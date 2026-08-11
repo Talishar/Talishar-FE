@@ -131,7 +131,45 @@ export const CARD_BACK = {
   '130': 'CBScowlingFleshBag2',
   '131': 'CBSnow',
   '132': 'CBPitchDevils2',
+  '133': 'RedLine',
+  '134': 'CBSkillIssue',
+  '135': 'CBWingedHussars',
+  '136': 'CBFabInsight',
+  '137': 'CBNxi2',
+  '138': 'CBOddwillows',
+  '139': 'CBShine',
+  '140': 'CB_IndyFab'
 } as { [key: string]: string };
+
+/* Talishar supporter card back IDs - shown as locked previews to non-supporters */
+export const TALISHAR_CARD_BACK_IDS = [
+  '1',
+  '2',
+  '3',
+  '4',
+  '5',
+  '6',
+  '7',
+  '8',
+  '82',
+  '83'
+];
+
+/* Talishar supporter playmat IDs - shown as locked previews to non-supporters */
+export const TALISHAR_PLAYMAT_IDS = [
+  '16',
+  '17',
+  '18',
+  '19',
+  '20',
+  '21',
+  '37',
+  '38',
+  '39',
+  '40',
+  '41',
+  '45'
+];
 
 /* All available playmats - CSS class names (must match image files) */
 export const PLAYMATS = {
@@ -179,6 +217,9 @@ export const PLAYMATS = {
   '41': 'TalisharPurple',
   '42': 'LibraryOfSolana',
   '43': 'TaddleDown',
+  '44': 'Omens',
+  '45': 'TheLostPrince',
+  '46': 'CoaxACommotion'
 } as { [key: string]: string };
 
 /* Display names for playmats (user-friendly formatting) */
@@ -226,7 +267,10 @@ export const PLAYMAT_DISPLAY_NAMES = {
   '40': 'Talishar Green',
   '41': 'Talishar Purple',
   '42': 'Library of Solana',
-  '43': 'Taddle Down'
+  '43': 'Taddle Down',
+  '44': 'Omens of the Third Age',
+  '45': 'Talishar, The Lost Prince',
+  '46': 'Coax A Commotion'
 } as { [key: string]: string };
 
 /* Default playmats available to all players */
@@ -247,12 +291,6 @@ export const PLAYER_PLAYMATS = [
   '13',
   '14',
   '15',
-  '16',
-  '17',
-  '18',
-  '19',
-  '20',
-  '21',
   '30',
   '31',
   '32',
@@ -260,5 +298,7 @@ export const PLAYER_PLAYMATS = [
   '34',
   '35',
   '36',
-  '42'
+  '42',
+  '44',
+  '46'
 ];

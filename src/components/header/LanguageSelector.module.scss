@@ -177,11 +177,13 @@
     left: auto;
     display: flex;
     flex-direction: column;
-    min-width: 180px;
-    background: var(--theme-section-background, rgba(14, 16, 20, 0.98));
-    border: 1px solid var(--muted-border-color, rgba(255, 255, 255, 0.1));
-    border-top: 2px solid var(--theme-primary, #d4af37);
-    border-radius: 0 0 6px 6px;
+    gap: 2px;
+    box-sizing: border-box;
+    min-width: 190px;
+    padding: 6px;
+    background: #0d0e10;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 6px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
     z-index: 10002;
     max-height: 320px;
@@ -190,24 +192,33 @@
     .socialLink {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 10px 16px;
-      font-size: 14px;
+      justify-content: flex-start;
+      flex-direction: row;
+      min-width: 0;
+      width: 100%;
+      height: auto;
+      box-sizing: border-box;
+      padding: 8px 10px;
+      font-size: 16px;
+      font-weight: 500;
       color: var(--snow, #fff);
       text-decoration: none;
       border-right: none;
-      border-bottom: 1px solid var(--theme-border, rgba(255, 255, 255, 0.06));
+      border-bottom: none;
+      border-radius: 5px;
       transition: background-color 150ms ease, color 150ms ease;
       white-space: nowrap;
 
-      &:last-child { border-bottom: none; }
+      &::before,
+      &::after {
+        display: none;
+      }
 
-      &:hover {
+      &:hover,
+      &:focus-visible {
         background-color: var(--theme-form-background, #2a2f35);
         color: var(--theme-primary, #d4af37);
       }
-
-      span { font-size: 14px; display: inline !important; }
     }
   }
 }

@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import {
-  useChooseFirstPlayerMutation,
   useSubmitChatMutation,
   useSubmitLobbyInputMutation,
   useReportTypingMutation
@@ -13,16 +12,13 @@ import { shallowEqual } from 'react-redux';
 import { getGameInfo, submitButton } from 'features/game/GameSlice';
 import {
   useFloating,
-  autoUpdate,
   offset,
   flip,
   shift,
   useClick,
   useDismiss,
   useRole,
-  useInteractions,
-  FloatingFocusManager,
-  FloatingOverlay
+  useInteractions
 } from '@floating-ui/react';
 import { createPortal } from 'react-dom';
 import { PROCESS_INPUT } from 'appConstants';
@@ -30,24 +26,23 @@ import { useLocation } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import useAuth from 'hooks/useAuth';
 import { CHAT_WHEEL } from 'constants/chatMessages';
-
-const submitButtonClass = classNames(styles.buttonDiv);
+import { isHandCardRotationHeld } from 'utils/handCardRotation';
+import { useTranslation } from 'react-i18next';
 
 interface ChatOptionsProps {
   setModalDisplay: (arg0: boolean) => void;
 }
 
 export const ChatInput = ({ usePrimary = false }: { usePrimary?: boolean }) => {
-  const { playerID, gameID, authKey } = useAppSelector(
+  const { playerID, gameID, authKey, isReplay } = useAppSelector(
     getGameInfo,
     shallowEqual
   );
   const { isMod } = useAuth();
   const chatEnabled = useAppSelector((state) => state.game.chatEnabled);
-  const dispatch = useAppDispatch();
 
   const [chatInput, setChatInput] = useState('');
-  const [submitChat, submitChatResult] = useSubmitChatMutation();
+  const [submitChat] = useSubmitChatMutation();
   const [reportTyping] = useReportTypingMutation();
   // true while we've sent a "typing" signal and haven't sent "stopped" yet
   const isTypingRef = useRef<boolean>(false);
@@ -59,7 +54,7 @@ export const ChatInput = ({ usePrimary = false }: { usePrimary?: boolean }) => {
   const sendStopTyping = React.useCallback(() => {
     if (!isTypingRef.current) return;
     isTypingRef.current = false;
-    reportTyping({ gameID, playerID, typing: false }).catch(() => {});
+    reportTyping({ gameID, playerID, typing: false }).catch(() => undefined);
   }, [gameID, playerID, reportTyping]);
 
   // Call on every keystroke with non-empty value.
@@ -67,15 +62,11 @@ export const ChatInput = ({ usePrimary = false }: { usePrimary?: boolean }) => {
   const handleTyping = React.useCallback(() => {
     if (!isTypingRef.current) {
       isTypingRef.current = true;
-      reportTyping({ gameID, playerID, typing: true }).catch(() => {});
+      reportTyping({ gameID, playerID, typing: true }).catch(() => undefined);
     }
     if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
     debounceTimerRef.current = setTimeout(sendStopTyping, 1500);
   }, [gameID, playerID, reportTyping, sendStopTyping]);
-
-  const handleInputFocus = React.useCallback(() => {
-    // No immediate typing signal on focus — wait for actual keystrokes
-  }, []);
 
   const handleInputBlur = React.useCallback(() => {
     // Treat blur as immediate end-of-typing
@@ -92,7 +83,7 @@ export const ChatInput = ({ usePrimary = false }: { usePrimary?: boolean }) => {
     };
   }, []);
 
-  if (!canChat) {
+  if (isReplay || !canChat) {
     return null;
   }
 
@@ -127,7 +118,7 @@ export const ChatInput = ({ usePrimary = false }: { usePrimary?: boolean }) => {
     if (e.target?.value.trim() !== '') {
       handleTyping();
     } else {
-      // Input cleared — treat as stopped typing immediately
+      // Input cleared - treat as stopped typing immediately
       if (debounceTimerRef.current) {
         clearTimeout(debounceTimerRef.current);
         debounceTimerRef.current = null;
@@ -144,7 +135,6 @@ export const ChatInput = ({ usePrimary = false }: { usePrimary?: boolean }) => {
             className={styles.chatInput}
             value={chatInput}
             onChange={handleChange}
-            onFocus={handleInputFocus}
             onBlur={handleInputBlur}
             onKeyDownCapture={(e) => {
               e.stopPropagation();
@@ -159,7 +149,8 @@ export const ChatInput = ({ usePrimary = false }: { usePrimary?: boolean }) => {
           />
           <button
             className={classNames(styles.buttonDiv, { secondary: !usePrimary })}
-            onClick={handleSubmit}>
+            onClick={handleSubmit}
+          >
             <div className={styles.icon}>
               <GiChatBubble />
             </div>
@@ -172,22 +163,20 @@ export const ChatInput = ({ usePrimary = false }: { usePrimary?: boolean }) => {
 };
 
 const ChatWheel = ({ usePrimary = false }: { usePrimary?: boolean }) => {
+  const { t } = useTranslation();
   const { playerID, gameID, authKey } = useAppSelector(
     getGameInfo,
     shallowEqual
   );
+
   const [modalDisplay, setModalDisplay] = useState<boolean>(false);
-  const [chooseFirstPlayer, chooseFirstPlayerData] =
-    useChooseFirstPlayerMutation();
-  const [submitLobbyInput, submitLobbyInputData] =
-    useSubmitLobbyInputMutation();
+  const [submitLobbyInput] = useSubmitLobbyInputMutation();
   const dispatch = useAppDispatch();
   const { refs, floatingStyles, context } = useFloating({
     placement: 'left',
     open: modalDisplay,
     onOpenChange: setModalDisplay,
-    middleware: [offset(20), flip(), shift()],
-    whileElementsMounted: autoUpdate
+    middleware: [offset(20), flip(), shift()]
   });
   const location = useLocation();
   const [sentChatRequest, setSentChatRequest] = useState<boolean>(false);
@@ -198,6 +187,7 @@ const ChatWheel = ({ usePrimary = false }: { usePrimary?: boolean }) => {
       if (e.key === 'q' || e.key === 'Q') {
         const tag = (e.target as HTMLElement).tagName;
         if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+        if (isHandCardRotationHeld()) return;
         e.preventDefault();
         setModalDisplay((prev) => !prev);
       }
@@ -216,6 +206,8 @@ const ChatWheel = ({ usePrimary = false }: { usePrimary?: boolean }) => {
     dismiss,
     role
   ]);
+
+  if (playerID === 3) return null;
 
   const submitChatRequest = async () => {
     if (location.pathname.includes('/lobby/')) {
@@ -240,13 +232,17 @@ const ChatWheel = ({ usePrimary = false }: { usePrimary?: boolean }) => {
 
   return (
     <>
-      <div className={classNames(styles.quickChatButton, { [styles.primaryQuickChatButton]: usePrimary })}>
+      <div
+        className={classNames(styles.quickChatButton, {
+          [styles.primaryQuickChatButton]: usePrimary
+        })}
+      >
         <button
           ref={refs.setReference}
           className={styles.quickChatToggleButton}
           {...getReferenceProps({ onClick: (e) => e.preventDefault() })}
         >
-          Quick Chat
+          {t('CHAT.QUICK_CHAT')}
         </button>
         <button
           onClick={(e) => {
@@ -255,25 +251,21 @@ const ChatWheel = ({ usePrimary = false }: { usePrimary?: boolean }) => {
           }}
           disabled={sentChatRequest}
         >
-          Invite to Chat
+          {t('CHAT.INVITE')}
         </button>
       </div>
       {modalDisplay &&
         createPortal(
-          <FloatingOverlay lockScroll className={styles.floatingOverlay}>
-            <FloatingFocusManager context={context} modal={false} initialFocus={-1}>
-              <div
-                ref={refs.setFloating}
-                style={floatingStyles}
-                className={styles.popOver}
-                {...getFloatingProps()}
-              >
-                <div className={styles.chatOptionsContainer}>
-                  <ChatOptions setModalDisplay={setModalDisplay} />
-                </div>
-              </div>
-            </FloatingFocusManager>
-          </FloatingOverlay>,
+          <div
+            ref={refs.setFloating}
+            style={floatingStyles}
+            className={styles.popOver}
+            {...getFloatingProps()}
+          >
+            <div className={styles.chatOptionsContainer}>
+              <ChatOptions setModalDisplay={setModalDisplay} />
+            </div>
+          </div>,
           document.body
         )}
     </>
@@ -295,7 +287,10 @@ function getRecents(): number[] {
 function addRecent(key: number): void {
   const recents = getRecents().filter((k) => k !== key);
   recents.unshift(key);
-  localStorage.setItem(RECENTS_KEY, JSON.stringify(recents.slice(0, MAX_RECENTS)));
+  localStorage.setItem(
+    RECENTS_KEY,
+    JSON.stringify(recents.slice(0, MAX_RECENTS))
+  );
 }
 
 const QUICK_CHAT_COOLDOWN_MS = 3000;
@@ -303,6 +298,7 @@ let lastQuickChatSent = 0;
 let quickChatToastPending = false;
 
 const ChatOptions = ({ setModalDisplay }: ChatOptionsProps) => {
+  const { t } = useTranslation();
   const [submitChat] = useSubmitChatMutation();
   const { playerID, gameID, authKey } = useAppSelector(
     getGameInfo,
@@ -327,8 +323,12 @@ const ChatOptions = ({ setModalDisplay }: ChatOptionsProps) => {
     if (now - lastQuickChatSent < QUICK_CHAT_COOLDOWN_MS) {
       if (!quickChatToastPending) {
         quickChatToastPending = true;
-        toast.error('Please wait before sending another quick chat.', { duration: 2000 });
-        setTimeout(() => { quickChatToastPending = false; }, 2000);
+        toast.error('Please wait before sending another quick chat.', {
+          duration: 2000
+        });
+        setTimeout(() => {
+          quickChatToastPending = false;
+        }, 2000);
       }
       return;
     }
@@ -370,18 +370,28 @@ const ChatOptions = ({ setModalDisplay }: ChatOptionsProps) => {
             role="button"
             aria-expanded={!recentsCollapsed}
           >
-            ⭐ Recent
-            <span className={`${styles.sectionChevron} ${recentsCollapsed ? styles.sectionChevronCollapsed : ''}`}>▾</span>
-          </div>
-          {!recentsCollapsed && recents.map((key) => (
-            <button
-              key={`recent${key}`}
-              className={styles.chatWheelButton}
-              onClick={(e) => { e.preventDefault(); handleSend(key); }}
+            {t('CHAT.RECENT')}
+            <span
+              className={`${styles.sectionChevron} ${
+                recentsCollapsed ? styles.sectionChevronCollapsed : ''
+              }`}
             >
-              {CHAT_WHEEL.get(key)}
-            </button>
-          ))}
+              ▾
+            </span>
+          </div>
+          {!recentsCollapsed &&
+            recents.map((key) => (
+              <button
+                key={`recent${key}`}
+                className={styles.chatWheelButton}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleSend(key);
+                }}
+              >
+                {CHAT_WHEEL.get(key)}
+              </button>
+            ))}
           <div className={styles.sectionDivider} />
         </>
       )}
@@ -389,9 +399,14 @@ const ChatOptions = ({ setModalDisplay }: ChatOptionsProps) => {
         <button
           key={`quickChat${key}`}
           className={styles.chatWheelButton}
-          onClick={(e) => { e.preventDefault(); handleSend(key); }}
+          onClick={(e) => {
+            e.preventDefault();
+            handleSend(key);
+          }}
         >
-          {index <= 9 && <span className={styles.keyHint}>{index < 9 ? index + 1 : 0}</span>}
+          {index <= 9 && (
+            <span className={styles.keyHint}>{index < 9 ? index + 1 : 0}</span>
+          )}
           {value}
         </button>
       ))}

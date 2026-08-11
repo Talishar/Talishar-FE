@@ -1,10 +1,11 @@
 import React from 'react';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
+import { Card } from 'features/Card';
 import CardDisplay from '../cardDisplay/CardDisplay';
 import styles from './Reactions.module.css';
 
-export default function Reactions() {
+function Reactions() {
   const activeCombatChain = useAppSelector(
     (state: RootState) => state.game.activeChainLink?.reactionCards
   );
@@ -19,15 +20,11 @@ export default function Reactions() {
   return (
     <div className={styles.reactionWrapper}>
       <div className={styles.reactions}>
-        {activeCombatChain?.map((card, ix) => {
+        {activeCombatChain?.map((card: Card, ix: number) => {
           const isPlayer = playerID === card.controller;
           return (
             <div key={ix.toString()} className={styles.cardContainer}>
-              <CardDisplay
-                card={card}
-                key={ix.toString()}
-                isPlayer={isPlayer}
-              />
+              <CardDisplay card={card} isPlayer={isPlayer} />
             </div>
           );
         })}
@@ -35,3 +32,5 @@ export default function Reactions() {
     </div>
   );
 }
+
+export default React.memo(Reactions);

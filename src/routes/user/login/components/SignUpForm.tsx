@@ -1,12 +1,10 @@
 import { useSignUpMutation } from 'features/api/apiSlice';
 import styles from './LoginForm.module.css';
 import { Link, useNavigate } from 'react-router-dom';
-import classNames from 'classnames';
-import { SignUpType, signUpValidationSchema } from './validation';
+import { SignUpType } from './validation';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
 import useAuth from 'hooks/useAuth';
 import { toast } from 'react-hot-toast';
 import { useState } from 'react';
@@ -15,21 +13,17 @@ import { useTranslation, Trans } from 'react-i18next';
 export const SignUpForm = () => {
   const [disclaimerOpen, setDisclaimerOpen] = useState(false);
   const { isLoggedIn } = useAuth();
-  const [signup, signupResult] = useSignUpMutation();
+  const [signup] = useSignUpMutation();
   const [parent] = useAutoAnimate();
   const navigate = useNavigate();
-  // Initial stuff to allow the lang to change
-  const { t, i18n, ready } = useTranslation();
+  const { t } = useTranslation();
 
   const {
     register,
     handleSubmit,
     setError,
     formState: { errors, isSubmitting }
-  } = useForm<SignUpType>({
-    mode: 'onBlur',
-    resolver: yupResolver(signUpValidationSchema)
-  });
+  } = useForm<SignUpType>({ mode: 'onBlur' });
 
   if (isLoggedIn) {
     navigate('/');
@@ -46,33 +40,36 @@ export const SignUpForm = () => {
         toast.error(resp.error, { position: 'top-center' });
       }
       if (resp.message === 'Success!') {
-        toast.success('You have signed up! Please now login to continue.', {
+        toast.success(t('USER.LOGIN.SIGNUP_SUCCESS'), {
           position: 'top-center'
         });
         navigate('/user/login');
       }
     } catch (err) {
       console.warn(err);
-      toast.error(`Network error: ${JSON.stringify(err)}`, {
-        position: 'top-center'
-      });
+      toast.error(
+        t('USER.LOGIN.NETWORK_ERROR', { error: JSON.stringify(err) }),
+        {
+          position: 'top-center'
+        }
+      );
       setError('root.serverError', {
         type: 'custom',
-        message: `There has been a network error while signing up. Please try again. If you still get an error please report on our discord and let us know the following: ${JSON.stringify(
-          err
-        )}`
+        message: t('USER.LOGIN.SIGNUP_NETWORK_ERROR', {
+          error: JSON.stringify(err)
+        })
       });
-    } finally {
     }
   };
 
   return (
     <div>
-      <h2>{t("USER.LOGIN.SIGN_UP")}</h2>
+      <h2>{t('USER.LOGIN.SIGN_UP')}</h2>
       <article className={styles.formContainer}>
         <form onSubmit={handleSubmit(onSubmit)} ref={parent}>
-          <label htmlFor="userId">Username</label>
+          <label htmlFor="userId">{t('USER.LOGIN.USERNAME')}</label>
           <input
+            id="userId"
             type="text"
             placeholder="Bravo"
             autoComplete="username"
@@ -82,60 +79,90 @@ export const SignUpForm = () => {
           {errors.userId?.message && (
             <div className={styles.fieldError}>{errors.userId?.message}</div>
           )}
-      <label htmlFor="email">{t("USER.LOGIN.EMAIL")}</label>
+          <label htmlFor="email">{t('USER.LOGIN.EMAIL')}</label>
           <input
+            id="email"
             type="email"
             placeholder="Bravo@talishar.net"
             autoComplete="email"
             {...register('email')}
             aria-invalid={errors.email?.message ? 'true' : undefined}
+            aria-describedby={errors.email?.message ? 'email-error' : undefined}
           />
           {errors.email?.message && (
-            <div className={styles.fieldError}>{errors.email?.message}</div>
+            <div id="email-error" className={styles.fieldError} role="alert">
+              {errors.email?.message}
+            </div>
           )}
-          <label htmlFor="password">{t("USER.LOGIN.PASSWORD")}</label>
+          <label htmlFor="password">{t('USER.LOGIN.PASSWORD')}</label>
           <input
+            id="password"
             type="password"
             placeholder="********"
             autoComplete="new-password"
             {...register('password')}
             aria-invalid={errors.password?.message ? 'true' : undefined}
+            aria-describedby={
+              errors.password?.message ? 'password-error' : undefined
+            }
           />
           {errors.password?.message && (
-            <div className={styles.fieldError}>{errors.password?.message}</div>
+            <div id="password-error" className={styles.fieldError} role="alert">
+              {errors.password?.message}
+            </div>
           )}
-          <label htmlFor="passwordRepeat">{t("USER.LOGIN.CONFIRM_PASSWORD")}</label>
+          <label htmlFor="passwordRepeat">
+            {t('USER.LOGIN.CONFIRM_PASSWORD')}
+          </label>
           <input
+            id="passwordRepeat"
             type="password"
             placeholder="********"
             autoComplete="new-password"
             {...register('passwordRepeat')}
             aria-invalid={errors.passwordRepeat?.message ? 'true' : undefined}
+            aria-describedby={
+              errors.passwordRepeat?.message
+                ? 'passwordRepeat-error'
+                : undefined
+            }
           />
           {errors.passwordRepeat?.message && (
-            <div className={styles.fieldError}>
+            <div
+              id="passwordRepeat-error"
+              className={styles.fieldError}
+              role="alert"
+            >
               {errors.passwordRepeat?.message}
             </div>
           )}
           <input
+            id="agreeToTerms"
             type="checkbox"
             {...register('agreeToTerms')}
             aria-invalid={errors.agreeToTerms?.message ? 'true' : undefined}
+            aria-describedby={
+              errors.agreeToTerms?.message ? 'agreeToTerms-error' : undefined
+            }
           />
-      <label htmlFor="agreeToTerms">
-      <Trans
-         i18nKey="USER.LOGIN.TALISHAR_CONSENT"
-    components={[
-      <span  key="not-judge-s0"
-              onClick={() => setDisclaimerOpen(true)}
-              className={styles.link}
-            />
-    ]}
-         >
-      </Trans>
+          <label htmlFor="agreeToTerms">
+            <Trans
+              i18nKey="USER.LOGIN.TALISHAR_CONSENT"
+              components={[
+                <span
+                  key="not-judge-s0"
+                  onClick={() => setDisclaimerOpen(true)}
+                  className={styles.link}
+                />
+              ]}
+            ></Trans>
           </label>
           {errors.agreeToTerms?.message && (
-            <div className={styles.fieldError}>
+            <div
+              id="agreeToTerms-error"
+              className={styles.fieldError}
+              role="alert"
+            >
               {errors.agreeToTerms?.message}
             </div>
           )}
@@ -144,89 +171,58 @@ export const SignUpForm = () => {
             aria-busy={isSubmitting}
             disabled={isSubmitting}
           >
-            {t("USER.LOGIN.SUBMIT")}
+            {isSubmitting ? t('GAME_LOBBY.SUBMITTING') : t('USER.LOGIN.SUBMIT')}
           </button>
           {errors.root?.serverError?.message && (
-            <div className={styles.fieldError}>
+            <div className={styles.fieldError} role="alert">
               <FaExclamationCircle /> {errors.root?.serverError?.message}
             </div>
           )}
         </form>
         <hr className={styles.divider} />
-<p className={styles.linebreak} style={{ marginTop: '18px' }}>
-  <Trans i18nKey="USER.LOGIN.ALREADY_HAVE_ACCOUNT"
-	 components={[
-	 <Link
-	   key="already-account-l0"
-            to={'/user/login'}
-            style={{
-              color: 'var(--theme-primary)',
-              textDecoration: 'underline'
-            }}
-            />
-	 ]}>
-	  </Trans>
+        <p className={styles.linebreak} style={{ marginTop: '18px' }}>
+          <Trans
+            i18nKey="USER.LOGIN.ALREADY_HAVE_ACCOUNT"
+            components={[
+              <Link
+                key="already-account-l0"
+                to={'/user/login'}
+                style={{
+                  color: 'var(--theme-primary)',
+                  textDecoration: 'underline'
+                }}
+              />
+            ]}
+          ></Trans>
         </p>
         <small className={styles.privacy}>
-          <Link to={'/privacy'}>{t("USER.LOGIN.PRIVACY_POLICY")}</Link>
+          <Link to={'/privacy'}>{t('USER.LOGIN.PRIVACY_POLICY')}</Link>
         </small>
       </article>
       <dialog open={disclaimerOpen}>
         <article className={styles.container}>
           <header>
-            <span
-              aria-label="Close"
+            <button
+              type="button"
+              aria-label={t('USER.LOGIN.CLOSE')}
               className="close"
               onClick={() => setDisclaimerOpen(false)}
-              ></span>
-	    {t("USER.LOGIN.DISCLAIMER")}            
+            />
+            {t('USER.LOGIN.DISCLAIMER')}
           </header>
-          <p>
-            Welcome to Talishar, a fan-made website where you can play the
-            trading card game Flesh & Blood by Legend Story Studios in your
-            browser! We want to ensure you have a fun and enjoyable experience
-            playing the game online.
-          </p>
-          <p>
-            Please be aware that, while we strive to provide an accurate and
-            enjoyable gaming experience, there may be bugs or errors in the
-            software that could impact the game's accuracy and functionality.
-            Therefore, it's important to note that Talishar has no
-            responsibility or warranty for the accuracy of the game rules on our
-            website. It's always a good idea to familiarize yourself with the
-            official rules and regulations of Flesh & Blood before playing on
-            Talishar.
-          </p>
-          <p>
-            It's also important to note that, if you're playing in a paper
-            event, you should not use "it works that way on Talishar" as an
-            excuse if you're caught performing an illegal move, missing
-            triggers, or doing something out of order. The ultimate
-            responsibility for knowing the game's rules lies with the players
-            themselves, not the software. The ultimate authority on the rules of
-            Flesh & Blood is Legend Story Studios.
-          </p>
-          <p>
-            At Talishar, we're open-source, which means we welcome contributions
-            and bug reports to help us improve the website. If you're interested
-            in contributing, please visit our GitHub page. We appreciate all
-            feedback and suggestions for improvement.
-          </p>
-          <p>
-            By accessing and using our website, you agree to this disclaimer and
-            assume all risks associated with using Talishar. We reserve the
-            right to modify or terminate our services at any time without prior
-            notice. If you have any questions or concerns, feel free to reach
-            out to us on our discord. Thanks for playing on Talishar!
-          </p>
+          <p>{t('USER.LOGIN.DISCLAIMER_BODY_1')}</p>
+          <p>{t('USER.LOGIN.DISCLAIMER_BODY_2')}</p>
+          <p>{t('USER.LOGIN.DISCLAIMER_BODY_3')}</p>
+          <p>{t('USER.LOGIN.DISCLAIMER_BODY_4')}</p>
+          <p>{t('USER.LOGIN.DISCLAIMER_BODY_5')}</p>
           <hr />
           <button
             onClick={(e) => {
-              e.preventDefault;
+              e.preventDefault();
               setDisclaimerOpen(false);
             }}
           >
-            {t("USER.LOGIN.POLICY_DIALOG_BUTTON")}
+            {t('USER.LOGIN.POLICY_DIALOG_BUTTON')}
           </button>
         </article>
       </dialog>

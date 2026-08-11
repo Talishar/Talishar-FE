@@ -1,3 +1,5 @@
+import { AltArt } from 'features/GameStaticInfo';
+
 export interface GetLobbyInfo {
   gameName?: number;
   playerID?: number;
@@ -71,6 +73,7 @@ export interface GetLobbyInfoResponse {
   overlayURL: string;
   deck: Deck;
   format: string;
+  altArts?: AltArt[];
 }
 
 export interface DeckResponse {

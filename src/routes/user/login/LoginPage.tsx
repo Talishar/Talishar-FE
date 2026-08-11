@@ -4,18 +4,31 @@ import PageBanner from 'components/PageBanner/PageBanner';
 import { useTranslation } from 'react-i18next';
 import { usePageTitle } from 'hooks/usePageTitle';
 
-const bannerByPath: Record<string, { title: string; subtitle?: string; pageTitle: string }> = {
-  signup: { title: 'Create Account', subtitle: 'Join Talishar for free', pageTitle: 'Sign Up - Play FaB Free Online' },
-  'password-recovery': { title: 'Reset Password', subtitle: "We'll send you a recovery link", pageTitle: 'Reset Password' },
-  'reset-password': { title: 'Reset Password', subtitle: 'Enter your new password', pageTitle: 'Reset Password' },
-};
-
 export const LoginPage = () => {
   const location = useLocation();
   const segment = location.pathname.split('/').filter(Boolean).pop() ?? '';
-  const { t, i18n, ready } = useTranslation();
+  const { t } = useTranslation();
 
-  const { title, subtitle, pageTitle } = bannerByPath[segment] ?? { title: t("USER.LOGIN.LOGIN"), subtitle: t("USER.LOGIN.WELCOME_BACK"), pageTitle: 'Login' };
+  let title: string;
+  let subtitle: string | undefined;
+  let pageTitle: string;
+  if (segment === 'signup') {
+    title = t('SIGNUP.BANNER_TITLE');
+    subtitle = t('SIGNUP.BANNER_SUBTITLE');
+    pageTitle = t('SIGNUP.PAGE_TITLE');
+  } else if (segment === 'password-recovery') {
+    title = t('PASSWORD.RECOVERY.BANNER_TITLE');
+    subtitle = t('PASSWORD.RECOVERY.BANNER_SUBTITLE');
+    pageTitle = t('PASSWORD.RECOVERY.PAGE_TITLE');
+  } else if (segment === 'reset-password') {
+    title = t('PASSWORD.RESET.BANNER_TITLE');
+    subtitle = t('PASSWORD.RESET.BANNER_SUBTITLE');
+    pageTitle = t('PASSWORD.RESET.PAGE_TITLE');
+  } else {
+    title = t('USER.LOGIN.LOGIN');
+    subtitle = t('USER.LOGIN.WELCOME_BACK');
+    pageTitle = t('PAGES.LOGIN');
+  }
 
   usePageTitle(pageTitle);
 

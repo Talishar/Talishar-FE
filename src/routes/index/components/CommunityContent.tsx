@@ -4,8 +4,12 @@ import {
   fetchDiscordContentCarousel,
   ContentVideo
 } from '../../../services/contentService';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { AdUnit } from 'components/ads';
+import {
+  TALISHAR_DISCORD_URL,
+  TALISHAR_METAFY_URL
+} from 'constants/socialLinks';
 
 interface CommunityContentProps {
   showAds?: boolean;
@@ -13,13 +17,14 @@ interface CommunityContentProps {
 
 const inferContentType = (title: string, description?: string): string => {
   const text = `${title} ${description ?? ''}`.toLowerCase();
-  if (text.includes('podcast') || text.includes('#podcast')) return 'Podcast';
+  if (text.includes('podcast') || text.includes('#podcast'))
+    return 'TYPE_PODCAST';
   if (
     text.includes('deck tech') ||
     text.includes('deck guide') ||
     text.includes('decktech')
   )
-    return 'Deck tech';
+    return 'TYPE_DECK_TECH';
   if (
     text.includes('recap') ||
     text.includes('calling') ||
@@ -27,11 +32,13 @@ const inferContentType = (title: string, description?: string): string => {
     text.includes('grand prix') ||
     text.includes('nationals')
   )
-    return 'Live recap';
-  return 'Video';
+    return 'TYPE_LIVE_RECAP';
+  return 'TYPE_VIDEO';
 };
 
-const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) => {
+const CommunityContent: React.FC<CommunityContentProps> = ({
+  showAds = false
+}) => {
   const [videos, setVideos] = useState<ContentVideo[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -50,8 +57,17 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
   };
 
   const getContentTypeLabel = (video: ContentVideo): string => {
-    if (video.type === 'metafy') return 'Guide';
-    return inferContentType(video.title, video.description);
+    if (video.type === 'metafy') return t('COMMUNITY_CONTENT.TYPE_GUIDE');
+    switch (inferContentType(video.title, video.description)) {
+      case 'TYPE_PODCAST':
+        return t('COMMUNITY_CONTENT.TYPE_PODCAST');
+      case 'TYPE_DECK_TECH':
+        return t('COMMUNITY_CONTENT.TYPE_DECK_TECH');
+      case 'TYPE_LIVE_RECAP':
+        return t('COMMUNITY_CONTENT.TYPE_LIVE_RECAP');
+      default:
+        return t('COMMUNITY_CONTENT.TYPE_VIDEO');
+    }
   };
 
   const getThumbnail = (video: ContentVideo): string => {
@@ -63,7 +79,10 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
     return '';
   };
 
-  const handleThumbError = (e: React.SyntheticEvent<HTMLImageElement>, video: ContentVideo) => {
+  const handleThumbError = (
+    e: React.SyntheticEvent<HTMLImageElement>,
+    video: ContentVideo
+  ) => {
     const img = e.currentTarget;
     if (video.videoId && !img.src.includes('youtube.com')) {
       img.src = `https://img.youtube.com/vi/${video.videoId}/mqdefault.jpg`;
@@ -153,7 +172,9 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
           )}
           <div className={styles.guideCardOverlay} />
           <div className={styles.guideCardContent}>
-            <span className={styles.guideCardBadge}>Guide</span>
+            <span className={styles.guideCardBadge}>
+              {t('COMMUNITY_CONTENT.TYPE_GUIDE')}
+            </span>
             <h4 className={styles.guideCardTitle}>{cleanTitle(video.title)}</h4>
             {video.description && (
               <p className={styles.guideCardDescription}>{video.description}</p>
@@ -166,7 +187,7 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
     const src =
       video.type === 'twitch'
         ? `https://player.twitch.tv/?video=${video.videoId}&parent=${window.location.hostname}`
-        : `https://www.youtube.com/embed/${video.videoId}?rel=0`;
+        : `https://www.youtube-nocookie.com/embed/${video.videoId}?rel=0`;
     return (
       <iframe
         className={styles.videoFrame}
@@ -198,9 +219,9 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
               </h3>
               <p className={styles.featuredMeta}>
                 <span className={styles.metaAuthor}>
-                  by {capitalize(featured.author)}
+                  {t('COMMUNITY_CONTENT.BY')} {capitalize(featured.author)}
                 </span>
-                &nbsp;·&nbsp;
+                &nbsp;-&nbsp;
                 <span className={styles.metaDate}>
                   {formatDate(featured.timestamp)}
                 </span>
@@ -219,7 +240,8 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
                     {cleanTitle(secondary.title)}
                   </p>
                   <p className={styles.secondaryMeta}>
-                    by {capitalize(secondary.author)}&nbsp;·&nbsp;
+                    {t('COMMUNITY_CONTENT.BY')} {capitalize(secondary.author)}
+                    &nbsp;-&nbsp;
                     {formatDate(secondary.timestamp)}
                   </p>
                 </div>
@@ -230,12 +252,12 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
               <div className={styles.communityAdSection}>
                 <div className={styles.adHeader}>
                   <a
-                    href="https://metafy.gg/@talishar/members"
+                    href={TALISHAR_METAFY_URL}
                     target="_blank"
                     rel="noopener noreferrer"
                     className={styles.removeAdsLink}
                   >
-                    Remove ads
+                    {t('UNITED_GAME_PANEL.REMOVE_ADS')}
                   </a>
                 </div>
                 <AdUnit placement="mobile-unit-3" />
@@ -264,9 +286,12 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
                     </div>
                   </div>
                   <div className={styles.listInfo}>
-                    <p className={styles.listTitle}>{cleanTitle(video.title)}</p>
+                    <p className={styles.listTitle}>
+                      {cleanTitle(video.title)}
+                    </p>
                     <p className={styles.listMeta}>
-                      by {capitalize(video.author)}&nbsp;·&nbsp;
+                      {t('COMMUNITY_CONTENT.BY')} {capitalize(video.author)}
+                      &nbsp;-&nbsp;
                       {formatDate(video.timestamp)}
                     </p>
                   </div>
@@ -282,39 +307,40 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
         <div className={styles.ctaBar}>
           <div className={styles.ctaContent}>
             <p className={styles.ctaHeading}>
-              👋 Want your content featured here?
+              {t('COMMUNITY_CONTENT.CTA_HEADING')}
             </p>
             <p className={styles.ctaSub}>
-              Share gameplay videos, podcasts, or strategy content in{' '}
-              <strong>#talishar-content</strong> on Discord and we'll highlight
-              your best work.
+              <Trans
+                i18nKey="COMMUNITY_CONTENT.CTA_SUB"
+                components={{ 1: <strong /> }}
+              />
             </p>
           </div>
           <a
-            href="https://discord.com/JykuRkdd5S"
+            href={TALISHAR_DISCORD_URL}
             target="_blank"
             rel="noopener noreferrer"
             className={styles.discordButton}
           >
-            Join Discord
+            {t('COMMUNITY_CONTENT.JOIN_DISCORD')}
           </a>
         </div>
-          {showAds && (
-            <div className={styles.adFooter}>
-              <div className={styles.adHeader}>
-                <a
-                  href="https://metafy.gg/@talishar/members"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.removeAdsLink}
-                >
-                  Remove ads
-                </a>
-              </div>
-              <AdUnit placement="billboard-1" className={styles.desktopAd} />
-              <AdUnit placement="mobile-unit-2" className={styles.mobileAd} />
+        {showAds && (
+          <div className={styles.adFooter}>
+            <div className={styles.adHeader}>
+              <a
+                href={TALISHAR_METAFY_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.removeAdsLink}
+              >
+                {t('UNITED_GAME_PANEL.REMOVE_ADS')}
+              </a>
             </div>
-          )}
+            <AdUnit placement="billboard-1" className={styles.desktopAd} />
+            <AdUnit placement="mobile-unit-2" className={styles.mobileAd} />
+          </div>
+        )}
       </div>
     </section>
   );

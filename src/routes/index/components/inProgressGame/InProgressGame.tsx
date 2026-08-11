@@ -1,6 +1,4 @@
 import classNames from 'classnames';
-import React from 'react';
-import { createSearchParams, useNavigate } from 'react-router-dom';
 import { IGameInProgress } from '../gameList/GameList';
 import styles from './InProgressGame.module.scss';
 import { RiSwordLine } from 'react-icons/ri';
@@ -9,23 +7,17 @@ import FriendBadge from '../gameList/FriendBadge';
 import { useTranslation } from 'react-i18next';
 
 export const InProgressGame = ({
-  ix,
   entry,
   isFriendsGame = false,
   friendName,
   formatLabel
 }: {
-  ix: number;
   entry: IGameInProgress;
   isFriendsGame?: boolean;
   friendName?: string;
   formatLabel?: string;
 }) => {
-  const navigate = useNavigate();
   const hasFormatLabel = !!formatLabel;
-  const spectateHandler = (gameName: number) => {
-    navigate(`/game/play/${gameName}`);
-  };
   const buttonClass = styles.button;
   const gameItemClass = classNames(styles.gameItem, {
     [styles.gameItemNoFormat]: !hasFormatLabel
@@ -37,17 +29,10 @@ export const InProgressGame = ({
     [styles.heroRowNoFormat]: !hasFormatLabel
   });
   // Initial stuff to allow the lang to change
-  const { t, i18n, ready } = useTranslation();
+  const { t } = useTranslation();
 
   return (
-    <div
-      key={entry.gameName}
-      className={gameItemClass}
-      onClick={(e) => {
-        e.preventDefault();
-        spectateHandler(entry.gameName);
-      }}
-    >
+    <div key={entry.gameName} className={gameItemClass}>
       <div className={matchupBlockClass}>
         <div className={heroRowClass}>
           <div>
@@ -55,6 +40,8 @@ export const InProgressGame = ({
               <img
                 className={styles.heroImg}
                 src={generateCroppedImageUrl(entry.p1Hero)}
+                alt={entry.p1Hero}
+                loading="lazy"
               />
             )}
           </div>
@@ -64,11 +51,15 @@ export const InProgressGame = ({
               <img
                 className={styles.heroImg}
                 src={generateCroppedImageUrl(entry.p2Hero)}
+                alt={entry.p2Hero}
+                loading="lazy"
               />
             )}
           </div>
         </div>
-        {formatLabel && <span className={styles.formatLabel}>{formatLabel}</span>}
+        {formatLabel && (
+          <span className={styles.formatLabel}>{formatLabel}</span>
+        )}
       </div>
       <FriendBadge
         isFriendsGame={isFriendsGame}
@@ -81,7 +72,7 @@ export const InProgressGame = ({
           href={`/game/play/${entry.gameName}`}
           role="button"
         >
-          {t("IN_PROGRESS_GAME.SPECTATE")}
+          {t('IN_PROGRESS_GAME.SPECTATE')}
         </a>
       </div>
     </div>

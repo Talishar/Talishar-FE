@@ -8,6 +8,7 @@ import { toast } from 'react-hot-toast';
 import useSound from 'use-sound';
 import { getSettingsEntity } from 'features/options/optionsSlice';
 import shuffleSound from 'sounds/shuffle.m4a';
+import prioritySound from 'sounds/prioritySound.wav';
 import {
   GiDiceSixFacesFive,
   GiDiceSixFacesFour,
@@ -17,36 +18,108 @@ import {
   GiDiceSixFacesTwo
 } from 'react-icons/gi';
 import { shallowEqual } from 'react-redux';
-import CardDisplay from '../cardDisplay/CardDisplay';
+import { Toast } from 'react-hot-toast';
 import styles from './EventsHandler.module.css';
+import { useTranslation } from 'react-i18next';
+import MovementEventCard, {
+  MOVEMENT_TOAST_OPTIONS,
+  MovementEventType
+} from './MovementEventCard';
+
+const DismissibleToast = ({
+  t,
+  children
+}: {
+  t: Toast;
+  children: React.ReactNode;
+}) => {
+  const { t: tr } = useTranslation();
+  return (
+    <div
+      className={styles.card}
+      onClick={() => toast.dismiss(t.id)}
+      role="button"
+      tabIndex={0}
+      title={tr('EVENTS.DISMISS')}
+    >
+      {children}
+    </div>
+  );
+};
 import {
   setShuffling,
   setAddBotDeck,
   setClashReveal,
-  setArsenalFlip
+  setHeroTransform,
+  setArsenalFlip,
+  setArsenalDestroy
 } from 'features/game/GameSlice';
 
+enum ModalType {
+  RequestChat = 0,
+  RequestUndo = 1,
+  RequestThisTurnUndo = 2,
+  RequestLastTurnUndo = 3,
+  RequestChainLinkUndo = 4
+}
+
+const parseCardEvent = (
+  eventValue: string | undefined,
+  viewerPlayerID: number
+): { cardNumber: string; isPlayer: boolean | undefined } => {
+  const raw = eventValue ?? '';
+  const colonIndex = raw.indexOf(':');
+  if (colonIndex === -1) return { cardNumber: raw, isPlayer: undefined };
+  const eventPlayerID = parseInt(raw.slice(0, colonIndex));
+  const viewerID = viewerPlayerID === 2 ? 2 : 1;
+  return {
+    cardNumber: raw.slice(colonIndex + 1),
+    isPlayer: Number.isNaN(eventPlayerID)
+      ? undefined
+      : eventPlayerID === viewerID
+  };
+};
+
 export const EventsHandler = React.memo(() => {
+  const { t } = useTranslation();
   const events = useAppSelector(
     (state: RootState) => state.game.events,
     shallowEqual
   );
-
-  enum ModalType {
-    RequestChat = 0,
-    RequestUndo = 1,
-    RequestThisTurnUndo = 2,
-    RequestLastTurnUndo = 3
-  }
+  const lastProcessedEventsRef = React.useRef<typeof events>(undefined);
 
   const [showModal, setShowModal] = useState(false);
   const [modal, setModal] = useState('');
   const [modalType, setModalType] = useState(ModalType.RequestChat);
   const { playerID } = useAppSelector(getGameInfo, shallowEqual);
+  const hasPriority = useAppSelector(
+    (state: RootState) => state.game.hasPriority
+  );
   const settingsData = useAppSelector(getSettingsEntity);
   const isMuted = settingsData['MuteSound']?.value === '1';
   const [playShuffleSound] = useSound(shuffleSound, { volume: 0.5 });
+  const [playPrioritySound] = useSound(prioritySound);
   const dispatch = useAppDispatch();
+
+  const isUndoModal = (type: ModalType) =>
+    type === ModalType.RequestUndo ||
+    type === ModalType.RequestThisTurnUndo ||
+    type === ModalType.RequestLastTurnUndo ||
+    type === ModalType.RequestChainLinkUndo;
+
+  useEffect(() => {
+    const link = document.getElementById('favicon') as HTMLLinkElement;
+    if (showModal && isUndoModal(modalType)) {
+      if (!isMuted) playPrioritySound();
+      if (link) link.href = '/images/priorityGreen.ico';
+    } else if (!showModal && link) {
+      // Restore favicon to whatever PassTurnDisplay would show
+      link.href =
+        hasPriority && playerID !== 3
+          ? '/images/priorityGreen.ico'
+          : '/images/priorityGrey.ico';
+    }
+  }, [showModal, modalType, isMuted, playPrioritySound, hasPriority, playerID]);
 
   const clickYes = (e: any) => {
     e.preventDefault();
@@ -61,6 +134,12 @@ export const EventsHandler = React.memo(() => {
       dispatch(
         submitButton({ button: { mode: PROCESS_INPUT.CONFIRM_LAST_TURN_UNDO } })
       );
+    else if (modalType == ModalType.RequestChainLinkUndo)
+      dispatch(
+        submitButton({
+          button: { mode: PROCESS_INPUT.CONFIRM_CHAIN_LINK_UNDO }
+        })
+      );
     else
       dispatch(submitButton({ button: { mode: PROCESS_INPUT.ENABLE_CHAT } }));
   };
@@ -71,7 +150,8 @@ export const EventsHandler = React.memo(() => {
     if (
       modalType == ModalType.RequestUndo ||
       modalType == ModalType.RequestThisTurnUndo ||
-      modalType == ModalType.RequestLastTurnUndo
+      modalType == ModalType.RequestLastTurnUndo ||
+      modalType == ModalType.RequestChainLinkUndo
     )
       dispatch(submitButton({ button: { mode: PROCESS_INPUT.DECLINE_UNDO } }));
     else
@@ -79,50 +159,85 @@ export const EventsHandler = React.memo(() => {
   };
 
   useEffect(() => {
-    if (events) {
+    if (events && events !== lastProcessedEventsRef.current) {
+      lastProcessedEventsRef.current = events;
+      const CLASH_DISPLAY_DURATION = 7600;
+      const CLASH_FIRST_DURATION = 3600;
+
+      // Group CLASH events into rounds due to Trounce double clash and similar effects
+      const clashRounds: Array<
+        Array<{ playerId: number; cardNumber: string }>
+      > = [];
+      {
+        let currentRound: Array<{ playerId: number; cardNumber: string }> = [];
+        const seenPlayers = new Set<number>();
+        for (const event of events) {
+          if (event.eventType !== 'CLASH') continue;
+          const [pid, card] = (event.eventValue ?? '').split(':');
+          const playerId = parseInt(pid);
+          if (seenPlayers.has(playerId)) {
+            clashRounds.push(currentRound);
+            currentRound = [];
+            seenPlayers.clear();
+          }
+          currentRound.push({ playerId, cardNumber: card });
+          seenPlayers.add(playerId);
+        }
+        if (currentRound.length > 0) clashRounds.push(currentRound);
+      }
+
+      const hasMultipleRounds = clashRounds.length > 1;
+      let cumulativeDelay = 0;
+      clashRounds.forEach((round, roundIndex) => {
+        const isLastRound = roundIndex === clashRounds.length - 1;
+        const displayDuration =
+          hasMultipleRounds && !isLastRound
+            ? CLASH_FIRST_DURATION
+            : CLASH_DISPLAY_DURATION;
+        const startDelay = cumulativeDelay;
+        cumulativeDelay += displayDuration;
+        setTimeout(() => {
+          round.forEach(({ playerId, cardNumber }) => {
+            dispatch(setClashReveal({ playerId, cardNumber }));
+          });
+          if (isLastRound) {
+            setTimeout(() => {
+              dispatch(setClashReveal({ playerId: null, cardNumber: '' }));
+            }, displayDuration);
+          }
+        }, startDelay);
+      });
+
       for (const event of events) {
         switch (event.eventType) {
           case 'ROLL':
             toast(
               (t) => (
-                <div className={styles.card}>
+                <DismissibleToast t={t}>
                   Die rolled, result:
                   <div className={styles.die}>{dieRoll(event.eventValue)}</div>
-                </div>
+                </DismissibleToast>
               ),
               { duration: 5000 }
             );
             continue;
-          case 'REVEAL':
+          case 'REVEAL': {
+            const reveal = parseCardEvent(event.eventValue, playerID);
             toast(
               (t) => (
-                <div className={styles.card}>
-                  Card Revealed
-                  <CardDisplay
-                    card={{ cardNumber: event.eventValue ?? '' }}
-                    makeMeBigger
-                  />
-                </div>
+                <MovementEventCard
+                  type={event.eventType as MovementEventType}
+                  cardNumber={reveal.cardNumber}
+                  isPlayer={reveal.isPlayer}
+                  onDismiss={() => toast.dismiss(t.id)}
+                />
               ),
-              { duration: 5000 }
+              MOVEMENT_TOAST_OPTIONS
             );
-            continue;
-          case 'CLASH': {
-            const clashValue = event.eventValue ?? '';
-            const [clashPlayerID, clashCardNumber] = clashValue.split(':');
-            dispatch(
-              setClashReveal({
-                playerId: parseInt(clashPlayerID),
-                cardNumber: clashCardNumber
-              })
-            );
-            requestAnimationFrame(() => {
-              setTimeout(() => {
-                dispatch(setClashReveal({ playerId: null, cardNumber: '' }));
-              }, 5600);
-            });
             continue;
           }
+          case 'CLASH':
+            continue;
           case 'TURNARSENALFACEUP': {
             const arsenalValue = event.eventValue ?? '';
             const [arsenalPlayerID, arsenalCardNumber] =
@@ -140,48 +255,82 @@ export const EventsHandler = React.memo(() => {
             });
             continue;
           }
-          case 'DISCARD':
+          case 'ARSENALDESTROY': {
+            const destroyValue = event.eventValue ?? '';
+            const [destroyPlayerID, destroyCardNumber] =
+              destroyValue.split(':');
+            dispatch(
+              setArsenalDestroy({
+                playerId: parseInt(destroyPlayerID),
+                cardNumber: destroyCardNumber
+              })
+            );
+            requestAnimationFrame(() => {
+              setTimeout(() => {
+                dispatch(setArsenalDestroy({ playerId: null, cardNumber: '' }));
+              }, 1000);
+            });
+            continue;
+          }
+          case 'DISCARD': {
+            const discard = parseCardEvent(event.eventValue, playerID);
             toast(
               (t) => (
-                <div className={styles.card}>
-                  Card Discarded
-                  <CardDisplay
-                    card={{ cardNumber: event.eventValue ?? '' }}
-                    makeMeBigger
-                  />
-                </div>
+                <MovementEventCard
+                  type={event.eventType as MovementEventType}
+                  cardNumber={discard.cardNumber}
+                  isPlayer={discard.isPlayer}
+                  onDismiss={() => toast.dismiss(t.id)}
+                />
               ),
-              { duration: 5000 }
+              MOVEMENT_TOAST_OPTIONS
             );
             continue;
-          case 'BANISH':
+          }
+          case 'BANISH': {
+            const banish = parseCardEvent(event.eventValue, playerID);
             toast(
               (t) => (
-                <div className={styles.card}>
-                  Card Banished
-                  <CardDisplay
-                    card={{ cardNumber: event.eventValue ?? '' }}
-                    makeMeBigger
-                  />
-                </div>
+                <MovementEventCard
+                  type={event.eventType as MovementEventType}
+                  cardNumber={banish.cardNumber}
+                  isPlayer={banish.isPlayer}
+                  onDismiss={() => toast.dismiss(t.id)}
+                />
               ),
-              { duration: 5000 }
+              MOVEMENT_TOAST_OPTIONS
             );
             continue;
-          case 'SOUL':
+          }
+          case 'SOUL': {
+            const soul = parseCardEvent(event.eventValue, playerID);
             toast(
               (t) => (
-                <div className={styles.card}>
-                  Into Soul
-                  <CardDisplay
-                    card={{ cardNumber: event.eventValue ?? '' }}
-                    makeMeBigger
-                  />
-                </div>
+                <MovementEventCard
+                  type={event.eventType as MovementEventType}
+                  cardNumber={soul.cardNumber}
+                  isPlayer={soul.isPlayer}
+                  onDismiss={() => toast.dismiss(t.id)}
+                />
               ),
-              { duration: 5000 }
+              MOVEMENT_TOAST_OPTIONS
             );
             continue;
+          }
+          case 'HERO_TRANSFORM': {
+            const [transformPlayerID, cardNumber] = (
+              event.eventValue ?? ''
+            ).split(':');
+            const playerId = parseInt(transformPlayerID);
+            if (!cardNumber || (playerId !== 1 && playerId !== 2)) continue;
+            dispatch(setHeroTransform({ playerId, cardNumber }));
+            requestAnimationFrame(() => {
+              setTimeout(() => {
+                dispatch(setHeroTransform({ playerId: null, cardNumber: '' }));
+              }, 2350);
+            });
+            continue;
+          }
           case 'REQUESTCHAT':
             if (
               parseInt(event.eventValue ?? '0') !== playerID &&
@@ -223,6 +372,18 @@ export const EventsHandler = React.memo(() => {
               );
             }
             continue;
+          case 'REQUESTCHAINLINKUNDO':
+            if (
+              parseInt(event.eventValue ?? '0') !== playerID &&
+              playerID !== 3
+            ) {
+              setShowModal(true);
+              setModalType(ModalType.RequestChainLinkUndo);
+              setModal(
+                'Do you want to allow the opponent to revert to the start of the chain link?'
+              );
+            }
+            continue;
           case 'UNDODENIEDNOTICE':
             if (parseInt(event.eventValue ?? '0') === playerID) {
               toast.error(
@@ -231,7 +392,7 @@ export const EventsHandler = React.memo(() => {
               );
             }
             continue;
-          case 'SHUFFLE':
+          case 'SHUFFLE': {
             const PlayerShuffling =
               event.eventValue !== undefined
                 ? parseInt(event.eventValue)
@@ -249,7 +410,8 @@ export const EventsHandler = React.memo(() => {
               }, 1000);
             });
             continue;
-          case 'ADDBOTDECK':
+          }
+          case 'ADDBOTDECK': {
             const PlayerAddingCard =
               event.eventValue !== undefined
                 ? parseInt(event.eventValue.split(',')[0])
@@ -270,6 +432,7 @@ export const EventsHandler = React.memo(() => {
               }, 1000);
             });
             continue;
+          }
           default:
             continue;
         }
@@ -282,11 +445,13 @@ export const EventsHandler = React.memo(() => {
       <>
         {createPortal(
           <dialog open className={styles.modal}>
-            <article className={styles.container}>
-              <header>{modal}</header>
-              <button onClick={clickYes}>Yes</button>
-              <button onClick={clickNo}>No</button>
-            </article>
+            <div className={styles.container}>
+              <div className={styles.dialogHeader}>{modal}</div>
+              <div className={styles.dialogFooter}>
+                <button onClick={clickYes}>{t('GAME_LOBBY.YES')}</button>
+                <button onClick={clickNo}>{t('GAME_LOBBY.NO')}</button>
+              </div>
+            </div>
           </dialog>,
           document.body
         )}

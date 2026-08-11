@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useAppSelector, useAppDispatch } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import styles from './ActionPointDisplay.module.css';
@@ -55,9 +55,14 @@ export default function ActionPointDisplay(props: ActionPointDisplayProps) {
     previousAPRef.current = APAvailable;
   }, [APAvailable, dispatch, props.isPlayer]);
 
-  const handleActionPointPopupComplete = (id: string) => {
-    dispatch(removeActionPointPopup({ isPlayer: props.isPlayer || false, id }));
-  };
+  const handleActionPointPopupComplete = useCallback(
+    (id: string) => {
+      dispatch(
+        removeActionPointPopup({ isPlayer: props.isPlayer || false, id })
+      );
+    },
+    [dispatch, props.isPlayer]
+  );
 
   const isOtherPlayerTurn = Number(turnPlayer) === Number(otherPlayer);
   const shouldShowRedImage = props.isPlayer
@@ -70,7 +75,9 @@ export default function ActionPointDisplay(props: ActionPointDisplayProps) {
 
   return (
     <div className={styles.actionPointDisplay}>
-      <div className={actionPointClass}>{`${APAvailable} AP`}</div>
+      <div className={actionPointClass}>
+        <span className={styles.tick}>{`${APAvailable} AP`}</span>
+      </div>
       {actionPointPopups.map((popup) => (
         <ActionPointPopup
           key={popup.id}

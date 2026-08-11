@@ -1,23 +1,25 @@
 import { useState, useEffect } from 'react';
 
-function getWindowDimensions() {
-  const { innerWidth: width, innerHeight: height } = window;
-  return [width, height];
-}
-
-export default function useWindowDimensions() {
-  const [windowDimensions, setWindowDimensions] = useState(
-    getWindowDimensions()
-  );
+export default function useWindowDimensions(): [number, number] {
+  const [dims, setDims] = useState<[number, number]>(() => [
+    window.innerWidth,
+    window.innerHeight
+  ]);
 
   useEffect(() => {
-    function handleResize() {
-      setWindowDimensions(getWindowDimensions());
-    }
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    let rafId = 0;
+    const handleResize = () => {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        setDims([window.innerWidth, window.innerHeight]);
+      });
+    };
+    window.addEventListener('resize', handleResize, { passive: true });
+    return () => {
+      cancelAnimationFrame(rafId);
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
-  return windowDimensions;
+  return dims;
 }

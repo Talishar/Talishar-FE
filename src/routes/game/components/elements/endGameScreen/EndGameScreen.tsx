@@ -1,38 +1,41 @@
 import React, { useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
-import { useAppSelector } from 'app/Hooks';
+import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import styles from './EndGameScreen.module.css';
-import { useGetPopUpContentQuery } from 'features/api/apiSlice';
-import { END_GAME_STATS } from 'appConstants';
-import { getGameInfo } from 'features/game/GameSlice';
+import { useGetHeroMasteryQuery, useGetPopUpContentQuery } from 'features/api/apiSlice';
+import { END_GAME_STATS, PROCESS_INPUT } from 'appConstants';
+import { getGameInfo, submitButton } from 'features/game/GameSlice';
 import EndGameStats, {
-  EndGameData,
-  EndGameStatsRef
+  type EndGameData,
+  type EndGameStatsRef
 } from '../endGameStats/EndGameStats';
 import EndGameMenuOptions from '../endGameMenuOptions/EndGameMenuOptions';
 import { shallowEqual } from 'react-redux';
 import useShowModal from 'hooks/useShowModals';
-import { FaEye, FaEyeSlash, FaEllipsisH, FaList, FaExchangeAlt } from 'react-icons/fa';
+import { FaEye, FaEyeSlash, FaEllipsisH, FaExchangeAlt } from 'react-icons/fa';
 import classNames from 'classnames';
-import useAuth from 'hooks/useAuth';
 import { PiFileCsvFill, PiCameraFill } from 'react-icons/pi';
-import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
+import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import MetafyLogo from 'img/MetafyGradient.svg';
+import { useTranslation } from 'react-i18next';
+import useAuth from 'hooks/useAuth';
+import MasteryProgressCard from 'features/mastery/MasteryProgressCard';
 
 const EndGameScreen = () => {
+  const dispatch = useAppDispatch();
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const gameState = useAppSelector((state: any) => state.game, shallowEqual);
+  const { t } = useTranslation();
+  const { isLoggedIn } = useAuth();
   const [playerID, setPlayerID] = useState(gameInfo.playerID === 2 ? 2 : 1);
   const [showStats, setShowStats] = useState(true);
-  const [showFullLog, setShowFullLog] = useState(false);
   const [bothPlayersData, setBothPlayersData] = useState<{
     [key: number]: any;
   }>({});
   const [moreOpen, setMoreOpen] = useState(false);
   const moreBtnRef = useRef<HTMLButtonElement>(null);
   const [menuStyle, setMenuStyle] = useState<React.CSSProperties>({});
-  const { isPatron } = useAuth();
   const { isSupporter } = useSupporterStatus();
   const endGameStatsRef = useRef<EndGameStatsRef>(null);
   const { data, isLoading, error } = useGetPopUpContentQuery({
@@ -41,6 +44,10 @@ const EndGameScreen = () => {
     authKey: gameInfo.authKey,
     popupType: END_GAME_STATS
   });
+  const { data: masteryData } = useGetHeroMasteryQuery(
+    { gameKey: `talishar:${gameInfo.gameID}`, scope: 'award' },
+    { skip: !isLoggedIn || !!gameInfo.roguelikeGameID }
+  );
 
   // Cache both players' data as they're loaded
   React.useEffect(() => {
@@ -55,8 +62,6 @@ const EndGameScreen = () => {
   const cardListBoxClasses = classNames(styles.cardListBox, {
     [styles.reduced]: !showStats
   });
-  const fullLogClasses = classNames(styles.fullLog, {});
-
   // Extract heroes from API data first (most reliable source)
   // If API doesn't have them, try gameState as fallback
   const yourHero =
@@ -80,27 +85,9 @@ const EndGameScreen = () => {
   let content;
 
   if (isLoading) {
-    content = <div>Loading...</div>;
+    content = <div>{t('END_GAME.LOADING')}</div>;
   } else if (error) {
     content = <div>{JSON.stringify(error)}</div>;
-  } else if (showFullLog) {
-    if (isPatron) {
-      content = (
-        <div className={fullLogClasses}>
-          {parseHtmlToReactElements(data.fullLog)}
-        </div>
-      );
-    } else {
-      content = (
-        <div>
-          Support our{' '}
-          <a href="https://metafy.gg/@talishar/members" target="_blank">
-            Metafy
-          </a>{' '}
-          to access this feature.
-        </div>
-      );
-    }
   } else {
     const endGameDataWithHeroes: EndGameData = {
       ...(data as EndGameData),
@@ -111,20 +98,40 @@ const EndGameScreen = () => {
       gameID: gameInfo.gameID?.toString(),
       bothPlayersData: bothPlayersData
     };
-    content = <EndGameStats ref={endGameStatsRef} {...endGameDataWithHeroes} />;
+    const masteryProgress = masteryData?.gameAward ? (
+      <MasteryProgressCard
+        heroId={masteryData.gameAward.heroId}
+        games={masteryData.gameAward.gamesAfter}
+        level={masteryData.gameAward.levelAfter}
+        nextThreshold={masteryData.gameAward.nextThreshold}
+        gamesToNext={masteryData.gameAward.gamesToNext}
+        unlocked={masteryData.gameAward.unlocked}
+        compact
+        showPortrait
+      />
+    ) : undefined;
+
+    content = (
+      <EndGameStats
+        ref={endGameStatsRef}
+        {...endGameDataWithHeroes}
+        masteryProgress={masteryProgress}
+      />
+    );
   }
 
   const switchPlayer = () => {
     playerID === 2 ? setPlayerID(1) : setPlayerID(2);
-    setMoreOpen(false);
   };
 
   const toggleShowStats = () => {
     setShowStats(!showStats);
   };
 
-  const toggleShowFullLog = () => {
-    setShowFullLog(!showFullLog);
+  const handleSwapHeroesRematch = () => {
+    dispatch(
+      submitButton({ button: { mode: PROCESS_INPUT.SWAP_HEROES_REMATCH } })
+    );
     setMoreOpen(false);
   };
 
@@ -164,64 +171,94 @@ const EndGameScreen = () => {
         <>
           <div className={styles.cardListTitleContainer}>
             <div className={styles.cardListTitle}>
-              <h2 className={styles.title}>Game Over Summary</h2>
+              <h2 className={styles.title}>{t('END_GAME.GAME_SUMMARY')}</h2>
               <div className={styles.menuOptionsWrapper}>
-                <EndGameMenuOptions />
+                <EndGameMenuOptions onSwitchPlayer={switchPlayer} />
               </div>
               <div className={styles.buttonGroup}>
                 <button
                   ref={moreBtnRef}
                   className={styles.buttonDiv}
                   onClick={handleOpenMore}
-                  aria-label="More options"
+                  aria-label={t('END_GAME.MORE_OPTIONS')}
                 >
-                  <FaEllipsisH aria-hidden="true" />&nbsp;More
+                  <FaEllipsisH aria-hidden="true" />
+                  &nbsp;{t('END_GAME.MORE')}
                 </button>
-                {moreOpen && ReactDOM.createPortal(
-                  <>
-                    <div
-                      className={styles.dropdownBackdrop}
-                      onClick={() => setMoreOpen(false)}
-                    />
-                    <div className={styles.dropdownMenu} style={menuStyle}>
-                      {!showFullLog && (
-                        <>
-                          <button className={styles.dropdownItem} onClick={handleExportStats}>
-                            <PiCameraFill aria-hidden="true" className={styles.dropdownIcon} /> Export as Image
+                {moreOpen &&
+                  ReactDOM.createPortal(
+                    <>
+                      <div
+                        className={styles.dropdownBackdrop}
+                        onClick={() => setMoreOpen(false)}
+                      />
+                      <div className={styles.dropdownMenu} style={menuStyle}>
+                        {!gameInfo.roguelikeGameID && (
+                          <button
+                            className={styles.dropdownItem}
+                            onClick={handleSwapHeroesRematch}
+                          >
+                            <FaExchangeAlt
+                              aria-hidden="true"
+                              className={styles.dropdownIcon}
+                            />{' '}
+                            {t('END_GAME.SWAP_AND_REMATCH')}
                           </button>
-                          <button className={styles.dropdownItem} onClick={handleExportCSV}>
-                            <PiFileCsvFill aria-hidden="true" className={styles.dropdownIcon} style={{ fontSize: '1.6em' }} /> Export as CSV
-                          </button>
-                        </>
-                      )}
-                      <button className={styles.dropdownItem} onClick={toggleShowFullLog}>
-                        <FaList aria-hidden="true" className={styles.dropdownIcon} /> {showFullLog ? 'Back to Stats' : 'Full Game Log'}
-                      </button>
-                      <button className={styles.dropdownItem} onClick={switchPlayer}>
-                        <FaExchangeAlt aria-hidden="true" className={styles.dropdownIcon} /> Switch Player Stats
-                      </button>
-                    </div>
-                  </>,
-                  document.body
-                )}
-                <div className={styles.buttonDiv} onClick={toggleShowStats}>
+                        )}
+                        <button
+                          className={styles.dropdownItem}
+                          onClick={handleExportStats}
+                        >
+                          <PiCameraFill
+                            aria-hidden="true"
+                            className={styles.dropdownIcon}
+                          />{' '}
+                          {t('END_GAME.EXPORT_AS_IMAGE')}
+                        </button>
+                        <button
+                          className={styles.dropdownItem}
+                          onClick={handleExportCSV}
+                        >
+                          <PiFileCsvFill
+                            aria-hidden="true"
+                            className={styles.dropdownIcon}
+                            style={{ fontSize: '1.6em' }}
+                          />{' '}
+                          {t('END_GAME.EXPORT_AS_CSV')}
+                        </button>
+                      </div>
+                    </>,
+                    document.body
+                  )}
+                <button
+                  type="button"
+                  className={`${styles.buttonDiv} ${styles.iconButton}`}
+                  onClick={toggleShowStats}
+                  aria-label={t('END_GAME.HIDE_STATS')}
+                >
                   <FaEye aria-hidden="true" fontSize={'1.5em'} />
-                </div>
+                </button>
               </div>
             </div>
           </div>
           {!isSupporter && !isLoading && !error && (
             <a
-              href="https://metafy.gg/@talishar/members"
+              href={TALISHAR_METAFY_URL}
               target="_blank"
               rel="noopener noreferrer"
               className={styles.supportCta}
             >
-              <img src={MetafyLogo} alt="Metafy" className={styles.supportCtaLogo} />
+              <img
+                src={MetafyLogo}
+                alt={t('END_GAME.METAFY')}
+                className={styles.supportCtaLogo}
+              />
               <span className={styles.supportCtaText}>
-                Enjoyed the game? Help Us Keep Talishar Free
+                {t('END_GAME.SUPPORT_CTA_TITLE')}
               </span>
-              <span className={styles.supportCtaAction}>Support us</span>
+              <span className={styles.supportCtaAction}>
+                {t('END_GAME.SUPPORT_CTA_ACTION')}
+              </span>
             </a>
           )}
           {content}
@@ -230,11 +267,16 @@ const EndGameScreen = () => {
       {!showStats && (
         <div className={styles.cardListTitleContainer}>
           <div className={styles.cardListTitle}>
-            <h2 className={styles.title}>Game Over Summary</h2>
+            <h2 className={styles.title}>{t('END_GAME.GAME_SUMMARY')}</h2>
             <div className={styles.buttonGroup}>
-              <div className={styles.buttonDiv} onClick={toggleShowStats}>
+              <button
+                type="button"
+                className={`${styles.buttonDiv} ${styles.iconButton}`}
+                onClick={toggleShowStats}
+                aria-label={t('END_GAME.SHOW_STATS')}
+              >
                 <FaEyeSlash aria-hidden="true" fontSize={'1.5em'} />
-              </div>
+              </button>
             </div>
           </div>
         </div>

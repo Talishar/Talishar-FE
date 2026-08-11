@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useAppSelector } from 'app/Hooks';
 import { getSettingsEntity } from 'features/options/optionsSlice';
-import { getGameInfo } from 'features/game/GameSlice';
 import * as optConst from 'features/options/constants';
+import { RootState } from 'app/Store';
 import classNames from 'classnames';
 
 import ArsenalZone from '../zones/arsenalZone/ArsenalZone';
@@ -19,52 +19,68 @@ import PitchZone from '../zones/pitchZone/PitchZone';
 import WeaponLZone from '../zones/weaponLZone/WeaponLZone';
 import WeaponRZone from '../zones/weaponRZone/WeaponRZone';
 import ZoneCounts from '../zones/zoneCountsZone/ZoneCounts';
-import CombatChain from '../combatChain/CombatChain';
-import PlayerPrompt from '../elements/playerPrompt/PlayerPrompt';
+import CombatChain, {
+  CombatChainPlayerPrompt
+} from '../combatChain/CombatChain';
 import Playmat from '../elements/playmat';
+import AmbientParticles from '../elements/ambientParticles';
 
 import styles from './GridBoard.module.css';
 import { useCookies } from 'react-cookie';
 import ExperimentalTurnWidget from '../elements/experimentalTurnWidget';
 import TurnWidget from '../elements/turnWidget/TurnWidget';
-import { createPortal } from 'react-dom';
 import ManualModePanel from '../leftColumn/ManualModePanel/ManualModePanel';
+import usePlayerPromptOwner from '../elements/playerPrompt/usePlayerPromptOwner';
 
 const GridBoard = () => {
   const [cookies] = useCookies(['experimental']);
-  const settingsData = useAppSelector(getSettingsEntity);
-  const { playerID, isReplay } = useAppSelector(getGameInfo);
-  const spectatorCameraView = useAppSelector(
-    (state: any) => state.game.spectatorCameraView
+  const playerID = useAppSelector(
+    (state: RootState) => state.game.gameInfo.playerID
   );
-  const isMirroredOpponent =
-    settingsData?.[optConst.MIRRORED_BOARD_LAYOUT]?.value === '1';
-  const isMirroredPlayer =
-    settingsData?.[optConst.MIRRORED_PLAYER_BOARD_LAYOUT]?.value === '1';
+  const isReplay = useAppSelector(
+    (state: RootState) => state.game.gameInfo.isReplay
+  );
+  const spectatorCameraView = useAppSelector(
+    (state: RootState) => state.game.spectatorCameraView
+  );
+  const promptOwner = usePlayerPromptOwner();
+  const isMirroredOpponent = useAppSelector(
+    (state: RootState) =>
+      getSettingsEntity(state)?.[optConst.MIRRORED_BOARD_LAYOUT]?.value === '1'
+  );
+  const isMirroredPlayer = useAppSelector(
+    (state: RootState) =>
+      getSettingsEntity(state)?.[optConst.MIRRORED_PLAYER_BOARD_LAYOUT]
+        ?.value === '1'
+  );
 
   // For spectators and replay viewers, check if they want to view from player 2's perspective
-  const isSpectatorViewingPlayer2 = (playerID === 3 || isReplay) && spectatorCameraView === 2;
-
-  const gridBoardClass = classNames({
-    // Swapped spectator views (with optional mirroring)
-    [styles.SwappedGameBoardGrid]:
-      isSpectatorViewingPlayer2 && !isMirroredOpponent && !isMirroredPlayer,
-    [styles.SwappedMirroredOpponentGameBoardGrid]:
-      isSpectatorViewingPlayer2 && isMirroredOpponent && !isMirroredPlayer,
-    [styles.SwappedMirroredPlayerGameBoardGrid]:
-      isSpectatorViewingPlayer2 && isMirroredPlayer && !isMirroredOpponent,
-    [styles.SwappedMirroredBothGameBoardGrid]:
-      isSpectatorViewingPlayer2 && isMirroredOpponent && isMirroredPlayer,
-    // Normal views (non-spectator or spectator viewing player 1)
-    [styles.gameBoardGrid]:
-      !isSpectatorViewingPlayer2 && !isMirroredOpponent && !isMirroredPlayer,
-    [styles.MirroredOpponentGameBoardGrid]:
-      !isSpectatorViewingPlayer2 && isMirroredOpponent && !isMirroredPlayer,
-    [styles.MirroredPlayerGameBoardGrid]:
-      !isSpectatorViewingPlayer2 && isMirroredPlayer && !isMirroredOpponent,
-    [styles.MirroredBothGameBoardGrid]:
-      !isSpectatorViewingPlayer2 && isMirroredOpponent && isMirroredPlayer
-  });
+  const isSpectatorViewingPlayer2 =
+    (playerID === 3 || isReplay) && spectatorCameraView === 2;
+  const gridBoardClass = useMemo(
+    () =>
+      classNames({
+        [styles.SwappedGameBoardGrid]:
+          isSpectatorViewingPlayer2 && !isMirroredOpponent && !isMirroredPlayer,
+        [styles.SwappedMirroredOpponentGameBoardGrid]:
+          isSpectatorViewingPlayer2 && isMirroredOpponent && !isMirroredPlayer,
+        [styles.SwappedMirroredPlayerGameBoardGrid]:
+          isSpectatorViewingPlayer2 && isMirroredPlayer && !isMirroredOpponent,
+        [styles.SwappedMirroredBothGameBoardGrid]:
+          isSpectatorViewingPlayer2 && isMirroredOpponent && isMirroredPlayer,
+        [styles.gameBoardGrid]:
+          !isSpectatorViewingPlayer2 &&
+          !isMirroredOpponent &&
+          !isMirroredPlayer,
+        [styles.MirroredOpponentGameBoardGrid]:
+          !isSpectatorViewingPlayer2 && isMirroredOpponent && !isMirroredPlayer,
+        [styles.MirroredPlayerGameBoardGrid]:
+          !isSpectatorViewingPlayer2 && isMirroredPlayer && !isMirroredOpponent,
+        [styles.MirroredBothGameBoardGrid]:
+          !isSpectatorViewingPlayer2 && isMirroredOpponent && isMirroredPlayer
+      }),
+    [isSpectatorViewingPlayer2, isMirroredOpponent, isMirroredPlayer]
+  );
 
   return (
     <>
@@ -159,8 +175,10 @@ const GridBoard = () => {
         </div>
         <Playmat isPlayer={false} />
         <Playmat isPlayer={true} />
+        <AmbientParticles />
         <div className={styles.combatChain}>
           <CombatChain />
+          {promptOwner === 'board' && <CombatChainPlayerPrompt standalone />}
         </div>
       </div>
     </>

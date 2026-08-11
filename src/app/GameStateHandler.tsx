@@ -5,6 +5,7 @@ import {
   getGameInfo,
   receiveGameState,
   setGameStart,
+  setOpponentPresence,
   setOpponentTyping
 } from 'features/game/GameSlice';
 import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
@@ -19,12 +20,12 @@ import {
 } from 'utils/LocalKeyManagement';
 import ParseGameState from './ParseGameState';
 import { toast } from 'react-hot-toast';
-import { useGetFriendsListQuery } from 'features/api/apiSlice';
-import useAuth from 'hooks/useAuth';
+import { useTranslation } from 'react-i18next';
 
 const MAX_RETRIES = 5;
 
 const GameStateHandler = () => {
+  const { t } = useTranslation();
   const { gameID } = useParams();
   const gameInfo = useAppSelector(getGameInfo);
   const currentUserName = useAppSelector(selectCurrentUserName);
@@ -38,15 +39,23 @@ const GameStateHandler = () => {
   );
   const navigate = useNavigate();
 
-  const { isLoggedIn } = useAuth();
-  const { data: friendsData } = useGetFriendsListQuery(undefined, {
-    skip: !isLoggedIn
-  });
-
   const sourceRef = useRef<EventSource | null>(null);
   const gameParamsRef = useRef({ gameID: 0, playerID: 0, authKey: '' });
   const retryCountRef = useRef(0);
+  const lastEventTimeRef = useRef(Date.now());
+  const retryTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const navigateTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [forceRetry, setForceRetry] = useState(0);
+  const gameOverRef = useRef(false);
+
+  useEffect(() => {
+    return () => {
+      if (navigateTimerRef.current !== null) {
+        clearTimeout(navigateTimerRef.current);
+        navigateTimerRef.current = null;
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const currentGameID = parseInt(gameID ?? gameName);
@@ -95,18 +104,6 @@ const GameStateHandler = () => {
     dispatch
   ]);
 
-  // Sync friends list to sessionStorage whenever it's fetched
-  useEffect(() => {
-    if (friendsData?.friends) {
-      try {
-        const friendsList = friendsData.friends.map((f) => f.username);
-        sessionStorage.setItem('friendsList', JSON.stringify(friendsList));
-      } catch (e) {
-        console.error('Failed to sync friendsList to sessionStorage:', e);
-      }
-    }
-  }, [friendsData?.friends]);
-
   // SSE connection to game server
   useEffect(() => {
     const currentGameID = gameInfo.gameID;
@@ -118,9 +115,14 @@ const GameStateHandler = () => {
       return;
     }
 
+    if (currentPlayerID === 3 && !currentUserName) {
+      return;
+    }
+
     // Reset retry count when the game changes
     if (gameParamsRef.current.gameID !== currentGameID) {
       retryCountRef.current = 0;
+      gameOverRef.current = false;
       gameParamsRef.current = {
         gameID: currentGameID,
         playerID: currentPlayerID,
@@ -133,32 +135,33 @@ const GameStateHandler = () => {
       sourceRef.current = null;
     }
 
+    const scheduleRetry = (delay: number) => {
+      if (retryTimerRef.current !== null) {
+        clearTimeout(retryTimerRef.current);
+      }
+      retryTimerRef.current = setTimeout(() => {
+        retryTimerRef.current = null;
+        setForceRetry((prev) => prev + 1);
+      }, delay);
+    };
+
     // Small delay to ensure the page is ready before connecting
     const connectionTimeout = setTimeout(() => {
       try {
-        let friendsList: string[] = [];
-        try {
-          const stored = sessionStorage.getItem('friendsList');
-          if (stored) {
-            friendsList = JSON.parse(stored);
-          }
-        } catch {
-          // Continue without friendsList
-        }
-
-        const resolvedUserName = getCurrentUsername(currentUserName) ?? '';
         const source = new EventSource(
-          `${BACKEND_URL}GetUpdateSSE.php?gameName=${currentGameID}&playerID=${currentPlayerID}&authKey=${currentAuthKey}&friendsList=${encodeURIComponent(
-            JSON.stringify(friendsList)
-          )}&userName=${encodeURIComponent(resolvedUserName)}`
+          `${BACKEND_URL}GetUpdateSSE.php?gameName=${currentGameID}&playerID=${currentPlayerID}&authKey=${currentAuthKey}`,
+          { withCredentials: true }
         );
         sourceRef.current = source;
 
         let hasConnected = false;
 
+        lastEventTimeRef.current = Date.now();
+
         source.onmessage = (event) => {
           hasConnected = true;
           retryCountRef.current = 0;
+          lastEventTimeRef.current = Date.now();
 
           try {
             const data = JSON.parse(event.data);
@@ -170,9 +173,22 @@ const GameStateHandler = () => {
                 errorMsg.includes('game no longer exists') ||
                 errorMsg.includes('does not exist')
               ) {
-                toast.error(`Game Error: ${data.error}`);
+                toast.error(
+                  t('GAME_STATE.GAME_ERROR', { message: data.error })
+                );
                 source.close();
-                setTimeout(() => navigate('/'), 60000);
+                if (navigateTimerRef.current === null) {
+                  navigateTimerRef.current = setTimeout(() => {
+                    navigateTimerRef.current = null;
+                    navigate('/');
+                  }, 60000);
+                }
+                return;
+              }
+
+              if (errorMsg.includes('required to spectate')) {
+                toast.error(t('SPECTATOR.LOGIN_REQUIRED_BODY'));
+                source.close();
                 return;
               }
 
@@ -180,30 +196,60 @@ const GameStateHandler = () => {
                 errorMsg.includes('invalid auth') ||
                 errorMsg.includes('authkey')
               ) {
-                toast.error(`Authentication Error: ${data.error}`);
+                toast.error(
+                  t('GAME_STATE.AUTH_ERROR', { message: data.error })
+                );
                 source.close();
                 return;
               }
 
-              toast.error(`Server Error: ${data.error}`);
+              toast.error(
+                t('GAME_STATE.SERVER_ERROR', { message: data.error })
+              );
               return;
             }
 
-            dispatch(receiveGameState(ParseGameState(data)));
+            const parsedState = ParseGameState(data);
+
+            const phase = parsedState.turnPhase?.turnPhase;
+            if (phase === 'OVER') {
+              gameOverRef.current = true;
+            } else if (phase !== undefined && phase !== 'YESNO') {
+              gameOverRef.current = false;
+            }
+
+            dispatch(receiveGameState(parsedState));
           } catch (parseError) {
             console.error('Failed to parse SSE data:', parseError);
           }
         };
 
-        // This replaces the old CheckOpponentTyping polling entirely.
+        // Typing state arrives as a named SSE event.
         source.addEventListener('typing', (event: MessageEvent) => {
+          lastEventTimeRef.current = Date.now();
           try {
             const data = JSON.parse(event.data);
             if (typeof data.opponentIsTyping === 'boolean') {
               dispatch(setOpponentTyping(data.opponentIsTyping));
             }
           } catch {
+            return;
           }
+        });
+
+        source.addEventListener('presence', (event: MessageEvent) => {
+          lastEventTimeRef.current = Date.now();
+          try {
+            const data = JSON.parse(event.data);
+            dispatch(setOpponentPresence(data.opponentPresence ?? null));
+          } catch {
+            return;
+          }
+        });
+
+        source.addEventListener('hb', () => {
+          hasConnected = true;
+          lastEventTimeRef.current = Date.now();
         });
 
         source.onerror = () => {
@@ -211,9 +257,11 @@ const GameStateHandler = () => {
           source.close();
           sourceRef.current = null;
 
+          if (gameOverRef.current) return;
+
           if (!hasConnected && retryCountRef.current === 1) {
-            // Transient interruption during page load — retry once quickly
-            setTimeout(() => setForceRetry((prev) => prev + 1), 500);
+            // Transient interruption during page load - retry once quickly
+            scheduleRetry(500);
             return;
           }
 
@@ -222,17 +270,26 @@ const GameStateHandler = () => {
               500 * Math.pow(2, retryCountRef.current),
               5000
             );
-            setTimeout(() => setForceRetry((prev) => prev + 1), retryDelay);
+            scheduleRetry(retryDelay);
           } else {
-            toast.error(
-              'Connection to game server lost. Please refresh the page.'
-            );
+            if (retryCountRef.current === MAX_RETRIES + 1) {
+              toast.error(t('GAME_STATE.CONNECTION_LOST'));
+            }
+            scheduleRetry(10000);
           }
         };
       } catch (error) {
         console.error('Failed to create EventSource:', error);
       }
     }, 100);
+
+    const stalenessWatchdog = setInterval(() => {
+      if (gameOverRef.current) return;
+      if (Date.now() - lastEventTimeRef.current > 45000) {
+        lastEventTimeRef.current = Date.now();
+        setForceRetry((prev) => prev + 1);
+      }
+    }, 10000);
 
     const handleBeforeUnload = () => {
       if (sourceRef.current) {
@@ -245,13 +302,27 @@ const GameStateHandler = () => {
 
     return () => {
       clearTimeout(connectionTimeout);
+      clearInterval(stalenessWatchdog);
+      if (retryTimerRef.current !== null) {
+        clearTimeout(retryTimerRef.current);
+        retryTimerRef.current = null;
+      }
       window.removeEventListener('beforeunload', handleBeforeUnload);
       if (sourceRef.current) {
         sourceRef.current.close();
         sourceRef.current = null;
       }
     };
-  }, [gameInfo.gameID, gameInfo.playerID, gameInfo.authKey, forceRetry, dispatch, navigate]);
+  }, [
+    gameInfo.gameID,
+    gameInfo.playerID,
+    gameInfo.authKey,
+    currentUserName,
+    forceRetry,
+    dispatch,
+    navigate,
+    t
+  ]);
 
   useEffect(() => {
     if (isFullRematch && gameID) {

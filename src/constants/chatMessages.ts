@@ -3,8 +3,7 @@
  * Used for sending quick chat messages in game
  */
 export const CHAT_WHEEL = new Map<number, string>([
-  [1, 'Hello'],
-  [2, 'Good luck, have fun'],
+  [24, 'Hello, good luck have fun!'],
   [3, 'Are you there?'],
   [4, 'Be right back'],
   [5, 'Can I undo?'],
@@ -14,11 +13,13 @@ export const CHAT_WHEEL = new Map<number, string>([
   [9, 'Sorry'],
   [10, 'Refresh the page'],
   [11, 'Good Game!'],
+  [16, 'Do you want to undo?'],
+  [2, 'Good luck, have fun'],
+  [1, 'Hello'],
   [12, 'I have to go'],
   [13, 'I think there is a bug'],
   [14, 'No thanks'],
   [15, 'Okay!'],
-  [16, 'Do you want to undo?'],
   [17, 'Rematch?'],
   [18, 'Thanks!'],
   [19, 'That was really cool!'],

@@ -266,11 +266,26 @@
   background: rgba(255, 255, 255, 0.055);
 }
 
-.resourceCardBody h4 {
-  margin: 0 0 0.35em 0;
+.resourceCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.65em;
+  margin: 0 0 0.7em;
+}
+
+.resourceCardHeader h4 {
+  margin: 0;
   font-size: 0.975rem;
   color: #fff;
   font-weight: 600;
+}
+
+.resourceLogo {
+  display: block;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  object-fit: contain;
 }
 
 .resourceCardBody p {

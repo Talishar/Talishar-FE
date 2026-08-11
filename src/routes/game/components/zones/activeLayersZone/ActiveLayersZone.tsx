@@ -1,22 +1,55 @@
-import React from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import styles from './ActiveLayersZone.module.css';
-import { motion, AnimatePresence } from 'framer-motion';
+import {
+  motion,
+  AnimatePresence,
+  useReducedMotion,
+  useMotionValue,
+  useTransform
+} from 'framer-motion';
 import ReorderLayers from './ReorderLayers';
 import useShowModal from 'hooks/useShowModals';
+import useOpponentPresencePrompt from 'hooks/useOpponentPresencePrompt';
 import { submitButton } from 'features/game/GameSlice';
 import { PROCESS_INPUT } from 'appConstants';
 import {
   parseHtmlToReactElements,
   parseTextToElements
 } from 'utils/ParseEscapedString';
+import { wrapKeywordsInNodes } from '../../elements/keywordPopover';
 import { BiTargetLock } from 'react-icons/bi';
+import { MdDragHandle, MdOpenWith, MdHeight } from 'react-icons/md';
 import Button from '../../../../../features/Button';
+import { Card } from 'features/Card';
+import { useTranslation } from 'react-i18next';
+import { groupConsecutiveCards } from './groupConsecutiveCards';
+import usePlayerPromptOwner from '../../elements/playerPrompt/usePlayerPromptOwner';
+
+const GROUPING_THRESHOLD = 1;
+const STORAGE_KEY_Y = 'activeLayersPositionY';
+const STORAGE_KEY_X = 'activeLayersPositionX';
+const STORAGE_KEY_X_ENABLED = 'activeLayersXDragEnabled';
+const MAX_Y_OFFSET = 52;
+const MIN_Y_OFFSET = -25;
+const MAX_X_OFFSET = 40;
+const MIN_X_OFFSET = -20;
+// Matches the @media (max-width: 768px) breakpoint in ActiveLayersZone.module.css
+const MOBILE_BREAKPOINT = 768;
 
 export default function ActiveLayersZone() {
   const showModal = useShowModal();
+  const promptOwner = usePlayerPromptOwner();
+  const { t } = useTranslation();
+  const prefersReducedMotion = useReducedMotion();
   const activeLayer = useAppSelector(
     (state: RootState) => state.game.activeLayers
   );
@@ -26,18 +59,162 @@ export default function ActiveLayersZone() {
   const playerPrompt = useAppSelector(
     (state: RootState) => state.game.playerPrompt
   );
+  const helpText = useOpponentPresencePrompt(playerPrompt?.helpText);
 
   const dispatch = useAppDispatch();
-  const staticCards = activeLayer?.cardList?.filter(
-    (card) => card.reorderable === false
-  );
-  const reorderableCards = activeLayer?.cardList?.filter(
-    (card) => card.reorderable
-  );
 
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
   );
+
+  const [staticCards, reorderableCards] = useMemo(() => {
+    if (!activeLayer?.cardList) return [undefined, undefined];
+
+    const staticCardList: Card[] = [];
+    const reorderableCardList: Card[] = [];
+    for (const card of activeLayer.cardList) {
+      if (card.reorderable) reorderableCardList.push(card);
+      else if (card.reorderable === false) staticCardList.push(card);
+    }
+
+    return [staticCardList, reorderableCardList];
+  }, [activeLayer?.cardList]);
+  const cardGroups = useMemo(
+    () => (staticCards ? groupConsecutiveCards(staticCards, playerID) : []),
+    [staticCards, playerID]
+  );
+
+  const yOffsetMV = useMotionValue(
+    parseFloat(localStorage.getItem(STORAGE_KEY_Y) ?? '') || 0
+  );
+  const yOffsetDvh = useTransform(yOffsetMV, (v) => `${v}dvh`);
+  const dragStartYRef = useRef(0);
+  const dragStartOffsetRef = useRef(yOffsetMV.get());
+
+  const xOffsetMV = useMotionValue(
+    parseFloat(localStorage.getItem(STORAGE_KEY_X) ?? '') || 0
+  );
+  const xOffsetDvw = useTransform(xOffsetMV, (v) => `${v}dvw`);
+  const dragStartXRef = useRef(0);
+  const dragStartOffsetXRef = useRef(xOffsetMV.get());
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [xDragEnabled, setXDragEnabled] = useState(
+    localStorage.getItem(STORAGE_KEY_X_ENABLED) !== 'false'
+  );
+
+  const disableXDrag = useCallback(() => {
+    setXDragEnabled(false);
+    localStorage.setItem(STORAGE_KEY_X_ENABLED, 'false');
+    xOffsetMV.set(0);
+    localStorage.setItem(STORAGE_KEY_X, '0');
+  }, [xOffsetMV]);
+
+  const toggleXDrag = () => {
+    if (xDragEnabled) {
+      disableXDrag();
+    } else {
+      setXDragEnabled(true);
+      localStorage.setItem(STORAGE_KEY_X_ENABLED, 'true');
+    }
+  };
+
+  useEffect(() => {
+    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`);
+    if (mql.matches) disableXDrag();
+
+    const handleChange = (e: MediaQueryListEvent) => {
+      if (e.matches) disableXDrag();
+    };
+    mql.addEventListener('change', handleChange);
+    return () => mql.removeEventListener('change', handleChange);
+  }, [disableXDrag]);
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    dragStartYRef.current = e.clientY;
+    dragStartOffsetRef.current = yOffsetMV.get();
+    dragStartXRef.current = e.clientX;
+    dragStartOffsetXRef.current = xOffsetMV.get();
+    setIsDragging(true);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    dragStartYRef.current = e.touches[0].clientY;
+    dragStartOffsetRef.current = yOffsetMV.get();
+    dragStartXRef.current = e.touches[0].clientX;
+    dragStartOffsetXRef.current = xOffsetMV.get();
+    setIsDragging(true);
+  };
+
+  useEffect(() => {
+    if (!isDragging) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const deltaY = e.clientY - dragStartYRef.current;
+      const deltaDvh = (deltaY / window.innerHeight) * 100;
+      const newOffsetY = Math.max(
+        MIN_Y_OFFSET,
+        Math.min(MAX_Y_OFFSET, dragStartOffsetRef.current + deltaDvh)
+      );
+      yOffsetMV.set(newOffsetY); // direct DOM update - no React re-render
+
+      if (xDragEnabled && window.innerWidth > MOBILE_BREAKPOINT) {
+        const deltaX = e.clientX - dragStartXRef.current;
+        const deltaDvw = (deltaX / window.innerWidth) * 100;
+        const newOffsetX = Math.max(
+          MIN_X_OFFSET,
+          Math.min(MAX_X_OFFSET, dragStartOffsetXRef.current + deltaDvw)
+        );
+        xOffsetMV.set(newOffsetX); // direct DOM update - no React re-render
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      const deltaY = e.touches[0].clientY - dragStartYRef.current;
+      const deltaDvh = (deltaY / window.innerHeight) * 100;
+      const newOffsetY = Math.max(
+        MIN_Y_OFFSET,
+        Math.min(MAX_Y_OFFSET, dragStartOffsetRef.current + deltaDvh)
+      );
+      yOffsetMV.set(newOffsetY); // direct DOM update - no React re-render
+
+      if (xDragEnabled && window.innerWidth > MOBILE_BREAKPOINT) {
+        const deltaX = e.touches[0].clientX - dragStartXRef.current;
+        const deltaDvw = (deltaX / window.innerWidth) * 100;
+        const newOffsetX = Math.max(
+          MIN_X_OFFSET,
+          Math.min(MAX_X_OFFSET, dragStartOffsetXRef.current + deltaDvw)
+        );
+        xOffsetMV.set(newOffsetX); // direct DOM update - no React re-render
+      }
+    };
+
+    const handleMouseUp = () => {
+      setIsDragging(false);
+      localStorage.setItem(STORAGE_KEY_Y, yOffsetMV.get().toString());
+      localStorage.setItem(STORAGE_KEY_X, xOffsetMV.get().toString());
+    };
+
+    const handleTouchEnd = () => {
+      setIsDragging(false);
+      localStorage.setItem(STORAGE_KEY_Y, yOffsetMV.get().toString());
+      localStorage.setItem(STORAGE_KEY_X, xOffsetMV.get().toString());
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('touchmove', handleTouchMove, { passive: true });
+    document.addEventListener('mouseup', handleMouseUp);
+    document.addEventListener('touchend', handleTouchEnd);
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener('touchend', handleTouchEnd);
+    };
+    // dragStart*Ref and dragStartOffset*Ref are refs - excluded from deps intentionally
+  }, [isDragging, yOffsetMV, xOffsetMV, xDragEnabled]);
 
   const handlePassTurn = () => {
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
@@ -47,7 +224,7 @@ export default function ActiveLayersZone() {
     dispatch(submitButton({ button: button }));
   };
 
-  const buttons = playerPrompt?.buttons?.map((button, ix) => {
+  const buttons = playerPrompt?.buttons?.map((button: Button, ix: number) => {
     return (
       <button
         className={styles.buttonDiv}
@@ -66,44 +243,105 @@ export default function ActiveLayersZone() {
     <AnimatePresence>
       {activeLayer?.active && showModal && (
         <motion.div
+          ref={containerRef}
           className={styles.activeLayersBox}
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.8 }}
+          style={{ y: yOffsetDvh, x: xOffsetDvw }}
+          initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={
+            prefersReducedMotion
+              ? { duration: 0.01 }
+              : { type: 'tween', duration: 0.18, ease: 'easeOut' }
+          }
           key="activeLayersBox"
         >
-          <div className={styles.activeLayersTitle}>
-            <div className={styles.titlesColumn}>
-              <h3 className={styles.title}>
-                Active Layers
-                {activeLayer.isReorderable
-                  ? ' (Drag highlighted to reorder)'
-                  : null}
-              </h3>
-              <Target target={activeLayer.target} />
-              {/*               <p className={styles.orderingExplanation}>
-                Priority settings can be adjusted in the menu
-              </p> */}
+          <div className={styles.activeLayersInner}>
+            <div className={styles.activeLayersTitle}>
+              <div className={styles.titlesColumn}>
+                <h3 className={styles.title}>
+                  {t('ZONES.ACTIVE_LAYERS')}
+                  {activeLayer.isReorderable
+                    ? ' (Drag highlighted to reorder)'
+                    : null}
+                </h3>
+                <Target target={activeLayer.target} />
+              </div>
+              {canPassPhase && (
+                <div className={styles.passTurnBox}>
+                  <button className={styles.passTurn} onClick={handlePassTurn}>
+                    {t('ZONES.PASS')}
+                  </button>
+                </div>
+              )}
             </div>
-            {canPassPhase && (
-              <div className={styles.passTurnBox}>
-                <button className={styles.passTurn} onClick={handlePassTurn}>
-                  Pass
-                </button>
+            <div className={styles.activeLayersContents}>
+              {cardGroups.map((group, groupIx) => {
+                if (group.cards.length > GROUPING_THRESHOLD) {
+                  return (
+                    <div key={groupIx} className={styles.groupedCardWrapper}>
+                      <CardDisplay
+                        card={group.cards[0]}
+                        isPlayer={group.isPlayer}
+                      >
+                        <div className={styles.groupedCardCount}>
+                          <span className={styles.groupedCardCountBadge}>
+                            ×{group.cards.length}
+                          </span>
+                        </div>
+                      </CardDisplay>
+                    </div>
+                  );
+                }
+                return group.cards.map((card, cardIx) => (
+                  <CardDisplay
+                    card={card}
+                    key={`${groupIx}-${cardIx}`}
+                    isPlayer={group.isPlayer}
+                  />
+                ));
+              })}
+              <ReorderLayers cards={reorderableCards ?? []} />
+            </div>
+            {promptOwner === 'activeLayers' && (
+              <div className={styles.activeLayersCallToAction}>
+                <div>
+                  {wrapKeywordsInNodes(parseHtmlToReactElements(helpText))}
+                </div>
+                {buttons}
               </div>
             )}
           </div>
-          <div className={styles.activeLayersContents}>
-            {staticCards &&
-              staticCards.map((card, ix) => {
-                const isPlayer = playerID === card.controller;
-                return <CardDisplay card={card} key={ix} isPlayer={isPlayer} />;
-              })}
-            <ReorderLayers cards={reorderableCards ?? []} />
-          </div>
-          <div className={styles.activeLayersCallToAction}>
-            <div>{parseHtmlToReactElements(playerPrompt?.helpText ?? '')}</div>
-            {buttons}
+          <div
+            className={`${styles.grabbyHandle} ${
+              isDragging ? styles.grabbyHandleDragging : ''
+            }`}
+            onMouseDown={handleMouseDown}
+            onTouchStart={handleTouchStart}
+          >
+            <button
+              type="button"
+              className={styles.dragModeToggle}
+              onClick={toggleXDrag}
+              onMouseDown={(e) => e.stopPropagation()}
+              onTouchStart={(e) => e.stopPropagation()}
+              title={
+                xDragEnabled
+                  ? 'Lock to vertical movement'
+                  : 'Unlock horizontal movement'
+              }
+            >
+              {xDragEnabled ? (
+                <MdOpenWith className={styles.dragModeIcon} />
+              ) : (
+                <MdHeight className={styles.dragModeIcon} />
+              )}
+            </button>
+            <MdDragHandle
+              size={32}
+              className={styles.gripIcon}
+              aria-label="Drag to move active layers panel"
+            />
           </div>
         </motion.div>
       )}

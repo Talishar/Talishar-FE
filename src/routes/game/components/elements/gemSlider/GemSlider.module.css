@@ -1,69 +1,118 @@
-.gem {
+.gemTarget {
+  --gem-size: clamp(31px, 4.2vh, 38px);
+  --gem-target-size: clamp(35px, 4.6vh, 42px);
+
   position: absolute;
-  bottom: -0.3vh;
-  width: 3vh;
-  height: 3vh;
-  background-image: url('../../../../../img/elements/hexagonSlideBG.png');
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
+  bottom: -3px;
+  left: 50%;
+  width: var(--gem-target-size);
+  height: var(--gem-target-size);
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   z-index: 10;
-  overflow: auto;
+  pointer-events: auto;
+}
+
+.gem {
+  position: relative;
+  box-sizing: border-box;
+  width: var(--gem-size);
+  height: var(--gem-size);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 25%;
+  background-color: transparent;
+  filter: drop-shadow(0 1px 2px #000) drop-shadow(0 0 2px #fff);
+  cursor: pointer;
+  overflow: visible;
+  appearance: none;
+}
+
+.gem,
+.gem:hover,
+.gem:active,
+.gem:focus,
+.gem:focus-visible {
+  --background-color: transparent;
+  --border-color: transparent;
+  --box-shadow: none;
+  --color: inherit;
+
+  background-color: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.gem {
+  transition:
+    background-color 0.15s ease-out,
+    box-shadow 0.15s ease-out,
+    filter 0.15s ease-out;
 }
 
 .gem:hover {
-  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.09);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+  filter: drop-shadow(0 1px 2px #000) drop-shadow(0 0 4px #fff) brightness(1.12);
+}
+
+.gem:active {
+  background-color: rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.26);
+  filter: drop-shadow(0 1px 1px #000) drop-shadow(0 0 3px #fff) brightness(1.05);
+}
+
+.gem:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+  filter: drop-shadow(0 1px 2px #000) drop-shadow(0 0 4px #fff);
 }
 
 .active {
   position: absolute;
-  left: 1.5vh;
-  height: 3vh;
-  width: 1.5vh;
-  object-fit: cover;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
   transition: all 0.25s ease-out;
+  pointer-events: none;
 }
 
 .inactive {
   position: absolute;
-  left: 0vh;
-  height: 3vh;
-  width: 1.5vh;
-  object-fit: cover;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
   transition: all 0.25s ease-out;
+  pointer-events: none;
 }
 
 @media only screen and (max-width: 768px) {
-  .gem {
-    width: 2.5vh;
-    height: 2.5vh;
-  }
-
-  .active {
-    height: 2.5vh;
-  }
-
-  .inactive {
-    height: 2.5vh;
+  .gemTarget {
+    --gem-size: clamp(17px, 2.5vh, 22px);
+    --gem-target-size: clamp(30px, 3.8vh, 36px);
+    align-items: flex-end;
   }
 }
 
 @media (orientation: portrait) and (max-width: 600px) {
-  .gem {
-    width: 4.5dvw;
-    height: 4.5dvw;
-    bottom: -0.3dvw;
+  .gemTarget {
+    --gem-size: clamp(16px, 4.5dvw, 20px);
+    --gem-target-size: clamp(30px, 7dvw, 34px);
+    bottom: -2px;
   }
+}
 
-  .active {
-    height: 4.5dvw;
-    width: 2.25dvw;
-    left: 2.25dvw;
-  }
-
+@media (prefers-reduced-motion: reduce) {
+  .gem,
+  .active,
   .inactive {
-    height: 4.5dvw;
-    width: 2.25dvw;
-    left: 0;
+    transition: none;
   }
 }

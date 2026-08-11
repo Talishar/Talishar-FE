@@ -2,16 +2,19 @@ import {
   createAsyncThunk,
   createSlice,
   PayloadAction,
-  createSelector
+  createSelector,
+  current,
+  original,
+  type Draft
 } from '@reduxjs/toolkit';
-import ParseGameState from '../../app/ParseGameState';
+import { preserveIdentities } from 'utils/PreserveIdentities';
 import InitialGameState from './InitialGameState';
-import GameStaticInfo from '../GameStaticInfo';
+import GameStaticInfo, { AltArt } from '../GameStaticInfo';
 import { Card } from '../Card';
 import { BACKEND_URL, ROGUELIKE_URL, URL_END_POINT } from 'appConstants';
 import Button from '../Button';
-import { toast } from 'react-hot-toast';
 import GameState from '../GameState';
+import Player from '../Player';
 import {
   GetLobbyRefresh,
   GetLobbyRefreshResponse
@@ -23,133 +26,64 @@ import {
   saveGameAuthKey,
   loadGamePlayerID
 } from 'utils/LocalKeyManagement';
+import { parseBackendJson } from 'utils/parseBackendResponse';
 import isEqual from 'react-fast-compare';
 import { CardStack } from '../../routes/game/components/zones/permanentsZone/PermanentsZone';
 
 const CHAT_RE = /<span[^>]*>(.*?):\s<\/span>/;
 
-/**
- * Sanitizes HTML content by removing all HTML tags.
- * Applies the regex replacement repeatedly until no more replacements occur
- * to prevent bypassing via nested/overlapping tag patterns.
- */
-const sanitizeHtmlTags = (input: string): string => {
-  let previous;
-  let result = input;
-  do {
-    previous = result;
-    result = result.replace(/<[^>]*>/g, '');
-  } while (result !== previous);
-  return result;
-};
+const processInputParams = (gameInfo: GameStaticInfo): URLSearchParams =>
+  new URLSearchParams({
+    gameName: String(gameInfo.gameID),
+    playerID: String(gameInfo.playerID),
+    authKey: String(gameInfo.authKey)
+  });
 
-export const nextTurn = createAsyncThunk(
-  'game/nextTurn',
-  async (
-    params: {
-      game: GameStaticInfo;
-      signal: AbortSignal | undefined;
-      lastUpdate: number;
-    },
-    { getState }
-  ) => {
-    const queryURL = params.game.isRoguelike
-      ? `${ROGUELIKE_URL}${URL_END_POINT.GAME_STATE_POLL}`
-      : `${BACKEND_URL}${URL_END_POINT.GAME_STATE_POLL}`;
-    let friendsList: string[] = [];
-    const state = getState() as any;
-    const apiState = state.api;
-    if (apiState?.queries) {
-      const cacheKeys = Object.keys(apiState.queries);
-      const friendsQueryKey = cacheKeys.find((key) =>
-        key.includes('getFriendsList')
-      );
-      if (friendsQueryKey && apiState.queries[friendsQueryKey]?.data) {
-        const friendsData = apiState.queries[friendsQueryKey].data;
-        friendsList = (friendsData?.friends || []).map((f: any) => f.username);
-      }
-    }
-    console.log(
-      'GameSlice nextTurn - sending friendsList:',
-      friendsList,
-      'playerID:',
-      params.game.playerID
-    );
+const sendProcessInput = async (
+  label: string,
+  gameInfo: GameStaticInfo,
+  queryParams: URLSearchParams,
+  extraQuery = ''
+): Promise<void> => {
+  const baseURL = gameInfo.isRoguelike ? ROGUELIKE_URL : BACKEND_URL;
+  const queryURL = `${baseURL}${URL_END_POINT.PROCESS_INPUT}`;
 
-    const queryParams = new URLSearchParams({
-      gameName: String(params.game.gameID),
-      playerID: String(params.game.playerID),
-      authKey: String(params.game.authKey),
-      lastUpdate: String(params.lastUpdate),
-      friendsList: JSON.stringify(friendsList)
+  let response: Response;
+  try {
+    response = await fetch(queryURL + queryParams.toString() + extraQuery, {
+      method: 'GET',
+      headers: {},
+      credentials: 'include'
     });
-
-    let waitingForJSONResponse = true;
-    while (waitingForJSONResponse) {
-      try {
-        const response = await fetch(queryURL + queryParams, {
-          method: 'POST',
-          headers: {},
-          credentials: 'include',
-          signal: params.signal,
-          body: JSON.stringify(queryParams)
-        });
-        let data = await response.text();
-        if (data.toString().trim() === '0') {
-          continue;
-        }
-        waitingForJSONResponse = false;
-        data = data.toString().trim();
-        const indexOfBraces = data.indexOf('{');
-        if (indexOfBraces === -1) {
-          // No JSON object found - backend returned an error message or non-JSON response
-          const errorMessage = sanitizeHtmlTags(data);
-          toast.error(`Backend Error: ${errorMessage}`);
-
-          // Check for fatal errors that should end the game
-          if (
-            errorMessage.includes('game no longer exists') ||
-            errorMessage.includes('does not exist')
-          ) {
-            // Return special error marker that will be handled by the rejected handler
-            throw new Error(`GAME_NOT_FOUND: ${errorMessage}`);
-          }
-
-          return console.error(`Backend returned non-JSON response: ${data}`);
-        }
-        if (indexOfBraces !== 0) {
-          const warningMessage = sanitizeHtmlTags(
-            data.substring(0, indexOfBraces)
-          );
-          toast.error(`Backend Warning: ${warningMessage}`);
-          console.warn(data.substring(0, indexOfBraces));
-          data = data.substring(indexOfBraces);
-        }
-        const parsedData = JSON.parse(data);
-        const gs = ParseGameState(parsedData);
-        return gs;
-      } catch (e) {
-        if (params.signal?.aborted) {
-          return;
-        }
-        waitingForJSONResponse = false;
-        // Re-throw to trigger rejected handler
-        throw e;
-      }
-    }
+  } catch (e) {
+    console.error(
+      `[${label}] Network error:`,
+      e,
+      '| params:',
+      Object.fromEntries(queryParams)
+    );
+    throw e;
   }
-);
+
+  const data = await response.text();
+  if (!response.ok || data.startsWith('Invalid')) {
+    console.error(
+      `[${label}] Backend error:`,
+      data,
+      '| params:',
+      Object.fromEntries(queryParams)
+    );
+    throw new Error(`${label} failed (HTTP ${response.status}): ${data}`);
+  }
+};
 
 export const gameLobby = createAsyncThunk(
   'gameLobby/getLobby',
-  async (
-    params: {
-      game: GameStaticInfo;
-      signal: AbortSignal | undefined;
-      lastUpdate: number;
-    },
-    { getState }
-  ) => {
+  async (params: {
+    game: GameStaticInfo;
+    signal: AbortSignal | undefined;
+    lastUpdate: number;
+  }) => {
     const queryURL = `${BACKEND_URL}${URL_END_POINT.GET_LOBBY_REFRESH}`;
 
     const requestBody = {
@@ -159,6 +93,7 @@ export const gameLobby = createAsyncThunk(
       lastUpdate: params.lastUpdate
     } as GetLobbyRefresh;
 
+    let data: string;
     try {
       const response = await fetch(queryURL, {
         method: 'POST',
@@ -167,28 +102,17 @@ export const gameLobby = createAsyncThunk(
         signal: params.signal,
         body: JSON.stringify(requestBody)
       });
-
-      let data = (await response.text()).trim();
-      const indexOfBraces = data.indexOf('{');
-      if (indexOfBraces === -1) {
-        // No JSON object found - backend returned an error message or non-JSON response
-        if (data !== '0') {
-          toast.error(`Backend Error: ${sanitizeHtmlTags(data)}`);
-          console.error(`Backend returned non-JSON response: ${data}`);
-        }
-        return;
-      }
-      if (indexOfBraces !== 0) {
-        data = data.substring(indexOfBraces);
-      }
-      const parsedData = JSON.parse(data) as GetLobbyRefreshResponse;
-      return parsedData;
+      data = (await response.text()).trim();
     } catch (e) {
-      if (params.signal?.aborted) {
-        return;
-      }
-      return console.error(e);
+      // An aborted poll is routine (game switch, unmount), not a failure.
+      if (params.signal?.aborted) return;
+      throw e;
     }
+    if (data === '0') return;
+
+    const parsedData = parseBackendJson(data) as GetLobbyRefreshResponse;
+    if (Object.keys(parsedData).length === 0) return;
+    return parsedData;
   }
 );
 
@@ -201,30 +125,12 @@ export const playCard = createAsyncThunk(
       params.cardParams.actionDataOverride != ''
         ? params.cardParams.actionDataOverride
         : params.cardIndex;
-    const gameInfo = game.gameInfo;
 
-    const queryURL = gameInfo.isRoguelike
-      ? `${ROGUELIKE_URL}${URL_END_POINT.PROCESS_INPUT}`
-      : `${BACKEND_URL}${URL_END_POINT.PROCESS_INPUT}`;
-    const queryParams = new URLSearchParams({
-      gameName: String(gameInfo.gameID),
-      playerID: String(gameInfo.playerID),
-      authKey: String(gameInfo.authKey),
-      mode: String(params.cardParams.action),
-      cardID: String(playNo)
-    });
+    const queryParams = processInputParams(game.gameInfo);
+    queryParams.set('mode', String(params.cardParams.action));
+    queryParams.set('cardID', String(playNo));
 
-    try {
-      const response = await fetch(queryURL + queryParams, {
-        method: 'GET',
-        headers: {},
-        credentials: 'include'
-      });
-      const data = await response.text();
-      return;
-    } catch (e) {
-      console.error(e);
-    }
+    await sendProcessInput('playCard', game.gameInfo, queryParams);
   }
 );
 
@@ -232,66 +138,263 @@ export const submitButton = createAsyncThunk(
   'game/submitButton',
   async (params: { button: Button }, { getState }) => {
     const { game } = getState() as { game: GameState };
-    const gameInfo = game.gameInfo;
-    const queryURL = gameInfo.isRoguelike
-      ? `${ROGUELIKE_URL}${URL_END_POINT.PROCESS_INPUT}`
-      : `${BACKEND_URL}${URL_END_POINT.PROCESS_INPUT}`;
-    const queryParams = new URLSearchParams({
-      gameName: String(gameInfo.gameID),
-      playerID: String(gameInfo.playerID),
-      authKey: String(gameInfo.authKey),
-      mode: String(params.button.mode),
-      buttonInput: String(params.button.buttonInput),
-      inputText: String(params.button.inputText),
-      cardID: String(params.button.cardID),
-      numMode: String(params.button.numMode ?? '')
-    });
-    try {
-      const response = await fetch(queryURL + queryParams, {
-        method: 'GET',
-        headers: {},
-        credentials: 'include'
-      });
-      const data = await response.text();
-      if (!response.ok || (data && data.startsWith('Invalid'))) {
-        console.error('[submitButton] Backend error:', data, '| params:', Object.fromEntries(queryParams));
-      }
-      return;
-    } catch (e) {
-      console.error(e);
-    }
+
+    const queryParams = processInputParams(game.gameInfo);
+    queryParams.set('mode', String(params.button.mode ?? ''));
+    if (params.button.buttonInput !== undefined)
+      queryParams.set('buttonInput', String(params.button.buttonInput));
+    if (params.button.inputText !== undefined)
+      queryParams.set('inputText', String(params.button.inputText));
+    if (params.button.cardID !== undefined)
+      queryParams.set('cardID', String(params.button.cardID));
+    if (params.button.numMode !== undefined)
+      queryParams.set('numMode', String(params.button.numMode));
+
+    await sendProcessInput('submitButton', game.gameInfo, queryParams);
   }
 );
 
 export const submitMultiButton = createAsyncThunk(
-  'game/submitButton',
+  'game/submitMultiButton',
   async (params: { mode?: number; extraParams: string }, { getState }) => {
+    if (params.mode === undefined) return;
     const { game } = getState() as { game: GameState };
-    const gameInfo = game.gameInfo;
-    const queryURL = gameInfo.isRoguelike
-      ? `${ROGUELIKE_URL}${URL_END_POINT.PROCESS_INPUT}`
-      : `${BACKEND_URL}${URL_END_POINT.PROCESS_INPUT}`;
-    const queryParams = new URLSearchParams({
-      gameName: String(gameInfo.gameID),
-      playerID: String(gameInfo.playerID),
-      authKey: String(gameInfo.authKey),
-      mode: String(params.mode)
-    });
-    const queryParamsString =
-      queryURL + queryParams.toString() + params.extraParams;
-    try {
-      const response = await fetch(queryParamsString, {
-        method: 'GET',
-        headers: {},
-        credentials: 'include'
-      });
-      const data = await response.text();
-      return;
-    } catch (e) {
-      console.error(e);
-    }
+
+    const queryParams = processInputParams(game.gameInfo);
+    queryParams.set('mode', String(params.mode));
+
+    await sendProcessInput(
+      'submitMultiButton',
+      game.gameInfo,
+      queryParams,
+      params.extraParams
+    );
   }
 );
+
+const STICKY_PLAYER_FIELDS = [
+  'Name',
+  'isPatron',
+  'isContributor',
+  'isPvtVoidPatron',
+  'metafyTiers'
+] as const;
+
+const FALLBACK_GAME_INFO_FIELDS = [
+  'roguelikeGameID',
+  'isPrivate',
+  'isReplay',
+  'isOpponentAI',
+  'gameFormat',
+  'deckLink',
+  'canCustomizeDeck',
+  'deckCardBackId',
+  'deckPlaymatId'
+] as const;
+
+const mergePlayer = (prev: Player, incoming: Player | undefined): Player => {
+  const merged = { ...prev, ...incoming };
+  for (const field of STICKY_PLAYER_FIELDS) {
+    if (prev[field] !== undefined) {
+      (merged[field] as Player[typeof field]) = prev[field];
+    }
+  }
+  return preserveIdentities(prev, merged);
+};
+
+function mergeReceivedGameState(
+  state: Draft<GameState>,
+  prevGame: GameState,
+  payload: GameState
+): void {
+  state.isUpdateInProgress = false;
+  state.isPlayerInputInProgress = false;
+  state.isFullRematch = payload.isFullRematch ?? false;
+  const incomingTurnPhase = payload.turnPhase?.turnPhase;
+  if (incomingTurnPhase === 'OVER') {
+    state.hasGameEnded = true;
+  } else if (incomingTurnPhase !== undefined && incomingTurnPhase !== 'YESNO') {
+    state.hasGameEnded = false;
+  }
+
+  state.playerOne = mergePlayer(prevGame.playerOne, payload.playerOne);
+  state.playerTwo = mergePlayer(prevGame.playerTwo, payload.playerTwo);
+
+  state.activeChainLink = preserveIdentities(
+    prevGame.activeChainLink,
+    payload.activeChainLink
+  );
+  state.activeLayers = preserveIdentities(
+    prevGame.activeLayers,
+    payload.activeLayers
+  );
+  state.oldCombatChain = preserveIdentities(
+    prevGame.oldCombatChain,
+    payload.oldCombatChain
+  );
+
+  {
+    const prevChatLog = state.chatLog ?? [];
+    let prevLen = 0;
+    for (let i = 0; i < prevChatLog.length; i++) {
+      if (prevChatLog[i].length > 0) prevLen++;
+    }
+    const incoming = payload.chatLog ?? [];
+    if (!state.showChatModal && prevLen > 0) {
+      let nonEmptySeen = 0;
+      let newPlayerChats = 0;
+      for (let i = 0; i < incoming.length; i++) {
+        const message = incoming[i];
+        if (message.length === 0) continue;
+        nonEmptySeen++;
+        if (nonEmptySeen > prevLen && CHAT_RE.test(message)) newPlayerChats++;
+      }
+      if (newPlayerChats > 0) {
+        state.unreadChatCount = (state.unreadChatCount ?? 0) + newPlayerChats;
+      }
+    }
+  }
+
+  state.chatLog = preserveIdentities(prevGame.chatLog, payload.chatLog);
+  state.opponentIsTyping = payload.opponentIsTyping ?? false;
+  state.opponentPresence = payload.opponentPresence ?? null;
+  state.amIActivePlayer = payload.amIActivePlayer;
+  state.turnPlayer = payload.turnPlayer;
+  state.otherPlayer = payload.otherPlayer;
+  state.turnPhase = preserveIdentities(prevGame.turnPhase, payload.turnPhase);
+  state.playerInputPopUp = preserveIdentities(
+    prevGame.playerInputPopUp,
+    payload.playerInputPopUp
+  );
+
+  const newLastPlayed = preserveIdentities(
+    prevGame.gameDynamicInfo.lastPlayed,
+    payload.gameDynamicInfo.lastPlayed
+  );
+  state.gameDynamicInfo.lastPlayed = newLastPlayed;
+  if (
+    newLastPlayed &&
+    newLastPlayed.cardNumber !== 'CardBack' &&
+    !newLastPlayed.cardNumber.startsWith('CB')
+  ) {
+    const prev = state.gameDynamicInfo.recentlyPlayed ?? [];
+    if (prev[0]?.cardNumber !== newLastPlayed.cardNumber) {
+      state.gameDynamicInfo.recentlyPlayed = [newLastPlayed, ...prev].slice(
+        0,
+        10
+      );
+    }
+  }
+  state.gameDynamicInfo.lastUpdate = payload.gameDynamicInfo.lastUpdate;
+  state.gameDynamicInfo.turnNo = payload.gameDynamicInfo.turnNo;
+  state.gameDynamicInfo.clock = payload.gameDynamicInfo.clock;
+  state.gameDynamicInfo.spectatorCount =
+    payload.gameDynamicInfo.spectatorCount ?? 0;
+  state.gameDynamicInfo.spectatorNames = preserveIdentities(
+    prevGame.gameDynamicInfo.spectatorNames,
+    payload.gameDynamicInfo.spectatorNames ?? []
+  );
+  state.gameDynamicInfo.playerInventory = preserveIdentities(
+    prevGame.gameDynamicInfo.playerInventory,
+    payload.gameDynamicInfo.playerInventory
+  );
+
+  state.hasPriority = payload.hasPriority;
+  state.priorityPlayer = payload.priorityPlayer;
+  state.chatEnabled = payload.chatEnabled;
+  state.playerPrompt = preserveIdentities(
+    prevGame.playerPrompt,
+    payload.playerPrompt
+  );
+  state.canPassPhase = payload.canPassPhase;
+  // events deliberately NOT identity-preserved: identical consecutive
+  // event arrays are distinct occurrences (e.g. the same animation twice)
+  state.events = payload.events;
+  state.landmark = preserveIdentities(prevGame.landmark, payload.landmark);
+
+  for (const field of FALLBACK_GAME_INFO_FIELDS) {
+    const incoming = payload.gameInfo[field];
+    if (incoming !== undefined && incoming !== null) {
+      (state.gameInfo[field] as GameStaticInfo[typeof field]) = incoming;
+    }
+  }
+  state.gameInfo.altArts = preserveIdentities(
+    prevGame.gameInfo.altArts,
+    payload.gameInfo.altArts ?? prevGame.gameInfo.altArts
+  );
+  state.gameInfo.opponentAltArts = preserveIdentities(
+    prevGame.gameInfo.opponentAltArts,
+    payload.gameInfo.opponentAltArts ?? prevGame.gameInfo.opponentAltArts
+  );
+
+  state.aiHasInfiniteHP = payload.aiHasInfiniteHP ?? false;
+  state.practiceDummyWeaponPower = payload.practiceDummyWeaponPower ?? 4;
+  state.opponentInactive = payload.opponentInactive ?? false;
+  state.inactivityDeadline =
+    payload.inactivityDeadline ?? state.inactivityDeadline;
+  state.serverTimeOffset = payload.serverTimeOffset ?? state.serverTimeOffset;
+  state.preventPassPrompt = payload.preventPassPrompt;
+}
+
+type PopupStateKey = 'damagePopups' | 'healingPopups' | 'actionPointPopups';
+type FloatingPopup = { id: string; amount: number };
+
+//Damage, healing and action point popups
+const createPopupReducers = (key: PopupStateKey) => ({
+  add: {
+    reducer: (
+      state: Draft<GameState>,
+      action: PayloadAction<{ isPlayer: boolean; amount: number; id: string }>
+    ) => {
+      const popups = (state[key] ??= { playerOne: [], playerTwo: [] });
+      const side = action.payload.isPlayer ? 'playerOne' : 'playerTwo';
+      popups[side].push({ id: action.payload.id, amount: action.payload.amount });
+    },
+    prepare: (payload: { isPlayer: boolean; amount: number }) => ({
+      payload: { ...payload, id: `${Date.now()}-${Math.random()}` }
+    })
+  },
+  remove: (
+    state: Draft<GameState>,
+    action: PayloadAction<{ isPlayer: boolean; id: string }>
+  ) => {
+    const popups = state[key];
+    if (!popups) return;
+    const side = action.payload.isPlayer ? 'playerOne' : 'playerTwo';
+    popups[side] = popups[side].filter(
+      (popup: FloatingPopup) => popup.id !== action.payload.id
+    );
+  }
+});
+
+const damagePopupReducers = createPopupReducers('damagePopups');
+const healingPopupReducers = createPopupReducers('healingPopups');
+const actionPointPopupReducers = createPopupReducers('actionPointPopups');
+
+type RevealKind =
+  | 'clashReveal'
+  | 'heroTransform'
+  | 'arsenalFlip'
+  | 'arsenalDestroy';
+
+type RevealPayload = { playerId: number | null; cardNumber: string };
+
+const createRevealReducer =
+  (kind: RevealKind) =>
+  (state: Draft<GameState>, action: PayloadAction<RevealPayload>) => {
+    const p1Card = `${kind}P1Card` as const;
+    const p2Card = `${kind}P2Card` as const;
+
+    if (action.payload.playerId === null) {
+      state[p1Card] = '';
+      state[p2Card] = '';
+      return;
+    }
+
+    state[action.payload.playerId === 1 ? p1Card : p2Card] =
+      action.payload.cardNumber;
+    state[`${kind}Trigger` as const] += 1;
+  };
 
 export const gameSlice = createSlice({
   name: 'game',
@@ -375,133 +478,29 @@ export const gameSlice = createSlice({
           state.cardListFocus.isSorted = false;
         } else {
           // Sort the cards
+          const isCardBack = (cardNumber: string) =>
+            cardNumber.toLowerCase() === 'cardback';
           const sortedCardList = [...state.cardListFocus.cardList].sort(
-            (a, b) => b.cardNumber.localeCompare(a.cardNumber)
+            (a, b) => {
+              const aBack = isCardBack(a.cardNumber);
+              const bBack = isCardBack(b.cardNumber);
+              if (aBack && bBack) return 0;
+              if (aBack) return 1;
+              if (bBack) return -1;
+              return b.cardNumber.localeCompare(a.cardNumber);
+            }
           );
           state.cardListFocus.cardList = sortedCardList;
           state.cardListFocus.isSorted = true;
         }
       }
     },
-    addDamagePopup: (
-      state,
-      action: PayloadAction<{
-        isPlayer: boolean;
-        amount: number;
-      }>
-    ) => {
-      const id = `${Date.now()}-${Math.random()}`;
-      const popup = { id, amount: action.payload.amount };
-      if (action.payload.isPlayer) {
-        if (!state.damagePopups) {
-          state.damagePopups = { playerOne: [], playerTwo: [] };
-        }
-        state.damagePopups.playerOne.push(popup);
-      } else {
-        if (!state.damagePopups) {
-          state.damagePopups = { playerOne: [], playerTwo: [] };
-        }
-        state.damagePopups.playerTwo.push(popup);
-      }
-    },
-    removeDamagePopup: (
-      state,
-      action: PayloadAction<{
-        isPlayer: boolean;
-        id: string;
-      }>
-    ) => {
-      if (!state.damagePopups) return;
-      if (action.payload.isPlayer) {
-        state.damagePopups.playerOne = state.damagePopups.playerOne.filter(
-          (p) => p.id !== action.payload.id
-        );
-      } else {
-        state.damagePopups.playerTwo = state.damagePopups.playerTwo.filter(
-          (p) => p.id !== action.payload.id
-        );
-      }
-    },
-    addHealingPopup: (
-      state,
-      action: PayloadAction<{
-        isPlayer: boolean;
-        amount: number;
-      }>
-    ) => {
-      const id = `${Date.now()}-${Math.random()}`;
-      const popup = { id, amount: action.payload.amount };
-      if (action.payload.isPlayer) {
-        if (!state.healingPopups) {
-          state.healingPopups = { playerOne: [], playerTwo: [] };
-        }
-        state.healingPopups.playerOne.push(popup);
-      } else {
-        if (!state.healingPopups) {
-          state.healingPopups = { playerOne: [], playerTwo: [] };
-        }
-        state.healingPopups.playerTwo.push(popup);
-      }
-    },
-    removeHealingPopup: (
-      state,
-      action: PayloadAction<{
-        isPlayer: boolean;
-        id: string;
-      }>
-    ) => {
-      if (!state.healingPopups) return;
-      if (action.payload.isPlayer) {
-        state.healingPopups.playerOne = state.healingPopups.playerOne.filter(
-          (p) => p.id !== action.payload.id
-        );
-      } else {
-        state.healingPopups.playerTwo = state.healingPopups.playerTwo.filter(
-          (p) => p.id !== action.payload.id
-        );
-      }
-    },
-    addActionPointPopup: (
-      state,
-      action: PayloadAction<{
-        isPlayer: boolean;
-        amount: number;
-      }>
-    ) => {
-      const id = `${Date.now()}-${Math.random()}`;
-      const popup = { id, amount: action.payload.amount };
-      if (action.payload.isPlayer) {
-        if (!state.actionPointPopups) {
-          state.actionPointPopups = { playerOne: [], playerTwo: [] };
-        }
-        state.actionPointPopups.playerOne.push(popup);
-      } else {
-        if (!state.actionPointPopups) {
-          state.actionPointPopups = { playerOne: [], playerTwo: [] };
-        }
-        state.actionPointPopups.playerTwo.push(popup);
-      }
-    },
-    removeActionPointPopup: (
-      state,
-      action: PayloadAction<{
-        isPlayer: boolean;
-        id: string;
-      }>
-    ) => {
-      if (!state.actionPointPopups) return;
-      if (action.payload.isPlayer) {
-        state.actionPointPopups.playerOne =
-          state.actionPointPopups.playerOne.filter(
-            (p) => p.id !== action.payload.id
-          );
-      } else {
-        state.actionPointPopups.playerTwo =
-          state.actionPointPopups.playerTwo.filter(
-            (p) => p.id !== action.payload.id
-          );
-      }
-    },
+    addDamagePopup: damagePopupReducers.add,
+    removeDamagePopup: damagePopupReducers.remove,
+    addHealingPopup: healingPopupReducers.add,
+    removeHealingPopup: healingPopupReducers.remove,
+    addActionPointPopup: actionPointPopupReducers.add,
+    removeActionPointPopup: actionPointPopupReducers.remove,
     openOptionsMenu: (state) => {
       state.optionsMenu = { active: true };
     },
@@ -526,6 +525,7 @@ export const gameSlice = createSlice({
       }>
     ) => {
       state.isFullRematch = false;
+      state.hasGameEnded = false;
       const previousGameID = state.gameInfo.gameID;
       const newGameID =
         typeof action.payload.gameID === 'string'
@@ -608,6 +608,8 @@ export const gameSlice = createSlice({
       state.activeChainLink = undefined;
 
       if (isNewGame) {
+        state.gameLobby = undefined;
+        state.isUpdateInProgress = false;
         state.gameInfo.bazaarDeckId = action.payload.bazaarDeckId ?? undefined;
         // Clear recently played history from previous game
         state.gameDynamicInfo.recentlyPlayed = [];
@@ -638,11 +640,15 @@ export const gameSlice = createSlice({
     },
     showChainLinkSummary: (
       state,
-      action: PayloadAction<{ chainLink?: number }>
+      action: PayloadAction<{
+        chainLink?: number;
+        view?: 'dialog' | 'preview' | 'all';
+      }>
     ) => {
       state.chainLinkSummary = {
         show: true,
-        index: action?.payload.chainLink ?? -1
+        index: action?.payload.chainLink ?? -1,
+        view: action?.payload.view ?? 'dialog'
       };
     },
     hideChainLinkSummary: (state) => {
@@ -701,6 +707,27 @@ export const gameSlice = createSlice({
     markHeroIntroAsShown: (state) => {
       state.gameInfo.hasShownHeroIntro = true;
     },
+    setLobbyAltArts: (state, action: PayloadAction<AltArt[]>) => {
+      state.gameInfo.altArts = action.payload;
+    },
+    setDeckCosmetics: (
+      state,
+      action: PayloadAction<{
+        cardBackId: string;
+        playmatId: string;
+        cardBack: string;
+        playmat: string;
+      }>
+    ) => {
+      state.gameInfo.deckCardBackId = action.payload.cardBackId;
+      state.gameInfo.deckPlaymatId = action.payload.playmatId;
+      state.playerOne.Playmat = action.payload.playmat;
+      if (state.playerOne.CardBack) {
+        state.playerOne.CardBack.cardNumber = action.payload.cardBack;
+      } else {
+        state.playerOne.CardBack = { cardNumber: action.payload.cardBack };
+      }
+    },
     disableModals: (state) => {
       state.showModals = false;
     },
@@ -718,36 +745,10 @@ export const gameSlice = createSlice({
       state.addBotDeckPlayerId = action.payload.playerId;
       state.addBotDeckCard = action.payload.cardNumber;
     },
-    setClashReveal: (
-      state,
-      action: PayloadAction<{ playerId: number | null; cardNumber: string }>
-    ) => {
-      if (action.payload.playerId === null) {
-        state.clashRevealP1Card = '';
-        state.clashRevealP2Card = '';
-      } else if (action.payload.playerId === 1) {
-        state.clashRevealP1Card = action.payload.cardNumber;
-        state.clashRevealTrigger += 1;
-      } else {
-        state.clashRevealP2Card = action.payload.cardNumber;
-        state.clashRevealTrigger += 1;
-      }
-    },
-    setArsenalFlip: (
-      state,
-      action: PayloadAction<{ playerId: number | null; cardNumber: string }>
-    ) => {
-      if (action.payload.playerId === null) {
-        state.arsenalFlipP1Card = '';
-        state.arsenalFlipP2Card = '';
-      } else if (action.payload.playerId === 1) {
-        state.arsenalFlipP1Card = action.payload.cardNumber;
-        state.arsenalFlipTrigger += 1;
-      } else {
-        state.arsenalFlipP2Card = action.payload.cardNumber;
-        state.arsenalFlipTrigger += 1;
-      }
-    },
+    setClashReveal: createRevealReducer('clashReveal'),
+    setHeroTransform: createRevealReducer('heroTransform'),
+    setArsenalFlip: createRevealReducer('arsenalFlip'),
+    setArsenalDestroy: createRevealReducer('arsenalDestroy'),
     setReplayStart: (
       state,
       action: PayloadAction<{
@@ -755,11 +756,16 @@ export const gameSlice = createSlice({
         gameID: number;
         authKey: string;
         username?: string;
+        replayNumber?: number;
       }>
     ) => {
       state.isFullRematch = false;
+      state.hasGameEnded = false;
       state.gameInfo.gameID = action.payload.gameID;
-      state.gameInfo.playerID = !!state.gameInfo.playerID
+      if (action.payload.replayNumber !== undefined) {
+        state.gameInfo.replayNumber = action.payload.replayNumber;
+      }
+      state.gameInfo.playerID = state.gameInfo.playerID
         ? state.gameInfo.playerID
         : action.payload.playerID;
       //If We don't currently have an Auth Key
@@ -791,301 +797,35 @@ export const gameSlice = createSlice({
     setOpponentTyping: (state, action: PayloadAction<boolean>) => {
       state.opponentIsTyping = action.payload;
     },
+    setOpponentPresence: (
+      state,
+      action: PayloadAction<GameState['opponentPresence']>
+    ) => {
+      state.opponentPresence = action.payload ?? null;
+    },
     // Receive game state directly from SSE (no HTTP round-trip needed)
     receiveGameState: (state, action: PayloadAction<GameState>) => {
       if (action.payload === undefined) {
         return state;
       }
-      state.isUpdateInProgress = false;
-      state.isPlayerInputInProgress = false;
-      state.isFullRematch = action.payload.isFullRematch ?? false;
-
-      // Preserve player metadata when merging game state updates (patron/metafy status, names)
-      const playerOneMetadata = {
-        Name: state.playerOne.Name,
-        isPatron: state.playerOne.isPatron,
-        isContributor: state.playerOne.isContributor,
-        isPvtVoidPatron: state.playerOne.isPvtVoidPatron,
-        metafyTiers: state.playerOne.metafyTiers
-      };
-      const playerTwoMetadata = {
-        Name: state.playerTwo.Name,
-        isPatron: state.playerTwo.isPatron,
-        isContributor: state.playerTwo.isContributor,
-        isPvtVoidPatron: state.playerTwo.isPvtVoidPatron,
-        metafyTiers: state.playerTwo.metafyTiers
-      };
-      state.playerOne = { ...state.playerOne, ...action.payload.playerOne };
-      state.playerTwo = { ...state.playerTwo, ...action.payload.playerTwo };
-      // Restore metadata from previous state to prevent flickering
-      if (playerOneMetadata.Name !== undefined)
-        state.playerOne.Name = playerOneMetadata.Name;
-      if (playerOneMetadata.isPatron !== undefined)
-        state.playerOne.isPatron = playerOneMetadata.isPatron;
-      if (playerOneMetadata.isContributor !== undefined)
-        state.playerOne.isContributor = playerOneMetadata.isContributor;
-      if (playerOneMetadata.isPvtVoidPatron !== undefined)
-        state.playerOne.isPvtVoidPatron = playerOneMetadata.isPvtVoidPatron;
-      if (playerOneMetadata.metafyTiers !== undefined)
-        state.playerOne.metafyTiers = playerOneMetadata.metafyTiers;
-      if (playerTwoMetadata.Name !== undefined)
-        state.playerTwo.Name = playerTwoMetadata.Name;
-      if (playerTwoMetadata.isPatron !== undefined)
-        state.playerTwo.isPatron = playerTwoMetadata.isPatron;
-      if (playerTwoMetadata.isContributor !== undefined)
-        state.playerTwo.isContributor = playerTwoMetadata.isContributor;
-      if (playerTwoMetadata.isPvtVoidPatron !== undefined)
-        state.playerTwo.isPvtVoidPatron = playerTwoMetadata.isPvtVoidPatron;
-      if (playerTwoMetadata.metafyTiers !== undefined)
-        state.playerTwo.metafyTiers = playerTwoMetadata.metafyTiers;
-
-      state.activeChainLink = action.payload.activeChainLink;
-      state.activeLayers = action.payload.activeLayers;
-      state.oldCombatChain = action.payload.oldCombatChain;
-
-      {
-        const prevLen = (state.chatLog ?? []).filter((m: string) => m.length > 0).length;
-        const incoming = action.payload.chatLog ?? [];
-        if (!state.showChatModal && prevLen > 0) {
-          const incomingNonEmpty = incoming.filter((m: string) => m.length > 0);
-          const newPlayerChats = incomingNonEmpty.slice(prevLen).filter((m: string) => CHAT_RE.test(m)).length;
-          if (newPlayerChats > 0) {
-            state.unreadChatCount = (state.unreadChatCount ?? 0) + newPlayerChats;
-          }
-        }
-      }
-
-      state.chatLog = action.payload.chatLog;
-      state.opponentIsTyping = action.payload.opponentIsTyping ?? false;
-      state.amIActivePlayer = action.payload.amIActivePlayer;
-      state.turnPlayer = action.payload.turnPlayer;
-      state.otherPlayer = action.payload.otherPlayer;
-      state.turnPhase = action.payload.turnPhase;
-      state.playerInputPopUp = action.payload.playerInputPopUp;
-
-      // gameInfo
-      const newCard1 = action.payload.gameDynamicInfo.lastPlayed;
-      state.gameDynamicInfo.lastPlayed = newCard1;
-      if (newCard1 && newCard1.cardNumber !== 'CardBack' && !newCard1.cardNumber.startsWith('CB')) {
-        const prev1 = state.gameDynamicInfo.recentlyPlayed ?? [];
-        if (prev1[0]?.cardNumber !== newCard1.cardNumber) {
-          state.gameDynamicInfo.recentlyPlayed = [newCard1, ...prev1].slice(0, 10);
-        }
-      }
-      state.gameDynamicInfo.lastUpdate =
-        action.payload.gameDynamicInfo.lastUpdate;
-      state.gameDynamicInfo.turnNo = action.payload.gameDynamicInfo.turnNo;
-      state.gameDynamicInfo.clock = action.payload.gameDynamicInfo.clock;
-      state.gameDynamicInfo.spectatorCount =
-        action.payload.gameDynamicInfo.spectatorCount ?? 0;
-      state.gameDynamicInfo.spectatorNames =
-        action.payload.gameDynamicInfo.spectatorNames ?? [];
-      state.gameDynamicInfo.playerInventory =
-        action.payload.gameDynamicInfo.playerInventory;
-      state.hasPriority = action.payload.hasPriority;
-      state.priorityPlayer = action.payload.priorityPlayer;
-      state.chatEnabled = action.payload.chatEnabled;
-
-      state.playerPrompt = action.payload.playerPrompt;
-      state.canPassPhase = action.payload.canPassPhase;
-      state.events = action.payload.events;
-      state.landmark = action.payload.landmark;
-
-      state.gameInfo.roguelikeGameID =
-        action.payload.gameInfo.roguelikeGameID ??
-        state.gameInfo.roguelikeGameID;
-
-      state.gameInfo.altArts =
-        action.payload.gameInfo.altArts ?? state.gameInfo.altArts;
-
-      state.gameInfo.opponentAltArts =
-        action.payload.gameInfo.opponentAltArts ??
-        state.gameInfo.opponentAltArts;
-
-      state.gameInfo.isPrivate =
-        action.payload.gameInfo.isPrivate ?? state.gameInfo.isPrivate;
-
-      state.gameInfo.isReplay =
-        action.payload.gameInfo.isReplay ?? state.gameInfo.isReplay;
-
-      state.gameInfo.isOpponentAI =
-        action.payload.gameInfo.isOpponentAI ?? state.gameInfo.isOpponentAI;
-
-      state.gameInfo.gameFormat =
-        action.payload.gameInfo.gameFormat ?? state.gameInfo.gameFormat;
-
-      state.aiHasInfiniteHP = action.payload.aiHasInfiniteHP ?? false;
-
-      state.opponentInactive = action.payload.opponentInactive ?? false;
-
-      state.preventPassPrompt = action.payload.preventPassPrompt;
-
+      const prevGame = (original(state) ?? current(state)) as GameState;
+      mergeReceivedGameState(state, prevGame, action.payload);
       return state;
     }
   },
   // The `extraReducers` field lets the slice handle actions defined elsewhere,
   // including actions generated by createAsyncThunk or in other slices.
   extraReducers: (builder) => {
-    // nextTurn
-    builder.addCase(nextTurn.fulfilled, (state, action) => {
-      if (action.payload === undefined) {
-        return state;
-      }
-      state.isUpdateInProgress = false;
-      state.isPlayerInputInProgress = false;
-      state.isFullRematch = action.payload.isFullRematch ?? false;
-
-      // Preserve player metadata when merging game state updates (patron/metafy status, names)
-      const playerOneMetadata = {
-        Name: state.playerOne.Name,
-        isPatron: state.playerOne.isPatron,
-        isContributor: state.playerOne.isContributor,
-        isPvtVoidPatron: state.playerOne.isPvtVoidPatron,
-        metafyTiers: state.playerOne.metafyTiers
-      };
-      const playerTwoMetadata = {
-        Name: state.playerTwo.Name,
-        isPatron: state.playerTwo.isPatron,
-        isContributor: state.playerTwo.isContributor,
-        isPvtVoidPatron: state.playerTwo.isPvtVoidPatron,
-        metafyTiers: state.playerTwo.metafyTiers
-      };
-      state.playerOne = { ...state.playerOne, ...action.payload.playerOne };
-      state.playerTwo = { ...state.playerTwo, ...action.payload.playerTwo };
-      // Restore metadata from previous state to prevent flickering
-      if (playerOneMetadata.Name !== undefined)
-        state.playerOne.Name = playerOneMetadata.Name;
-      if (playerOneMetadata.isPatron !== undefined)
-        state.playerOne.isPatron = playerOneMetadata.isPatron;
-      if (playerOneMetadata.isContributor !== undefined)
-        state.playerOne.isContributor = playerOneMetadata.isContributor;
-      if (playerOneMetadata.isPvtVoidPatron !== undefined)
-        state.playerOne.isPvtVoidPatron = playerOneMetadata.isPvtVoidPatron;
-      if (playerOneMetadata.metafyTiers !== undefined)
-        state.playerOne.metafyTiers = playerOneMetadata.metafyTiers;
-      if (playerTwoMetadata.Name !== undefined)
-        state.playerTwo.Name = playerTwoMetadata.Name;
-      if (playerTwoMetadata.isPatron !== undefined)
-        state.playerTwo.isPatron = playerTwoMetadata.isPatron;
-      if (playerTwoMetadata.isContributor !== undefined)
-        state.playerTwo.isContributor = playerTwoMetadata.isContributor;
-      if (playerTwoMetadata.isPvtVoidPatron !== undefined)
-        state.playerTwo.isPvtVoidPatron = playerTwoMetadata.isPvtVoidPatron;
-      if (playerTwoMetadata.metafyTiers !== undefined)
-        state.playerTwo.metafyTiers = playerTwoMetadata.metafyTiers;
-
-      state.activeChainLink = action.payload.activeChainLink;
-      state.activeLayers = action.payload.activeLayers;
-      state.oldCombatChain = action.payload.oldCombatChain;
-
-      {
-        const prevLen = (state.chatLog ?? []).filter((m: string) => m.length > 0).length;
-        const incoming = action.payload.chatLog ?? [];
-        if (!state.showChatModal && prevLen > 0) {
-          const incomingNonEmpty = incoming.filter((m: string) => m.length > 0);
-          const newPlayerChats = incomingNonEmpty.slice(prevLen).filter((m: string) => CHAT_RE.test(m)).length;
-          if (newPlayerChats > 0) {
-            state.unreadChatCount = (state.unreadChatCount ?? 0) + newPlayerChats;
-          }
-        }
-      }
-
-      state.chatLog = action.payload.chatLog;
-      state.opponentIsTyping = action.payload.opponentIsTyping ?? false;
-      state.amIActivePlayer = action.payload.amIActivePlayer;
-      state.turnPlayer = action.payload.turnPlayer;
-      state.otherPlayer = action.payload.otherPlayer;
-      state.turnPhase = action.payload.turnPhase;
-      state.playerInputPopUp = action.payload.playerInputPopUp;
-
-      // gameInfo
-      const newCard2 = action.payload.gameDynamicInfo.lastPlayed;
-      state.gameDynamicInfo.lastPlayed = newCard2;
-      if (newCard2 && newCard2.cardNumber !== 'CardBack' && !newCard2.cardNumber.startsWith('CB')) {
-        const prev2 = state.gameDynamicInfo.recentlyPlayed ?? [];
-        if (prev2[0]?.cardNumber !== newCard2.cardNumber) {
-          state.gameDynamicInfo.recentlyPlayed = [newCard2, ...prev2].slice(0, 10);
-        }
-      }
-      state.gameDynamicInfo.lastUpdate =
-        action.payload.gameDynamicInfo.lastUpdate;
-      state.gameDynamicInfo.turnNo = action.payload.gameDynamicInfo.turnNo;
-      state.gameDynamicInfo.clock = action.payload.gameDynamicInfo.clock;
-      state.gameDynamicInfo.spectatorCount =
-        action.payload.gameDynamicInfo.spectatorCount ?? 0;
-      state.gameDynamicInfo.spectatorNames =
-        action.payload.gameDynamicInfo.spectatorNames ?? [];
-      state.gameDynamicInfo.playerInventory =
-        action.payload.gameDynamicInfo.playerInventory;
-      state.hasPriority = action.payload.hasPriority;
-      state.priorityPlayer = action.payload.priorityPlayer;
-      state.chatEnabled = action.payload.chatEnabled;
-
-      state.playerPrompt = action.payload.playerPrompt;
-      state.canPassPhase = action.payload.canPassPhase;
-      state.events = action.payload.events;
-      state.landmark = action.payload.landmark;
-
-      state.gameInfo.roguelikeGameID =
-        action.payload.gameInfo.roguelikeGameID ??
-        state.gameInfo.roguelikeGameID;
-
-      state.gameInfo.altArts =
-        action.payload.gameInfo.altArts ?? state.gameInfo.altArts;
-
-      state.gameInfo.opponentAltArts =
-        action.payload.gameInfo.opponentAltArts ??
-        state.gameInfo.opponentAltArts;
-
-      state.gameInfo.isPrivate =
-        action.payload.gameInfo.isPrivate ?? state.gameInfo.isPrivate;
-
-      state.gameInfo.isReplay =
-        action.payload.gameInfo.isReplay ?? state.gameInfo.isReplay;
-
-      state.gameInfo.isOpponentAI =
-        action.payload.gameInfo.isOpponentAI ?? state.gameInfo.isOpponentAI;
-
-      state.gameInfo.gameFormat =
-        action.payload.gameInfo.gameFormat ?? state.gameInfo.gameFormat;
-
-      state.aiHasInfiniteHP = action.payload.aiHasInfiniteHP ?? false;
-
-      state.opponentInactive = action.payload.opponentInactive ?? false;
-
-      state.preventPassPrompt = action.payload.preventPassPrompt;
-
-      return state;
-    });
-    builder.addCase(nextTurn.pending, (state, action) => {
-      state.isUpdateInProgress = true;
-      return state;
-    });
-    builder.addCase(nextTurn.rejected, (state, action) => {
-      state.isUpdateInProgress = false;
-
-      // Check if this was a "game not found" error
-      const errorMessage = action.error?.message || '';
-      if (errorMessage.includes('GAME_NOT_FOUND')) {
-        console.error('Game not found on server, marking for navigation');
-        window.sessionStorage.setItem(
-          'gameNotFound',
-          String(state.gameInfo.gameID)
-        );
-      }
-
-      return state;
-    });
-
     // playCard
-    builder.addCase(playCard.pending, (state) => {
+    builder.addCase(playCard.pending, (state, action) => {
       // player input in progress
       state.isPlayerInputInProgress = true;
+      state.playerInputRequestId = action.meta.requestId;
       return state;
     });
     builder.addCase(playCard.fulfilled, (state) => {
-      // not setting isPlayerInput to false because the
-      // 'nextTurn' builder will set to true.
+      // The next SSE game-state update clears isPlayerInputInProgress.
+      state.isPlayerInputInProgress = false;
       return state;
     });
     builder.addCase(playCard.rejected, (state) => {
@@ -1094,12 +834,14 @@ export const gameSlice = createSlice({
     });
 
     // submitButton
-    builder.addCase(submitButton.pending, (state) => {
+    builder.addCase(submitButton.pending, (state, action) => {
       // player input in progress
       state.isPlayerInputInProgress = true;
+      state.playerInputRequestId = action.meta.requestId;
       return state;
     });
     builder.addCase(submitButton.fulfilled, (state) => {
+      state.isPlayerInputInProgress = false;
       return state;
     });
     builder.addCase(submitButton.rejected, (state) => {
@@ -1107,9 +849,27 @@ export const gameSlice = createSlice({
       return state;
     });
 
-    // nextTurn
+    builder.addCase(submitMultiButton.pending, (state, action) => {
+      // player input in progress
+      state.isPlayerInputInProgress = true;
+      state.playerInputRequestId = action.meta.requestId;
+      return state;
+    });
+    builder.addCase(submitMultiButton.fulfilled, (state) => {
+      state.isPlayerInputInProgress = false;
+      return state;
+    });
+    builder.addCase(submitMultiButton.rejected, (state) => {
+      state.isPlayerInputInProgress = false;
+      return state;
+    });
+
+    // gameLobby
     builder.addCase(gameLobby.fulfilled, (state, action) => {
       if (action.payload === undefined) {
+        return state;
+      }
+      if (action.meta.arg.game.gameID !== state.gameInfo.gameID) {
         return state;
       }
       state.isUpdateInProgress = false;
@@ -1126,17 +886,19 @@ export const gameSlice = createSlice({
 
       // set isFullRematch to false
       state.isFullRematch = false;
+      state.hasGameEnded = false;
 
       state.chatEnabled = action.payload.chatEnabled ?? false;
       state.opponentIsTyping = action.payload.opponentIsTyping ?? false;
+      state.opponentPresence = null;
 
       return state;
     });
-    builder.addCase(gameLobby.pending, (state, action) => {
+    builder.addCase(gameLobby.pending, (state) => {
       state.isUpdateInProgress = true;
       return state;
     });
-    builder.addCase(gameLobby.rejected, (state, action) => {
+    builder.addCase(gameLobby.rejected, (state) => {
       state.isUpdateInProgress = false;
       return state;
     });
@@ -1175,12 +937,17 @@ export const {
   setIsRoguelike,
   setHeroInfo,
   markHeroIntroAsShown,
+  setLobbyAltArts,
+  setDeckCosmetics,
   setShuffling,
   setAddBotDeck,
   setClashReveal,
+  setHeroTransform,
   setArsenalFlip,
+  setArsenalDestroy,
   setReplayStart,
   setOpponentTyping,
+  setOpponentPresence,
   addDamagePopup,
   removeDamagePopup,
   addHealingPopup,
@@ -1198,97 +965,73 @@ const selectPlayerOnePermanents = (state: RootState) =>
 const selectPlayerTwoPermanents = (state: RootState) =>
   state.game.playerTwo.Permanents;
 
-// Memoized selector factories for player one and player two
+const buildPermanentsAsStack = (
+  permanents: Card[] | undefined
+): CardStack[] => {
+  const cards = permanents || [];
+  if (cards.length === 0) return [];
+
+  const result: CardStack[] = [];
+  const byCardNumber = new Map<string, number[]>();
+  let idIndex = 0;
+
+  for (const currentCard of [...cards].sort((a, b) =>
+    a.cardNumber.localeCompare(b.cardNumber)
+  )) {
+    if (currentCard.cardNumber === 'EVR070') {
+      result.push({
+        card: currentCard,
+        count: 1,
+        id: `${currentCard.cardNumber}-${idIndex++}`
+      });
+      continue;
+    }
+
+    const curNormalized = { ...currentCard, actionDataOverride: '' };
+    const candidates = byCardNumber.get(currentCard.cardNumber);
+    let matched = false;
+
+    if (candidates) {
+      for (const idx of candidates) {
+        if (
+          isEqual(
+            { ...result[idx].card, actionDataOverride: '' },
+            curNormalized
+          )
+        ) {
+          result[idx].count++;
+          matched = true;
+          break;
+        }
+      }
+    }
+
+    if (!matched) {
+      const idx = result.length;
+      if (candidates) {
+        candidates.push(idx);
+      } else {
+        byCardNumber.set(currentCard.cardNumber, [idx]);
+      }
+      result.push({
+        card: currentCard,
+        count: 1,
+        id: `${currentCard.cardNumber}-${idIndex++}`
+      });
+    }
+  }
+
+  return result;
+};
+
 const selectPlayerOnePermanentsAsStack = createSelector(
   [selectPlayerOnePermanents],
-  (permanents: Card[] | undefined) => {
-    const cards = permanents || [];
-    let initialCardStack: CardStack[] = [];
-    let idIndex = 0;
-    return [...cards]
-      .sort((a, b) => a.cardNumber.localeCompare(b.cardNumber))
-      .reduce((accumulator, currentCard) => {
-        if (currentCard.cardNumber === 'EVR070') {
-          accumulator.push({
-            card: currentCard,
-            count: 1,
-            id: `${currentCard.cardNumber}-${idIndex++}`
-          });
-          return accumulator;
-        }
-        const cardCopy = { ...currentCard };
-        const storedADO = currentCard.actionDataOverride;
-        cardCopy.actionDataOverride = '';
-        let isInAccumulator = false;
-        let index = 0;
-
-        for (const [ix, cardStack] of accumulator.entries()) {
-          cardCopy.actionDataOverride = cardStack.card.actionDataOverride;
-          if (isEqual(cardStack.card, cardCopy)) {
-            isInAccumulator = true;
-            index = ix;
-            break;
-          }
-        }
-        if (isInAccumulator) {
-          accumulator[index].count = accumulator[index].count + 1;
-          return accumulator;
-        }
-        accumulator.push({
-          card: currentCard,
-          count: 1,
-          id: `${currentCard.cardNumber}-${idIndex++}`
-        });
-        cardCopy.actionDataOverride = storedADO;
-        return accumulator;
-      }, initialCardStack);
-  }
+  (permanents) => buildPermanentsAsStack(permanents)
 );
 
 const selectPlayerTwoPermanentsAsStack = createSelector(
   [selectPlayerTwoPermanents],
-  (permanents: Card[] | undefined) => {
-    const cards = permanents || [];
-    let initialCardStack: CardStack[] = [];
-    let idIndex = 0;
-    return [...cards]
-      .sort((a, b) => a.cardNumber.localeCompare(b.cardNumber))
-      .reduce((accumulator, currentCard) => {
-        if (currentCard.cardNumber === 'EVR070') {
-          accumulator.push({
-            card: currentCard,
-            count: 1,
-            id: `${currentCard.cardNumber}-${idIndex++}`
-          });
-          return accumulator;
-        }
-        const cardCopy = { ...currentCard };
-        const storedADO = currentCard.actionDataOverride;
-        cardCopy.actionDataOverride = '';
-        let isInAccumulator = false;
-        let index = 0;
-
-        for (const [ix, cardStack] of accumulator.entries()) {
-          cardCopy.actionDataOverride = cardStack.card.actionDataOverride;
-          if (isEqual(cardStack.card, cardCopy)) {
-            isInAccumulator = true;
-            index = ix;
-            break;
-          }
-        }
-        if (isInAccumulator) {
-          accumulator[index].count = accumulator[index].count + 1;
-          return accumulator;
-        }
-        accumulator.push({
-          card: currentCard,
-          count: 1,
-          id: `${currentCard.cardNumber}-${idIndex++}`
-        });
-        cardCopy.actionDataOverride = storedADO;
-        return accumulator;
-      }, initialCardStack);
-  }
+  (permanents) => buildPermanentsAsStack(permanents)
 );
 
 export const selectPermanentsAsStack = (

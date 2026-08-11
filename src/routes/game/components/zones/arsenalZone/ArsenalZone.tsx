@@ -1,26 +1,15 @@
 import React from 'react';
-import { useAppDispatch, useAppSelector } from 'app/Hooks';
+import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import Displayrow from 'interface/Displayrow';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import { Card } from 'features/Card';
 import styles from './ArsenalZone.module.css';
-import {
-  getGameInfo,
-  submitButton
-} from '../../../../../features/game/GameSlice';
-import Button from '../../../../../features/Button';
-import { AnimatePresence, motion } from 'framer-motion';
-import useWindowDimensions from '../../../../../hooks/useWindowDimensions';
-import { PROCESS_INPUT } from 'appConstants';
-import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
+import { useTranslation } from 'react-i18next';
 
 export default function ArsenalZone(prop: Displayrow) {
   const { isPlayer } = prop;
-
-  const isSpectator = useAppSelector((state: RootState) => {
-    return state.game.gameInfo.playerID === 3;
-  });
+  const { t } = useTranslation();
 
   const arsenalCards = useAppSelector((state: RootState) => {
     return isPlayer
@@ -43,14 +32,22 @@ export default function ArsenalZone(prop: Displayrow) {
   const arsenalFlipTrigger = useAppSelector(
     (state: RootState) => state.game.arsenalFlipTrigger
   );
+  const arsenalDestroyP1Card = useAppSelector(
+    (state: RootState) => state.game.arsenalDestroyP1Card
+  );
+  const arsenalDestroyP2Card = useAppSelector(
+    (state: RootState) => state.game.arsenalDestroyP2Card
+  );
+  const arsenalDestroyTrigger = useAppSelector(
+    (state: RootState) => state.game.arsenalDestroyTrigger
+  );
 
   const currentPlayerID = isPlayer ? playerID : otherPlayerID;
   const flipCard =
     currentPlayerID === 1 ? arsenalFlipP1Card : arsenalFlipP2Card;
   const showFlip = !!flipCard;
-
-  const [width, height] = useWindowDimensions();
-  const isPortrait = height > width;
+  const destroyCard =
+    currentPlayerID === 1 ? arsenalDestroyP1Card : arsenalDestroyP2Card;
 
   if (
     arsenalCards === undefined ||
@@ -59,8 +56,28 @@ export default function ArsenalZone(prop: Displayrow) {
   ) {
     return (
       <div className={styles.arsenalContainer}>
-        <div className={styles.arsenalZone}>Arsenal</div>
-        {!isPortrait && <ArsenalPrompt />}
+        <div className={styles.arsenalZone}>
+          {t('ZONES.ARSENAL')}
+          {destroyCard && (
+            <div
+              key={`arsenalDestroyAnim-${arsenalDestroyTrigger}`}
+              className={styles.arsenalDestroyContainer}
+            >
+              <div className={styles.arsenalDestroyTopPiece}>
+                <CardDisplay
+                  card={{ cardNumber: destroyCard }}
+                  isPlayer={isPlayer}
+                />
+              </div>
+              <div className={styles.arsenalDestroyBottomPiece}>
+                <CardDisplay
+                  card={{ cardNumber: destroyCard }}
+                  isPlayer={isPlayer}
+                />
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     );
   }
@@ -68,9 +85,7 @@ export default function ArsenalZone(prop: Displayrow) {
   return (
     <div className={styles.arsenalContainer}>
       <div className={styles.arsenalZone}>
-        {arsenalCards.map((card: Card, index) => {
-          // if it doesn't belong to us we don't need to know if it's faceup or facedown.
-          const cardCopy = { ...card };
+        {arsenalCards.map((card: Card, index: number) => {
           // Check if this card is currently animating
           const isAnimatingThisCard = showFlip && card.cardNumber === flipCard;
 
@@ -78,7 +93,7 @@ export default function ArsenalZone(prop: Displayrow) {
             <div key={index} className={styles.cardWrapper}>
               {/* Hide the actual card while animation is playing */}
               {!isAnimatingThisCard && (
-                <CardDisplay card={cardCopy} isPlayer={isPlayer} />
+                <CardDisplay card={card} isPlayer={isPlayer} />
               )}
               {/* Show animation overlay while animating */}
               {isAnimatingThisCard && (
@@ -86,78 +101,35 @@ export default function ArsenalZone(prop: Displayrow) {
                   key={`arsenalFlipAnimation-${arsenalFlipTrigger}`}
                   className={styles.arsenalFlipCard}
                 >
-                  <CardDisplay card={{ cardNumber: flipCard }} />
+                  <CardDisplay
+                    card={{ cardNumber: flipCard }}
+                    isPlayer={isPlayer}
+                  />
                 </div>
               )}
             </div>
           );
         })}
+        {destroyCard && (
+          <div
+            key={`arsenalDestroyAnim-${arsenalDestroyTrigger}`}
+            className={styles.arsenalDestroyContainer}
+          >
+            <div className={styles.arsenalDestroyTopPiece}>
+              <CardDisplay
+                card={{ cardNumber: destroyCard }}
+                isPlayer={isPlayer}
+              />
+            </div>
+            <div className={styles.arsenalDestroyBottomPiece}>
+              <CardDisplay
+                card={{ cardNumber: destroyCard }}
+                isPlayer={isPlayer}
+              />
+            </div>
+          </div>
+        )}
       </div>
-      <ArsenalPrompt />
     </div>
   );
 }
-
-const ArsenalPrompt = () => {
-  const playerPrompt = useAppSelector(
-    (state: RootState) => state.game.playerPrompt
-  );
-  const turnPhase = useAppSelector(
-    (state: RootState) => state.game.turnPhase?.turnPhase
-  );
-  const gameInfo = useAppSelector(getGameInfo);
-
-  const oldCombatChain =
-    useAppSelector((state: RootState) => state.game.oldCombatChain) ?? [];
-  const activeCombatChain = useAppSelector(
-    (state: RootState) => state.game.activeChainLink
-  );
-  const showCombatChain =
-    oldCombatChain?.length > 0 ||
-    (activeCombatChain?.attackingCard &&
-      activeCombatChain?.attackingCard?.cardNumber !== 'blank');
-
-  const dispatch = useAppDispatch();
-
-  const clickButton = (button: Button) => {
-    dispatch(submitButton({ button: button }));
-  };
-
-  const showPrompt =
-    (gameInfo.playerID !== 3 && turnPhase === 'ARS') ||
-    turnPhase === 'CHOOSEHAND' ||
-    turnPhase === 'MAYCHOOSEHAND' ||
-    turnPhase === 'MAYCHOOSEHANDHEAVE';
-    
-  const buttons = playerPrompt?.buttons?.map((button, ix) => {
-    return (
-      <div
-        className={styles.buttonDiv}
-        onClick={() => {
-          clickButton(button);
-        }}
-        key={ix.toString()}
-      >
-        {button.caption}
-      </div>
-    );
-  });
-
-  return (
-    <AnimatePresence>
-      {showPrompt && !showCombatChain && (
-        <motion.div
-          className={styles.playerPrompt}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-        >
-          <div className={styles.content}>
-            <div>{parseHtmlToReactElements(playerPrompt?.helpText ?? '')}</div>
-          </div>
-          {buttons}
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
-};

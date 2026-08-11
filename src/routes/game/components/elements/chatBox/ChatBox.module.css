@@ -5,6 +5,106 @@
   bottom: 0;
   left: 0.1em;
   right: 0;
+  --game-log-accent: var(--theme-text);
+  --game-log-critical: #fca52c;
+}
+
+.chatMessage {
+  padding: 2px 5px;
+}
+
+.logMuted {
+  color: color-mix(in srgb, var(--theme-text) 55%, transparent);
+  font-size: 0.9em;
+}
+
+.logRepeatCount {
+  color: inherit;
+  font-size: inherit;
+  font-weight: 400;
+  opacity: 0.7;
+}
+
+.logAction {
+  font-weight: 600;
+}
+
+.logTrigger {
+  border-left: 2px solid var(--game-log-accent);
+  padding-left: 6px;
+}
+
+.logCritical {
+  color: var(--game-log-critical);
+  font-weight: 700;
+}
+
+.logIrreversible {
+  font-weight: 600;
+}
+
+.turnDivider {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 9px 5px 6px;
+  color: var(--game-log-accent);
+  font-size: 0.85em;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.turnDivider > span {
+  min-width: 0;
+}
+
+.turnDividerLabel {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.turnDivider::before,
+.turnDivider::after {
+  content: '';
+  height: 0;
+  flex: 1 0 12px;
+  align-self: center;
+  border-top: 1px solid color-mix(in srgb, currentColor 50%, transparent);
+}
+
+.turnDividerPlayer {
+  color: var(--theme-text);
+  font-weight: 500;
+  text-transform: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.combatGroup {
+  margin: 5px 4px;
+  padding: 4px 0;
+  border-left: 2px solid var(--game-log-accent);
+  background-color: color-mix(
+    in srgb,
+    var(--theme-form-background) 94%,
+    var(--game-log-accent)
+  );
+}
+
+.combatGroupLabel {
+  padding: 0 6px 3px;
+  color: var(--game-log-accent);
+  font-size: 0.75em;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.combatGroup .chatMessage,
+.combatGroup .chatMobileMessage {
+  padding-left: 7px;
+  padding-right: 7px;
 }
 
 .tabs > button {
@@ -23,13 +123,13 @@
 
 .tabs > button {
   border: 1px solid var(--theme-secondary) !important;
-  background-color: black !important;
+  background-color: var(--theme-form-background) !important;
   color: var(--secondary-inverse) !important;
 }
 
 .primaryTabs > button {
   border: 1px solid var(--theme-secondary) !important;
-  background-color: black !important;
+  background-color: var(--theme-form-background) !important;
   color: var(--secondary-inverse) !important;
 }
 
@@ -46,14 +146,14 @@
 }
 
 .tabs > button:hover {
-  background-color: black;
+  background-color: var(--theme-form-background);
   color: var(--theme-secondary);
   border: 1px solid var(--theme-secondary);
   cursor: pointer;
 }
 
 .primaryTabs > button:hover {
-  background-color: black;
+  background-color: var(--theme-form-background);
   color: var(--theme-secondary);
   border: 1px solid var(--theme-secondary);
   cursor: pointer;
@@ -102,7 +202,7 @@
 
 .chatBoxMobileContainer {
   position: fixed;
-  bottom: 2dvh;
+  bottom: 1dvh;
   right: 2dvh;
   width: clamp(230px, 52vw, 360px);
   z-index: 99997;
@@ -111,7 +211,8 @@
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.65);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid var(--theme-border-light);
+  background-color: var(--theme-form-background);
   user-select: text;
 }
 
@@ -120,9 +221,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: rgba(18, 14, 8, 0.97);
+  background-color: var(--theme-card-background);
   padding: 5px 8px;
-  border-bottom: 1px solid rgba(200, 164, 53, 0.35);
+  border-bottom: 1px solid color-mix(in srgb, var(--theme-primary) 35%, transparent);
   gap: 4px;
 }
 
@@ -146,27 +247,27 @@
 }
 
 .chatMobileTab {
-  background-color: rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.55);
-  border-color: rgba(255, 255, 255, 0.15);
+  background-color: color-mix(in srgb, var(--theme-text) 8%, transparent);
+  color: var(--theme-text-muted);
+  border-color: var(--theme-border-light);
 }
 
 .chatMobileTab:hover {
-  background-color: rgba(255, 255, 255, 0.15);
-  color: rgba(255, 255, 255, 0.85);
+  background-color: color-mix(in srgb, var(--theme-text) 15%, transparent);
+  color: var(--theme-text-secondary);
 }
 
 .chatMobileTabActive {
   background-color: var(--theme-primary, #c8a435);
-  color: #000;
+  color: var(--theme-primary-inverse);
   border-color: var(--theme-primary, #c8a435);
 }
 
 /* Collapse / expand toggle */
 .chatMobileToggle {
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: rgba(255, 255, 255, 0.65);
+  border: 1px solid var(--theme-border);
+  color: var(--theme-text-secondary);
   font-size: 12px;
   border-radius: 5px;
   cursor: pointer;
@@ -178,8 +279,8 @@
 }
 
 .chatMobileToggle:hover {
-  color: white;
-  border-color: rgba(255, 255, 255, 0.5);
+  color: var(--theme-text);
+  border-color: color-mix(in srgb, var(--theme-text) 50%, transparent);
 }
 
 /* Scrollable message area */
@@ -188,12 +289,24 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
-  background-color: rgba(252, 252, 250, 0.95);
-  color: #111;
   padding: 6px 8px;
   display: flex;
   flex-direction: column;
   gap: 1px;
+  --game-log-accent: #9edfff;
+  --game-log-critical: #ffd27a;
+}
+
+.loadEarlierButton {
+  align-self: center;
+  margin: 2px 0 6px;
+  padding: 4px 10px;
+  min-height: 28px;
+  border: 1px solid var(--theme-border-light);
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--theme-text) 7%, transparent);
+  color: var(--theme-text);
+  font-size: 12px;
 }
 
 /* Individual message */
@@ -213,7 +326,7 @@
 .typingIndicator {
   padding: 8px 0;
   font-style: italic;
-  color: #666;
+  color: var(--theme-text-muted);
   animation: blink 1.4s infinite;
 }
 

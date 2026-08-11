@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useId } from 'react';
 import { createPortal } from 'react-dom';
 import styles from './PlayerNoteModal.module.css';
+import { useTranslation } from 'react-i18next';
 
 interface PlayerNoteModalProps {
   isOpen: boolean;
@@ -17,7 +18,10 @@ export default function PlayerNoteModal({
   initialNote,
   playerName
 }: PlayerNoteModalProps) {
+  const { t } = useTranslation();
   const [noteText, setNoteText] = useState(initialNote);
+  const titleId = useId();
+  const countId = useId();
 
   useEffect(() => {
     setNoteText(initialNote);
@@ -37,13 +41,19 @@ export default function PlayerNoteModal({
 
   return createPortal(
     <div className={styles.overlay} onClick={handleCancel}>
-      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+      <div
+        className={styles.modal}
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+      >
         <div className={styles.header}>
-          <h2>Note for {playerName}</h2>
+          <h2 id={titleId}>{t('PLAYER_NAME.NOTE_FOR', { playerName })}</h2>
           <button
             className={styles.closeButton}
             onClick={handleCancel}
-            title="Close"
+            aria-label={t('PLAYER_NAME.CLOSE')}
           >
             ✕
           </button>
@@ -53,18 +63,22 @@ export default function PlayerNoteModal({
           className={styles.textarea}
           value={noteText}
           onChange={(e) => setNoteText(e.target.value)}
-          placeholder="Add a personal note about this opponent..."
+          placeholder={t('PLAYER_NAME.NOTE_PLACEHOLDER')}
           maxLength={200}
+          aria-labelledby={titleId}
+          aria-describedby={countId}
         />
 
-        <div className={styles.charCount}>{noteText.length}/200</div>
+        <div id={countId} className={styles.charCount} aria-live="polite">
+          {noteText.length}/200
+        </div>
 
         <div className={styles.footer}>
           <button className={styles.buttonCancel} onClick={handleCancel}>
-            Cancel
+            {t('PLAYER_NAME.CANCEL')}
           </button>
           <button className={styles.buttonSave} onClick={handleSave}>
-            Save Note
+            {t('PLAYER_NAME.SAVE_NOTE')}
           </button>
         </div>
       </div>

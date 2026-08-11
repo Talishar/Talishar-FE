@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import styles from './DamagePopup.module.css';
 
@@ -13,13 +13,16 @@ export const DamagePopup: React.FC<DamagePopupProps> = ({
   amount,
   onComplete
 }) => {
+  const onCompleteRef = useRef(onComplete);
+  onCompleteRef.current = onComplete;
+
   useEffect(() => {
     const timer = setTimeout(() => {
-      onComplete(id);
+      onCompleteRef.current(id);
     }, 1500);
 
     return () => clearTimeout(timer);
-  }, [id, onComplete]);
+  }, [id]); // onComplete excluded: always read from ref
 
   return (
     <motion.div

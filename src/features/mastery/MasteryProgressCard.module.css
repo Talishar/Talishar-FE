@@ -1,0 +1,71 @@
+.card { margin: .75rem 0 1rem; padding: .85rem 1rem; border: 1px solid rgba(205,151,84,.3); border-radius: 8px; background: linear-gradient(110deg, rgba(119,66,37,.18), rgba(255,255,255,.025)); color: #eee8df; }
+.card strong, .card b, .card small { display: block; }
+.card strong { font-family: Georgia, serif; }
+.card b { margin-top: .25rem; color: #e8c47c; font-size: .85rem; }
+.card small { color: #b9b0a5; }
+.track { height: 7px; margin: .55rem 0 .4rem; overflow: hidden; border-radius: 999px; background: rgba(255,255,255,.1); }
+.track i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #934d33, #e2b45e); box-shadow: 0 0 12px rgba(226,180,94,.35); }
+.unlockLabel { display: block; margin-bottom: .35rem; color: #f0c76d; font-size: .7rem; font-weight: 900; letter-spacing: .14em; }
+.unlocked { border-color: #ddb561; background: radial-gradient(circle at 50% 0, rgba(229,187,99,.22), rgba(76,40,27,.2)); box-shadow: 0 0 24px rgba(221,181,97,.16); text-align: center; }
+.compact {
+  max-width: 640px;
+  margin: -0.15rem 0 0;
+  padding: 0.15rem 0.1rem 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--theme-text-muted, #b9b0a5);
+}
+
+.compact strong {
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--theme-text-muted, #b9b0a5);
+}
+
+.compact .track {
+  box-sizing: border-box;
+  height: 5px;
+  margin: 0.35rem 0 0.25rem;
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.18));
+  background: transparent;
+}
+
+.compact .track i {
+  background: var(--theme-primary, #d4af37);
+  box-shadow: none;
+  opacity: 0.65;
+}
+
+.compact small {
+  color: var(--theme-text-muted, #999);
+  font-size: 0.72rem;
+}
+
+.withPortrait {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.65rem;
+  text-align: left;
+}
+
+.content {
+  min-width: 0;
+}
+
+.portraitFrame {
+  width: 3rem;
+  height: 3rem;
+  box-sizing: border-box;
+}
+
+.portrait {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  border-radius: 50%;
+  object-fit: cover;
+}

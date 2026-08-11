@@ -46,7 +46,7 @@
   border-radius: 7%;
   max-height: 100%;
   max-width: 100%;
-  transition: box-shadow 0.25s, border-color 0.25s;
+  transition: box-shadow 0.25s, border-color 0.25s, filter 0.25s;
   -webkit-user-drag: none;
   -khtml-user-drag: none;
   -moz-user-drag: none;
@@ -113,16 +113,17 @@
 .isTargeted {
   border: 2px solid rgba(255, 60, 60, 0.9);
   border-radius: 7%;
-  box-shadow: 0 0 6px 3px rgba(255, 40, 40, 0.6), inset 0 0 8px 2px rgba(255, 40, 40, 0.25);
+  will-change: filter;
   animation: targetedPulse 2s ease-in-out infinite;
 }
 
 @keyframes targetedPulse {
-  0%, 100% {
-    box-shadow: 0 0 6px 3px rgba(255, 40, 40, 0.6), inset 0 0 8px 2px rgba(255, 40, 40, 0.25);
+  0%,
+  100% {
+    filter: drop-shadow(0 0 5px rgba(255, 40, 40, 0.75));
   }
   50% {
-    box-shadow: 0 0 8px 4px rgba(255, 40, 40, 0.7), inset 0 0 10px 3px rgba(255, 40, 40, 0.3);
+    filter: drop-shadow(0 0 10px rgba(255, 40, 40, 1));
   }
 }
 
@@ -179,8 +180,8 @@
 }
 
 .border4 {
-  border-color: gray;
-  box-shadow: 0 0 2px 2px gray;
+  border-color: #c5cbcf;
+  box-shadow: 0 0 3px 3px #c5cbcf;
 }
 
 .border5 {
@@ -199,13 +200,13 @@
 }
 
 .border8 {
-  border-color: goldenrod;
-  box-shadow: 0 0 4px 4px goldenrod;
+  border-color: #ffd700;
+  box-shadow: 0 0 3px 3px #ffd700;
 }
 
 .border9 {
   border-color: rgb(192, 6, 6);
-  box-shadow: 0 0 4px 4px rgb(192, 6, 6);
+  box-shadow: 0 0 3px 3px rgb(192, 6, 6);
 }
 
 .border10 {
@@ -228,6 +229,18 @@
   position: absolute;
   left: 0px;
   right: 0px;
+  animation: subCardSlideUp 0.18s ease-out both;
+}
+
+@keyframes subCardSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .subcard-transition-enter {

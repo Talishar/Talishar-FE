@@ -25,9 +25,15 @@ const InitialGameState: GameState = {
   clashRevealP1Card: '',
   clashRevealP2Card: '',
   clashRevealTrigger: 0,
+  heroTransformP1Card: '',
+  heroTransformP2Card: '',
+  heroTransformTrigger: 0,
   arsenalFlipP1Card: '',
   arsenalFlipP2Card: '',
   arsenalFlipTrigger: 0,
+  arsenalDestroyP1Card: '',
+  arsenalDestroyP2Card: '',
+  arsenalDestroyTrigger: 0,
   damagePopups: {
     playerOne: [],
     playerTwo: []
@@ -41,6 +47,7 @@ const InitialGameState: GameState = {
     playerTwo: []
   },
   aiHasInfiniteHP: false,
+  practiceDummyWeaponPower: 4,
   spectatorCameraView: 1
 };
 
@@ -341,9 +348,15 @@ export const OfflineTestingGameState: GameState = {
   clashRevealP1Card: '',
   clashRevealP2Card: '',
   clashRevealTrigger: 0,
+  heroTransformP1Card: '',
+  heroTransformP2Card: '',
+  heroTransformTrigger: 0,
   arsenalFlipP1Card: '',
   arsenalFlipP2Card: '',
-  arsenalFlipTrigger: 0
+  arsenalFlipTrigger: 0,
+  arsenalDestroyP1Card: '',
+  arsenalDestroyP2Card: '',
+  arsenalDestroyTrigger: 0
 };
 
 export default InitialGameState as GameState;

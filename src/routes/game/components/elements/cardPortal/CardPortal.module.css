@@ -21,8 +21,10 @@
 .img {
   height: calc(50vh * var(--hover-img-scale));
   display: block;
+  width: auto;
   max-width: 100%;
   max-height: 100%;
+  object-fit: contain;
   border-radius: 5%;
 }
 
@@ -30,27 +32,99 @@
   z-index: 111;
 }
 
+.keywordStrip {
+  pointer-events: none;
+  width: min(100%, 360px);
+  margin-top: 4px;
+  padding: 7px 9px;
+  border-radius: 7px;
+  background: rgb(15 23 42 / 88%);
+  color: #f8fafc;
+  font-size: 0.72rem;
+  line-height: 1.25;
+}
+
+.keywordLine {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  margin: 2px 0;
+}
+.keywordPill {
+  flex: none;
+  padding: 1px 5px;
+  border-radius: 999px;
+  background: rgb(148 163 184 / 35%);
+  font-weight: 700;
+}
+.keywordMore {
+  margin-top: 4px;
+  color: #cbd5e1;
+}
+
 .doubleFacedCard {
   position: absolute;
   left: calc(-38vh * var(--hover-img-scale));
 }
 
+.meldWrap {
+  --meld-h: calc(40vh * var(--hover-img-scale));
+  width: calc(var(--meld-h) / 0.7166);
+  height: var(--meld-h);
+}
+
+.meldImg {
+  height: var(--meld-h);
+  width: calc(var(--meld-h) / 0.7166);
+  max-width: none;
+  max-height: none;
+}
+
 @media (orientation: portrait) {
   .popUpContainer {
+    top: 50% !important;
+    left: 50% !important;
     bottom: auto !important;
     right: auto !important;
-    left: auto !important;
-    top: auto !important;
-    height: 90dvh !important;
+    transform: translate(-50%, -50%);
+    height: calc(90dvh * var(--hover-img-scale, 1)) !important;
+    width: calc(90vw * var(--hover-img-scale, 1));
+    display: flex;
+    align-items: center;
+    justify-content: center;
     pointer-events: none;
-    background: url('../../../../../img/backgrounds/transparent-card.png');
+    background: url('../../../../../img/backgrounds/transparent-card.png')
+      center / contain no-repeat;
   }
 
   .img {
-    height: 40dvh;
+    height: auto;
+    max-height: calc(75dvh * var(--hover-img-scale, 1));
+    max-width: calc(85vw * var(--hover-img-scale, 1));
+    width: auto;
+    object-fit: contain;
+  }
+
+  .meldWrap {
+    --meld-h: calc(min(75dvh, 60.9vw) * var(--hover-img-scale, 1));
   }
 
   .doubleFacedCard {
     position: static;
+  }
+
+  .popUpContainer:has(.doubleFacedCard) {
+    flex-direction: row;
+    gap: 1vw;
+  }
+
+  .popUpContainer:has(.doubleFacedCard) .popUp {
+    max-width: 45vw;
+    padding: 0.5vh;
+  }
+
+  .popUpContainer:has(.doubleFacedCard) .img {
+    max-width: calc(44vw * var(--hover-img-scale, 1));
+    max-height: calc(70dvh * var(--hover-img-scale, 1));
   }
 }

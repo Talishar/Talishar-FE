@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation, Trans } from 'react-i18next';
 import styles from './SessionRecovery.module.css';
 import useAuth from 'hooks/useAuth';
 import { useGetLastActiveGameQuery } from 'features/api/apiSlice';
@@ -6,14 +7,14 @@ import { useNavigate } from 'react-router-dom';
 import {
   deleteGameAuthKey,
   saveGameAuthKey,
-  loadGameAuthKeyFromIndexedDB,
-  loadGameUsername
+  loadGameAuthKeyFromIndexedDB
 } from 'utils/LocalKeyManagement';
 import { toast } from 'react-hot-toast';
 import useSetting from 'hooks/useSetting';
 import { IS_STREAMER_MODE } from 'features/options/constants';
 
 const SessionRecovery: React.FC = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { isLoggedIn, currentUserName } = useAuth();
   const isStreamerMode =
@@ -101,7 +102,6 @@ const SessionRecovery: React.FC = () => {
       // First try IndexedDB backup
       const idbAuthKey = await loadGameAuthKeyFromIndexedDB(gameId as number);
       if (idbAuthKey) {
-        console.log('✅ Recovered authKey from IndexedDB');
         return idbAuthKey;
       }
 
@@ -114,7 +114,6 @@ const SessionRecovery: React.FC = () => {
           if (response.ok) {
             const result = await response.json();
             if (result.success && result.authKey) {
-              console.log('✅ Recovered authKey from backend');
               return result.authKey;
             }
           } else if (response.status === 410) {
@@ -150,21 +149,18 @@ const SessionRecovery: React.FC = () => {
 
       // If server didn't provide authKey, attempt recovery
       if (!authKeyToUse) {
-        console.log('⚠️ Server authKey unavailable, attempting recovery...');
         authKeyToUse = await attemptAuthKeyRecovery(
           data.gameName,
           data.playerID
         );
 
         if (!authKeyToUse) {
-          toast.error(
-            'Unable to recover game session. Please rejoin the game.'
-          );
+          toast.error(t('SESSION_RECOVERY.UNABLE_TO_RECOVER'));
           setIsRecovering(false);
           return;
         }
 
-        toast.success('Game session recovered!');
+        toast.success(t('SESSION_RECOVERY.GAME_SESSION_RECOVERED'));
       }
 
       // Save auth key before navigating
@@ -181,7 +177,7 @@ const SessionRecovery: React.FC = () => {
       });
     } catch (error) {
       console.error('Rejoin error:', error);
-      toast.error('Failed to rejoin game. Please try again.');
+      toast.error(t('SESSION_RECOVERY.REJOIN_FAILED'));
       setIsRecovering(false);
     }
   };
@@ -200,17 +196,22 @@ const SessionRecovery: React.FC = () => {
   }
 
   const opponentStatus = data?.opponentDisconnected
-    ? ' (Opponent Disconnected)'
+    ? ` ${t('SESSION_RECOVERY.OPPONENT_DISCONNECTED')}`
     : '';
   const gameId = data?.gameName;
 
   return (
     <div className={styles.container}>
       <div className={styles.message}>
-        <h3 className={styles.title}>⚡ Resume Your Game?</h3>
+        <h3 className={styles.title}>
+          {t('SESSION_RECOVERY.RESUME_YOUR_GAME')}
+        </h3>
         <p className={styles.description}>
-          You have an active game{' '}
-          <span className={styles.gameId}>#{gameId}</span> waiting
+          <Trans
+            i18nKey="SESSION_RECOVERY.ACTIVE_GAME"
+            values={{ gameId }}
+            components={{ 1: <span className={styles.gameId} /> }}
+          />
           {opponentStatus ? (
             <span className={styles.opponentStatus}>{opponentStatus}</span>
           ) : (
@@ -218,9 +219,9 @@ const SessionRecovery: React.FC = () => {
           )}
         </p>
         <p className={styles.opponentInfo}>
-          Opponent:{' '}
+          {t('SESSION_RECOVERY.OPPONENT_LABEL')}{' '}
           <span className={styles.opponentName}>
-            {isStreamerMode ? 'Opponent' : data?.opponentName}
+            {isStreamerMode ? t('GAME_LOBBY.OPPONENT') : data?.opponentName}
           </span>
         </p>
         <div className={styles.buttonGroup}>
@@ -228,17 +229,19 @@ const SessionRecovery: React.FC = () => {
             className={styles.rejoinButton}
             onClick={handleRejoin}
             disabled={isRecovering}
-            title="Resume your game"
+            title={t('SESSION_RECOVERY.RESUME_TITLE')}
           >
-            {isRecovering ? '⏳ Recovering...' : 'Rejoin Game'}
+            {isRecovering
+              ? t('SESSION_RECOVERY.RECOVERING')
+              : t('SESSION_RECOVERY.REJOIN_GAME')}
           </button>
           <button
             className={styles.dismissButton}
             onClick={handleDismiss}
             disabled={isRecovering}
-            title="Dismiss for 2 hours"
+            title={t('SESSION_RECOVERY.DISMISS_TITLE')}
           >
-            Dismiss
+            {t('SESSION_RECOVERY.DISMISS')}
           </button>
         </div>
       </div>

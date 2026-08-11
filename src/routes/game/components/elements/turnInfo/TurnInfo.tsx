@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import styles from './TurnInfo.module.css';
@@ -6,37 +7,43 @@ import { FaRegClock } from 'react-icons/fa';
 import useSetting from 'hooks/useSetting';
 import { IS_STREAMER_MODE } from 'features/options/constants';
 
-const getGameIdFromUrl = () => {
-  const url = window.location.href;
-  const gameId = url.split('/').pop();
-  return gameId;
-};
+const getGameIdFromUrl = () => window.location.href.split('/').pop();
 
 const STORAGE_KEY_PREFIX = 'game-timer-';
 
-export default function TurnInfo() {
-  const gameId = getGameIdFromUrl();
-  const storageKey = `${STORAGE_KEY_PREFIX}${gameId}`;
+function fancyTimeFormat(duration: number | undefined): string {
+  duration = duration ?? 0;
+  const hrs = ~~(duration / 3600);
+  const mins = ~~((duration % 3600) / 60);
+  const secs = ~~duration % 60;
+  let ret = '';
+  if (hrs > 0) ret += '' + hrs + ':' + (mins < 10 ? '0' : '');
+  ret += '' + mins + ':' + (secs < 10 ? '0' : '');
+  ret += '' + secs;
+  return ret;
+}
 
-  // Timer state
-  const initialTimer = localStorage.getItem(storageKey)
-    ? parseInt(localStorage.getItem(storageKey)!)
-    : 0;
-  const [timer, setTimer] = useState(initialTimer);
+export default function TurnInfo() {
+  const { t } = useTranslation();
+  // Stable for the component's lifetime - URL doesn't change during a game.
+  const storageKeyRef = useRef(`${STORAGE_KEY_PREFIX}${getGameIdFromUrl()}`);
+
+  const [timer, setTimer] = useState(() => {
+    const stored = localStorage.getItem(storageKeyRef.current);
+    return stored ? parseInt(stored, 10) : 0;
+  });
 
   useEffect(() => {
+    const key = storageKeyRef.current;
     const intervalId = setInterval(() => {
       setTimer((prevTimer) => {
         const newTimer = prevTimer + 1;
-        localStorage.setItem(storageKey, newTimer.toString());
+        localStorage.setItem(key, newTimer.toString());
         return newTimer;
       });
     }, 1000);
-
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [storageKey]);
+    return () => clearInterval(intervalId);
+  }, []); // storageKey is stable for the component's lifetime
 
   // Turn and player info
   let turnNumber = useAppSelector(
@@ -67,36 +74,22 @@ export default function TurnInfo() {
     (turnPlayer == 1 && !amIPlayerOne) || (turnPlayer == 2 && amIPlayerOne);
   const displayName =
     isStreamerMode && isOpponentTurn
-      ? 'Opponent'
-      : String(playerName ?? 'Unknown').substring(0, 15);
-
-  function fancyTimeFormat(duration: number | undefined) {
-    duration = duration ?? 0;
-    const hrs = ~~(duration / 3600);
-    const mins = ~~((duration % 3600) / 60);
-    const secs = ~~duration % 60;
-
-    let ret = '';
-
-    if (hrs > 0) {
-      ret += '' + hrs + ':' + (mins < 10 ? '0' : '');
-    }
-
-    ret += '' + mins + ':' + (secs < 10 ? '0' : '');
-    ret += '' + secs;
-
-    return ret;
-  }
+      ? t('TURN_INFO.OPPONENT')
+      : String(playerName ?? t('TURN_INFO.UNKNOWN')).substring(0, 15);
 
   return (
     <div className={styles.turnInfoContainer}>
       <div className={styles.topRow}>
-        <div className={styles.turnNumberSmall}>Turn #{turnNumber}</div>
+        <div className={styles.turnNumberSmall}>
+          {t('TURN_INFO.TURN_NUMBER', { turnNumber })}
+        </div>
         <div className={styles.timer}>
           <FaRegClock /> {fancyTimeFormat(timer)}
         </div>
       </div>
-      <div className={styles.playerName}>{displayName}'s Turn</div>
+      <div className={styles.playerName}>
+        {t('TURN_INFO.PLAYERS_TURN', { playerName: displayName })}
+      </div>
     </div>
   );
 }

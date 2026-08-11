@@ -1,16 +1,18 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { useAppSelector, useAppDispatch } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import Displayrow from 'interface/Displayrow';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import DamagePopup from '../../elements/damagePopup/DamagePopup';
 import HealingPopup from '../../elements/healingPopup/HealingPopup';
+import { Card } from 'features/Card';
 import {
   removeDamagePopup,
   addDamagePopup,
   addHealingPopup,
   removeHealingPopup
 } from 'features/game/GameSlice';
+import HeroTransformEventCard from '../../elements/eventsHandler/HeroTransformEventCard';
 import styles from './HeroZone.module.css';
 
 export const HeroZone = React.memo((prop: Displayrow) => {
@@ -28,10 +30,32 @@ export const HeroZone = React.memo((prop: Displayrow) => {
 
   const cardWithSoul = React.useMemo(() => {
     if (!cardToDisplay) return cardToDisplay;
-    const soulSubcards = soulCards?.map((c) => c.cardNumber) ?? [];
+    const soulSubcards = soulCards?.map((c: Card) => c.cardNumber) ?? [];
     if (soulSubcards.length === 0) return cardToDisplay;
     return { ...cardToDisplay, subcards: soulSubcards };
   }, [cardToDisplay, soulCards]);
+
+  const { transformCard, transformTrigger } = useAppSelector(
+    (state: RootState) => {
+      const viewerPlayerID = state.game.gameInfo.playerID;
+      const displayedPlayerID =
+        viewerPlayerID === 1 || viewerPlayerID === 2
+          ? isPlayer
+            ? viewerPlayerID
+            : 3 - viewerPlayerID
+          : isPlayer
+          ? 1
+          : 2;
+
+      return {
+        transformCard:
+          displayedPlayerID === 1
+            ? state.game.heroTransformP1Card
+            : state.game.heroTransformP2Card,
+        transformTrigger: state.game.heroTransformTrigger
+      };
+    }
+  );
 
   // Use the same logic as HealthDisplay/TurnWidget - isPlayer determines the health
   const health = useAppSelector((state: RootState) =>
@@ -75,17 +99,32 @@ export const HeroZone = React.memo((prop: Displayrow) => {
     previousHealthRef.current = health;
   }, [health, dispatch, isPlayer]);
 
-  const handleDamagePopupComplete = (id: string) => {
-    dispatch(removeDamagePopup({ isPlayer, id }));
-  };
+  const handleDamagePopupComplete = useCallback(
+    (id: string) => {
+      dispatch(removeDamagePopup({ isPlayer, id }));
+    },
+    [dispatch, isPlayer]
+  );
 
-  const handleHealingPopupComplete = (id: string) => {
-    dispatch(removeHealingPopup({ isPlayer, id }));
-  };
+  const handleHealingPopupComplete = useCallback(
+    (id: string) => {
+      dispatch(removeHealingPopup({ isPlayer, id }));
+    },
+    [dispatch, isPlayer]
+  );
 
   return (
     <div className={styles.heroZone}>
-      <CardDisplay card={cardWithSoul} isPlayer={isPlayer} />
+      {transformCard ? (
+        <HeroTransformEventCard
+          key={`heroTransform-${transformTrigger}`}
+          cardNumber={transformCard}
+        >
+          <CardDisplay card={cardWithSoul} isPlayer={isPlayer} />
+        </HeroTransformEventCard>
+      ) : (
+        <CardDisplay card={cardWithSoul} isPlayer={isPlayer} />
+      )}
       {damagePopups.map((popup) => (
         <DamagePopup
           key={popup.id}
@@ -105,5 +144,7 @@ export const HeroZone = React.memo((prop: Displayrow) => {
     </div>
   );
 });
+
+HeroZone.displayName = 'HeroZone';
 
 export default HeroZone;

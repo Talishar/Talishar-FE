@@ -1,19 +1,23 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import { useTheme } from './ThemeContext';
+import { useTranslation } from 'react-i18next';
 import styles from './ThemeToggle.module.css';
 
 const ThemeToggle: React.FC = () => {
   const { currentTheme, setTheme, availableThemes } = useTheme();
   const { isSupporter } = useSupporterStatus();
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
@@ -32,7 +36,7 @@ const ThemeToggle: React.FC = () => {
   const handlePremiumClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsOpen(false);
-    window.location.href = 'https://metafy.gg/@talishar/members';
+    window.location.href = TALISHAR_METAFY_URL;
   };
 
   return (
@@ -45,7 +49,11 @@ const ThemeToggle: React.FC = () => {
         aria-expanded={isOpen}
       >
         <span>{currentTheme.name}</span>
-        <span className={`${styles.chevron}${isOpen ? ` ${styles.chevronOpen}` : ''}`} />
+        <span
+          className={`${styles.chevron}${
+            isOpen ? ` ${styles.chevronOpen}` : ''
+          }`}
+        />
       </button>
 
       {isOpen && (
@@ -59,6 +67,7 @@ const ThemeToggle: React.FC = () => {
                 role="option"
                 aria-selected={isSelected}
                 aria-disabled={locked}
+                tabIndex={locked ? -1 : 0}
                 className={[
                   styles.option,
                   isSelected ? styles.optionSelected : '',
@@ -67,15 +76,21 @@ const ThemeToggle: React.FC = () => {
                   .filter(Boolean)
                   .join(' ')}
                 onClick={() => handleSelect(theme.id, !!theme.premium)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    handleSelect(theme.id, !!theme.premium);
+                  }
+                }}
               >
                 <span className={styles.optionName}>{theme.name}</span>
                 {locked && (
                   <span
                     className={styles.lockBadge}
-                    title="Metafy supporter exclusive"
+                    title={t('THEME_TOGGLE.METAFY_SUPPORTER_EXCLUSIVE')}
                     onClick={handlePremiumClick}
                   >
-                    🔒
+                    {t('THEME_TOGGLE.LOCK')}
                   </span>
                 )}
               </li>
@@ -88,7 +103,7 @@ const ThemeToggle: React.FC = () => {
                 className={styles.upgradeButton}
                 onClick={handlePremiumClick}
               >
-                Unlock all themes — become a supporter
+                {t('THEME_TOGGLE.UNLOCK_CUSTOM_THEMES')}
               </button>
             </li>
           )}

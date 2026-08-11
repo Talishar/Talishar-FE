@@ -1,22 +1,26 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import ChatInput from '../chatInput/ChatInput';
 import styles from './ChatBox.module.css';
-import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 import classNames from 'classnames';
 import useSetting from 'hooks/useSetting';
 import { IS_STREAMER_MODE } from 'features/options/constants';
+import GameLogMessages from './GameLogMessages';
+import { useTranslation } from 'react-i18next';
 
-const CHAT_RE = /<span[^>]*>(.*?):\s<\/span>/;
-
-export default function ChatBox({ usePrimary = false, showTabs = true }: { usePrimary?: boolean; showTabs?: boolean }) {
+export default function ChatBox({
+  usePrimary = false,
+  showTabs = true
+}: {
+  usePrimary?: boolean;
+  showTabs?: boolean;
+}) {
+  const { t } = useTranslation();
   const amIPlayerOne = useAppSelector((state: RootState) => {
     return state.game.gameInfo.playerID === 1;
   });
-  const gameID = useAppSelector(
-    (state: RootState) => state.game.gameInfo.gameID
-  );
+  // gameID selector removed - it was selected but never used in this component.
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
   );
@@ -30,7 +34,7 @@ export default function ChatBox({ usePrimary = false, showTabs = true }: { usePr
     String(useSetting({ settingName: IS_STREAMER_MODE })?.value) === '1';
 
   // Typing state is pushed via SSE named event → stored in Redux.
-  // No polling needed — zero extra HTTP connections.
+  // No polling needed - zero extra HTTP connections.
   const displayTyping = useAppSelector(
     (state: RootState) =>
       (state.game.opponentIsTyping ?? false) &&
@@ -60,56 +64,53 @@ export default function ChatBox({ usePrimary = false, showTabs = true }: { usePr
     }
   };
 
-  const chatMessages = chatLog
-    ?.filter((message) => {
-      switch (chatFilter) {
-        case 'none':
-          return true;
+  const streamerNameRegex = useMemo(
+    () =>
+      isStreamerMode && oppName
+        ? new RegExp(oppName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g')
+        : null,
+    [isStreamerMode, oppName]
+  );
 
-        case 'chat':
-          return message.match(CHAT_RE);
-
-        case 'log':
-          return !message.match(CHAT_RE);
-
-        default:
-          return true;
-      }
-    })
-    .map((message) => {
-      const myDisplayName = amIPlayerOne
-        ? myName && myName.trim()
-          ? myName.substring(0, 15)
-          : 'Player 1'
-        : myName && myName.trim()
+  const transformMessage = useMemo(() => {
+    const myDisplayName = amIPlayerOne
+      ? myName && myName.trim()
         ? myName.substring(0, 15)
-        : 'Player 2';
+        : 'Player 1'
+      : myName && myName.trim()
+      ? myName.substring(0, 15)
+      : 'Player 2';
 
-      const oppDisplayName = isStreamerMode
-        ? 'Opponent'
-        : amIPlayerOne
-        ? oppName && oppName.trim()
-          ? oppName.substring(0, 15)
-          : 'Player 2'
-        : oppName && oppName.trim()
+    const oppDisplayName = isStreamerMode
+      ? 'Opponent'
+      : amIPlayerOne
+      ? oppName && oppName.trim()
         ? oppName.substring(0, 15)
-        : 'Player 1';
+        : 'Player 2'
+      : oppName && oppName.trim()
+      ? oppName.substring(0, 15)
+      : 'Player 1';
 
-      const p1DisplayName = amIPlayerOne ? myDisplayName : oppDisplayName;
-      const p2DisplayName = amIPlayerOne ? oppDisplayName : myDisplayName;
+    const p1DisplayName = amIPlayerOne ? myDisplayName : oppDisplayName;
+    const p2DisplayName = amIPlayerOne ? oppDisplayName : myDisplayName;
 
-      let processedMessage = message
+    return (message: string) => {
+      let processed = message
         .replace(/Player 1/g, `<b>${p1DisplayName}</b>`)
         .replace(/Player 2/g, `<b>${p2DisplayName}</b>`);
 
-      if (isStreamerMode && oppName) {
-        const oppNameEscaped = oppName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        const oppNameRegex = new RegExp(oppNameEscaped, 'g');
-        processedMessage = processedMessage.replace(oppNameRegex, 'Opponent');
+      if (streamerNameRegex) {
+        processed = processed.replace(streamerNameRegex, 'Opponent');
       }
 
-      return processedMessage;
-    });
+      return processed;
+    };
+  }, [isStreamerMode, amIPlayerOne, myName, oppName, streamerNameRegex]);
+
+  const playerNames = useMemo<[string, string]>(
+    () => [amIPlayerOne ? myName : oppName, amIPlayerOne ? oppName : myName],
+    [amIPlayerOne, myName, oppName]
+  );
 
   useEffect(() => {
     const currentLength = chatLog?.length ?? 0;
@@ -127,45 +128,62 @@ export default function ChatBox({ usePrimary = false, showTabs = true }: { usePr
   return (
     <div className={styles.chatBoxContainer}>
       {showTabs && (
-        <div className={classNames(styles.tabs, { [styles.primaryTabs]: usePrimary })}>
+        <div
+          role="tablist"
+          aria-label={t('CHAT.CHAT')}
+          className={classNames(styles.tabs, {
+            [styles.primaryTabs]: usePrimary
+          })}
+        >
           <button
+            type="button"
+            role="tab"
+            aria-selected={chatFilter === 'none'}
             className={classNames(chatFilter === 'none' && styles.activeTab)}
             onClick={(e) => {
               e.preventDefault();
               setChatFilter('none');
             }}
           >
-            All
+            {t('CHAT.ALL')}
           </button>
           <button
+            type="button"
+            role="tab"
+            aria-selected={chatFilter === 'chat'}
             className={classNames(chatFilter === 'chat' && styles.activeTab)}
             onClick={(e) => {
               e.preventDefault();
               setChatFilter('chat');
             }}
           >
-            Chat
+            {t('CHAT.CHAT')}
           </button>
           <button
+            type="button"
+            role="tab"
+            aria-selected={chatFilter === 'log'}
             className={classNames(chatFilter === 'log' && styles.activeTab)}
             onClick={(e) => {
               e.preventDefault();
               setChatFilter('log');
             }}
           >
-            Log
+            {t('CHAT.LOG')}
           </button>
         </div>
       )}
       <div className={styles.chatBoxInner}>
         <div className={styles.chatBox} ref={chatBoxRef}>
-          {chatMessages &&
-            chatMessages.map((chat, ix) => {
-              return <div key={ix}>{parseHtmlToReactElements(chat)}</div>;
-            })}
+          <GameLogMessages
+            chatLog={chatLog}
+            chatFilter={chatFilter}
+            transformMessage={transformMessage}
+            playerNames={playerNames}
+          />
           {displayTyping && (
             <div className={styles.typingIndicator} ref={messagesEndRef}>
-              <em>Opponent is typing…</em>
+              <em>{t('CHAT.TYPING')}</em>
             </div>
           )}
           {!displayTyping && <div ref={messagesEndRef} />}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { GiAngelOutfit, GiGroundSprout } from 'react-icons/gi';
 import { GiDroplets } from 'react-icons/gi';
 import { FaPrayingHands } from 'react-icons/fa';
@@ -8,6 +8,7 @@ import { setCardListLoadFocus } from 'features/game/GameSlice';
 import Displayrow from 'interface/Displayrow';
 import styles from './ZoneCounts.module.css';
 import classNames from 'classnames';
+import { useTranslation } from 'react-i18next';
 
 export const ZoneCounts = (prop: Displayrow) => {
   const soulCount = useAppSelector((state: RootState) =>
@@ -50,95 +51,76 @@ export const ZoneCounts = (prop: Displayrow) => {
   );
 };
 
-const SoulCount = (prop: Displayrow) => {
-  const [hasSoul, setHasSoul] = useState(false);
+const SoulCount = React.memo((prop: Displayrow) => {
   const dispatch = useAppDispatch();
   const { isPlayer } = prop;
+  const { t } = useTranslation();
   const soulCount = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.SoulCount : state.game.playerTwo.SoulCount
   );
+
+  if (!soulCount || soulCount <= 0) return null;
 
   const soulDisplay = () => {
     const playerPronoun = isPlayer ? 'Your' : "Opponent's";
     const popUpName = isPlayer ? 'mySoulPopup' : 'theirSoulPopup';
     dispatch(
-      setCardListLoadFocus({
-        query: popUpName,
-        name: `${playerPronoun} Soul`
-      })
+      setCardListLoadFocus({ query: popUpName, name: `${playerPronoun} Soul` })
     );
   };
 
-  if (!hasSoul && soulCount != undefined && soulCount > 0) {
-    setHasSoul(true);
-  }
-
   return (
-    <>
-      {!!hasSoul && (
-        <div
-          title="Soul"
-          className={styles.clickableItem}
-          onClick={soulDisplay}
-        >
-          <GiAngelOutfit /> {soulCount}
-        </div>
-      )}
-    </>
+    <div
+      title={t('ZONES.SOUL')}
+      className={styles.clickableItem}
+      onClick={soulDisplay}
+    >
+      <GiAngelOutfit /> {soulCount}
+    </div>
   );
-};
+});
 
-const EarthCount = (prop: Displayrow) => {
-  const [hasEarth, setHasEarth] = useState(false);
-  const dispatch = useAppDispatch();
+const EarthCount = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
+  const { t } = useTranslation();
   const earthCount = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.earthCount : state.game.playerTwo.earthCount
   );
 
-  if (!hasEarth && earthCount != undefined && earthCount > 0) {
-    setHasEarth(true);
-  }
+  if (!earthCount || earthCount <= 0) return null;
 
   return (
-    <>
-      {!!hasEarth && (
-        <div title="Earth Cards Count" className={styles.NotClickableItem}>
-          <GiGroundSprout /> {earthCount}
-        </div>
-      )}
-    </>
+    <div
+      title={t('ZONES.EARTH_CARDS_COUNT')}
+      className={styles.NotClickableItem}
+    >
+      <GiGroundSprout /> {earthCount}
+    </div>
   );
-};
+});
 
-const BlessingsCount = (prop: Displayrow) => {
-  const [hasBlessings, setHasBlessings] = useState(false);
-  const dispatch = useAppDispatch();
+const BlessingsCount = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
+  const { t } = useTranslation();
   const blessingsCount = useAppSelector((state: RootState) =>
     isPlayer
       ? state.game.playerOne.blessingsCount
       : state.game.playerTwo.blessingsCount
   );
 
-  if (!hasBlessings && blessingsCount != undefined && blessingsCount > 0) {
-    setHasBlessings(true);
-  }
+  if (!blessingsCount || blessingsCount <= 0) return null;
 
   return (
-    <>
-      {!!hasBlessings && (
-        <div title="Count Your Blessings" className={styles.NotClickableItem}>
-          <FaPrayingHands /> {blessingsCount}
-        </div>
-      )}
-    </>
+    <div
+      title={t('ZONES.COUNT_YOUR_BLESSINGS')}
+      className={styles.NotClickableItem}
+    >
+      <FaPrayingHands /> {blessingsCount}
+    </div>
   );
-};
+});
 
-const BloodDebtCount = (prop: Displayrow) => {
-  const [hasBloodDebt, setHasBloodDebt] = useState(false);
-  const dispatch = useAppDispatch();
+const BloodDebtCount = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
   const bloodDebtCount = useAppSelector((state: RootState) =>
     isPlayer
@@ -151,20 +133,7 @@ const BloodDebtCount = (prop: Displayrow) => {
       : state.game.playerTwo.bloodDebtImmune
   );
 
-  const BloodDebtDisplay = () => {
-    const playerPronoun = isPlayer ? 'Your' : "Opponent's";
-    const popUpName = isPlayer ? 'myBloodDebtPopup' : 'theirBloodDebtPopup';
-    dispatch(
-      setCardListLoadFocus({
-        query: popUpName,
-        name: `${playerPronoun} BloodDebt`
-      })
-    );
-  };
-
-  if (!hasBloodDebt && bloodDebtCount != undefined && bloodDebtCount > 0) {
-    setHasBloodDebt(true);
-  }
+  if (!bloodDebtCount || bloodDebtCount <= 0) return null;
 
   const bloodDebtItem = classNames(
     { [styles.isRed]: !isImmune },
@@ -172,19 +141,13 @@ const BloodDebtCount = (prop: Displayrow) => {
   );
 
   return (
-    <>
-      {!!hasBloodDebt ? (
-        <div
-          title={`Blood Debt${bloodDebtCount === 1 ? '' : 's'}`}
-          className={bloodDebtItem}
-        >
-          <GiDroplets /> {bloodDebtCount}
-        </div>
-      ) : (
-        <div className={styles.item}> </div>
-      )}
-    </>
+    <div
+      title={`Blood Debt${bloodDebtCount === 1 ? '' : 's'}`}
+      className={bloodDebtItem}
+    >
+      <GiDroplets /> {bloodDebtCount}
+    </div>
   );
-};
+});
 
 export default ZoneCounts;

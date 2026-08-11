@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
 import styles from './AdBlockingRecovery.module.css';
+
+type ReviqApi = {
+  checkAdblock?: () => Promise<boolean>;
+  onAdblock?: (cb: () => void) => void;
+  setAdsEnabled?: (enabled: boolean) => void;
+  push?: (fn: (api: ReviqApi) => void) => unknown;
+};
 
 declare global {
   interface Window {
-    reviq?: {
-      checkAdblock: () => Promise<boolean>;
-      onAdblock: (cb: () => void) => void;
-      push: (fn: (obj: { setKv: (k: string, v: number) => void }) => void) => void;
-    };
+    reviq?: ReviqApi;
   }
 }
 
@@ -15,6 +20,7 @@ const DISMISS_KEY = 'talishar_adblock_dismissed';
 const DISMISS_DURATION_MS = 2 * 60 * 60 * 1000; // 2 hours
 
 const AdBlockingRecovery: React.FC = () => {
+  const { t } = useTranslation();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -25,17 +31,45 @@ const AdBlockingRecovery: React.FC = () => {
 
     // Dev override: append ?adblock=1 to the URL to force the modal
     if (new URLSearchParams(window.location.search).get('adblock') === '1') {
+      const reviq = window.reviq ?? ([] as unknown as ReviqApi);
+      window.reviq = reviq;
+      reviq.push?.((api) => api.setAdsEnabled?.(true));
       setVisible(true);
       return;
     }
 
+    const handleAdblock = (api: ReviqApi) => {
+      try {
+        api.setAdsEnabled?.(true);
+      } catch {
+        // Still show recovery messaging if RevIQ cannot enable ads.
+      }
+      setVisible(true);
+    };
+
     const check = async () => {
       try {
-        if (typeof window.reviq?.checkAdblock === 'function') {
-          const hasAdblock = await window.reviq.checkAdblock();
-          if (hasAdblock) setVisible(true);
-        } else if (typeof window.reviq?.onAdblock === 'function') {
-          window.reviq.onAdblock(() => setVisible(true));
+        const reviq = window.reviq ?? ([] as unknown as ReviqApi);
+        window.reviq = reviq;
+
+        if (typeof reviq.checkAdblock === 'function') {
+          const hasAdblock = await reviq.checkAdblock();
+          if (hasAdblock) handleAdblock(reviq);
+        } else if (typeof reviq.onAdblock === 'function') {
+          reviq.onAdblock(() => handleAdblock(reviq));
+        } else if (typeof reviq.push === 'function') {
+          reviq.push((api) => {
+            if (typeof api.checkAdblock === 'function') {
+              api
+                .checkAdblock()
+                .then((hasAdblock) => {
+                  if (hasAdblock) handleAdblock(api);
+                })
+                .catch(() => undefined);
+            } else if (typeof api.onAdblock === 'function') {
+              api.onAdblock(() => handleAdblock(api));
+            }
+          });
         }
       } catch {
         // Detection unavailable; silently ignore
@@ -55,25 +89,26 @@ const AdBlockingRecovery: React.FC = () => {
   return (
     <div className={styles.container}>
       <div className={styles.message}>
-        <p className={styles.title}>Ad Blocker Detected</p>
+        <p className={styles.title}>{t('AD_BLOCKING_RECOVERY.TITLE')}</p>
         <p className={styles.description}>
-          Talishar is free to play and supported by ads. Please consider
-          disabling your ad blocker to help keep the platform running.
+          {t('AD_BLOCKING_RECOVERY.DESCRIPTION')}
         </p>
         <p className={styles.subDescription}>
-          You can also support us directly on{' '}
-          <a
-            className={styles.link}
-            href="https://metafy.gg/@talishar/members"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Metafy
-          </a>
-          .
+          <Trans i18nKey="AD_BLOCKING_RECOVERY.SUPPORT_DIRECTLY">
+            You can also support us directly on{' '}
+            <a
+              className={styles.link}
+              href={TALISHAR_METAFY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Metafy
+            </a>
+            .
+          </Trans>
         </p>
         <button className={styles.dismissButton} onClick={handleDismiss}>
-          Dismiss
+          {t('AD_BLOCKING_RECOVERY.DISMISS')}
         </button>
       </div>
     </div>

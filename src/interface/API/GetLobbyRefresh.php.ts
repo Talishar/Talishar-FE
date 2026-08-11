@@ -9,6 +9,8 @@ export interface GetLobbyRefreshResponse {
   lastUpdate?: number;
   amIChoosingFirstPlayer?: boolean;
   isPrivateLobby?: boolean;
+  format?: string;
+  gameDescription?: string;
   gameLog?: string;
   playAudio?: boolean;
   theirHero?: string;
@@ -33,6 +35,7 @@ export interface GetLobbyRefreshResponse {
   chatInvited?: boolean;
   opponentIsTyping?: boolean;
   wasKicked?: boolean;
+  sideboardWasReset?: boolean;
   isOpponentAI?: boolean;
 }
 
@@ -50,10 +53,10 @@ export interface Matchup {
 // as the discovery grid for Bazaar decks; no further filtering needed.
 //
 // If absent (older backend versions), the FE falls back to its local
-// HEROES_OF_RATHE constant + young flag — without ban filtering.
+// HEROES_OF_RATHE constant + young flag - without ban filtering.
 export interface LegalHero {
-  heroId: string;   // slug, e.g. "briar_warden_of_thorns"
-  name: string;     // display name, e.g. "Briar Warden of Thorns"
-  class: string;    // class name from CardClass(): "RUNEBLADE", "WIZARD", "ASSASSIN", etc.
-  young?: boolean;  // optional; backend has already format-filtered, FE doesn't re-filter
+  heroId: string; // slug, e.g. "briar_warden_of_thorns"
+  name: string; // display name, e.g. "Briar Warden of Thorns"
+  class: string; // class name from CardClass(): "RUNEBLADE", "WIZARD", "ASSASSIN", etc.
+  young?: boolean; // optional; backend has already format-filtered, FE doesn't re-filter
 }

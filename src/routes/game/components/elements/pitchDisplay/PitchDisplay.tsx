@@ -1,20 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import Displayrow from 'interface/Displayrow';
-import { AnimatePresence } from 'framer-motion';
-import ResourcesParticle from '../ResourcesParticle/ResourcesParticle';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { useCookies } from 'react-cookie';
+import ResourcesParticle, {
+  PitchColor
+} from '../ResourcesParticle/ResourcesParticle';
 import styles from './PitchDisplay.module.css';
 
 interface Particle {
   id: string;
-  isChiCard: boolean;
+  pitchColor: PitchColor;
+}
+
+const FALLBACK_PITCH_COLOR: PitchColor = 'red';
+
+function getPitchColor(
+  pitchValue: number | undefined,
+  cardNumber: string
+): PitchColor {
+  if (cardNumber.includes('inner_chi')) return 'blue';
+  if (pitchValue === 3) return 'blue';
+  if (pitchValue === 2) return 'yellow';
+  return FALLBACK_PITCH_COLOR;
 }
 
 export default function PitchDisplay(prop: Displayrow) {
   const { isPlayer } = prop;
   const [particles, setParticles] = useState<Particle[]>([]);
-  const [particleCounter, setParticleCounter] = useState(0);
+  const [pulses, setPulses] = useState<Particle[]>([]);
+  const [cookies] = useCookies(['disableParticles']);
+  const prefersReducedMotion = useReducedMotion();
+  const particleCounter = useRef(0);
 
   let pitchAmount = useAppSelector((state: RootState) =>
     isPlayer
@@ -28,24 +46,29 @@ export default function PitchDisplay(prop: Displayrow) {
 
   // Detect when a new card is added to pitch and spawn particles
   React.useEffect(() => {
+    if (cookies.disableParticles === 'true' || prefersReducedMotion) return;
     if (pitchZone && pitchZone.length > 0) {
-      const lastCard = pitchZone[pitchZone.length - 1];
-      const isChiCard = lastCard.cardNumber.includes('inner_chi');
-
-      // Spawn 3 particles for the newly pitched card
-      for (let i = 0; i < 3; i++) {
-        const newParticle: Particle = {
-          id: `${particleCounter}-${i}`,
-          isChiCard
-        };
-        setParticles((prev) => [...prev, newParticle]);
-      }
-      setParticleCounter((prev) => prev + 1);
+      const newestCard = pitchZone[0];
+      const pitchColor = getPitchColor(
+        newestCard.pitchValue,
+        newestCard.cardNumber
+      );
+      const batch = particleCounter.current++;
+      const newParticles: Particle[] = Array.from({ length: 3 }, (_, i) => ({
+        id: `${batch}-${i}`,
+        pitchColor
+      }));
+      setParticles((prev) => [...prev, ...newParticles]);
+      setPulses((prev) => [...prev, { id: `pulse-${batch}`, pitchColor }]);
     }
-  }, [pitchZone?.length]);
+  }, [pitchZone?.length, cookies.disableParticles, prefersReducedMotion]);
 
   const removeParticle = (id: string) => {
     setParticles((prev) => prev.filter((p) => p.id !== id));
+  };
+
+  const removePulse = (id: string) => {
+    setPulses((prev) => prev.filter((pulse) => pulse.id !== id));
   };
 
   if (pitchAmount === undefined) {
@@ -55,10 +78,22 @@ export default function PitchDisplay(prop: Displayrow) {
   return (
     <div className={styles.pitchOverlay}>
       <AnimatePresence>
+        {pulses.map((pulse) => (
+          <motion.div
+            key={pulse.id}
+            className={`${styles.pitchPulse} ${
+              styles[`pitchPulse${pulse.pitchColor}`]
+            }`}
+            initial={{ opacity: 0.8, scale: 0.45 }}
+            animate={{ opacity: 0, scale: 2.5 }}
+            transition={{ duration: 0.7, ease: 'easeOut' }}
+            onAnimationComplete={() => removePulse(pulse.id)}
+          />
+        ))}
         {particles.map((particle) => (
           <ResourcesParticle
             key={particle.id}
-            isChiCard={particle.isChiCard}
+            pitchColor={particle.pitchColor}
             onAnimationComplete={() => removeParticle(particle.id)}
           />
         ))}

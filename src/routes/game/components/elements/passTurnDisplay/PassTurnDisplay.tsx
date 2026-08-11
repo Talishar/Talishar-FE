@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { submitButton } from 'features/game/GameSlice';
 import { useAppSelector, useAppDispatch } from 'app/Hooks';
 import { RootState } from 'app/Store';
@@ -10,7 +11,27 @@ import passTurnSound from 'sounds/prioritySound.wav';
 import { createPortal } from 'react-dom';
 import { getSettingsEntity } from 'features/options/optionsSlice';
 
+function passSubtitle(
+  turnPhase: string | undefined,
+  t: (key: string) => string
+): string {
+  switch (turnPhase) {
+    case 'B': // Defend step
+      return t('PASS_TURN_DISPLAY.BLOCK');
+    case 'A': // Attack reaction step
+    case 'D': // Defense reaction step
+      return t('PASS_TURN_DISPLAY.REACTION');
+    case 'ARS': // End step
+    case 'PDECK':
+      return t('PASS_TURN_DISPLAY.END_TURN');
+    case 'M': // Action phase
+    default:
+      return t('PASS_TURN_DISPLAY.PRIORITY');
+  }
+}
+
 export default function PassTurnDisplay() {
+  const { t } = useTranslation();
   const canPassPhase = useAppSelector(
     (state: RootState) => state.game.canPassPhase
   );
@@ -23,36 +44,48 @@ export default function PassTurnDisplay() {
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
   );
+  const isReplay = useAppSelector(
+    (state: RootState) => state.game.gameInfo.isReplay
+  );
   const priorityPlayer = useAppSelector(
     (state: RootState) => state.game.priorityPlayer
+  );
+  const turnPhaseEnum = useAppSelector(
+    (state: RootState) => state.game.turnPhase?.turnPhase
+  );
+  const spectatorCameraView = useAppSelector(
+    (state: RootState) => state.game.spectatorCameraView
   );
   const [showAreYouSureModal, setShowAreYouSureModal] =
     useState<boolean>(false);
   const [isPassClickDebounced, setIsPassClickDebounced] =
     useState<boolean>(false);
   const [playPassTurnSound] = useSound(passTurnSound);
+  // Ref so the priority-sound effect doesn't re-register when useSound creates a new function ref.
+  const playPassTurnSoundRef = useRef(playPassTurnSound);
+  playPassTurnSoundRef.current = playPassTurnSound;
+
+  // Holds the debounce timer so it can be cleared on unmount (prevents setState after unmount).
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const preventPassPrompt = useAppSelector(
     (state: RootState) => state.game.preventPassPrompt
   );
-  const settingsData = useAppSelector(getSettingsEntity);
-  const initialValues = { mute: settingsData['MuteSound']?.value === '1' };
+  const isMuted = useAppSelector(
+    (state: RootState) => getSettingsEntity(state)['MuteSound']?.value === '1'
+  );
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (hasPriority && !initialValues.mute && playerID !== 3) {
-      playPassTurnSound();
+    if (hasPriority && !isMuted && playerID !== 3) {
+      playPassTurnSoundRef.current();
     }
-  }, [
-    frameNumber,
-    hasPriority,
-    initialValues.mute,
-    playerID,
-    playPassTurnSound
-  ]);
+    // playPassTurnSound excluded: latest value always read from ref.
+  }, [frameNumber, hasPriority, isMuted, playerID]);
 
   useEffect(() => {
-    let link = document.getElementById('favicon') as HTMLLinkElement;
+    const link = document.getElementById('favicon') as HTMLLinkElement;
     if (hasPriority && link && playerID !== 3) {
       link.href = '/images/priorityGreen.ico';
     } else if (link) {
@@ -60,19 +93,27 @@ export default function PassTurnDisplay() {
     }
   }, [hasPriority, playerID]);
 
+  // Cleanup debounce timer on unmount so setState is never called on an unmounted component.
+  useEffect(
+    () => () => {
+      if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+    },
+    []
+  );
+
   const onPassTurn = useCallback(() => {
-    if (isPassClickDebounced) {
-      return;
-    }
+    if (isPassClickDebounced) return;
 
     setIsPassClickDebounced(true);
-    const debounceTimer = setTimeout(() => {
+    if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+    debounceTimerRef.current = setTimeout(() => {
       setIsPassClickDebounced(false);
+      debounceTimerRef.current = null;
     }, 500);
 
-    if (preventPassPrompt) {
+    if (!isReplay && preventPassPrompt) {
       if (showAreYouSureModal) {
-        // Modal is already open, treat SPACE shortucut as clicking Yes
+        // Modal is already open, treat SPACE shortcut as clicking Yes
         setShowAreYouSureModal(false);
         dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
       } else {
@@ -81,11 +122,16 @@ export default function PassTurnDisplay() {
     } else {
       dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
     }
-
-    return () => clearTimeout(debounceTimer);
-  }, [preventPassPrompt, showAreYouSureModal, dispatch, isPassClickDebounced]);
+  }, [
+    preventPassPrompt,
+    showAreYouSureModal,
+    dispatch,
+    isPassClickDebounced,
+    isReplay
+  ]);
 
   const onUndoKeyPress = useCallback(() => {
+    if (isReplay) return;
     if (showAreYouSureModal) {
       // If modal is open, treat UNDO shortcut as clicking No (close modal)
       setShowAreYouSureModal(false);
@@ -93,7 +139,7 @@ export default function PassTurnDisplay() {
       // If modal is not open, allow normal undo action
       dispatch(submitButton({ button: { mode: PROCESS_INPUT.UNDO } }));
     }
-  }, [showAreYouSureModal, dispatch]);
+  }, [isReplay, showAreYouSureModal, dispatch]);
 
   useShortcut(DEFAULT_SHORTCUTS.PASS_TURN, onPassTurn);
   useShortcut(DEFAULT_SHORTCUTS.PASS_MIDDLE_CLICK, onPassTurn);
@@ -110,49 +156,62 @@ export default function PassTurnDisplay() {
     setShowAreYouSureModal(false);
   };
 
-  if (canPassPhase === undefined) {
+  if (canPassPhase === undefined && !isReplay) {
     return <div className={styles.passTurnDisplay}></div>;
   }
 
   // Spectator view - show priority indicator
-  if (playerID === 3) {
-    // Use priorityPlayer to determine which player has priority
-    // priorityPlayer 1 = top player, priorityPlayer 2 = bottom player
-    // Fallback to checking hasPriority if priorityPlayer is undefined
+  if (playerID === 3 && !isReplay) {
     const priority = priorityPlayer ?? (hasPriority ? 1 : 2);
-    const arrow = priority === 1 ? '▲' : '▼';
+    // In camera view 2 the board is flipped, so invert the arrow direction
+    const isFlipped = spectatorCameraView === 2;
+    const showUpArrow = isFlipped ? priority === 2 : priority === 1;
+    const arrow = showUpArrow ? '▲' : '▼';
 
     return (
       <div className={styles.passTurnDisplay}>
         <div className={styles.spectatorDisplay}>
           <div className={styles.spectatorArrow}>{arrow}</div>
-          <div className={styles.spectatorPlayerName}>Priority</div>
+          <div className={styles.spectatorPlayerName}>
+            {t('PASS_TURN_DISPLAY.PRIORITY')}
+          </div>
         </div>
       </div>
     );
   }
 
-  if (canPassPhase === true) {
+  if (canPassPhase === true || isReplay) {
+    const subtitle = isReplay
+      ? t('PASS_TURN_DISPLAY.REPLAY')
+      : passSubtitle(turnPhaseEnum, t);
     return (
       <>
-        <div className={styles.passTurnDisplayActive} onClick={onPassTurn}>
-          <div> PASS </div>
-          <div className={styles.subThing}>[spacebar]</div>
+        <div
+          className={styles.passTurnDisplayActive}
+          onClick={onPassTurn}
+          role="button"
+          aria-label={
+            isReplay
+              ? t('PASS_TURN_DISPLAY.ADVANCE_REPLAY')
+              : t('PASS_TURN_DISPLAY.PASS_PRIORITY')
+          }
+          title={t('PASS_TURN_DISPLAY.TITLE', { subtitle })}
+        >
+          <div> {t('PASS_TURN_DISPLAY.PASS')} </div>
+          <div className={styles.subThing}>{subtitle}</div>
         </div>
         {showAreYouSureModal &&
           preventPassPrompt &&
           createPortal(
             <>
               <dialog open={showAreYouSureModal} className={styles.modal}>
-                <article className={styles.container}>
-                  <header className={styles.header}>{preventPassPrompt}</header>
-                  <button className={styles.preventButtons} onClick={clickYes}>
-                    Yes
-                  </button>
-                  <button className={styles.preventButtons} onClick={clickNo}>
-                    No
-                  </button>
-                </article>
+                <div className={styles.container}>
+                  <div className={styles.dialogHeader}>{preventPassPrompt}</div>
+                  <div className={styles.dialogFooter}>
+                    <button onClick={clickYes}>{t('GAME_LOBBY.YES')}</button>
+                    <button onClick={clickNo}>{t('GAME_LOBBY.NO')}</button>
+                  </div>
+                </div>
               </dialog>
             </>,
             document.body
@@ -162,7 +221,11 @@ export default function PassTurnDisplay() {
   }
 
   if (canPassPhase === false) {
-    return <div className={styles.passTurnDisplay}>WAIT</div>;
+    return (
+      <div className={styles.passTurnDisplay}>
+        {t('PASS_TURN_DISPLAY.WAIT')}
+      </div>
+    );
   }
 
   return null;

@@ -3,10 +3,15 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--theme-primary, #d4af37) 0%, color-mix(in srgb, var(--theme-primary, #d4af37) 55%, white 45%) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--theme-primary, #d4af37) 0%,
+    color-mix(in srgb, var(--theme-primary, #d4af37) 55%, white 45%) 100%
+  );
   color: var(--theme-primary-inverse, #000);
   font-weight: bold;
-  box-shadow: 0 2px 8px color-mix(in srgb, var(--theme-primary, #d4af37) 40%, transparent);
+  box-shadow: 0 2px 8px
+    color-mix(in srgb, var(--theme-primary, #d4af37) 40%, transparent);
   flex-shrink: 0;
   cursor: pointer;
   align-self: center;
@@ -16,7 +21,8 @@
   width: 18px;
   height: 18px;
   font-size: 12px;
-  box-shadow: 0 1px 4px color-mix(in srgb, var(--theme-primary, #d4af37) 35%, transparent);
+  box-shadow: 0 1px 4px
+    color-mix(in srgb, var(--theme-primary, #d4af37) 35%, transparent);
 }
 
 .small {
@@ -39,15 +45,18 @@
 
 .tooltip {
   position: fixed;
-  background: rgba(0, 0, 0, 0.9);
-  color: var(--theme-primary, #d4af37);
-  padding: 0.5em 0.75em;
-  border-radius: 8px;
-  font-size: 0.85rem;
+  max-width: var(--tooltip-max-width);
+  padding: var(--tooltip-padding);
+  border: var(--tooltip-border-width) solid var(--tooltip-border-color);
+  border-radius: var(--tooltip-border-radius);
+  background: var(--tooltip-background-color);
+  color: var(--tooltip-color);
+  box-shadow: var(--tooltip-shadow);
+  font-size: var(--tooltip-font-size);
+  font-weight: var(--tooltip-font-weight);
+  line-height: var(--tooltip-line-height);
   white-space: nowrap;
-  z-index: 1000;
+  z-index: var(--tooltip-z-index);
   pointer-events: none;
   transform: translateX(-50%);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
-  border: 1px solid color-mix(in srgb, var(--theme-primary, #d4af37) 30%, transparent);
 }

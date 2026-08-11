@@ -6,13 +6,38 @@ import CombatChainLink from '../features/CombatChainLink';
 import GameState from '../features/GameState';
 import Player from '../features/Player';
 
+// Hoisted out of ParseGameState: this used to be allocated fresh on every
+// single poll/SSE push even though the pattern never changes.
+const IMAGE_PATH_RE = /.\/Images\//gm;
+
 function GetCardName(cardNumber: string): string {
   if (!cardNumber || cardNumber === 'blank') return '';
-  let name = cardNumber.replace(/_red$|_yellow$|_blue$/, '');
-  return name
-    .split('_')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(' ');
+
+  let end = cardNumber.length;
+  if (cardNumber.endsWith('_red')) end -= 4;
+  else if (cardNumber.endsWith('_yellow')) end -= 7;
+  else if (cardNumber.endsWith('_blue')) end -= 5;
+
+  let result = '';
+  let wordStart = 0;
+  let wordCount = 0;
+
+  for (let index = 0; index <= end; index += 1) {
+    if (index !== end && cardNumber.charCodeAt(index) !== 95) continue;
+
+    if (wordCount > 0) result += ' ';
+    if (index > wordStart) {
+      result += cardNumber.charAt(wordStart).toUpperCase();
+      if (index > wordStart + 1) {
+        result += cardNumber.slice(wordStart + 1, index).toLowerCase();
+      }
+    }
+
+    wordStart = index + 1;
+    wordCount += 1;
+  }
+
+  return result;
 }
 
 function ParseCard(input: any) {
@@ -45,6 +70,7 @@ function ParseCard(input: any) {
   card.countersMap = input.countersMap ? input.countersMap : undefined;
   card.label = input.label ? String(input.label) : undefined;
   card.zone = input.zone;
+  card.slot = input.slot ? String(input.slot) : undefined;
   card.facing = input.facing;
   card.numUses = input.numUses;
   card.subcards = input.subcards;
@@ -100,75 +126,175 @@ function ParseEquipment(input: any) {
     return result;
   }
   for (const cardObj of input) {
-    if (cardObj.cardNumber == 'frostbite') {
-      switch (cardObj.sType) {
-        case 'Head':
-          result.HeadEq = ParseCard(cardObj);
-          break;
-        case 'Chest':
-          result.ChestEq = ParseCard(cardObj);
-          break;
-        case 'Arms':
-          result.ArmsEq = ParseCard(cardObj);
-          break;
-        case 'Legs':
-          result.LegsEq = ParseCard(cardObj);
-          break;
-        default:
-          console.log('Frostbite processed without assignment', cardObj);
-          break;
-      }
-    } else {
-      switch (cardObj.type) {
-        case 'C': // hero
-          result.Hero = ParseCard({ ...cardObj, zone: ZONE.HERO });
-          break;
-        case 'W':
-        case 'W,T': // token weapon (i.e. Graphene Chelicera)
-        case 'W,T,E': // weapon token equipment (none as of 1/13/25 but futureproofing)
-        case 'W,E': // weapon equipment (Parry Blade, Nitro Mechanoid, etc.)
-          if (result.WeaponLEq == undefined) {
-            result.WeaponLEq = ParseCard(cardObj);
-          } else {
-            result.WeaponREq = ParseCard(cardObj);
-          }
-          break;
-        case 'E':
-          switch (cardObj.sType) {
-            case 'Head':
-              result.HeadEq = ParseCard(cardObj);
-              break;
-            case 'Chest':
-              result.ChestEq = ParseCard(cardObj);
-              break;
-            case 'Arms':
-              result.ArmsEq = ParseCard(cardObj);
-              break;
-            case 'Legs':
-              result.LegsEq = ParseCard(cardObj);
-              break;
-            case 'Off-Hand': // make assumption we won't have two weapons AND an off-hand
-            case 'Quiver': // make assumption that you can only have a 2H weapon AND a quiver
-              result.WeaponREq = ParseCard(cardObj);
-              break;
-            default:
-              break;
-          }
-          break;
-        case 'Companion':
-          if (cardObj.sType == 'Off-Hand') {
-            result.WeaponREq = ParseCard(cardObj);
-            break;
-          }
-          console.log('Companion processed without assignment', cardObj);
-          break;
-        default:
-          break;
-      }
+    const card = ParseCard(cardObj);
+
+    switch (card.slot) {
+      case 'Hero':
+        card.zone = ZONE.HERO;
+        result.Hero = card;
+        break;
+      case 'LWep':
+        result.WeaponLEq = card;
+        break;
+      case 'RWep':
+      case 'Off-Hand':
+        result.WeaponREq = card;
+        break;
+      case 'Head':
+        result.HeadEq = card;
+        break;
+      case 'Chest':
+        result.ChestEq = card;
+        break;
+      case 'Arms':
+        result.ArmsEq = card;
+        break;
+      case 'Legs':
+        result.LegsEq = card;
+        break;
+      default:
+        break;
     }
   }
 
   return result;
+}
+
+function parseCards(input: any, reverse = false): Card[] {
+  if (!Array.isArray(input)) return [];
+  const result: Card[] = [];
+  if (reverse) {
+    for (let i = input.length - 1; i >= 0; i--) result.push(ParseCard(input[i]));
+  } else {
+    for (const cardObj of input) result.push(ParseCard(cardObj));
+  }
+  return result;
+}
+
+interface PlayerKeyMap {
+  equipment: string;
+  hand: string;
+  soul: string;
+  soulCount: string;
+  bloodDebtCount: string;
+  bloodDebtImmune: string;
+  earthCount: string;
+  blessingsCount: string;
+  health: string;
+  discard: string;
+  pitch: string;
+  pitchCount: string;
+  deck: string;
+  deckCount: string;
+  deckCard: string;
+  cardBack: string;
+  banish: string;
+  arsenal: string;
+  allies: string;
+  auras: string;
+  items: string;
+  permanents: string;
+  effects: string;
+  actionPoints: string;
+}
+
+const PLAYER_ONE_KEYS: PlayerKeyMap = {
+  equipment: 'playerEquipment',
+  hand: 'playerHand',
+  soul: 'playerSoul',
+  soulCount: 'playerSoulCount',
+  bloodDebtCount: 'myBloodDebtCount',
+  bloodDebtImmune: 'amIBloodDebtImmune',
+  earthCount: 'myEarthCount',
+  blessingsCount: 'myBlessingsCount',
+  health: 'playerHealth',
+  discard: 'playerDiscard',
+  pitch: 'playerPitch',
+  pitchCount: 'playerPitchCount',
+  deck: 'playerDeck',
+  deckCount: 'playerDeckCount',
+  deckCard: 'playerDeckCard',
+  cardBack: 'playerCardBack',
+  banish: 'playerBanish',
+  arsenal: 'playerArse',
+  allies: 'playerAllies',
+  auras: 'playerAuras',
+  items: 'playerItems',
+  permanents: 'playerPermanents',
+  effects: 'playerEffects',
+  actionPoints: 'playerAP'
+};
+
+const PLAYER_TWO_KEYS: PlayerKeyMap = {
+  equipment: 'opponentEquipment',
+  hand: 'opponentHand',
+  soul: 'opponentSoul',
+  soulCount: 'opponentSoulCount',
+  bloodDebtCount: 'opponentBloodDebtCount',
+  bloodDebtImmune: 'isOpponentBloodDebtImmune',
+  earthCount: 'opponentEarthCount',
+  blessingsCount: 'opponentBlessingsCount',
+  health: 'opponentHealth',
+  discard: 'opponentDiscard',
+  pitch: 'opponentPitch',
+  pitchCount: 'opponentPitchCount',
+  deck: 'opponentDeck',
+  deckCount: 'opponentDeckCount',
+  deckCard: 'opponentDeckCard',
+  cardBack: 'opponentCardBack',
+  banish: 'opponentBanish',
+  arsenal: 'opponentArse',
+  allies: 'opponentAllies',
+  auras: 'opponentAuras',
+  items: 'opponentItems',
+  permanents: 'opponentPermanents',
+  effects: 'opponentEffects',
+  actionPoints: 'opponentAP'
+};
+
+function ParsePlayer(input: any, keys: PlayerKeyMap): Player {
+  // Equipment must be parsed first; it seeds every field on the Player.
+  const player = ParseEquipment(input[keys.equipment]);
+
+  player.Hand = parseCards(input[keys.hand]);
+  player.Soul = parseCards(input[keys.soul]);
+  player.SoulCount = input[keys.soulCount];
+  player.bloodDebtCount = input[keys.bloodDebtCount];
+  player.bloodDebtImmune = input[keys.bloodDebtImmune];
+  player.earthCount = input[keys.earthCount];
+  player.blessingsCount = input[keys.blessingsCount];
+  player.Health = input[keys.health];
+
+  // Piles the backend sends bottom-first are reversed so index 0 is the top.
+  player.Graveyard = parseCards(input[keys.discard], true);
+  player.Pitch = parseCards(input[keys.pitch], true);
+  player.Deck = parseCards(input[keys.deck], true);
+  player.Banish = parseCards(input[keys.banish], true);
+
+  player.PitchRemaining = input[keys.pitchCount];
+  player.DeckSize = input[keys.deckCount];
+  player.DeckBack = ParseCard(input[keys.deckCard]);
+  player.CardBack = input[keys.cardBack];
+  player.Arsenal = parseCards(input[keys.arsenal]);
+
+  // Allies, auras, items and permanents all share one pile on the frontend.
+  player.Permanents = [
+    ...parseCards(input[keys.allies]),
+    ...parseCards(input[keys.auras]).map((card) => ({
+      ...card,
+      zone: ZONE.AURAS
+    })),
+    ...parseCards(input[keys.items]).map((card) => ({
+      ...card,
+      zone: ZONE.ITEMS
+    })),
+    ...parseCards(input[keys.permanents])
+  ];
+
+  player.Effects = parseCards(input[keys.effects]);
+  player.ActionPoints = input[keys.actionPoints];
+
+  return player;
 }
 
 export default function ParseGameState(input: any) {
@@ -194,7 +320,13 @@ export default function ParseGameState(input: any) {
     clashRevealTrigger: 0,
     arsenalFlipP1Card: '',
     arsenalFlipP2Card: '',
-    arsenalFlipTrigger: 0
+    arsenalFlipTrigger: 0,
+    arsenalDestroyP1Card: '',
+    arsenalDestroyP2Card: '',
+    arsenalDestroyTrigger: 0,
+    heroTransformP1Card: '',
+    heroTransformP2Card: '',
+    heroTransformTrigger: 0
   };
 
   if (input.errorMessage) {
@@ -282,214 +414,18 @@ export default function ParseGameState(input: any) {
     result.activeLayers.active = false;
   }
 
-  // Player Two, the opponent.
-  // do equipment first as it's more complicated
-  result.playerTwo = ParseEquipment(input.opponentEquipment);
-
-  result.playerTwo.Hand = [];
-  if (input.opponentHand && Array.isArray(input.opponentHand)) {
-    for (const cardObj of input.opponentHand) {
-      result.playerTwo.Hand.push(ParseCard(cardObj));
-    }
-  }
-
-  result.playerTwo.SoulCount = input.opponentSoulCount;
-  result.playerTwo.Soul = [];
-  if (input.opponentSoul && Array.isArray(input.opponentSoul)) {
-    for (const cardObj of input.opponentSoul) {
-      result.playerTwo.Soul.push(ParseCard(cardObj));
-    }
-  }
-  result.playerTwo.bloodDebtCount = input.opponentBloodDebtCount;
-  result.playerTwo.bloodDebtImmune = input.isOpponentBloodDebtImmune;
-  result.playerTwo.earthCount = input.opponentEarthCount;
-  result.playerTwo.blessingsCount = input.opponentBlessingsCount;
-  result.playerTwo.Health = input.opponentHealth;
-
-  result.playerTwo.Graveyard = [];
-  if (input.opponentDiscard && Array.isArray(input.opponentDiscard)) {
-    for (const cardObj of input.opponentDiscard.reverse()) {
-      result.playerTwo.Graveyard.push(ParseCard(cardObj));
-    }
-  }
-
-  result.playerTwo.PitchRemaining = input.opponentPitchCount;
-  result.playerTwo.Pitch = [];
-  if (input.opponentPitch && Array.isArray(input.opponentPitch)) {
-    for (const cardObj of input.opponentPitch.reverse()) {
-      result.playerTwo.Pitch.push(ParseCard(cardObj));
-    }
-  }
-
-  result.playerTwo.DeckSize = input.opponentDeckCount;
-  result.playerTwo.DeckBack = ParseCard(input.opponentDeckCard);
-  result.playerTwo.Deck = [];
-  if (input.opponentDeck && Array.isArray(input.opponentDeck)) {
-    for (const cardObj of input.opponentDeck.reverse()) {
-      result.playerTwo.Deck.push(ParseCard(cardObj));
-    }
-  }
-  result.playerTwo.CardBack = input.opponentCardBack;
-
-  result.playerTwo.Banish = [];
-  if (input.opponentBanish && Array.isArray(input.opponentBanish)) {
-    for (const cardObj of input.opponentBanish.reverse()) {
-      result.playerTwo.Banish.push(ParseCard(cardObj));
-    }
-  }
+  result.playerTwo = ParsePlayer(input, PLAYER_TWO_KEYS);
+  result.playerOne = ParsePlayer(input, PLAYER_ONE_KEYS);
 
   if (input.landmarks?.length > 0) {
     result.landmark = ParseCard(input.landmarks[0]);
   }
 
-  result.playerTwo.Arsenal = [];
-  if (input.opponentArse && Array.isArray(input.opponentArse)) {
-    for (const cardObj of input.opponentArse) {
-      result.playerTwo.Arsenal.push(ParseCard(cardObj));
-    }
-  }
-
-  // Stick all permanents in the same pile.
-  result.playerTwo.Permanents = [];
-  if (input.opponentAllies && Array.isArray(input.opponentAllies)) {
-    for (const cardObj of input.opponentAllies) {
-      result.playerTwo.Permanents.push(ParseCard(cardObj));
-    }
-  }
-  if (input.opponentAuras && Array.isArray(input.opponentAuras)) {
-    for (const cardObj of input.opponentAuras) {
-      result.playerTwo.Permanents.push(
-        ParseCard({ ...cardObj, zone: ZONE.AURAS })
-      );
-    }
-  }
-  if (input.opponentItems && Array.isArray(input.opponentItems)) {
-    for (const cardObj of input.opponentItems) {
-      result.playerTwo.Permanents.push(
-        ParseCard({ ...cardObj, zone: ZONE.ITEMS })
-      );
-    }
-  }
-  if (input.opponentPermanents && Array.isArray(input.opponentPermanents)) {
-    for (const cardObj of input.opponentPermanents) {
-      result.playerTwo.Permanents.push(ParseCard(cardObj));
-    }
-  }
-
-  result.playerTwo.Effects = [];
-  if (input.opponentEffects && Array.isArray(input.opponentEffects)) {
-    for (const cardObj of input.opponentEffects) {
-      result.playerTwo.Effects.push(ParseCard(cardObj));
-    }
-  }
-
-  result.playerTwo.ActionPoints = input.opponentAP;
-
-  // Player One the one who's playing.
-  // Equipment first again.
-  result.playerOne = ParseEquipment(input.playerEquipment);
-
-  result.playerOne.Hand = [];
-  if (input.playerHand && Array.isArray(input.playerHand)) {
-    for (const cardObj of input.playerHand) {
-      result.playerOne.Hand.push(ParseCard(cardObj));
-    }
-  }
-
-  result.playerOne.bloodDebtCount = input.myBloodDebtCount;
-  result.playerOne.bloodDebtImmune = input.amIBloodDebtImmune;
-  result.playerOne.earthCount = input.myEarthCount;
-  result.playerOne.blessingsCount = input.myBlessingsCount;
-  result.playerOne.SoulCount = input.playerSoulCount;
-  result.playerOne.Soul = [];
-  if (input.playerSoul && Array.isArray(input.playerSoul)) {
-    for (const cardObj of input.playerSoul) {
-      result.playerOne.Soul.push(ParseCard(cardObj));
-    }
-  }
-  result.playerOne.Health = input.playerHealth;
-
-  result.playerOne.Graveyard = [];
-  if (input.playerDiscard && Array.isArray(input.playerDiscard)) {
-    for (const cardObj of input.playerDiscard.reverse()) {
-      result.playerOne.Graveyard.push(ParseCard(cardObj));
-    }
-  }
-
-  result.playerOne.PitchRemaining = input.playerPitchCount;
-  result.playerOne.Pitch = [];
-  if (input.playerPitch && Array.isArray(input.playerPitch)) {
-    for (const cardObj of input.playerPitch.reverse()) {
-      result.playerOne.Pitch.push(ParseCard(cardObj));
-    }
-  }
-
-  result.playerOne.DeckSize = input.playerDeckCount;
-  result.playerOne.DeckBack = ParseCard(input.playerDeckCard);
-  result.playerOne.Deck = [];
-  if (input.playerDeck && Array.isArray(input.playerDeck)) {
-    for (const cardObj of input.playerDeck.reverse()) {
-      result.playerOne.Deck.push(ParseCard(cardObj));
-    }
-  }
-  result.playerOne.CardBack = input.playerCardBack;
-
-  result.playerOne.Banish = [];
-  if (input.playerBanish && Array.isArray(input.playerBanish)) {
-    for (const cardObj of input.playerBanish.reverse()) {
-      result.playerOne.Banish.push(ParseCard(cardObj));
-    }
-  }
-
-  result.playerOne.Arsenal = [];
-  if (input.playerArse && Array.isArray(input.playerArse)) {
-    for (const cardObj of input.playerArse) {
-      result.playerOne.Arsenal.push(ParseCard(cardObj));
-    }
-  }
-
-  // Stick all permanents in the same pile.
-  result.playerOne.Permanents = [];
-  if (input.playerAllies && Array.isArray(input.playerAllies)) {
-    for (const cardObj of input.playerAllies) {
-      result.playerOne.Permanents.push(ParseCard(cardObj));
-    }
-  }
-  if (input.playerAuras && Array.isArray(input.playerAuras)) {
-    for (const cardObj of input.playerAuras) {
-      result.playerOne.Permanents.push(
-        ParseCard({ ...cardObj, zone: ZONE.AURAS })
-      );
-    }
-  }
-  if (input.playerItems && Array.isArray(input.playerItems)) {
-    for (const cardObj of input.playerItems) {
-      result.playerOne.Permanents.push(
-        ParseCard({ ...cardObj, zone: ZONE.ITEMS })
-      );
-    }
-  }
-  if (input.playerPermanents && Array.isArray(input.playerPermanents)) {
-    for (const cardObj of input.playerPermanents) {
-      result.playerOne.Permanents.push(ParseCard(cardObj));
-    }
-  }
-
-  result.playerOne.Effects = [];
-  if (input.playerEffects && Array.isArray(input.playerEffects)) {
-    for (const cardObj of input.playerEffects) {
-      result.playerOne.Effects.push(ParseCard(cardObj));
-    }
-  }
-
-  result.playerOne.ActionPoints = input.playerAP;
-
   // Chat log.
   const chatArray = input.chatLog ? input.chatLog.split('<br>') : [];
-  const re = /.\/Images\//gm;
 
   result.chatLog = chatArray.map((message: string) => {
-    return message.replace(re, '/images/');
+    return message.replace(IMAGE_PATH_RE, '/images/');
   });
 
   // activeplayer
@@ -544,6 +480,11 @@ export default function ParseGameState(input: any) {
     result.gameInfo.gameGUID = input.initialLoad.gameGUID;
     result.gameInfo.altArts = input.initialLoad.altArts;
     result.gameInfo.opponentAltArts = input.initialLoad.opponentAltArts;
+    result.gameInfo.deckLink = input.initialLoad.deckLink;
+    result.gameInfo.canCustomizeDeck =
+      input.initialLoad.canCustomizeDeck ?? false;
+    result.gameInfo.deckCardBackId = input.initialLoad.deckCardBackId;
+    result.gameInfo.deckPlaymatId = input.initialLoad.deckPlaymatId;
   }
 
   result.playerPrompt = input.playerPrompt;
@@ -579,6 +520,9 @@ export default function ParseGameState(input: any) {
   // opponent typing indicator
   result.opponentIsTyping = input.opponentIsTyping ?? false;
 
+  // Ephemeral opponent activity, containing zone-level information only.
+  result.opponentPresence = input.opponentPresence ?? null;
+
   // game visibility (private or public)
   result.gameInfo.isPrivate = input.isPrivate ?? false;
 
@@ -595,9 +539,15 @@ export default function ParseGameState(input: any) {
 
   // AI infinite HP status for manual mode
   result.aiHasInfiniteHP = input.aiHasInfiniteHP ?? false;
+  result.practiceDummyWeaponPower = input.practiceDummyWeaponPower ?? 4;
 
   // opponent inactivity status
   result.opponentInactive = input.inactive ?? false;
+
+  result.inactivityDeadline = input.inactivityDeadline ?? undefined;
+  result.serverTimeOffset = input.serverTime
+    ? input.serverTime - Date.now()
+    : undefined;
 
   // rematch acceptance status
   result.isFullRematch = input.fullRematchAccepted ?? false;

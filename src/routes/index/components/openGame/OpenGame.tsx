@@ -6,8 +6,10 @@ import styles from './OpenGame.module.css';
 import { generateCroppedImageUrl } from '../../../../utils/cropImages';
 import FriendBadge from '../gameList/FriendBadge';
 import QuickJoinContext from '../quickJoin/QuickJoinContext';
+import { requestRustPanelAttention } from 'hooks/useRustCounters';
 import { GAME_FORMAT } from '../../../../appConstants';
 import { useTranslation } from 'react-i18next';
+import { CLASS_OF_RATHE } from '../filter/constants';
 
 const decodeHtmlEntities = (text: string): string => {
   const doc = new DOMParser().parseFromString(text, 'text/html');
@@ -15,30 +17,39 @@ const decodeHtmlEntities = (text: string): string => {
 };
 
 const DESCRIPTION_KEY_MAP: Record<string, string> = {
-  'Looking for best deck in the format': 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.BEST_DECK',
+  'Looking for best deck in the format':
+    'MENU.CREATE_GAME.GAME_DESCRIPTIONS.BEST_DECK',
   'Looking for meta heroes': 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.META_HEROES',
   'Meme / fun decks only': 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.MEME',
-  'Off-meta / experimental decks': 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPICY_BREWS',
-  'Looking to play against a specific class': 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPECIFIC_CLASS',
-  'Looking to play against a specific hero': 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPECIFIC_HERO',
-  'No interest in playing against specific hero': 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.NOT_SPECIFIC_HERO',
+  'Off-meta / experimental decks':
+    'MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPICY_BREWS',
+  'Looking to play against a specific class':
+    'MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPECIFIC_CLASS',
+  'Looking to play against a specific hero':
+    'MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPECIFIC_HERO',
+  'No interest in playing against specific hero':
+    'MENU.CREATE_GAME.GAME_DESCRIPTIONS.NOT_SPECIFIC_HERO',
   'Prefer fast decks (aggro)': 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.AGGRO',
   'Prefer slow decks (control)': 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.CONTROL',
   'Casual / relaxed play': 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.CASUAL',
   'Looking for a quick game': 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.QUICK',
-  'New player learning the game': 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.NEW_PLAYER',
+  'New player learning the game':
+    'MENU.CREATE_GAME.GAME_DESCRIPTIONS.NEW_PLAYER',
   'Practicing a new hero': 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.NEW_HERO',
-  'Slow play OK': 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.SLOW_PLAY',
+  'Slow play OK': 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.SLOW_PLAY'
 };
 
 // Keys that were incorrectly stored verbatim due to missing translations
 const BROKEN_KEY_MAP: Record<string, string> = {
-  'MENU.CREATE_GAME.GAME_DESCRIPTIONS.NOT_SPECIFIC_CLASS': 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.NOT_SPECIFIC_HERO',
+  'MENU.CREATE_GAME.GAME_DESCRIPTIONS.NOT_SPECIFIC_CLASS':
+    'MENU.CREATE_GAME.GAME_DESCRIPTIONS.NOT_SPECIFIC_HERO'
 };
+
+const CLASS_NAMES = new Set(CLASS_OF_RATHE.map((c) => c.label));
 
 const FORMAT_DISPLAY_NAMES: Record<string, string> = {
   [GAME_FORMAT.DRAFT]: 'Limited',
-  [GAME_FORMAT.SEALED]: 'Limited',
+  [GAME_FORMAT.SEALED]: 'Limited'
 };
 
 const OpenGame = ({
@@ -64,18 +75,22 @@ const OpenGame = ({
       ? quickJoinCtx.favoriteDeckOptions.find(
           (o) => o.value === quickJoinCtx.selectedFavoriteDeck
         )?.imageUrl
-      : undefined) ??
-    UNKNOWN_HERO_URL;
+      : undefined) ?? UNKNOWN_HERO_URL;
+  const isRustLocked = !!quickJoinCtx?.isRustLocked;
   const handleJoin = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (isRustLocked) {
+      requestRustPanelAttention();
+      return;
+    }
     if (hasDeckReady && quickJoinCtx) {
       quickJoinCtx.quickJoin(entry.gameName);
     } else {
       navigate(`/game/join/${entry.gameName}`);
     }
   };
-  const { t, i18n, ready } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   // This lets us recognize descriptions stored in any language (JP, FR, etc.)
   const reverseDescriptionMap = useMemo(() => {
@@ -107,15 +122,22 @@ const OpenGame = ({
     if (reverseKey) return t(reverseKey);
 
     const heroPrefix = 'Looking to play against ';
-    if (decoded.startsWith(heroPrefix) && decoded.includes(',')) {
+    if (decoded.startsWith(heroPrefix)) {
       const names = decoded.slice(heroPrefix.length);
-      return `${t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPECIFIC_HERO')}: ${names}`;
+      const nameList = names.split(',').map((n) => n.trim());
+      const isClassDescription = nameList.some((name) => CLASS_NAMES.has(name));
+      const descKey = isClassDescription
+        ? 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPECIFIC_CLASS'
+        : 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPECIFIC_HERO';
+      return `${t(descKey)}: ${names}`;
     }
 
     const notHeroPrefix = 'No interest in playing against ';
-    if (decoded.startsWith(notHeroPrefix) && decoded.includes(',')) {
+    if (decoded.startsWith(notHeroPrefix)) {
       const names = decoded.slice(notHeroPrefix.length);
-      return `${t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.NOT_SPECIFIC_HERO')}: ${names}`;
+      return `${t(
+        'MENU.CREATE_GAME.GAME_DESCRIPTIONS.NOT_SPECIFIC_HERO'
+      )}: ${names}`;
     }
 
     return decoded;
@@ -135,29 +157,46 @@ const OpenGame = ({
     setIsLongDesc(fullHeight > lineHeight * 2 + 2);
   }, [entry.description, i18n.language]);
 
-  const buttonClass = classNames(styles.button, styles.buttonWithIcon, 'secondary');
+  const buttonClass = classNames(
+    styles.button,
+    styles.buttonWithIcon,
+    'secondary',
+    {
+      [styles.buttonLocked]: isRustLocked
+    }
+  );
 
   return (
-    <div key={ix} className={styles.gameItem} onClick={handleJoin}>
+    <div key={ix} className={styles.gameItem}>
       <div>
-        {!!entry.p1Hero ? (
+        {entry.p1Hero ? (
           <img
             className={styles.heroImg}
             src={generateCroppedImageUrl(entry.p1Hero)}
+            alt={entry.p1Hero}
+            loading="lazy"
           />
         ) : (
           <img
             className={styles.heroImg}
             src="https://images.talishar.net/public/crops/UNKNOWNHERO_cropped.webp"
+            alt=""
+            loading="lazy"
           />
         )}
       </div>
       <div className={styles.descriptionBlock} title={entry.description}>
-        {formatLabel && <span className={styles.formatLabel}>{formatLabel}</span>}
+        {formatLabel && (
+          <span className={styles.formatLabel}>{formatLabel}</span>
+        )}
         <span
           ref={descRef}
-          className={classNames(styles.description, { [styles.descriptionLong]: isLongDesc })}
-        >{translateDescription(entry.description)}</span>
+          className={classNames(styles.description, {
+            [styles.descriptionLong]: isLongDesc
+          })}
+        >
+          {translateDescription(entry.description)}
+        </span>
       </div>
       {isOther && !formatLabel && (
         <div className={styles.formatName}>
@@ -165,32 +204,30 @@ const OpenGame = ({
         </div>
       )}
       <FriendBadge isFriendsGame={isFriendsGame} size="small" />
-      <div
-        className={styles.buttonWrapper}
-        aria-busy={quickJoinCtx?.isJoining}
-      >
+      <div className={styles.buttonWrapper} aria-busy={quickJoinCtx?.isJoining}>
         <a
           className={buttonClass}
           href={`/game/join/${entry.gameName}`}
           role="button"
+          aria-disabled={isRustLocked || undefined}
           onClick={handleJoin}
           title={
-            hasDeckReady
-              ? t("OPEN_GAME.JOIN_DECK_READY")
-              : t("OPEN_GAME.JOIN_DECK_NOT_READY")
+            isRustLocked
+              ? 'Clear your rust counters to join'
+              : hasDeckReady
+              ? t('OPEN_GAME.JOIN_DECK_READY')
+              : t('OPEN_GAME.JOIN_DECK_NOT_READY')
           }
         >
           <img
-              src={selectedHeroImageUrl}
-              alt=""
-              className={styles.joinHeroIcon}
-              aria-hidden="true"
-            />
+            src={selectedHeroImageUrl}
+            alt=""
+            className={styles.joinHeroIcon}
+            aria-hidden="true"
+          />
           <span className={styles.joinLabel}>
-            {hasDeckReady && (
-              <span className={styles.joinMicroLabel}></span>
-            )}
-            {t("OPEN_GAME.JOIN")}
+            {hasDeckReady && <span className={styles.joinMicroLabel}></span>}
+            {t('OPEN_GAME.JOIN')}
           </span>
         </a>
       </div>

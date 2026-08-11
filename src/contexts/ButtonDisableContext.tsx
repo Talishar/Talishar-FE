@@ -22,7 +22,7 @@ interface ButtonDisableProviderProps {
 
 export const ButtonDisableProvider: React.FC<ButtonDisableProviderProps> = ({
   children,
-  disableDuration = 2000
+  disableDuration = 1000
 }) => {
   const [isDisabled, setIsDisabled] = useState(false);
 

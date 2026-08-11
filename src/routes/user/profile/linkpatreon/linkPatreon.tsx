@@ -1,5 +1,6 @@
 import { useSubmitPatreonLoginMutation } from 'features/api/apiSlice';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'react-hot-toast';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
@@ -9,8 +10,8 @@ export interface PatreonLoginResponse {
 }
 
 const LinkPatreon = () => {
-  const [submitPatreonMutation, submitPatreonMutationResponse] =
-    useSubmitPatreonLoginMutation();
+  const { t } = useTranslation();
+  const [submitPatreonMutation] = useSubmitPatreonLoginMutation();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
@@ -24,17 +25,17 @@ const LinkPatreon = () => {
         if (data.message === 'ok') {
           navigate('/user/profile');
         } else {
-          toast.error(`Patreon login error:\n${data?.error}`);
+          toast.error(t('LINK_PATREON_PAGE.ERROR', { error: data?.error }));
           navigate('/user/profile');
         }
       })
-      .catch((err) => {
-        toast.error(`Patreon login network error:\n${err}`);
+      .catch((err: any) => {
+        toast.error(t('LINK_PATREON_PAGE.NETWORK_ERROR', { error: err }));
         navigate('/user/profile');
       });
   }, []);
 
-  return <div>linkPatreon</div>;
+  return <div>{t('LINK_PATREON_PAGE.CONNECTING')}</div>;
 };
 
 export default LinkPatreon;

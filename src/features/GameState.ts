@@ -5,6 +5,7 @@ import CombatChainLink from './CombatChainLink';
 import { GameDynamicInfo } from './GameDynamicInfo';
 import GameStaticInfo from './GameStaticInfo';
 import Player from './Player';
+import { PlayerPresence } from './PlayerPresence';
 
 export default interface GameState {
   gameInfo: GameStaticInfo;
@@ -46,8 +47,10 @@ export default interface GameState {
   };
   chatLog?: string[];
   opponentIsTyping?: boolean;
+  opponentPresence?: PlayerPresence | null;
   isUpdateInProgress?: boolean;
   isPlayerInputInProgress?: boolean;
+  playerInputRequestId?: string;
   turnPhase?: {
     turnPhase?: string;
     caption?: string;
@@ -86,6 +89,7 @@ export default interface GameState {
       caption: string;
       mode: number;
       maxNo: number;
+      minNo?: number;
     };
   };
   playerPreferences?: {
@@ -107,6 +111,7 @@ export default interface GameState {
   chainLinkSummary?: {
     show?: boolean;
     index?: number;
+    view?: 'dialog' | 'preview' | 'all';
   };
   canPassPhase?: boolean;
   events?: {
@@ -121,6 +126,7 @@ export default interface GameState {
   hasPriority?: boolean;
   priorityPlayer?: number;
   isFullRematch?: boolean;
+  hasGameEnded?: boolean;
   preventPassPrompt?: string;
   chatEnabled: boolean;
   shufflingPlayerId: number | null;
@@ -130,9 +136,15 @@ export default interface GameState {
   clashRevealP1Card: string;
   clashRevealP2Card: string;
   clashRevealTrigger: number;
+  heroTransformP1Card: string;
+  heroTransformP2Card: string;
+  heroTransformTrigger: number;
   arsenalFlipP1Card: string;
   arsenalFlipP2Card: string;
   arsenalFlipTrigger: number;
+  arsenalDestroyP1Card: string;
+  arsenalDestroyP2Card: string;
+  arsenalDestroyTrigger: number;
   damagePopups?: {
     playerOne: Array<{ id: string; amount: number }>;
     playerTwo: Array<{ id: string; amount: number }>;
@@ -146,6 +158,9 @@ export default interface GameState {
     playerTwo: Array<{ id: string; amount: number }>;
   };
   aiHasInfiniteHP?: boolean;
+  practiceDummyWeaponPower?: number;
   opponentInactive?: boolean;
+  inactivityDeadline?: number; // Absolute server timestamp (ms) at which the priority player becomes inactive. 
+  serverTimeOffset?: number; // Server clock minus local clock (ms)
   spectatorCameraView?: number; // 1 for player 1 view, 2 for player 2 view
 }

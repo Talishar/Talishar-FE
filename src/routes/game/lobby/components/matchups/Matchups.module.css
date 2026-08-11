@@ -29,9 +29,9 @@
   width: 100%;
   padding: 0.5rem 0.75rem;
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--theme-border-light);
   border-radius: 6px;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--theme-text);
   font-size: 0.875rem;
   font-family: inherit;
   line-height: 1.25 !important;
@@ -42,7 +42,7 @@
 }
 
 .matchupContainer input[type='text']::placeholder {
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--theme-text-muted);
 }
 
 .matchupContainer input[type='text']:focus {
@@ -89,8 +89,8 @@
   border-radius: 0.35rem;
   padding: 0.16rem 0.34rem;
   background: rgba(0, 0, 0, 0.35);
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: var(--theme-secondary-inverse, #fff);
+  border: 1px solid var(--theme-border-light);
 }
 
 .matchupButtonSuggested {
@@ -107,8 +107,8 @@
   border-radius: 0.35rem;
   padding: 0.16rem 0.34rem;
   background: rgba(0, 0, 0, 0.35);
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: var(--theme-secondary-inverse, #fff);
+  border: 1px solid var(--theme-border-light);
 }
 
 .autoApplyingStatus {
@@ -127,9 +127,9 @@
   width: 100%;
   padding: 0.5rem 0.75rem;
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--theme-border-light);
   border-radius: 6px;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--theme-text);
   font-weight: 400;
   font-size: 0.875rem;
   cursor: pointer;
@@ -140,9 +140,9 @@
 }
 
 .matchups button:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: color-mix(in srgb, var(--theme-text) 5%, transparent);
   border-color: var(--theme-primary, #d4af37);
-  color: #fff;
+  color: var(--theme-text);
   transform: none;
 }
 
@@ -153,7 +153,7 @@
 }
 
 .matchups button:active {
-  background: rgba(255, 255, 255, 0.08);
+  background: color-mix(in srgb, var(--theme-text) 8%, transparent);
   transform: none;
 }
 
@@ -187,9 +187,9 @@
   margin-left: auto;
 }
 
-/* Tablet: 3 columns, uniform sizing — also applies to touch devices above 1200px */
+/* Tablet: 3 columns, uniform sizing - also applies to touch devices above 1200px */
 @media (max-width: 1200px) and (min-width: 769px),
-       (min-width: 769px) and (pointer: coarse) {
+  (min-width: 769px) and (pointer: coarse) {
   .matchupContainer {
     display: grid;
     grid-template-columns: repeat(3, 1fr);

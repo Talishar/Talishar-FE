@@ -1,21 +1,15 @@
-import { ErrorMessage, FormikProvider, useFormik } from 'formik';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './LoginForm.module.css';
-import classnames from 'classnames';
 import SwordLoader from 'components/SwordLoader/SwordLoader';
 import {
   useGetFavoriteDecksQuery,
   useLoginMutation
 } from 'features/api/apiSlice';
-import { QueryStatus } from '@reduxjs/toolkit/dist/query';
 import useAuth from 'hooks/useAuth';
 import { toast } from 'react-hot-toast';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useAppDispatch } from 'app/Hooks';
-import { setCredentialsReducer } from 'features/auth/authSlice';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
-import { loginValidationSchema, LoginValidationType } from './validation';
+import { LoginValidationType } from './validation';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 
@@ -36,23 +30,19 @@ const getLoginBody = ({
 
 export const LoginForm = () => {
   const [parent] = useAutoAnimate();
-  const [login, loginResult] = useLoginMutation();
+  const [login] = useLoginMutation();
   const { setLoggedIn } = useAuth();
   const navigate = useNavigate();
   const { refetch } = useGetFavoriteDecksQuery(undefined);
-    // Initial stuff to allow the lang to change
-  const { t, i18n, ready } = useTranslation();
+  const { t } = useTranslation();
 
   const {
     register,
     handleSubmit,
     setError,
     formState: { errors, isSubmitting }
-  } = useForm<LoginValidationType>({
-    mode: 'onBlur',
-    resolver: yupResolver(loginValidationSchema)
-  });
-  
+  } = useForm<LoginValidationType>({ mode: 'onBlur' });
+
   const onSubmit: SubmitHandler<LoginValidationType> = async (data) => {
     const values = { ...data, rememberMe: data.rememberMe ?? false };
     try {
@@ -65,7 +55,7 @@ export const LoginForm = () => {
         toast.error(resp.error, { position: 'top-center' });
       }
       if (resp?.isUserLoggedIn) {
-        toast.success(t("USER.LOGIN.LOGGED_IN"), { position: 'top-center' });
+        toast.success(t('USER.LOGIN.LOGGED_IN'), { position: 'top-center' });
         refetch();
         setLoggedIn(
           resp?.loggedInUserID ?? '0',
@@ -80,12 +70,12 @@ export const LoginForm = () => {
         navigate('/');
       }
       if (resp?.isUserLoggedIn === false) {
-        toast.error(t("USER.LOGIN.INCORRECT_CREDENTIALS"), {
+        toast.error(t('USER.LOGIN.INCORRECT_CREDENTIALS'), {
           position: 'top-center'
         });
         setError('root.serverError', {
           type: 'custom',
-          message: t("USER.LOGIN.INCORRECT_CREDENTIALS")
+          message: t('USER.LOGIN.INCORRECT_CREDENTIALS')
         });
       }
     } catch (err) {
@@ -95,7 +85,7 @@ export const LoginForm = () => {
       });
       setError('root.serverError', {
         type: 'custom',
-        message: `There has been a network error while logging in. Please try again. If you still get an error please report on our discord and let us know the following: ${JSON.stringify(
+        message: `There has been a network error while logging in. Please try again. If you still get an error, please report it on our Discord and include the following: ${JSON.stringify(
           err
         )}`
       });
@@ -104,12 +94,15 @@ export const LoginForm = () => {
 
   return (
     <div>
-      <h2>{t("USER.LOGIN.LOGIN")}</h2>
-      <article className={styles.formContainer} style={{ position: 'relative' }}>
+      <h2>{t('USER.LOGIN.LOGIN')}</h2>
+      <article
+        className={styles.formContainer}
+        style={{ position: 'relative' }}
+      >
         {isSubmitting && (
           <div className={styles.loadingOverlay}>
             <SwordLoader size={50} />
-            <p className={styles.loadingText}>{t("USER.LOGIN.LOGGING_IN")}</p>
+            <p className={styles.loadingText}>{t('USER.LOGIN.LOGGING_IN')}</p>
           </div>
         )}
         <button
@@ -159,40 +152,60 @@ export const LoginForm = () => {
                 <rect width="278" height="212" fill="white" />
               </clipPath>
             </defs>
-      </svg>
-      {t("USER.LOGIN.LOGIN_METAFY")}
+          </svg>
+          {t('USER.LOGIN.LOGIN_METAFY')}
         </button>
-        <p className={styles.orbreak}>{t("USER.LOGIN.OR")}</p>
+        <p className={styles.orbreak}>{t('USER.LOGIN.OR')}</p>
         <form onSubmit={handleSubmit(onSubmit)} ref={parent}>
-      <label htmlFor="userID">{t("USER.LOGIN.USERNAME")}</label>
+          <label htmlFor="userID">{t('USER.LOGIN.USERNAME')}</label>
           <input
+            id="userID"
             type="text"
             placeholder="bravo"
             {...register('userID')}
             aria-invalid={errors.userID?.message ? 'true' : undefined}
+            aria-describedby={
+              errors.userID?.message ? 'userID-error' : undefined
+            }
           />
           {errors.userID?.message && (
-            <div className={styles.fieldError}>{errors.userID?.message}</div>
+            <div id="userID-error" className={styles.fieldError} role="alert">
+              {errors.userID?.message}
+            </div>
           )}
-          <label htmlFor="password">{t("USER.LOGIN.PASSWORD")}</label>
+          <label htmlFor="password">{t('USER.LOGIN.PASSWORD')}</label>
           <input
+            id="password"
             type="password"
             placeholder="********"
             {...register('password')}
             aria-invalid={errors.password?.message ? 'true' : undefined}
+            aria-describedby={
+              errors.password?.message ? 'password-error' : undefined
+            }
           />
           {errors.password?.message && (
-            <div className={styles.fieldError}>{errors.password?.message}</div>
+            <div id="password-error" className={styles.fieldError} role="alert">
+              {errors.password?.message}
+            </div>
           )}
           <input
             id="rememberMe"
             type="checkbox"
             autoComplete="off"
             {...register('rememberMe')}
+            aria-invalid={errors.rememberMe?.message ? 'true' : undefined}
+            aria-describedby={
+              errors.rememberMe?.message ? 'rememberMe-error' : undefined
+            }
           />
-          <label htmlFor="rememberMe">{t("USER.LOGIN.REMEMBER_ME")}</label>
+          <label htmlFor="rememberMe">{t('USER.LOGIN.REMEMBER_ME')}</label>
           {errors.rememberMe?.message && (
-            <div className={styles.fieldError}>
+            <div
+              id="rememberMe-error"
+              className={styles.fieldError}
+              role="alert"
+            >
               {errors.rememberMe?.message}
             </div>
           )}
@@ -203,43 +216,41 @@ export const LoginForm = () => {
           </Link> */}
           {/*           <p className={styles.fieldError}>
             <br />
-              <small>⚠️ Due to some recent issues on the website, your account might have been deleted. If you cannot login, try signing up again. Thank you for your comprehension</small>
+              <small>⚠️ Due to some recent issues on the website, your account might have been deleted. If you cannot log in, try signing up again. Thank you for your comprehension</small>
             </p> */}
           <button
             type="submit"
             disabled={isSubmitting}
             aria-busy={isSubmitting}
             className={styles.submitButton}
-      >
-      {t("USER.LOGIN.LOGIN")}
+          >
+            {isSubmitting ? t('USER.LOGIN.LOGGING_IN') : t('USER.LOGIN.LOGIN')}
           </button>
           {errors.root?.serverError?.message && (
-            <div className={styles.fieldError}>
+            <div className={styles.fieldError} role="alert">
               <FaExclamationCircle /> {errors.root?.serverError?.message}
             </div>
           )}
         </form>
         <hr className={styles.divider} />
         <p className={styles.linebreak} style={{ marginTop: '18px' }}>
-          {t("USER.LOGIN.NO_ACCOUNT")}{' '}
+          {t('USER.LOGIN.NO_ACCOUNT')}{' '}
           <Link
             to={'./signup'}
             style={{
               color: 'var(--theme-primary)',
               textDecoration: 'underline'
             }}
-      >
-      {t("USER.LOGIN.SIGN_UP")}
+          >
+            {t('USER.LOGIN.SIGN_UP')}
           </Link>
         </p>
         <small>
-      <em>
-      {t("USER.LOGIN.REMEMBER_ME_CONSENT")}                  
-          </em>
+          <em>{t('USER.LOGIN.REMEMBER_ME_CONSENT')}</em>
         </small>
         &nbsp;
         <small>
-          <Link to={'/privacy'}>{t("USER.LOGIN.REMEMBER_ME_CONSENT")}</Link>
+          <Link to={'/privacy'}>{t('USER.LOGIN.PRIVACY_POLICY')}</Link>
         </small>
       </article>
     </div>

@@ -1,8 +1,6 @@
-import React from 'react';
 import styles from './OpponentBoardGrid.module.css';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
-import { DEFAULT_PLAYMAT } from 'appConstants';
 import HeadEqZone from '../zones/headEqZone/HeadEqZone';
 import PermanentsZone from '../zones/permanentsZone/PermanentsZone';
 import GraveyardZone from '../zones/graveyardZone/GraveyardZone';
@@ -30,9 +28,7 @@ export default function OpponentBoardGrid({ swapPlayers = false }: Props) {
     (state: RootState) => state.game.playerTwo.Playmat
   );
 
-  const playmat = swapPlayers
-    ? (p1Playmat ?? 'aria')
-    : (p2Playmat ?? 'volcor');
+  const playmat = swapPlayers ? p1Playmat ?? 'aria' : p2Playmat ?? 'volcor';
   const isPlayer = swapPlayers;
 
   const styleToApply = {

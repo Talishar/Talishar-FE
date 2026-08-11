@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation, Trans } from 'react-i18next';
 import styles from './ContributorLeaderboard.module.css';
 
 interface GitHubContributor {
@@ -76,7 +77,7 @@ function mergeContributors(
       html_url: c.html_url,
       totalContributions: c.contributions,
       backendContributions: c.contributions,
-      frontendContributions: 0,
+      frontendContributions: 0
     });
   }
 
@@ -93,7 +94,7 @@ function mergeContributors(
         html_url: c.html_url,
         totalContributions: c.contributions,
         backendContributions: 0,
-        frontendContributions: c.contributions,
+        frontendContributions: c.contributions
       });
     }
   }
@@ -106,6 +107,7 @@ function mergeContributors(
 const MEDAL = ['🥇', '🥈', '🥉'];
 
 const ContributorLeaderboard: React.FC = () => {
+  const { t } = useTranslation();
   const [contributors, setContributors] = useState<MergedContributor[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -126,7 +128,7 @@ const ContributorLeaderboard: React.FC = () => {
 
     Promise.all([
       fetchContributors(BACKEND_REPO),
-      fetchContributors(FRONTEND_REPO),
+      fetchContributors(FRONTEND_REPO)
     ])
       .then(([backend, frontend]) => {
         if (cancelled) return;
@@ -147,14 +149,16 @@ const ContributorLeaderboard: React.FC = () => {
   }, []);
 
   const INITIAL_DISPLAY = 20;
-  const displayed = showAll ? contributors : contributors.slice(0, INITIAL_DISPLAY);
+  const displayed = showAll
+    ? contributors
+    : contributors.slice(0, INITIAL_DISPLAY);
 
   if (loading) {
     return (
       <div className={styles.leaderboardContainer}>
         <div className={styles.loadingState}>
           <span className={styles.spinner} aria-hidden="true" />
-          <span>Loading contributors…</span>
+          <span>{t('LEADERBOARD.LOADING')}</span>
         </div>
       </div>
     );
@@ -163,9 +167,7 @@ const ContributorLeaderboard: React.FC = () => {
   if (error) {
     return (
       <div className={styles.leaderboardContainer}>
-        <p className={styles.errorState}>
-          Could not load contributor data — GitHub API may be rate-limited. Try again later.
-        </p>
+        <p className={styles.errorState}>{t('LEADERBOARD.LOAD_ERROR')}</p>
       </div>
     );
   }
@@ -180,11 +182,17 @@ const ContributorLeaderboard: React.FC = () => {
             target="_blank"
             rel="noopener noreferrer"
             className={styles.card}
-            title={`${c.login} — ${c.totalContributions.toLocaleString()} total commits`}
+            title={t('LEADERBOARD.CONTRIBUTOR_TITLE', {
+              login: c.login,
+              commits: c.totalContributions.toLocaleString()
+            })}
           >
             <div className={styles.rankBadge}>
               {index < 3 ? (
-                <span className={styles.medal} aria-label={`Rank ${index + 1}`}>
+                <span
+                  className={styles.medal}
+                  aria-label={t('LEADERBOARD.RANK', { rank: index + 1 })}
+                >
                   {MEDAL[index]}
                 </span>
               ) : (
@@ -193,7 +201,7 @@ const ContributorLeaderboard: React.FC = () => {
             </div>
             <img
               src={c.avatar_url}
-              alt={`${c.login}'s avatar`}
+              alt={t('LEADERBOARD.AVATAR_ALT', { login: c.login })}
               className={styles.avatar}
               loading="lazy"
               width={56}
@@ -202,13 +210,24 @@ const ContributorLeaderboard: React.FC = () => {
             <div className={styles.info}>
               <span className={styles.username}>{c.login}</span>
               <span className={styles.contributions}>
-                {c.totalContributions.toLocaleString()} commits
+                {c.totalContributions.toLocaleString()}{' '}
+                {t('LEADERBOARD.COMMITS')}
               </span>
               <span className={styles.breakdown}>
                 {[
-                  c.backendContributions > 0 ? `BE: ${c.backendContributions.toLocaleString()}` : '',
-                  c.frontendContributions > 0 ? `FE: ${c.frontendContributions.toLocaleString()}` : '',
-                ].filter(Boolean).join(' · ')}
+                  c.backendContributions > 0
+                    ? t('LEADERBOARD.BE', {
+                        value: c.backendContributions.toLocaleString()
+                      })
+                    : '',
+                  c.frontendContributions > 0
+                    ? t('LEADERBOARD.FE', {
+                        value: c.frontendContributions.toLocaleString()
+                      })
+                    : ''
+                ]
+                  .filter(Boolean)
+                  .join(' - ')}
               </span>
             </div>
           </a>
@@ -221,28 +240,19 @@ const ContributorLeaderboard: React.FC = () => {
           onClick={() => setShowAll((prev) => !prev)}
         >
           {showAll
-            ? 'Show fewer contributors'
-            : `Show all ${contributors.length} contributors`}
+            ? t('LEADERBOARD.SHOW_FEWER')
+            : t('LEADERBOARD.SHOW_ALL', { count: contributors.length })}
         </button>
       )}
 
-      <p className={styles.footnote}>Contributions combined from{' '}
-        <a
-          href={`https://github.com/${BACKEND_REPO}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Talishar (backend)
-        </a>{' '}
-        and{' '}
-        <a
-          href={`https://github.com/${FRONTEND_REPO}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Talishar-FE (frontend)
-        </a>
-        . Data fetched from the GitHub API.
+      <p className={styles.footnote}>
+        <Trans
+          i18nKey="LEADERBOARD.FOOTNOTE"
+          components={{
+            1: <a href={`https://github.com/${BACKEND_REPO}`} />,
+            2: <a href={`https://github.com/${FRONTEND_REPO}`} />
+          }}
+        />
       </p>
     </div>
   );

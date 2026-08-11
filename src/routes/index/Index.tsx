@@ -1,11 +1,11 @@
 import { useAppDispatch } from 'app/Hooks';
 import { clearGameInfo } from 'features/game/GameSlice';
 import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { usePageTitle } from 'hooks/usePageTitle';
 import GameList from './components/gameList';
 import styles from './Index.module.css';
 import News from 'routes/news';
-import DevTool from './components/devTool';
 import CommunityContent from './components/CommunityContent';
 import { QuickJoinProvider } from './components/quickJoin/QuickJoinContext';
 import UnifiedGamePanel from './components/UnifiedGamePanel';
@@ -13,17 +13,19 @@ import { useGetSystemMessageQuery } from 'features/api/apiSlice';
 import SystemMessageModal from 'components/SystemMessageModal/SystemMessageModal';
 import useAuth from 'hooks/useAuth';
 import useSupporterStatus from 'hooks/useSupporterStatus';
-import { AdUnit } from 'components/ads';
 import useAdScript from 'hooks/useAdScript';
+import { AdUnit } from 'components/ads';
 import TalisharLogo from '../../img/TalisharLogo.webp';
 import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
+import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
+import { Link } from 'react-router-dom';
 
 const Index = () => {
-  usePageTitle('Play FaB Online');
+  const { t } = useTranslation();
+  usePageTitle(t('PAGES.PLAY_FAB_ONLINE'));
   const dispatch = useAppDispatch();
-  const { isLoggedIn, currentUserName } = useAuth();
-  const { isSupporter, isLoading } = useSupporterStatus();
-  const showAds = !isLoading && !isSupporter;
+  const { isLoggedIn, isLoading: isAuthLoading, currentUserName } = useAuth();
+  const { isSupporter, showAds } = useSupporterStatus();
   const [isBannerHidden, setIsBannerHidden] = useState(false);
 
   const bannerPreferenceKey = useMemo(() => {
@@ -31,6 +33,44 @@ const Index = () => {
     return `talishar_home_banner_hidden_v2_${currentUserName}`;
   }, [isLoggedIn, currentUserName]);
   useAdScript(showAds);
+
+  useEffect(() => {
+    if (!showAds) {
+      document
+        .querySelectorAll(
+          '[id^="reviq-"], [id^="prims_"], [id^="primis"], [class*="primis"], [data-ad="video"]'
+        )
+        .forEach((el) => el.remove());
+      return;
+    }
+
+    document
+      .querySelectorAll(
+        '[id^="reviq-"], [id^="prims_"], [id^="primis"], [class*="primis"], [data-ad="video"]'
+      )
+      .forEach((el) => el.remove());
+
+    const videoDiv = document.createElement('div');
+    videoDiv.setAttribute('data-ad', 'video');
+    document.body.appendChild(videoDiv);
+
+    const ANCHOR_SELECTOR = '[data-ad="anchor"]';
+    const hideAnchors = () => {
+      document.querySelectorAll(ANCHOR_SELECTOR).forEach((el) => {
+        (el as HTMLElement).style.display = 'none';
+      });
+    };
+    hideAnchors();
+    const observer = new MutationObserver(hideAnchors);
+    observer.observe(document.documentElement, {
+      childList: true,
+      subtree: true
+    });
+    return () => {
+      observer.disconnect();
+    };
+  }, [showAds]);
+
   const { data: systemMessageData } = useGetSystemMessageQuery(undefined, {
     skip: !isLoggedIn
   });
@@ -38,7 +78,7 @@ const Index = () => {
   useEffect(() => {
     dispatch(clearGameInfo());
 
-    let link = document.getElementById('favicon') as HTMLLinkElement;
+    const link = document.getElementById('favicon') as HTMLLinkElement;
     if (link) {
       link.href = '/favicon.ico';
     }
@@ -84,65 +124,107 @@ const Index = () => {
 
   return (
     <main className={styles.main}>
-      <div className={`${styles.bannerSection}${isLoggedIn && isBannerHidden ? ` ${styles.bannerSectionCompact}` : ''}`}>
+      <div
+        className={`${styles.bannerSection}${
+          isLoggedIn && isBannerHidden ? ` ${styles.bannerSectionCompact}` : ''
+        }`}
+      >
         {isLoggedIn && (
           <button
             type="button"
             className={styles.bannerToggle}
             onClick={handleToggleBanner}
             aria-pressed={isBannerHidden}
-            aria-label={isBannerHidden ? 'Expand banner' : 'Collapse banner'}
-            title={isBannerHidden ? 'Expand banner' : 'Collapse banner'}
+            aria-label={
+              isBannerHidden
+                ? t('HOME.HERO.EXPAND_BANNER')
+                : t('HOME.HERO.COLLAPSE_BANNER')
+            }
+            title={
+              isBannerHidden
+                ? t('HOME.HERO.EXPAND_BANNER')
+                : t('HOME.HERO.COLLAPSE_BANNER')
+            }
           >
             {isBannerHidden ? <BsChevronDown /> : <BsChevronUp />}
           </button>
         )}
         <div className={styles.bannerBackground} />
         <div className={styles.bannerOverlay} />
-        <div className={styles.bannerContent}>
+        <div
+          className={`${styles.bannerContent}${
+            !isAuthLoading && !isLoggedIn ? ` ${styles.bannerContentGuest}` : ''
+          }`}
+        >
           {!isBannerHidden && (
-            <img src={TalisharLogo} alt="Talishar" className={styles.heroLogo} />
+            <img
+              src={TalisharLogo}
+              alt={t('HOME.HERO.LOGO_ALT')}
+              className={styles.heroLogo}
+            />
           )}
           {!isBannerHidden && (
             <>
-              <h1 className={styles.heroTitle}>
-                Play Flesh &amp; Blood Online
-              </h1>
-              <p className={styles.heroSubtitle}>
-                Talishar lets you play FaB online for free, right in your browser.{' '}
-                Find opponents, test decks, and get games in whenever you want.
-              </p>
-              <div className={styles.heroCta}>
-                <a href="#games" className={styles.heroCtaPrimary}>Join a game</a>
-                {!isSupporter && (
-                  <a
-                    href="https://metafy.gg/@talishar/members"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.heroCtaSecondary}
-                  >
-                    Support us on Metafy
-                  </a>
-                )}
-              </div>
+              <h1 className={styles.heroTitle}>{t('HOME.HERO.TITLE')}</h1>
+              <p className={styles.heroSubtitle}>{t('HOME.HERO.SUBTITLE')}</p>
+              {!isAuthLoading && (
+                <div className={styles.heroCta}>
+                  {isLoggedIn ? (
+                    <>
+                      <a href="#games" className={styles.heroCtaPrimary}>
+                        {t('HOME.HERO.JOIN_CTA')}
+                      </a>
+                      {!isSupporter && (
+                        <a
+                          href={TALISHAR_METAFY_URL}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={styles.heroCtaSecondary}
+                        >
+                          {t('HOME.HERO.SUPPORT_CTA')}
+                        </a>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <Link to="/user/login" className={styles.heroCtaPrimary}>
+                        {t('HOME.HERO.LOGIN_CTA')}
+                      </Link>
+                      <Link
+                        to="/user/login/signup"
+                        className={styles.heroCtaSecondary}
+                      >
+                        {t('HOME.HERO.SIGN_UP_CTA')}
+                      </Link>
+                    </>
+                  )}
+                </div>
+              )}
             </>
           )}
         </div>
       </div>
       <div id="games" className={styles.contentSection}>
-        <QuickJoinProvider>
-          <div className={styles.gridWrapper}>
-            {import.meta.env.DEV && <DevTool />}
-            <div className={`${styles.grid}${!isLoggedIn ? ` ${styles.gridLoggedOut}` : ''}`}>
-              <div className={styles.gameListContainer}>
-                <GameList />
-              </div>
-              <div className={styles.createGameContainer}>
-                <UnifiedGamePanel />
+        {!isAuthLoading && (
+          <QuickJoinProvider>
+            <div className={styles.gridWrapper}>
+              <div
+                className={`${styles.grid}${
+                  !isLoggedIn ? ` ${styles.gridLoggedOut}` : ''
+                }`}
+              >
+                {isLoggedIn && (
+                  <div className={styles.gameListContainer}>
+                    <GameList />
+                  </div>
+                )}
+                <div className={styles.createGameContainer}>
+                  <UnifiedGamePanel />
+                </div>
               </div>
             </div>
-          </div>
-        </QuickJoinProvider>
+          </QuickJoinProvider>
+        )}
         <section className={styles.newsContainer}>
           <News />
         </section>
@@ -151,12 +233,12 @@ const Index = () => {
             {!isSupporter && (
               <div className={styles.adHeader}>
                 <a
-                  href="https://metafy.gg/@talishar/members"
+                  href={TALISHAR_METAFY_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={styles.removeAdsLink}
                 >
-                  Remove ads
+                  {t('UNITED_GAME_PANEL.REMOVE_ADS')}
                 </a>
               </div>
             )}

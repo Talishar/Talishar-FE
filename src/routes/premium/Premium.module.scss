@@ -85,10 +85,11 @@
 
 .saveBadge {
   font-size: 0.75rem;
-  background: rgba(212, 175, 55, 0.15);
+  background: transparent;
   color: var(--theme-primary);
-  padding: 0.2rem 0.6rem;
-  border-radius: 10px;
+  padding: 0.18rem 0.6rem;
+  border: 1px solid var(--theme-primary);
+  border-radius: 999px;
   font-weight: 600;
 }
 
@@ -110,12 +111,6 @@
   transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
     box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1),
     border-color 0.25s;
-}
-
-.tierCard:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-  border-color: rgba(255, 255, 255, 0.3);
 }
 
 .tierCard.recommended {
@@ -333,7 +328,7 @@
 .ctaSection {
   text-align: center;
   padding: 1rem;
-  background: linear-gradient(180deg, transparent 0%, rgba(212, 175, 55, 0.04) 100%);
+  background: var(--theme-section-background-transparent);
   border-radius: 16px;
   border: 1px solid rgba(212, 175, 55, 0.1);
 }

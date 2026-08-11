@@ -1,4 +1,5 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAppSelector, useAppDispatch } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import Player from 'interface/Player';
@@ -16,26 +17,10 @@ import passTurnSound from 'sounds/prioritySound.wav';
 import { createPortal } from 'react-dom';
 import useShortcut from 'hooks/useShortcut';
 import { DEFAULT_SHORTCUTS } from 'appConstants';
-import { toast } from 'react-hot-toast';
 
 const MANUAL_MODE = 'ManualMode';
 
 export default function ExperimentalTurnWidget() {
-  const [heightRatio, setHeightRatio] = useState(1);
-
-  const canPassPhase = useAppSelector(
-    (state: RootState) => state.game.canPassPhase
-  );
-
-  const widgetBackground = useMemo(() => {
-    // Ensure canPassPhase is a boolean to prevent classnames parsing issues
-    const isCanPass = Boolean(canPassPhase === true);
-    return classNames(styles.widgetBackground, {
-      [styles.myTurn]: isCanPass,
-      [styles.ourTurn]: !isCanPass
-    });
-  }, [canPassPhase]);
-
   return (
     <div className={styles.widgetContainer}>
       <ActionPointDisplay isPlayer={false} />
@@ -61,7 +46,7 @@ function HealthDisplay(props: Player) {
   );
 }
 
-const ManualModeHealth = ({ isPlayer }: { isPlayer: Boolean }) => {
+const ManualModeHealth = ({ isPlayer }: { isPlayer: boolean }) => {
   const dispatch = useAppDispatch();
   const onAddResourceClick = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -187,6 +172,7 @@ const ManualMode = () => {
 };
 
 export function PassTurnDisplay() {
+  const { t } = useTranslation();
   const canPassPhase = useAppSelector(
     (state: RootState) => state.game.canPassPhase
   );
@@ -198,22 +184,24 @@ export function PassTurnDisplay() {
   );
   const [showAreYouSureModal, setShowAreYouSureModal] =
     useState<boolean>(false);
-  const [canPassController, setCanPassController] = useState<boolean>(false);
   const [playPassTurnSound] = useSound(passTurnSound);
   const preventPassPrompt = useAppSelector(
     (state: RootState) => state.game.preventPassPrompt
   );
+  const isReplay = useAppSelector(
+    (state: RootState) => state.game.gameInfo.isReplay
+  );
 
   const dispatch = useAppDispatch();
 
-  useMemo(() => {
+  useEffect(() => {
     if (hasPriority) {
       playPassTurnSound();
     }
-  }, [frameNumber]);
+  }, [frameNumber, hasPriority, playPassTurnSound]);
 
   useEffect(() => {
-    let link = document.getElementById('favicon') as HTMLLinkElement;
+    const link = document.getElementById('favicon') as HTMLLinkElement;
     if (hasPriority && link) {
       link.href = '/images/priorityGreen.ico';
     } else if (link) {
@@ -222,12 +210,11 @@ export function PassTurnDisplay() {
   }, [hasPriority]);
 
   const onPassTurn = () => {
-    if (preventPassPrompt && !showAreYouSureModal) {
+    if (!isReplay && preventPassPrompt && !showAreYouSureModal) {
       setShowAreYouSureModal(true);
     } else {
       dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
     }
-    setCanPassController(true);
   };
 
   useShortcut(DEFAULT_SHORTCUTS.PASS_TURN, onPassTurn);
@@ -235,18 +222,16 @@ export function PassTurnDisplay() {
 
   const clickYes = (e: any) => {
     e.preventDefault();
-    //console.log('yes!');
     setShowAreYouSureModal(false);
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
   };
 
   const clickNo = (e: any) => {
     e.preventDefault();
-    //console.log('no!');
     setShowAreYouSureModal(false);
   };
 
-  if (canPassPhase === undefined) {
+  if (canPassPhase === undefined && !isReplay) {
     return (
       <div
         className={classNames(styles.passTurnDisplay, styles.passTurnInactive)}
@@ -254,15 +239,15 @@ export function PassTurnDisplay() {
     );
   }
 
-  if (canPassPhase === true) {
+  if (canPassPhase === true || isReplay) {
     return (
       <>
         <div
           className={classNames(styles.passTurnDisplay, styles.passTurnActive)}
           onClick={onPassTurn}
         >
-          <div className={styles.passText}>PASS</div>
-          <div className={styles.subThing}>[spacebar]</div>
+          <div className={styles.passText}>{t('TURN_WIDGET.PASS')}</div>
+          <div className={styles.subThing}>{t('TURN_WIDGET.SPACEBAR')}</div>
         </div>
         {showAreYouSureModal &&
           createPortal(
@@ -270,8 +255,8 @@ export function PassTurnDisplay() {
               <dialog open={showAreYouSureModal} className={styles.modal}>
                 <article>
                   <header>{preventPassPrompt}</header>
-                  <button onClick={clickYes}>Yes</button>
-                  <button onClick={clickNo}>No</button>
+                  <button onClick={clickYes}>{t('GAME_LOBBY.YES')}</button>
+                  <button onClick={clickNo}>{t('GAME_LOBBY.NO')}</button>
                 </article>
               </dialog>
             </>,
@@ -286,7 +271,7 @@ export function PassTurnDisplay() {
       <div
         className={classNames(styles.passTurnDisplay, styles.passTurnInactive)}
       >
-        WAIT
+        {t('TURN_WIDGET.WAIT')}
       </div>
     );
   }

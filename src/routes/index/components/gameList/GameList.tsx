@@ -7,18 +7,17 @@ import styles from './GameList.module.scss';
 import InProgressGame from '../inProgressGame';
 import Filter from '../filter';
 import { GAME_FORMAT, GAME_FORMAT_NUMBER, normalizeFormat } from 'appConstants';
-import FormatList from '../formatList';
 import OpenGame from '../openGame/OpenGame';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import useAuth from 'hooks/useAuth';
 import { useBlockedUsers } from 'hooks/useBlockedUsers';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
-import { useAppDispatch } from 'app/Hooks';
 import { HEROES_OF_RATHE } from '../filter/constants';
 import GameFilter from './GameFilter';
 import FriendBadge from './FriendBadge';
-import { useTranslation, Trans } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
+import { Friend } from 'interface/API/FriendListAPI.php';
 
 export interface IOpenGame {
   p1Hero?: string;
@@ -41,13 +40,6 @@ export interface IGameInProgress {
   visibility?: string; // "0" = private, "1" = public, "2" = friends-only
 }
 
-export interface IInProgressGameList {
-  gameList: IGameInProgress[];
-  name: string;
-  isFriendsSection?: boolean;
-  friendUsernames?: Set<string>;
-}
-
 export interface GameListResponse {
   gamesInProgress: IGameInProgress[];
   openGames: IOpenGame[];
@@ -64,50 +56,85 @@ const GameList = () => {
     'gameFilters',
     'gameFriendsFilter'
   ]);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   // Initial stuff to allow the lang to change
-  const { t, i18n, ready } = useTranslation();
-  
-  const { data: apiData, isLoading, error, refetch, isFetching } = useGetGameListQuery(undefined);
-  const { isLoggedIn } = useAuth();
+  const { t } = useTranslation();
+  const { isLoggedIn, isLoading: isAuthLoading } = useAuth();
+  const canAccessPublicGames = !isAuthLoading && isLoggedIn;
 
-  const HERO_LIST = ['WTR001', 'ARC001', 'MON001', 'UPR001', 'ELE001', 'ROS001', 'HNT001', 'SUP001'];
-  const FORMAT_LIST = [GAME_FORMAT.COMPETITIVE_CC, GAME_FORMAT.BLITZ, GAME_FORMAT.COMMONER, GAME_FORMAT.DRAFT, GAME_FORMAT.SEALED, GAME_FORMAT.GAGE];
-  
+  const {
+    data: apiData,
+    isLoading,
+    error,
+    refetch,
+    isFetching
+  } = useGetGameListQuery(undefined, {
+    skip: !canAccessPublicGames
+  });
+
+  const HERO_LIST = [
+    'WTR001',
+    'ARC001',
+    'MON001',
+    'UPR001',
+    'ELE001',
+    'ROS001',
+    'HNT001',
+    'SUP001'
+  ];
+  const FORMAT_LIST = [
+    GAME_FORMAT.COMPETITIVE_CC,
+    GAME_FORMAT.BLITZ,
+    GAME_FORMAT.COMMONER,
+    GAME_FORMAT.DRAFT,
+    GAME_FORMAT.SEALED,
+    GAME_FORMAT.GAGE
+  ];
+
   const USE_DEV_FAKE_GAMES = false; // Set to true to enable fake games for testing
 
-  const DEV_FAKE_OPEN: IOpenGame[] = (import.meta.env.DEV && USE_DEV_FAKE_GAMES) ? Array.from({ length: 20 }, (_, i) => ({
-    gameName: 80000 + i,
-    p1Hero: HERO_LIST[i % HERO_LIST.length],
-    format: FORMAT_LIST[i % FORMAT_LIST.length],
-    formatName: FORMAT_LIST[i % FORMAT_LIST.length],
-    description: `Dev test game ${i + 1}`,
-    visibility: '1',
-  })) : [];
-  const DEV_FAKE_IN_PROGRESS: IGameInProgress[] = (import.meta.env.DEV && USE_DEV_FAKE_GAMES) ? Array.from({ length: 20 }, (_, i) => ({
-    gameName: 90000 + i,
-    p1Hero: HERO_LIST[i % HERO_LIST.length],
-    p2Hero: HERO_LIST[(i + 5) % HERO_LIST.length],
-    format: FORMAT_LIST[i % FORMAT_LIST.length],
-    secondsSinceLastUpdate: Math.floor(Math.random() * 600),
-    visibility: '1',
-  })) : [];
+  const DEV_FAKE_OPEN: IOpenGame[] =
+    import.meta.env.DEV && USE_DEV_FAKE_GAMES
+      ? Array.from({ length: 20 }, (_, i) => ({
+          gameName: 80000 + i,
+          p1Hero: HERO_LIST[i % HERO_LIST.length],
+          format: FORMAT_LIST[i % FORMAT_LIST.length],
+          formatName: FORMAT_LIST[i % FORMAT_LIST.length],
+          description: `Dev test game ${i + 1}`,
+          visibility: '1'
+        }))
+      : [];
+  const DEV_FAKE_IN_PROGRESS: IGameInProgress[] =
+    import.meta.env.DEV && USE_DEV_FAKE_GAMES
+      ? Array.from({ length: 20 }, (_, i) => ({
+          gameName: 90000 + i,
+          p1Hero: HERO_LIST[i % HERO_LIST.length],
+          p2Hero: HERO_LIST[(i + 5) % HERO_LIST.length],
+          format: FORMAT_LIST[i % FORMAT_LIST.length],
+          secondsSinceLastUpdate: Math.floor(Math.random() * 600),
+          visibility: '1'
+        }))
+      : [];
 
   const data: typeof apiData = apiData
     ? {
         ...apiData,
         openGames: [...DEV_FAKE_OPEN, ...(apiData.openGames ?? [])],
-        gamesInProgress: [...DEV_FAKE_IN_PROGRESS, ...(apiData.gamesInProgress ?? [])],
+        gamesInProgress: [
+          ...DEV_FAKE_IN_PROGRESS,
+          ...(apiData.gamesInProgress ?? [])
+        ]
       }
     : apiData;
-  const { data: friendsData } = useGetFriendsListQuery(undefined, { skip: !isLoggedIn });
+  const { data: friendsData } = useGetFriendsListQuery(undefined, {
+    skip: !isLoggedIn
+  });
   const { blockedUsers } = useBlockedUsers();
 
   useEffect(() => {
     if (friendsData?.friends) {
       try {
-        const friendsList = friendsData.friends.map((f) => f.username);
+        const friendsList = friendsData.friends.map((f: Friend) => f.username);
         sessionStorage.setItem('friendsList', JSON.stringify(friendsList));
       } catch (e) {
         console.error('Failed to sync friendsList to sessionStorage:', e);
@@ -116,17 +143,24 @@ const GameList = () => {
   }, [friendsData]);
 
   const [heroFilter, setHeroFilter] = useState<string[]>([]);
-  const [gamesInProgressExpanded, setGamesInProgressExpanded] = useState(true); // Default to open
   const [activeTab, setActiveTab] = useState<'open' | 'inProgress'>('open');
 
   useEffect(() => {
     scrollableContentRef.current?.scrollTo({ top: 0 });
   }, [activeTab]);
   const [isRateLimited, setIsRateLimited] = useState(false);
-  const PREVIEW_LIMIT = 9;
   const lastRefetchTime = useRef<number>(0);
   const scrollableContentRef = useRef<HTMLDivElement>(null);
   const REFETCH_RATE_LIMIT_MS = 3000;
+
+  useEffect(() => {
+    if (!canAccessPublicGames) return;
+
+    const id = setInterval(() => {
+      if (!document.hidden) refetch();
+    }, 10000);
+    return () => clearInterval(id);
+  }, [canAccessPublicGames, refetch]);
 
   // Initialize filters from cookies
   const defaultFormats = new Set([
@@ -204,7 +238,7 @@ const GameList = () => {
     return defaultFormats;
   });
 
-  const [includeFriendsGames, setIncludeFriendsGames] = useState(() => {
+  const [includeFriendsGames] = useState(() => {
     // Try to load from cookies first, then fallback to localStorage
     if (cookies.gameFriendsFilter !== undefined) {
       return cookies.gameFriendsFilter === 'true';
@@ -235,16 +269,6 @@ const GameList = () => {
     } catch {
       // Ignore parsing errors
     }
-  }, []);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
   }, []);
 
   // Save format filters to cookies and localStorage when they change
@@ -289,37 +313,44 @@ const GameList = () => {
     setInProgressFormatFilters(formats);
   };
 
-  const handleFriendsGamesFilterChange = (include: boolean) => {
-    setIncludeFriendsGames(include);
-  };
-
-  const activeHeroIds = new Set<string>();
-
+  const heroCountsOpen = new Map<string, number>();
   if (data?.openGames) {
-    data.openGames.forEach((game) => {
-      if (game.p1Hero) activeHeroIds.add(game.p1Hero);
+    data.openGames.forEach((game: IOpenGame) => {
+      if (game.p1Hero)
+        heroCountsOpen.set(
+          game.p1Hero,
+          (heroCountsOpen.get(game.p1Hero) ?? 0) + 1
+        );
     });
   }
 
+  const heroCountsInProgress = new Map<string, number>();
   if (data?.gamesInProgress) {
-    data.gamesInProgress.forEach((game) => {
-      if (game.p1Hero) activeHeroIds.add(game.p1Hero);
-      if (game.p2Hero) activeHeroIds.add(game.p2Hero);
+    data.gamesInProgress.forEach((game: IGameInProgress) => {
+      if (game.p1Hero)
+        heroCountsInProgress.set(
+          game.p1Hero,
+          (heroCountsInProgress.get(game.p1Hero) ?? 0) + 1
+        );
+      if (game.p2Hero)
+        heroCountsInProgress.set(
+          game.p2Hero,
+          (heroCountsInProgress.get(game.p2Hero) ?? 0) + 1
+        );
     });
   }
 
-  const filteredHeroOptions = HEROES_OF_RATHE.filter((hero) =>
-    activeHeroIds.has(hero.value)
-  );
+  const heroCounts =
+    activeTab === 'open' ? heroCountsOpen : heroCountsInProgress;
 
   // Create a set of friend usernames for quick lookup
   const friendUsernames = new Set(
-    friendsData?.friends?.map((f) => f.username) || []
+    friendsData?.friends?.map((f: Friend) => f.username) || []
   );
 
   // Filter games
   const filteredGamesInProgress = data?.gamesInProgress
-    ? data.gamesInProgress.filter((game) => {
+    ? data.gamesInProgress.filter((game: IGameInProgress) => {
         // Hide games created by blocked users
         if (game.gameCreator && blockedUsers.includes(game.gameCreator)) {
           return false;
@@ -386,7 +417,10 @@ const GameList = () => {
           }
 
           // Hide friends-only games from non-friends
-          if (game.visibility === '2' && !(game.gameCreator && friendUsernames.has(game.gameCreator))) {
+          if (
+            game.visibility === '2' &&
+            !(game.gameCreator && friendUsernames.has(game.gameCreator))
+          ) {
             return false;
           }
 
@@ -400,7 +434,7 @@ const GameList = () => {
           }
           return false;
         })
-        .sort((a, b) => a.format.localeCompare(b.format))
+        .sort((a: IOpenGame, b: IOpenGame) => a.format.localeCompare(b.format))
     : [];
 
   const handleReloadClick = () => {
@@ -414,6 +448,8 @@ const GameList = () => {
   };
 
   const otherFormats = [
+    GAME_FORMAT.BLITZ,
+    GAME_FORMAT.COMPETITIVE_BLITZ,
     GAME_FORMAT.OPEN_BLITZ,
     GAME_FORMAT.OPEN_LL_CC,
     GAME_FORMAT.COMMONER,
@@ -448,48 +484,58 @@ const GameList = () => {
   };
 
   const formatLabelMap: Record<string, string> = {
-    [GAME_FORMAT.BLITZ]: t("GAME_LIST.FORMATS.BLITZ"),
-    [GAME_FORMAT.COMPETITIVE_BLITZ]: t("GAME_LIST.FORMATS.COMPETITIVE_BLITZ"),
-    [GAME_FORMAT.CLASSIC_CONSTRUCTED]: t("GAME_LIST.FORMATS.CC"),
-    [GAME_FORMAT.COMPETITIVE_CC]: t("GAME_LIST.FORMATS.COMPETITIVE_CC"),
-    [GAME_FORMAT.LLCC]: t("GAME_LIST.FORMATS.LL"),
-    [GAME_FORMAT.COMPETITIVE_LL]: t("GAME_LIST.FORMATS.COMPETITIVE_LL"),
-    [GAME_FORMAT.SAGE]: t("GAME_LIST.FORMATS.SAGE"),
-    [GAME_FORMAT.COMPETITIVE_SAGE]: t("GAME_LIST.FORMATS.COMPETITIVE_SAGE"),
-    [GAME_FORMAT.OPEN_SAGE]: t("GAME_LIST.FORMATS.FUTURE_SAGE"),
-    [GAME_FORMAT.OPEN_CC]: t("GAME_LIST.FORMATS.FUTURE_CC"),
-    [GAME_FORMAT.GAGE]: t("GAME_LIST.FORMATS.GAGE"),
-    [GAME_FORMAT_NUMBER.BLITZ]: t("GAME_LIST.FORMATS.BLITZ"),
-    [GAME_FORMAT_NUMBER.COMPETITIVE_BLITZ]: t("GAME_LIST.FORMATS.COMPETITIVE_BLITZ"),
-    [GAME_FORMAT_NUMBER.CLASSIC_CONSTRUCTED]: t("GAME_LIST.FORMATS.CC"),
-    [GAME_FORMAT_NUMBER.COMPETITIVE_CC]: t("GAME_LIST.FORMATS.COMPETITIVE_CC"),
-    [GAME_FORMAT_NUMBER.LLCC]: t("GAME_LIST.FORMATS.LL"),
-    [GAME_FORMAT_NUMBER.COMPETITIVE_LL]: t("GAME_LIST.FORMATS.COMPETITIVE_LL"),
-    [GAME_FORMAT_NUMBER.SAGE]: t("GAME_LIST.FORMATS.SAGE"),
-    [GAME_FORMAT_NUMBER.COMPETITIVE_SAGE]: t("GAME_LIST.FORMATS.COMPETITIVE_SAGE"),
-    [GAME_FORMAT_NUMBER.OPEN_SAGE]: t("GAME_LIST.FORMATS.FUTURE_SAGE"),
-    [GAME_FORMAT_NUMBER.OPEN_CC]: t("GAME_LIST.FORMATS.FUTURE_CC"),
-    [GAME_FORMAT_NUMBER.GAGE]: t("GAME_LIST.FORMATS.GAGE"),
+    [GAME_FORMAT.BLITZ]: t('GAME_LIST.FORMATS.BLITZ'),
+    [GAME_FORMAT.COMPETITIVE_BLITZ]: t('GAME_LIST.FORMATS.COMPETITIVE_BLITZ'),
+    [GAME_FORMAT.CLASSIC_CONSTRUCTED]: t('GAME_LIST.FORMATS.CC'),
+    [GAME_FORMAT.COMPETITIVE_CC]: t('GAME_LIST.FORMATS.COMPETITIVE_CC'),
+    [GAME_FORMAT.LLCC]: t('GAME_LIST.FORMATS.LL'),
+    [GAME_FORMAT.COMPETITIVE_LL]: t('GAME_LIST.FORMATS.COMPETITIVE_LL'),
+    [GAME_FORMAT.SAGE]: t('GAME_LIST.FORMATS.SAGE'),
+    [GAME_FORMAT.COMPETITIVE_SAGE]: t('GAME_LIST.FORMATS.COMPETITIVE_SAGE'),
+    [GAME_FORMAT.OPEN_SAGE]: t('GAME_LIST.FORMATS.FUTURE_SAGE'),
+    [GAME_FORMAT.OPEN_CC]: t('GAME_LIST.FORMATS.FUTURE_CC'),
+    [GAME_FORMAT.GAGE]: t('GAME_LIST.FORMATS.GAGE'),
+    [GAME_FORMAT_NUMBER.BLITZ]: t('GAME_LIST.FORMATS.BLITZ'),
+    [GAME_FORMAT_NUMBER.COMPETITIVE_BLITZ]: t(
+      'GAME_LIST.FORMATS.COMPETITIVE_BLITZ'
+    ),
+    [GAME_FORMAT_NUMBER.CLASSIC_CONSTRUCTED]: t('GAME_LIST.FORMATS.CC'),
+    [GAME_FORMAT_NUMBER.COMPETITIVE_CC]: t('GAME_LIST.FORMATS.COMPETITIVE_CC'),
+    [GAME_FORMAT_NUMBER.LLCC]: t('GAME_LIST.FORMATS.LL'),
+    [GAME_FORMAT_NUMBER.COMPETITIVE_LL]: t('GAME_LIST.FORMATS.COMPETITIVE_LL'),
+    [GAME_FORMAT_NUMBER.SAGE]: t('GAME_LIST.FORMATS.SAGE'),
+    [GAME_FORMAT_NUMBER.COMPETITIVE_SAGE]: t(
+      'GAME_LIST.FORMATS.COMPETITIVE_SAGE'
+    ),
+    [GAME_FORMAT_NUMBER.OPEN_SAGE]: t('GAME_LIST.FORMATS.FUTURE_SAGE'),
+    [GAME_FORMAT_NUMBER.OPEN_CC]: t('GAME_LIST.FORMATS.FUTURE_CC'),
+    [GAME_FORMAT_NUMBER.GAGE]: t('GAME_LIST.FORMATS.GAGE')
   };
 
-  const getFormatLabel = (format: string) => formatLabelMap[format] || t("GAME_LIST.FORMATS.OTHER");
+  const getFormatLabel = (format: string) =>
+    formatLabelMap[format] || t('GAME_LIST.FORMATS.OTHER');
 
   const displayOpenGames = sortedOpenGames;
 
   // Count friend games in each tab for the badge indicator
   const friendOpenGamesCount = sortedOpenGames.filter(
-    (game) => game.gameCreator && friendUsernames.has(game.gameCreator)
+    (game: IOpenGame) =>
+      game.gameCreator && friendUsernames.has(game.gameCreator)
   ).length;
 
   const friendInProgressCount = filteredGamesInProgress.filter(
-    (game) =>
+    (game: IGameInProgress) =>
       (game.gameCreator && friendUsernames.has(game.gameCreator)) ||
       (game.p2Username && friendUsernames.has(game.p2Username))
   ).length;
 
   return (
-    <article className={`${styles.gameList}${!isLoggedIn ? ` ${styles.gameListLoggedOut}` : ''}`}>
-      {/* Sticky header — always visible, never scrolls */}
+    <article
+      className={`${styles.gameList}${
+        !isLoggedIn ? ` ${styles.gameListLoggedOut}` : ''
+      }`}
+    >
+      {/* Sticky header - always visible, never scrolls */}
       <div className={styles.stickyHeader}>
         {cookies.experimental && (
           <button
@@ -498,71 +544,114 @@ const GameList = () => {
               removeCookie('experimental');
             }}
           >
-            {t("GAME_LIST.DISABLE_EXPERIMENTAL")}
+            {t('GAME_LIST.DISABLE_EXPERIMENTAL')}
           </button>
         )}
         <div className={styles.titleDiv}>
-          <h3 className={styles.title}>{t("GAME_LIST.OPEN_GAMES", "Open Games")}</h3>
-          <button
-            onClick={handleReloadClick}
-            className={styles.reloadButton}
-            disabled={isFetching || isRateLimited}
-            title={t("GAME_LIST.MANUAL_REFRESH")}
-          >
-            {t("GAME_LIST.REFRESH")}
-            <span className={`${styles.refreshIcon}${(isFetching || isRateLimited) ? ` ${styles.spinning}` : ''}`}>↻</span>
-          </button>
+          <h3 className={styles.title}>
+            {t('GAME_LIST.OPEN_GAMES', 'Open Games')}
+          </h3>
+          {canAccessPublicGames && (
+            <button
+              onClick={handleReloadClick}
+              className={styles.reloadButton}
+              disabled={isFetching || isRateLimited}
+              title={t('GAME_LIST.MANUAL_REFRESH')}
+            >
+              {t('GAME_LIST.REFRESH')}
+              <span
+                className={`${styles.refreshIcon}${
+                  isFetching || isRateLimited ? ` ${styles.spinning}` : ''
+                }`}
+              >
+                ↻
+              </span>
+            </button>
+          )}
         </div>
-        {isLoading ? <div aria-busy="true">{t("GAME_LIST.LOADING")}</div> : null}
-        {error ? (
+        {canAccessPublicGames && isLoading ? (
+          <div role="status" aria-live="polite" aria-busy="true">
+            {t('GAME_LIST.LOADING')}
+          </div>
+        ) : null}
+        {canAccessPublicGames && error ? (
           <div>
-            <h2>{t("GAME_LIST.LOAD_ERROR_TITLE")}</h2>
-            <p>{t("GAME_LIST.LOAD_ERROR_DESCRIPTION")}</p>
+            <h2>{t('GAME_LIST.LOAD_ERROR_TITLE')}</h2>
+            <p>{t('GAME_LIST.LOAD_ERROR_DESCRIPTION')}</p>
             <p>{JSON.stringify(error)}</p>
           </div>
         ) : null}
-        {!isLoggedIn && !isLoading && (
+        {!isAuthLoading && !isLoggedIn && (
           <div className={styles.loginNotice}>
-            <span className={styles.loginNoticeIcon}>🔒</span>
-            <span>
-              <Trans i18nKey="GAME_LIST.PLEASE_LOGIN">
-                Please <Link to="/user/login">log in</Link> to view open lobbies and spectate games!
-              </Trans>
+            <span className={styles.loginNoticeIcon} aria-hidden="true">
+              {t('OPTIONS_MENU.LOCK_ICON')}
             </span>
+            <div className={styles.loginNoticeContent}>
+              <strong className={styles.loginNoticeTitle}>
+                {t('GAME_LIST.LOGIN_REQUIRED_TITLE')}
+              </strong>
+              <p>{t('GAME_LIST.PLEASE_LOGIN')}</p>
+              <Link to="/user/login" className={styles.loginButton}>
+                {t('GAME_LIST.LOGIN_BUTTON')}
+              </Link>
+              <p className={styles.privateGameNotice}>
+                {t('GAME_LIST.PRIVATE_GAMES_AVAILABLE')}
+              </p>
+            </div>
           </div>
         )}
-        {!isLoading && !error && isLoggedIn && (
+        {!isLoading && !error && canAccessPublicGames && (
           <>
             <div className={styles.tabs}>
               <button
-                className={`${styles.tab} ${activeTab === 'open' ? styles.tabActive : ''}`}
-                onClick={() => { setActiveTab('open'); }}
+                className={`${styles.tab} ${
+                  activeTab === 'open' ? styles.tabActive : ''
+                }`}
+                onClick={() => {
+                  setActiveTab('open');
+                }}
               >
-                {t("GAME_LIST.LOOKING_FOR_OPPONENT", "Looking for opponent")}
-                <span className={`${styles.tabBadge} ${activeTab === 'open' ? styles.tabBadgeActive : ''}`}>
+                {t('GAME_LIST.LOOKING_FOR_OPPONENT', 'Looking for opponent')}
+                <span
+                  className={`${styles.tabBadge} ${
+                    activeTab === 'open' ? styles.tabBadgeActive : ''
+                  }`}
+                >
                   {sortedOpenGames.length}
                 </span>
                 {friendOpenGamesCount > 0 && (
                   <FriendBadge
                     isFriendsGame
                     size="small"
-                    tooltip={`${friendOpenGamesCount} friend${friendOpenGamesCount > 1 ? 's' : ''} looking for opponent`}
+                    tooltip={`${friendOpenGamesCount} friend${
+                      friendOpenGamesCount > 1 ? 's' : ''
+                    } looking for opponent`}
                   />
                 )}
               </button>
               <button
-                className={`${styles.tab} ${activeTab === 'inProgress' ? styles.tabActive : ''}`}
-                onClick={() => { setActiveTab('inProgress'); }}
+                className={`${styles.tab} ${
+                  activeTab === 'inProgress' ? styles.tabActive : ''
+                }`}
+                onClick={() => {
+                  setActiveTab('inProgress');
+                }}
               >
-                {t("GAME_LIST.IN_PROGRESS_TAB", "In progress")}
-                <span className={`${styles.tabBadge} ${activeTab === 'inProgress' ? styles.tabBadgeActive : ''}`}>
+                {t('GAME_LIST.IN_PROGRESS_TAB', 'In progress')}
+                <span
+                  className={`${styles.tabBadge} ${
+                    activeTab === 'inProgress' ? styles.tabBadgeActive : ''
+                  }`}
+                >
                   {data?.gameInProgressCount ?? 0}
                 </span>
                 {friendInProgressCount > 0 && (
                   <FriendBadge
                     isFriendsGame
                     size="small"
-                    tooltip={`${friendInProgressCount} friend${friendInProgressCount > 1 ? 's' : ''} playing`}
+                    tooltip={`${friendInProgressCount} friend${
+                      friendInProgressCount > 1 ? 's' : ''
+                    } playing`}
                   />
                 )}
               </button>
@@ -570,26 +659,61 @@ const GameList = () => {
 
             <div className={styles.filterRow}>
               <div className={styles.filterHeroWrapper}>
-                <Filter setHeroFilter={setHeroFilter} heroOptions={filteredHeroOptions} />
+                <Filter
+                  setHeroFilter={setHeroFilter}
+                  heroOptions={HEROES_OF_RATHE}
+                  heroCounts={heroCounts}
+                />
               </div>
               <div className={styles.filterFormatWrapper}>
                 <GameFilter
                   selectedFormats={inProgressFormatFilters}
                   onFilterChange={handleInProgressFilterChange}
                   formatOptions={[
-                    { label: t("GAME_LIST.FORMATS.CC"), value: GAME_FORMAT.CLASSIC_CONSTRUCTED },
-                    { label: t("GAME_LIST.FORMATS.COMPETITIVE_CC"), value: GAME_FORMAT.COMPETITIVE_CC },
-                    { label: t("GAME_LIST.FORMATS.LL"), value: GAME_FORMAT.LLCC },
-                    { label: t("GAME_LIST.FORMATS.COMPETITIVE_LL"), value: GAME_FORMAT.COMPETITIVE_LL },
-                    { label: t("GAME_LIST.FORMATS.SAGE"), value: GAME_FORMAT.SAGE },
-                    { label: t("GAME_LIST.FORMATS.COMPETITIVE_SAGE"), value: GAME_FORMAT.COMPETITIVE_SAGE },
-                    { label: t("GAME_LIST.FORMATS.FUTURE_SAGE"), value: GAME_FORMAT.OPEN_SAGE },
-                    { label: t("GAME_LIST.FORMATS.FUTURE_CC"), value: GAME_FORMAT.OPEN_CC },
-                    { label: t("GAME_LIST.FORMATS.GAGE"), value: GAME_FORMAT.GAGE },
-                    { label: t("GAME_LIST.FORMATS.OTHER"), value: 'otherFormats', isGroup: true, groupValues: otherFormats }
+                    {
+                      label: t('GAME_LIST.FORMATS.CC'),
+                      value: GAME_FORMAT.CLASSIC_CONSTRUCTED
+                    },
+                    {
+                      label: t('GAME_LIST.FORMATS.COMPETITIVE_CC'),
+                      value: GAME_FORMAT.COMPETITIVE_CC
+                    },
+                    {
+                      label: t('GAME_LIST.FORMATS.LL'),
+                      value: GAME_FORMAT.LLCC
+                    },
+                    {
+                      label: t('GAME_LIST.FORMATS.COMPETITIVE_LL'),
+                      value: GAME_FORMAT.COMPETITIVE_LL
+                    },
+                    {
+                      label: t('GAME_LIST.FORMATS.SAGE'),
+                      value: GAME_FORMAT.SAGE
+                    },
+                    {
+                      label: t('GAME_LIST.FORMATS.COMPETITIVE_SAGE'),
+                      value: GAME_FORMAT.COMPETITIVE_SAGE
+                    },
+                    {
+                      label: t('GAME_LIST.FORMATS.FUTURE_SAGE'),
+                      value: GAME_FORMAT.OPEN_SAGE
+                    },
+                    {
+                      label: t('GAME_LIST.FORMATS.FUTURE_CC'),
+                      value: GAME_FORMAT.OPEN_CC
+                    },
+                    {
+                      label: t('GAME_LIST.FORMATS.GAGE'),
+                      value: GAME_FORMAT.GAGE
+                    },
+                    {
+                      label: t('GAME_LIST.FORMATS.OTHER'),
+                      value: 'otherFormats',
+                      isGroup: true,
+                      groupValues: otherFormats
+                    }
                   ]}
                   includeFriendsGames={includeFriendsGames}
-                  onFriendsGamesChange={handleFriendsGamesFilterChange}
                   formatNumberMapping={formatNumberMapping}
                 />
               </div>
@@ -599,12 +723,14 @@ const GameList = () => {
       </div>
 
       {/* Scrollable game list content */}
-      {!isLoading && !error && isLoggedIn && (
+      {!isLoading && !error && canAccessPublicGames && (
         <div className={styles.scrollableContent} ref={scrollableContentRef}>
           {activeTab === 'open' ? (
             <>
-              {displayOpenGames.map((entry, ix) => {
-                const isFriendsGame = !!(entry.gameCreator && friendUsernames.has(entry.gameCreator));
+              {displayOpenGames.map((entry: IOpenGame, ix: number) => {
+                const isFriendsGame = !!(
+                  entry.gameCreator && friendUsernames.has(entry.gameCreator)
+                );
                 return (
                   <OpenGame
                     entry={entry}
@@ -619,102 +745,36 @@ const GameList = () => {
             </>
           ) : (
             <div data-testid="games-in-progress" ref={parent}>
-              {[...friendGamesInProgress, ...otherGamesInProgress].map((entry, ix) => {
-                const isFriendsGame = !!(
-                  (entry.gameCreator && friendUsernames.has(entry.gameCreator)) ||
-                  (entry.p2Username && friendUsernames.has(entry.p2Username))
-                );
-                const friendName =
-                  entry.gameCreator && friendUsernames.has(entry.gameCreator)
-                    ? entry.gameCreator
-                    : entry.p2Username && friendUsernames.has(entry.p2Username)
-                    ? entry.p2Username
-                    : undefined;
-                return (
-                  <InProgressGame
-                    entry={entry}
-                    ix={ix}
-                    key={entry.gameName}
-                    isFriendsGame={isFriendsGame}
-                    friendName={friendName}
-                    formatLabel={getFormatLabel(entry.format)}
-                  />
-                );
-              })}
+              {[...friendGamesInProgress, ...otherGamesInProgress].map(
+                (entry) => {
+                  const isFriendsGame = !!(
+                    (entry.gameCreator &&
+                      friendUsernames.has(entry.gameCreator)) ||
+                    (entry.p2Username && friendUsernames.has(entry.p2Username))
+                  );
+                  const friendName =
+                    entry.gameCreator && friendUsernames.has(entry.gameCreator)
+                      ? entry.gameCreator
+                      : entry.p2Username &&
+                        friendUsernames.has(entry.p2Username)
+                      ? entry.p2Username
+                      : undefined;
+                  return (
+                    <InProgressGame
+                      entry={entry}
+                      key={entry.gameName}
+                      isFriendsGame={isFriendsGame}
+                      friendName={friendName}
+                      formatLabel={getFormatLabel(entry.format)}
+                    />
+                  );
+                }
+              )}
             </div>
           )}
         </div>
       )}
-
-
-
-
-
     </article>
-  );
-};
-
-const InProgressGameList = ({
-  gameList,
-  name,
-  isFriendsSection,
-  friendUsernames = new Set()
-}: IInProgressGameList) => {
-  const [parent] = useAutoAnimate();
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 1025);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 1025);
-    };
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
-
-  if (gameList.length === 0) {
-    return null;
-  }
-
-  return (
-    <div className={styles.groupDiv} ref={parent}>
-      <h5
-        className={styles.subSectionTitle}
-        style={{
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          userSelect: 'none'
-        }}
-      >
-        {name}
-      </h5>
-      {gameList.map((entry, ix: number) => {
-        const isFriendsGame =
-          isFriendsSection ||
-          !!(
-            (entry.gameCreator && friendUsernames.has(entry.gameCreator)) ||
-            (entry.p2Username && friendUsernames.has(entry.p2Username))
-          );
-        const friendName =
-          entry.gameCreator && friendUsernames.has(entry.gameCreator)
-            ? entry.gameCreator
-            : entry.p2Username && friendUsernames.has(entry.p2Username)
-            ? entry.p2Username
-            : undefined;
-        return (
-          <InProgressGame
-            entry={entry}
-            ix={ix}
-            key={entry.gameName}
-            isFriendsGame={isFriendsGame}
-            friendName={friendName}
-          />
-        );
-      })}
-    </div>
   );
 };
 

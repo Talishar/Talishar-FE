@@ -1,6 +1,7 @@
 export interface Card {
   cardNumber: string; // Card number = card ID (e.g. WTR000 = Heart of Fyendal)
   cardName?: string; // Card name for display (e.g. "Command and Conquer")
+  pitchValue?: 0 | 1 | 2 | 3; // 1 = red, 2 = yellow, 3 = blue
   action?: number; // action = (ProcessInput mode)
   overlay?: 'none' | 'disabled'; // overlay = 0 is none, 1 is grayed out/disabled
   borderColor?: string; // borderColor = Border Color
@@ -21,6 +22,7 @@ export interface Card {
   countersMap?: { [key: string]: number }; // string = name of counter, number = number of counters
   label?: string;
   zone?: string;
+  slot?: string; // backend-assigned character/equipment board slot
   facing?: 'UP' | 'DOWN' | 'DOWNALL';
   layer?: number; // layer ID number
   reorderable?: boolean; // can be reordered in the active layers window

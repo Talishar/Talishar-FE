@@ -1,18 +1,145 @@
 .activeLayersBox {
   position: fixed;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   min-width: 35vh;
   top: 8vh;
   left: 20%;
-  background-color: var(--theme-near-black);
-  padding: 1.5vh;
-  border: 1px solid var(--theme-primary);
+  background-color: var(--near-black, #0d0d0f);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.18));
   border-radius: 10px;
   max-width: 95vh;
   max-height: 40vh;
   z-index: 99;
+  touch-action: none;
+}
+
+.grabbyHandle {
+  width: calc(var(--card-size) * 0.2);
+  background-color: color-mix(in srgb, var(--theme-tertiary) 55%, transparent);
+  border-radius: 0 10px 10px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  cursor: grab;
+  user-select: none;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  padding: 0.5em;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  align-self: stretch;
+  font-size: min(calc(1.5vh - 2px), calc(0.9vw - 1px));
+  font-size: min(calc(1.5dvh - 2px), calc(0.9dvw - 1px));
+}
+
+@media (orientation: portrait) {
+  .grabbyHandle {
+    font-size: calc(1.5vw + 3px);
+    font-size: calc(1.5dvw + 3px);
+  }
+}
+
+@media (orientation: landscape) and (max-aspect-ratio: 3/2) {
+  .grabbyHandle {
+    font-size: calc(1.5vh - 2px);
+    font-size: calc(1.5dvh - 2px);
+  }
+}
+
+.grabbyHandle:active {
+  cursor: grabbing;
+}
+
+.grabbyHandleDragging {
+  background-color: color-mix(in srgb, var(--theme-secondary) 45%, transparent);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.dragModeToggle {
+  position: absolute;
+  top: 0.5em;
+  left: 48%;
+  translate: -50% 0;
+  width: 72%;
+  aspect-ratio: 1;
+  background-color: rgba(255, 255, 255, 0.07);
+  color: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 0;
+  margin: 0;
+  box-shadow: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.dragModeToggle:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.dragModeIcon {
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+  width: 85%;
+  height: auto;
+  display: block;
+}
+
+.dragModeToggle:hover .dragModeIcon {
+  opacity: 1;
+}
+
+.gripIcon {
+  color: var(--white);
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.grabbyHandle:hover .gripIcon {
+  opacity: 1;
+}
+
+.activeLayersInner {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 1.5vh;
   overflow-y: auto;
+  min-width: 0;
+  min-height: 0;
+  /* Custom scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: var(--theme-primary-focus, rgba(212, 175, 55, 0.3))
+    rgba(0, 0, 0, 0.3);
+}
+
+.activeLayersInner::-webkit-scrollbar {
+  width: 4px;
+}
+
+.activeLayersInner::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+
+.activeLayersInner::-webkit-scrollbar-thumb {
+  background: var(--theme-primary-focus, rgba(212, 175, 55, 0.3));
+  border-radius: 4px;
+}
+
+.activeLayersInner::-webkit-scrollbar-thumb:hover {
+  background: var(--theme-primary, #d4af37);
 }
 
 .activeLayersContents > div {
@@ -30,12 +157,16 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
   gap: 10px;
+  padding-bottom: 0.5em;
+  margin-bottom: 0.4em;
 }
 
 .title {
   font-size: 1.5em;
-  margin: 0px !important;
+  margin: 0 !important;
+  line-height: 1;
 }
 
 .activeLayersContents {
@@ -91,31 +222,63 @@
   padding-left: 0.5em;
 }
 
-.buttonDiv {
-  width: auto;
-  font-size: 0.8em;
-  margin: 0px;
-  padding: 6px 8px;
-  white-space: nowrap;
-}
-
 .passTurn {
   position: absolute;
   top: 0.75vh;
-  right: 0.75vh;
+  right: 3.25vh;
   width: 6.5vh;
   font-size: 1.25em;
   margin-top: 10px;
   margin-right: 10px;
-  padding: 4px;
   z-index: 1;
   user-select: none;
+  background-color: rgba(255, 255, 255, 0.07);
+  color: #e0e0e0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  flex-basis: auto;
+  padding: 8px 16px;
+  white-space: nowrap;
+  transition: background-color 0.2s ease, border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.passTurn:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+}
+
+.buttonDiv {
+  background-color: rgba(255, 255, 255, 0.07);
+  color: #e0e0e0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  min-width: calc(6dvw * var(--card-scale));
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  flex-basis: auto;
+  padding: 8px 16px;
+  width: auto;
+  margin-bottom: 0;
+  white-space: nowrap;
+  transition: background-color 0.2s ease, border-color 0.2s ease,
+    color 0.2s ease;
+  box-shadow: none;
 }
 
 .buttonDiv:hover {
-  background-color: black;
-  color: var(--theme-primary);
-  border: 1px solid var(--theme-primary);
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.3);
   cursor: pointer;
 }
 
@@ -125,13 +288,45 @@
   align-items: center;
 }
 
+.groupedCardWrapper {
+  flex-shrink: 0;
+  position: relative;
+  display: inline-flex;
+}
+
+.groupedCardCount {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.groupedCardCountBadge {
+  background-color: rgba(0, 0, 0, 0.75);
+  color: white;
+  font-weight: bold;
+  font-size: 1em;
+  line-height: 1;
+  padding: 4px 9px;
+  border-radius: 10px;
+  white-space: nowrap;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
+}
+
 @media only screen and (max-width: 768px) {
   .activeLayersBox {
     min-width: min(70dvw, 320px);
     max-width: 92dvw;
-    max-height: 55dvh;
+    max-height: 45dvh;
+    top: 30dvh;
     left: 50%;
     translate: -50% 0;
+  }
+
+  .activeLayersInner {
     padding: 2dvw;
   }
 
@@ -176,6 +371,10 @@
   }
 
   .passTurnBox {
+    display: none;
+  }
+
+  .dragModeToggle {
     display: none;
   }
 

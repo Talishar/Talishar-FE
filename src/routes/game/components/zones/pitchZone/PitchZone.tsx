@@ -7,11 +7,30 @@ import styles from './PitchZone.module.css';
 import PitchDisplay from '../../elements/pitchDisplay/PitchDisplay';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
+
+const PITCH_ANIMATE = { y: 0 };
+const PITCH_TRANSITION = { ease: 'easeIn', duration: 0.2 };
+const PITCH_EXIT = { opacity: 0 };
+
+const PITCH_CARD_STYLES: React.CSSProperties[] = [
+  { top: '0em', zIndex: '-1' },
+  { top: '-1.5em', zIndex: '-2' },
+  { top: '-3em', zIndex: '-3' },
+  { top: '-4.5em', zIndex: '-4' }
+];
+const PITCH_CARD_INITIALS = [
+  { y: '0em' },
+  { y: '1.5em' },
+  { y: '3em' },
+  { y: '4.5em' }
+];
 
 export default function PitchZone(prop: Displayrow) {
   const { isPlayer } = prop;
   const { DisplayRow } = prop;
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
 
   const pitchZone = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.Pitch : state.game.playerTwo.Pitch
@@ -21,7 +40,7 @@ export default function PitchZone(prop: Displayrow) {
     (state: RootState) => state.game.cardListFocus
   );
 
-  let pitchAmount = useAppSelector((state: RootState) =>
+  const pitchAmount = useAppSelector((state: RootState) =>
     isPlayer
       ? state.game.playerOne.PitchRemaining
       : state.game.playerTwo.PitchRemaining
@@ -36,7 +55,7 @@ export default function PitchZone(prop: Displayrow) {
   ) {
     return (
       <>
-        <div className={styles.pitchZone}>Pitch</div>
+        <div className={styles.pitchZone}>{t('ZONES.PITCH')}</div>
       </>
     );
   }
@@ -60,23 +79,20 @@ export default function PitchZone(prop: Displayrow) {
     }
   };
 
-  const pitchOrder = pitchZone ? [...pitchZone].reverse() : [];
-  const numInPitch = pitchZone ? pitchZone.length : 0;
-  const cardToDisplay =
-    numInPitch > 0 ? { ...pitchZone![numInPitch - 1], borderColor: '' } : null;
+  const pitchOrder = pitchZone ? pitchZone.slice(-4).reverse() : [];
 
   return (
     <div className={styles.pitchZone} onClick={pitchZoneDisplay}>
       <AnimatePresence>
-        {pitchOrder.slice(0, 4).map((card, ix) => {
+        {pitchOrder.map((card, ix) => {
           return (
             <motion.div
-              style={{ top: `-${1.5 * ix}em`, zIndex: `-${ix + 1}` }}
+              style={PITCH_CARD_STYLES[ix]}
               className={styles.pitchCard}
-              initial={{ y: `${1.5 * ix}em` }}
-              animate={{ y: 0 }}
-              transition={{ ease: 'easeIn', duration: 0.2 }}
-              exit={{ opacity: 0 }}
+              initial={PITCH_CARD_INITIALS[ix]}
+              animate={PITCH_ANIMATE}
+              transition={PITCH_TRANSITION}
+              exit={PITCH_EXIT}
               key={`${card.cardNumber}-${ix}`}
               data-testid="pitch-motion-div"
             >

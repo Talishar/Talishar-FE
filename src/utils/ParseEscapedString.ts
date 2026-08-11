@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 
-const CARDRE = /{{(.+?)\|(.+?)(?:\|(.+?))?}}/g;
+const CARDRE = /{{(.+?)\|(.+?)(?:\|(.+?))?(?:\|(.+?))?}}/g;
 
 const COLOR_MAPPING: { [key: string]: string } = {
   '0': '#999999',
@@ -40,6 +40,21 @@ const ELEMENT_COLOR_MAPPING: {
       '0 0 10px rgba(255, 0, 150, 0.9), 0 0 20px rgba(255, 100, 0, 0.8), 0 0 30px rgba(0, 200, 255, 0.8), 0 0 40px rgba(100, 0, 255, 0.7)',
     background:
       'linear-gradient(90deg, #ff0080 0%, #ff6b00 25%, #00ff00 50%, #0080ff 75%, #ff00ff 100%)',
+    backgroundClip: 'text',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent'
+  },
+  '5': {
+    color: '#ff3030',
+    textShadow:
+      '0 0 8px rgba(255, 48, 48, 0.9), 0 0 18px rgba(200, 0, 0, 0.7), 0 0 35px rgba(255, 80, 0, 0.5)'
+  },
+  '6': {
+    color: 'transparent',
+    textShadow:
+      '0 0 10px rgba(255, 230, 120, 0.6), 0 0 20px rgba(200, 255, 200, 0.4)',
+    background:
+      'linear-gradient(135deg, #fffde7 0%, #c8f7c5 40%, #e8d5ff 70%, #fffde7 100%)',
     backgroundClip: 'text',
     WebkitBackgroundClip: 'text',
     WebkitTextFillColor: 'transparent'
@@ -134,7 +149,7 @@ export const parseHtmlToReactElements = (htmlString: string): ReactNode => {
   // Replace {{cardID|cardName|colorCode}} with a unique placeholder
   const processedHtml = htmlString.replace(
     CARDRE,
-    (match, cardID, cardName, colorCode = '0') => {
+    (match, cardID, cardName, colorCode = '0', hoverCardID?: string) => {
       const placeholder = `__CARD_${cardIndex}__`;
 
       // Check if this is an element reference (cardID === 'element')
@@ -158,16 +173,19 @@ export const parseHtmlToReactElements = (htmlString: string): ReactNode => {
           styleObj.color = elementStyle.color;
         }
 
-        cardElements.push(
-          React.createElement(
-            'span',
-            {
-              key: `element-${cardIndex}`,
-              style: styleObj
-            },
-            cardName
-          )
-        );
+        const elementProps: any = {
+          key: `element-${cardIndex}`,
+          style: styleObj
+        };
+
+        if (hoverCardID) {
+          const imgPath = `./WebpImages/${hoverCardID}.webp`;
+          elementProps.onMouseOver = (e: React.MouseEvent<HTMLSpanElement>) =>
+            handleCardMouseOver(e, imgPath);
+          elementProps.onMouseOut = handleCardMouseOut;
+        }
+
+        cardElements.push(React.createElement('span', elementProps, cardName));
       } else {
         // Regular card reference
         const color = COLOR_MAPPING[colorCode];

@@ -63,20 +63,15 @@
           position: relative;
           animation: rainbow-text 4s linear infinite;
           overflow: visible;
-          
-          // Don't use before/after for default animation
-          &::before,
-          &::after {
-            content: none !important;
-          }
-          
+
           // Sparkle effect using box-shadow on hover
           &:hover {
             filter: drop-shadow(0 0 8px rgba(255, 200, 87, 0.8));
-            animation: rainbow-flow 5s linear infinite, pulse 3s ease-in-out infinite;
+            animation: rainbow-flow 5s linear infinite,
+              pulse 3s ease-in-out infinite;
           }
         }
-        
+
         @supports (background-clip: text) or (-webkit-background-clip: text) {
           &.support {
             background: linear-gradient(
@@ -322,6 +317,42 @@
   &[aria-expanded='true'] {
     color: var(--theme-primary);
     background-color: rgba(0, 0, 0, 0.1);
+
+    &::before {
+      rotate: 225deg;
+    }
+
+    &::before,
+    &::after {
+      transform: scale(1);
+    }
+  }
+
+  &::before,
+  &::after {
+    display: block;
+    content: '';
+    position: absolute;
+    background-color: var(--theme-primary);
+    transition: all 300ms;
+    transform: scale(0);
+    transform-origin: center;
+  }
+
+  &::before {
+    $width: 10px;
+    width: $width;
+    height: $width;
+    bottom: -(calc($width/2) - 1);
+    left: calc(50% - ($width/2));
+    rotate: 45deg;
+  }
+
+  &::after {
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
   }
 }
 
@@ -338,28 +369,30 @@
   position: absolute;
   top: 100%;
   right: 0;
-  min-width: 220px;
-  background: rgba(0, 0, 0, 0.58);
+  min-width: 190px;
+  background: rgba(0, 0, 0, 0.92);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.06);
-  border-top: 2px solid var(--theme-primary, #d4af37);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
   z-index: 10001;
   list-style: none;
   margin: 0 !important;
-  padding: 10px 8px;
+  padding: 6px;
   display: flex !important;
   flex-direction: column !important;
-  gap: 4px;
+  gap: 2px;
   border-radius: 0 0 6px 6px;
 
-  > li > :is(a, button) {
-    display: flex !important;
-    flex-direction: row !important;
+  // The extra navbar class keeps the general `.navBar ul li a` styles from
+  // overriding the dropdown item layout.
+  .navBar & > li > :is(a, button) {
+    display: grid !important;
+    grid-template-columns: 20px 1fr;
     align-items: center !important;
-    gap: 16px;
-    padding: 13px 16px;
+    justify-content: stretch !important;
+    column-gap: 10px;
+    padding: 8px 10px;
     margin-bottom: 0 !important;
     color: var(--snow, #fff);
     font-size: 20px;
@@ -367,8 +400,10 @@
     text-decoration: none;
     white-space: nowrap;
     height: auto;
+    min-width: 0;
     width: 100%;
-    border-radius: 8px;
+    box-sizing: border-box;
+    border-radius: 5px;
     border: none;
     background: none;
     cursor: pointer;
@@ -383,13 +418,14 @@
     }
 
     svg {
-      font-size: 24px !important;
+      width: 20px;
+      font-size: 19px !important;
       flex-shrink: 0;
       opacity: 0.85;
     }
 
     span {
-      font-size: 20px !important;
+      font-size: 16px !important;
       display: inline !important;
     }
 
@@ -452,7 +488,6 @@
       transform: scale(0.9);
     }
   }
-
 }
 
 .burgerButton {
@@ -473,7 +508,8 @@
   margin-right: 10px;
   align-self: center;
   border-radius: 6px;
-  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+  transition: background-color 150ms ease, color 150ms ease,
+    border-color 150ms ease;
 
   &:hover {
     color: var(--theme-primary);
@@ -530,6 +566,11 @@
     flex-direction: column;
 
     > li {
+      display: block;
+      height: auto !important;
+      min-height: 0;
+      margin: 0 !important;
+      padding: 0 !important;
       border-bottom: 1px solid var(--muted-border-color, #202632);
 
       > a,
@@ -538,7 +579,10 @@
         flex-direction: row !important;
         align-items: center;
         gap: 14px;
-        padding: 14px 20px;
+        box-sizing: border-box;
+        min-height: 49px;
+        margin: 0 !important;
+        padding: 14px 20px !important;
         width: 100%;
         color: var(--snow, #fff);
         text-decoration: none;
@@ -549,7 +593,8 @@
         border-radius: 0;
         justify-content: flex-start;
         border-left: 3px solid transparent;
-        transition: background-color 150ms ease, color 150ms ease, border-left-color 150ms ease;
+        transition: background-color 150ms ease, color 150ms ease,
+          border-left-color 150ms ease;
 
         &:hover {
           background-color: var(--theme-form-background, #33383d);
@@ -571,21 +616,9 @@
           display: inline !important;
           font-size: 15px;
         }
-
-        // Strip native button styles from Login button rendered inside a Link
-        > button {
-          background: none;
-          border: none;
-          color: inherit;
-          padding: 0;
-          font: inherit;
-          cursor: pointer;
-          font-weight: 500;
-          margin: 0;
-        }
       }
 
-      // LanguageSelector / SocialDropdown wrappers rendered as <li>
+      // LanguageSelector wrapper rendered as <li>
       &[class] {
         > button {
           flex-direction: row !important;
@@ -593,13 +626,17 @@
           align-items: center !important;
           gap: 14px !important;
           min-width: unset;
-          padding: 14px 20px;
+          box-sizing: border-box;
+          min-height: 49px;
+          margin: 0 !important;
+          padding: 14px 20px !important;
           height: auto;
           width: 100%;
           font-size: 15px;
           font-weight: 500;
           border-left: 3px solid transparent;
-          transition: background-color 150ms ease, color 150ms ease, border-left-color 150ms ease;
+          transition: background-color 150ms ease, color 150ms ease,
+            border-left-color 150ms ease;
 
           &:hover {
             background-color: var(--theme-form-background, #33383d);
@@ -633,7 +670,8 @@
 }
 
 @keyframes rainbow-text {
-  0%, 100% {
+  0%,
+  100% {
     color: #ff6b6b;
   }
   16% {
@@ -655,17 +693,21 @@
 
 // Pulse animation for Support Us hover
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     filter: drop-shadow(0 0 8px rgba(255, 200, 87, 0.6));
   }
   25% {
-    filter: drop-shadow(0 0 10px rgba(255, 200, 87, 0.8)) drop-shadow(0 0 15px rgba(255, 100, 255, 0.3));
+    filter: drop-shadow(0 0 10px rgba(255, 200, 87, 0.8))
+      drop-shadow(0 0 15px rgba(255, 100, 255, 0.3));
   }
   50% {
-    filter: drop-shadow(0 0 15px rgba(255, 200, 87, 1)) drop-shadow(0 0 25px rgba(255, 100, 255, 0.5));
+    filter: drop-shadow(0 0 15px rgba(255, 200, 87, 1))
+      drop-shadow(0 0 25px rgba(255, 100, 255, 0.5));
   }
   75% {
-    filter: drop-shadow(0 0 10px rgba(255, 200, 87, 0.8)) drop-shadow(0 0 15px rgba(255, 100, 255, 0.3));
+    filter: drop-shadow(0 0 10px rgba(255, 200, 87, 0.8))
+      drop-shadow(0 0 15px rgba(255, 100, 255, 0.3));
   }
 }
 

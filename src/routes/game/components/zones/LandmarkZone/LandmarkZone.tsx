@@ -1,4 +1,3 @@
-import React from 'react';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';

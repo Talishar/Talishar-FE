@@ -4,6 +4,7 @@ import styles from './Effects.module.css';
 import { Card } from 'features/Card';
 import { useAppSelector } from 'app/Hooks';
 import CardPopUp from '../cardPopUp/CardPopUp';
+import CardImage from '../cardImage/CardImage';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import CountersOverlay from '../countersOverlay/CountersOverlay';
 
@@ -24,11 +25,17 @@ export function Effect(prop: CardProp) {
     ? styles.imgPlayerBorder
     : styles.imgOpponentBorder;
   return (
-    <CardPopUp cardNumber={prop.card.cardNumber} containerClass={styles.effect}>
+    <CardPopUp
+      cardNumber={prop.card.cardNumber}
+      containerClass={styles.effect}
+      isOpponent={!isPlayer}
+    >
       <div className={styles.overlayContainer}>
-        <img
+        <CardImage
           src={src}
+          alt={card.cardName ?? prop.name ?? ''}
           className={`${styles.img} ${imgBorderClass} ${imgClassName || ''}`}
+          isOpponent={!isPlayer}
         />
         <CountersOverlay {...card} num={numValue} excludeFancyCounters={true} />
       </div>
@@ -39,34 +46,19 @@ export function Effect(prop: CardProp) {
 export default function Effects(props: Player) {
   const classCSS = props.isPlayer ? styles.isPlayer : styles.isOpponent;
 
-  const playerID = useAppSelector(
-    (state: RootState) => state.game.gameInfo.playerID
-  );
-  const isReplay = useAppSelector(
-    (state: RootState) => state.game.gameInfo.isReplay
-  );
-  const spectatorCameraView = useAppSelector(
-    (state: RootState) => state.game.spectatorCameraView
-  );
-
-  // Get both effects
-  const playerOneEffects = useAppSelector(
-    (state: RootState) => state.game.playerOne.Effects
-  );
-  const playerTwoEffects = useAppSelector(
-    (state: RootState) => state.game.playerTwo.Effects
-  );
-
-  let effects;
-  if (playerID === 3 || isReplay) {
-    if (spectatorCameraView === 2) {
-      effects = props.isPlayer ? playerTwoEffects : playerOneEffects;
-    } else {
-      effects = props.isPlayer ? playerOneEffects : playerTwoEffects;
-    }
-  } else {
-    effects = props.isPlayer ? playerOneEffects : playerTwoEffects;
-  }
+  const isPlayer = props.isPlayer;
+  const effects = useAppSelector((state: RootState) => {
+    const { playerID, isReplay } = state.game.gameInfo;
+    const isP2View =
+      (playerID === 3 || isReplay) && state.game.spectatorCameraView === 2;
+    return isPlayer
+      ? isP2View
+        ? state.game.playerTwo.Effects
+        : state.game.playerOne.Effects
+      : isP2View
+      ? state.game.playerOne.Effects
+      : state.game.playerTwo.Effects;
+  });
 
   if (effects === undefined) {
     return <div className={classCSS}></div>;
@@ -74,7 +66,7 @@ export default function Effects(props: Player) {
 
   return (
     <div className={classCSS}>
-      {effects.map((card: Card, index) => {
+      {effects.map((card: Card, index: number) => {
         return <Effect card={card} key={index} isPlayer={props.isPlayer} />;
       })}
     </div>

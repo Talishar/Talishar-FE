@@ -11,9 +11,7 @@
   background: var(--theme-card-background, #1e2329);
   border: none;
   border-radius: 12px;
-  box-shadow:
-    0 25px 60px rgba(0, 0, 0, 0.5),
-    0 4px 16px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5), 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
 dialog {

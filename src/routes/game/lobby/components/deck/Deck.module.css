@@ -130,8 +130,6 @@
   font-weight: 600;
   font-size: 0.95em;
   color: var(--theme-text-secondary);
-  background-color: var(--theme-section-background);
-  border-left: 3px solid var(--theme-primary);
   margin-bottom: 0.5em;
   border-radius: 0.25em;
   display: flex;
@@ -164,12 +162,15 @@
   max-height: 100%;
   max-width: 105%;
   border-radius: 0.5em;
+  transition: width 0.1s, height 0.1s, margin 0.1s;
 }
 
 .card:hover {
+  height: 105%;
   width: 105%;
-  transition: width 0.1s;
-  -webkit-transition: width 0.1s;
+  max-height: 105%;
+  max-width: 105%;
+  margin: -2.5%;
 }
 
 .container input {

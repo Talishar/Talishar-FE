@@ -10,6 +10,7 @@ import Index from './routes/index/Index';
 import { ErrorPage } from 'errorPage';
 import Play from 'routes/game/play/Play';
 import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
+import { useTranslation } from 'react-i18next';
 import {
   ForgottenPasswordForm,
   LoginForm,
@@ -26,6 +27,7 @@ import Header from 'components/header/Header';
 import Privacy from 'routes/privacy';
 import CreateGame from 'routes/game/create/CreateGame';
 import LoadReplay from 'routes/game/load/LoadReplay';
+import SharedReplay from 'routes/game/shared/SharedReplay';
 import LinkPatreon from 'routes/user/profile/linkpatreon';
 import LinkMetafy from 'routes/user/profile/linkmetafy/linkMetafy';
 import ModPage from 'routes/mod/ModPage';
@@ -37,24 +39,7 @@ import AdsTest from 'routes/ads/AdsTest';
 import Learn from 'routes/learn/Learn';
 import About from 'routes/about/About';
 import Premium from 'routes/premium/Premium';
-
-const PlayGuard = ({ children }: { children: JSX.Element }) => {
-  const [searchParams] = useKnownSearchParams();
-
-  if (searchParams.gameName == null || searchParams.playerID == null) {
-    return (
-      <Navigate
-        to={{
-          pathname: '/',
-          search: createSearchParams(searchParams).toString()
-        }}
-        replace={true}
-      />
-    );
-  }
-
-  return children;
-};
+import Mastery from 'routes/mastery/Mastery';
 
 const IndexGuard = ({ children }: { children: JSX.Element }) => {
   const [searchParams] = useKnownSearchParams();
@@ -82,18 +67,18 @@ const LoggedInGuard = ({
   shouldBeLoggedIn: boolean;
 }) => {
   const { isLoggedIn, isLoading, error } = useAuth();
+  const { t } = useTranslation();
 
   // Don't redirect while loading auth status on page refresh
   if (isLoading) {
     return (
       <div style={{ textAlign: 'center', padding: '2rem' }}>
-        <p>Loading authentication...</p>
+        <p>{t('AUTH.LOADING')}</p>
         {error && (
           <p
             style={{ fontSize: '0.9rem', color: '#ff6b6b', marginTop: '1rem' }}
           >
-            If this persists, please try refreshing the page or clearing your
-            browser cookies.
+            {t('AUTH.LOADING_ERROR')}
           </p>
         )}
       </div>
@@ -116,18 +101,18 @@ const LoggedInGuard = ({
 
 const ModGuard = ({ children }: { children: JSX.Element }) => {
   const { isLoggedIn, isMod, isLoading, error } = useAuth();
+  const { t } = useTranslation();
 
   // Don't redirect while loading auth status on page refresh
   if (isLoading) {
     return (
       <div style={{ textAlign: 'center', padding: '2rem' }}>
-        <p>Loading authentication...</p>
+        <p>{t('AUTH.LOADING')}</p>
         {error && (
           <p
             style={{ fontSize: '0.9rem', color: '#ff6b6b', marginTop: '1rem' }}
           >
-            If this persists, please try refreshing the page or clearing your
-            browser cookies.
+            {t('AUTH.LOADING_ERROR')}
           </p>
         )}
       </div>
@@ -154,21 +139,11 @@ export const router = createBrowserRouter(
       <Route element={<Outlet />}>
         <Route
           path="game/play/:gameID"
-          element={
-            // disabled playguard as we need to redo this logic a bit
-            // <PlayGuard>
-            <Play isRoguelike={false} />
-            // </PlayGuard>
-          }
+          element={<Play isRoguelike={false} />}
         />
         <Route
           path="roguelike/play/"
-          element={
-            // disabled playguard as we need to redo this logic a bit
-            // <PlayGuard>
-            <Play isRoguelike={true} />
-            // </PlayGuard>
-          }
+          element={<Play isRoguelike={true} />}
         />
         <Route path="game/play" element={<Play isRoguelike={false} />} />
         <Route path="game/lobby/:gameID" element={<Lobby />} />
@@ -191,9 +166,18 @@ export const router = createBrowserRouter(
           <Route path="learn" element={<Learn />} />
           <Route path="about" element={<About />} />
           <Route path="premium" element={<Premium />} />
+          <Route
+            path="mastery"
+            element={
+              <LoggedInGuard shouldBeLoggedIn={true}>
+                <Mastery />
+              </LoggedInGuard>
+            }
+          />
           <Route path="game/join/:gameID" element={<JoinGame />} />
           <Route path="game/create" element={<CreateGame />} />
           <Route path="game/load" element={<LoadReplay />} />
+          <Route path="replay/shared" element={<SharedReplay />} />
           <Route path="privacy" element={<Privacy />} />
           <Route path="privacy-policy" element={<PrivacyPolicy />} />
           <Route path="terms-of-service" element={<TermsOfService />} />

@@ -1,11 +1,7 @@
-import React from 'react';
-import TopRow from '../topRow/TopRow';
-import MiddleRow from '../middleRow/MiddleRow';
-import BottomRow from '../bottomRow/BottomRow';
+import { useMemo } from 'react';
 import styles from './PlayerBoardGrid.module.css';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
-import { DEFAULT_PLAYMAT } from 'appConstants';
 import HeadEqZone from '../zones/headEqZone/HeadEqZone';
 import PermanentsZone from '../zones/permanentsZone/PermanentsZone';
 import GraveyardZone from '../zones/graveyardZone/GraveyardZone';
@@ -33,12 +29,13 @@ export default function PlayerBoardGrid({ swapPlayers = false }: Props) {
     (state: RootState) => state.game.playerTwo.Playmat
   );
 
-  const playmat = swapPlayers ? (p2Playmat ?? 'volcor') : (p1Playmat ?? 'aria');
+  const playmat = swapPlayers ? p2Playmat ?? 'volcor' : p1Playmat ?? 'aria';
   const isPlayer = !swapPlayers;
 
-  const styleToApply = {
-    backgroundImage: `url(/playmats/${playmat}.webp)`
-  };
+  const styleToApply = useMemo(
+    () => ({ backgroundImage: `url(/playmats/${playmat}.webp)` }),
+    [playmat]
+  );
 
   return (
     <div className={styles.playerPlaymat} style={styleToApply}>

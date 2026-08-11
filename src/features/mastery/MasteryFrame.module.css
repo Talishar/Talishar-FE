@@ -1,0 +1,278 @@
+.frame {
+  --mastery-color: rgba(255, 255, 255, 0.18);
+  --mastery-highlight: rgba(255, 255, 255, 0.48);
+  --mastery-shadow: #171717;
+  --mastery-glow: transparent;
+  position: relative;
+  isolation: isolate;
+  display: inline-grid;
+  place-items: center;
+  padding: 5px;
+  border-radius: 50%;
+  background: linear-gradient(
+    145deg,
+    var(--mastery-highlight),
+    var(--mastery-color) 42%,
+    var(--mastery-shadow)
+  );
+  box-shadow: 0 0 0 1px
+      color-mix(in srgb, var(--mastery-color) 70%, transparent),
+    0 0 12px var(--mastery-glow), 0 7px 18px rgba(0, 0, 0, 0.42);
+}
+
+.frame > img {
+  position: relative;
+  z-index: 2;
+}
+
+.frame::before {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  inset: -3px;
+  border-radius: inherit;
+  background: var(--mastery-color);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.frame::after {
+  content: '';
+  position: absolute;
+  z-index: 3;
+  inset: 2px;
+  border: 1px solid var(--mastery-highlight);
+  border-radius: inherit;
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.65);
+  pointer-events: none;
+}
+
+.gem {
+  position: absolute;
+  z-index: 4;
+  bottom: -4px;
+  left: 50%;
+  display: none;
+  width: 10px;
+  height: 10px;
+  translate: -50% 0;
+  rotate: 45deg;
+  border: 2px solid var(--mastery-shadow);
+  background: linear-gradient(
+    135deg,
+    var(--mastery-highlight),
+    var(--mastery-color) 58%
+  );
+  box-shadow: 0 0 7px var(--mastery-glow);
+  pointer-events: none;
+}
+
+.mastery_0 {
+  padding: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.mastery_0::after {
+  display: none;
+}
+
+/* 5 games: simple bronze. */
+.mastery_1 {
+  --mastery-color: #a9632f;
+  --mastery-highlight: #dda06b;
+  --mastery-shadow: #4a2413;
+  padding: 4px;
+}
+
+/* 15 games: bronze with one small lower ornament. */
+.mastery_2 {
+  --mastery-color: #ad6732;
+  --mastery-highlight: #efb478;
+  --mastery-shadow: #4a2413;
+}
+
+.mastery_2 .gem {
+  display: block;
+  width: 8px;
+  height: 8px;
+}
+
+/* 25 games: brighter, more geometric silver. */
+.mastery_3 {
+  --mastery-color: #929eab;
+  --mastery-highlight: #edf2f6;
+  --mastery-shadow: #3d4752;
+  background: conic-gradient(
+    from 22.5deg,
+    var(--mastery-highlight),
+    var(--mastery-shadow),
+    var(--mastery-color),
+    var(--mastery-highlight)
+  );
+}
+
+.mastery_3::before {
+  opacity: 0.65;
+  clip-path: polygon(
+    50% 0,
+    61% 5%,
+    75% 3%,
+    84% 16%,
+    97% 25%,
+    95% 39%,
+    100% 50%,
+    95% 61%,
+    97% 75%,
+    84% 84%,
+    75% 97%,
+    61% 95%,
+    50% 100%,
+    39% 95%,
+    25% 97%,
+    16% 84%,
+    3% 75%,
+    5% 61%,
+    0 50%,
+    5% 39%,
+    3% 25%,
+    16% 16%,
+    25% 3%,
+    39% 5%
+  );
+}
+
+/* 50 games: polished silver with a clean double-ring treatment. */
+.mastery_4 {
+  --mastery-color: #b7c2cc;
+  --mastery-highlight: #ffffff;
+  --mastery-shadow: #46515e;
+  --mastery-glow: rgba(210, 229, 240, 0.18);
+  padding: 6px;
+  background: conic-gradient(from 30deg, #fff, #73818e, #dce5eb, #596571, #fff);
+}
+
+.mastery_4::after {
+  inset: 3px;
+  border-width: 2px;
+}
+
+/* 100 games: restrained gold. */
+.mastery_5 {
+  --mastery-color: #c99228;
+  --mastery-highlight: #ffe48a;
+  --mastery-shadow: #68400f;
+  --mastery-glow: rgba(255, 195, 53, 0.18);
+  padding: 5px;
+}
+
+/* 150 games: richer gold with a lower jewel. */
+.mastery_6 {
+  --mastery-color: #d5a12e;
+  --mastery-highlight: #fff0a5;
+  --mastery-shadow: #6c3b09;
+  --mastery-glow: rgba(255, 196, 43, 0.25);
+  padding: 6px;
+  background: conic-gradient(
+    from 0deg,
+    var(--mastery-highlight),
+    var(--mastery-shadow),
+    var(--mastery-color),
+    var(--mastery-highlight),
+    var(--mastery-color)
+  );
+}
+
+.mastery_6 .gem {
+  display: block;
+  width: 12px;
+  height: 12px;
+}
+
+/* 250 games: cool platinum, distinguished by weight rather than wings. */
+.mastery_7 {
+  --mastery-color: #bad2d6;
+  --mastery-highlight: #ffffff;
+  --mastery-shadow: #4a6870;
+  --mastery-glow: rgba(186, 232, 240, 0.3);
+  padding: 7px;
+  background: conic-gradient(from 45deg, #fff, #708e96, #dcf0ef, #526f77, #fff);
+}
+
+.mastery_7::after {
+  inset: 3px;
+  border-width: 2px;
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(223, 250, 250, 0.45);
+}
+
+/* 500 games: clean circular diamond-blue frame. */
+.mastery_8 {
+  --mastery-color: #5ed2e5;
+  --mastery-highlight: #f0ffff;
+  --mastery-shadow: #31547c;
+  --mastery-glow: rgba(73, 218, 255, 0.45);
+  padding: 7px;
+  background: conic-gradient(
+    from 22.5deg,
+    #fff,
+    #56c9df,
+    #736be0,
+    #dffeff,
+    #278bab,
+    #fff
+  );
+}
+
+.mastery_8::before {
+  inset: -3px;
+  border-radius: 50%;
+  opacity: 0.68;
+  background: conic-gradient(#fff, #56cfe4, #6c63d8, #fff, #2aa4c5, #fff);
+}
+
+.mastery_8 .gem {
+  display: none;
+}
+
+/* 1,000 games: deep blood red with restrained antique-gold accents. */
+.mastery_9 {
+  --mastery-color: #9f1013;
+  --mastery-highlight: #d8a64b;
+  --mastery-shadow: #350607;
+  --mastery-glow: rgba(164, 18, 20, 0.42);
+  padding: 8px;
+  background: linear-gradient(
+    145deg,
+    #d3a34b 0 8%,
+    #a81215 8% 74%,
+    #4b080a 74% 92%,
+    #b98738 92%
+  );
+  filter: drop-shadow(0 0 5px rgba(148, 14, 17, 0.42));
+}
+
+.mastery_9::before {
+  inset: -3px;
+  border-radius: 50%;
+  opacity: 0.84;
+  background: #970d10;
+  box-shadow: 0 0 0 1px #c18c38;
+}
+
+.mastery_9 .gem {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .mastery_8 .gem,
+  .mastery_9 .gem {
+    animation: masteryGemGlow 2.8s ease-in-out infinite;
+  }
+}
+
+@keyframes masteryGemGlow {
+  50% {
+    box-shadow: 0 0 13px var(--mastery-glow);
+  }
+}

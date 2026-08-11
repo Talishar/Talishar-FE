@@ -74,22 +74,42 @@
 }
 
 .closeButton {
-  background: none;
-  border: none;
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 1.5rem;
+  appearance: none;
+  box-sizing: border-box;
+  background: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  border-radius: 4px;
+  color: rgba(255, 255, 255, 0.7) !important;
   cursor: pointer;
-  padding: 0;
-  width: 2rem;
-  height: 2rem;
-  display: flex;
+  padding: 0 !important;
+  margin: 0 !important;
+  width: 2rem !important;
+  height: 2rem !important;
+  min-width: 2rem !important;
+  min-height: 2rem !important;
+  box-shadow: none !important;
+  display: inline-flex !important;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease,
+    box-shadow 0.2s ease;
+  flex: 0 0 2rem;
+  line-height: 0;
+
+  svg {
+    display: block;
+    width: 1.25rem;
+    height: 1.25rem;
+    pointer-events: none;
+  }
 
   &:hover {
-    color: #667eea;
-    transform: rotate(90deg);
+    background: rgba(255, 215, 0, 0.12) !important;
+    background-image: none !important;
+    color: #fff !important;
+    box-shadow: 0 0 0 1px rgba(255, 215, 0, 0.12) !important;
+    transform: none !important;
   }
 }
 
@@ -161,9 +181,7 @@
   }
 
   .devToolTab {
-    width: 2.5rem;
-    height: 2.5rem;
-    font-size: 0.75rem;
+    display: none;
   }
 
   .content {

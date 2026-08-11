@@ -15,6 +15,7 @@ interface ImageSelectProps {
   disabled?: boolean;
   'aria-invalid'?: 'true' | undefined;
   'aria-busy'?: boolean;
+  'aria-label'?: string;
   id?: string;
 }
 
@@ -26,6 +27,7 @@ export const ImageSelect: React.FC<ImageSelectProps> = ({
   disabled = false,
   'aria-invalid': ariaInvalid,
   'aria-busy': ariaBusy,
+  'aria-label': ariaLabel,
   id
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -89,9 +91,9 @@ export const ImageSelect: React.FC<ImageSelectProps> = ({
     <div
       className={`${styles.imageSelect} ${disabled ? styles.disabled : ''}`}
       ref={containerRef}
-      id={id}
     >
       <div
+        id={id}
         className={`${styles.selectTrigger} ${isOpen ? styles.open : ''} ${
           ariaInvalid ? styles.invalid : ''
         }`}
@@ -103,6 +105,7 @@ export const ImageSelect: React.FC<ImageSelectProps> = ({
         aria-haspopup="listbox"
         aria-busy={ariaBusy}
         aria-invalid={ariaInvalid}
+        aria-label={ariaLabel}
       >
         {selectedOption ? (
           <div className={styles.selectedOption}>

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { BsTranslate } from 'react-icons/bs';
 import styles from './LanguageSelector.module.scss';
 import { useTranslation } from 'react-i18next';
@@ -7,7 +7,13 @@ import {
   I18N_SUPPORTED_LANGUAGE_CODES
 } from '../../constants/i18nSupportedLanguages';
 
-const LanguageSelector = ({ inDropdown = false }: { inDropdown?: boolean }) => {
+const LanguageSelector = ({
+  inDropdown = false,
+  hideIcon = false
+}: {
+  inDropdown?: boolean;
+  hideIcon?: boolean;
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLLIElement>(null);
 
@@ -33,33 +39,42 @@ const LanguageSelector = ({ inDropdown = false }: { inDropdown?: boolean }) => {
   }, []);
 
   return (
-    <li className={`${styles.socialDropdown}${inDropdown ? ` ${styles.inDropdown}` : ''}`} ref={dropdownRef}>
+    <li
+      className={`${styles.socialDropdown}${
+        inDropdown ? ` ${styles.inDropdown}` : ''
+      }`}
+      ref={dropdownRef}
+    >
       {inDropdown ? (
         <a
           href="#"
-          onClick={(e) => { e.preventDefault(); setIsOpen(!isOpen); }}
+          onClick={(e) => {
+            e.preventDefault();
+            setIsOpen(!isOpen);
+          }}
           aria-label={t('HEADER.LANGUAGE_SELECTOR.LANGUAGES')}
+          aria-expanded={isOpen}
+          aria-haspopup="menu"
         >
-          <BsTranslate />{' '}
-          <span>
-            {t('HEADER.LANGUAGE_SELECTOR.LANGUAGE')}
-          </span>
+          <BsTranslate /> <span>{t('HEADER.LANGUAGE_SELECTOR.LANGUAGE')}</span>
         </a>
       ) : (
         <button
+          type="button"
           className={styles.dropdownToggle}
           onClick={() => setIsOpen(!isOpen)}
           aria-label={t('HEADER.LANGUAGE_SELECTOR.LANGUAGES')}
+          aria-expanded={isOpen}
+          aria-haspopup="menu"
         >
-	  { inDropdown ? 
-            <BsTranslate /> : '' }
+          {!hideIcon && <BsTranslate />}
           <span className={styles.label}>
             {t('HEADER.LANGUAGE_SELECTOR.LANGUAGE')}
           </span>
         </button>
       )}
       {isOpen && (
-        <div className={styles.dropdownMenu}>
+        <div className={styles.dropdownMenu} role="menu">
           {I18N_SUPPORTED_LANGUAGE_CODES.map((code) => (
             <a
               key={code}
@@ -70,6 +85,7 @@ const LanguageSelector = ({ inDropdown = false }: { inDropdown?: boolean }) => {
                 setIsOpen(false);
               }}
               className={styles.socialLink}
+              role="menuitem"
             >
               {I18N_LANGUAGE_LABELS[code]}
             </a>

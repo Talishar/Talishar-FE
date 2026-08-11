@@ -1,7 +1,6 @@
 import * as yup from 'yup';
 
 const SELECT_DECK = 'You must select a deck.';
-const URL = 'Deck link must be a URL';
 
 const validationSchema = yup.object().shape(
   {

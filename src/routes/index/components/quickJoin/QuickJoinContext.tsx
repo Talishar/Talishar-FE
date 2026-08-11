@@ -25,6 +25,21 @@ import { ImageSelectOption } from 'components/ImageSelect';
 import { getReadableFormatName } from 'utils/formatUtils';
 import { FAB_BAZAAR_DECK_URL_BASE } from 'appConstants';
 import useAuth from 'hooks/useAuth';
+import { FavoriteDeck } from 'interface/API/GetFavoriteDecks.php';
+import { BazaarDeck } from 'interface/API/GetBazaarDecks';
+import useRustCounters, {
+  requestRustPanelAttention
+} from 'hooks/useRustCounters';
+import { useTranslation } from 'react-i18next';
+
+const isValidDeckUrl = (value: string): boolean => {
+  try {
+    const url = new URL(value);
+    return url.protocol === 'http:' || url.protocol === 'https:';
+  } catch {
+    return false;
+  }
+};
 
 const shortenFormat = (format: string): string => {
   if (!format) return '';
@@ -36,27 +51,30 @@ const shortenFormat = (format: string): string => {
 const formatDeckLabel = (
   deckName: string,
   format: string | null,
-  maxLength: number = 58
+  maxLength = 58
 ): string => {
+  const name = String(deckName ?? '');
   const formatStr = format ? ` (${shortenFormat(format)})` : '';
-  const combined = `${deckName}${formatStr}`;
+  const combined = `${name}${formatStr}`;
 
   if (combined.length <= maxLength) {
     return combined;
   }
 
   const availableForName = Math.max(1, maxLength - formatStr.length - 3);
-  return `${deckName.substring(0, availableForName)}...${formatStr}`;
+  return `${name.substring(0, availableForName)}...${formatStr}`;
 };
 
 interface QuickJoinContextType {
   deckSource: 'talishar' | 'bazaar';
   selectedFavoriteDeck: string;
+  selectedFavoriteDeckHero: string | null;
   selectedBazaarDeck: string;
   importDeckUrl: string;
   saveDeck: boolean;
   detectedFormat: string | null;
   error: string | null;
+  importDeckError: string | null;
   isJoining: boolean;
   hasDeckConfigured: boolean;
   favoriteDeckOptions: ImageSelectOption[];
@@ -66,6 +84,7 @@ interface QuickJoinContextType {
   bazaarError: string | null;
   metafyHash: string | null;
   isBazaarEnabled: boolean;
+  isRustLocked: boolean;
   /** URL-ready fabdb value that accounts for the active deck source */
   effectiveFabdb: string;
   /** Talishar deck key that accounts for the active deck source */
@@ -93,9 +112,11 @@ export const QuickJoinProvider = ({
   children: React.ReactNode;
 }) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const [joinGame] = useJoinGameMutation();
   const { isLoggedIn, isLoading: isAuthLoading } = useAuth();
+  const { isRustLocked } = useRustCounters();
   const metafyHash = useAppSelector(selectMetafyHash);
   const metafyTimestamp = useAppSelector(selectMetafyTimestamp);
   const metafyId = useAppSelector(selectMetafyId);
@@ -126,6 +147,7 @@ export const QuickJoinProvider = ({
   );
   const [detectedFormat, setDetectedFormat] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [importDeckError, setImportDeckError] = useState<string | null>(null);
   const [isJoining, setIsJoining] = useState(false);
 
   const canFetchBazaar =
@@ -152,9 +174,17 @@ export const QuickJoinProvider = ({
     }));
   }, [favoritesData?.favoriteDecks]);
 
+  const selectedFavoriteDeckHero = useMemo(
+    () =>
+      favoritesData?.favoriteDecks.find(
+        (deck: FavoriteDeck) => deck.key === selectedFavoriteDeck
+      )?.hero ?? null,
+    [favoritesData?.favoriteDecks, selectedFavoriteDeck]
+  );
+
   const bazaarDeckOptions: ImageSelectOption[] = useMemo(() => {
     if (!bazaarData?.decks) return [];
-    return bazaarData.decks.map((deck) => ({
+    return bazaarData.decks.map((deck: BazaarDeck) => ({
       value: deck.id ?? deck.deckId ?? '',
       label: formatDeckLabel(deck.name, deck.format ?? null),
       imageUrl: deck.hero ? generateCroppedImageUrl(deck.hero) : undefined
@@ -179,7 +209,7 @@ export const QuickJoinProvider = ({
       return;
     }
     const found = favoritesData.favoriteDecks.find(
-      (deck) => deck.key === selectedFavoriteDeck
+      (deck: FavoriteDeck) => deck.key === selectedFavoriteDeck
     );
     if (found?.format) {
       setDetectedFormat(getReadableFormatName(found.format));
@@ -191,11 +221,7 @@ export const QuickJoinProvider = ({
   // If FaB Bazaar isn't enabled for this user, reset any stale 'bazaar' value so the
   // disabled tab doesn't get the active class from localStorage.
   useEffect(() => {
-    if (
-      canResolveBazaarAccess &&
-      !isBazaarEnabled &&
-      deckSource === 'bazaar'
-    ) {
+    if (canResolveBazaarAccess && !isBazaarEnabled && deckSource === 'bazaar') {
       setDeckSourceState('talishar');
       localStorage.setItem(LS_DECK_SOURCE_KEY, 'talishar');
     }
@@ -205,6 +231,7 @@ export const QuickJoinProvider = ({
     setDeckSourceState(v);
     localStorage.setItem(LS_DECK_SOURCE_KEY, v);
     setError(null);
+    setImportDeckError(null);
   }, []);
 
   const setSelectedFavoriteDeck = useCallback((v: string) => {
@@ -215,6 +242,7 @@ export const QuickJoinProvider = ({
       localStorage.setItem(LS_IMPORT_URL_KEY, '');
     }
     setError(null);
+    setImportDeckError(null);
   }, []);
 
   const setSelectedBazaarDeck = useCallback((v: string) => {
@@ -232,6 +260,7 @@ export const QuickJoinProvider = ({
       setDetectedFormat(null);
     }
     setError(null);
+    setImportDeckError(null);
   }, []);
 
   const setSaveDeck = useCallback((v: boolean) => {
@@ -251,11 +280,26 @@ export const QuickJoinProvider = ({
     return importDeckUrl;
   }, [deckSource, selectedBazaarDeck, importDeckUrl]);
 
-  const effectiveFavoriteDecks = deckSource === 'talishar' ? selectedFavoriteDeck : '';
+  const effectiveFavoriteDecks =
+    deckSource === 'talishar' ? selectedFavoriteDeck : '';
 
   const quickJoin = useCallback(
     async (gameName: number) => {
+      if (isRustLocked) {
+        requestRustPanelAttention();
+        return;
+      }
+      if (
+        deckSource === 'talishar' &&
+        !selectedFavoriteDeck &&
+        !isValidDeckUrl(importDeckUrl.trim())
+      ) {
+        setError(null);
+        setImportDeckError(t('JOIN.INVALID_DECK_URL'));
+        return;
+      }
       setError(null);
+      setImportDeckError(null);
       setIsJoining(true);
       try {
         const isBazaar = deckSource === 'bazaar';
@@ -264,7 +308,8 @@ export const QuickJoinProvider = ({
           : importDeckUrl.trim();
         const favDecksValue = isBazaar ? '' : selectedFavoriteDeck;
         // Only save deck if it's from importDeckUrl (not from favorites or bazaar)
-        const shouldSaveDeck = !isBazaar && saveDeck && importDeckUrl.trim() !== '';
+        const shouldSaveDeck =
+          !isBazaar && saveDeck && importDeckUrl.trim() !== '';
 
         const response = await joinGame({
           gameName,
@@ -325,18 +370,22 @@ export const QuickJoinProvider = ({
       selectedBazaarDeck,
       dispatch,
       navigate,
-      setSaveDeck
+      setSaveDeck,
+      isRustLocked,
+      t
     ]
   );
 
   const value: QuickJoinContextType = {
     deckSource,
     selectedFavoriteDeck,
+    selectedFavoriteDeckHero,
     selectedBazaarDeck,
     importDeckUrl,
     saveDeck,
     detectedFormat,
     error,
+    importDeckError,
     isJoining,
     hasDeckConfigured,
     favoriteDeckOptions,
@@ -346,6 +395,7 @@ export const QuickJoinProvider = ({
     bazaarError,
     metafyHash,
     isBazaarEnabled,
+    isRustLocked,
     effectiveFabdb,
     effectiveFavoriteDecks,
     setDeckSource,

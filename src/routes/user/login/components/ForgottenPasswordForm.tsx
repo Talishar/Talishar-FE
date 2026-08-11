@@ -1,31 +1,25 @@
-import {
-  ForgottenPasswordType,
-  forgottenPasswordValidationSchema
-} from './validation';
+import { ForgottenPasswordType } from './validation';
 import styles from './LoginForm.module.css';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { useForgottenPasswordMutation } from 'features/api/apiSlice';
 import { Link, useNavigate } from 'react-router-dom';
 import classNames from 'classnames';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-hot-toast';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
+import { useTranslation } from 'react-i18next';
 
 export const ForgottenPasswordForm = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
-  const [forgottenPassword, forgottenPasswordResult] =
-    useForgottenPasswordMutation();
+  const [forgottenPassword] = useForgottenPasswordMutation();
   const [parent] = useAutoAnimate();
   const {
     register,
     handleSubmit,
     setError,
     formState: { errors, isSubmitting }
-  } = useForm<ForgottenPasswordType>({
-    mode: 'onBlur',
-    resolver: yupResolver(forgottenPasswordValidationSchema)
-  });
+  } = useForm<ForgottenPasswordType>({ mode: 'onBlur' });
 
   const onSubmit: SubmitHandler<ForgottenPasswordType> = async (values) => {
     try {
@@ -33,7 +27,7 @@ export const ForgottenPasswordForm = () => {
 
       // TODO change this to check statusCode, but we currently don't return it here
       if (resp.message === 'Password reset email sent.') {
-        toast.success('Password reset email sent. Please check your email.', {
+        toast.success(t('USER.LOGIN.PASSWORD_RESET_EMAIL_SENT'), {
           position: 'top-center'
         });
         navigate('/user/login');
@@ -46,33 +40,39 @@ export const ForgottenPasswordForm = () => {
       }
     } catch (err) {
       console.warn(err);
-      toast.error(`Network error: ${JSON.stringify(err)}`, {
-        position: 'top-center'
-      });
+      toast.error(
+        t('USER.LOGIN.NETWORK_ERROR', { error: JSON.stringify(err) }),
+        {
+          position: 'top-center'
+        }
+      );
       setError('root.serverError', {
         type: 'custom',
-        message: `There has been a network error while submitting your forgotten password request. Please try again. If you still get an error please report on our discord and let us know the following: ${JSON.stringify(
-          err
-        )}`
+        message: t('USER.LOGIN.FORGOTTEN_PASSWORD_NETWORK_ERROR', {
+          error: JSON.stringify(err)
+        })
       });
-    } finally {
     }
   };
 
   return (
     <div>
-      <h2>Forgotten Password</h2>
+      <h2>{t('USER.LOGIN.FORGOTTEN_PASSWORD')}</h2>
       <article className={styles.formContainer}>
         <form onSubmit={handleSubmit(onSubmit)} ref={parent}>
-          <label htmlFor="email">Email</label>
+          <label htmlFor="email">{t('USER.LOGIN.EMAIL')}</label>
           <input
+            id="email"
             type="email"
             placeholder="bravo@talishar.net"
             {...register('email')}
             aria-invalid={errors.email?.message ? 'true' : undefined}
+            aria-describedby={errors.email?.message ? 'email-error' : undefined}
           />
           {errors.email?.message && (
-            <div className={styles.fieldError}>{errors.email?.message}</div>
+            <div id="email-error" className={styles.fieldError} role="alert">
+              {errors.email?.message}
+            </div>
           )}
           <button
             type="submit"
@@ -80,26 +80,23 @@ export const ForgottenPasswordForm = () => {
             aria-busy={isSubmitting}
             className={styles.submitButton}
           >
-            Submit
+            {isSubmitting ? t('GAME_LOBBY.SUBMITTING') : t('USER.LOGIN.SUBMIT')}
           </button>
           {errors.root?.serverError?.message && (
-            <div className={styles.fieldError}>
+            <div className={styles.fieldError} role="alert">
               <FaExclamationCircle /> {errors.root?.serverError?.message}
             </div>
           )}
         </form>
-        <p>
-          An e-mail will be sent with instructions on how to reset your
-          password.
-        </p>
+        <p>{t('USER.LOGIN.PASSWORD_RESET_INFO')}</p>
         <hr className={styles.divider} />
-        <p className={styles.linebreak}>or</p>
+        <p className={styles.linebreak}>{t('USER.LOGIN.OR')}</p>
         <Link
           className={classNames(styles.signupButton, 'outline')}
           role="button"
           to={'/user/login'}
         >
-          Log in
+          {t('USER.LOGIN.LOGIN')}
         </Link>
         <Link
           className={classNames(styles.signupButton, 'outline')}
@@ -107,7 +104,7 @@ export const ForgottenPasswordForm = () => {
           role="button"
           to={'/user/login/signup'}
         >
-          Register
+          {t('USER.LOGIN.SIGN_UP')}
         </Link>
       </article>
     </div>

@@ -4,14 +4,39 @@
   width: 16dvh;
   flex-shrink: 0;
   position: relative;
+  pointer-events: auto;
+}
+
+.shuffleAccentA,
+.shuffleAccentB {
+  animation: hand-shuffle-accent 460ms ease-out;
+}
+
+@keyframes hand-shuffle-accent {
+  0% {
+    filter: brightness(1) saturate(1);
+  }
+  35% {
+    filter: brightness(1.12) saturate(1.16);
+  }
+  100% {
+    filter: brightness(1) saturate(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shuffleAccentA,
+  .shuffleAccentB {
+    animation: none;
+  }
 }
 
 @media (orientation: portrait) {
   .handCard {
     height: 9dvh;
-    width: 14%;
+    width: 10dvh;
     flex-shrink: 0;
-    min-width: 14%;
+    min-width: 10dvh;
   }
 }
 
@@ -77,8 +102,8 @@
 }
 
 .border4 {
-  border-color: gray;
-  box-shadow: 0 0 4px 5px rgb(100, 100, 100);
+  border-color: #c5cbcf;
+  box-shadow: 0 0 4px 4px #c5cbcf;
 }
 
 .border5 {
@@ -97,13 +122,13 @@
 }
 
 .border8 {
-  border-color: goldenrod;
-  box-shadow: 0 0 5px 5px goldenrod;
+  border-color: #ffd700;
+  box-shadow: 0 0 4px 4px #ffd700;
 }
 
 .border9 {
   border-color: rgb(192, 6, 6);
-  box-shadow: 0 0 5px 5px rgb(192, 6, 6);
+  box-shadow: 0 0 4px 4px rgb(192, 6, 6);
 }
 
 .label {

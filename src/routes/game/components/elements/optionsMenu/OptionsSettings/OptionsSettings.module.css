@@ -1,14 +1,14 @@
 .leftColumn {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.25rem;
   width: 100%;
 }
 
 .fieldset {
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
-  padding: 1rem;
+  padding: 1.25rem 1.5rem;
   margin: 0;
   background: rgba(0, 0, 0, 0.2);
 }
@@ -16,7 +16,9 @@
 .fieldset legend {
   padding: 0 0.5rem;
   color: var(--theme-primary);
-  font-size: 0.95em;
+  font-size: 1em;
+  font-weight: 700;
+  line-height: 1.2;
   overflow: visible;
   display: inline-flex;
   align-items: center;
@@ -24,16 +26,16 @@
 }
 
 fieldset legend strong {
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .optionLabel {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.4rem 0.5rem;
+  gap: 0.75rem;
+  padding: 0.65rem 0.75rem;
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: 6px;
   transition: background-color 0.2s;
   user-select: none;
 }
@@ -71,46 +73,6 @@ fieldset legend strong {
   background-color: rgba(255, 255, 255, 0.05);
 }
 
-.tooltipContent {
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: rgba(0, 0, 0, 0.95);
-  color: white;
-  padding: 0.6rem 0.8rem;
-  border-radius: 4px;
-  font-size: 0.85em;
-  white-space: normal;
-  min-width: 200px;
-  pointer-events: none;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  z-index: 1000;
-  animation: tooltipFadeIn 0.2s ease-in-out;
-  margin-top: 0.5rem;
-}
-
-.tooltipContent::after {
-  content: '';
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  border: 5px solid transparent;
-  border-bottom-color: rgba(0, 0, 0, 0.95);
-}
-
-@keyframes tooltipFadeIn {
-  from {
-    opacity: 0;
-    transform: translateX(-50%) translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-}
-
 .optionLabel input[type='checkbox'],
 .optionLabel input[type='radio'] {
   cursor: pointer;
@@ -126,7 +88,7 @@ fieldset legend strong {
 
 .cardBackTitle strong {
   display: block;
-  color: var(--theme-primary);
+  color: var(--cosmetics-accent, var(--theme-primary));
   font-size: 1em;
   margin-bottom: 0.5rem;
 }
@@ -152,23 +114,84 @@ fieldset legend strong {
   border-color: var(--theme-primary);
 }
 
-.playmatPreview {
-  margin-top: 1rem;
+.playmatListContainer {
   width: 100%;
-  min-height: 180px;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 0.5rem 0.25rem 0.5rem 0;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 }
 
-.playmatPreviewImage {
-  width: 100%;
-  min-height: 350px;
-  height: auto;
-  display: block;
+.playmatListContainer::-webkit-scrollbar {
+  width: 6px;
+}
+
+.playmatListContainer::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.playmatListContainer::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+.playmatThumbWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
   border-radius: 8px;
+  transition: transform 0.2s;
+  contain: layout style paint;
+}
+
+.playmatThumbWrapper:hover {
+  will-change: transform;
+  transform: scale(1.04);
+}
+
+.playmatThumb {
+  width: 160px;
+  height: 90px;
+  box-sizing: border-box;
   object-fit: cover;
+  border-radius: 8px;
+  opacity: 0.88;
+  transition: opacity 0.25s, border-color 0.15s, box-shadow 0.25s;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  border: 2px solid transparent;
+  display: block;
+}
+
+.playmatThumbWrapper:hover .playmatThumb {
+  opacity: 1;
+}
+
+.playmatThumbSelected {
+  border-color: var(--theme-primary);
+  opacity: 1;
+}
+
+.playmatLabel {
+  font-size: 0.75em;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  max-width: 160px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lockedPlaymatLabel {
+  color: rgba(255, 255, 255, 0.35);
 }
 
 .cardBackListContainer {
@@ -187,21 +210,61 @@ fieldset legend strong {
   height: 150px;
   width: 150px;
   max-height: 150px;
-  filter: brightness(0.85);
-  transition: filter 0.25s, box-shadow 0.25s, transform 0.2s;
+  box-sizing: border-box;
+  opacity: 0.88;
+  transition: opacity 0.25s, border-color 0.15s, box-shadow 0.25s,
+    transform 0.2s;
   cursor: pointer;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 2px solid transparent;
 }
 
 .cardBack:hover {
-  filter: brightness(0.85);
+  will-change: transform;
+  opacity: 1;
   transform: scale(1.05);
 }
 
 .selected {
-  box-shadow: 0 0 0 3px var(--theme-primary);
-  filter: brightness(1);
+  border-color: var(--theme-primary);
+  opacity: 1;
+}
+
+.lockedCardBackWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: not-allowed;
+  contain: layout style paint;
+}
+
+.lockedCardBack {
+  filter: brightness(0.4) grayscale(0.4);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.lockedCardBack:hover {
+  filter: brightness(0.4) grayscale(0.4);
+  transform: none;
+}
+
+.lockOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  pointer-events: none;
+}
+
+.lockIcon {
+  font-size: 2rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8));
+  opacity: 0.9;
 }
 
 hr {

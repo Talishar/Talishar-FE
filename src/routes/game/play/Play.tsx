@@ -14,39 +14,69 @@ import CardListZone from '../components/zones/cardListZone/CardListZone';
 import ChainLinkSummaryContainer from '../components/elements/chainLinkSummary/ChainLinkSummary';
 import ActiveLayersZone from '../components/zones/activeLayersZone/ActiveLayersZone';
 import GameStateHandler from 'app/GameStateHandler';
+import SpectatorLoginRequired from 'components/SpectatorLoginRequired';
 import HeroVsHeroIntro from '../components/elements/heroVsHeroIntro/HeroVsHeroIntro';
 import OpponentInactive from '../components/elements/opponentInactive/OpponentInactive';
 import { useCookies } from 'react-cookie';
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import { usePageTitle } from 'hooks/usePageTitle';
+import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '../../../app/Hooks';
 import {
   setIsRoguelike,
   setHeroInfo,
-  getGameInfo
+  getGameInfo,
+  submitButton
 } from '../../../features/game/GameSlice';
-import { fetchAllSettings, settingUpdated } from 'features/options/optionsSlice';
-import { SHORTCUT_ATTACK_THRESHOLD, SKIP_AR_WINDOW, SKIP_DR_WINDOW } from 'features/options/constants';
+import {
+  fetchAllSettings,
+  settingUpdated
+} from 'features/options/optionsSlice';
+import {
+  SHORTCUT_ATTACK_THRESHOLD,
+  SKIP_AR_WINDOW,
+  SKIP_DR_WINDOW
+} from 'features/options/constants';
 import { Toaster } from 'react-hot-toast';
 import { shallowEqual } from 'react-redux';
 import { PanelProvider } from '../components/leftColumn/PanelContext';
+import { RootState } from 'app/Store';
+import { PROCESS_INPUT } from 'appConstants';
+import usePlayerPresenceReporter from 'hooks/usePlayerPresenceReporter';
+import useAdScript, {
+  wasAdProviderLoadedInDocument
+} from 'hooks/useAdScript';
+
+const TOAST_STYLE: React.CSSProperties = {
+  background: 'var(--theme-tertiary)',
+  color: 'var(--white)',
+  border: '2px solid var(--theme-border)',
+  padding: '0.5rem',
+  wordBreak: 'break-word',
+  maxWidth: '100vh',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  userSelect: 'none',
+  msUserSelect: 'none',
+  WebkitUserSelect: 'none',
+  MozUserSelect: 'none',
+  zIndex: 10001
+};
+const TOAST_OPTIONS = { style: TOAST_STYLE };
 
 function Play({ isRoguelike }: { isRoguelike: boolean }) {
-  usePageTitle('In Game');
-
-  // Always hide anchor ads while the game view is mounted
-  useEffect(() => {
-    const ANCHOR_SELECTOR = '[data-ad="anchor"]';
-    const hideAnchors = () => {
-      document.querySelectorAll(ANCHOR_SELECTOR).forEach((el) => {
-        (el as HTMLElement).style.display = 'none';
-      });
-    };
-    hideAnchors();
-    const observer = new MutationObserver(hideAnchors);
-    observer.observe(document.documentElement, { childList: true, subtree: true });
-    return () => observer.disconnect();
+  const needsCleanDocument = useRef(wasAdProviderLoadedInDocument());
+  useLayoutEffect(() => {
+    if (needsCleanDocument.current) {
+      window.location.reload();
+    }
   }, []);
+
+  useAdScript(false);
+  const { t } = useTranslation();
+  usePageTitle(t('PAGES.GAME_PLAY'));
+  usePlayerPresenceReporter();
+
   const [cookies] = useCookies([
     'experimental',
     'cardSize',
@@ -55,11 +85,19 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
   ]);
 
   const dispatch = useAppDispatch();
-  const gameState = useAppSelector((state: any) => state.game, shallowEqual);
+  const playerOneHeroCardNumber = useAppSelector(
+    (state: RootState) => state.game.playerOne?.Hero?.cardNumber
+  );
+  const playerTwoHeroCardNumber = useAppSelector(
+    (state: RootState) => state.game.playerTwo?.Hero?.cardNumber
+  );
   const heroIntroShown = useAppSelector(
     (state: any) => state.game.heroIntroShown
   );
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
+  const canPassPhase = useAppSelector(
+    (state: RootState) => state.game.canPassPhase
+  );
 
   useEffect(() => {
     dispatch(setIsRoguelike(isRoguelike));
@@ -71,42 +109,44 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
     }
   }, [gameInfo.gameID, dispatch]);
 
-  const turnNo = useAppSelector((state: any) => state.game.gameDynamicInfo?.turnNo);
+  const turnNo = useAppSelector(
+    (state: any) => state.game.gameDynamicInfo?.turnNo
+  );
+  const turnPlayer = useAppSelector((state: any) => state.game.turnPlayer);
   const prevTurnNoRef = useRef<number | undefined>(undefined);
+  const prevTurnPlayerRef = useRef<number | undefined>(undefined);
   useEffect(() => {
     if (prevTurnNoRef.current === undefined) {
       prevTurnNoRef.current = turnNo;
+      prevTurnPlayerRef.current = turnPlayer;
       return;
     }
-    if (turnNo !== prevTurnNoRef.current) {
+    if (
+      turnNo !== prevTurnNoRef.current ||
+      turnPlayer !== prevTurnPlayerRef.current
+    ) {
       prevTurnNoRef.current = turnNo;
+      prevTurnPlayerRef.current = turnPlayer;
       dispatch(settingUpdated({ name: SHORTCUT_ATTACK_THRESHOLD, value: '0' }));
       dispatch(settingUpdated({ name: SKIP_AR_WINDOW, value: '0' }));
       dispatch(settingUpdated({ name: SKIP_DR_WINDOW, value: '0' }));
     }
-  }, [turnNo, dispatch]);
+  }, [turnNo, turnPlayer, dispatch]);
 
   // Dispatch hero info once game state is fully populated
   useEffect(() => {
-    const playerID = gameState?.gameInfo?.playerID;
-    const playerOneHero = gameState?.playerOne?.Hero;
-    const playerTwoHero = gameState?.playerTwo?.Hero;
+    const playerID = gameInfo?.playerID;
 
-    if (playerID && playerOneHero?.cardNumber && playerTwoHero?.cardNumber) {
-      // Get current hero names from gameInfo (may have been set from Lobby)
-      const currentHeroName = gameState?.gameInfo?.heroName;
-      const currentOpponentHeroName = gameState?.gameInfo?.opponentHeroName;
-
-      // Only dispatch if we don't have opponent hero card number yet (first load)
-      if (!gameState?.gameInfo?.opponentHeroCardNumber) {
+    if (playerID && playerOneHeroCardNumber && playerTwoHeroCardNumber) {
+      if (!gameInfo?.opponentHeroCardNumber) {
         const yourCardNumber =
-          playerID === 1 ? playerOneHero.cardNumber : playerTwoHero.cardNumber;
+          playerID === 1 ? playerOneHeroCardNumber : playerTwoHeroCardNumber;
         const opponentCardNumber =
-          playerID === 1 ? playerTwoHero.cardNumber : playerOneHero.cardNumber;
+          playerID === 1 ? playerTwoHeroCardNumber : playerOneHeroCardNumber;
 
         dispatch(
           setHeroInfo({
-            heroName: currentHeroName,
+            heroName: gameInfo?.heroName,
             yourHeroCardNumber: yourCardNumber,
             opponentHeroCardNumber: opponentCardNumber
           })
@@ -114,9 +154,11 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
       }
     }
   }, [
-    gameState?.playerOne?.Hero?.cardNumber,
-    gameState?.playerTwo?.Hero?.cardNumber,
-    gameState?.gameInfo?.playerID,
+    playerOneHeroCardNumber,
+    playerTwoHeroCardNumber,
+    gameInfo?.playerID,
+    gameInfo?.opponentHeroCardNumber,
+    gameInfo?.heroName,
     dispatch
   ]);
 
@@ -156,29 +198,14 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
     }
   }, [cookies.hoverImageSize]);
 
+  if (needsCleanDocument.current) {
+    return null;
+  }
+
   return (
     <PanelProvider>
       <div className="centering">
-        <Toaster
-          position="top-left"
-          toastOptions={{
-            style: {
-              background: 'var(--theme-tertiary)',
-              color: 'var(--white)',
-              border: '2px solid var(--theme-border)',
-              padding: '0.5rem',
-              wordBreak: 'break-word',
-              maxWidth: '100vh',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              userSelect: 'none',
-              msUserSelect: 'none',
-              WebkitUserSelect: 'none',
-              MozUserSelect: 'none',
-              zIndex: 10001
-            }
-          }}
-        />
+        <Toaster position="top-left" toastOptions={TOAST_OPTIONS} />
         <div className="app" key="app">
           <ChatCardDetail />
           <LeftColumn />
@@ -200,7 +227,19 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
         <OpponentInactive />
         <CardPortal />
         <GameStateHandler />
+        <SpectatorLoginRequired />
         <EventsHandler />
+        {gameInfo.isReplay && canPassPhase === true && (
+          <button
+            type="button"
+            className="replayAdvanceButton"
+            onClick={() =>
+              dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }))
+            }
+          >
+            {t('PLAY.ADVANCE_REPLAY')}
+          </button>
+        )}
       </div>
     </PanelProvider>
   );

@@ -8,21 +8,21 @@
   min-width: 0px;
   grid-area: chat;
   height: 100%;
-  min-height: 200px;
+  min-height: 0;
 }
 
 .spacer {
-  display: none;
+  display: block;
+  flex: 0 0 var(--sticky-footer-height, 60px);
 }
 
 @media (min-width: 1200px) and (pointer: fine) {
   .container {
-    height: calc(100dvh - 20px);
-    min-height: unset;
+    height: 100%;
   }
 
   .spacer {
-    display: block;
+    flex-basis: 0;
     height: 0;
   }
 }

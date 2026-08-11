@@ -1,24 +1,36 @@
 .friendsListContainer {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  padding: 1.5rem 0.5rem;
+  gap: 1rem;
+  padding: 0.5rem;
   border: none;
-  border-top: 1px solid var(--theme-border, rgba(255, 255, 255, 0.15));
   border-radius: 0;
   background: transparent;
 }
 
 .title {
-  margin: 0 0 1rem 0;
-  font-size: 1.3rem;
+  margin: 0;
+  font-size: 1.1rem;
   font-weight: 600;
   color: var(--theme-text, #e0e0e0);
 }
 
+.titleButton {
+  all: unset;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  cursor: pointer;
+}
+
+.titleButton:focus-visible {
+  outline: 2px solid var(--theme-primary, #d4af37);
+  outline-offset: 4px;
+}
+
 .subtitle {
   margin: 0 0 0.75rem 0;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
   color: var(--theme-text, #e0e0e0);
 }
@@ -357,7 +369,7 @@
 }
 
 .username {
-  color: #e0e0e0;
+  color: var(--theme-text, #e0e0e0);
   font-weight: 500;
 }
 

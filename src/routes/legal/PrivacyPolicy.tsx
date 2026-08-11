@@ -1,214 +1,191 @@
 import React from 'react';
+import { useTranslation, Trans } from 'react-i18next';
+import {
+  TALISHAR_DISCORD_URL,
+  TALISHAR_GITHUB_URL
+} from 'constants/socialLinks';
+import { usePageTitle } from 'hooks/usePageTitle';
 import styles from './LegalPages.module.css';
 
 const PrivacyPolicy: React.FC = () => {
+  const { t } = useTranslation();
+  usePageTitle(t('PAGES.PRIVACY_POLICY_PAGE'));
   return (
     <main className={styles.legalContainer}>
       <div className={styles.content}>
-        <h1>Privacy Policy</h1>
-        <p className={styles.lastUpdated}>Last Updated: November 4, 2025</p>
+        <h1>{t('LEGAL.PRIVACY_POLICY')}</h1>
+        <p className={styles.lastUpdated}>
+          {t('LEGAL.LAST_UPDATED', { date: 'November 4, 2025' })}
+        </p>
 
         <section className={styles.section}>
-          <h2>1. Introduction</h2>
-          <p>
-            Talishar ("we," "our," or "us") is committed to protecting your
-            privacy. This Privacy Policy explains how we collect, use, disclose,
-            and otherwise handle your information when you visit our website and
-            use our services.
-          </p>
+          <h2>{t('LEGAL.PRIVACY.SECTION_1_TITLE')}</h2>
+          <p>{t('LEGAL.PRIVACY.SECTION_1_PARA_1')}</p>
         </section>
 
         <section className={styles.section}>
-          <h2>2. Information We Collect</h2>
-          <h3>2.1 Information You Provide Directly</h3>
+          <h2>{t('LEGAL.PRIVACY.SECTION_2_TITLE')}</h2>
+          <h3>{t('LEGAL.PRIVACY.SECTION_2_SUB_1_TITLE')}</h3>
           <ul>
             <li>
-              <strong>Account Information:</strong> When you create an account,
-              we collect your email address, username, and password.
+              <Trans i18nKey="LEGAL.PRIVACY.SECTION_2_SUB_1_ITEM_1">
+                <strong>Account Information:</strong> When you create an
+                account, we collect your email address, username, and password.
+              </Trans>
             </li>
             <li>
-              <strong>Game Data:</strong> We store information about your games,
-              deck builds, and game history on our platform.
+              <Trans i18nKey="LEGAL.PRIVACY.SECTION_2_SUB_1_ITEM_2">
+                <strong>Game Data:</strong> We store information about your
+                games, deck builds, and game history on our platform.
+              </Trans>
             </li>
             <li>
-              <strong>Communications:</strong> We may collect messages,
-              feedback, and communications you send us.
+              <Trans i18nKey="LEGAL.PRIVACY.SECTION_2_SUB_1_ITEM_3">
+                <strong>Communications:</strong> We may collect messages,
+                feedback, and communications you send us.
+              </Trans>
             </li>
           </ul>
 
-          <h3>2.2 Information Collected Automatically</h3>
+          <h3>{t('LEGAL.PRIVACY.SECTION_2_SUB_2_TITLE')}</h3>
           <ul>
             <li>
-              <strong>Log Data:</strong> IP address, browser type, operating
-              system, pages visited, and timestamps.
+              <Trans i18nKey="LEGAL.PRIVACY.SECTION_2_SUB_2_ITEM_1">
+                <strong>Log Data:</strong> IP address, browser type, operating
+                system, pages visited, and timestamps.
+              </Trans>
             </li>
             <li>
-              <strong>Cookies and Similar Technologies:</strong> We use cookies
-              to enhance user experience and track site usage.
+              <Trans i18nKey="LEGAL.PRIVACY.SECTION_2_SUB_2_ITEM_2">
+                <strong>Cookies and Similar Technologies:</strong> We use
+                cookies to enhance user experience and track site usage.
+              </Trans>
             </li>
             <li>
-              <strong>Analytics:</strong> We use Google Analytics and similar
-              services to understand how users interact with our platform.
+              <Trans i18nKey="LEGAL.PRIVACY.SECTION_2_SUB_2_ITEM_3">
+                <strong>Analytics:</strong> We use Google Analytics and similar
+                services to understand how users interact with our platform.
+                Analytics cookies are only set after you accept them in the
+                cookie consent banner.
+              </Trans>
             </li>
           </ul>
 
-          <h3>2.3 Third-Party Information</h3>
-          <p>
-            We may receive information from third-party services, analytics
-            providers, and advertising partners.
-          </p>
+          <h3>{t('LEGAL.PRIVACY.SECTION_2_SUB_3_TITLE')}</h3>
+          <p>{t('LEGAL.PRIVACY.SECTION_2_SUB_3_PARA_1')}</p>
         </section>
 
         <section className={styles.section}>
-          <h2>3. How We Use Your Information</h2>
+          <h2>{t('LEGAL.PRIVACY.SECTION_3_TITLE')}</h2>
           <ul>
-            <li>To provide, maintain, and improve our services</li>
-            <li>To process transactions and send related information</li>
-            <li>To authenticate users and prevent fraud</li>
-            <li>To personalize user experience and provide targeted content</li>
-            <li>To send promotional emails and updates (with your consent)</li>
-            <li>To comply with legal obligations</li>
-            <li>To analyze platform usage and trends</li>
-            <li>
-              To display advertisements through rev.iq
-            </li>
-          </ul>
-        </section>
-
-        <section className={styles.section}>
-          <h2>4. Information Sharing</h2>
-          <p>
-            We do not sell, trade, or rent your personal information to third
-            parties. We may share information:
-          </p>
-          <ul>
-            <li>
-              With service providers who assist us in operating our website
-            </li>
-            <li>
-              With analytics and advertising partners (in anonymized form)
-            </li>
-            <li>When required by law or to protect our rights and safety</li>
-            <li>With your consent for specific purposes</li>
+            <li>{t('LEGAL.PRIVACY.SECTION_3_ITEM_1')}</li>
+            <li>{t('LEGAL.PRIVACY.SECTION_3_ITEM_2')}</li>
+            <li>{t('LEGAL.PRIVACY.SECTION_3_ITEM_3')}</li>
+            <li>{t('LEGAL.PRIVACY.SECTION_3_ITEM_4')}</li>
+            <li>{t('LEGAL.PRIVACY.SECTION_3_ITEM_5')}</li>
+            <li>{t('LEGAL.PRIVACY.SECTION_3_ITEM_6')}</li>
+            <li>{t('LEGAL.PRIVACY.SECTION_3_ITEM_7')}</li>
+            <li>{t('LEGAL.PRIVACY.SECTION_3_ITEM_8')}</li>
           </ul>
         </section>
 
         <section className={styles.section}>
-          <h2>5. Cookies and Tracking Technologies</h2>
-          <p>We use cookies and similar tracking technologies to:</p>
+          <h2>{t('LEGAL.PRIVACY.SECTION_4_TITLE')}</h2>
+          <p>{t('LEGAL.PRIVACY.SECTION_4_INTRO')}</p>
           <ul>
-            <li>Remember your preferences and login information</li>
-            <li>Analyze platform usage through Google Analytics</li>
-            <li>Display ads through rev.iq</li>
-            <li>Enable essential platform functionality</li>
+            <li>{t('LEGAL.PRIVACY.SECTION_4_ITEM_1')}</li>
+            <li>{t('LEGAL.PRIVACY.SECTION_4_ITEM_2')}</li>
+            <li>{t('LEGAL.PRIVACY.SECTION_4_ITEM_3')}</li>
+            <li>{t('LEGAL.PRIVACY.SECTION_4_ITEM_4')}</li>
           </ul>
-          <p>
-            You can control cookie settings through your browser. Disabling
-            cookies may affect platform functionality.
-          </p>
         </section>
 
         <section className={styles.section}>
-          <h2>6. rev.iq Advertising</h2>
-          <p>
-            Talishar uses rev.iq to display advertisements. rev.iq may
-            collect information about your browsing behavior to deliver
-            relevant ads. For more information, see
-            <a
-              href="https://www.rev.iq/privacy"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {' '}
-              rev.iq's Privacy Policy
-            </a>
-            .
-          </p>
-        </section>
-
-        <section className={styles.section}>
-          <h2>7. Data Security</h2>
-          <p>
-            We implement appropriate technical and organizational measures to
-            protect your information against unauthorized access, alteration,
-            disclosure, or destruction. However, no online platform is
-            completely secure.
-          </p>
-        </section>
-
-        <section className={styles.section}>
-          <h2>8. Data Retention</h2>
-          <p>
-            We retain your information for as long as necessary to provide our
-            services and comply with legal obligations. You can request deletion
-            of your account and associated data at any time through your account
-            settings.
-          </p>
-        </section>
-
-        <section className={styles.section}>
-          <h2>9. Your Rights</h2>
-          <p>
-            Depending on your location, you may have certain rights regarding
-            your personal information:
-          </p>
+          <h2>{t('LEGAL.PRIVACY.SECTION_5_TITLE')}</h2>
+          <p>{t('LEGAL.PRIVACY.SECTION_5_INTRO')}</p>
           <ul>
-            <li>Right to access your information</li>
-            <li>Right to correct inaccurate information</li>
-            <li>Right to request deletion</li>
-            <li>Right to opt-out of certain processing</li>
-            <li>Right to data portability</li>
+            <li>{t('LEGAL.PRIVACY.SECTION_5_ITEM_1')}</li>
+            <li>{t('LEGAL.PRIVACY.SECTION_5_ITEM_2')}</li>
+            <li>{t('LEGAL.PRIVACY.SECTION_5_ITEM_3')}</li>
+            <li>{t('LEGAL.PRIVACY.SECTION_5_ITEM_4')}</li>
           </ul>
-          <p>
-            To exercise these rights, please contact us at the email address
-            provided below.
-          </p>
+          <p>{t('LEGAL.PRIVACY.SECTION_5_PARA_2')}</p>
         </section>
 
         <section className={styles.section}>
-          <h2>10. Children's Privacy</h2>
+          <h2>{t('LEGAL.PRIVACY.SECTION_6_TITLE')}</h2>
           <p>
-            Talishar is not directed to children under 13. We do not knowingly
-            collect personal information from children under 13. If we learn we
-            have collected such information, we will delete it promptly.
-          </p>
-        </section>
-
-        <section className={styles.section}>
-          <h2>11. Changes to This Privacy Policy</h2>
-          <p>
-            We may update this Privacy Policy from time to time. We will notify
-            you of significant changes by posting the updated policy on our
-            website. Your continued use of Talishar constitutes acceptance of
-            our Privacy Policy.
-          </p>
-        </section>
-
-        <section className={styles.section}>
-          <h2>12. Contact Us</h2>
-          <p>
-            If you have questions about this Privacy Policy or our privacy
-            practices, please contact us:
-          </p>
-          <ul>
-            <li>
-              <strong>Discord:</strong>{' '}
+            <Trans i18nKey="LEGAL.PRIVACY.SECTION_6_PARA_1">
+              Talishar uses rev.iq to display advertisements. rev.iq may collect
+              information about your browsing behavior to deliver relevant ads.
+              For more information, see{' '}
               <a
-                href="https://discord.gg/JykuRkdd5S"
+                href="https://www.rev.iq/privacy"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Join our Discord community
+                rev.iq's Privacy Policy
+              </a>
+              .
+            </Trans>
+          </p>
+        </section>
+
+        <section className={styles.section}>
+          <h2>{t('LEGAL.PRIVACY.SECTION_7_TITLE')}</h2>
+          <p>{t('LEGAL.PRIVACY.SECTION_7_PARA_1')}</p>
+        </section>
+
+        <section className={styles.section}>
+          <h2>{t('LEGAL.PRIVACY.SECTION_8_TITLE')}</h2>
+          <p>{t('LEGAL.PRIVACY.SECTION_8_PARA_1')}</p>
+        </section>
+
+        <section className={styles.section}>
+          <h2>{t('LEGAL.PRIVACY.SECTION_9_TITLE')}</h2>
+          <p>{t('LEGAL.PRIVACY.SECTION_9_INTRO')}</p>
+          <ul>
+            <li>{t('LEGAL.PRIVACY.SECTION_9_ITEM_1')}</li>
+            <li>{t('LEGAL.PRIVACY.SECTION_9_ITEM_2')}</li>
+            <li>{t('LEGAL.PRIVACY.SECTION_9_ITEM_3')}</li>
+            <li>{t('LEGAL.PRIVACY.SECTION_9_ITEM_4')}</li>
+            <li>{t('LEGAL.PRIVACY.SECTION_9_ITEM_5')}</li>
+          </ul>
+          <p>{t('LEGAL.PRIVACY.SECTION_9_PARA_2')}</p>
+        </section>
+
+        <section className={styles.section}>
+          <h2>{t('LEGAL.PRIVACY.SECTION_10_TITLE')}</h2>
+          <p>{t('LEGAL.PRIVACY.SECTION_10_PARA_1')}</p>
+        </section>
+
+        <section className={styles.section}>
+          <h2>{t('LEGAL.PRIVACY.SECTION_11_TITLE')}</h2>
+          <p>{t('LEGAL.PRIVACY.SECTION_11_PARA_1')}</p>
+        </section>
+
+        <section className={styles.section}>
+          <h2>{t('LEGAL.PRIVACY.SECTION_12_TITLE')}</h2>
+          <p>{t('LEGAL.PRIVACY.SECTION_12_INTRO')}</p>
+          <ul>
+            <li>
+              <strong>{t('LEGAL.CONTACT_DISCORD')}</strong>{' '}
+              <a
+                href={TALISHAR_DISCORD_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {t('LEGAL.JOIN_DISCORD_COMMUNITY')}
               </a>
             </li>
             <li>
-              <strong>GitHub:</strong>{' '}
+              <strong>{t('LEGAL.CONTACT_GITHUB')}</strong>{' '}
               <a
-                href="https://github.com/Talishar/Talishar"
+                href={TALISHAR_GITHUB_URL}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Visit our GitHub repository
+                {t('LEGAL.VISIT_GITHUB_REPOSITORY')}
               </a>
             </li>
           </ul>

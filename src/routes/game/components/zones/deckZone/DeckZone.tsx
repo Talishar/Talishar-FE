@@ -1,22 +1,27 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import Displayrow from 'interface/Displayrow';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import styles from './DeckZone.module.css';
 import { setCardListFocus, clearCardListFocus } from 'features/game/GameSlice';
+import useWindowDimensions from 'hooks/useWindowDimensions';
 import * as optConst from 'features/options/constants';
+import { useTranslation } from 'react-i18next';
+
+const MAX_STACK_LAYERS = 12;
 
 export const DeckZone = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
   const dispatch = useAppDispatch();
-  const settingsData = useAppSelector(
-    (state: RootState) => state.settings.entities
+  const { t } = useTranslation();
+  const [windowWidth] = useWindowDimensions();
+  const alwaysShowCounters = useAppSelector(
+    (state: RootState) =>
+      String(
+        state.settings.entities?.[optConst.ALWAYS_SHOW_COUNTERS]?.value
+      ) === '1'
   );
-  const alwaysShowCounters =
-    String(settingsData?.[optConst.ALWAYS_SHOW_COUNTERS]?.value) === '1';
-
-  const showCount = true;
 
   const deckCards = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.DeckSize : state.game.playerTwo.DeckSize
@@ -41,9 +46,6 @@ export const DeckZone = React.memo((prop: Displayrow) => {
   );
   const addBotDeckPlayerId = useAppSelector(
     (state: RootState) => state.game.addBotDeckPlayerId
-  );
-  const addBotDeckCard = useAppSelector(
-    (state: RootState) => state.game.addBotDeckCard
   );
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
@@ -76,8 +78,59 @@ export const DeckZone = React.memo((prop: Displayrow) => {
     currentDeckPlayerID === 1 ? clashRevealP1Card : clashRevealP2Card;
   const showClash = !!clashCard;
 
+  const isMobileOrTablet = windowWidth <= 1024;
+  const safeCount = deckCards ?? 0;
+  const baseOffsetY = safeCount * -0.24;
+  const baseOffsetX = safeCount * 0.24;
+  const shuffleLayerCount = Math.min(5, Math.max(3, safeCount - 1));
+
+  const baseLayerStyles = useMemo(() => {
+    if (safeCount <= 1) return [];
+    const layerCount = Math.min(MAX_STACK_LAYERS, safeCount - 1);
+    return Array.from({ length: layerCount }, (_, index) => {
+      const sourceIndex =
+        layerCount === 1
+          ? 0
+          : Math.round((index * (safeCount - 2)) / (layerCount - 1));
+
+      return {
+        transform:
+          `translateY(${safeCount * -0.24}px) translateX(${
+            safeCount * 0.24
+          }px) ` +
+          `translateY(${(sourceIndex + 1) * 0.25}px) translateX(${
+            (sourceIndex + 1) * -0.25
+          }px)`,
+        zIndex: safeCount - sourceIndex - 1
+      };
+    });
+  }, [safeCount]);
+
+  const cardWrapperStyle = useMemo(
+    () =>
+      !isMobileOrTablet
+        ? {
+            transform: `translate3d(${Math.round(baseOffsetX)}px, ${Math.round(
+              baseOffsetY
+            )}px, 0)`
+          }
+        : undefined,
+    [isMobileOrTablet, baseOffsetY, baseOffsetX]
+  );
+
+  const shuffleLayerDelays = useMemo(
+    () =>
+      shouldAnimateShuffling
+        ? Array.from(
+            { length: shuffleLayerCount },
+            () => `${Math.random() * 400}ms`
+          )
+        : null,
+    [shouldAnimateShuffling, shuffleLayerCount]
+  );
+
   if (deckCards === undefined || deckCards === 0) {
-    return <div className={styles.deckZone}>Deck</div>;
+    return <div className={styles.deckZone}>{t('ZONES.DECK')}</div>;
   }
 
   const deckZoneDisplay = () => {
@@ -85,45 +138,29 @@ export const DeckZone = React.memo((prop: Displayrow) => {
     const isPlayerPronoun = isPlayer ? 'Your' : "Opponent's";
     const zoneTitle = `${isPlayerPronoun} Deck`;
 
-    // Check if this zone is already open
     if (cardListFocus?.active && cardListFocus?.name === zoneTitle) {
-      // Close it
       dispatch(clearCardListFocus());
     } else {
-      // Open it
-      dispatch(
-        setCardListFocus({
-          cardList: deckZone,
-          name: zoneTitle
-        })
-      );
+      dispatch(setCardListFocus({ cardList: deckZone, name: zoneTitle }));
     }
   };
-  // Calculate number of visible layers based on deck size
-  const isMobileOrTablet = window.innerWidth <= 1024;
-  const visibleLayers = deckCards;
-  const layerOffsetY = 0.25; // pixels per layer (down)
-  const layerOffsetX = -0.25; // pixels per layer (left)
-  const baseOffsetY = visibleLayers * 0.24 * -1; // pixels (up, based on card count)
-  const baseOffsetX = visibleLayers * 0.24; // pixels (right, based on card count)
-
-  // Determine how many layers to animate during shuffle (3-10 layers plus the top card)
-  const shuffleLayerCount = Math.min(3, Math.max(5, visibleLayers - 1));
 
   return (
     <div className={styles.deckZone} onClick={deckZoneDisplay}>
       <div className={styles.zoneStack}>
         {/* Render background layers for 3D effect - only on desktop */}
         {!isMobileOrTablet &&
-          Array.from({ length: visibleLayers - 1 }).map((_, index) => {
-            // Apply shuffling animation to the top shuffleLayerCount layers
+          baseLayerStyles.map((style, index) => {
             const shouldAnimateLayer =
               shouldAnimateShuffling && index < shuffleLayerCount;
-            // Generate random delay (0ms to 400ms) for this layer
-            const animationDelay = shouldAnimateLayer
-              ? `${Math.random() * 400}ms`
-              : '0ms';
-
+            // During steady-state, pass the memoized style object directly (no allocation).
+            // Only spread a new object when an animationDelay is needed during a shuffle.
+            const finalStyle = shouldAnimateLayer
+              ? {
+                  ...style,
+                  animationDelay: shuffleLayerDelays?.[index] ?? '0ms'
+                }
+              : style;
             return (
               <div
                 key={`layer-${index}`}
@@ -132,32 +169,18 @@ export const DeckZone = React.memo((prop: Displayrow) => {
                     ? styles.zoneLayerShuffling
                     : styles.zoneLayer
                 }
-                style={{
-                  transform: `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px) translateY(${
-                    (index + 1) * layerOffsetY
-                  }px) translateX(${(index + 1) * layerOffsetX}px)`,
-                  zIndex: visibleLayers - index - 1,
-                  animationDelay: animationDelay
-                }}
+                style={finalStyle}
               />
             );
           })}
         {/* Main card on top */}
-        <div
-          className={styles.cardWrapper}
-          style={
-            !isMobileOrTablet
-              ? {
-                  transform: `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px)`
-                }
-              : {}
-          }
-        >
+        <div className={styles.cardWrapper} style={cardWrapperStyle}>
           <CardDisplay
             card={deckBack}
-            num={showCount ? deckCards : undefined}
+            num={deckCards}
             isShuffling={shouldAnimateShuffling}
             showCountersOnHover={!alwaysShowCounters}
+            disableTilt
           />
         </div>
         {/* Add card animation */}
@@ -169,6 +192,7 @@ export const DeckZone = React.memo((prop: Displayrow) => {
             <CardDisplay
               card={deckBack}
               showCountersOnHover={!alwaysShowCounters}
+              disableTilt
             />
           </div>
         )}
@@ -182,12 +206,13 @@ export const DeckZone = React.memo((prop: Displayrow) => {
                     '--deckOffsetY': `${baseOffsetY}px`,
                     '--deckOffsetX': `${baseOffsetX}px`
                   } as React.CSSProperties)
-                : {}
+                : undefined
             }
           >
             <CardDisplay
               card={{ cardNumber: clashCard }}
               showCountersOnHover={!alwaysShowCounters}
+              isPlayer={isPlayer}
             />
           </div>
         )}

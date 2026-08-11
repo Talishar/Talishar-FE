@@ -4,16 +4,21 @@
   flex-direction: row;
   min-width: 30%;
   max-width: 90%;
-  min-height: 20%;
+  min-height: max(22vh, 150px);
   left: 15%;
   right: 28%;
   max-height: 40vh;
   height: auto;
   background-color: var(--near-black);
-  padding: 1vh;
-  border: 1px solid var(--theme-primary);
+  --container-padding: 1vh;
+  padding: var(--container-padding);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
   border-radius: 10px;
   z-index: 900;
+}
+
+.optionsContainer.aboveEndGameScreen {
+  z-index: 1150;
 }
 
 .optionsTitleContainer {
@@ -51,30 +56,114 @@
 }
 
 .buttonDiv {
-  background-color: var(--theme-primary);
-  color: black;
+  background-color: rgba(255, 255, 255, 0.07);
+  color: #e0e0e0;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   min-width: calc(6dvw * var(--card-scale));
   height: 32px;
-  border-radius: 5px;
-  border: 1px solid var(--theme-primary);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   flex-basis: auto;
-  padding: 8px;
+  padding: 8px 16px;
   width: auto;
   margin-bottom: 0.25rem;
+  white-space: nowrap;
+  transition: background-color 0.2s ease, border-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .buttonDiv:hover {
-  background-color: black;
-  color: var(--theme-primary);
-  border: 1px solid var(--theme-primary);
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.3);
   cursor: pointer;
 }
 
-.optionsMenuCloseIcon {
+.numberInputRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75em;
+  padding-left: 0.45em;
+}
+
+.numberInputField {
+  box-sizing: border-box;
+  background-color: rgba(255, 255, 255, 0.07);
+  color: #e0e0e0;
+  height: 40px;
+  flex: 1;
+  min-width: 0;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 8px 12px;
+  font-size: 1em;
+  transition: border-color 0.2s ease;
+}
+
+.numberInputField:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Match the Submit button to the input field's box model and height */
+.numberInputSubmit.numberInputSubmit {
+  box-sizing: border-box;
+  height: 40px;
+  margin-bottom: 0;
+  flex-shrink: 0;
+}
+
+.buttonDiv:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.multiChooseActions {
+  margin-top: 0.35rem;
+  padding: 0.75rem 0.45rem 0.65rem;
+}
+
+.multiChooseSubmit.buttonDiv {
+  box-sizing: border-box;
+  min-height: 40px;
+  margin-bottom: 0;
+  background: var(--theme-primary, #d4af37);
+  border-color: var(--theme-primary, #d4af37);
+  color: #111;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.multiChooseSubmit.buttonDiv:hover:not(:disabled) {
+  background: var(--theme-primary-hover, #e2c45c);
+  border-color: var(--theme-primary-hover, #e2c45c);
+  color: #000;
+}
+
+.multiChooseSubmit.buttonDiv:disabled {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.28);
+  color: rgba(255, 255, 255, 0.55);
+  box-shadow: none;
+}
+
+.numberInputHint {
+  padding-left: 0.45em;
+  margin-top: 0.4em;
+  font-size: 0.85em;
+  color: rgba(224, 224, 224, 0.6);
+}
+
+.inputPopUpCloseIcon {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: transparent;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -84,7 +173,7 @@
   border-radius: 5px;
 }
 
-.optionsMenuCloseIcon:hover {
+.inputPopUpCloseIcon:hover {
   background-color: var(--theme-primary);
   color: black;
 }
@@ -111,6 +200,67 @@
   flex-direction: column;
   width: 100%;
   gap: 5px;
+}
+
+.cardSearchContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex: 1 1 24rem;
+  min-width: 10rem;
+  max-width: 32rem;
+  margin-left: auto;
+  margin-right: 1rem;
+  padding-left: 1rem;
+}
+
+.cardSearchInput.cardSearchInput {
+  box-sizing: border-box;
+  width: 100%;
+  height: 38px;
+  margin-bottom: 0;
+  padding: 7px 11px;
+  color: #e0e0e0;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+.cardSearchInput.cardSearchInput:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(236, 236, 236, 0.28);
+}
+
+.cardSearchCount,
+.noSearchResults {
+  color: rgba(224, 224, 224, 0.7);
+  font-size: 0.85rem;
+}
+
+.noSearchResults {
+  padding: 1.25rem 0.25rem;
+}
+
+@media (max-width: 600px) {
+  .optionsTitleContainer {
+    flex-wrap: wrap;
+  }
+
+  .cardSearchContainer {
+    order: 2;
+    flex: 1 0 calc(100% - 0.5rem);
+    min-width: 0;
+    max-width: none;
+    margin: 0.4rem 0.5rem 0 0;
+    padding-left: 0;
+  }
+
+  .cardSearchInput.cardSearchInput {
+    height: 34px;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+  }
 }
 
 .optForm.optForm {
@@ -192,12 +342,12 @@
   align-items: center;
 }
 
-@media (orientation: portrait) {
+@media (orientation: portrait) and (max-width: 600px) {
   .optionsContainer,
   .optOptionsContainer {
     left: 50%;
     translate: -50% 0;
-    width: min(70dvw, 320px);
+    width: min(88dvw, 320px);
     max-width: 92dvw;
     right: auto;
   }
@@ -207,6 +357,15 @@
     max-width: 14dvw;
     max-height: 14vw;
     max-height: 14dvw;
+  }
+}
+
+@media (orientation: portrait) and (min-width: 601px) {
+  .optOptionsContainer {
+    left: 18%;
+    right: 5%;
+    translate: none;
+    width: auto;
   }
 }
 
@@ -235,7 +394,7 @@
   width: 100%;
   margin: 0;
   margin-top: 10px;
-  height: 50%;
+  height: auto;
 }
 
 .reorderItem {
@@ -250,16 +409,21 @@
   flex-direction: row;
   min-width: 30%;
   max-width: 90%;
-  min-height: 40%;
-  left: 15%;
-  right: 25%;
+  min-height: max(22vh, 150px);
+  left: 20%;
+  right: 30%;
   max-height: 52.5vh;
   height: auto;
   background-color: var(--near-black);
-  padding: 1.5vh;
-  border: 1px solid var(--theme-primary);
+  --container-padding: 1.5vh;
+  padding: var(--container-padding);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
   border-radius: 10px;
   z-index: 900;
+}
+
+.optOptionsContainer.aboveEndGameScreen {
+  z-index: 1150;
 }
 
 .optFormContainer {
@@ -267,9 +431,16 @@
   width: 100%;
 }
 
+.newOptForm.optFormContainer {
+  height: auto;
+}
+
 .newOptForm.cardsContainer {
-  height: 90%;
+  height: auto;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
 /* Card position indicators */
@@ -346,19 +517,21 @@
 }
 
 @media (max-width: 768px) {
-  .newOptForm.submitButtonDiv {
-    width: auto;
-    min-width: 100px;
-    max-width: 180px;
-    margin-bottom: 14px;
-    padding: 8px 16px;
-    font-size: 13px;
+  .optOptionsContainer {
+    left: 45%;
+    translate: -50% 0;
+    right: auto;
+    width: min(85dvw, 380px);
+    max-width: 95dvw;
   }
 
-  .buttonDiv {
-    width: 10dvw;
-    font-size: 0.7em;
-    flex: 0 1 auto;
+  .newOptForm.submitButtonDiv {
+    width: auto;
+    min-width: 80px;
+    max-width: 160px;
+    margin-bottom: 10px;
+    padding: 5px 12px;
+    font-size: 13px;
   }
 
   .topAndBottomText {
@@ -367,22 +540,23 @@
 
   .reorderCards {
     margin-top: 0;
-    height: 40%;
+    height: auto;
   }
 }
 
 @media (max-width: 480px) {
-  .newOptForm.submitButtonDiv {
-    width: auto;
-    min-width: 80px;
-    max-width: 150px;
-    margin-bottom: 14px;
-    padding: 6px 12px;
-    font-size: 12px;
+  .optOptionsContainer {
+    width: min(92dvw, 340px);
+    max-width: 92dvw;
   }
 
-  .buttonDiv {
-    font-size: 0.7em;
+  .newOptForm.submitButtonDiv {
+    width: auto;
+    min-width: 64px;
+    max-width: 130px;
+    margin-bottom: 8px;
+    padding: 4px 10px;
+    font-size: 12px;
   }
 
   .topAndBottomText {
@@ -391,7 +565,23 @@
 
   .reorderCards {
     margin-top: 0;
-    height: 40%;
+    height: auto;
+  }
+}
+
+/* Touch device overrides - larger tap targets for fat-finger friendliness */
+@media (pointer: coarse) {
+  .buttonList {
+    gap: 0.6rem;
+  }
+
+  .buttonDiv {
+    min-height: 44px;
+    min-width: 44px;
+    height: auto;
+    padding: 8px 12px;
+    font-size: 0.75em;
+    border-radius: 8px;
   }
 }
 
@@ -405,9 +595,8 @@
 
 .grabbyHandle {
   width: calc(var(--card-size) * 0.2);
-  height: auto;
-  background-color: var(--theme-tertiary);
-  border-radius: 10px;
+  background-color: color-mix(in srgb, var(--theme-tertiary) 55%, transparent);
+  border-radius: 0 10px 10px 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -419,6 +608,25 @@
   box-sizing: border-box;
   flex-shrink: 0;
   align-self: stretch;
+  margin-top: calc(-1 * var(--container-padding));
+  margin-right: calc(-1 * var(--container-padding));
+  margin-bottom: calc(-1 * var(--container-padding));
+  font-size: min(calc(1.5vh - 2px), calc(0.9vw - 1px));
+  font-size: min(calc(1.5dvh - 2px), calc(0.9dvw - 1px));
+}
+
+@media (orientation: portrait) {
+  .grabbyHandle {
+    font-size: calc(1.5vw + 3px);
+    font-size: calc(1.5dvw + 3px);
+  }
+}
+
+@media (orientation: landscape) and (max-aspect-ratio: 3/2) {
+  .grabbyHandle {
+    font-size: calc(1.5vh - 2px);
+    font-size: calc(1.5dvh - 2px);
+  }
 }
 
 .grabbyHandle:active {
@@ -426,7 +634,7 @@
 }
 
 .grabbyHandleDragging {
-  background-color: var(--theme-secondary);
+  background-color: color-mix(in srgb, var(--theme-secondary) 45%, transparent);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
@@ -435,7 +643,8 @@
   opacity: 0.8;
   transition: opacity 0.2s ease;
   width: 100%;
-  height: 100%;
+  height: auto;
+  display: block;
 }
 
 .grabbyHandle:hover .gripIcon {

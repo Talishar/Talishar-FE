@@ -11,6 +11,8 @@ import TurnWidget from '../elements/turnWidget/TurnWidget';
 import ManualModePanel from '../leftColumn/ManualModePanel/ManualModePanel';
 import { useAppSelector } from 'app/Hooks';
 import { getGameInfo } from 'features/game/GameSlice';
+import { RootState } from 'app/Store';
+import AmbientParticles from '../elements/ambientParticles';
 
 export interface playAreaDimensions {
   dimension: number;
@@ -21,16 +23,18 @@ export function Board() {
   const [cookies] = useCookies(['experimental']);
   const { playerID, isReplay } = useAppSelector(getGameInfo);
   const spectatorCameraView = useAppSelector(
-    (state: any) => state.game.spectatorCameraView
+    (state: RootState) => state.game.spectatorCameraView
   );
 
   const useOldScreen = height > width;
   // const useOldScreen = true;
-  const isSpectatorViewingPlayer2 = (playerID === 3 || isReplay) && spectatorCameraView === 2;
+  const isSpectatorViewingPlayer2 =
+    (playerID === 3 || isReplay) && spectatorCameraView === 2;
 
   if (useOldScreen) {
     return (
       <div className={styles.gameBoard}>
+        <AmbientParticles />
         <ManualModePanel />
         <OpponentBoardGrid swapPlayers={isSpectatorViewingPlayer2} />
         <div className={styles.chainMiddleContainer}>
@@ -41,7 +45,9 @@ export function Board() {
             {cookies.experimental ? <ExperimentalTurnWidget /> : <TurnWidget />}
           </div>
         </div>
-        <PlayerPrompt />
+        <div className={styles.playerPromptSlot}>
+          <PlayerPrompt />
+        </div>
         <PlayerBoardGrid swapPlayers={isSpectatorViewingPlayer2} />
       </div>
     );

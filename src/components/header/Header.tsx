@@ -10,35 +10,38 @@ import {
   BsFillBookFill,
   BsList,
   BsX,
+  BsCollection,
   BsCollectionPlayFill,
   BsChevronDown,
   BsPlayFill,
   BsInfoCircleFill,
   BsFullscreen,
-  BsFullscreenExit
+  BsFullscreenExit,
+  BsStars
 } from 'react-icons/bs';
-import { IoLogOut } from "react-icons/io5";
-import SocialDropdown from 'components/header/SocialDropdown';
+import { IoLogOut } from 'react-icons/io5';
 import LanguageSelector from 'components/header/LanguageSelector';
 import Footer from 'components/footer/Footer';
 import { useGetPendingRequestsQuery } from 'features/api/apiSlice';
-import useSupporterStatus from 'hooks/useSupporterStatus';
 import CookieConsent from 'components/CookieConsent';
 import AdBlockingRecovery from 'components/AdBlockingRecovery';
 import SessionRecovery from 'components/SessionRecovery';
+import { AmbientParticles } from 'routes/game/components/elements/ambientParticles/AmbientParticles';
 import { Toaster } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 const Header = () => {
-  const { isLoggedIn, isMod, currentUserName, logOut } = useAuth();
+  const { isLoggedIn, isMod, currentUserName, currentDisplayName, logOut } =
+    useAuth();
   const { data: pendingData } = useGetPendingRequestsQuery(undefined, {
     skip: !isLoggedIn
   });
-  const { isSupporter } = useSupporterStatus();
   const pendingRequestCount = pendingData?.requests?.length || 0;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
-  const [isFullscreen, setIsFullscreen] = useState(!!document.fullscreenElement);
+  const [isFullscreen, setIsFullscreen] = useState(
+    !!document.fullscreenElement
+  );
   const userDropdownRef = useRef<HTMLDivElement>(null);
 
   const { t } = useTranslation();
@@ -46,27 +49,33 @@ const Header = () => {
   useEffect(() => {
     const handleOrientationChange = () => setMobileMenuOpen(false);
     window.addEventListener('orientationchange', handleOrientationChange);
-    return () => window.removeEventListener('orientationchange', handleOrientationChange);
+    return () =>
+      window.removeEventListener('orientationchange', handleOrientationChange);
   }, []);
 
   useEffect(() => {
-    const onFullscreenChange = () => setIsFullscreen(!!document.fullscreenElement);
+    const onFullscreenChange = () =>
+      setIsFullscreen(!!document.fullscreenElement);
     document.addEventListener('fullscreenchange', onFullscreenChange);
-    return () => document.removeEventListener('fullscreenchange', onFullscreenChange);
+    return () =>
+      document.removeEventListener('fullscreenchange', onFullscreenChange);
   }, []);
 
   const handleFullscreenToggle = () => {
     if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch(() => {});
+      document.documentElement.requestFullscreen().catch(() => undefined);
     } else {
-      document.exitFullscreen().catch(() => {});
+      document.exitFullscreen().catch(() => undefined);
     }
   };
 
   useEffect(() => {
     if (!userDropdownOpen) return;
     const handleClickOutside = (e: MouseEvent) => {
-      if (userDropdownRef.current && !userDropdownRef.current.contains(e.target as Node)) {
+      if (
+        userDropdownRef.current &&
+        !userDropdownRef.current.contains(e.target as Node)
+      ) {
         setUserDropdownOpen(false);
       }
     };
@@ -77,8 +86,7 @@ const Header = () => {
   const closeMobileMenu = () => setMobileMenuOpen(false);
   const closeUserDropdown = () => setUserDropdownOpen(false);
 
-  const handleLogOut = (e: React.MouseEvent) => {
-    e.preventDefault();
+  const handleLogOut = () => {
     logOut();
     setMobileMenuOpen(false);
     setUserDropdownOpen(false);
@@ -117,17 +125,17 @@ const Header = () => {
               <img src={TalisharLogo} alt={t('HEADER.TALISHAR_LOGO_ALT')} />
             </Link>
           </li>
-            <li>
-              <NavLink to="/premium" className={styles.support}>
-                {t('HEADER.SUPPORT_US')}
-              </NavLink>
-            </li>
+          <li>
+            <NavLink to="/premium" className={styles.support}>
+              {t('HEADER.SUPPORT_US')}
+            </NavLink>
+          </li>
         </ul>
 
         <ul className={styles.centerNav}>
           <li>
             <NavLink to="/" end className={navLinkClass}>
-              Play
+              {t('HEADER.PLAY')}
             </NavLink>
           </li>
           <li>
@@ -135,6 +143,13 @@ const Header = () => {
               {t('HEADER.REPLAYS')}
             </NavLink>
           </li>
+          {isLoggedIn && (
+            <li>
+              <NavLink to="/mastery" className={navLinkClass}>
+                {t('HEADER.MASTERY')}
+              </NavLink>
+            </li>
+          )}
           <li>
             <NavLink to="/learn" className={navLinkClass}>
               {t('HEADER.LEARN')}
@@ -142,16 +157,12 @@ const Header = () => {
           </li>
           <li>
             <NavLink to="/about" className={navLinkClass}>
-              About
+              {t('HEADER.ABOUT')}
             </NavLink>
           </li>
-	  {!isLoggedIn ? (
-	  <li>
-	    <LanguageSelector />
-	  </li>
-	  ) : ''}
-	</ul>
+        </ul>
         <ul className={styles.rightGroup}>
+          {!isLoggedIn && <LanguageSelector hideIcon />}
           <li>
             {isLoggedIn ? (
               <div className={styles.userDropdown} ref={userDropdownRef}>
@@ -162,9 +173,13 @@ const Header = () => {
                   aria-haspopup="true"
                 >
                   <BsPersonFill />
-                  <span className={styles.userName}>{currentUserName}</span>
+                  <span className={styles.userName}>
+                    {currentDisplayName ?? currentUserName}
+                  </span>
                   <BsChevronDown
-                    className={`${styles.chevron} ${userDropdownOpen ? styles.chevronOpen : ''}`}
+                    className={`${styles.chevron} ${
+                      userDropdownOpen ? styles.chevronOpen : ''
+                    }`}
                   />
                   {pendingRequestCount > 0 && (
                     <span className={styles.notificationBadge}>
@@ -180,6 +195,11 @@ const Header = () => {
                       </Link>
                     </li>
                     <li>
+                      <Link to="/user/decks" onClick={closeUserDropdown}>
+                        <BsCollection /> <span>{t('HEADER.MY_DECKS')}</span>
+                      </Link>
+                    </li>
+                    <li>
                       <Link to="/user/settings" onClick={closeUserDropdown}>
                         <BsGearFill /> <span>{t('HEADER.SETTINGS')}</span>
                       </Link>
@@ -187,30 +207,45 @@ const Header = () => {
                     <LanguageSelector inDropdown />
                     {document.fullscreenEnabled && (
                       <li>
-                        <a href="#" onClick={(e) => { e.preventDefault(); handleFullscreenToggle(); }}>
-                          {isFullscreen ? <BsFullscreenExit /> : <BsFullscreen />}
-                          <span>{isFullscreen ? t('HEADER.EXIT_FULLSCREEN') : t('HEADER.FULLSCREEN')}</span>
+                        <a
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleFullscreenToggle();
+                          }}
+                        >
+                          {isFullscreen ? (
+                            <BsFullscreenExit />
+                          ) : (
+                            <BsFullscreen />
+                          )}
+                          <span>
+                            {isFullscreen
+                              ? t('HEADER.EXIT_FULLSCREEN')
+                              : t('HEADER.FULLSCREEN')}
+                          </span>
                         </a>
                       </li>
                     )}
                     {isMod && (
                       <li>
                         <Link to="/mod" onClick={closeUserDropdown}>
-                          <BsShieldFillCheck /> <span>Mod Page</span>
+                          <BsShieldFillCheck />{' '}
+                          <span>{t('HEADER.MOD_PAGE')}</span>
                         </Link>
                       </li>
                     )}
                     <li>
-                      <a href="" onClick={handleLogOut}>
+                      <button type="button" onClick={handleLogOut}>
                         <IoLogOut /> <span>{t('HEADER.LOGOUT')}</span>
-                      </a>
+                      </button>
                     </li>
                   </ul>
                 )}
               </div>
             ) : (
-              <Link to="/user/login" className={styles.login}>
-                <button>{t('HEADER.LOGIN')}</button>
+              <Link to="/user/login" className={styles.login} role="button">
+                {t('HEADER.LOGIN')}
               </Link>
             )}
           </li>
@@ -219,7 +254,9 @@ const Header = () => {
         <button
           className={styles.burgerButton}
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+          aria-label={
+            mobileMenuOpen ? t('HEADER.CLOSE_MENU') : t('HEADER.OPEN_MENU')
+          }
           aria-expanded={mobileMenuOpen}
         >
           {mobileMenuOpen ? <BsX /> : <BsList />}
@@ -231,7 +268,7 @@ const Header = () => {
           <ul>
             <li>
               <Link to="/" onClick={closeMobileMenu}>
-                <BsPlayFill /> <span>Play</span>
+                <BsPlayFill /> <span>{t('HEADER.PLAY')}</span>
               </Link>
             </li>
             <li>
@@ -239,6 +276,13 @@ const Header = () => {
                 <BsCollectionPlayFill /> <span>{t('HEADER.REPLAYS')}</span>
               </Link>
             </li>
+            {isLoggedIn && (
+              <li>
+                <Link to="/mastery" onClick={closeMobileMenu}>
+                  <BsStars /> <span>{t('HEADER.MASTERY')}</span>
+                </Link>
+              </li>
+            )}
             <li>
               <Link to="/learn" onClick={closeMobileMenu}>
                 <BsFillBookFill /> <span>{t('HEADER.LEARN')}</span>
@@ -246,7 +290,7 @@ const Header = () => {
             </li>
             <li>
               <Link to="/about" onClick={closeMobileMenu}>
-                <BsInfoCircleFill /> <span>About</span>
+                <BsInfoCircleFill /> <span>{t('HEADER.ABOUT')}</span>
               </Link>
             </li>
             <li>
@@ -267,6 +311,13 @@ const Header = () => {
             </li>
             {isLoggedIn && (
               <li>
+                <Link to="/user/decks" onClick={closeMobileMenu}>
+                  <BsCollection /> <span>{t('HEADER.MY_DECKS')}</span>
+                </Link>
+              </li>
+            )}
+            {isLoggedIn && (
+              <li>
                 <Link to="/user/settings" onClick={closeMobileMenu}>
                   <BsGearFill /> <span>{t('HEADER.SETTINGS')}</span>
                 </Link>
@@ -276,23 +327,33 @@ const Header = () => {
             {isLoggedIn && isMod && (
               <li>
                 <Link to="/mod" onClick={closeMobileMenu}>
-                  <BsShieldFillCheck /> <span>Mod Page</span>
+                  <BsShieldFillCheck /> <span>{t('HEADER.MOD_PAGE')}</span>
                 </Link>
               </li>
             )}
             {document.fullscreenEnabled && (
               <li>
-                <a href="#" onClick={(e) => { e.preventDefault(); handleFullscreenToggle(); }}>
+                <a
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleFullscreenToggle();
+                  }}
+                >
                   {isFullscreen ? <BsFullscreenExit /> : <BsFullscreen />}
-                  <span>{isFullscreen ? t('HEADER.EXIT_FULLSCREEN') : t('HEADER.FULLSCREEN')}</span>
+                  <span>
+                    {isFullscreen
+                      ? t('HEADER.EXIT_FULLSCREEN')
+                      : t('HEADER.FULLSCREEN')}
+                  </span>
                 </a>
               </li>
             )}
             {isLoggedIn && (
               <li>
-                <a href="" onClick={handleLogOut}>
+                <button type="button" onClick={handleLogOut}>
                   <IoLogOut /> <span>{t('HEADER.LOGOUT')}</span>
-                </a>
+                </button>
               </li>
             )}
           </ul>
@@ -302,6 +363,7 @@ const Header = () => {
         <Outlet />
         <Footer />
       </div>
+      <AmbientParticles variant="global" />
       <CookieConsent />
       <AdBlockingRecovery />
       <SessionRecovery />

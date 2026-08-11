@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import styles from './ModPage.module.css';
 import { toast } from 'react-hot-toast';
 import {
   useGetModPageDataQuery,
+  useResetAllRustCountersMutation,
   useBanPlayerByIPMutation,
+  useBanIPDirectMutation,
   useBanPlayerByNameMutation,
   useCloseGameMutation,
   useDeleteUsernameMutation,
@@ -13,17 +16,22 @@ import {
 } from 'features/api/apiSlice';
 import UsernameModeration from './UsernameModeration';
 import DeleteUsernameAutocomplete from './DeleteUsernameAutocomplete';
+import { LinkedAccount } from 'interface/API/ModPageAPI';
 
 const ModPage: React.FC = () => {
+  const { t } = useTranslation();
   const [ipToBan, setIpToBan] = useState('');
   const [playerNumberToBan, setPlayerNumberToBan] = useState('');
+  const [directIP, setDirectIP] = useState('');
   const [gameToClose, setGameToClose] = useState('');
   const [playerToBan, setPlayerToBan] = useState('');
   const [usernameToDelete, setUsernameToDelete] = useState('');
-  const [selectedUserEmail, setSelectedUserEmail] = useState<string | null>(null);
+  const [, setSelectedUserEmail] = useState<string | null>(null);
   const [systemMsgUsername, setSystemMsgUsername] = useState('');
   const [systemMsgText, setSystemMsgText] = useState('');
+  const [systemMsgExpiresInHours, setSystemMsgExpiresInHours] = useState('24');
   const [broadcastMsgText, setBroadcastMsgText] = useState('');
+  const [broadcastExpiresInHours, setBroadcastExpiresInHours] = useState('24');
 
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
@@ -31,18 +39,26 @@ const ModPage: React.FC = () => {
   const {
     data: modPageData,
     isLoading,
-    error: fetchError,
     refetch
   } = useGetModPageDataQuery(undefined);
 
-  const [banByIP, { isLoading: isBanningByIP }] = useBanPlayerByIPMutation();
-  const [banByName, { isLoading: isBanningByName }] = useBanPlayerByNameMutation();
-  const [closeGameMutation, { isLoading: isClosingGame }] = useCloseGameMutation();
-  const [deleteUsername, { isLoading: isDeletingUsername }] = useDeleteUsernameMutation();
-  const [sendToPlayer, { isLoading: isSendingToPlayer }] = useSendSystemMessageToPlayerMutation();
-  const [sendToAll, { isLoading: isSendingToAll }] = useSendSystemMessageToAllMutation();
-  const [syncMetafy, { isLoading: isSyncingMetafy }] = useSyncMetafySubscribersMutation();
+  const [banByIP] = useBanPlayerByIPMutation();
+  const [banIPDirect, { isLoading: isBanningIPDirect }] =
+    useBanIPDirectMutation();
+  const [banByName] = useBanPlayerByNameMutation();
+  const [closeGameMutation] = useCloseGameMutation();
+  const [resetAllRustCounters, { isLoading: isResettingRustCounters }] =
+    useResetAllRustCountersMutation();
+  const [deleteUsername, { isLoading: isDeletingUsername }] =
+    useDeleteUsernameMutation();
+  const [sendToPlayer, { isLoading: isSendingToPlayer }] =
+    useSendSystemMessageToPlayerMutation();
+  const [sendToAll, { isLoading: isSendingToAll }] =
+    useSendSystemMessageToAllMutation();
+  const [syncMetafy, { isLoading: isSyncingMetafy }] =
+    useSyncMetafySubscribersMutation();
   const [metafySyncResult, setMetafySyncResult] = useState<any>(null);
+  const [clearNoMetafyId, setClearNoMetafyId] = useState(false);
 
   const handleBanByIP = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,7 +66,7 @@ const ModPage: React.FC = () => {
 
     try {
       await banByIP({ ipToBan, playerNumberToBan }).unwrap();
-      setSuccessMessage('Player banned by IP successfully');
+      setSuccessMessage(t('MOD_PAGE.PLAYER_BANNED_BY_IP_SUCCESS'));
       setIpToBan('');
       setPlayerNumberToBan('');
       // Refresh data after successful ban
@@ -61,13 +77,37 @@ const ModPage: React.FC = () => {
     }
   };
 
+  const handleBanIPDirect = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSuccessMessage(null);
+
+    try {
+      const response = await banIPDirect({
+        directIPToBan: directIP.trim()
+      }).unwrap();
+      if (response?.status === 'error') {
+        toast.error(response.message || t('MOD_PAGE.FAILED_TO_BAN_IP'), {
+          position: 'top-center'
+        });
+        return;
+      }
+      setSuccessMessage(
+        response?.message || t('MOD_PAGE.IP_BANNED_SUCCESS', { ip: directIP })
+      );
+      setDirectIP('');
+      await refetch();
+    } catch (err: any) {
+      console.error('Failed to ban IP:', err);
+    }
+  };
+
   const handleCloseGame = async (e: React.FormEvent) => {
     e.preventDefault();
     setSuccessMessage(null);
 
     try {
       await closeGameMutation({ gameToClose }).unwrap();
-      setSuccessMessage('Game closed successfully');
+      setSuccessMessage(t('MOD_PAGE.GAME_CLOSED_SUCCESS'));
       setGameToClose('');
     } catch (err: any) {
       console.error('Failed to close game:', err);
@@ -81,7 +121,7 @@ const ModPage: React.FC = () => {
 
     try {
       await banByName({ playerToBan }).unwrap();
-      setSuccessMessage('Player banned successfully');
+      setSuccessMessage(t('MOD_PAGE.PLAYER_BANNED_SUCCESS'));
       setPlayerToBan('');
       // Refresh data after successful ban
       await refetch();
@@ -91,27 +131,44 @@ const ModPage: React.FC = () => {
     }
   };
 
+  const handleResetAllRustCounters = async () => {
+    setSuccessMessage(null);
+
+    if (!window.confirm(t('MOD_PAGE.CONFIRM_RESET_ALL_RUST_COUNTERS'))) {
+      return;
+    }
+
+    try {
+      const result = await resetAllRustCounters().unwrap();
+      const message = t('MOD_PAGE.RUST_COUNTERS_RESET_SUCCESS', {
+        count: result.usersReset
+      });
+      toast.success(message, { position: 'top-center' });
+      setSuccessMessage(message);
+    } catch (err: any) {
+      const errorMessage =
+        err?.data?.error || t('MOD_PAGE.FAILED_TO_RESET_RUST_COUNTERS');
+      toast.error(errorMessage, { position: 'top-center' });
+    }
+  };
+
   const handleDeleteUsername = async (e: React.FormEvent) => {
     e.preventDefault();
     setSuccessMessage(null);
 
     if (!usernameToDelete.trim()) {
-      toast.error('Please enter a username to delete', {
+      toast.error(t('MOD_PAGE.PLEASE_ENTER_USERNAME'), {
         position: 'top-center'
       });
       return;
     }
 
     try {
-      console.log(
-        '[ModPage Delete Username] Starting deletion for:',
-        usernameToDelete
-      );
       const response = await deleteUsername({ usernameToDelete }).unwrap();
 
       // Show success toast
       toast.success(
-        response.message || 'Username deleted successfully from database',
+        response.message || t('MOD_PAGE.USERNAME_DELETED_SUCCESS'),
         {
           style: {
             minWidth: '300px'
@@ -121,7 +178,7 @@ const ModPage: React.FC = () => {
       );
 
       setSuccessMessage(
-        response.message || 'Username deleted successfully from database'
+        response.message || t('MOD_PAGE.USERNAME_DELETED_SUCCESS')
       );
       setUsernameToDelete('');
       setSelectedUserEmail(null);
@@ -140,15 +197,18 @@ const ModPage: React.FC = () => {
         err?.message ||
         err?.error ||
         err?.toString() ||
-        'Unknown error';
+        t('MOD_PAGE.UNKNOWN_ERROR');
 
       // Show error toast
-      toast.error(`Error deleting username: ${errorMessage}`, {
-        style: {
-          minWidth: '300px'
-        },
-        position: 'top-center'
-      });
+      toast.error(
+        t('MOD_PAGE.ERROR_DELETING_USERNAME', { message: errorMessage }),
+        {
+          style: {
+            minWidth: '300px'
+          },
+          position: 'top-center'
+        }
+      );
     }
   };
 
@@ -157,18 +217,29 @@ const ModPage: React.FC = () => {
     setSuccessMessage(null);
 
     if (!systemMsgUsername.trim() || !systemMsgText.trim()) {
-      toast.error('Username and message are required', { position: 'top-center' });
+      toast.error(t('MOD_PAGE.USERNAME_AND_MESSAGE_REQUIRED'), {
+        position: 'top-center'
+      });
       return;
     }
 
     try {
-      const result = await sendToPlayer({ username: systemMsgUsername, message: systemMsgText }).unwrap();
-      toast.success(result.message || 'System message sent', { position: 'top-center' });
-      setSuccessMessage(result.message || 'System message sent');
+      const result = await sendToPlayer({
+        username: systemMsgUsername,
+        message: systemMsgText,
+        expiresInHours: systemMsgExpiresInHours
+          ? Number(systemMsgExpiresInHours)
+          : null
+      }).unwrap();
+      toast.success(result.message || t('MOD_PAGE.SYSTEM_MESSAGE_SENT'), {
+        position: 'top-center'
+      });
+      setSuccessMessage(result.message || t('MOD_PAGE.SYSTEM_MESSAGE_SENT'));
       setSystemMsgUsername('');
       setSystemMsgText('');
     } catch (err: any) {
-      const errorMessage = err?.data?.error || 'Failed to send system message';
+      const errorMessage =
+        err?.data?.error || t('MOD_PAGE.FAILED_TO_SEND_SYSTEM_MESSAGE');
       toast.error(errorMessage, { position: 'top-center' });
     }
   };
@@ -178,21 +249,29 @@ const ModPage: React.FC = () => {
     setSuccessMessage(null);
 
     if (!broadcastMsgText.trim()) {
-      toast.error('Message is required', { position: 'top-center' });
+      toast.error(t('MOD_PAGE.MESSAGE_REQUIRED'), { position: 'top-center' });
       return;
     }
 
-    if (!window.confirm('Send this system message to ALL players?')) {
+    if (!window.confirm(t('MOD_PAGE.CONFIRM_SEND_TO_ALL'))) {
       return;
     }
 
     try {
-      const result = await sendToAll({ message: broadcastMsgText }).unwrap();
-      toast.success(result.message || 'Broadcast sent', { position: 'top-center' });
-      setSuccessMessage(result.message || 'Broadcast sent');
+      const result = await sendToAll({
+        message: broadcastMsgText,
+        expiresInHours: broadcastExpiresInHours
+          ? Number(broadcastExpiresInHours)
+          : null
+      }).unwrap();
+      toast.success(result.message || t('MOD_PAGE.BROADCAST_SENT'), {
+        position: 'top-center'
+      });
+      setSuccessMessage(result.message || t('MOD_PAGE.BROADCAST_SENT'));
       setBroadcastMsgText('');
     } catch (err: any) {
-      const errorMessage = err?.data?.error || 'Failed to send broadcast';
+      const errorMessage =
+        err?.data?.error || t('MOD_PAGE.FAILED_TO_SEND_BROADCAST');
       toast.error(errorMessage, { position: 'top-center' });
     }
   };
@@ -201,21 +280,39 @@ const ModPage: React.FC = () => {
     setSuccessMessage(null);
     setMetafySyncResult(null);
 
-    if (!window.confirm('This will fetch all Talishar Metafy subscribers and clear expired supporters from the DB. Continue?')) {
+    if (!window.confirm(t('MOD_PAGE.CONFIRM_SYNC_METAFY'))) {
+      return;
+    }
+
+    if (
+      clearNoMetafyId &&
+      !window.confirm(t('MOD_PAGE.CONFIRM_CLEAR_NO_METAFY_ID'))
+    ) {
       return;
     }
 
     try {
-      const result = await syncMetafy().unwrap();
+      const result = await syncMetafy({ clearNoMetafyId }).unwrap();
       setMetafySyncResult(result);
       if (result?.error) {
         toast.error(result.error, { position: 'top-center', duration: 8000 });
       } else {
-        toast.success(`Sync complete: ${result?.cleared ?? 0} expired supporter(s) cleared`, { position: 'top-center' });
-        setSuccessMessage(`Metafy sync complete — ${result?.cleared ?? 0} expired, ${result?.stillActive ?? 0} active`);
+        toast.success(
+          t('MOD_PAGE.SYNC_COMPLETE_COUNT', { count: result?.cleared ?? 0 }),
+          { position: 'top-center' }
+        );
+        setSuccessMessage(
+          t('MOD_PAGE.SYNC_COMPLETE_SUMMARY', {
+            cleared: result?.cleared ?? 0,
+            active: result?.stillActive ?? 0
+          })
+        );
       }
     } catch (err: any) {
-      const errorMessage = err?.data?.error || err?.data?.apiError || 'Failed to sync Metafy subscribers';
+      const errorMessage =
+        err?.data?.error ||
+        err?.data?.apiError ||
+        t('MOD_PAGE.FAILED_TO_SYNC_METAFY');
       toast.error(errorMessage, { position: 'top-center' });
       if (err?.data) setMetafySyncResult(err.data);
     }
@@ -224,7 +321,7 @@ const ModPage: React.FC = () => {
   return (
     <div className={styles.container}>
       <div className={styles.modPagePanel}>
-        <h1 className={styles.title}>Moderator Panel</h1>
+        <h1 className={styles.title}>{t('MOD_PAGE.MODERATOR_PANEL')}</h1>
 
         {successMessage && (
           <div className={styles.successMessage}>{successMessage}</div>
@@ -233,8 +330,10 @@ const ModPage: React.FC = () => {
         <div className={styles.contentWrapper}>
           <div className={styles.leftColumn}>
             <form onSubmit={handleBanByIP} className={styles.form}>
-              <h2>IP Ban from Game</h2>
-              <label htmlFor="ipToBan">Game to IP ban from:</label>
+              <h2>{t('MOD_PAGE.IP_BAN_FROM_GAME')}</h2>
+              <label htmlFor="ipToBan">
+                {t('MOD_PAGE.GAME_TO_IP_BAN_FROM')}
+              </label>
               <input
                 type="text"
                 id="ipToBan"
@@ -243,7 +342,7 @@ const ModPage: React.FC = () => {
                 required
               />
               <label htmlFor="playerNumberToBan">
-                Player to ban? (1 or 2):
+                {t('MOD_PAGE.PLAYER_TO_BAN')}
               </label>
               <input
                 type="text"
@@ -252,12 +351,32 @@ const ModPage: React.FC = () => {
                 onChange={(e) => setPlayerNumberToBan(e.target.value)}
                 required
               />
-              <button type="submit">Ban</button>
+              <button type="submit">{t('USERNAME_MODERATION.BAN')}</button>
+            </form>
+
+            <form onSubmit={handleBanIPDirect} className={styles.form}>
+              <h2>{t('MOD_PAGE.BAN_IP_ADDRESS')}</h2>
+              <label htmlFor="directIP">
+                {t('MOD_PAGE.IP_ADDRESS_TO_BAN')}
+              </label>
+              <input
+                type="text"
+                id="directIP"
+                value={directIP}
+                onChange={(e) => setDirectIP(e.target.value)}
+                placeholder={t('MOD_PAGE.IP_PLACEHOLDER')}
+                required
+              />
+              <button type="submit" disabled={isBanningIPDirect}>
+                {isBanningIPDirect
+                  ? t('MOD_PAGE.BANNING')
+                  : t('MOD_PAGE.BAN_IP')}
+              </button>
             </form>
 
             <form onSubmit={handleCloseGame} className={styles.form}>
-              <h2>Close Game</h2>
-              <label htmlFor="gameToClose">Game to close:</label>
+              <h2>{t('MOD_PAGE.CLOSE_GAME')}</h2>
+              <label htmlFor="gameToClose">{t('MOD_PAGE.GAME_TO_CLOSE')}</label>
               <input
                 type="text"
                 id="gameToClose"
@@ -265,12 +384,12 @@ const ModPage: React.FC = () => {
                 onChange={(e) => setGameToClose(e.target.value)}
                 required
               />
-              <button type="submit">Close Game</button>
+              <button type="submit">{t('MOD_PAGE.CLOSE_GAME')}</button>
             </form>
 
             <form onSubmit={handleBanPlayer} className={styles.form}>
-              <h2>Ban Player by Username</h2>
-              <label htmlFor="playerToBan">Player to ban:</label>
+              <h2>{t('MOD_PAGE.BAN_PLAYER_BY_USERNAME')}</h2>
+              <label htmlFor="playerToBan">{t('MOD_PAGE.PLAYER_TO_BAN')}</label>
               <input
                 type="text"
                 id="playerToBan"
@@ -278,12 +397,14 @@ const ModPage: React.FC = () => {
                 onChange={(e) => setPlayerToBan(e.target.value)}
                 required
               />
-              <button type="submit">Ban</button>
+              <button type="submit">{t('USERNAME_MODERATION.BAN')}</button>
             </form>
 
             <form onSubmit={handleDeleteUsername} className={styles.form}>
-              <h2>Delete Username from Database</h2>
-              <label htmlFor="usernameToDelete">Username to delete:</label>
+              <h2>{t('MOD_PAGE.DELETE_USERNAME_FROM_DATABASE')}</h2>
+              <label htmlFor="usernameToDelete">
+                {t('MOD_PAGE.USERNAME_TO_DELETE')}
+              </label>
               <DeleteUsernameAutocomplete
                 value={usernameToDelete}
                 onChange={(newValue) => setUsernameToDelete(newValue)}
@@ -296,13 +417,17 @@ const ModPage: React.FC = () => {
                 type="submit"
                 disabled={isDeletingUsername || !usernameToDelete.trim()}
               >
-                {isDeletingUsername ? 'Deleting...' : 'Delete Username'}
+                {isDeletingUsername
+                  ? t('MOD_PAGE.DELETING')
+                  : t('MOD_PAGE.DELETE_USERNAME')}
               </button>
             </form>
 
             <form onSubmit={handleSendSystemMessage} className={styles.form}>
-              <h2>Send System Message to Player</h2>
-              <label htmlFor="systemMsgUsername">Username:</label>
+              <h2>{t('MOD_PAGE.SEND_SYSTEM_MESSAGE_TO_PLAYER')}</h2>
+              <label htmlFor="systemMsgUsername">
+                {t('MOD_PAGE.USERNAME_LABEL')}
+              </label>
               <input
                 type="text"
                 id="systemMsgUsername"
@@ -310,7 +435,9 @@ const ModPage: React.FC = () => {
                 onChange={(e) => setSystemMsgUsername(e.target.value)}
                 required
               />
-              <label htmlFor="systemMsgText">Message:</label>
+              <label htmlFor="systemMsgText">
+                {t('MOD_PAGE.MESSAGE_LABEL')}
+              </label>
               <textarea
                 id="systemMsgText"
                 value={systemMsgText}
@@ -320,14 +447,34 @@ const ModPage: React.FC = () => {
                 maxLength={2000}
                 className={styles.textarea}
               />
+              <label htmlFor="systemMsgExpiresInHours">
+                {t('MOD_PAGE.EXPIRES_LABEL')}
+              </label>
+              <select
+                id="systemMsgExpiresInHours"
+                value={systemMsgExpiresInHours}
+                onChange={(e) => setSystemMsgExpiresInHours(e.target.value)}
+                className={styles.select}
+              >
+                <option value="1">{t('MOD_PAGE.EXPIRY_OPTION_1H')}</option>
+                <option value="6">{t('MOD_PAGE.EXPIRY_OPTION_6H')}</option>
+                <option value="24">{t('MOD_PAGE.EXPIRY_OPTION_24H')}</option>
+                <option value="72">{t('MOD_PAGE.EXPIRY_OPTION_3D')}</option>
+                <option value="168">{t('MOD_PAGE.EXPIRY_OPTION_7D')}</option>
+                <option value="">{t('MOD_PAGE.EXPIRY_OPTION_NEVER')}</option>
+              </select>
               <button type="submit" disabled={isSendingToPlayer}>
-                {isSendingToPlayer ? 'Sending...' : 'Send Message'}
+                {isSendingToPlayer
+                  ? t('MOD_PAGE.SENDING')
+                  : t('MOD_PAGE.SEND_MESSAGE')}
               </button>
             </form>
 
             <form onSubmit={handleBroadcastMessage} className={styles.form}>
-              <h2>Broadcast System Message to All Players</h2>
-              <label htmlFor="broadcastMsgText">Message:</label>
+              <h2>{t('MOD_PAGE.BROADCAST_TO_ALL_PLAYERS')}</h2>
+              <label htmlFor="broadcastMsgText">
+                {t('MOD_PAGE.MESSAGE_LABEL')}
+              </label>
               <textarea
                 id="broadcastMsgText"
                 value={broadcastMsgText}
@@ -337,117 +484,391 @@ const ModPage: React.FC = () => {
                 maxLength={2000}
                 className={styles.textarea}
               />
+              <label htmlFor="broadcastExpiresInHours">
+                {t('MOD_PAGE.EXPIRES_LABEL')}
+              </label>
+              <select
+                id="broadcastExpiresInHours"
+                value={broadcastExpiresInHours}
+                onChange={(e) => setBroadcastExpiresInHours(e.target.value)}
+                className={styles.select}
+              >
+                <option value="1">{t('MOD_PAGE.EXPIRY_OPTION_1H')}</option>
+                <option value="6">{t('MOD_PAGE.EXPIRY_OPTION_6H')}</option>
+                <option value="24">{t('MOD_PAGE.EXPIRY_OPTION_24H')}</option>
+                <option value="72">{t('MOD_PAGE.EXPIRY_OPTION_3D')}</option>
+                <option value="168">{t('MOD_PAGE.EXPIRY_OPTION_7D')}</option>
+                <option value="">{t('MOD_PAGE.EXPIRY_OPTION_NEVER')}</option>
+              </select>
               <button type="submit" disabled={isSendingToAll}>
-                {isSendingToAll ? 'Sending...' : 'Broadcast to All'}
+                {isSendingToAll
+                  ? t('MOD_PAGE.SENDING')
+                  : t('MOD_PAGE.BROADCAST_TO_ALL')}
               </button>
             </form>
 
             <div className={styles.form}>
-              <h2>Sync Metafy Subscribers</h2>
-              <p style={{ color: '#ccc', fontSize: '13px', marginBottom: '10px' }}>
-                Fetches all active Talishar Metafy subscribers and cross-checks the DB to clear expired supporters.
+              <h2>{t('MOD_PAGE.SYNC_METAFY_SUBSCRIBERS')}</h2>
+              <p
+                style={{
+                  color: '#ccc',
+                  fontSize: '13px',
+                  marginBottom: '10px'
+                }}
+              >
+                {t('MOD_PAGE.SYNC_METAFY_DESCRIPTION')}
               </p>
+              <label
+                htmlFor="clearNoMetafyId"
+                style={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: '8px',
+                  color: '#ccc',
+                  fontSize: '13px',
+                  marginBottom: '10px',
+                  cursor: 'pointer'
+                }}
+              >
+                <input
+                  id="clearNoMetafyId"
+                  type="checkbox"
+                  checked={clearNoMetafyId}
+                  onChange={(e) => setClearNoMetafyId(e.target.checked)}
+                  style={{ width: 'auto', margin: '2px 0 0 0' }}
+                />
+                <span>
+                  {t('MOD_PAGE.CLEAR_NO_METAFY_ID_LABEL')}
+                  <br />
+                  <span style={{ color: '#FF9800', fontSize: '12px' }}>
+                    {t('MOD_PAGE.CLEAR_NO_METAFY_ID_WARNING')}
+                  </span>
+                </span>
+              </label>
               <button
                 onClick={handleSyncMetafy}
                 disabled={isSyncingMetafy}
                 style={{ backgroundColor: '#FF9800' }}
               >
-                {isSyncingMetafy ? 'Syncing...' : 'Sync Metafy Subscribers'}
+                {isSyncingMetafy
+                  ? t('MOD_PAGE.SYNCING')
+                  : t('MOD_PAGE.SYNC_METAFY_SUBSCRIBERS')}
               </button>
               {metafySyncResult && (
-                <div style={{ marginTop: '12px', padding: '10px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', borderLeft: `3px solid ${metafySyncResult.error ? '#f44336' : (metafySyncResult.cleared ?? 0) > 0 ? '#FF9800' : '#00ff00'}` }}>
-                  <p style={{ color: metafySyncResult.error ? '#f44336' : '#00ff00', fontWeight: 'bold', marginBottom: '6px' }}>
-                    {metafySyncResult.error ? 'Sync Error' : 'Sync Complete'}
+                <div
+                  style={{
+                    marginTop: '12px',
+                    padding: '10px',
+                    background: 'rgba(255,255,255,0.05)',
+                    borderRadius: '3px',
+                    borderLeft: `3px solid ${
+                      metafySyncResult.error
+                        ? '#f44336'
+                        : (metafySyncResult.cleared ?? 0) > 0
+                        ? '#FF9800'
+                        : '#00ff00'
+                    }`
+                  }}
+                >
+                  <p
+                    style={{
+                      color: metafySyncResult.error ? '#f44336' : '#00ff00',
+                      fontWeight: 'bold',
+                      marginBottom: '6px'
+                    }}
+                  >
+                    {metafySyncResult.error
+                      ? t('MOD_PAGE.SYNC_ERROR')
+                      : t('MOD_PAGE.SYNC_COMPLETE')}
                   </p>
                   {metafySyncResult.error && (
-                    <p style={{ color: '#f44336', fontSize: '13px', marginBottom: '6px' }}>{metafySyncResult.error}</p>
+                    <p
+                      style={{
+                        color: '#f44336',
+                        fontSize: '13px',
+                        marginBottom: '6px'
+                      }}
+                    >
+                      {metafySyncResult.error}
+                    </p>
                   )}
                   {metafySyncResult.apiError && (
-                    <p style={{ color: '#f44336', fontSize: '12px', marginBottom: '4px', fontFamily: 'monospace' }}>{metafySyncResult.apiError}</p>
+                    <p
+                      style={{
+                        color: '#f44336',
+                        fontSize: '12px',
+                        marginBottom: '4px',
+                        fontFamily: 'monospace'
+                      }}
+                    >
+                      {metafySyncResult.apiError}
+                    </p>
                   )}
                   {metafySyncResult.hint && (
-                    <p style={{ color: '#FF9800', fontSize: '12px', marginBottom: '6px' }}>💡 {metafySyncResult.hint}</p>
+                    <p
+                      style={{
+                        color: '#FF9800',
+                        fontSize: '12px',
+                        marginBottom: '6px'
+                      }}
+                    >
+                      {t('MOD_PAGE.SYNC_HINT')} {metafySyncResult.hint}
+                    </p>
                   )}
                   {metafySyncResult.apiWarning && (
-                    <p style={{ color: '#FF9800', fontSize: '12px', marginBottom: '6px' }}>API Warning: {metafySyncResult.apiWarning}</p>
+                    <p
+                      style={{
+                        color: '#FF9800',
+                        fontSize: '12px',
+                        marginBottom: '6px'
+                      }}
+                    >
+                      {t('MOD_PAGE.API_WARNING')} {metafySyncResult.apiWarning}
+                    </p>
                   )}
-                  <p style={{ color: '#00bcd4', fontSize: '13px', marginBottom: '6px' }}>
-                    Fetched {metafySyncResult.subscribersFetched ?? 0} subscriber(s){metafySyncResult.apiSource ? ` via ${metafySyncResult.apiSource}` : ''}
+                  <p
+                    style={{
+                      color: '#00bcd4',
+                      fontSize: '13px',
+                      marginBottom: '6px'
+                    }}
+                  >
+                    {t('MOD_PAGE.FETCHED_SUBSCRIBERS', {
+                      count: metafySyncResult.subscribersFetched ?? 0,
+                      apiSource: metafySyncResult.apiSource
+                        ? ` via ${metafySyncResult.apiSource}`
+                        : ''
+                    })}
                   </p>
                   <table style={{ fontSize: '13px', color: '#ddd' }}>
                     <tbody>
-                      <tr><td style={{ padding: '2px 10px' }}>Users with Talishar in DB:</td><td><strong>{metafySyncResult.usersChecked ?? 0}</strong></td></tr>
-                      <tr><td style={{ padding: '2px 10px' }}>Still active:</td><td style={{ color: '#00ff00' }}><strong>{metafySyncResult.stillActive ?? 0}</strong></td></tr>
-                      <tr><td style={{ padding: '2px 10px' }}>Expired (cleared):</td><td style={{ color: '#FF9800' }}><strong>{metafySyncResult.cleared ?? 0}</strong></td></tr>
+                      <tr>
+                        <td style={{ padding: '2px 10px' }}>
+                          {t('MOD_PAGE.USERS_WITH_TALISHAR_IN_DB')}:
+                        </td>
+                        <td>
+                          <strong>{metafySyncResult.usersChecked ?? 0}</strong>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style={{ padding: '2px 10px' }}>
+                          {t('MOD_PAGE.STILL_ACTIVE')}:
+                        </td>
+                        <td style={{ color: '#00ff00' }}>
+                          <strong>{metafySyncResult.stillActive ?? 0}</strong>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style={{ padding: '2px 10px' }}>
+                          {t('MOD_PAGE.EXPIRED_CLEARED')}:
+                        </td>
+                        <td style={{ color: '#FF9800' }}>
+                          <strong>{metafySyncResult.cleared ?? 0}</strong>
+                        </td>
+                      </tr>
                       {(metafySyncResult.backfilled ?? 0) > 0 && (
-                        <tr><td style={{ padding: '2px 10px' }}>MetafyID backfilled:</td><td style={{ color: '#00bcd4' }}><strong>{metafySyncResult.backfilled}</strong></td></tr>
+                        <tr>
+                          <td style={{ padding: '2px 10px' }}>
+                            {t('MOD_PAGE.METAFY_ID_BACKFILLED')}:
+                          </td>
+                          <td style={{ color: '#00bcd4' }}>
+                            <strong>{metafySyncResult.backfilled}</strong>
+                          </td>
+                        </tr>
                       )}
-                      <tr><td style={{ padding: '2px 10px' }}>Skipped (no metafyID):</td><td style={{ color: '#aaa' }}><strong>{metafySyncResult.skippedNoMetafyId ?? 0}</strong></td></tr>
+                      {metafySyncResult.forcedNoMetafyIdClear ? (
+                        <tr>
+                          <td style={{ padding: '2px 10px' }}>
+                            {t('MOD_PAGE.CLEARED_NO_METAFY_ID')}:
+                          </td>
+                          <td style={{ color: '#FF9800' }}>
+                            <strong>
+                              {metafySyncResult.clearedNoMetafyId ?? 0}
+                            </strong>
+                          </td>
+                        </tr>
+                      ) : (
+                        <tr>
+                          <td style={{ padding: '2px 10px' }}>
+                            {t('MOD_PAGE.SKIPPED_NO_METAFY_ID')}:
+                          </td>
+                          <td style={{ color: '#aaa' }}>
+                            <strong>
+                              {metafySyncResult.skippedNoMetafyId ?? 0}
+                            </strong>
+                          </td>
+                        </tr>
+                      )}
                     </tbody>
                   </table>
                   {metafySyncResult.clearedUsers?.length > 0 && (
-                    <p style={{ marginTop: '8px', color: '#FF9800', fontSize: '12px' }}>
-                      <strong>Cleared:</strong> {metafySyncResult.clearedUsers.join(', ')}
+                    <p
+                      style={{
+                        marginTop: '8px',
+                        color: '#FF9800',
+                        fontSize: '12px'
+                      }}
+                    >
+                      <strong>{t('MOD_PAGE.CLEARED')}:</strong>{' '}
+                      {metafySyncResult.clearedUsers.join(', ')}
+                    </p>
+                  )}
+                  {metafySyncResult.clearedNoMetafyIdUsers?.length > 0 && (
+                    <p
+                      style={{
+                        marginTop: '4px',
+                        color: '#FF9800',
+                        fontSize: '12px'
+                      }}
+                    >
+                      <strong>{t('MOD_PAGE.CLEARED_NO_METAFY_ID')}:</strong>{' '}
+                      {metafySyncResult.clearedNoMetafyIdUsers.join(', ')}
                     </p>
                   )}
                   {metafySyncResult.skippedUsers?.length > 0 && (
-                    <p style={{ marginTop: '4px', color: '#aaa', fontSize: '12px' }}>
-                      <strong>Skipped:</strong> {metafySyncResult.skippedUsers.join(', ')}
+                    <p
+                      style={{
+                        marginTop: '4px',
+                        color: '#aaa',
+                        fontSize: '12px'
+                      }}
+                    >
+                      <strong>{t('MOD_PAGE.SKIPPED')}:</strong>{' '}
+                      {metafySyncResult.skippedUsers.join(', ')}
                     </p>
                   )}
-
                 </div>
               )}
+            </div>
+
+            <div className={styles.form}>
+              <h2>{t('MOD_PAGE.RESET_ALL_RUST_COUNTERS')}</h2>
+              <p
+                style={{
+                  color: '#ccc',
+                  fontSize: '13px',
+                  marginBottom: '10px'
+                }}
+              >
+                {t('MOD_PAGE.RESET_RUST_COUNTERS_DESCRIPTION')}
+              </p>
+              <button
+                type="button"
+                onClick={handleResetAllRustCounters}
+                disabled={isResettingRustCounters}
+              >
+                {isResettingRustCounters
+                  ? t('MOD_PAGE.RESETTING_RUST_COUNTERS')
+                  : t('MOD_PAGE.RESET_ALL_RUST_COUNTERS')}
+              </button>
             </div>
           </div>
 
           <div className={styles.middleColumn}>
             <div className={styles.dataSection}>
-              <h2>Most Recently Created Accounts</h2>
+              <h2>{t('MOD_PAGE.MOST_RECENTLY_CREATED_ACCOUNTS')}</h2>
               {isLoading ? (
-                <p>Loading...</p>
+                <p>{t('MOD_PAGE.LOADING')}</p>
               ) : modPageData?.recentAccounts &&
                 modPageData.recentAccounts.length > 0 ? (
                 <ul className={styles.dataList}>
-                  {modPageData.recentAccounts.map((account, index) => (
-                    <li key={index}>{account}</li>
-                  ))}
+                  {modPageData.recentAccounts.map(
+                    (account: string, index: number) => (
+                      <li key={index}>{account}</li>
+                    )
+                  )}
                 </ul>
               ) : (
-                <p>No recent accounts</p>
+                <p>{t('MOD_PAGE.NO_RECENT_ACCOUNTS')}</p>
+              )}
+            </div>
+
+            <div className={styles.dataSection}>
+              <h2>{t('MOD_PAGE.POSSIBLE_BAN_EVADERS')}</h2>
+              {isLoading ? (
+                <p>{t('MOD_PAGE.LOADING')}</p>
+              ) : modPageData?.linkedAccounts &&
+                modPageData.linkedAccounts.length > 0 ? (
+                <ul className={styles.dataList}>
+                  {modPageData.linkedAccounts.map(
+                    (link: LinkedAccount, index: number) => (
+                      <li key={index}>
+                        <strong>{link.username}</strong> - {link.ip} (
+                        {link.linkedTo === 'banned IP'
+                          ? t('MOD_PAGE.BANNED_IP')
+                          : t('MOD_PAGE.SHARES_IP_WITH', {
+                              username: link.linkedTo
+                            })}
+                        )
+                      </li>
+                    )
+                  )}
+                </ul>
+              ) : (
+                <p>{t('MOD_PAGE.NO_LINKED_ACCOUNTS')}</p>
               )}
             </div>
           </div>
 
           <div className={styles.rightColumn}>
             <div className={styles.dataSection}>
-              <h2>Banned Players</h2>
+              <h2>{t('MOD_PAGE.BANNED_PLAYERS')}</h2>
               {isLoading ? (
-                <p>Loading...</p>
+                <p>{t('MOD_PAGE.LOADING')}</p>
               ) : modPageData?.bannedPlayers &&
                 modPageData.bannedPlayers.length > 0 ? (
                 <ul className={styles.dataList}>
-                  {modPageData.bannedPlayers.map((player, index) => (
-                    <li key={index}>{player}</li>
-                  ))}
+                  {modPageData.bannedPlayers.map(
+                    (player: string, index: number) => {
+                      const knownIPs =
+                        modPageData.bannedPlayerIPs?.[player.toLowerCase()];
+                      return (
+                        <li key={index}>
+                          {player}
+                          {knownIPs && knownIPs.length > 0 && (
+                            <span style={{ color: '#aaa', fontSize: '12px' }}>
+                              {' - '}
+                              {knownIPs.map((ip: string, ipIndex: number) => (
+                                <React.Fragment key={ip}>
+                                  {ipIndex > 0 && ', '}
+                                  <a
+                                    onClick={() => setDirectIP(ip)}
+                                    title={t(
+                                      'MOD_PAGE.CLICK_TO_FILL_BAN_IP_FORM'
+                                    )}
+                                    style={{
+                                      cursor: 'pointer',
+                                      textDecoration: 'underline'
+                                    }}
+                                  >
+                                    {ip}
+                                  </a>
+                                </React.Fragment>
+                              ))}
+                            </span>
+                          )}
+                        </li>
+                      );
+                    }
+                  )}
                 </ul>
               ) : (
-                <p>No banned players</p>
+                <p>{t('MOD_PAGE.NO_BANNED_PLAYERS')}</p>
               )}
             </div>
 
             <div className={styles.dataSection}>
-              <h2>Banned IPs</h2>
+              <h2>{t('MOD_PAGE.BANNED_IPS')}</h2>
               {isLoading ? (
-                <p>Loading...</p>
+                <p>{t('MOD_PAGE.LOADING')}</p>
               ) : modPageData?.bannedIPs && modPageData.bannedIPs.length > 0 ? (
                 <ul className={styles.dataList}>
-                  {modPageData.bannedIPs.map((ip, index) => (
+                  {modPageData.bannedIPs.map((ip: string, index: number) => (
                     <li key={index}>{ip}</li>
                   ))}
                 </ul>
               ) : (
-                <p>No banned IPs</p>
+                <p>{t('MOD_PAGE.NO_BANNED_IPS')}</p>
               )}
             </div>
           </div>

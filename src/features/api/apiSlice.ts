@@ -22,13 +22,17 @@ import {
   LoadReplayAPI,
   LoadReplayResponse
 } from 'interface/API/LoadReplayAPI.php';
-import { toast } from 'react-hot-toast';
-import { cleanErrorText } from 'utils/cleanErrorText';
-import { JoinGameAPI, JoinGameResponse } from 'interface/API/JoinGame.php';
 import {
-  GetLobbyInfo,
-  GetLobbyInfoResponse
-} from 'interface/API/GetLobbyInfo.php';
+  ShareReplayAPI,
+  ShareReplayResponse,
+  LoadSharedReplayAPI,
+  LoadSharedReplayResponse
+} from 'interface/API/ShareReplayAPI';
+import { toast } from 'react-hot-toast';
+import { parseResponse } from 'utils/parseBackendResponse';
+import { PlayerPresence } from 'features/PlayerPresence';
+import { JoinGameAPI, JoinGameResponse } from 'interface/API/JoinGame.php';
+import { GetLobbyInfo } from 'interface/API/GetLobbyInfo.php';
 import { SubmitLobbyInput } from 'interface/API/SubmitLobbyInput.php';
 import { ChooseFirstPlayer } from 'interface/API/ChooseFirstPlayer.php';
 import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
@@ -60,11 +64,24 @@ import {
   UpdateFavoriteDeckResponse
 } from 'interface/API/UpdateFavoriteDeck.php';
 import {
+  GetDeckCardsRequest,
+  GetDeckCardsResponse
+} from 'interface/API/GetDeckCards.php';
+import {
+  SaveDeckCosmeticsRequest,
+  SaveDeckCosmeticsResponse
+} from 'interface/API/SaveDeckCosmetics.php';
+import {
   MatchResultWebhookRequest,
   MatchResultWebhookResponse
 } from 'interface/API/MatchResultWebhookAPI.php';
 import { PatreonLoginResponse } from 'routes/user/profile/linkpatreon/linkPatreon';
-import { UserProfileAPIResponse } from 'interface/API/UserProfileAPI.php';
+import {
+  ChangeDisplayNameRequest,
+  ChangeDisplayNameResponse,
+  UserProfileAPIResponse
+} from 'interface/API/UserProfileAPI.php';
+import { ClearRustCountersAPIResponse } from 'interface/API/ClearRustCountersAPI.php';
 import {
   MetafyLoginResponse,
   MetafySignupResponse,
@@ -74,10 +91,11 @@ import { SubmitChatAPI } from 'interface/API/SubmitChat.php';
 import {
   ModPageDataResponse,
   BanPlayerByIPRequest,
+  BanIPDirectRequest,
   BanPlayerByNameRequest,
   CloseGameRequest,
   DeleteUsernameRequest,
-  SearchUsernamesRequest,
+  ResetAllRustCountersResponse,
   SearchUsernamesResponse
 } from 'interface/API/ModPageAPI';
 import { FriendListAPIResponse } from 'interface/API/FriendListAPI.php';
@@ -86,8 +104,12 @@ import {
   BanOffensiveUsernameRequest
 } from 'interface/API/UsernameModerationAPI';
 import { BlockedUsersAPIResponse } from 'interface/API/BlockedUsersAPI.php';
-import { getGameInfo } from '../game/GameSlice';
-import { RootState } from '../../app/Store';
+import type GameState from '../GameState';
+import {
+  GetSavedReplaysResponse,
+  SetReplayFavoriteRequest
+} from 'interface/API/GetSavedReplays.php';
+import { HeroMasteryResponse } from 'interface/API/HeroMastery';
 
 export interface GetLastActiveGameResponse {
   gameExists: boolean;
@@ -100,17 +122,16 @@ export interface GetLastActiveGameResponse {
   authKeyMismatch?: boolean;
 }
 
+type ApiState = {
+  game: Pick<GameState, 'gameInfo' | 'gameDynamicInfo'>;
+};
+
 // catch warnings and show a toast if we get one.
 export const rtkQueryErrorToaster: Middleware =
-  (api: MiddlewareAPI) => (next) => (action) => {
+  (_api: MiddlewareAPI) => (next) => (action) => {
     if (isRejectedWithValue(action)) {
-      //console.warn('Rejected action:', action);
       const errorMessage = action.error?.message ?? 'an error happened';
       const errorStatus = (action.payload as any)?.status ?? 0;
-      //console.log('errorStatus:', errorStatus);
-      //console.log('errorMessage:', errorMessage);
-      //console.log('action.payload:', action.payload);
-      //console.log('action.error:', action.error);
 
       // Suppress 401 Unauthorized errors - these are often benign (e.g., logging out/in quickly)
       // and not user-facing errors that need a toast notification
@@ -124,51 +145,13 @@ export const rtkQueryErrorToaster: Middleware =
     return next(action);
   };
 
-export const parseResponse = async (response: any) => {
-  const data = await response.text();
-  let stringData = data.toString().trim() as string;
-  if (stringData.length === 0) {
-    return {};
-  }
-  const indexOfBraces = stringData.indexOf('{');
-  if (indexOfBraces !== 0 && stringData.length > 0) {
-    let errorString;
-    if (indexOfBraces === -1) {
-      errorString = data;
-    } else {
-      errorString = stringData.substring(0, indexOfBraces);
-    }
-    const cleanedError = cleanErrorText(errorString);
-    console.warn(`BE Response:`, cleanedError);
-    toast.error(`BE Response:\n${cleanedError}`);
-    stringData = stringData.substring(indexOfBraces);
-  }
-
-  // Only try to parse if we have valid JSON-like content
-  if (
-    stringData.length === 0 ||
-    stringData === '{}' ||
-    !stringData.startsWith('{')
-  ) {
-    return {};
-  }
-
-  try {
-    return JSON.parse(stringData);
-  } catch (e) {
-    console.error('JSON Parse Error:', e, 'Input:', stringData);
-    toast.error('Failed to parse server response. Please try again.');
-    return {};
-  }
-};
-
 // Different request URLs depending on the gameID number, beta, live or dev.
 const dynamicBaseQuery: BaseQueryFn<
   string | FetchArgs,
   unknown,
   FetchBaseQueryError
 > = async (args, webApi, extraOptions) => {
-  const { isRoguelike } = getGameInfo(webApi.getState() as RootState);
+  const { isRoguelike } = (webApi.getState() as ApiState).game.gameInfo;
   const baseUrl = isRoguelike ? ROGUELIKE_URL : BACKEND_URL;
   const rawBaseQuery = fetchBaseQuery({
     baseUrl,
@@ -200,10 +183,38 @@ const dynamicBaseQuery: BaseQueryFn<
 export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: dynamicBaseQuery,
-  tagTypes: ['ModPageData', 'UserProfile', 'Auth', 'SystemMessage'],
+  tagTypes: [
+    'ModPageData',
+    'UserProfile',
+    'Auth',
+    'SystemMessage',
+    'SavedReplays',
+    'HeroMastery'
+  ],
   refetchOnFocus: false,
   refetchOnReconnect: false,
   endpoints: (builder) => ({
+    getHeroMastery: builder.query<
+      HeroMasteryResponse,
+      | string
+      | {
+          gameKey?: string;
+          gameName?: number;
+          scope?: 'account' | 'game' | 'award';
+        }
+      | void
+    >({
+      query: (request) => ({
+        url: URL_END_POINT.GET_HERO_MASTERY,
+        method: 'GET',
+        params:
+          typeof request === 'string'
+            ? { gameKey: request }
+            : request || undefined,
+        responseHandler: parseResponse
+      }),
+      providesTags: ['HeroMastery']
+    }),
     getPopUpContent: builder.query({
       query: ({
         playerID = 0,
@@ -237,7 +248,7 @@ export const apiSlice = createApi({
       invalidatesTags: ['Auth']
     }),
     loginWithCookie: builder.query({
-      query: (body) => {
+      query: () => {
         return {
           url: URL_END_POINT.LOGIN_WITH_COOKIE,
           method: 'POST',
@@ -248,7 +259,7 @@ export const apiSlice = createApi({
       providesTags: ['Auth']
     }),
     logOut: builder.mutation({
-      query: (body) => {
+      query: () => {
         return {
           url: URL_END_POINT.LOGOUT,
           method: 'POST',
@@ -294,8 +305,7 @@ export const apiSlice = createApi({
         playerID = 0,
         chatText = '',
         authKey = '',
-        quickChat,
-        ...rest
+        quickChat
       }) => {
         return {
           url: 'SubmitChat.php',
@@ -312,7 +322,7 @@ export const apiSlice = createApi({
       }
     }),
     processInputAPI: builder.mutation({
-      query: ({ ...body }) => {
+      query: (body) => {
         return {
           url: URL_END_POINT.PROCESS_INPUT_POST,
           method: 'POST',
@@ -382,7 +392,9 @@ export const apiSlice = createApi({
         sideboard
       }) => {
         const url = new URL(
-          `https://fabbazaar.app/api/decks/${encodeURIComponent(deckId)}/matchups/${encodeURIComponent(heroId)}`
+          `https://fabbazaar.app/api/decks/${encodeURIComponent(
+            deckId
+          )}/matchups/${encodeURIComponent(heroId)}`
         );
         url.searchParams.set('metafyId', String(metafyId));
         url.searchParams.set('metafyHash', String(metafyHash));
@@ -412,9 +424,6 @@ export const apiSlice = createApi({
           url: URL_END_POINT.GET_FAVORITE_DECKS,
           responseHandler: parseResponse
         };
-      },
-      transformResponse: (response: GetFavoriteDecksResponse, metra, arg) => {
-        return response;
       }
     }),
     deleteDeck: builder.mutation<DeleteDeckAPIResponse, DeleteDeckAPIRequest>({
@@ -447,6 +456,29 @@ export const apiSlice = createApi({
       query: (body: UpdateFavoriteDeckRequest) => {
         return {
           url: URL_END_POINT.UPDATE_FAVORITE_DECK,
+          method: 'POST',
+          body: body,
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    getDeckCards: builder.query<GetDeckCardsResponse, GetDeckCardsRequest>({
+      query: ({ decklink }: GetDeckCardsRequest) => {
+        return {
+          url: URL_END_POINT.GET_DECK_CARDS,
+          method: 'GET',
+          params: { decklink },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    saveDeckCosmetics: builder.mutation<
+      SaveDeckCosmeticsResponse,
+      SaveDeckCosmeticsRequest
+    >({
+      query: (body: SaveDeckCosmeticsRequest) => {
+        return {
+          url: URL_END_POINT.SAVE_DECK_COSMETICS,
           method: 'POST',
           body: body,
           responseHandler: parseResponse
@@ -501,11 +533,8 @@ export const apiSlice = createApi({
           responseHandler: parseResponse
         };
       },
-      transformErrorResponse: (
-        response: { status: string | number },
-        meta,
-        arg
-      ) => response.status
+      transformErrorResponse: (response: { status: string | number }) =>
+        response.status
     }),
     getLobbyInfo: builder.query({
       query: ({ ...body }: GetLobbyInfo) => {
@@ -515,9 +544,6 @@ export const apiSlice = createApi({
           body: body,
           responseHandler: parseResponse
         };
-      },
-      transformResponse: (response: GetLobbyInfoResponse, meta, arg) => {
-        return response;
       }
     }),
     getUserProfile: builder.query<UserProfileAPIResponse, undefined>({
@@ -529,6 +555,30 @@ export const apiSlice = createApi({
         };
       },
       providesTags: [{ type: 'UserProfile', id: 'LIST' }]
+    }),
+    changeDisplayName: builder.mutation<
+      ChangeDisplayNameResponse,
+      ChangeDisplayNameRequest
+    >({
+      query: (body: ChangeDisplayNameRequest) => {
+        return {
+          url: URL_END_POINT.CHANGE_DISPLAY_NAME,
+          method: 'POST',
+          body: body,
+          responseHandler: parseResponse
+        };
+      },
+      invalidatesTags: [{ type: 'UserProfile', id: 'LIST' }]
+    }),
+    clearRustCounters: builder.mutation<ClearRustCountersAPIResponse, void>({
+      query: () => {
+        return {
+          url: URL_END_POINT.CLEAR_RUST_COUNTERS,
+          method: 'POST',
+          responseHandler: parseResponse
+        };
+      },
+      invalidatesTags: [{ type: 'UserProfile', id: 'LIST' }]
     }),
     chooseFirstPlayer: builder.mutation({
       query: ({ ...body }: ChooseFirstPlayer) => {
@@ -550,7 +600,10 @@ export const apiSlice = createApi({
         };
       }
     }),
-    kickPlayer: builder.mutation<{ success: boolean; error?: string }, { gameName: number; playerID: number; authKey: string }>({
+    kickPlayer: builder.mutation<
+      { success: boolean; error?: string },
+      { gameName: number; playerID: number; authKey: string }
+    >({
       query: (body) => {
         return {
           url: URL_END_POINT.KICK_PLAYER,
@@ -599,6 +652,53 @@ export const apiSlice = createApi({
       // Pick out errors and prevent nested properties in a hook or selector
       transformErrorResponse: (response: { status: string | number }) =>
         response.status
+    }),
+    getSavedReplays: builder.query<GetSavedReplaysResponse, void>({
+      query: () => ({
+        url: URL_END_POINT.GET_SAVED_REPLAYS,
+        method: 'GET'
+      }),
+      providesTags: ['SavedReplays']
+    }),
+    getReplayTurns: builder.query<
+      { turns: Array<{ player: 1 | 2; number: number }> },
+      number
+    >({
+      query: (gameName) => ({
+        url: `${URL_END_POINT.GET_REPLAY_TURNS}?gameName=${gameName}`,
+        method: 'GET'
+      })
+    }),
+    setReplayFavorite: builder.mutation<
+      { success: boolean; favorite: boolean },
+      SetReplayFavoriteRequest
+    >({
+      query: (body) => ({
+        url: URL_END_POINT.SET_REPLAY_FAVORITE,
+        method: 'POST',
+        body,
+        responseHandler: parseResponse
+      }),
+      invalidatesTags: ['SavedReplays']
+    }),
+    shareReplay: builder.mutation<ShareReplayResponse, ShareReplayAPI>({
+      query: (body) => ({
+        url: URL_END_POINT.SHARE_REPLAY,
+        method: 'POST',
+        body,
+        responseHandler: parseResponse
+      })
+    }),
+    loadSharedReplay: builder.mutation<
+      LoadSharedReplayResponse,
+      LoadSharedReplayAPI
+    >({
+      query: (body) => ({
+        url: URL_END_POINT.CREATE_SHARED_REPLAY_GAME,
+        method: 'POST',
+        body,
+        responseHandler: parseResponse
+      })
     }),
     submitPatreonLogin: builder.mutation<
       PatreonLoginResponse,
@@ -684,6 +784,17 @@ export const apiSlice = createApi({
       },
       providesTags: [{ type: 'ModPageData', id: 'LIST' }]
     }),
+    resetAllRustCounters: builder.mutation<ResetAllRustCountersResponse, void>({
+      query: () => ({
+        url: URL_END_POINT.RESET_ALL_RUST_COUNTERS,
+        method: 'POST',
+        responseHandler: parseResponse
+      }),
+      invalidatesTags: [
+        { type: 'ModPageData', id: 'LIST' },
+        { type: 'UserProfile', id: 'LIST' }
+      ]
+    }),
     banPlayerByIP: builder.mutation<any, BanPlayerByIPRequest>({
       query: ({ ipToBan, playerNumberToBan }) => {
         return {
@@ -692,6 +803,19 @@ export const apiSlice = createApi({
           body: {
             ipToBan: ipToBan,
             playerNumberToBan: playerNumberToBan
+          },
+          responseHandler: parseResponse
+        };
+      },
+      invalidatesTags: [{ type: 'ModPageData', id: 'LIST' }]
+    }),
+    banIPDirect: builder.mutation<any, BanIPDirectRequest>({
+      query: ({ directIPToBan }) => {
+        return {
+          url: URL_END_POINT.BAN_PLAYER,
+          method: 'POST',
+          body: {
+            directIPToBan: directIPToBan
           },
           responseHandler: parseResponse
         };
@@ -877,7 +1001,7 @@ export const apiSlice = createApi({
 
     // Blocked Users endpoints
     getBlockedUsers: builder.query<BlockedUsersAPIResponse, void>({
-      queryFn: async (arg, api, extraOptions, baseQuery) => {
+      queryFn: async (_arg, _api, _extraOptions, baseQuery) => {
         try {
           const result: any = await baseQuery({
             url: URL_END_POINT.BLOCKED_USERS,
@@ -916,10 +1040,7 @@ export const apiSlice = createApi({
         };
       },
       // Handle errors gracefully - don't crash if BlockedUsersAPI is unavailable
-      async onQueryStarted(
-        { blockedUsername },
-        { dispatch, queryFulfilled, getState }
-      ) {
+      async onQueryStarted({ blockedUsername }, { queryFulfilled }) {
         try {
           await queryFulfilled;
         } catch (error: any) {
@@ -947,10 +1068,7 @@ export const apiSlice = createApi({
         };
       },
       // Handle errors gracefully - don't crash if BlockedUsersAPI is unavailable
-      async onQueryStarted(
-        { blockedUserId },
-        { dispatch, queryFulfilled, getState }
-      ) {
+      async onQueryStarted({ blockedUserId }, { queryFulfilled }) {
         try {
           await queryFulfilled;
         } catch (error: any) {
@@ -1008,31 +1126,41 @@ export const apiSlice = createApi({
       }),
       providesTags: [{ type: 'SystemMessage', id: 'MINE' }]
     }),
-    sendSystemMessageToPlayer: builder.mutation<any, { username: string; message: string }>({
-      query: ({ username, message }) => {
+    sendSystemMessageToPlayer: builder.mutation<
+      any,
+      { username: string; message: string; expiresInHours?: number | null }
+    >({
+      query: ({ username, message, expiresInHours }) => {
         return {
           url: URL_END_POINT.SYSTEM_MESSAGE,
           method: 'POST',
-          body: { action: 'sendToPlayer', username, message },
+          body: { action: 'sendToPlayer', username, message, expiresInHours },
           responseHandler: parseResponse
         };
       }
     }),
-    sendSystemMessageToAll: builder.mutation<any, { message: string }>({
-      query: ({ message }) => {
+    sendSystemMessageToAll: builder.mutation<
+      any,
+      { message: string; expiresInHours?: number | null }
+    >({
+      query: ({ message, expiresInHours }) => {
         return {
           url: URL_END_POINT.SYSTEM_MESSAGE,
           method: 'POST',
-          body: { action: 'sendToAll', message },
+          body: { action: 'sendToAll', message, expiresInHours },
           responseHandler: parseResponse
         };
       }
     }),
-    syncMetafySubscribers: builder.mutation<any, void>({
-      query: () => {
+    syncMetafySubscribers: builder.mutation<
+      any,
+      { clearNoMetafyId?: boolean } | void
+    >({
+      query: (args) => {
         return {
           url: URL_END_POINT.SYNC_METAFY_SUBSCRIBERS,
           method: 'POST',
+          body: { clearNoMetafyId: args?.clearNoMetafyId ?? false },
           responseHandler: parseResponse
         };
       }
@@ -1059,7 +1187,10 @@ export const apiSlice = createApi({
         };
       }
     }),
-    reportTyping: builder.mutation<any, { gameID: number; playerID: number; typing?: boolean }>({
+    reportTyping: builder.mutation<
+      any,
+      { gameID: number; playerID: number; typing?: boolean }
+    >({
       query: ({ gameID = 0, playerID = 0, typing = true }) => {
         return {
           url: 'APIs/ChatTyping.php',
@@ -1073,17 +1204,22 @@ export const apiSlice = createApi({
         };
       }
     }),
-    checkOpponentTyping: builder.query<
-      { opponentIsTyping: boolean },
-      { gameID: number; playerID: number }
+    reportPresence: builder.mutation<
+      any,
+      {
+        gameID: number;
+        playerID: number;
+        presence: PlayerPresence | null;
+      }
     >({
-      query: ({ gameID = 0, playerID = 0 }) => {
+      query: ({ gameID = 0, playerID = 0, presence }) => {
         return {
-          url: 'APIs/CheckOpponentTyping.php',
+          url: 'APIs/PlayerPresence.php',
           method: 'GET',
           params: {
             gameName: gameID,
-            playerID: playerID
+            playerID,
+            presence: presence ? JSON.stringify(presence) : ''
           },
           responseHandler: parseResponse
         };
@@ -1121,6 +1257,7 @@ export const apiSlice = createApi({
 
 // Export the auto-generated hook for the `getPosts` query endpoint
 export const {
+  useGetHeroMasteryQuery,
   useGetPopUpContentQuery,
   useSubmitChatMutation,
   useGetGameListQuery,
@@ -1130,6 +1267,8 @@ export const {
   useDeleteDeckMutation,
   useAddFavoriteDeckMutation,
   useUpdateFavoriteDeckMutation,
+  useLazyGetDeckCardsQuery,
+  useSaveDeckCosmeticsMutation,
   useSetMatchResultWebhookMutation,
   useDeleteAccountMutation,
   useLoginMutation,
@@ -1150,11 +1289,20 @@ export const {
   useRefreshMetafyCommunitiesMutation,
   useLoadDebugGameMutation,
   useGetUserProfileQuery,
+  useChangeDisplayNameMutation,
+  useClearRustCountersMutation,
   useLoadReplayMutation,
+  useGetSavedReplaysQuery,
+  useGetReplayTurnsQuery,
+  useSetReplayFavoriteMutation,
+  useShareReplayMutation,
+  useLoadSharedReplayMutation,
   useSubmitLobbyInputMutation,
   useKickPlayerMutation,
   useGetModPageDataQuery,
+  useResetAllRustCountersMutation,
   useBanPlayerByIPMutation,
+  useBanIPDirectMutation,
   useBanPlayerByNameMutation,
   useDeleteUsernameMutation,
   useCloseGameMutation,
@@ -1182,7 +1330,7 @@ export const {
   useAcknowledgeSystemMessageMutation,
   useGetLastActiveGameQuery,
   useReportTypingMutation,
-  useCheckOpponentTypingQuery,
+  useReportPresenceMutation,
   useGetAppInfoQuery,
   useGenerateAuthTokenMutation,
   useGetBazaarDecksQuery,

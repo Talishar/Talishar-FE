@@ -1,3 +1,4 @@
+import React from 'react';
 import CardDisplay from '../../cardDisplay/CardDisplay';
 import SearchCardInput from '../../searchCardInput/SearchCardInput';
 import { NAME_A_CARD } from '../constants';
@@ -7,6 +8,7 @@ import styles from '../PlayerInputPopUp.module.css';
 export const OtherInput = (props: FormProps) => {
   const {
     cards,
+    cardOriginalIndexes,
     buttons,
     choiceOptions,
     checkedState,
@@ -18,10 +20,21 @@ export const OtherInput = (props: FormProps) => {
     checkBoxSubmit
   } = props;
 
-  const selectCard = cards?.map((card, ix) => {
+  let selectedCount = 0;
+  for (const checked of checkedState) {
+    if (checked) ++selectedCount;
+  }
+  const minNo = formOptions?.minNo ?? 0;
+  const maxNo = formOptions?.maxNo ?? checkedState.length;
+  const hasValidSelection = selectedCount >= minNo && selectedCount <= maxNo;
+  const selectionSummary =
+    minNo === maxNo ? `${selectedCount}/${minNo}` : `${selectedCount} selected`;
+
+  const selectCard = cards?.map((card, index) => {
+    const originalIndex = cardOriginalIndexes[index] ?? index;
     return choiceOptions == 'checkbox' ? (
       <div
-        key={ix.toString()}
+        key={`${card.cardNumber}-${originalIndex}`}
         className={styles.cardDiv}
         onClick={(e) => {
           e.preventDefault();
@@ -30,12 +43,18 @@ export const OtherInput = (props: FormProps) => {
         }}
       >
         <CardDisplay
-          card={{ borderColor: checkedState[ix] ? '8' : '', ...card }}
+          card={{
+            borderColor: checkedState[originalIndex] ? '8' : '',
+            ...card
+          }}
           preventUseOnClick
         />
       </div>
     ) : (
-      <div className={styles.cardDiv} key={ix.toString()}>
+      <div
+        className={styles.cardDiv}
+        key={`${card.cardNumber}-${originalIndex}`}
+      >
         <CardDisplay card={card} />
       </div>
     );
@@ -65,18 +84,20 @@ export const OtherInput = (props: FormProps) => {
           })}
         </div>
       ) : null}
-      <div>
+      <div className={formOptions ? styles.multiChooseActions : undefined}>
         {formOptions ? (
           <div>
             {checkboxes?.length != 0 ? <div>{checkboxes}</div> : null}
-            <div
-              className={styles.buttonDiv}
+            <button
+              type="button"
+              className={`${styles.buttonDiv} ${styles.multiChooseSubmit}`}
+              disabled={!hasValidSelection}
               onClick={() => {
                 checkBoxSubmit();
               }}
             >
-              {formOptions.caption}
-            </div>
+              {formOptions.caption} - {selectionSummary}
+            </button>
           </div>
         ) : null}
         {id === NAME_A_CARD && <SearchCardInput />}

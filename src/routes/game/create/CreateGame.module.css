@@ -20,6 +20,8 @@
 
 /* Resets PicoCSS article + fieldset card styling when CreateGame is embedded */
 .embeddedForm {
+  width: 100%;
+  box-sizing: border-box;
   background: none !important;
   border: none !important;
   padding: 0 !important;
@@ -35,6 +37,10 @@
 
 .embeddedForm form {
   margin-bottom: 0 !important;
+}
+
+.guestHiddenField {
+  display: none !important;
 }
 
 .embeddedFormLayout {
@@ -74,6 +80,18 @@
 .embeddedSubmitButton {
   margin-top: 0.75rem;
   flex-shrink: 0;
+}
+
+.submitLocked {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.rustLockedHint {
+  margin-top: 0.4rem;
+  color: var(--theme-text-muted, rgba(237, 237, 237, 0.6));
+  font-size: 0.82rem;
+  text-align: center;
 }
 
 @media (max-width: 768px) {
@@ -119,7 +137,7 @@
 }
 
 .fieldError {
-  color: red;
+  color: var(--theme-danger, red);
 }
 
 .disclaimer {
@@ -128,6 +146,8 @@
 }
 
 .button {
+  background-color: var(--theme-primary, #d4af37) !important;
+  border-color: var(--theme-primary, #d4af37) !important;
   color: var(--primary-inverse);
   width: 100%;
   margin-bottom: 0 !important;
@@ -243,6 +263,15 @@
   color: var(--theme-primary, #d4af37);
 }
 
+.oscilioVariant {
+  margin-top: 0.75rem;
+}
+
+.oscilioVariant select {
+  margin-top: 0.25rem;
+  margin-bottom: 0;
+}
+
 .deckOption {
   display: flex;
   align-items: center;
@@ -291,7 +320,7 @@
 }
 
 .deckTab:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: color-mix(in srgb, var(--theme-text) 6%, transparent);
   color: var(--theme-text, #ededed);
 }
 
@@ -300,9 +329,14 @@
 }
 
 .deckTabActive {
-  background: color-mix(in srgb, var(--theme-primary, #d4af37) 20%, transparent);
+  background: var(--theme-form-background, #33383d);
   color: var(--theme-primary, #d4af37);
   font-weight: 600;
+  box-shadow: inset 0 -2px 0 var(--theme-primary, #d4af37) !important;
+}
+
+.deckTabActive:hover {
+  box-shadow: inset 0 -2px 0 var(--theme-primary, #d4af37) !important;
 }
 
 .deckTabDisabled {

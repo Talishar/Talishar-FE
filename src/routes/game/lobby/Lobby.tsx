@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useMemo, useRef } from 'react';
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useState,
+  useMemo,
+  useRef
+} from 'react';
 import { usePageTitle } from 'hooks/usePageTitle';
 import Deck from './components/deck/Deck';
 import LobbyChat from './components/lobbyChat/LobbyChat';
@@ -6,7 +12,7 @@ import testData from './mockdata.json';
 import styles from './Lobby.module.css';
 import Equipment from './components/equipment/Equipment';
 import classNames from 'classnames';
-import { FaExclamationCircle } from 'react-icons/fa';
+import { FaExclamationCircle, FaLock, FaGlobeAmericas } from 'react-icons/fa';
 import { GiCapeArmor } from 'react-icons/gi';
 import { SiBookstack } from 'react-icons/si';
 import { MdArrowDropDown, MdArrowRight } from 'react-icons/md';
@@ -16,16 +22,19 @@ import StickyFooter from './components/stickyFooter/StickyFooter';
 import { toast } from 'react-hot-toast';
 import useAuth from 'hooks/useAuth';
 import useAdScript from 'hooks/useAdScript';
+import { useCookies } from 'react-cookie';
 import {
   useGetLobbyInfoQuery,
   useSubmitSideboardMutation,
   useSubmitLobbyInputMutation,
   useGetUserProfileQuery,
   useUpdateBazaarMatchupMutation,
-  useKickPlayerMutation
+  useKickPlayerMutation,
+  useGetHeroMasteryQuery
 } from 'features/api/apiSlice';
 import { useAppSelector } from 'app/Hooks';
 import { shallowEqual } from 'react-redux';
+import { Matchup } from 'interface/API/GetLobbyRefresh.php';
 import { RootState } from 'app/Store';
 import { createPatreonIconMap } from 'utils/patronIcons';
 import { DeckResponse, Weapon } from 'interface/API/GetLobbyInfo.php';
@@ -33,11 +42,12 @@ import LobbyUpdateHandler from './components/updateHandler/SideboardUpdateHandle
 import {
   GAME_FORMAT,
   BREAKPOINT_EXTRA_LARGE,
-  CLOUD_IMAGES_URL,
   QUERY_STATUS,
   FAB_BAZAAR_DECK_URL_BASE,
   FABRARY_DECK_URL_BASE
 } from 'appConstants';
+import { JUDGE_HUB_DISCORD_URL } from 'constants/socialLinks';
+import { getReadableFormatName } from 'utils/formatUtils';
 
 const COMPETITIVE_FORMATS = new Set([
   GAME_FORMAT.COMPETITIVE_CC,
@@ -54,7 +64,12 @@ import Matchups from './components/matchups/Matchups';
 import { GameLocationState } from 'interface/GameLocationState';
 import { saveGameAuthKey } from 'utils/LocalKeyManagement';
 import CardPopUp from '../components/elements/cardPopUp/CardPopUp';
-import { clearGetLobbyRefresh, getGameInfo, setHeroInfo } from 'features/game/GameSlice';
+import {
+  clearGetLobbyRefresh,
+  getGameInfo,
+  setHeroInfo,
+  setLobbyAltArts
+} from 'features/game/GameSlice';
 import useSound from 'use-sound';
 import playerJoined from 'sounds/playerJoinedSound.mp3';
 import { createPortal } from 'react-dom';
@@ -65,9 +80,8 @@ import {
   fetchAllSettings,
   getSettingsStatus
 } from 'features/options/optionsSlice';
-import { IS_STREAMER_MODE } from 'features/options/constants';
-
-const FAB_BAZAAR_LEARN_MORE_URL = 'https://fabbazaar.app/tutorials/talishar';
+import { DISABLE_ALT_ARTS } from 'features/options/constants';
+import { useTranslation, Trans } from 'react-i18next';
 
 // FaBrary uses hyphens (e.g. "briar-warden-of-thorns"), Talishar uses underscores.
 const normalizeHeroId = (id: string) => id.toLowerCase().replace(/-/g, '_');
@@ -76,7 +90,10 @@ const normalizeHeroId = (id: string) => id.toLowerCase().replace(/-/g, '_');
 // e.g. "🪴Briar" → "briar", "🏀 Vynnset" → "vynnset"
 const normalizeMatchupName = (name: string): string =>
   name
-    .replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}\uFE0F\u200D]/gu, '')
+    .replace(
+      /[\p{Emoji_Presentation}\p{Extended_Pictographic}\uFE0F\u200D]/gu,
+      ''
+    )
     .replace(/[^a-zA-Z0-9\s]/g, '')
     .trim()
     .toLowerCase()
@@ -87,25 +104,30 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
   // Strip the "{index}<fav>" prefix that appears when a favorite deck link is stored
   // e.g. "20<fav>https://fabrary.net/decks/..." → "https://fabrary.net/decks/..."
   const favMarker = deckLink.indexOf('<fav>');
-  const cleanedLink = favMarker !== -1 ? deckLink.slice(favMarker + 5) : deckLink;
+  const cleanedLink =
+    favMarker !== -1 ? deckLink.slice(favMarker + 5) : deckLink;
   const bases = [FAB_BAZAAR_DECK_URL_BASE, FABRARY_DECK_URL_BASE];
   for (const base of bases) {
     const normalizedBase = base.endsWith('/') ? base : `${base}/`;
     if (cleanedLink.startsWith(normalizedBase)) {
-      const deckId = cleanedLink.slice(normalizedBase.length).split('?')[0].trim();
+      const deckId = cleanedLink
+        .slice(normalizedBase.length)
+        .split('?')[0]
+        .trim();
       return deckId || null;
     }
   }
   return null;
 };
 
- const Lobby = () => {
-  usePageTitle('Lobby');
+const Lobby = () => {
+  const { t } = useTranslation();
+  usePageTitle(t('PAGES.LOBBY'));
   useAdScript(false);
   const [activeTab, setActiveTab] = useState<string>('equipment');
   const [unreadChat, setUnreadChat] = useState<boolean>(false);
   const [filtersExpanded, setFiltersExpanded] = useState(false);
-  const [width, height] = useWindowDimensions();
+  const [width] = useWindowDimensions();
   const [isWideScreen, setIsWideScreen] = useState<boolean>(false);
   const [isDeckValid, setIsDeckValid] = useState(true);
   const navigate = useNavigate();
@@ -114,21 +136,31 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
   const [selectedMatchupId, setSelectedMatchupId] = useState<string | null>(
     null
   );
-  const deckLinkTrackingRef = useRef<{ link: string | undefined; gameKey: string }>({
+  const deckLinkTrackingRef = useRef<{
+    link: string | undefined;
+    gameKey: string;
+  }>({
     link: undefined,
     gameKey: ''
   });
+  const [cookies] = useCookies(['hoverImageSize']);
+
+  useEffect(() => {
+    document.documentElement.style.setProperty(
+      '--hover-img-scale',
+      cookies.hoverImageSize ? String(cookies.hoverImageSize) : '1'
+    );
+  }, [cookies.hoverImageSize]);
+
   const settingsStatus = useAppSelector(getSettingsStatus);
-  const {
-    isLoggedIn,
-    isPatron,
-    metafyId,
-    metafyHash,
-    metafyTimestamp,
-    refreshAuth
-  } = useAuth();
+  const { isLoggedIn, metafyId, metafyHash, metafyTimestamp, refreshAuth } =
+    useAuth();
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const { playerID, gameID, authKey } = gameInfo;
+  const { data: masteryData } = useGetHeroMasteryQuery(
+    { gameName: gameID, scope: 'game' },
+    { skip: !isLoggedIn }
+  );
   const [acceptedDisclaimer, setAcceptedDisclaimer] = useState<boolean>(
     () => localStorage.getItem('openFormatDisclaimerAccepted') === 'true'
   );
@@ -146,7 +178,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
   const isMuted = settingsData['MuteSound']?.value === '1';
   const isStreamerMode = String(settingsData['IsStreamerMode']?.value) === '1';
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     dispatch(clearGetLobbyRefresh());
   }, []);
 
@@ -165,28 +197,6 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
       dispatch(fetchAllSettings({ game: dummyGameInfo }));
     }
   }, []);
-
-  // Get patron info for player 1 (you)
-  const yourPatronInfo = useAppSelector(
-    (state: RootState) => ({
-      isPatron: state.game.playerOne.isPatron,
-      isContributor: state.game.playerOne.isContributor,
-      isPvtVoidPatron: state.game.playerOne.isPvtVoidPatron,
-      metafyTiers: state.game.playerOne.metafyTiers
-    }),
-    shallowEqual
-  );
-
-  // Get patron info for player 2 (opponent)
-  const opponentPatronInfo = useAppSelector(
-    (state: RootState) => ({
-      isPatron: state.game.playerTwo.isPatron,
-      isContributor: state.game.playerTwo.isContributor,
-      isPvtVoidPatron: state.game.playerTwo.isPvtVoidPatron,
-      metafyTiers: state.game.playerTwo.metafyTiers
-    }),
-    shallowEqual
-  );
 
   // Get user profile to access Metafy tiers (since Redux might not be populated in lobby)
   const { data: userProfileData } = useGetUserProfileQuery(undefined, {
@@ -234,14 +244,26 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
   });
   const opponentNameRef = React.useRef<HTMLHeadingElement>(null);
 
-  let { data, isLoading, refetch } = useGetLobbyInfoQuery({
+  const lobbyInfoQuery = useGetLobbyInfoQuery({
     gameName: gameID,
     playerID: playerID,
     authKey: authKey
   });
+  let { data } = lobbyInfoQuery;
+  const { isLoading, refetch } = lobbyInfoQuery;
 
-  const [submitSideboardMutation, submitSideboardMutationData] =
-    useSubmitSideboardMutation();
+  useEffect(() => {
+    if (gameLobby?.sideboardWasReset) refetch();
+  }, [gameLobby?.sideboardWasReset, refetch]);
+
+  const altArtsFromLobby = data?.altArts;
+  const areAltArtsDisabled =
+    String(settingsData[DISABLE_ALT_ARTS]?.value) === '1';
+  useEffect(() => {
+    dispatch(setLobbyAltArts(areAltArtsDisabled ? [] : altArtsFromLobby ?? []));
+  }, [altArtsFromLobby, areAltArtsDisabled, dispatch]);
+
+  const [submitSideboardMutation] = useSubmitSideboardMutation();
 
   const [updateBazaarMatchup] = useUpdateBazaarMatchupMutation();
 
@@ -257,9 +279,9 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
         playerID: playerID,
         authKey: authKey
       }).unwrap();
-      toast.success('Opponent has been kicked from the lobby.');
+      toast.success(t('GAME_LOBBY.KICKED_SUCCESS'));
     } catch (err: any) {
-      toast.error(err?.error || 'Failed to kick opponent.');
+      toast.error(err?.error || t('GAME_LOBBY.KICKED_FAILURE'));
     }
   };
 
@@ -272,7 +294,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
         action: 'Unready Sideboard'
       }).unwrap();
     } catch (err: any) {
-      toast.error(err?.error || 'Failed to unready sideboard');
+      toast.error(err?.error || t('GAME_LOBBY.SIDEBOARD_UNREADY_FAILURE'));
     }
   };
 
@@ -289,15 +311,15 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
     setIsWideScreen(width > BREAKPOINT_EXTRA_LARGE && hasMousePointer);
   }, [width]);
 
-
   useEffect(() => {
     // New lobby/deck context: clear stale selected matchup from previous session.
     // Skip when myDeckLink is transiently undefined (gameLobby cleared during polling reset on submit).
-    // Also skip when polling recovers with the same link — that is not a real deck change.
+    // Also skip when polling recovers with the same link - that is not a real deck change.
     const newLink = gameLobby?.myDeckLink;
     if (!newLink) return;
     const gameKey = `${gameID}:${playerID}`;
-    const { link: prevLink, gameKey: prevGameKey } = deckLinkTrackingRef.current;
+    const { link: prevLink, gameKey: prevGameKey } =
+      deckLinkTrackingRef.current;
     if (gameKey === prevGameKey && newLink === prevLink) return;
     deckLinkTrackingRef.current = { link: newLink, gameKey };
     setSelectedMatchupId(null);
@@ -325,28 +347,26 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
 
   const handleMatchupClick = () => setActiveTab('matchups');
 
-  const selectedMatchup = useMemo(() => {
-    if (!selectedMatchupId) return null;
-    return (gameLobby?.matchups ?? []).find(
-      (matchup) => matchup.matchupId === selectedMatchupId
-    );
-  }, [selectedMatchupId, gameLobby?.matchups]);
-
   const suggestedMatchupId = useMemo(() => {
-    if (!gameLobby?.theirHero || gameLobby.theirHero === 'CardBack') return null;
+    if (!gameLobby?.theirHero || gameLobby.theirHero === 'CardBack')
+      return null;
     if (!isBazaarDeckInLobby) return null;
     const opponentHero = normalizeHeroId(gameLobby.theirHero ?? '');
-    const matchingMatchup = (gameLobby?.matchups ?? []).find((matchup) => {
-      if (matchup.heroIdentifiers?.length) {
-        return matchup.heroIdentifiers.some((id) => normalizeHeroId(id) === opponentHero);
+    const matchingMatchup = (gameLobby?.matchups ?? []).find(
+      (matchup: Matchup) => {
+        if (matchup.heroIdentifiers?.length) {
+          return matchup.heroIdentifiers.some(
+            (id: string) => normalizeHeroId(id) === opponentHero
+          );
+        }
+        const normalizedId = normalizeHeroId(matchup.matchupId);
+        if (normalizedId === opponentHero) return true;
+        if (opponentHero.startsWith(normalizedId + '_')) return true;
+        const normalizedName = normalizeMatchupName(matchup.name);
+        if (normalizedName === opponentHero) return true;
+        return opponentHero.startsWith(normalizedName + '_');
       }
-      const normalizedId = normalizeHeroId(matchup.matchupId);
-      if (normalizedId === opponentHero) return true;
-      if (opponentHero.startsWith(normalizedId + '_')) return true;
-      const normalizedName = normalizeMatchupName(matchup.name);
-      if (normalizedName === opponentHero) return true;
-      return opponentHero.startsWith(normalizedName + '_');
-    });
+    );
     return matchingMatchup?.matchupId ?? null;
   }, [gameLobby?.theirHero, gameLobby?.matchups, isBazaarDeckInLobby]);
 
@@ -422,11 +442,11 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
 
   // Navigate home if the host kicked us
   useEffect(() => {
-    if (gameLobby?.wasKicked) {
-      toast.error('You were kicked from the lobby.');
+    if (playerID === 2 && gameLobby?.wasKicked) {
+      toast.error(t('GAME_LOBBY.KICKED'));
       navigate('/');
     }
-  }, [gameLobby?.wasKicked, navigate]);
+  }, [gameLobby?.wasKicked, navigate, playerID]);
 
   const deckClone = [...data.deck.cards];
   const deckSBClone = [...data.deck.cardsSB];
@@ -434,15 +454,89 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
   const deckSBIndexed = deckSBClone
     .sort()
     .map((card, ix) => `${card}-${ix + deckIndexed.length}`);
+  const headClone = [...(data?.deck?.head ?? [])];
+  const headSBClone = [...(data?.deck?.headSB ?? [])];
+  const legsClone = [...(data?.deck?.legs ?? [])];
+  const legsSBClone = [...(data?.deck?.legsSB ?? [])];
+  const armsClone = [...(data?.deck?.arms ?? [])];
+  const armsSBClone = [...(data?.deck?.armsSB ?? [])];
+  const chestClone = [...(data?.deck?.chest ?? [])];
+  const chestSBClone = [...(data?.deck?.chestSB ?? [])];
 
   const leftHero =
     data.deck.hero === 'CardBack' ? 'UNKNOWNHERO' : data.deck.hero;
   const rightHero =
     gameLobby?.theirHero === 'CardBack' ? 'UNKNOWNHERO' : gameLobby?.theirHero;
+  const leftMasteryLevel =
+    masteryData?.gamePlayers?.[String(playerID)]?.level ?? 0;
+  const rightMasteryLevel =
+    masteryData?.gamePlayers?.[String(playerID === 1 ? 2 : 1)]?.level ?? 0;
 
   const leftPic = `url(${generateCroppedImageUrl(leftHero)})`;
-  const isWaitingForOpponent = !gameLobby?.theirHero || gameLobby.theirHero === 'CardBack';
-  const rightPic = `url(${generateCroppedImageUrl(rightHero ?? 'UNKNOWNHERO')})`;
+  const lobbyFormatName = getReadableFormatName(
+    String(gameLobby?.format ?? data.format ?? '')
+  );
+  const rawLobbyDescription = (gameLobby?.gameDescription ?? '').trim();
+  const lobbyDescription =
+    rawLobbyDescription && rawLobbyDescription !== 'Game #'
+      ? rawLobbyDescription
+      : '';
+  const lobbyVisibilityLabel =
+    gameLobby?.isPrivateLobby === undefined
+      ? ''
+      : gameLobby.isPrivateLobby
+      ? t('MENU.CREATE_GAME.VISIBILITIES.PRIVATE')
+      : t('MENU.CREATE_GAME.VISIBILITIES.PUBLIC');
+  const lobbyMetaLine = [lobbyVisibilityLabel, lobbyFormatName]
+    .filter(Boolean)
+    .join(' - ');
+  const lobbyTooltipParts = [
+    gameLobby?.isPrivateLobby === undefined
+      ? ''
+      : gameLobby.isPrivateLobby
+      ? t('MENU.CREATE_GAME.VISIBILITIES.PRIVATE_LOBBY')
+      : t('MENU.CREATE_GAME.VISIBILITIES.PUBLIC_LOBBY'),
+    lobbyFormatName,
+    lobbyDescription
+  ].filter(Boolean);
+  const lobbyTooltip = lobbyTooltipParts.length
+    ? lobbyTooltipParts.join('\n')
+    : undefined;
+  const showLobbySettings = lobbyMetaLine !== '' || lobbyDescription !== '';
+  const lobbySettingsItems = (
+    <>
+      {lobbyVisibilityLabel !== '' && (
+        <span
+          className={classNames(styles.lobbySettingsItem, {
+            [styles.lobbySettingsPrivate]: gameLobby?.isPrivateLobby === true
+          })}
+        >
+          {gameLobby?.isPrivateLobby ? (
+            <FaLock aria-hidden="true" />
+          ) : (
+            <FaGlobeAmericas aria-hidden="true" />
+          )}
+          {lobbyVisibilityLabel}
+        </span>
+      )}
+      {lobbyFormatName !== '' && (
+        <span className={styles.lobbySettingsItem}>{lobbyFormatName}</span>
+      )}
+      {lobbyDescription !== '' && (
+        <span
+          className={classNames(
+            styles.lobbySettingsItem,
+            styles.lobbySettingsDescription
+          )}
+        >
+          {lobbyDescription}
+        </span>
+      )}
+    </>
+  );
+  const rightPic = `url(${generateCroppedImageUrl(
+    rightHero ?? 'UNKNOWNHERO'
+  )})`;
 
   const eqClasses = classNames(styles.tabButton, {
     [styles.tabActive]: activeTab === 'equipment'
@@ -456,7 +550,13 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
 
   const handleLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    // TODO: Need a way to announce to the server that we are leaving
+    // Tell the server we are going so the opponent's lobby clears immediately
+    submitLobbyInput({
+      gameName: gameID,
+      playerID: playerID,
+      authKey: authKey,
+      action: 'Leave Lobby'
+    });
     navigate(`/`);
   };
 
@@ -465,7 +565,6 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
       case GAME_FORMAT.BLITZ:
       case GAME_FORMAT.COMMONER:
       case GAME_FORMAT.COMPETITIVE_BLITZ:
-      case GAME_FORMAT.COMMONER:
       case GAME_FORMAT.CLASH:
       case GAME_FORMAT.SAGE:
       case GAME_FORMAT.COMPETITIVE_SAGE:
@@ -512,11 +611,12 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
   });
 
   const hasModular = (data.deck.modular?.length ?? 0) > 0;
-  const initialEquipment = (main: string[], side: string[]) => {
+  // Only auto-select from what was actually equipped on the mainboard
+  const initialEquipment = (main: string[]) => {
     if (hasModular) {
-      return [...main, ...side, 'NONE00'].filter((id) => id !== 'EVO013')[0];
+      return [...main, 'NONE00'].filter((id) => id !== 'EVO013')[0];
     } else {
-      return [...main, ...side, 'NONE00'][0];
+      return [...main, 'NONE00'][0];
     }
   };
 
@@ -563,12 +663,11 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
     'kayo_underhanded_cheat',
     'kayo_strong_arm'
   ];
-  let handsTotal = oneHandedHeroes.includes(data.deck.hero) ? 1 : 2;
+  const handsTotal = oneHandedHeroes.includes(data.deck.hero) ? 1 : 2;
   const mainClassNames = classNames(styles.lobbyClass);
 
   const [showChatModal, setShowChatModal] = useState(true);
-  const [chatModal, setChatModal] = useState('');
-  const [modal, setModal] = useState('Do you want to enable chat?');
+  const [modal] = useState(t('GAME_LOBBY.ENABLE_CHAT_QUERY'));
 
   const clickYes = (e: any) => {
     e.preventDefault();
@@ -655,10 +754,10 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
 
     const inventory = [
       ...weaponsSB,
-      ...(data?.deck?.headSB ?? []),
-      ...(data?.deck?.chestSB ?? []),
-      ...(data?.deck?.armsSB ?? []),
-      ...(data?.deck?.legsSB ?? []),
+      ...headClone.concat(headSBClone),
+      ...chestClone.concat(chestSBClone),
+      ...armsClone.concat(armsSBClone),
+      ...legsClone.concat(legsSBClone),
       ...(data?.deck?.demiHero ?? []),
       ...modularRemaining,
       ...(deckIndexed
@@ -706,9 +805,11 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
       try {
         const refreshedAuth: any = await refreshAuth();
         const refreshed = refreshedAuth?.data;
-        resolvedMetafyId = refreshed?.metafyID ?? refreshed?.metafyId ?? resolvedMetafyId;
+        resolvedMetafyId =
+          refreshed?.metafyID ?? refreshed?.metafyId ?? resolvedMetafyId;
         resolvedMetafyHash = refreshed?.metafyHash ?? resolvedMetafyHash;
-        resolvedMetafyTimestamp = refreshed?.timestamp ?? resolvedMetafyTimestamp;
+        resolvedMetafyTimestamp =
+          refreshed?.timestamp ?? resolvedMetafyTimestamp;
       } catch (authRefreshErr) {
         // Auth refresh failed
       }
@@ -739,7 +840,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
       const sideboardIn = multisetDiff(deck, originalMain);
       const sideboardOut = multisetDiff(originalMain, deck);
       try {
-        const bazaarResponse = await updateBazaarMatchup({
+        await updateBazaarMatchup({
           deckId: bazaarDeckId,
           heroId: opponentHeroId,
           metafyId: resolvedMetafyId,
@@ -753,7 +854,9 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
     }
 
     try {
-      const submitResponse: any = await submitSideboardMutation(requestBody).unwrap();
+      const submitResponse: any = await submitSideboardMutation(
+        requestBody
+      ).unwrap();
 
       // If game started, capture and store the auth key for future use
       if (submitResponse?.gameStarted && submitResponse?.authKey && gameID) {
@@ -780,8 +883,8 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
             <dialog open className={styles.modal}>
               <article>
                 <header>{modal}</header>
-                <button onClick={clickYes}>Yes</button>
-                <button onClick={clickNo}>No</button>
+                <button onClick={clickYes}>{t('GAME_LOBBY.YES')}</button>
+                <button onClick={clickNo}>{t('GAME_LOBBY.NO')}</button>
               </article>
             </dialog>
           </>,
@@ -793,31 +896,36 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
             <dialog open={needToDoDisclaimer}>
               <article className={styles.disclaimerArticles}>
                 <header className={styles.disclaimerHeader}>
-                  ⚠️ Open Format Disclaimer
+                  {t('GAME_LOBBY.OPEN_FORMAT_DISCLAIMER_HEADER')}
                 </header>
                 <p style={{ marginBottom: '1em' }}>
-                  Note that new cards are added on a 'best-effort' basis and
-                  there may be more bugs and innacurate card interactions. It
-                  may not be a completely accurate representation of the Rules
-                  as written. If you have questions about interactions or
-                  rulings, please contact the{' '}
-                  <a
-                    href="https://discord.gg/flesh-and-blood-judge-hub-874145774135558164"
-                    target="_blank"
-                  >
-                    {' '}
-                    JudgeHub Discord
-                  </a>{' '}
-                  for clarification.
+                  <Trans i18nKey="GAME_LOBBY.OPEN_FORMAT_DISCLAIMER">
+                    Note that new cards are added on a &apos;best-effort&apos;
+                    basis and there may be more bugs and inaccurate card
+                    interactions. It may not be a completely accurate
+                    representation of the Rules as written. If you have
+                    questions about interactions or rulings, please contact the{' '}
+                    <a
+                      href={JUDGE_HUB_DISCORD_URL}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      JudgeHub Discord
+                    </a>{' '}
+                    for clarification.
+                  </Trans>
                 </p>
                 <div className={styles.disclaimerAcceptButtons}>
                   <button
                     onClick={() => {
-                      localStorage.setItem('openFormatDisclaimerAccepted', 'true');
+                      localStorage.setItem(
+                        'openFormatDisclaimerAccepted',
+                        'true'
+                      );
                       setAcceptedDisclaimer(true);
                     }}
                   >
-                    I Accept!
+                    {t('GAME_LOBBY.I_ACCEPT')}
                   </button>
                 </div>
                 <div className={styles.disclaimerButtons}>
@@ -827,7 +935,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                     }}
                     className={leaveLobby}
                   >
-                    No Thanks!
+                    {t('GAME_LOBBY.NO_THANKS')}
                   </button>
                 </div>
               </article>
@@ -835,7 +943,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
           </>,
           document.body
         )}
-      <LobbyUpdateHandler isSubmitting={isSubmitting} />
+      <LobbyUpdateHandler />
       <Formik
         initialValues={{
           hero: data?.deck.hero,
@@ -844,10 +952,10 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
             weaponsIndexed.length > 0
               ? weaponsIndexed
               : [weaponsSBIndexed.find((w) => w.img === 'NONE00')!],
-          head: initialEquipment(data.deck.head, data.deck.headSB),
-          chest: initialEquipment(data.deck.chest, data.deck.chestSB),
-          arms: initialEquipment(data.deck.arms, data.deck.armsSB),
-          legs: initialEquipment(data.deck.legs, data.deck.legsSB),
+          head: initialEquipment(data.deck.head),
+          chest: initialEquipment(data.deck.chest),
+          arms: initialEquipment(data.deck.arms),
+          legs: initialEquipment(data.deck.legs),
           assignedModulars: { head: [], chest: [], arms: [], legs: [] }
         }}
         onSubmit={handleFormSubmission}
@@ -859,9 +967,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
       >
         <Form className={styles.form}>
           <FormikDebugLogger />
-          <div
-            className={styles.gridLayout}
-          >
+          <div className={styles.gridLayout}>
             <div className={styles.titleContainer}>
               <CardPopUp
                 cardNumber={data.deck.hero}
@@ -870,6 +976,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                 <div
                   className={styles.leftCol}
                   style={{ backgroundImage: leftPic }}
+                  data-mastery-level={leftMasteryLevel}
                 >
                   <div className={styles.dimPic}>
                     <h3 aria-busy={isLoading}>
@@ -911,6 +1018,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                 <div
                   className={styles.rightCol}
                   style={{ backgroundImage: rightPic }}
+                  data-mastery-level={rightMasteryLevel}
                 >
                   {playerID === 1 &&
                     gameLobby?.theirHero &&
@@ -922,59 +1030,77 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                         type="button"
                         className={styles.kickButton}
                         onClick={handleKickPlayer}
-                        title={`Kick ${isStreamerMode ? 'opponent' : gameLobby.theirName} from the lobby`}
-                        aria-label="Kick opponent"
+                        title={t('GAME_LOBBY.KICK_TITLE', {
+                          name: isStreamerMode
+                            ? t('GAME_LOBBY.OPPONENT')
+                            : gameLobby.theirName
+                        })}
+                        aria-label={t('GAME_LOBBY.KICK_LABEL')}
                       >
-                        Kick
+                        {t('GAME_LOBBY.KICK')}
                       </button>
                     )}
                   <div className={styles.dimPic}>
-                    {gameLobby?.theirHero && gameLobby.theirHero !== 'CardBack' && <h3
-                      ref={opponentNameRef}
-                      onMouseEnter={handleNoteTooltipOpen}
-                      onMouseLeave={handleNoteTooltipClose}
-                      aria-busy={!gameLobby}
-                      style={{ cursor: opponentNote ? 'help' : 'default' }}
-                    >
-                      {createPatreonIconMap(
-                        gameLobby?.theirIsContributor ?? false,
-                        gameLobby?.theirIsPvtVoidPatron ?? false,
-                        gameLobby?.theirIsPatron ? true : false,
-                        false,
-                        (gameLobby?.theirMetafyTiers?.length ?? 0) > 0 ? gameLobby!.theirMetafyTiers : undefined
-                      )
-                        .filter((icon) => icon.condition)
-                        .map((icon, index) => (
-                          <a
-                            key={`${icon.src}-${index}`}
-                            href={icon.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            title={icon.title}
-                            className={styles.lobbyIconLink}
-                          >
-                            <img
-                              src={icon.src}
-                              alt={icon.title}
-                              className={styles.lobbyIcon}
-                            />
-                          </a>
-                        ))}
-                      <span className={styles.lobbyPlayerName}>
-                        {isStreamerMode
-                          ? 'Opponent'
-                          : String(gameLobby?.theirName ?? '').substring(0, 15)}
-                      </span>
-                    </h3>}
+                    {gameLobby?.theirHero &&
+                      gameLobby.theirHero !== 'CardBack' && (
+                        <h3
+                          ref={opponentNameRef}
+                          onMouseEnter={handleNoteTooltipOpen}
+                          onMouseLeave={handleNoteTooltipClose}
+                          aria-busy={!gameLobby}
+                          style={{ cursor: opponentNote ? 'help' : 'default' }}
+                        >
+                          {createPatreonIconMap(
+                            gameLobby?.theirIsContributor ?? false,
+                            gameLobby?.theirIsPvtVoidPatron ?? false,
+                            gameLobby?.theirIsPatron ? true : false,
+                            false,
+                            (gameLobby?.theirMetafyTiers?.length ?? 0) > 0
+                              ? gameLobby!.theirMetafyTiers
+                              : undefined
+                          )
+                            .filter((icon) => icon.condition)
+                            .map((icon, index) => (
+                              <a
+                                key={`${icon.src}-${index}`}
+                                href={icon.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                title={icon.title}
+                                className={styles.lobbyIconLink}
+                              >
+                                <img
+                                  src={icon.src}
+                                  alt={icon.title}
+                                  className={styles.lobbyIcon}
+                                />
+                              </a>
+                            ))}
+                          <span className={styles.lobbyPlayerName}>
+                            {isStreamerMode
+                              ? t('GAME_LOBBY.OPPONENT')
+                              : String(gameLobby?.theirName ?? '').substring(
+                                  0,
+                                  15
+                                )}
+                          </span>
+                        </h3>
+                      )}
                     <div className={styles.heroName}>
                       {gameLobby?.theirHeroName != ''
                         ? ''
-                        : 'Waiting For Opponent'}
+                        : t('GAME_LOBBY.WAITING')}
                     </div>
                   </div>
                 </div>
               </CardPopUp>
             </div>
+
+            {!isWideScreen && showLobbySettings && (
+              <div className={styles.lobbySettingsBar} title={lobbyTooltip}>
+                {lobbySettingsItems}
+              </div>
+            )}
 
             {gameLobby?.amIChoosingFirstPlayer && !needToDoDisclaimer
               ? createPortal(<ChooseFirstTurn />, document.body)
@@ -984,28 +1110,28 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                       {!isWideScreen && (
                         <li>
                           <button
-                            aria-label="Leave the lobby"
+                            aria-label={t('GAME_LOBBY.LEAVE_TITLE')}
                             className={leaveClasses}
                             onClick={handleLeave}
                             type="button"
                           >
-                            Leave
+                            {t('GAME_LOBBY.LEAVE')}
                           </button>
                         </li>
                       )}
                     </ul>
                     <ul>
                       {shouldShowMatchupsUI && (
-                          <li>
-                            <button
-                              className={matchupClasses}
-                              onClick={handleMatchupClick}
-                              type="button"
-                            >
-                              Matchups
-                            </button>
-                          </li>
-                        )}
+                        <li>
+                          <button
+                            className={matchupClasses}
+                            onClick={handleMatchupClick}
+                            type="button"
+                          >
+                            {t('GAME_LOBBY.MATCHUPS')}
+                          </button>
+                        </li>
+                      )}
                       <li>
                         <button
                           className={eqClasses}
@@ -1015,7 +1141,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                           <div className={styles.icon}>
                             <GiCapeArmor />
                           </div>
-                          Equipment
+                          {t('GAME_LOBBY.EQUIPMENT')}
                         </button>
                       </li>
                       <li>
@@ -1027,7 +1153,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                           <div className={styles.icon}>
                             <SiBookstack />
                           </div>
-                          Deck
+                          {t('GAME_LOBBY.DECK')}
                         </button>
                       </li>
                       <li>
@@ -1041,7 +1167,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                               <FaExclamationCircle />{' '}
                             </>
                           )}
-                          Chat
+                          {t('GAME_LOBBY.CHAT')}
                         </button>
                       </li>
                     </ul>
@@ -1060,7 +1186,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                         <div className={styles.icon}>
                           <GiCapeArmor />
                         </div>
-                        Equipment
+                        {t('GAME_LOBBY.EQUIPMENT')}
                       </button>
                     </li>
                     <li>
@@ -1072,10 +1198,15 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                         <div className={styles.icon}>
                           <SiBookstack />
                         </div>
-                        Deck
+                        {t('GAME_LOBBY.DECK')}
                       </button>
                     </li>
                   </ul>
+                  {showLobbySettings && (
+                    <div className={styles.inlineNavMeta} title={lobbyTooltip}>
+                      {lobbySettingsItems}
+                    </div>
+                  )}
                   <div style={{ marginLeft: 'auto' }}>
                     <DesktopDeckSelectionButtons
                       deckIndexed={deckIndexed}
@@ -1155,15 +1286,21 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
               <div className={styles.spacer}></div>
             )}
 
-            {shouldShowMatchupsUI && (activeTab === 'matchups' || isWideScreen) && (
-              <Matchups
-                refetch={refetch}
-                selectedMatchupId={selectedMatchupId}
-                onMatchupSelected={setSelectedMatchupId}
-                suggestedMatchupId={suggestedMatchupId}
-                isReadied={!!(gameLobby?.canUnreadySideboard || gameLobby?.amIChoosingFirstPlayer)}
-              />
-            )}
+            {shouldShowMatchupsUI &&
+              (activeTab === 'matchups' || isWideScreen) && (
+                <Matchups
+                  refetch={refetch}
+                  selectedMatchupId={selectedMatchupId}
+                  onMatchupSelected={setSelectedMatchupId}
+                  suggestedMatchupId={suggestedMatchupId}
+                  isReadied={
+                    !!(
+                      gameLobby?.canUnreadySideboard ||
+                      gameLobby?.amIChoosingFirstPlayer
+                    )
+                  }
+                />
+              )}
             <StickyFooter
               deckSize={deckSize}
               submitSideboard={gameLobby?.canSubmitSideboard ?? false}
@@ -1228,6 +1365,7 @@ const DesktopDeckSelectionButtons = ({
   filtersExpanded: boolean;
   setFiltersExpanded: (value: boolean) => void;
 }) => {
+  const { t } = useTranslation();
   const { setFieldValue } = useFormikContext<DeckResponse>();
 
   const handleSelectAll = () => {
@@ -1250,30 +1388,34 @@ const DesktopDeckSelectionButtons = ({
         className={styles.selectionButton}
         onClick={() => setFiltersExpanded(!filtersExpanded)}
         type="button"
-        title={filtersExpanded ? 'Collapse filters' : 'Expand filters'}
+        title={
+          filtersExpanded
+            ? t('GAME_LOBBY.COLLAPSE_FILTERS')
+            : t('GAME_LOBBY.EXPAND_FILTERS')
+        }
       >
         {filtersExpanded ? (
           <MdArrowDropDown size={24} />
         ) : (
           <MdArrowRight size={24} />
         )}
-        Filters
+        {t('GAME_LOBBY.FILTERS')}
       </button>
       <button
         className={styles.selectionButton}
         onClick={handleSelectAll}
         type="button"
-        title="Select all cards"
+        title={t('GAME_LOBBY.SELECT_ALL_TITLE')}
       >
-        Select All
+        {t('GAME_LOBBY.SELECT_ALL')}
       </button>
       <button
         className={styles.selectionButton}
         onClick={handleSelectNone}
         type="button"
-        title="Deselect all cards"
+        title={t('GAME_LOBBY.SELECT_NONE_TITLE')}
       >
-        Select None
+        {t('GAME_LOBBY.SELECT_NONE')}
       </button>
     </div>
   );

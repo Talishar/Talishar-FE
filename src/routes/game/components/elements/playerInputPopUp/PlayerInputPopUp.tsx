@@ -1,5 +1,12 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+  useMemo
+} from 'react';
 import { submitButton, submitMultiButton } from 'features/game/GameSlice';
+import { useTranslation } from 'react-i18next';
 import { useAppSelector, useAppDispatch } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import styles from './PlayerInputPopUp.module.css';
@@ -7,15 +14,23 @@ import Button from 'features/Button';
 import { FaTimes } from 'react-icons/fa';
 import { MdDragHandle } from 'react-icons/md';
 import { PROCESS_INPUT } from 'appConstants';
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useTransform } from 'framer-motion';
 import useShowModal from 'hooks/useShowModals';
 import { OptInput } from './components/OptInput';
 import { NewOptInput } from './components/NewOptInput';
 import { TriggerOrderInput } from './components/TriggerOrderInput';
 import { RearrangeTopInput } from './components/RearrangeTopInput';
+import { NumberInput } from './components/NumberInput';
 import { FormProps } from './playerInputPopupTypes';
 import { OtherInput } from './components/OtherInput';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
+import classNames from 'classnames';
+import GameState from 'features/GameState';
+import { Card } from 'features/Card';
+
+type MultiChooseOption = NonNullable<
+  NonNullable<GameState['playerInputPopUp']>['multiChooseText']
+>[number];
 
 const PlayerInputFormTypeMap: {
   [key: string]: (props: FormProps) => JSX.Element;
@@ -24,7 +39,8 @@ const PlayerInputFormTypeMap: {
   NEWOPT: NewOptInput,
   HANDTOPBOTTOM: OptInput,
   TRIGGERORDER: TriggerOrderInput,
-  REARRANGETOP: RearrangeTopInput
+  REARRANGETOP: RearrangeTopInput,
+  NUMBERINPUT: NumberInput
 };
 
 const PLAYER_INPUT_STORAGE_KEY = 'playerInputPopupPosition';
@@ -34,82 +50,113 @@ const PLAYER_INPUT_MIN_Y_OFFSET = -45;
 export default function PlayerInputPopUp() {
   const showModal = useShowModal();
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const inputPopUp = useAppSelector(
     (state: RootState) => state.game.playerInputPopUp
+  );
+  const hasGameEnded = useAppSelector(
+    (state: RootState) => state.game.hasGameEnded
   );
 
   const [checkedState, setCheckedState] = useState(
     new Array(inputPopUp?.multiChooseText?.length).fill(false)
   );
+  const [cardSearch, setCardSearch] = useState('');
 
-  const [yOffset, setYOffset] = useState(() => {
-    const stored = localStorage.getItem(PLAYER_INPUT_STORAGE_KEY);
-    return stored ? parseFloat(stored) : 0;
-  });
+  const storedInputOffset =
+    parseFloat(localStorage.getItem(PLAYER_INPUT_STORAGE_KEY) ?? '') || 0;
+  const yOffsetMV = useMotionValue(storedInputOffset);
+  const dragStartYRef = useRef(0);
+  const dragStartOffsetRef = useRef(storedInputOffset);
+  const currentDragOffsetRef = useRef(storedInputOffset);
   const [isDragging, setIsDragging] = useState(false);
-  const [dragStartY, setDragStartY] = useState(0);
-  const [dragStartOffset, setDragStartOffset] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
+  const rafRef = useRef<number>(0);
+  const basePctRef = useRef('52.5%');
 
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseDown = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    dragStartYRef.current = e.clientY;
+    dragStartOffsetRef.current = currentDragOffsetRef.current;
     setIsDragging(true);
-    setDragStartY(e.clientY);
-    setDragStartOffset(yOffset);
-  };
+  }, []);
 
-  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    setIsDragging(true);
-    setDragStartY(e.touches[0].clientY);
-    setDragStartOffset(yOffset);
-  };
+  const handleTouchStart = useCallback(
+    (e: React.TouchEvent<HTMLDivElement>) => {
+      dragStartYRef.current = e.touches[0].clientY;
+      dragStartOffsetRef.current = currentDragOffsetRef.current;
+      setIsDragging(true);
+    },
+    []
+  );
 
   useEffect(() => {
     if (!isDragging) return;
 
     const handleMouseMove = (e: MouseEvent) => {
-      const delta = e.clientY - dragStartY;
-      const deltaDvh = (delta / window.innerHeight) * 100;
-      let newOffset = dragStartOffset + deltaDvh;
-      newOffset = Math.max(
-        PLAYER_INPUT_MIN_Y_OFFSET,
-        Math.min(PLAYER_INPUT_MAX_Y_OFFSET, newOffset)
-      );
-      setYOffset(newOffset);
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = requestAnimationFrame(() => {
+        const delta = e.clientY - dragStartYRef.current;
+        const deltaDvh = (delta / window.innerHeight) * 100;
+        const newOffset = Math.max(
+          PLAYER_INPUT_MIN_Y_OFFSET,
+          Math.min(
+            PLAYER_INPUT_MAX_Y_OFFSET,
+            dragStartOffsetRef.current + deltaDvh
+          )
+        );
+        currentDragOffsetRef.current = newOffset;
+        yOffsetMV.set(newOffset); // direct DOM update - no React re-render
+      });
     };
 
     const handleTouchMove = (e: TouchEvent) => {
-      const delta = e.touches[0].clientY - dragStartY;
-      const deltaDvh = (delta / window.innerHeight) * 100;
-      let newOffset = dragStartOffset + deltaDvh;
-      newOffset = Math.max(
-        PLAYER_INPUT_MIN_Y_OFFSET,
-        Math.min(PLAYER_INPUT_MAX_Y_OFFSET, newOffset)
-      );
-      setYOffset(newOffset);
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = requestAnimationFrame(() => {
+        const delta = e.touches[0].clientY - dragStartYRef.current;
+        const deltaDvh = (delta / window.innerHeight) * 100;
+        const newOffset = Math.max(
+          PLAYER_INPUT_MIN_Y_OFFSET,
+          Math.min(
+            PLAYER_INPUT_MAX_Y_OFFSET,
+            dragStartOffsetRef.current + deltaDvh
+          )
+        );
+        currentDragOffsetRef.current = newOffset;
+        yOffsetMV.set(newOffset); // direct DOM update - no React re-render
+      });
     };
 
     const handleMouseUp = () => {
+      cancelAnimationFrame(rafRef.current);
       setIsDragging(false);
-      localStorage.setItem(PLAYER_INPUT_STORAGE_KEY, yOffset.toString());
+      localStorage.setItem(
+        PLAYER_INPUT_STORAGE_KEY,
+        currentDragOffsetRef.current.toString()
+      );
     };
 
     const handleTouchEnd = () => {
+      cancelAnimationFrame(rafRef.current);
       setIsDragging(false);
-      localStorage.setItem(PLAYER_INPUT_STORAGE_KEY, yOffset.toString());
+      localStorage.setItem(
+        PLAYER_INPUT_STORAGE_KEY,
+        currentDragOffsetRef.current.toString()
+      );
     };
 
     document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('touchmove', handleTouchMove);
+    document.addEventListener('touchmove', handleTouchMove, { passive: true });
     document.addEventListener('mouseup', handleMouseUp);
     document.addEventListener('touchend', handleTouchEnd);
 
     return () => {
+      cancelAnimationFrame(rafRef.current);
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('touchmove', handleTouchMove);
       document.removeEventListener('mouseup', handleMouseUp);
       document.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [isDragging, dragStartY, dragStartOffset, yOffset]);
+  }, [isDragging, yOffsetMV]);
 
   useEffect(() => {
     const cardsArrLength = inputPopUp?.popup?.cards?.length ?? 0;
@@ -119,11 +166,13 @@ export default function PlayerInputPopUp() {
     // Initialize checked state from multiChooseText default values
     const initialState = new Array(checkBoxLength).fill(false);
     if (inputPopUp?.multiChooseText) {
-      inputPopUp.multiChooseText.forEach((option, index) => {
-        if (option.check !== undefined) {
-          initialState[index] = option.check;
+      inputPopUp.multiChooseText.forEach(
+        (option: MultiChooseOption, index: number) => {
+          if (option.check !== undefined) {
+            initialState[index] = option.check;
+          }
         }
-      });
+      );
     }
 
     setCheckedState(initialState);
@@ -137,6 +186,58 @@ export default function PlayerInputPopUp() {
     dispatch(submitButton({ button: button }));
   };
 
+  const basePct = inputPopUp?.popup?.id === 'NEWOPT' ? '40%' : '52.5%';
+  basePctRef.current = basePct;
+  const topStyle = useTransform(
+    yOffsetMV,
+    (v) => `calc(${basePctRef.current} + ${v}dvh)`
+  );
+  const popupId = inputPopUp?.popup?.id || '';
+  const popupCards = inputPopUp?.popup?.cards;
+  const usesOtherInput = !PlayerInputFormTypeMap[popupId];
+  const popupCardCount = popupCards?.length ?? 0;
+  const showCardSearch = usesOtherInput && popupCardCount >= 8;
+  let cardListKey = '';
+  if (popupCards) {
+    for (let index = 0; index < popupCards.length; index += 1) {
+      const card = popupCards[index];
+      if (index > 0) cardListKey += '|';
+      cardListKey += `${card.cardNumber}:${card.actionDataOverride ?? ''}`;
+    }
+  }
+  const filteredCardEntries = useMemo(() => {
+    const cards: Card[] = [];
+    const originalIndexes: number[] = [];
+    if (!popupCards) return { cards, originalIndexes };
+
+    const normalizedSearch = showCardSearch
+      ? cardSearch.trim().toLocaleLowerCase()
+      : '';
+    for (
+      let originalIndex = 0;
+      originalIndex < popupCards.length;
+      originalIndex += 1
+    ) {
+      const card = popupCards[originalIndex];
+      if (
+        normalizedSearch &&
+        !`${card.cardName ?? ''} ${card.cardNumber}`
+          .toLocaleLowerCase()
+          .includes(normalizedSearch)
+      ) {
+        continue;
+      }
+      cards.push(card);
+      originalIndexes.push(originalIndex);
+    }
+
+    return { cards, originalIndexes };
+  }, [popupCards, cardSearch, showCardSearch]);
+
+  useEffect(() => {
+    setCardSearch('');
+  }, [cardListKey]);
+
   if (
     !showModal ||
     inputPopUp === undefined ||
@@ -147,6 +248,16 @@ export default function PlayerInputPopUp() {
   }
 
   const checkBoxSubmit = () => {
+    let selectedCount = 0;
+    for (const checked of checkedState) {
+      if (checked) ++selectedCount;
+    }
+    const minNo = inputPopUp.formOptions?.minNo ?? 0;
+    const maxNo = inputPopUp.formOptions?.maxNo ?? checkedState.length;
+    if (selectedCount < minNo || selectedCount > maxNo) {
+      return;
+    }
+
     let extraParams = `&chkCount=${checkedState.length}`;
     if (inputPopUp.multiChooseText) {
       for (let i = 0; i < checkedState.length; i++) {
@@ -178,6 +289,14 @@ export default function PlayerInputPopUp() {
     if (pos === undefined) {
       return;
     }
+    const maxNo = inputPopUp.formOptions?.maxNo ?? checkedState.length;
+    let selectedCount = 0;
+    for (const checked of checkedState) {
+      if (checked) ++selectedCount;
+    }
+    if (!checkedState[pos] && selectedCount >= maxNo) {
+      return;
+    }
     const updatedCheckedState = checkedState.map((item, index) =>
       index === pos ? !item : item
     );
@@ -185,7 +304,7 @@ export default function PlayerInputPopUp() {
   };
 
   const checkboxes =
-    inputPopUp.multiChooseText?.map((option, ix) => {
+    inputPopUp.multiChooseText?.map((option: MultiChooseOption, ix: number) => {
       return (
         <div key={ix} className={styles.checkBoxRow}>
           <label className={styles.checkBoxLabel}>
@@ -203,14 +322,11 @@ export default function PlayerInputPopUp() {
       );
     }) || [];
 
-  const FormDisplay =
-    PlayerInputFormTypeMap[inputPopUp.popup?.id || ''] || OtherInput;
+  const FormDisplay = PlayerInputFormTypeMap[popupId] || OtherInput;
 
   const titleElements = parseHtmlToReactElements(
     inputPopUp?.popup?.title ?? ''
   );
-
-  const basePct = inputPopUp.popup?.id === 'NEWOPT' ? '40%' : '52.5%';
 
   return (
     <motion.div
@@ -218,14 +334,15 @@ export default function PlayerInputPopUp() {
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.8 }}
-      transition={{ type: 'tween' }}
-      style={{ top: `calc(${basePct} + ${yOffset}dvh)` }}
+      transition={{ type: 'tween', duration: 0.12 }}
+      style={{ top: topStyle }}
       key="playerInputPopupBox"
-      className={
+      className={classNames(
         inputPopUp.popup?.id === 'NEWOPT'
           ? styles.optOptionsContainer
-          : styles.optionsContainer
-      }
+          : styles.optionsContainer,
+        { [styles.aboveEndGameScreen]: hasGameEnded }
+      )}
     >
       <div className={styles.popupContent}>
         <div className={styles.optionsTitleContainer}>
@@ -235,20 +352,53 @@ export default function PlayerInputPopUp() {
               {inputPopUp.popup?.additionalComments}
             </h4>
           </div>
-          {inputPopUp.popup?.canClose ? (
-            <div className={styles.inputPopUpCloseIcon} onClick={onPassTurn}>
-              <FaTimes title="Close Popup" />
+          {showCardSearch ? (
+            <div className={styles.cardSearchContainer}>
+              <input
+                type="search"
+                className={styles.cardSearchInput}
+                value={cardSearch}
+                onChange={(event) => setCardSearch(event.target.value)}
+                onKeyDown={(event) => event.stopPropagation()}
+                placeholder={t('PLAYER_INPUT.SEARCH_CARDS')}
+                aria-label={t('PLAYER_INPUT.SEARCH_CARDS')}
+              />
+              {cardSearch ? (
+                <span className={styles.cardSearchCount} aria-live="polite">
+                  {filteredCardEntries.cards.length} {t('PLAYER_INPUT.OF')}{' '}
+                  {popupCardCount}
+                </span>
+              ) : null}
             </div>
+          ) : null}
+          {inputPopUp.popup?.canClose ? (
+            <button
+              type="button"
+              className={styles.inputPopUpCloseIcon}
+              onClick={onPassTurn}
+              aria-label={t('PLAYER_INPUT.CLOSE_POPUP')}
+            >
+              <FaTimes aria-hidden="true" />
+            </button>
           ) : null}
         </div>
         <div className={styles.contentContainer}>
+          {showCardSearch &&
+          cardSearch &&
+          filteredCardEntries.cards.length === 0 ? (
+            <div className={styles.noSearchResults} role="status">
+              {t('PLAYER_INPUT.NO_MATCHING_CARDS')}
+            </div>
+          ) : null}
           <FormDisplay
-            cards={inputPopUp.popup?.cards || []}
+            cards={filteredCardEntries.cards}
+            cardOriginalIndexes={filteredCardEntries.originalIndexes}
             topCards={inputPopUp.popup?.topCards || []}
             bottomCards={inputPopUp.popup?.bottomCards || []}
             buttons={inputPopUp.buttons || []}
             onClickButton={onClickButton}
             id={inputPopUp.popup?.id || ''}
+            customInput={inputPopUp.popup?.customInput || ''}
             choiceOptions={inputPopUp.choiceOptions || ''}
             checkedState={checkedState}
             handleCheckBoxChange={handleCheckBoxChange}
@@ -268,7 +418,7 @@ export default function PlayerInputPopUp() {
         <MdDragHandle
           size={32}
           className={styles.gripIcon}
-          aria-label="Drag to move popup"
+          aria-label={t('PLAYER_INPUT.DRAG_MOVE_POPUP')}
         />
       </div>
     </motion.div>

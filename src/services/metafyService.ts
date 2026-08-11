@@ -59,21 +59,17 @@ export interface MetafyGuidesResponse {
  * Uses dedicated backend endpoint to handle OAuth
  */
 export const fetchMetafyGuides = async (
-  page: number = 1,
-  perPage: number = 20
+  page = 1,
+  perPage = 20
 ): Promise<MetafyGuidesResponse> => {
-  try {
-    const url = `${BACKEND_URL}GetMetafyGuides.php?page=${page}&per_page=${perPage}`;
+  const url = `${BACKEND_URL}GetMetafyGuides.php?page=${page}&per_page=${perPage}`;
 
-    const response = await fetch(url);
+  const response = await fetch(url);
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data: MetafyGuidesResponse = await response.json();
-
-    return data;
-  } catch (error) {
-    throw error;
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
   }
+  const data: MetafyGuidesResponse = await response.json();
+
+  return data;
 };

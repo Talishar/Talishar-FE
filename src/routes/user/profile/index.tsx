@@ -1,29 +1,19 @@
 import { usePageTitle } from 'hooks/usePageTitle';
+import { Trans, useTranslation } from 'react-i18next';
 import {
-  useDeleteDeckMutation,
   useDeleteAccountMutation,
-  useGetFavoriteDecksQuery,
   useGetUserProfileQuery,
-  useAddFavoriteDeckMutation,
-  useUpdateFavoriteDeckMutation,
+  useChangeDisplayNameMutation,
   useSetMatchResultWebhookMutation
 } from 'features/api/apiSlice';
-import { DeleteDeckAPIResponse } from 'interface/API/DeleteDeckAPI.php';
-import { DeleteAccountAPIResponse } from 'interface/API/DeleteAccountAPI.php';
-import { AddFavoriteDeckRequest } from 'interface/API/AddFavoriteDeck.php';
-import { UpdateFavoriteDeckRequest } from 'interface/API/UpdateFavoriteDeck.php';
 import { toast } from 'react-hot-toast';
-import { RiEdit2Line, RiDeleteBin5Line } from 'react-icons/ri';
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import styles from './profile.module.css';
-import { generateCroppedImageUrl } from 'utils/cropImages';
-import { getReadableFormatName } from 'utils/formatUtils';
-import { HEROES_OF_RATHE } from 'routes/index/components/filter/constants';
 import FriendsList from './FriendsList';
 import BlockedUsers from './BlockedUsers';
 import MetafySection from './MetafySection';
 import UpgradeSection from './UpgradeSection';
+import useAuth from 'hooks/useAuth';
 
 const CODE = 'code';
 const CLIENT_ID =
@@ -33,30 +23,19 @@ const SCOPE = 'identity identity.memberships';
 const PATREON_URL = 'https://www.patreon.com/oauth2/authorize?';
 
 export const ProfilePage = () => {
-  usePageTitle('Profile');
-  const navigate = useNavigate();
+  const { t } = useTranslation();
+  usePageTitle(t('PAGES.PROFILE'));
+  const { currentUserId } = useAuth();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [confirmationUsername, setConfirmationUsername] = useState('');
-  const [newDeckUrl, setNewDeckUrl] = useState('');
-  const [isAddingDeck, setIsAddingDeck] = useState(false);
-  const [selectedHeroByDeck, setSelectedHeroByDeck] = useState<
-    Record<string, string>
-  >({});
-  const [updatingDeckLink, setUpdatingDeckLink] = useState<string | null>(null);
-  const {
-    data: decksData,
-    isLoading: deckIsLoading,
-    refetch: deckRefetch
-  } = useGetFavoriteDecksQuery(undefined);
-  const {
-    data: profileData,
-    isLoading: profileIsLoading,
-    refetch: profileRefetch
-  } = useGetUserProfileQuery(undefined);
-  const [deleteDeck] = useDeleteDeckMutation();
-  const [addFavoriteDeck] = useAddFavoriteDeckMutation();
-  const [updateFavoriteDeck] = useUpdateFavoriteDeckMutation();
+  const { data: profileData, isLoading: profileIsLoading } =
+    useGetUserProfileQuery(undefined);
   const [deleteAccount, { isLoading: isDeleting }] = useDeleteAccountMutation();
+  const [changeDisplayName, { isLoading: isChangingName }] =
+    useChangeDisplayNameMutation();
+  const [isEditingDisplayName, setIsEditingDisplayName] = useState(false);
+  const [newDisplayName, setNewDisplayName] = useState('');
+  const [showDisplayNameInfo, setShowDisplayNameInfo] = useState(false);
   const [webhookInput, setWebhookInput] = useState('');
   const [isSavingWebhook, setIsSavingWebhook] = useState(false);
   const [setMatchResultWebhook] = useSetMatchResultWebhookMutation();
@@ -66,14 +45,6 @@ export const ProfilePage = () => {
       setWebhookInput(profileData.matchResultWebhookUrl ?? '');
     }
   }, [profileData?.matchResultWebhookUrl]);
-
-  const handleDeleteDeckMessage = (resp: DeleteDeckAPIResponse): string => {
-    if (resp.message === 'Deck deleted successfully.') {
-      return 'The deck has been removed from your favorites list. It is still available to view on the deckbuilding site.';
-    } else {
-      return 'There has been a problem deleting your deck, please try again.';
-    }
-  };
 
   const handleSaveWebhook = async () => {
     setIsSavingWebhook(true);
@@ -95,173 +66,34 @@ export const ProfilePage = () => {
     }
   };
 
-  const handleDeleteDeck = async (deckLink: string) => {
+  const handleChangeDisplayName = async (displayName: string) => {
     try {
-      const deleteDeckPromise = deleteDeck({ deckLink }).unwrap();
-      toast.promise(
-        deleteDeckPromise,
-        {
-          loading: 'Deleting deck...',
-          success: (data) => {
-            return handleDeleteDeckMessage(data);
-          },
-          error: (err) => {
-            console.error('[Deck Deletion] Error response:', {
-              errorObject: err,
-              message: err?.message,
-              error: err?.error,
-              status: err?.status,
-              statusCode: err?.statusCode,
-              data: err?.data,
-              toString: err?.toString()
-            });
-            return `There has been an error, please try again. Error: ${err.toString()}`;
-          }
-        },
-        {
-          style: {
-            minWidth: '250px'
-          },
+      const resp = await changeDisplayName({ displayName }).unwrap();
+      if (resp.status === 'success') {
+        toast.success(
+          displayName === ''
+            ? 'Display name reset to your username.'
+            : `Display name changed to ${resp.displayName}.`,
+          { position: 'top-center' }
+        );
+        setIsEditingDisplayName(false);
+        setNewDisplayName('');
+      } else {
+        toast.error(resp.message ?? 'Failed to change display name.', {
           position: 'top-center'
-        }
-      );
-      const resp = await deleteDeckPromise;
-    } catch (err) {
-      console.error('[Deck Deletion] Caught exception:', {
-        errorObject: err,
-        message: err instanceof Error ? err.message : 'Unknown error',
-        stack: err instanceof Error ? err.stack : 'No stack trace',
-        toString: err?.toString(),
-        type: typeof err
-      });
-    } finally {
-      deckRefetch();
+        });
+      }
+    } catch (err: any) {
+      const message =
+        err?.data?.message ??
+        'Failed to change display name. Please try again.';
+      toast.error(message, { position: 'top-center' });
     }
   };
 
-  const handleEditDeck = (deckLink: string) => {
-    window.open(deckLink, '_blank');
-  };
-
-  const handleHeroChange = async (deckLink: string, newHeroValue: string) => {
-    setUpdatingDeckLink(deckLink);
-    try {
-      const updatePayload: UpdateFavoriteDeckRequest = {
-        decklink: deckLink,
-        heroID: newHeroValue
-      };
-
-      const updatePromise = updateFavoriteDeck(updatePayload).unwrap();
-      toast.promise(
-        updatePromise,
-        {
-          loading: 'Updating hero...',
-          success: (data) => {
-            setSelectedHeroByDeck((prev) => ({
-              ...prev,
-              [deckLink]: newHeroValue
-            }));
-            return 'Hero updated successfully!';
-          },
-          error: (err) => {
-            console.error('[Hero Update] Error response:', {
-              errorObject: err,
-              message: err?.message,
-              error: err?.error,
-              status: err?.status,
-              data: err?.data,
-              toString: err?.toString()
-            });
-            return `Error updating hero: ${
-              err?.message || err?.error || err?.toString() || 'Unknown error'
-            }`;
-          }
-        },
-        {
-          style: {
-            minWidth: '250px'
-          },
-          position: 'top-center'
-        }
-      );
-      await updatePromise;
-      deckRefetch();
-    } catch (err) {
-      console.error('[Hero Update] Caught exception:', {
-        errorObject: err,
-        message: err instanceof Error ? err.message : 'Unknown error',
-        stack: err instanceof Error ? err.stack : 'No stack trace',
-        toString: err?.toString(),
-        type: typeof err
-      });
-    } finally {
-      setUpdatingDeckLink(null);
-    }
-  };
-
-  const handleAddDeck = async () => {
-    if (!newDeckUrl.trim()) {
-      toast.error('Please enter a deck URL', {
-        position: 'top-center'
-      });
-      return;
-    }
-
-    setIsAddingDeck(true);
-    try {
-      const deckPayload: AddFavoriteDeckRequest = {
-        fabdb: newDeckUrl
-      };
-
-      const addDeckPromise = addFavoriteDeck(deckPayload).unwrap();
-      toast.promise(
-        addDeckPromise,
-        {
-          loading: 'Adding deck to favorites...',
-          success: (data) => {
-            return 'Deck added to favorites successfully!';
-          },
-          error: (err) => {
-            console.error('[Deck Addition] Error response:', {
-              errorObject: err,
-              message: err?.message,
-              error: err?.error,
-              status: err?.status,
-              statusCode: err?.statusCode,
-              originalStatus: err?.originalStatus,
-              data: err?.data,
-              toString: err?.toString()
-            });
-            return `Error adding deck: ${
-              err?.message ||
-              err?.error ||
-              err?.toString() ||
-              'Invalid deck URL or deck not accessible'
-            }`;
-          }
-        },
-        {
-          style: {
-            minWidth: '250px'
-          },
-          position: 'top-center'
-        }
-      );
-      const result = await addDeckPromise;
-      setNewDeckUrl('');
-    } catch (err) {
-      console.error('[Deck Addition] Caught exception:', {
-        errorObject: err,
-        message: err instanceof Error ? err.message : 'Unknown error',
-        stack: err instanceof Error ? err.stack : 'No stack trace',
-        toString: err?.toString(),
-        type: typeof err
-      });
-    } finally {
-      setIsAddingDeck(false);
-      deckRefetch();
-    }
-  };
+  const nameChangeCooldownActive =
+    !!profileData?.nextChangeAllowed &&
+    new Date(profileData.nextChangeAllowed).getTime() > Date.now();
 
   const handleDeleteAccountConfirm = async () => {
     if (!confirmationUsername) {
@@ -317,36 +149,36 @@ export const ProfilePage = () => {
   PatreonOAuthParam.append('redirect_uri', REDIRECT_URI);
   PatreonOAuthParam.append('scope', SCOPE);
 
-  // console.log(
-  //   'If you want to test the patreon connection go to this URL:',
-  //   PATREON_URL + PatreonOAuthParam.toString()
-  // );
-
   const isMetafySupporter: boolean = profileData?.isMetafySupporter ?? false;
 
   return (
     <div>
       <div className={styles.wideContainer}>
-        <h1 className={styles.title}>Profile Page</h1>
+        <h1 className={styles.title}>{t('PROFILE.PAGE_TITLE')}</h1>
         <div className={styles.twoColumnLayout}>
           <div className={styles.leftColumn}>
             <article className={styles.articleTitle}>
               <div className={styles.usernameHeader}>
-                <span className={styles.usernameLabel}>Username</span>
-                <h2 className={styles.usernameValue}>{profileData?.userName}</h2>
+                <span className={styles.usernameLabel}>
+                  {t('PROFILE.USERNAME_LABEL')}
+                </span>
+                <h2 className={styles.usernameValue}>
+                  {profileData?.userName}
+                </h2>
+                {currentUserId && (
+                  <div className={styles.userIdLine}>
+                    <span className={styles.userIdLabel}>
+                      {t('PROFILE.USER_ID_LABEL')}
+                    </span>
+                    <span className={styles.userIdValue}>{currentUserId}</span>
+                  </div>
+                )}
               </div>
-              <div>
-                {profileIsLoading && <p>Loading Profile...</p>}
+              <div className={styles.accountOverview}>
+                {profileIsLoading && <p>{t('PROFILE.LOADING')}</p>}
 
                 {/* Show Upgrade/Supporter Status */}
-                <UpgradeSection
-                  isSupporter={isMetafySupporter}
-                  userName={profileData?.userName}
-                  isOwner={
-                    profileData?.userName === 'PvtVoid' ||
-                    profileData?.userName === 'OotTheMonk'
-                  }
-                />
+                <UpgradeSection isSupporter={isMetafySupporter} />
 
                 {/* Metafy Section */}
                 {profileData?.metafyInfo && (
@@ -359,19 +191,32 @@ export const ProfilePage = () => {
 
                 {/* Patreon Section */}
                 {!profileIsLoading && (
-                  <div className={styles.patreonSection}>
-                    <h3>Patreon</h3>
+                  <div
+                    className={`${styles.patreonSection} ${
+                      !profileData?.isPatreonLinked ? styles.connectionRow : ''
+                    }`}
+                  >
+                    <h3>{t('PROFILE.PATREON_TITLE')}</h3>
                     {profileData?.isPatreonLinked ? (
                       <p>
-                        Your Patreon account is linked. <br />
-                        <a href={PATREON_URL + PatreonOAuthParam.toString()}>
-                          Refresh your Patreon connection
-                        </a>
+                        <Trans
+                          i18nKey="PROFILE.PATREON_LINKED"
+                          components={{
+                            1: <br />,
+                            2: (
+                              <a
+                                href={
+                                  PATREON_URL + PatreonOAuthParam.toString()
+                                }
+                              />
+                            )
+                          }}
+                        />
                       </p>
                     ) : (
                       <p>
                         <a href={PATREON_URL + PatreonOAuthParam.toString()}>
-                          Connect to Patreon
+                          {t('PROFILE.CONNECT_PATREON')}
                         </a>
                       </p>
                     )}
@@ -393,10 +238,10 @@ export const ProfilePage = () => {
                         value={webhookInput}
                         onChange={(e) => setWebhookInput(e.target.value)}
                         disabled={isSavingWebhook}
-                        className={styles.addDeckInput}
+                        className={styles.webhookInput}
                       />
                       <button
-                        className={styles.addDeckButton}
+                        className={styles.metafyToggleButton}
                         onClick={handleSaveWebhook}
                         disabled={isSavingWebhook}
                       >
@@ -407,31 +252,132 @@ export const ProfilePage = () => {
                 )}
               </div>
 
-              <FriendsList className={styles.friendsSection} />
-              <BlockedUsers className={styles.friendsSection} />
-              <h3 className={styles.title}>Delete Account</h3>
-              <p style={{ color: '#fa3737ff', marginBottom: '1em' }}>
-                <strong>Warning:</strong> This action is permanent and cannot be
-                undone. All your account data will be deleted.
-              </p>
-              <button
-                className={styles.deleteAccountButton}
-                onClick={() => setShowDeleteModal(true)}
-              >
-                Delete My Account
-              </button>
+              {/* Display Name Section */}
+              {!profileIsLoading && (
+                <section className={styles.displayNameSection}>
+                  <div className={styles.displayNameHeader}>
+                    <h3>{t('PROFILE.DISPLAY_NAME_TITLE')}</h3>
+                    <button
+                      type="button"
+                      className={styles.infoButton}
+                      onClick={() => setShowDisplayNameInfo((prev) => !prev)}
+                      aria-label={t('PROFILE.DISPLAY_NAME_INFO_ARIA')}
+                      aria-expanded={showDisplayNameInfo}
+                    >
+                      i
+                    </button>
+                  </div>
+                  <p>
+                    {t('PROFILE.DISPLAY_NAME_SHOWN_HINT')}{' '}
+                    <strong>
+                      {profileData?.displayName ?? profileData?.userName}
+                    </strong>
+                  </p>
+                  {showDisplayNameInfo && (
+                    <div className={styles.displayNameInfoBox}>
+                      <p>{t('PROFILE.DISPLAY_NAME_INFO_1')}</p>
+                      <p>{t('PROFILE.DISPLAY_NAME_INFO_2')}</p>
+                    </div>
+                  )}
+                  {profileData?.canChangeDisplayName ? (
+                    isEditingDisplayName ? (
+                      <div className={styles.displayNameEditRow}>
+                        <input
+                          type="text"
+                          value={newDisplayName}
+                          onChange={(e) => setNewDisplayName(e.target.value)}
+                          placeholder="New display name (3-20 letters/numbers)"
+                          maxLength={20}
+                          className={styles.displayNameInput}
+                          disabled={isChangingName}
+                        />
+                        <button
+                          className={styles.metafyToggleButton}
+                          onClick={() =>
+                            handleChangeDisplayName(newDisplayName.trim())
+                          }
+                          disabled={
+                            isChangingName || newDisplayName.trim().length < 3
+                          }
+                        >
+                          {isChangingName ? 'Saving...' : 'Save'}
+                        </button>
+                        <button
+                          className={`${styles.metafyToggleButton} ${styles.secondaryButton}`}
+                          onClick={() => {
+                            setIsEditingDisplayName(false);
+                            setNewDisplayName('');
+                          }}
+                          disabled={isChangingName}
+                        >
+                          {t('PROFILE.CANCEL')}
+                        </button>
+                      </div>
+                    ) : nameChangeCooldownActive ? (
+                      <p>
+                        {t('PROFILE.CHANGE_AGAIN_ON', {
+                          date: new Date(
+                            profileData.nextChangeAllowed as string
+                          ).toLocaleString()
+                        })}
+                      </p>
+                    ) : (
+                      <div className={styles.displayNameEditRow}>
+                        <button
+                          className={styles.metafyToggleButton}
+                          onClick={() => setIsEditingDisplayName(true)}
+                        >
+                          {t('PROFILE.CHANGE_DISPLAY_NAME')}
+                        </button>
+                        {profileData?.hasCustomDisplayName && (
+                          <button
+                            className={`${styles.metafyToggleButton} ${styles.secondaryButton}`}
+                            onClick={() => handleChangeDisplayName('')}
+                            disabled={isChangingName}
+                          >
+                            {t('PROFILE.RESET_TO_USERNAME')}
+                          </button>
+                        )}
+                      </div>
+                    )
+                  ) : (
+                    <p>{t('PROFILE.SUPPORTER_PERK')}</p>
+                  )}
+                </section>
+              )}
+
+              <section className={styles.dangerSection}>
+                <h3 className={styles.title}>{t('PROFILE.DELETE_ACCOUNT')}</h3>
+                <p className={styles.deleteWarning}>
+                  <Trans
+                    i18nKey="PROFILE.DELETE_WARNING"
+                    components={{ 1: <strong /> }}
+                  />
+                </p>
+                <button
+                  className={styles.deleteAccountButton}
+                  onClick={() => setShowDeleteModal(true)}
+                >
+                  {t('PROFILE.DELETE_MY_ACCOUNT')}
+                </button>
+              </section>
 
               {showDeleteModal && (
                 <div className={styles.modalOverlay}>
                   <div className={styles.modal}>
-                    <h4>Delete Account Confirmation</h4>
+                    <h4>{t('PROFILE.DELETE_CONFIRMATION_TITLE')}</h4>
                     <p>
-                      Are you sure you want to delete your account? This action
-                      is <strong>permanent</strong> and cannot be undone.
+                      <Trans
+                        i18nKey="PROFILE.DELETE_CONFIRM"
+                        components={{ 1: <strong /> }}
+                      />
                     </p>
                     <p>
-                      Please type your username{' '}
-                      <strong>{profileData?.userName}</strong> to confirm:
+                      <Trans
+                        i18nKey="PROFILE.DELETE_TYPE_USERNAME"
+                        values={{ userName: profileData?.userName }}
+                        components={{ 2: <strong /> }}
+                      />
                     </p>
                     <input
                       type="text"
@@ -449,7 +395,7 @@ export const ProfilePage = () => {
                         }}
                         disabled={isDeleting}
                       >
-                        Cancel
+                        {t('PROFILE.CANCEL')}
                       </button>
                       <button
                         className={styles.confirmDeleteButton}
@@ -459,7 +405,9 @@ export const ProfilePage = () => {
                           confirmationUsername !== profileData?.userName
                         }
                       >
-                        {isDeleting ? 'Deleting...' : 'Delete Account'}
+                        {isDeleting
+                          ? t('PROFILE.DELETING')
+                          : t('PROFILE.DELETE_ACCOUNT')}
                       </button>
                     </div>
                   </div>
@@ -468,128 +416,8 @@ export const ProfilePage = () => {
             </article>
           </div>
           <div className={styles.rightColumn}>
-            <article className={styles.articleTitle}>
-              <h3 className={styles.title}>Your Decks</h3>
-              {/* Add Deck Section */}
-              <div className={styles.addDeckSection}>
-                <p>
-                  Paste a deck link from{' '}
-                  <a
-                    href="https://FaBrary.net"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    FaBrary.net
-                  </a>{' '}
-                  to add it to your favorites.
-                </p>
-                <div className={styles.addDeckContainer}>
-                  <input
-                    type="text"
-                    placeholder="Paste deck URL here..."
-                    value={newDeckUrl}
-                    onChange={(e) => setNewDeckUrl(e.target.value)}
-                    disabled={isAddingDeck}
-                    className={styles.addDeckInput}
-                  />
-                  <button
-                    onClick={handleAddDeck}
-                    disabled={isAddingDeck || !newDeckUrl.trim()}
-                    className={styles.addDeckButton}
-                  >
-                    {isAddingDeck ? 'Adding...' : 'Add Deck'}
-                  </button>
-                </div>
-              </div>
-              <table>
-                <thead>
-                  <tr>
-                    <th scope="col">Hero</th>
-                    <th scope="col">Select Hero</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Format</th>
-                    {/* <th scope="col">Card Back</th>
-                      <th scope="col">Playmat</th> */}
-                    <th scope="col" aria-label="Edit Deck"></th>
-                    <th scope="col" aria-label="Delete Deck"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {deckIsLoading && (
-                    <tr>
-                      <td colSpan={6}>Loading...</td>
-                    </tr>
-                  )}
-                  {decksData?.favoriteDecks.map((deck, ix) => (
-                    <tr key={deck.key}>
-                      <th scope="row">
-                        {!!deck.hero && (
-                          <img
-                            src={generateCroppedImageUrl(deck.hero)}
-                            className={styles.heroImage}
-                          />
-                        )}
-                      </th>
-                      <td>
-                        <select
-                          value={
-                            selectedHeroByDeck[deck.link] || deck.hero || ''
-                          }
-                          onChange={(e) =>
-                            handleHeroChange(deck.link, e.target.value)
-                          }
-                          disabled={updatingDeckLink === deck.link}
-                          className={styles.heroSelect}
-                        >
-                          <option value="">-- Select Hero --</option>
-                          {[...HEROES_OF_RATHE]
-                            .sort((a, b) => {
-                              const displayLabelA = a.label;
-                              const displayLabelB = b.label;
-                              return displayLabelA.localeCompare(displayLabelB);
-                            })
-                            .map((hero) => {
-                              return (
-                                <option key={hero.value} value={hero.value}>
-                                  {hero.label}
-                                </option>
-                              );
-                            })}
-                        </select>
-                      </td>
-                      <td>{deck.name}</td>
-                      <td className={styles.formatCell}>{getReadableFormatName(deck.format || '')}</td>
-                      {/* <td>{deck.cardBack ? deck.cardBack.charAt(0).toUpperCase() + deck.cardBack.slice(1).toLowerCase() : ""}</td>
-                  <td>{deck.playmat ? deck.playmat.charAt(0).toUpperCase() + deck.playmat.slice(1).toLowerCase() : ""}</td> */}
-                      <td className={styles.editButton}>
-                        <button
-                          className={styles.button}
-                          onClick={() => handleEditDeck(deck.link)}
-                          title="Edit Deck"
-                        >
-                          <RiEdit2Line
-                            fontSize={'1.5em'}
-                            className={styles.trashcanIcon}
-                          />
-                        </button>
-                      </td>
-                      <td className={styles.deleteButton}>
-                        <button
-                          className={styles.button}
-                          onClick={() => handleDeleteDeck(deck.link)}
-                          title="Delete Deck"
-                        >
-                          <RiDeleteBin5Line
-                            fontSize={'1.5em'}
-                            className={styles.trashcanIcon}
-                          />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </article>
+            <FriendsList className={styles.friendsSection} />
+            <BlockedUsers className={styles.friendsSection} />
           </div>
         </div>
       </div>

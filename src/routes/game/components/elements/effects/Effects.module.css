@@ -75,3 +75,9 @@
     height: auto;
   }
 }
+
+@media (max-width: 1200px) {
+  .isOpponent {
+    margin-top: 3.35rem;
+  }
+}

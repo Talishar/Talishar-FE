@@ -4,15 +4,17 @@ import { RootState } from 'app/Store';
 import Displayrow from 'interface/Displayrow';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import styles from './HeadEqZone.module.css';
+import { useTranslation } from 'react-i18next';
 
 export const HeadEqZone = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
+  const { t } = useTranslation();
   const cardToDisplay = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.HeadEq : state.game.playerTwo.HeadEq
   );
 
   if (cardToDisplay === undefined) {
-    return <div className={styles.headZone}>Head</div>;
+    return <div className={styles.headZone}>{t('ZONES.HEAD')}</div>;
   }
 
   const subcardCount = cardToDisplay.subcards?.length ?? 0;
@@ -21,7 +23,12 @@ export const HeadEqZone = React.memo((prop: Displayrow) => {
     <div className={styles.headZone}>
       <CardDisplay card={cardToDisplay} isPlayer={isPlayer} />
       {subcardCount > 0 && (
-        <div className={styles.subcardCounter} title={`${subcardCount} card${subcardCount !== 1 ? 's' : ''} underneath`}>
+        <div
+          className={styles.subcardCounter}
+          title={`${subcardCount} card${
+            subcardCount !== 1 ? 's' : ''
+          } underneath`}
+        >
           x {subcardCount}
         </div>
       )}

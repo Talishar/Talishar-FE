@@ -19,6 +19,14 @@
   max-width: var(--card-size);
 }
 
+.clickable {
+  cursor: pointer;
+}
+
+.compact > div + div {
+  margin-left: var(--hand-overlap, 0px);
+}
+
 .isPlayer {
   bottom: calc(var(--card-size) * -0.4);
   z-index: 60;
@@ -36,8 +44,8 @@
 
 @media (orientation: portrait) {
   .isOpponent {
-    top: calc((var(--card-size) * -0.4) + 6dvh);
-    top: calc((var(--card-size) * -0.4) + 6dvh);
+    top: calc((var(--card-size) * -0.4) + min(6vh, 48px));
+    top: calc((var(--card-size) * -0.4) + min(6dvh, 48px));
   }
 }
 

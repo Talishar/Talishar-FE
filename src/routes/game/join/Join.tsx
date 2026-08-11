@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useAppDispatch } from 'app/Hooks';
 import {
   useGetFavoriteDecksQuery,
@@ -7,24 +7,26 @@ import {
   useGetGameInfoQuery
 } from 'features/api/apiSlice';
 import { JoinGameAPI } from 'interface/API/JoinGame.php';
+import {
+  IOpenGame,
+  IGameInProgress
+} from 'routes/index/components/gameList/GameList';
+import { FavoriteDeck } from 'interface/API/GetFavoriteDecks.php';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import styles from './Join.module.css';
 import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
 import { setGameStart } from 'features/game/GameSlice';
 import { toast } from 'react-hot-toast';
 import { FaExclamationCircle, FaQuestionCircle } from 'react-icons/fa';
-import validationSchema from './validationSchema';
 import useAuth from 'hooks/useAuth';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import useAdScript from 'hooks/useAdScript';
 import { AdUnit } from 'components/ads';
-import classNames from 'classnames';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
 import { ErrorMessage } from '@hookform/error-message';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { ImageSelect, ImageSelectOption } from 'components/ImageSelect';
-import { GAME_FORMAT, isPreconFormat, PRECON_DECKS } from 'appConstants';
+import { isPreconFormat, PRECON_DECKS } from 'appConstants';
 import { getReadableFormatName } from 'utils/formatUtils';
 import { useTranslation, Trans } from 'react-i18next';
 import PageBanner from 'components/PageBanner/PageBanner';
@@ -53,12 +55,6 @@ const getBaseFormatType = (format: string | null): string => {
   return readable;
 };
 
-// Helper function to normalize format for comparison (backend format codes vs deck format names)
-const normalizeFormatForComparison = (format: string | null): string => {
-  if (!format) return '';
-  return getReadableFormatName(format).toLowerCase();
-};
-
 // Helper function to shorten format names
 const shortenFormat = (format: string): string => {
   if (!format) return '';
@@ -70,33 +66,33 @@ const shortenFormat = (format: string): string => {
 const formatDeckLabel = (
   deckName: string,
   format: string | null,
-  maxLength: number = 58
+  maxLength = 58
 ): string => {
+  const name = String(deckName ?? '');
   const formatStr = format ? ` (${shortenFormat(format)})` : '';
-  const combined = `${deckName}${formatStr}`;
+  const combined = `${name}${formatStr}`;
 
   if (combined.length <= maxLength) {
     return combined;
   }
 
   const availableForName = Math.max(1, maxLength - formatStr.length - 3);
-  return `${deckName.substring(0, availableForName)}...${formatStr}`;
+  return `${name.substring(0, availableForName)}...${formatStr}`;
 };
 
 const JoinGame = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const [joinGame, joinGameResult] = useJoinGameMutation();
+  const [joinGame] = useJoinGameMutation();
   const { data, isLoading, isSuccess } = useGetFavoriteDecksQuery(undefined);
   const { isLoggedIn } = useAuth();
-  const { isSupporter, isLoading: authLoading } = useSupporterStatus();
-  const showAds = !authLoading && !isSupporter;
+  const { showAds } = useSupporterStatus();
   useAdScript(showAds);
 
   // Initial stuff to allow the lang to change
-  const { t, i18n, ready } = useTranslation();
+  const { t } = useTranslation();
 
-  let [{ gameName: searchGameName = '0', playerID = '2', authKey = '' }] =
+  const [{ gameName: searchGameName = '0', playerID = '2' }] =
     useKnownSearchParams();
 
   const { gameID } = useParams();
@@ -111,10 +107,10 @@ const JoinGame = () => {
     if (!gameListData) return false;
     const gameNameStr = finalGameName;
     const openGame = gameListData.openGames?.find(
-      (g) => String(g.gameName) === gameNameStr
+      (g: IOpenGame) => String(g.gameName) === gameNameStr
     );
     const inProgressGame = gameListData.gamesInProgress?.find(
-      (g) => String(g.gameName) === gameNameStr
+      (g: IGameInProgress) => String(g.gameName) === gameNameStr
     );
     return !!(openGame || inProgressGame);
   }, [gameListData, finalGameName]);
@@ -131,10 +127,7 @@ const JoinGame = () => {
     setError,
     reset,
     setValue
-  } = useForm<JoinGameAPI>({
-    mode: 'onBlur',
-    resolver: yupResolver(validationSchema)
-  });
+  } = useForm<JoinGameAPI>({ mode: 'onBlur' });
 
   const [selectedFavoriteDeck, setSelectedFavoriteDeck] =
     React.useState<string>('');
@@ -153,7 +146,7 @@ const JoinGame = () => {
       favoriteDecks:
         data?.lastUsedDeckIndex !== undefined
           ? data.favoriteDecks.find(
-              (deck) => deck.index === data.lastUsedDeckIndex
+              (deck: FavoriteDeck) => deck.index === data.lastUsedDeckIndex
             )?.key
           : '',
       gameDescription: ''
@@ -176,10 +169,10 @@ const JoinGame = () => {
       const gameNameStr = finalGameName;
 
       const openGame = gameListData.openGames?.find(
-        (g) => String(g.gameName) === gameNameStr
+        (g: IOpenGame) => String(g.gameName) === gameNameStr
       );
       const inProgressGame = gameListData.gamesInProgress?.find(
-        (g) => String(g.gameName) === gameNameStr
+        (g: IGameInProgress) => String(g.gameName) === gameNameStr
       );
       const foundGame = openGame || inProgressGame;
 
@@ -209,14 +202,14 @@ const JoinGame = () => {
       gameFormat &&
       getReadableFormatName(gameFormat).toLowerCase().includes('open');
     const baseGameFormat = getBaseFormatType(gameFormat);
-    const filtered = data.favoriteDecks.filter((deck) => {
+    const filtered = data.favoriteDecks.filter((deck: FavoriteDeck) => {
       // Show all decks for OPEN format
       if (isOpenFormat) return true;
       if (!deck.format) return false;
       const baseDeckFormat = getBaseFormatType(deck.format);
       return baseDeckFormat === baseGameFormat;
     });
-    return filtered.map((deck) => ({
+    return filtered.map((deck: FavoriteDeck) => ({
       value: deck.key,
       label: formatDeckLabel(deck.name, deck.format),
       imageUrl: generateCroppedImageUrl(deck.hero)
@@ -253,7 +246,6 @@ const JoinGame = () => {
             authKey: response.authKey ?? ''
           })
         );
-        const searchParam = { playerID: String(response.playerID ?? '0') };
         navigate(`/game/lobby/${response.gameName}`, {
           state: {
             playerID: response.playerID ?? 0,
@@ -275,188 +267,196 @@ const JoinGame = () => {
 
   return (
     <div className={styles.pageWrapper}>
-      <PageBanner title={t('JOIN.TITLE', 'Join Game')} subtitle={t('JOIN.SUBTITLE', 'Choose your deck and enter the game')} />
+      <PageBanner
+        title={t('JOIN.TITLE', 'Join Game')}
+        subtitle={t('JOIN.SUBTITLE', 'Choose your deck and enter the game')}
+      />
       <main className={styles.LoginPageContainer}>
-      {showAds && (
-        <aside className={styles.leftRail}>
-          <AdUnit placement="left-rail-1" />
-        </aside>
-      )}
-      <article className={styles.formContainer}>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className={styles.formInner}>
-            {isPrecon ? (
-              <label>
-                {t('JOIN.PRECON')}
-                <ImageSelect
-                  id="preconDecks"
-                  options={preconDeckOptions}
-                  value={selectedPreconDeck}
-                  onChange={(value) => {
-                    setSelectedPreconDeck(value);
-                    setValue('fabdb', value);
-                  }}
-                  placeholder={t('JOIN.SELECT_DECK')}
-                  aria-invalid={errors.deck?.message ? 'true' : undefined}
-                />
-                <input
-                  type="hidden"
-                  {...register('fabdb')}
-                  value={selectedPreconDeck}
-                />
-                <ErrorMessage
-                  errors={errors}
-                  name="fabdb"
-                  render={({ message }) => <p>{message}</p>}
-                />
-              </label>
-            ) : (
-              <>
-                {isLoggedIn && !isLoading && (
-                  <label>
-                    {t('JOIN.SELECTED_DECK')}
-                    <ImageSelect
-                      id="favoriteDecks"
-                      options={favoriteDeckOptions}
-                      value={selectedFavoriteDeck}
-                      onChange={(value) => {
-                        setSelectedFavoriteDeck(value);
-                        setValue('favoriteDecks', value);
-                      }}
-                      placeholder={t('JOIN.SELECTED_DECK_PLACEHOLDER')}
-                      aria-busy={isLoading}
-                      aria-invalid={
-                        errors.favoriteDecks?.message ? 'true' : undefined
-                      }
-                    />
-                    <input
-                      type="hidden"
-                      {...register('favoriteDecks')}
-                      value={selectedFavoriteDeck}
-                    />
-                    <ErrorMessage
-                      errors={errors}
-                      name="favoriteDecks"
-                      render={({ message }) => <p>{message}</p>}
-                    />
-                  </label>
-                )}
-                <ErrorMessage
-                  errors={errors}
-                  name="favoriteDecks"
-                  render={({ message }) => (
-                    <p className={styles.fieldError}>
-                      <FaExclamationCircle /> {message}
-                    </p>
-                  )}
-                />
-                <fieldset>
-                  <label>
-                    <>
-                      {t('JOIN.IMPORT_DECK')}
-                      {''}
-                      <span
-                        title={t('JOIN.IMPORT_TITLE')}
-                        style={{
-                          cursor: 'help',
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          marginLeft: '4px'
-                        }}
-                      >
-                        <FaQuestionCircle size={14} />
-                      </span>
-                      <input
-                        type="text"
-                        id="fabdb"
-                        aria-label={t('JOIN.IMPORT_HELP')}
-                        {...register('fabdb')}
-                        aria-invalid={errors.deck?.message ? 'true' : undefined}
-                      />
-                    </>
-                    <ErrorMessage
-                      errors={errors}
-                      name="fabdb"
-                      render={({ message }) => (
-                        <p className={styles.fieldError}>
-                          <FaExclamationCircle /> {message}
-                        </p>
-                      )}
-                    />
-                  </label>
-                  {isLoggedIn && (
+        {showAds && (
+          <aside className={styles.leftRail}>
+            <AdUnit placement="left-rail-1" />
+          </aside>
+        )}
+        <article className={styles.formContainer}>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className={styles.formInner}>
+              {isPrecon ? (
+                <label>
+                  {t('JOIN.PRECON')}
+                  <ImageSelect
+                    id="preconDecks"
+                    options={preconDeckOptions}
+                    value={selectedPreconDeck}
+                    onChange={(value) => {
+                      setSelectedPreconDeck(value);
+                      setValue('fabdb', value);
+                    }}
+                    placeholder={t('JOIN.SELECT_DECK')}
+                    aria-label={t('JOIN.PRECON')}
+                    aria-invalid={errors.deck?.message ? 'true' : undefined}
+                  />
+                  <input
+                    type="hidden"
+                    {...register('fabdb')}
+                    value={selectedPreconDeck}
+                  />
+                  <ErrorMessage
+                    errors={errors}
+                    name="fabdb"
+                    render={({ message }) => <p>{message}</p>}
+                  />
+                </label>
+              ) : (
+                <>
+                  {isLoggedIn && !isLoading && (
                     <label>
-                      <input
-                        type="checkbox"
-                        role="switch"
-                        id="favoriteDeck"
-                        {...register('favoriteDeck')}
+                      {t('JOIN.SELECTED_DECK')}
+                      <ImageSelect
+                        id="favoriteDecks"
+                        options={favoriteDeckOptions}
+                        value={selectedFavoriteDeck}
+                        onChange={(value) => {
+                          setSelectedFavoriteDeck(value);
+                          setValue('favoriteDecks', value);
+                        }}
+                        placeholder={t('JOIN.SELECTED_DECK_PLACEHOLDER')}
+                        aria-label={t('JOIN.SELECTED_DECK')}
+                        aria-busy={isLoading}
+                        aria-invalid={
+                          errors.favoriteDecks?.message ? 'true' : undefined
+                        }
                       />
-                      {t('JOIN.SAVE_DECK_FAVOURITES')}
+                      <input
+                        type="hidden"
+                        {...register('favoriteDecks')}
+                        value={selectedFavoriteDeck}
+                      />
+                      <ErrorMessage
+                        errors={errors}
+                        name="favoriteDecks"
+                        render={({ message }) => <p>{message}</p>}
+                      />
                     </label>
                   )}
-                  <label style={{ marginTop: '1rem' }}>
-                    {t('JOIN.GAME_FORMAT')}
-                    <input
-                      type="text"
-                      id="gameFormat"
-                      aria-label={t('JOIN.GAME_FORMAT')}
-                      value={getReadableFormatName(gameFormat || '')}
-                      disabled
-                      readOnly
-                    />
-                  </label>
-                </fieldset>
-              </>
-            )}
-          </div>
-          {!isLoggedIn && (
-            <p>
-              <small>
-                <Trans i18nKey="LOGIN_REQUIRED">
-                  You must be <Link to="/user/login">logged in</Link> to join
-                  public lobbies.
-                </Trans>
-              </small>
-            </p>
-          )}
-          <button
-            type="submit"
-            className={styles.buttonClass}
-            aria-busy={isSubmitting}
-            style={{ marginTop: '27px' }}
-          >
-            {t('JOIN.JOIN')}
-          </button>
-          {errors.root?.serverError?.message && (
-            <div className={styles.fieldError}>
-              <FaExclamationCircle /> {errors.root?.serverError?.message}
+                  <ErrorMessage
+                    errors={errors}
+                    name="favoriteDecks"
+                    render={({ message }) => (
+                      <p className={styles.fieldError}>
+                        <FaExclamationCircle /> {message}
+                      </p>
+                    )}
+                  />
+                  <fieldset>
+                    <label>
+                      <>
+                        {t('JOIN.IMPORT_DECK')}
+                        {''}
+                        <span
+                          title={t('JOIN.IMPORT_TITLE')}
+                          style={{
+                            cursor: 'help',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            marginLeft: '4px'
+                          }}
+                        >
+                          <FaQuestionCircle size={14} />
+                        </span>
+                        <input
+                          type="text"
+                          id="fabdb"
+                          aria-label={t('JOIN.IMPORT_HELP')}
+                          {...register('fabdb')}
+                          aria-invalid={
+                            errors.deck?.message ? 'true' : undefined
+                          }
+                        />
+                      </>
+                      <ErrorMessage
+                        errors={errors}
+                        name="fabdb"
+                        render={({ message }) => (
+                          <p className={styles.fieldError}>
+                            <FaExclamationCircle /> {message}
+                          </p>
+                        )}
+                      />
+                    </label>
+                    {isLoggedIn && (
+                      <label>
+                        <input
+                          type="checkbox"
+                          role="switch"
+                          id="favoriteDeck"
+                          {...register('favoriteDeck')}
+                        />
+                        {t('JOIN.SAVE_DECK_FAVOURITES')}
+                      </label>
+                    )}
+                    <label style={{ marginTop: '1rem' }}>
+                      {t('JOIN.GAME_FORMAT')}
+                      <input
+                        type="text"
+                        id="gameFormat"
+                        aria-label={t('JOIN.GAME_FORMAT')}
+                        value={getReadableFormatName(gameFormat || '')}
+                        disabled
+                        readOnly
+                      />
+                    </label>
+                  </fieldset>
+                </>
+              )}
             </div>
-          )}
-        </form>
-        <hr />
-        <button
-          className={styles.backButton}
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation;
-            navigate(-1);
-          }}
-        >
-          {t('JOIN.BACK')}
-        </button>
-      </article>
-      {showAds && (
-        <aside className={styles.rightRail}>
-          <AdUnit placement="right-rail-1" />
-        </aside>
-      )}
-      {showAds && (
-        <div className={styles.mobileAd}>
-          <AdUnit placement="mobile-unit-4" />
-        </div>
-      )}
-    </main>
+            {!isLoggedIn && (
+              <p>
+                <small>
+                  <Trans i18nKey="LOGIN_REQUIRED">
+                    You must be <Link to="/user/login">logged in</Link> to join
+                    public lobbies.
+                  </Trans>
+                </small>
+              </p>
+            )}
+            <button
+              type="submit"
+              className={styles.buttonClass}
+              disabled={isSubmitting}
+              aria-busy={isSubmitting}
+              style={{ marginTop: '27px' }}
+            >
+              {isSubmitting ? t('JOIN.JOINING_GAME') : t('JOIN.JOIN')}
+            </button>
+            {errors.root?.serverError?.message && (
+              <div className={styles.fieldError}>
+                <FaExclamationCircle /> {errors.root?.serverError?.message}
+              </div>
+            )}
+          </form>
+          <hr />
+          <button
+            className={styles.backButton}
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation;
+              navigate(-1);
+            }}
+          >
+            {t('JOIN.BACK')}
+          </button>
+        </article>
+        {showAds && (
+          <aside className={styles.rightRail}>
+            <AdUnit placement="right-rail-1" />
+          </aside>
+        )}
+        {showAds && (
+          <div className={styles.mobileAd}>
+            <AdUnit placement="mobile-unit-4" />
+          </div>
+        )}
+      </main>
     </div>
   );
 };

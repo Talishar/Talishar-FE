@@ -1,5 +1,6 @@
 import { FormProps } from '../playerInputPopupTypes';
 import React, { useMemo, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import styles from '../PlayerInputPopUp.module.css';
 import CardDisplay from '../../../elements/cardDisplay/CardDisplay';
 import { Card } from 'features/Card';
@@ -9,7 +10,6 @@ import { useProcessInputAPIMutation } from 'features/api/apiSlice';
 import { getGameInfo } from 'features/game/GameSlice';
 import { shallowEqual } from 'react-redux';
 import classNames from 'classnames';
-import { on } from 'events';
 
 let change = false;
 let buttonClick = false;
@@ -25,6 +25,7 @@ const ReorderOpt = ({
     shallowEqual
   );
 
+  const { t } = useTranslation();
   const [cardListTop, setCardListTop] = React.useState<Card[]>([]);
   const [cardListBottom, setCardListBottom] = React.useState<Card[]>([]);
 
@@ -49,8 +50,7 @@ const ReorderOpt = ({
     );
   }, [topCards, bottomCards]);
 
-  const [processInputAPI, useProcessInputAPIResponse] =
-    useProcessInputAPIMutation();
+  const [processInputAPI] = useProcessInputAPIMutation();
 
   const changeTopCardOrder = (newOrder: Card[]) => {
     setCardListTop(newOrder);
@@ -126,7 +126,7 @@ const ReorderOpt = ({
     processInputAPI(body);
   };
 
-  const cardInLayer: string[] = [];
+  const cardCounts = new Map<string, number>();
   return (
     <div className={classNames(styles.newOptForm, styles.optFormContainer)}>
       <div
@@ -140,14 +140,14 @@ const ReorderOpt = ({
           handleSubmit();
         }}
       >
-        Submit Opt
+        {t('PLAYER_INPUT.NEW_OPT_SUBMIT')}
       </div>
       <div className={classNames(styles.newOptForm, styles.cardsContainer)}>
         <div className={classNames(styles.newOptForm, styles.reorderCards)}>
           <div
             className={classNames(styles.newOptForm, styles.topAndBottomText)}
           >
-            Top
+            {t('PLAYER_INPUT.NEW_OPT_TOP')}
           </div>
           <Reorder.Group
             className={classNames(styles.newOptForm, styles.reorderCards)}
@@ -157,10 +157,8 @@ const ReorderOpt = ({
           >
             {cardListTop.map((card, ix) => {
               // avoid any jankiness if we have duplicate cards in the layer!
-              const layerCount = cardInLayer.filter(
-                (value) => value === card.cardNumber
-              ).length;
-              cardInLayer.push(card.cardNumber);
+              const layerCount = cardCounts.get(card.cardNumber) ?? 0;
+              cardCounts.set(card.cardNumber, layerCount + 1);
               const isFirst = ix === 0;
               const isLast = ix === cardListTop.length - 1;
               const showLabels = cardListTop.length > 1;
@@ -179,7 +177,7 @@ const ReorderOpt = ({
                           styles.firstLabel
                         )}
                       >
-                        FIRST
+                        {t('PLAYER_INPUT.NEW_OPT_FIRST')}
                       </div>
                     )}
                     {showLabels && isLast && (
@@ -189,7 +187,7 @@ const ReorderOpt = ({
                           styles.lastLabel
                         )}
                       >
-                        LAST
+                        {t('PLAYER_INPUT.NEW_OPT_LAST')}
                       </div>
                     )}
                     <CardDisplay card={card} key={ix} />
@@ -208,7 +206,7 @@ const ReorderOpt = ({
                         moveCardToBottom(card, ix);
                       }}
                     >
-                      Bottom
+                      {t('PLAYER_INPUT.NEW_OPT_BOTTOM')}
                     </div>
                   </div>
                 </Reorder.Item>
@@ -220,7 +218,7 @@ const ReorderOpt = ({
           <div
             className={classNames(styles.newOptForm, styles.topAndBottomText)}
           >
-            Bottom
+            {t('PLAYER_INPUT.NEW_OPT_BOTTOM')}
           </div>
           <Reorder.Group
             className={classNames(styles.newOptForm, styles.reorderCards)}
@@ -230,10 +228,8 @@ const ReorderOpt = ({
           >
             {cardListBottom.map((card, ix) => {
               // avoid any jankiness if we have duplicate cards in the layer!
-              const layerCount = cardInLayer.filter(
-                (value) => value === card.cardNumber
-              ).length;
-              cardInLayer.push(card.cardNumber);
+              const layerCount = cardCounts.get(card.cardNumber) ?? 0;
+              cardCounts.set(card.cardNumber, layerCount + 1);
               const isFirst = ix === 0;
               const isLast = ix === cardListBottom.length - 1;
               const showLabels = cardListBottom.length > 1;
@@ -253,7 +249,7 @@ const ReorderOpt = ({
                           styles.firstLabel
                         )}
                       >
-                        FIRST
+                        {t('PLAYER_INPUT.NEW_OPT_FIRST')}
                       </div>
                     )}
                     {showLabels && isLast && (
@@ -263,7 +259,7 @@ const ReorderOpt = ({
                           styles.lastLabel
                         )}
                       >
-                        LAST
+                        {t('PLAYER_INPUT.NEW_OPT_LAST')}
                       </div>
                     )}
                     <CardDisplay card={card} key={ix} />
@@ -282,7 +278,7 @@ const ReorderOpt = ({
                         moveCardToTop(card, ix);
                       }}
                     >
-                      Top
+                      {t('PLAYER_INPUT.NEW_OPT_TOP')}
                     </div>
                   </div>
                 </Reorder.Item>

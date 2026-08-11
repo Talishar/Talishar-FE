@@ -1,5 +1,3 @@
-import { useCallback } from 'react';
-
 const MOUSE_BUTTON_CODES: Record<string, number> = {
   MiddleClick: 1
 };

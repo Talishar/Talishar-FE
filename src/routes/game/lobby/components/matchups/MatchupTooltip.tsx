@@ -72,8 +72,14 @@ const MatchupTooltip: React.FC<MatchupTooltipProps> = ({
       }
     }
 
-    left = Math.max(padding, Math.min(left, viewportWidth - tooltipWidth - padding));
-    top = Math.max(padding, Math.min(top, viewportHeight - tooltipHeight - padding));
+    left = Math.max(
+      padding,
+      Math.min(left, viewportWidth - tooltipWidth - padding)
+    );
+    top = Math.max(
+      padding,
+      Math.min(top, viewportHeight - tooltipHeight - padding)
+    );
 
     setTooltipPos({ top, left, position });
   }, [isVisible]);

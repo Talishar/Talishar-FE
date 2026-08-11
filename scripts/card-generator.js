@@ -1,7 +1,8 @@
 const axios = require('axios');
 const fs = require('fs');
 
-const url = "https://raw.githubusercontent.com/the-fab-cube/flesh-and-blood-cards/refs/heads/omens-of-the-third-age/json/english/card.json";
+// const url = "https://raw.githubusercontent.com/the-fab-cube/flesh-and-blood-cards/main/json/english/card.json";
+const url = "https://raw.githubusercontent.com/the-fab-cube/flesh-and-blood-cards/refs/heads/usurp-the-shadow-throne/json/english/card.json";
 
 const outputFile = '../src/constants/cardList.ts';
 
@@ -14,10 +15,6 @@ axios
 
     const cardNames = cards.reduce((acc, card) => {
       const name = card.name.trim();
-
-      if (card.types.includes('Token')) {
-        return acc;
-      }
 
       // if name has "//" split into two names
       if (name.includes("//")) {

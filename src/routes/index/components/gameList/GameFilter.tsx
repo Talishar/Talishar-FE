@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import styles from './GameFilter.module.scss';
 import { IoMdArrowDropright } from 'react-icons/io';
 import { IoFunnel } from 'react-icons/io5';
@@ -6,17 +6,6 @@ import { useTranslation } from 'react-i18next';
 
 // Utility functions for persisting filters to local storage
 const FILTER_STORAGE_KEY = 'gameFilters';
-const FRIENDS_FILTER_STORAGE_KEY = 'gameFriendsFilter';
-
-const loadFiltersFromStorage = (): string[] => {
-  try {
-    const stored = localStorage.getItem(FILTER_STORAGE_KEY);
-    return stored ? JSON.parse(stored) : [];
-  } catch {
-    return [];
-  }
-};
-
 const saveFiltersToStorage = (formats: Set<string>): void => {
   try {
     localStorage.setItem(
@@ -25,23 +14,6 @@ const saveFiltersToStorage = (formats: Set<string>): void => {
     );
   } catch {
     console.error('Failed to save filters to localStorage');
-  }
-};
-
-const loadFriendsFilterFromStorage = (): boolean => {
-  try {
-    const stored = localStorage.getItem(FRIENDS_FILTER_STORAGE_KEY);
-    return stored ? JSON.parse(stored) : true;
-  } catch {
-    return true;
-  }
-};
-
-const saveFriendsFilterToStorage = (include: boolean): void => {
-  try {
-    localStorage.setItem(FRIENDS_FILTER_STORAGE_KEY, JSON.stringify(include));
-  } catch {
-    console.error('Failed to save friends filter to localStorage');
   }
 };
 
@@ -57,7 +29,6 @@ export interface GameFilterProps {
   onFilterChange: (formats: Set<string>) => void;
   formatOptions: Array<FormatOption>;
   includeFriendsGames: boolean;
-  onFriendsGamesChange: (include: boolean) => void;
   formatNumberMapping?: { [key: string]: string }; // Map string format to numeric format
 }
 
@@ -66,16 +37,15 @@ const GameFilter = ({
   onFilterChange,
   formatOptions,
   includeFriendsGames,
-  onFriendsGamesChange,
   formatNumberMapping = {}
 }: GameFilterProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({});
-										
+
   // Initial stuff to allow the lang to change
-  const { t, i18n, ready } = useTranslation();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -229,12 +199,6 @@ const GameFilter = ({
     saveFiltersToStorage(emptyFormats);
   };
 
-  const handleFriendsGamesChange = () => {
-    const newValue = !includeFriendsGames;
-    onFriendsGamesChange(newValue);
-    saveFriendsFilterToStorage(newValue);
-  };
-
   const isGroupSelected = (groupValues?: string[]) => {
     if (!groupValues) return false;
     return groupValues.every((val) => {
@@ -246,18 +210,31 @@ const GameFilter = ({
     });
   };
 
-  const defaultFormats = formatOptions.map((f) => f.value);
-  const allFormatsSelected = selectedFormats.size === formatOptions.length;
+  const allFormatsSelected = formatOptions.every((format) =>
+    format.isGroup
+      ? isGroupSelected(format.groupValues)
+      : selectedFormats.has(format.value) ||
+        !!(
+          formatNumberMapping[format.value] &&
+          selectedFormats.has(formatNumberMapping[format.value])
+        )
+  );
   const friendsGameEnabled = includeFriendsGames;
   const hasActiveFilters = !allFormatsSelected || !friendsGameEnabled;
 
   return (
     <div className={styles.filterContainer} ref={dropdownRef}>
       <button
+        type="button"
         ref={buttonRef}
-        className={`${styles.filterButton}${hasActiveFilters ? ` ${styles.filterButtonActive}` : ''}`}
+        className={`${styles.filterButton}${
+          hasActiveFilters ? ` ${styles.filterButtonActive}` : ''
+        }`}
         onClick={() => setIsOpen(!isOpen)}
-        title={t("GAME_FILTER.FILTER_GAMES")}
+        title={t('GAME_FILTER.FILTER_GAMES')}
+        aria-label={t('GAME_FILTER.FILTER_GAMES')}
+        aria-expanded={isOpen}
+        aria-haspopup="dialog"
       >
         <span className={styles.filterIcon}>
           <IoFunnel />
@@ -275,15 +252,28 @@ const GameFilter = ({
       {isOpen && (
         <>
           <div className={styles.backdrop} onClick={() => setIsOpen(false)} />
-          <div className={styles.dropdown} style={dropdownStyle}>
+          <div
+            className={styles.dropdown}
+            style={dropdownStyle}
+            role="dialog"
+            aria-label={t('GAME_FILTER.FILTER_GAMES')}
+          >
             <div className={styles.dropdownHeader}>
-              <h5 className={styles.dropdownTitle}>{t("GAME_FILTER.FILTER_GAMES")}</h5>
+              <h5 className={styles.dropdownTitle}>
+                {t('GAME_FILTER.FILTER_GAMES')}
+              </h5>
               <div className={styles.headerActions}>
-                <button className={styles.headerActionBtn} onClick={handleResetFilters}>
-                  {t("GAME_FILTER.RESET_FILTER")}
+                <button
+                  className={styles.headerActionBtn}
+                  onClick={handleResetFilters}
+                >
+                  {t('GAME_FILTER.RESET_FILTER')}
                 </button>
-                <button className={styles.headerActionBtn} onClick={handleDeselectAll}>
-                  {t("GAME_FILTER.UNCHECK_ALL")}
+                <button
+                  className={styles.headerActionBtn}
+                  onClick={handleDeselectAll}
+                >
+                  {t('GAME_FILTER.UNCHECK_ALL')}
                 </button>
               </div>
             </div>
@@ -296,7 +286,9 @@ const GameFilter = ({
                 return (
                   <label
                     key={format.value}
-                    className={`${styles.checklistItem}${isChecked ? ` ${styles.checklistItemChecked}` : ''}`}
+                    className={`${styles.checklistItem}${
+                      isChecked ? ` ${styles.checklistItemChecked}` : ''
+                    }`}
                   >
                     <input
                       type="checkbox"

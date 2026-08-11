@@ -6,6 +6,7 @@ import {
 } from '../constants';
 import {
   getCollectionCardImagePath,
+  invalidateLanguageCache,
   loadInitialLanguage
 } from '../multilanguage';
 import { CLOUD_IMAGES_URL } from '../../../appConstants';
@@ -196,7 +197,10 @@ describe('Multilanguage', () => {
   });
 
   describe('loadInitialLanguage', () => {
-    beforeEach(() => window.localStorage.clear());
+    beforeEach(() => {
+      window.localStorage.clear();
+      invalidateLanguageCache();
+    });
 
     it('should return default language if is not stored in localStorage', () => {
       const result = loadInitialLanguage();

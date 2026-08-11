@@ -75,25 +75,42 @@
 }
 
 .closeButton {
-  background: none;
-  border: none;
-  color: var(--theme-primary);
-  font-size: 1.8rem;
+  appearance: none;
+  box-sizing: border-box;
+  background: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  border-radius: 4px;
+  color: rgba(255, 255, 255, 0.7) !important;
   cursor: pointer;
-  padding: 0;
-  width: 2rem;
-  height: 2rem;
-  display: flex;
+  padding: 0 !important;
+  margin: 0 !important;
+  width: 2rem !important;
+  height: 2rem !important;
+  min-width: 2rem !important;
+  min-height: 2rem !important;
+  box-shadow: none !important;
+  display: inline-flex !important;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
-  line-height: 1;
-  margin-bottom: 0.1em;
+  transition: background-color 0.2s ease, color 0.2s ease,
+    box-shadow 0.2s ease;
+  flex: 0 0 2rem;
+  line-height: 0;
+
+  svg {
+    display: block;
+    width: 1.25rem;
+    height: 1.25rem;
+    pointer-events: none;
+  }
 
   &:hover {
-    transform: rotate(90deg);
-    color: var(--theme-primary-hover);
+    background: var(--theme-primary-focus) !important;
+    background-image: none !important;
+    color: #fff !important;
+    box-shadow: 0 0 0 1px var(--theme-primary-focus) !important;
+    transform: none !important;
   }
 }
 
@@ -137,6 +154,30 @@
   flex: 1;
   text-align: center;
   min-width: 3rem;
+}
+
+.controlRow .numberInput {
+  flex: 1;
+  width: 3rem;
+  min-width: 0;
+  height: 2rem;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: var(--theme-primary) !important;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+  box-shadow: none !important;
+  caret-color: var(--theme-primary) !important;
+
+  &:focus {
+    border: 0 !important;
+    outline: 0;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
 }
 
 .buttonSmall {
@@ -232,7 +273,113 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin: 0;
+}
+
+.formLabelRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 0.25rem;
+}
+
+.tooltipTrigger {
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  background: rgba(212, 105, 31, 0.2);
+  border: 1px solid var(--theme-primary-focus);
+  color: var(--theme-primary);
+  font-size: 0.75rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+  margin-bottom: 0 !important;
+
+  &:hover {
+    background: rgba(212, 105, 31, 0.4);
+    border-color: var(--theme-primary);
+    box-shadow: 0 0 6px var(--theme-primary-focus);
+  }
+}
+
+.tooltip {
+  background: var(--tooltip-background-color);
+  border: var(--tooltip-border-width) solid var(--tooltip-border-color);
+  border-radius: var(--tooltip-border-radius);
+  box-shadow: var(--tooltip-shadow);
+  color: var(--tooltip-color);
+  padding: 0.75rem;
+  font-size: var(--tooltip-font-size);
+  font-weight: var(--tooltip-font-weight);
+  line-height: var(--tooltip-line-height);
+  margin-bottom: 0.5rem;
+  animation: fadeIn 0.15s ease-out;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+.tooltipTitle {
+  color: var(--theme-primary);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 0.5rem 0;
+}
+
+.tooltipList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.tooltipList li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.tooltipCode {
+  font-family: monospace;
+  font-size: 0.8rem;
+  color: #f0c070;
+  background: rgba(240, 192, 112, 0.1);
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  width: fit-content;
+}
+
+.tooltipList span:not(.tooltipCode) {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.65);
+  padding-left: 0.1rem;
+}
+
+.tooltipNote {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 0;
+  line-height: 1.4;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 0.4rem;
 }
 
 .formGroup input {
@@ -331,9 +478,7 @@
   }
 
   .manualModeTab {
-    width: 2.5rem;
-    height: 2.5rem;
-    font-size: 0.75rem;
+    display: none;
   }
 
   .content {

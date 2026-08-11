@@ -3,6 +3,7 @@ import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import Backend from 'i18next-http-backend';
 import { I18N_SUPPORTED_LANGUAGE_CODES } from './constants/i18nSupportedLanguages';
+import enTranslations from '../public/locales/en/translation.json';
 
 // the translations
 // (tip move them in a JSON file and import them,
@@ -15,12 +16,22 @@ i18n
   .use(initReactI18next)
   .init({
     fallbackLng: 'en',
+    partialBundledLanguages: true,
     supportedLngs: [...I18N_SUPPORTED_LANGUAGE_CODES],
     showSupportNotice: false,
+    returnEmptyString: false,
     interpolation: {
       escapeValue: false // not needed for react as it escapes by default
     },
-
+    resources: {
+      en: {
+        translation: enTranslations
+      }
+    },
+    backend: {
+      // Other languages will still fetch from this public URL
+      loadPath: '/locales/{{lng}}/{{ns}}.json'
+    },
     react: {
       useSuspense: false
     }

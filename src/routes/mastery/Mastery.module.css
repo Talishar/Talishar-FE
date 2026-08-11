@@ -1,0 +1,424 @@
+.page {
+  min-height: 100vh;
+  color: var(--theme-text, #f4eded);
+  background: var(--theme-background, #0a0a0a);
+}
+
+.content {
+  width: min(100%, 1440px);
+  margin: 0 auto;
+  padding: 1.25rem clamp(0.75rem, 2vw, 1.75rem) 4rem;
+  box-sizing: border-box;
+}
+
+.betaNotice {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0 !important;
+  padding: 0.55rem 0.7rem;
+  background: color-mix(in srgb, var(--theme-primary, #d4af37) 7%, transparent);
+  color: var(--theme-text-secondary, #c6c6c6);
+  font-size: 0.7rem;
+  line-height: 1.4;
+}
+
+.betaNotice strong {
+  color: var(--theme-primary, #d4af37);
+  font-weight: 600;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.8rem;
+  min-height: 2rem;
+  margin: 0 0 0.75rem;
+}
+
+.collectionSummary {
+  margin: 0 !important;
+  color: var(--theme-text-muted, rgba(244, 237, 237, 0.58));
+  font-size: 0.7rem;
+  line-height: 1.2;
+}
+
+.collectionSummary span {
+  color: var(--theme-primary, #d4af37);
+}
+
+.toolbarControls {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.sortControl {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  width: auto;
+  margin: 0 !important;
+}
+
+.sortControl select {
+  width: 12rem;
+  height: 2.1rem;
+  margin: 0 !important;
+  padding: 0.3rem 1.8rem 0.3rem 0.6rem !important;
+  border-color: var(--theme-border, rgba(255, 255, 255, 0.16));
+  border-radius: 5px;
+  background-color: var(--theme-section-background, #121416);
+  box-sizing: border-box;
+}
+
+.sortControl select,
+.filters button {
+  color: var(--theme-text-primary, #fff) !important;
+  font-family: inherit !important;
+  font-size: 0.72rem !important;
+  font-style: normal !important;
+  font-weight: 600 !important;
+  line-height: 1.25 !important;
+}
+
+.sortControl option {
+  background: var(--theme-section-background, #121416);
+  color: var(--theme-text-secondary, #c6c6c6);
+  font: inherit;
+}
+
+.filters {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 0.2rem;
+  margin: 0 !important;
+  padding: 0.18rem;
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.16));
+  border-radius: 5px;
+  background: var(--theme-section-background, rgba(255, 255, 255, 0.025));
+}
+
+/* Pico gives buttons a full-width layout and large block margins by default. */
+.filters button {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: auto !important;
+  min-height: 1.75rem;
+  margin: 0 !important;
+  padding: 0.3rem 0.72rem !important;
+  border: 0 !important;
+  border-radius: 3px;
+  background: transparent !important;
+  box-shadow: none !important;
+  box-sizing: border-box;
+}
+
+.filters button:hover,
+.filters .activeFilter {
+  background: var(--theme-primary, #d4af37) !important;
+  color: var(--theme-text-primary, #fff) !important;
+}
+
+.filters button:focus-visible,
+.groupHeading:focus-visible,
+.heroCard:focus-visible {
+  outline: 2px solid var(--theme-primary, #d4af37);
+  outline-offset: 2px;
+}
+
+.group {
+  --block-spacing-vertical: 0;
+  --block-spacing-horizontal: 0;
+  margin: 0 0 0.65rem !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-top: 1px solid var(--theme-border, rgba(255, 255, 255, 0.12)) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.groupHeading {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 0.45rem;
+  width: 100% !important;
+  min-height: 2.25rem;
+  margin: 0 !important;
+  padding: 0.48rem 0.2rem !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--theme-text-primary, #fff) !important;
+  text-align: left !important;
+  font-family: inherit;
+  font-size: 0.94rem;
+  font-weight: 400;
+  line-height: 1 !important;
+}
+
+.groupHeading:hover {
+  background: rgba(255, 255, 255, 0.025) !important;
+}
+
+.collapseIcon {
+  display: block;
+  flex: 0 0 17px;
+  width: 17px;
+  height: 17px;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 1px solid var(--theme-primary, #d4af37);
+  border-radius: 50%;
+  color: var(--theme-primary, #d4af37);
+  box-sizing: border-box;
+}
+
+.collapseIcon path {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.groupHeading b {
+  font-weight: 400;
+}
+.groupHeading small {
+  color: var(--theme-text-muted, #888);
+  font-size: 0.82em;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+  align-items: start;
+  gap: 0.65rem 0.35rem;
+  margin: 0 !important;
+  padding: 0.25rem 0.1rem 0.75rem;
+}
+
+/* Reset Pico's article block spacing; each hero should occupy one compact cell. */
+.heroCard {
+  --block-spacing-vertical: 0;
+  --block-spacing-horizontal: 0;
+  position: relative;
+  min-width: 0;
+  margin: 0 !important;
+  padding: 0.15rem 0.2rem 0.25rem !important;
+  border: 0 !important;
+  border-radius: 5px;
+  background: transparent !important;
+  box-shadow: none !important;
+  text-align: center;
+  outline: none;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.heroCard:hover,
+.heroCard:focus-visible {
+  z-index: 3;
+  background: rgba(255, 255, 255, 0.045) !important;
+  transform: translateY(-2px);
+}
+
+.portraitFrame {
+  display: grid;
+  width: clamp(70px, 5.8vw, 88px);
+  height: clamp(70px, 5.8vw, 88px);
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.heroCard img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  margin: 0 !important;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.heroCard strong {
+  display: block;
+  margin: 0.38rem auto 0 !important;
+  overflow: hidden;
+  color: var(--theme-text-secondary, #c6c6c6);
+  font-size: 0.68rem;
+  font-weight: 400;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gameCount {
+  display: block;
+  margin: 0.06rem 0 0 !important;
+  color: var(--theme-text-secondary, #c6c6c6);
+  font-size: 0.61rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.heroCard[data-played='true'] strong,
+.heroCard[data-mastered='true'] strong {
+  color: var(--theme-primary, #d4af37);
+}
+
+.detail {
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  bottom: calc(100% + 0.4rem);
+  display: none;
+  width: 250px;
+  min-height: 132px;
+  margin: 0 !important;
+  padding: 0.85rem;
+  translate: -50% 0;
+  border: 1px solid
+    color-mix(in srgb, var(--theme-primary, #d4af37) 55%, transparent);
+  border-radius: 5px;
+  background: var(--theme-card-background, #1e2329);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6),
+    0 0 16px color-mix(in srgb, var(--theme-primary, #d4af37) 10%, transparent);
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.detail b,
+.detail span,
+.detail em {
+  display: block;
+}
+.detail strong {
+  margin: 0 0 0.15rem !important;
+  color: var(--theme-text-primary, #fff) !important;
+  font-size: 0.76rem;
+  font-weight: 600;
+  white-space: normal;
+}
+.detail b {
+  color: var(--theme-primary, #d4af37);
+  font-size: 0.9rem;
+}
+.detailGames {
+  margin-top: 0.45rem;
+  color: var(--theme-text-secondary, #c6c6c6);
+  font-size: 0.72rem;
+  line-height: 1.35;
+}
+
+.detailProgress {
+  height: 8px;
+  margin: 0.4rem 0;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.detailProgress i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #934d33, #e2b45e);
+  box-shadow: 0 0 12px rgba(226, 180, 94, 0.45);
+}
+
+.milestoneMessage,
+.maximumMessage {
+  color: var(--theme-primary, #d4af37);
+  font-size: 0.72rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.detail[data-maximum='true'] {
+  min-height: 0;
+}
+
+.detail[data-maximum='true'] .detailGames {
+  margin-top: 0.45rem;
+}
+
+.detail[data-maximum='true'] .maximumMessage {
+  margin-top: 0.1rem;
+}
+
+.heroCard:hover .detail,
+.heroCard:focus-visible .detail,
+.heroCard[data-expanded='true'] .detail {
+  display: block;
+}
+
+.status,
+.empty {
+  margin: 0 !important;
+  padding: 1.5rem;
+  color: var(--theme-text-muted, #888);
+  text-align: center;
+}
+
+@media (max-width: 760px) {
+  .content {
+    padding-top: 0.85rem;
+  }
+  .toolbar {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+  .betaNotice {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .collectionSummary {
+    text-align: right;
+  }
+  .toolbarControls {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
+    gap: 0.6rem 0.2rem;
+  }
+  .portraitFrame {
+    width: clamp(64px, 18vw, 78px);
+    height: clamp(64px, 18vw, 78px);
+  }
+}
+
+@media (max-width: 430px) {
+  .toolbarControls {
+    width: 100%;
+  }
+  .sortControl {
+    justify-content: flex-end;
+    width: 100%;
+  }
+  .filters {
+    width: 100%;
+  }
+  .filters button {
+    flex: 1 1 0;
+    padding-inline: 0.35rem !important;
+  }
+  .grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heroCard {
+    transition: none;
+  }
+}

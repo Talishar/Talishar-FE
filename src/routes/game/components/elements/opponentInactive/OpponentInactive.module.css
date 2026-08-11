@@ -8,17 +8,17 @@
   align-items: center;
   gap: 0.75rem;
   padding: 1rem 1.5rem;
-  background-color: rgba(0, 0, 0, 0.92);
-  border: 1px solid var(--theme-alarm, #c62828);
+  background-color: rgba(0, 0, 0, 0.98);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
   border-radius: 10px;
-  box-shadow: 0 0 20px rgba(198, 40, 40, 0.3);
   animation: slideIn 0.3s ease-out;
   max-width: 250px;
 }
 
+/* Urgency is conveyed by the icon and red leave button; the frame stays
+   neutral to match the rest of the board chrome */
 .warning {
-  border-color: var(--theme-warning, #feca57);
-  box-shadow: 0 0 20px rgba(254, 202, 87, 0.25);
+  border-color: var(--theme-border, rgba(255, 255, 255, 0.2));
 }
 
 @keyframes slideIn {
@@ -35,6 +35,42 @@
 .icon {
   font-size: 1.5rem;
   line-height: 1;
+}
+
+.countdown {
+  font-variant-numeric: tabular-nums;
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--white, #f4eded);
+  transition: color 0.3s ease;
+}
+
+.countdownUnit {
+  font-size: 0.9rem;
+  font-weight: 400;
+  margin-left: 0.1rem;
+  opacity: 0.6;
+}
+
+.progressTrack {
+  width: 100%;
+  height: 2px;
+  background-color: rgba(255, 255, 255, 0.12);
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.45);
+  transition: width 0.5s linear, background-color 0.3s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progressFill {
+    transition: none;
+  }
 }
 
 .message {
@@ -60,6 +96,12 @@
   letter-spacing: 0.05em;
 }
 
+.leaveButton:hover {
+  background-color: transparent;
+  color: var(--theme-alarm, #c62828);
+  border: 1px solid var(--theme-alarm, #c62828);
+}
+
 .leaveButton:disabled {
   opacity: 0.5;
   cursor: not-allowed;
@@ -68,21 +110,25 @@
 .stillHereButton {
   width: 100%;
   padding: 0.5rem 1rem;
-  background-color: var(--theme-primary);
-  color: var(--primary-inverse, #000);
-  border: 1px solid var(--theme-primary);
+  background-color: rgba(255, 255, 255, 0.07);
+  color: #e0e0e0;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 5px;
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s, color 0.2s;
+  transition: background-color 0.2s ease, border-color 0.2s ease,
+    color 0.2s ease;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
 }
 
 .stillHereButton:hover {
-  background-color: transparent;
-  color: var(--theme-primary);
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
 }
 
 .stillHereButton:disabled {

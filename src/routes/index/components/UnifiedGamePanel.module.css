@@ -55,6 +55,27 @@
   min-height: 0;
 }
 
+.guestPanel {
+  max-width: 760px;
+  padding: 2rem;
+}
+
+.guestDescription {
+  margin: 0;
+  color: var(--theme-text-secondary, #c8c8c8);
+  line-height: 1.5;
+}
+
+.guestPrivateSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.guestPrivateHeader .title {
+  margin-bottom: 0.35rem;
+}
+
 .quickJoinSection {
   flex-shrink: 0;
 }
@@ -104,4 +125,8 @@
   text-decoration: underline;
 }
 
-
+@media (max-width: 768px) {
+  .guestPanel {
+    padding: 1.25rem 1rem;
+  }
+}

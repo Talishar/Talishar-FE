@@ -8,15 +8,14 @@
   justify-content: space-between;
   position: relative;
   cursor: pointer;
-  transition: background-color 250ms, left 250ms, box-shadow 250ms;
-  left: 0;
+  transition: background-color 250ms, transform 250ms, box-shadow 250ms;
   background: transparent;
   border-radius: var(--border-radius);
   gap: 0.5rem;
   row-gap: 0.4rem;
 
   &:hover {
-    left: 0.2rem;
+    transform: translateX(0.2rem);
     background-color: rgba(255, 255, 255, 0.04);
     box-shadow: inset 3px 0 0 0 rgba(255, 255, 255, 0.15);
   }
@@ -24,6 +23,11 @@
   &:hover .button {
     background-color: var(--theme-form-border);
     border-color: rgba(255, 255, 255, 0.22);
+  }
+
+  &:hover .buttonLocked {
+    background-color: var(--theme-form-background);
+    border-color: rgba(255, 255, 255, 0.12);
   }
 
   &:hover .joinHeroIcon {
@@ -70,6 +74,12 @@
   /* match the opponent hero image height */
   height: 3.6em;
   padding: 0 !important;
+}
+
+.buttonLocked {
+  opacity: 0.4;
+  filter: grayscale(0.7);
+  cursor: not-allowed;
 }
 
 .joinHeroIcon {

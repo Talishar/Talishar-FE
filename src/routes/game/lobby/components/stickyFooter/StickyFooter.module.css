@@ -5,11 +5,9 @@
   right: 0;
   left: 0;
   background-color: var(--theme-card-background, #1e2329);
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid var(--theme-border-light);
   z-index: 1000;
-  box-shadow:
-    0 -8px 24px rgba(0, 0, 0, 0.4),
-    0 -2px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.4), 0 -2px 6px rgba(0, 0, 0, 0.2);
 }
 
 .dynamicContainer {
@@ -54,15 +52,15 @@
 }
 
 .syncPassive {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: rgba(255, 255, 255, 0.45);
+  background: color-mix(in srgb, var(--theme-text) 6%, transparent);
+  border: 1px solid var(--theme-border-light);
+  color: var(--theme-text-muted);
 }
 
 .syncPassiveLink {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: rgba(255, 255, 255, 0.45);
+  background: color-mix(in srgb, var(--theme-text) 6%, transparent);
+  border: 1px solid var(--theme-border-light);
+  color: var(--theme-text-muted);
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.03em;
@@ -73,21 +71,21 @@
 }
 
 .syncPassiveLink:hover {
-  color: rgba(255, 255, 255, 0.75);
-  border-color: rgba(255, 255, 255, 0.25);
+  color: var(--theme-text-secondary);
+  border-color: var(--theme-border);
 }
 
 .syncLink {
   font-size: 0.67rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--theme-text-muted);
   text-decoration: underline;
   text-underline-offset: 2px;
   white-space: nowrap;
 }
 
 .syncLink:hover {
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--theme-text-secondary);
 }
 
 .iconButton {
@@ -98,9 +96,9 @@
   width: 34px;
   height: 34px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: rgba(255, 255, 255, 0.45);
+  background: color-mix(in srgb, var(--theme-text) 6%, transparent);
+  border: 1px solid var(--theme-border-light);
+  color: var(--theme-text-muted);
   padding: 0;
   margin: 0;
   cursor: pointer;
@@ -111,9 +109,9 @@
 }
 
 .iconButton:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.8);
-  border-color: rgba(255, 255, 255, 0.25);
+  background: color-mix(in srgb, var(--theme-text) 10%, transparent);
+  color: var(--theme-text-secondary);
+  border-color: var(--theme-border);
   transform: none;
   box-shadow: none;
 }
@@ -149,14 +147,14 @@
   font-size: 1.25rem;
   font-weight: 800;
   line-height: 1;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--theme-text);
   transition: color 0.3s ease;
 }
 
 .deckMeta {
   font-size: 0.68rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.35);
+  color: var(--theme-text-muted);
   white-space: nowrap;
   letter-spacing: 0.02em;
   transition: color 0.3s ease;
@@ -196,7 +194,7 @@
 
 .confirmReady {
   background: var(--theme-primary, #d4af37);
-  color: #000;
+  color: var(--theme-primary-inverse, #000);
 }
 
 .confirmReady:hover {
@@ -204,10 +202,10 @@
 }
 
 .confirmDisabled {
-  background: rgba(255, 255, 255, 0.06);
-  color: rgba(255, 255, 255, 0.25);
+  background: color-mix(in srgb, var(--theme-text) 6%, transparent);
+  color: var(--theme-text-muted);
   cursor: not-allowed;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid var(--theme-border-light) !important;
 }
 
 .editButton {
@@ -215,9 +213,9 @@
   font-size: 0.88rem;
   padding: 0.45rem 1.1rem;
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: color-mix(in srgb, var(--theme-text) 8%, transparent);
+  color: var(--theme-text-secondary);
+  border: 1px solid var(--theme-border-light);
   margin: 0;
   white-space: nowrap;
   width: auto;
@@ -231,6 +229,7 @@
 
 .leaveButton {
   font-size: 0.88rem;
+  font-weight: 600;
   padding: 0.45rem 1.1rem;
   margin: 0;
   white-space: nowrap;
@@ -239,6 +238,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 6px;
+  border: 1px solid var(--theme-border);
+  background: transparent;
+  color: var(--theme-text-muted);
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.leaveButton:hover {
+  border-color: rgba(220, 80, 80, 0.55);
+  color: rgba(240, 120, 120, 0.9);
+  background: rgba(200, 50, 50, 0.08);
 }
 
 /* ── Alarm row ────────────────────────────────── */
@@ -280,7 +291,12 @@
     gap: 0.75rem;
   }
 
-  .confirmButton {
+  .actionSection {
+    gap: 1.25rem;
+  }
+
+  .confirmButton,
+  .leaveButton {
     padding: 0.5rem 1.35rem;
   }
 }

@@ -5,6 +5,10 @@ export interface BanPlayerByIPRequest {
   playerNumberToBan: string;
 }
 
+export interface BanIPDirectRequest {
+  directIPToBan: string;
+}
+
 export interface BanPlayerByNameRequest {
   playerToBan: string;
 }
@@ -15,6 +19,12 @@ export interface DeleteUsernameRequest {
 
 export interface CloseGameRequest {
   gameToClose: string;
+}
+
+export interface ResetAllRustCountersResponse {
+  success: boolean;
+  usersReset: number;
+  message?: string;
 }
 
 export interface BannedPlayersResponse {
@@ -29,10 +39,18 @@ export interface RecentAccountsResponse {
   recentAccounts: string[];
 }
 
+export interface LinkedAccount {
+  username: string;
+  ip: string;
+  linkedTo: string;
+}
+
 export interface ModPageDataResponse {
   bannedPlayers: string[];
   bannedIPs: string[];
   recentAccounts: string[];
+  linkedAccounts?: LinkedAccount[];
+  bannedPlayerIPs?: Record<string, string[]>;
 }
 
 export interface SearchUsernamesRequest {

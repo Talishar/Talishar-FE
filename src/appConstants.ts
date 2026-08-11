@@ -99,6 +99,7 @@ export const PROCESS_INPUT = {
   REMOVE_ARSENAL_FROM_OPPONENT: 10017,
   HOP_TO_TURN: 10018,
   TOGGLE_AI_INFINITE_HP: 10019,
+  SET_PRACTICE_DUMMY_WEAPON_POWER: 10020,
 
   // End game options
   QUICK_REMATCH: 100000,
@@ -122,7 +123,8 @@ export const PROCESS_INPUT = {
   DECLINE_UNDO: 100017,
   CONFIRM_THIS_TURN_UNDO: 100018,
   CONFIRM_LAST_TURN_UNDO: 100019,
-  DECLINE_CHAT: 100020
+  DECLINE_CHAT: 100020,
+  CONFIRM_CHAIN_LINK_UNDO: 100022
 };
 
 // Default shortcut inputs
@@ -291,6 +293,16 @@ const PRECON_DECK_DATA = [
     name: 'Hala, Bladesaint of the Vow',
     link: 'https://fabrary.net/decks/01KNHHE1MY39BC4PXYXMTJVT1M',
     hero: 'AHA001'
+  },
+  {
+    name: 'Zyggy Starlight',
+    link: 'https://fabrary.net/decks/01KREWW7RJS0GZ2PCCD4BM47QY',
+    hero: 'OMN001'
+  },
+  {
+    name: 'Olympia, Prized Fighter',
+    link: 'https://fabrary.net/decks/01KP7ZJNFZZD8YNGP438FT8SFG',
+    hero: 'HVY092'
   }
 ];
 
@@ -311,12 +323,12 @@ export const URL_END_POINT = {
   GET_GAME_INFO: 'APIs/GetGameInfo.php',
   CREATE_GAME: 'APIs/CreateGame.php',
   REPLAYS: 'APIs/CreateReplayGame.php',
-  SUBMIT_CHAT: 'SubmitChat.php',
+  GET_SAVED_REPLAYS: 'APIs/GetSavedReplays.php',
+  GET_REPLAY_TURNS: 'APIs/GetReplayTurns.php',
+  SET_REPLAY_FAVORITE: 'APIs/SetReplayFavorite.php',
   GET_POPUP: 'GetPopupAPI.php',
-  GAME_STATE_POLL: 'GetNextTurn.php?',
   PROCESS_INPUT: 'ProcessInput.php?',
   PROCESS_INPUT_POST: 'ProcessInputAPI.php',
-  PARSE_GAME_FILE: 'APIs/ParseGameFile.php',
   CHOOSE_FIRST_PLAYER: 'APIs/ChooseFirstPlayer.php',
   GET_FAVORITE_DECKS: 'APIs/GetFavoriteDecks.php',
   GET_LOBBY_INFO: 'APIs/GetLobbyInfo.php',
@@ -324,7 +336,8 @@ export const URL_END_POINT = {
   JOIN_GAME: 'APIs/JoinGame.php',
   SUBMIT_SIDEBOARD: 'APIs/SubmitSideboard.php',
   USER_PROFILE: 'APIs/UserProfileAPI.php',
-  START_GAME_LEGACY: 'Start.php',
+  CHANGE_DISPLAY_NAME: 'APIs/ChangeDisplayNameAPI.php',
+  CLEAR_RUST_COUNTERS: 'APIs/ClearRustCounters.php',
   LOGIN: 'AccountFiles/PasswordLoginAPI.php',
   LOGIN_WITH_COOKIE: 'AccountFiles/TryLoginAPI.php',
   LOGOUT: `AccountFiles/LogoutUserAPI.php`,
@@ -336,6 +349,8 @@ export const URL_END_POINT = {
   DELETE_DECK: `APIs/DeleteDeckAPI.php`,
   ADD_FAVORITE_DECK: `APIs/AddFavoriteDeck.php`,
   UPDATE_FAVORITE_DECK: `APIs/UpdateFavoriteDeck.php`,
+  GET_DECK_CARDS: `APIs/GetDeckCards.php`,
+  SAVE_DECK_COSMETICS: `APIs/SaveDeckCosmetics.php`,
   PATREON_LOGIN: `AccountFiles/PatreonLoginAPI.php`,
   METAFY_LOGIN: `AccountFiles/MetafyLoginAPI.php`,
   METAFY_SIGNUP: `AccountFiles/MetafySignupAPI.php`,
@@ -343,8 +358,8 @@ export const URL_END_POINT = {
   LOAD_BUG_REPORT: `LoadBugReport.php`,
   SUBMIT_LOBBY_INPUT: 'APIs/SubmitLobbyInput.php',
   KICK_PLAYER: 'APIs/KickPlayer.php',
-  BLOCK_USER: 'include/BlockUser.php',
   GET_MOD_PAGE_DATA: 'APIs/GetModPageData.php',
+  RESET_ALL_RUST_COUNTERS: 'APIs/ResetAllRustCounters.php',
   SEARCH_USERNAMES: 'APIs/SearchUsernames.php',
   BAN_PLAYER: 'BanPlayer.php',
   CLOSE_GAME: 'CloseGame.php',
@@ -354,8 +369,11 @@ export const URL_END_POINT = {
   SYSTEM_MESSAGE: 'APIs/SystemMessageAPI.php',
   GET_SYSTEM_MESSAGE: 'APIs/GetSystemMessage.php',
   GET_LAST_ACTIVE_GAME: 'APIs/GetLastActiveGame.php',
+  SHARE_REPLAY: 'APIs/ShareReplay.php',
+  CREATE_SHARED_REPLAY_GAME: 'APIs/CreateSharedReplayGame.php',
   SYNC_METAFY_SUBSCRIBERS: 'APIs/SyncMetafySubscribers.php',
   GET_APP_INFO: 'AccountFiles/GetAppInfoAPI.php',
+  GET_HERO_MASTERY: 'APIs/GetHeroMastery.php',
   GENERATE_AUTH_TOKEN: 'AccountFiles/GenerateAuthTokenAPI.php',
   MATCH_RESULT_WEBHOOK: 'APIs/MatchResultWebhookAPI.php'
 };

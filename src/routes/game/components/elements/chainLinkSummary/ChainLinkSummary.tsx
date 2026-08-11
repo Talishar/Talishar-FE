@@ -10,16 +10,18 @@ import styles from './ChainLinkSummary.module.css';
 import attackSymbol from '../../../../../img/symbols/symbol-attack.png';
 import { useGetPopUpContentQuery } from 'features/api/apiSlice';
 import GameStaticInfo from 'features/GameStaticInfo';
-import CardTextLink from '../cardTextLink/CardTextLink';
 import { Effect } from '../effects/Effects';
 import { Card } from 'features/Card';
+import CombatChainLink from 'features/CombatChainLink';
 import EndGameScreen from '../endGameScreen/EndGameScreen';
 import useShortcut from 'hooks/useShortcut';
 import { DEFAULT_SHORTCUTS } from 'appConstants';
 import { shallowEqual } from 'react-redux';
-import { useEffect } from 'react';
+import React, { CSSProperties, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export const ChainLinkSummaryContainer = () => {
+  const { t } = useTranslation();
   const chainLinkSummary = useAppSelector(
     (state: RootState) => state.game.chainLinkSummary,
     shallowEqual
@@ -28,8 +30,14 @@ export const ChainLinkSummaryContainer = () => {
   const turnPhase = useAppSelector(
     (state: RootState) => state.game.turnPhase?.turnPhase
   );
+  const hasGameEnded = useAppSelector(
+    (state: RootState) => state.game.hasGameEnded
+  );
   const lastUpdate = useAppSelector(
     (state: RootState) => state.game.gameDynamicInfo.lastUpdate
+  );
+  const oldCombatChain = useAppSelector(
+    (state: RootState) => state.game.oldCombatChain ?? []
   );
 
   const dispatch = useAppDispatch();
@@ -41,51 +49,180 @@ export const ChainLinkSummaryContainer = () => {
     }
   }, [turnPhase, dispatch]);
 
-  // Check if game is over to show end game screen
-  if (!!turnPhase && turnPhase === 'OVER') {
-    return (
+  const props = {
+    lastUpdate: lastUpdate,
+    ...gameInfo
+  };
+
+  let chainLinkContent: React.ReactNode = null;
+  if (chainLinkSummary?.show && chainLinkSummary.view === 'all') {
+    chainLinkContent = (
+      <div
+        className={styles.emptyOutside}
+        onClick={() => dispatch(hideChainLinkSummary())}
+      >
+        <div
+          className={styles.allLinksBox}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className={styles.cardListTitleContainer}>
+            <h3 className={styles.title}>
+              {t('CHAIN_LINK_SUMMARY.COMBAT_CHAIN')}
+            </h3>
+            <button
+              type="button"
+              className={styles.cardListCloseIcon}
+              onClick={() => dispatch(hideChainLinkSummary())}
+              aria-label={t('PLAYER_INPUT.CLOSE_POPUP')}
+            >
+              <FaTimes aria-hidden="true" />
+            </button>
+          </div>
+          <div className={styles.allLinksGrid}>
+            {oldCombatChain.map((_: CombatChainLink, index: number) => (
+              <ChainLinkSummary
+                key={index}
+                {...props}
+                chainLinkIndex={index}
+                presentation="inline"
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  } else if (chainLinkSummary?.show) {
+    chainLinkContent = (
       <div>
-        <EndGameScreen />
+        <ChainLinkSummary
+          {...props}
+          chainLinkIndex={chainLinkSummary.index}
+          presentation={
+            chainLinkSummary.view === 'preview' ? 'preview' : 'dialog'
+          }
+        />
       </div>
     );
   }
 
-  if (!chainLinkSummary || !chainLinkSummary.show) {
-    return null;
-  }
-
-  const props = {
-    chainLinkIndex: chainLinkSummary.index,
-    lastUpdate: lastUpdate,
-    ...gameInfo
-  };
   return (
-    <div>
-      <ChainLinkSummary {...props} />
-    </div>
+    <>
+      {hasGameEnded && (
+        <div style={chainLinkSummary?.show ? { display: 'none' } : undefined}>
+          <EndGameScreen />
+        </div>
+      )}
+      {chainLinkContent}
+    </>
   );
 };
 
 interface ChainLinkSummaryProps extends GameStaticInfo {
   chainLinkIndex?: number;
   lastUpdate?: number;
+  presentation?: 'dialog' | 'preview' | 'inline';
 }
+
+interface ChainLinkCard {
+  Player: string | number;
+  Name: string;
+  cardID: string;
+  modifier: number;
+  pitch?: number | string;
+}
+
+const PITCH_COLORS: Record<number, string> = {
+  1: '#af1518',
+  2: '#daa520',
+  3: '#4b84ff'
+};
+const pitchColor = (pitch?: number | string): string | undefined =>
+  PITCH_COLORS[Number(pitch)];
+
+const CardRow = ({
+  entry,
+  isPlayer,
+  value,
+  signed
+}: {
+  entry: ChainLinkCard;
+  isPlayer: boolean;
+  value?: number;
+  signed?: boolean;
+}) => {
+  const { t } = useTranslation();
+  const card: Card = { cardNumber: entry.cardID };
+  const color = pitchColor(entry.pitch);
+  const artStyle = {
+    '--pitch-color': color ?? 'rgba(219, 209, 163, 0.5)',
+    '--pitch-glow': color ? `${color}66` : 'transparent'
+  } as CSSProperties;
+  const nameStyle = color ? { color, fontWeight: 600 } : undefined;
+  const valueClass = signed
+    ? (value ?? 0) > 0
+      ? styles.rowValPos
+      : (value ?? 0) < 0
+      ? styles.rowValNeg
+      : styles.rowValNeutral
+    : styles.rowVal;
+  return (
+    <div className={styles.row}>
+      <div className={styles.rowIcon}>
+        {entry.cardID === 'POWERCOUNTER' ? (
+          <img
+            src={attackSymbol}
+            className={styles.attackSymbol}
+            alt={t('CHAIN_LINK_SUMMARY.POWER_COUNTER_ALT')}
+          />
+        ) : (
+          <div className={styles.pitchArt} style={artStyle}>
+            <Effect
+              card={card}
+              isPlayer={isPlayer}
+              imgClassName={styles.pitchImg}
+            />
+          </div>
+        )}
+      </div>
+      <div className={styles.rowName} style={nameStyle}>
+        {entry.Name}
+      </div>
+      {value !== undefined && (
+        <div className={valueClass}>
+          {signed && value > 0 ? '+' : ''}
+          {value}
+        </div>
+      )}
+    </div>
+  );
+};
 
 const ChainLinkSummary = ({
   gameID,
   playerID,
   authKey,
   chainLinkIndex,
-  lastUpdate
+  lastUpdate,
+  presentation = 'dialog'
 }: ChainLinkSummaryProps) => {
+  const { t } = useTranslation();
+  const isResolvedLink = chainLinkIndex != null && chainLinkIndex >= 0;
+
   const { data, isLoading, error } = useGetPopUpContentQuery({
     gameID: gameID,
     playerID: playerID,
     authKey: authKey,
-    popupType: chainLinkIndex != -1 ? 'chainLinkPopup' : 'attackSummary',
+    popupType: isResolvedLink ? 'chainLinkPopup' : 'attackSummary',
     index: chainLinkIndex,
     lastUpdate: lastUpdate
   });
+
+  const didItHitFromRedux = useAppSelector((state: RootState) =>
+    isResolvedLink
+      ? state.game.oldCombatChain?.[chainLinkIndex]?.didItHit
+      : undefined
+  );
+
   const dispatch = useAppDispatch();
 
   const closeCardList = () => {
@@ -94,98 +231,213 @@ const ChainLinkSummary = ({
 
   useShortcut(DEFAULT_SHORTCUTS.CLOSE_WINDOW, closeCardList);
 
+  const title = isResolvedLink
+    ? `Chain Link ${(chainLinkIndex ?? 0) + 1}`
+    : 'Current Attack';
+
   let content;
+  let headerBadge: React.ReactNode = null;
 
   if (isLoading) {
-    content = <div>Loading...</div>;
-  } else if (error) {
-    content = <div className={styles.error}>{JSON.stringify(error)}</div>;
-  } else {
     content = (
-      <div className={styles.cardListContents}>
-        <div className={styles.totalDamageContainer}>
-          <span className={styles.totalDamageLabel}>Total Damage Dealt: </span>
-          <span className={styles.totalDamageValue}>
-            {data.TotalDamageDealt}
-          </span>
-        </div>
-        <div className={styles.tableWrapper}>
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th className={styles.cardImageCol}></th>
-                <th className={styles.cardNameCol}>Card</th>
-                <th className={styles.effectCol}>Effect</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.Cards != undefined ? (
-                data.Cards.map((entry: any, ix: number) => {
-                  const card: Card = { cardNumber: entry.cardID };
-                  const isPlayer = parseInt(entry.Player) === playerID;
-                  return (
-                    <tr key={`cardList${ix}`} className={styles.tableRow}>
-                      <td className={styles.cardImageCol}>
-                        {entry.cardID === 'POWERCOUNTER' ? (
-                          <img
-                            src={attackSymbol}
-                            className={styles.attackSymbol}
-                            alt="+1 Power Counter"
-                          />
-                        ) : (
-                          <Effect card={card} isPlayer={isPlayer} />
-                        )}
-                      </td>
-                      <td className={styles.cardNameCol}>
-                        <CardTextLink
-                          cardName={entry.Name}
-                          cardNumber={entry.cardID}
-                        />
-                      </td>
-                      <td className={styles.effectCol}>
-                        <span
-                          className={
-                            entry.modifier > 0
-                              ? styles.positive
-                              : entry.modifier < 0
-                              ? styles.negative
-                              : ''
-                          }
-                        >
-                          {entry.modifier > 0 ? '+' : ''}
-                          {entry.modifier === 0 ? '-' : entry.modifier}
-                        </span>
-                      </td>
-                    </tr>
-                  );
-                })
-              ) : (
-                <tr>
-                  <td colSpan={3} className={styles.error}>
-                    {JSON.stringify(data)}
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <div className={styles.info}>{t('CHAIN_LINK_SUMMARY.LOADING')}</div>
     );
+  } else if (error) {
+    const errorMsg =
+      'status' in (error as object)
+        ? `Error ${(error as { status: number }).status}`
+        : 'Failed to load chain link summary';
+    content = <div className={styles.error}>{errorMsg}</div>;
+  } else if (!data?.Cards) {
+    content = <div className={styles.error}>{JSON.stringify(data)}</div>;
+  } else {
+    const cards: ChainLinkCard[] = data.Cards;
+
+    const attackerPID =
+      data.AttackingPlayerID != null
+        ? Number(data.AttackingPlayerID)
+        : cards.length > 0
+        ? Number(cards[0].Player)
+        : Number(playerID);
+
+    const attackCards = cards.filter((c) => Number(c.Player) === attackerPID);
+    const blockCards = cards.filter((c) => Number(c.Player) !== attackerPID);
+    const isAttackerYou = attackerPID === Number(playerID);
+
+    if (isResolvedLink) {
+      const damage = Number(data.TotalDamageDealt) || 0;
+      const totalAttack =
+        data.TotalAttack != null
+          ? Number(data.TotalAttack)
+          : attackCards.reduce((sum, c) => sum + (Number(c.modifier) || 0), 0);
+      const totalBlock = blockCards.reduce(
+        (sum, c) => sum + (Number(c.modifier) || 0),
+        0
+      );
+      const attackCardsTotal = attackCards.reduce(
+        (sum, c) => sum + (Number(c.modifier) || 0),
+        0
+      );
+      const activeEffectModifier = totalAttack - attackCardsTotal;
+      const didHit =
+        data.DidItHit != null
+          ? !!data.DidItHit
+          : didItHitFromRedux ?? damage > 0;
+
+      const hasBlockers = blockCards.length > 0;
+      const reductionValue = hasBlockers
+        ? totalBlock
+        : Math.max(0, totalAttack - damage);
+      const reductionLabel = hasBlockers ? 'Blocked' : 'Prevented';
+
+      headerBadge = (
+        <span
+          className={`${styles.badge} ${didHit ? styles.hit : styles.noHit}`}
+        >
+          {didHit ? 'Hit' : 'No hit'}
+        </span>
+      );
+
+      content = (
+        <>
+          <div className={styles.ledger}>
+            <div className={styles.stat}>
+              <div className={styles.statNum}>{totalAttack}</div>
+              <div className={styles.statLabel}>
+                {t('CHAIN_LINK_SUMMARY.ATTACK')}
+              </div>
+            </div>
+            {reductionValue > 0 && (
+              <>
+                <div className={styles.op}>−</div>
+                <div className={styles.stat}>
+                  <div className={styles.statNum}>{reductionValue}</div>
+                  <div className={styles.statLabel}>{reductionLabel}</div>
+                </div>
+              </>
+            )}
+            <div className={styles.op}>→</div>
+            <div className={styles.stat}>
+              <div className={`${styles.statNum} ${styles.dmgNum}`}>
+                {damage}
+              </div>
+              <div className={styles.statLabel}>
+                {t('CHAIN_LINK_SUMMARY.DAMAGE')}
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.body}>
+            <div className={styles.sectionLabel}>
+              {t('CHAIN_LINK_SUMMARY.ATTACK')}
+            </div>
+            {attackCards.length > 0 ? (
+              <>
+                {attackCards.map((entry, ix) => (
+                  <CardRow
+                    key={`atk-${entry.cardID}-${ix}`}
+                    entry={entry}
+                    isPlayer={isAttackerYou}
+                    value={Number(entry.modifier) || 0}
+                  />
+                ))}
+                {activeEffectModifier !== 0 && (
+                  <CardRow
+                    entry={{
+                      Player: attackerPID,
+                      Name: 'Active combat effects',
+                      cardID: 'POWERCOUNTER',
+                      modifier: activeEffectModifier
+                    }}
+                    isPlayer={isAttackerYou}
+                    value={activeEffectModifier}
+                    signed
+                  />
+                )}
+              </>
+            ) : (
+              <div className={styles.emptyRow}>
+                {t('CHAIN_LINK_SUMMARY.NO_ATTACKER')}
+              </div>
+            )}
+
+            <div className={styles.sectionLabel}>
+              {t('CHAIN_LINK_SUMMARY.BLOCKS')}
+            </div>
+            {hasBlockers ? (
+              blockCards.map((entry, ix) => (
+                <CardRow
+                  key={`blk-${entry.cardID}-${ix}`}
+                  entry={entry}
+                  isPlayer={!isAttackerYou}
+                  value={Number(entry.modifier) || 0}
+                />
+              ))
+            ) : (
+              <div className={styles.emptyRow}>
+                {t('CHAIN_LINK_SUMMARY.NO_BLOCKS')}
+              </div>
+            )}
+          </div>
+        </>
+      );
+    } else {
+      content = (
+        <div className={styles.body}>
+          <div className={styles.sectionLabel}>
+            {t('CHAIN_LINK_SUMMARY.ATTACK_MODIFIERS')}
+          </div>
+          {cards.length > 0 ? (
+            cards.map((entry, ix) => (
+              <CardRow
+                key={`mod-${entry.cardID}-${ix}`}
+                entry={entry}
+                isPlayer={Number(entry.Player) === Number(playerID)}
+                value={Number(entry.modifier) || 0}
+                signed
+              />
+            ))
+          ) : (
+            <div className={styles.emptyRow}>
+              {t('CHAIN_LINK_SUMMARY.NO_MODIFIERS')}
+            </div>
+          )}
+        </div>
+      );
+    }
   }
 
-  return (
-    <div className={styles.emptyOutside} onClick={closeCardList}>
-      <div className={styles.cardListBox} onClick={(e) => e.stopPropagation()}>
-        <div className={styles.cardListTitleContainer}>
-          <div className={styles.cardListTitle}>
-            <h3 className={styles.title}>{'Chain Link Summary'}</h3>
-          </div>
-          <div className={styles.cardListCloseIcon} onClick={closeCardList}>
-            <FaTimes title="Close Dialog" />
-          </div>
+  const summary = (
+    <div className={styles.cardListBox} onClick={(e) => e.stopPropagation()}>
+      <div className={styles.cardListTitleContainer}>
+        <div className={styles.titleRow}>
+          <h3 className={styles.title}>{title}</h3>
+          {headerBadge}
         </div>
-        {content}
+        {presentation !== 'inline' && (
+          <button
+            type="button"
+            className={styles.cardListCloseIcon}
+            onClick={closeCardList}
+            aria-label={t('PLAYER_INPUT.CLOSE_POPUP')}
+          >
+            <FaTimes aria-hidden="true" />
+          </button>
+        )}
       </div>
+      {content}
+    </div>
+  );
+
+  if (presentation === 'inline') return summary;
+  return (
+    <div
+      className={
+        presentation === 'preview' ? styles.previewOutside : styles.emptyOutside
+      }
+      onClick={presentation === 'dialog' ? closeCardList : undefined}
+    >
+      {summary}
     </div>
   );
 };

@@ -13,7 +13,12 @@
   height: 34px;
   padding: 0;
   border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--theme-border, rgba(255, 255, 255, 0.2)) 70%, black 30%);
+  border: 1px solid
+    color-mix(
+      in srgb,
+      var(--theme-border, rgba(255, 255, 255, 0.2)) 70%,
+      black 30%
+    );
   background: color-mix(in srgb, var(--landing-surface) 93%, black 7%);
   color: color-mix(in srgb, var(--theme-text, #ffffff) 68%, black 32%);
   font-size: 0.95rem;
@@ -24,14 +29,16 @@
   line-height: 1;
   cursor: pointer;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease,
+    color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
 }
 
 .bannerToggle:hover {
   border-color: var(--theme-primary, #d4af37);
   background: color-mix(in srgb, var(--landing-surface) 82%, black 18%);
   color: var(--theme-primary, #d4af37);
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25), 0 0 12px color-mix(in srgb, var(--theme-primary, #d4af37) 18%, transparent);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25),
+    0 0 12px color-mix(in srgb, var(--theme-primary, #d4af37) 18%, transparent);
   transform: translateY(-1px);
 }
 
@@ -50,8 +57,7 @@
 .bannerBackground {
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(
+  background: linear-gradient(
       to bottom,
       rgba(0, 0, 0, 0.55) 0%,
       rgba(0, 0, 0, 0.55) 40%,
@@ -74,6 +80,10 @@
   text-align: center;
   padding: 120px 2rem 3rem;
   pointer-events: none;
+}
+
+.bannerContentGuest {
+  padding-bottom: 2rem;
 }
 
 .heroLogo {
@@ -149,7 +159,6 @@
 
 .contentSection {
   position: relative;
-  z-index: 1;
   background: var(--theme-background);
   margin-top: 0;
   scroll-margin-top: 86px;
@@ -248,16 +257,6 @@
   align-self: stretch;
 }
 
-@media (max-width: 768px) {
-  .gridLoggedOut .gameListContainer {
-    order: 2;
-  }
-
-  .gridLoggedOut .createGameContainer {
-    order: 1;
-  }
-}
-
 @media (min-width: 769px) {
   .grid {
     grid-template-columns: 1fr 1fr;
@@ -268,6 +267,11 @@
     overflow: hidden;
     min-height: 550px;
   }
+}
+
+.grid.gridLoggedOut {
+  grid-template-columns: minmax(0, 800px);
+  justify-content: center;
 }
 
 @media (max-width: 768px) {
@@ -314,8 +318,6 @@ h3 {
 }
 
 .messageItem {
-  background: rgba(255, 255, 255, 0.05);
-  border-left: 3px solid var(--theme-primary, #d4af37);
   border-radius: 4px;
   padding: 1em;
   margin-bottom: 1em;
@@ -394,8 +396,6 @@ h3 {
 }
 
 .messageEmbed {
-  background: rgba(100, 181, 246, 0.05);
-  border-left: 3px solid var(--theme-primary, #d4af37);
   border-radius: 4px;
   padding: 0.75em;
 }
@@ -718,8 +718,13 @@ h3 {
 }
 
 @keyframes newsCardPulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
 }
 
 .newsCardHeader {

@@ -71,12 +71,27 @@
   margin-bottom: 0 !important;
 }
 
+.textInput[aria-invalid='true'] {
+  border-color: var(--alarm, #d93526);
+}
+
+.fieldError {
+  color: var(--alarm, #d93526);
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+
 .toggleLabel {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   font-size: 0.9rem;
   cursor: pointer;
+  margin: 0;
+}
+
+.toggleLabel input[type='checkbox'] {
+  flex-shrink: 0;
   margin: 0;
 }
 
@@ -149,21 +164,33 @@
   color: var(--theme-text, #ededed);
 }
 
+.tab:focus-visible {
+  position: relative;
+  z-index: 1;
+  outline: 2px solid var(--theme-primary, #d4af37);
+  outline-offset: -2px;
+}
+
 .tab + .tab {
   border-left: 1px solid var(--theme-border, rgba(255, 255, 255, 0.15));
 }
 
 .tabActive {
-  background: color-mix(in srgb, var(--theme-primary, #d4af37) 20%, transparent);
+  background: var(--theme-form-background, #33383d);
   color: var(--theme-primary, #d4af37);
   font-weight: 600;
+  box-shadow: inset 0 -2px 0 var(--theme-primary, #d4af37) !important;
+}
+
+.tabActive:hover {
+  box-shadow: inset 0 -2px 0 var(--theme-primary, #d4af37) !important;
 }
 
 .tabDisabled {
   opacity: 0.45 !important;
   cursor: not-allowed !important;
   /* Pico CSS sets pointer-events: none on button:disabled, which prevents cursor: not-allowed.
-     Restoring pointer-events here is safe — the HTML disabled attribute still blocks clicks. */
+     Restoring pointer-events here is safe - the HTML disabled attribute still blocks clicks. */
   pointer-events: auto !important;
 }
 

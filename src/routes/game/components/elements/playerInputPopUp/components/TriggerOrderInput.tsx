@@ -1,5 +1,6 @@
 import { FormProps } from '../playerInputPopupTypes';
 import React, { useMemo, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import styles from '../PlayerInputPopUp.module.css';
 import CardDisplay from '../../cardDisplay/CardDisplay';
 import { Card } from 'features/Card';
@@ -9,7 +10,6 @@ import { useProcessInputAPIMutation } from 'features/api/apiSlice';
 import { getGameInfo } from 'features/game/GameSlice';
 import { shallowEqual } from 'react-redux';
 import classNames from 'classnames';
-import { on } from 'events';
 
 let change = false;
 let buttonClick = false;
@@ -19,6 +19,7 @@ const TriggerOrdering = ({ topCards }: { topCards: Card[] }) => {
     shallowEqual
   );
 
+  const { t } = useTranslation();
   const [cardListTop, setCardListTop] = React.useState<Card[]>([]);
 
   useMemo(() => {
@@ -33,8 +34,7 @@ const TriggerOrdering = ({ topCards }: { topCards: Card[] }) => {
     );
   }, [topCards]);
 
-  const [processInputAPI, useProcessInputAPIResponse] =
-    useProcessInputAPIMutation();
+  const [processInputAPI] = useProcessInputAPIMutation();
 
   const changeTopCardOrder = (newOrder: Card[]) => {
     setCardListTop(newOrder);
@@ -88,7 +88,6 @@ const TriggerOrdering = ({ topCards }: { topCards: Card[] }) => {
     processInputAPI(body);
   };
 
-  const cardInLayer: string[] = [];
   return (
     <div className={classNames(styles.newOptForm, styles.optFormContainer)}>
       <div
@@ -102,14 +101,14 @@ const TriggerOrdering = ({ topCards }: { topCards: Card[] }) => {
           handleSubmit();
         }}
       >
-        Submit
+        {t('PLAYER_INPUT.SUBMIT')}
       </div>
       <div className={classNames(styles.newOptForm, styles.cardsContainer)}>
         <div className={classNames(styles.newOptForm, styles.reorderCards)}>
           <div
             className={classNames(styles.newOptForm, styles.topAndBottomText)}
           >
-            Triggers
+            {t('PLAYER_INPUT.TRIGGERS')}
           </div>
           <Reorder.Group
             className={classNames(styles.newOptForm, styles.reorderCards)}
@@ -118,11 +117,6 @@ const TriggerOrdering = ({ topCards }: { topCards: Card[] }) => {
             axis="x"
           >
             {cardListTop.map((card, ix) => {
-              // avoid any jankiness if we have duplicate cards in the layer!
-              const layerCount = cardInLayer.filter(
-                (value) => value === card.cardNumber
-              ).length;
-              cardInLayer.push(card.cardNumber);
               return (
                 <Reorder.Item
                   key={card.uniqueId}

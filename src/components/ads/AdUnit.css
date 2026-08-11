@@ -61,7 +61,7 @@
     max-width: none;
   }
 
-  /* Hide leaderboard on mobile — a mobile-unit is shown instead */
+  /* Hide leaderboard on mobile - a mobile-unit is shown instead */
   .ad-unit[data-ad^='leaderboard'] {
     display: none;
   }

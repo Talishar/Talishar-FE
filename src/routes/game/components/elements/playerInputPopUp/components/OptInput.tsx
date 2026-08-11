@@ -38,7 +38,7 @@ const OptOptionBox = ({ card, onClickButton }: OptOptionBoxProps) => {
 };
 
 export const OptInput = (props: FormProps) => {
-  const { cards, buttons, onClickButton, id } = props;
+  const { cards, buttons, onClickButton } = props;
 
   const maxButtonsPerIndex = 2;
   const buttonsCountPerIndex = new Map();

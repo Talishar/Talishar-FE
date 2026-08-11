@@ -4,11 +4,19 @@ import styles from './DevToolPanel.module.css';
 import { useLoadDebugGameMutation } from 'features/api/apiSlice';
 import { toast } from 'react-hot-toast';
 import { usePanelContext } from '../PanelContext';
+import { useAppSelector } from 'app/Hooks';
+import { RootState } from 'app/Store';
+import { useTranslation } from 'react-i18next';
+import { MdClose } from 'react-icons/md';
 
 export default function DevToolPanel() {
   const [isOpen, setIsOpen] = useState(false);
+  const { t } = useTranslation();
   const { setIsDevToolOpen, isManualModeOpen } = usePanelContext();
   const location = useLocation();
+  const isReplay = useAppSelector(
+    (state: RootState) => state.game.gameInfo.isReplay
+  );
 
   // Extract game ID from URL (e.g., /game/play/1145 -> 1145)
   const gameIdFromUrl = useMemo(() => {
@@ -17,7 +25,11 @@ export default function DevToolPanel() {
   }, [location.pathname]);
 
   // Only show in dev environment and not on CreateGame page
-  if (import.meta.env.PROD || location.pathname.includes('/create')) {
+  if (
+    import.meta.env.PROD ||
+    location.pathname.includes('/create') ||
+    isReplay
+  ) {
     return null;
   }
 
@@ -31,9 +43,9 @@ export default function DevToolPanel() {
           setIsOpen(!isOpen);
           setIsDevToolOpen(!isOpen);
         }}
-        title="Toggle Dev Tool"
+        title={t('DEV_TOOL.TOGGLE')}
       >
-        Dev Tool
+        {t('DEV_TOOL.TITLE')}
       </button>
       {isOpen && (
         <DevToolContent
@@ -58,6 +70,7 @@ function DevToolContent({
   const gameIDInput = useId();
   const variantInput = useId();
   const localIDInput = useId();
+  const { t } = useTranslation();
   const [gameID, setGameID] = useState<string | undefined>(undefined);
   const [variant, setVariant] = useState<string>('0');
   const [localGame, setLocalGame] = useState<string | undefined>(gameIdFromUrl);
@@ -73,7 +86,7 @@ function DevToolContent({
       const sourceGameID = `${gameID?.trim()}-${variant}`;
 
       try {
-        const result = await debugGameMutation({
+        await debugGameMutation({
           source: sourceGameID,
           target: localGame?.trim()
         }).unwrap();
@@ -111,14 +124,19 @@ function DevToolContent({
   return (
     <div className={styles.devToolPanel}>
       <div className={styles.header}>
-        <h3>Dev Tool</h3>
-        <button className={styles.closeButton} onClick={onClose}>
-          ×
+        <h3>{t('DEV_TOOL.TITLE')}</h3>
+        <button
+          type="button"
+          className={styles.closeButton}
+          onClick={onClose}
+          aria-label={`Close ${t('DEV_TOOL.TITLE')}`}
+        >
+          <MdClose aria-hidden="true" />
         </button>
       </div>
       <div className={styles.content}>
         <div className={styles.formGroup}>
-          <label htmlFor={gameIDInput}>Debug game ID:</label>
+          <label htmlFor={gameIDInput}>{t('DEV_TOOL.DEBUG_GAME_ID')}:</label>
           <input
             id={gameIDInput}
             type="text"
@@ -127,7 +145,9 @@ function DevToolContent({
           />
         </div>
         <div className={styles.formGroup}>
-          <label htmlFor={variantInput}>Bug report variant:</label>
+          <label htmlFor={variantInput}>
+            {t('DEV_TOOL.BUG_REPORT_VARIANT')}:
+          </label>
           <input
             id={variantInput}
             type="number"
@@ -137,11 +157,11 @@ function DevToolContent({
             placeholder="0"
           />
           <small style={{ display: 'block', marginTop: '4px', color: '#888' }}>
-            Will load 111-0, 111-1, 111-2, etc.
+            {t('DEV_TOOL.WILL_LOAD')}
           </small>
         </div>
         <div className={styles.formGroup}>
-          <label htmlFor={localIDInput}>Local game ID to overwrite:</label>
+          <label htmlFor={localIDInput}>{t('DEV_TOOL.LOCAL_GAME_ID')}:</label>
           <input
             id={localIDInput}
             type="text"
@@ -151,7 +171,7 @@ function DevToolContent({
           />
         </div>
         <button className={styles.submitButton} onClick={handleButtonClick}>
-          Replace local game with debug game
+          {t('DEV_TOOL.REPLACE_LOCAL')}
         </button>
       </div>
     </div>

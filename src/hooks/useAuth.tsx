@@ -1,12 +1,12 @@
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import {
-  useGetFavoriteDecksQuery,
   useLoginWithCookieQuery,
   useLogOutMutation
 } from 'features/api/apiSlice';
 import {
   selectCurrentUser,
   selectCurrentUserName,
+  selectCurrentDisplayName,
   selectIsPatron,
   selectIsMod,
   selectMetafyId,
@@ -31,16 +31,15 @@ const MOD_USERNAMES = [
 export default function useAuth() {
   const currentUserId = useAppSelector(selectCurrentUser);
   const currentUserName = useAppSelector(selectCurrentUserName);
+  const currentDisplayName = useAppSelector(selectCurrentDisplayName);
   const reduxIsPatron = useAppSelector(selectIsPatron);
-  const isMod = useAppSelector(selectIsMod);
+  const reduxIsMod = useAppSelector(selectIsMod);
   const metafyId = useAppSelector(selectMetafyId);
   const metafyHash = useAppSelector(selectMetafyHash);
   const metafyTimestamp = useAppSelector(selectMetafyTimestamp);
   // const { refetch } = useGetFavoriteDecksQuery(undefined);
-  const [logOutAPI, logOutData] = useLogOutMutation();
+  const [logOutAPI] = useLogOutMutation();
   const {
-    isLoading: isQueryLoading,
-    isFetching,
     error,
     data,
     refetch: refetchAuth
@@ -58,12 +57,14 @@ export default function useAuth() {
       isMod?: boolean,
       metafyId?: string | number | null,
       metafyHash?: string | null,
-      metafyTimestamp?: number | null
+      metafyTimestamp?: number | null,
+      displayName?: string | null
     ) => {
       dispatch(
         setCredentialsReducer({
           user: user,
           userName: userName,
+          displayName: displayName ?? userName,
           accessToken: token,
           isPatron: patron,
           isMod: isMod || false,
@@ -102,8 +103,12 @@ export default function useAuth() {
   const isLoggedIn = data?.isUserLoggedIn || !!currentUserId;
 
   const isPatron = data?.isUserLoggedIn
-    ? (data?.isPatron ?? reduxIsPatron)
+    ? data?.isPatron ?? reduxIsPatron
     : reduxIsPatron;
+
+  const isMod = data?.isUserLoggedIn
+    ? MOD_USERNAMES.includes(data.loggedInUserName ?? '')
+    : reduxIsMod;
 
   // Add a timeout for auth check - if it doesn't complete within 5 seconds, assume user isn't logged in
   // This prevents infinite loading state when cookies are rejected due to SameSite policy
@@ -139,7 +144,8 @@ export default function useAuth() {
           userIsMod,
           data.metafyID ?? data.metafyId ?? null,
           data.metafyHash ?? null,
-          data.timestamp ?? null
+          data.timestamp ?? null,
+          data.loggedInDisplayName ?? null
         );
       } else {
         // User is not logged in, clear any stale auth state
@@ -162,6 +168,7 @@ export default function useAuth() {
     isLoggedIn,
     currentUserId,
     currentUserName,
+    currentDisplayName,
     isLoading,
     error,
     isPatron,

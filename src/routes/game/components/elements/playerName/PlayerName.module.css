@@ -24,10 +24,10 @@
     top: 0;
     left: 0;
     margin: 0.25rem;
-    padding: 0.15rem 0.2rem;
+    padding: 0.15rem;
     height: auto;
-    width: auto;
-    max-width: 140px;
+    width: max-content;
+    max-width: 45vw;
     font-size: 0.55rem;
     z-index: 500;
     border-radius: 0.2em;
@@ -37,12 +37,21 @@
     top: auto;
     bottom: 0;
   }
+
+  .playerName.spectator:not(.playerTwo) {
+    top: 3.35rem;
+  }
 }
 
-/* On small phones the opponent name badge overlaps the toolbar buttons — hide it */
 @media (max-width: 600px) {
-  .playerName:not(.playerTwo) {
+  .playerName:not(.playerTwo):not(.spectator) {
     display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .playerName.spectator.playerTwo {
+    bottom: 4.5rem;
   }
 }
 
@@ -191,20 +200,20 @@
 
 .noteTooltip {
   position: fixed;
-  background-color: rgba(20, 20, 20, 0.98);
-  border: 1px solid rgba(111, 0, 0, 0.6);
-  border-radius: 0.3em;
-  backdrop-filter: blur(4px);
-  color: var(--secondary-inverse);
-  padding: 0.75em 1em;
+  padding: var(--tooltip-padding);
+  border: var(--tooltip-border-width) solid var(--tooltip-border-color);
+  border-radius: var(--tooltip-border-radius);
+  background: var(--tooltip-background-color);
+  color: var(--tooltip-color);
+  box-shadow: var(--tooltip-shadow);
   max-width: 300px;
   max-height: 150px;
   overflow-y: auto;
   word-wrap: break-word;
-  z-index: 10000;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
-  font-size: 0.9em;
-  line-height: 1.4;
+  z-index: var(--tooltip-z-index);
+  font-size: var(--tooltip-font-size);
+  font-weight: var(--tooltip-font-weight);
+  line-height: var(--tooltip-line-height);
   pointer-events: none;
 }
 

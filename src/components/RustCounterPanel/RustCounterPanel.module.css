@@ -1,0 +1,232 @@
+.panel {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 0.75rem;
+  padding: 0.65rem 2.3rem 0.65rem 0.85rem;
+  color: var(--theme-text, #ededed);
+}
+
+.panelLocked {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  flex: 1 1 auto;
+}
+
+.titleRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.55rem;
+}
+
+.title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.counterImages {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-shrink: 0;
+}
+
+.counterImage {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+
+.helpWrapper {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+  display: inline-flex;
+}
+
+.helpIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto !important;
+  margin: 0 !important;
+  padding: 0.25rem;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--theme-text-muted, rgba(237, 237, 237, 0.55));
+  cursor: help;
+  transition: color 0.15s;
+}
+
+.helpIcon:hover,
+.helpIcon:focus-visible {
+  color: var(--theme-text, #ededed);
+  background: transparent;
+}
+
+.tooltip {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: var(--tooltip-z-index);
+  width: min(320px, calc(100vw - 2rem));
+  padding: var(--tooltip-padding);
+  border: var(--tooltip-border-width) solid var(--tooltip-border-color);
+  border-radius: var(--tooltip-border-radius);
+  background: var(--tooltip-background-color);
+  color: var(--tooltip-color);
+  font-size: var(--tooltip-font-size);
+  font-weight: var(--tooltip-font-weight);
+  line-height: var(--tooltip-line-height);
+  text-align: left;
+  box-shadow: var(--tooltip-shadow);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.12s ease, visibility 0.12s ease;
+  pointer-events: none;
+}
+
+.helpWrapper:hover .tooltip,
+.helpWrapper:focus-within .tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+.subtitle {
+  color: var(--theme-text-muted, rgba(237, 237, 237, 0.65));
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex: 0 0 auto;
+}
+
+.watchAdWrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.clearButton {
+  width: auto !important;
+  margin-bottom: 0 !important;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 4px;
+  background: transparent;
+  color: rgba(237, 237, 237, 0.7);
+  font-size: 0.82rem;
+  font-weight: 400;
+  text-transform: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.clearButton:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.28);
+  color: rgba(237, 237, 237, 0.95);
+}
+
+.clearButtonLocked {
+  background: var(--theme-primary, #d4af37);
+  border-color: var(--theme-primary, #d4af37);
+  color: var(--primary-inverse, #000000);
+  font-weight: 600;
+}
+
+.clearButtonLocked:hover {
+  background: var(--theme-primary, #d4af37);
+  border-color: var(--theme-primary, #d4af37);
+  color: var(--primary-inverse, #000000);
+  filter: brightness(1.12);
+}
+
+.pulse {
+  animation: rustPulse 0.6s ease-in-out 2;
+}
+
+@keyframes rustPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(212, 175, 55, 0.35);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse {
+    animation: none;
+  }
+
+  .tooltip {
+    transition: none;
+  }
+}
+
+.removeAdsLink {
+  color: rgba(237, 237, 237, 0.5) !important;
+  font-size: 0.82rem;
+  font-weight: 400;
+  text-decoration: none !important;
+  opacity: 1 !important;
+  white-space: nowrap;
+}
+
+.removeAdsLink:hover {
+  color: rgba(237, 237, 237, 0.85) !important;
+  text-decoration: none !important;
+  opacity: 1 !important;
+}
+
+.supporterMessage {
+  margin: 0;
+  color: var(--theme-text, #ededed);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 560px) {
+  .panel {
+    align-items: stretch;
+    flex-direction: column;
+    padding-right: 0.85rem;
+  }
+
+  .titleRow {
+    padding-right: 1.6rem;
+  }
+
+  .actions {
+    align-items: stretch;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .watchAdWrapper {
+    width: 100%;
+  }
+
+  .clearButton {
+    width: 100% !important;
+  }
+}

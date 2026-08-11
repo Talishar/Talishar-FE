@@ -1,0 +1,314 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483646;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgba(3, 5, 8, 0.9);
+  backdrop-filter: blur(8px);
+}
+
+.dialog {
+  position: relative;
+  width: min(920px, 100%);
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 14px;
+  background: radial-gradient(
+      circle at 50% 0%,
+      rgba(212, 175, 55, 0.12),
+      transparent 42%
+    ),
+    #111318;
+  color: #f3f3f3;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.72), 0 0 32px rgba(212, 175, 55, 0.05);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.closeButton {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 2;
+  display: grid;
+  width: 2.5rem !important;
+  height: 2.5rem;
+  margin: 0 !important;
+  padding: 0;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.72);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.closeButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.closeButton:not(:disabled) {
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.closeButton svg {
+  display: block;
+  width: 1rem;
+  height: 1rem;
+}
+
+.bannerLink {
+  display: block;
+  line-height: 0;
+}
+
+.banner {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 13px 13px 0 0;
+}
+
+.content {
+  padding: 1.25rem 1.5rem 1.5rem;
+}
+
+.header {
+  text-align: center;
+}
+
+.eyebrow {
+  color: #dfbb38;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.header h2 {
+  margin: 0.25rem 0;
+  color: #fff;
+  font-size: clamp(1.6rem, 4vw, 2.35rem);
+}
+
+.header p {
+  max-width: 620px;
+  margin: 0 auto;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.95rem;
+}
+
+.benefits {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.45rem 1.25rem;
+  margin: 1rem 0;
+  padding: 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.87rem;
+  list-style: none;
+}
+
+.benefits li {
+  list-style: none;
+}
+
+.benefits li::marker {
+  content: '';
+}
+
+.benefits li::before {
+  margin-right: 0.4rem;
+  color: #dfbb38;
+  content: '✓';
+  font-weight: 800;
+}
+
+.tiers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+
+.tier {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  padding: 0.85rem 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.035);
+  color: #fff !important;
+  text-align: center;
+  text-decoration: none !important;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.tier:hover,
+.tier:focus-visible {
+  border-color: #dfbb38;
+  color: #fff !important;
+  transform: translateY(-2px);
+}
+
+.tierName {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 2.4em;
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.tierIcon {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  object-fit: contain;
+}
+
+.monthlyPrice {
+  margin-top: 0.3rem;
+  color: #dfbb38;
+  font-size: 1.45rem;
+  font-weight: 800;
+}
+
+.monthlyPrice small {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.68rem;
+  font-weight: 500;
+}
+
+.annualPrice {
+  margin-top: 0.15rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.72rem;
+}
+
+.savings {
+  margin-top: 0.15rem;
+  color: rgba(223, 187, 56, 0.62);
+  font-size: 0.66rem;
+  font-weight: 600;
+}
+
+.premiumButton,
+.rewardButton {
+  display: block;
+  width: 100% !important;
+  margin: 0.85rem 0 0 !important;
+  padding: 0.65rem 1rem;
+  border-radius: 6px;
+  font-size: 0.92rem;
+  font-weight: 750;
+  text-align: center;
+  text-decoration: none !important;
+}
+
+.premiumButton {
+  border: 1px solid #dfbb38;
+  background: #dfbb38;
+  color: #111 !important;
+}
+
+.premiumButton:hover,
+.premiumButton:focus-visible {
+  color: #111 !important;
+  filter: brightness(1.08);
+}
+
+.rewardButton {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.035);
+  color: rgba(255, 255, 255, 0.72) !important;
+  font-weight: 600;
+}
+
+.rewardButton:disabled {
+  cursor: wait;
+  opacity: 0.62;
+}
+
+.rewardButton:not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.055);
+  cursor: pointer;
+}
+
+.rewardButton:hover,
+.rewardButton:focus-visible {
+  color: rgba(255, 255, 255, 0.86) !important;
+}
+
+.rewardButton:not(:disabled):hover,
+.rewardButton:not(:disabled):focus-visible {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.timerNote {
+  margin: 0.4rem 0 0;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.72rem;
+  text-align: center;
+}
+
+@media (max-width: 620px) {
+  .backdrop {
+    padding: 0.5rem;
+  }
+
+  .dialog {
+    max-height: calc(100vh - 1rem);
+  }
+
+  .content {
+    padding: 1rem;
+  }
+
+  .tiers {
+    gap: 0.45rem;
+  }
+
+  .tier {
+    padding-inline: 0.25rem;
+  }
+
+  .tierName {
+    font-size: 0.7rem;
+  }
+
+  .tierIcon {
+    width: 22px;
+    height: 22px;
+    flex-basis: 22px;
+  }
+
+  .monthlyPrice {
+    font-size: 1.15rem;
+  }
+
+  .annualPrice,
+  .savings {
+    font-size: 0.6rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tier {
+    transition: none;
+  }
+}
