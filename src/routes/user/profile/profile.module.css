@@ -346,6 +346,17 @@
   margin: 0;
 }
 
+.webhookInput:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.webhookLockedNote {
+  margin: 0.75rem 0 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9em;
+}
+
 @media (max-width: 575px) {
   .webhookInputRow {
     flex-direction: column;

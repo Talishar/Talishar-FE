@@ -14,6 +14,7 @@ import BlockedUsers from './BlockedUsers';
 import MetafySection from './MetafySection';
 import UpgradeSection from './UpgradeSection';
 import useAuth from 'hooks/useAuth';
+import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
 
 const CODE = 'code';
 const CLIENT_ID =
@@ -153,6 +154,8 @@ export const ProfilePage = () => {
   PatreonOAuthParam.append('scope', SCOPE);
 
   const isMetafySupporter: boolean = profileData?.isMetafySupporter ?? false;
+  // Server-side gate is authoritative; this only decides whether the input is usable.
+  const canUseWebhook: boolean = profileData?.canUseMatchResultWebhook ?? false;
 
   return (
     <div>
@@ -241,17 +244,30 @@ export const ProfilePage = () => {
                         placeholder="https://your-webhook.example.com/results"
                         value={webhookInput}
                         onChange={(e) => setWebhookInput(e.target.value)}
-                        disabled={isSavingWebhook}
+                        disabled={isSavingWebhook || !canUseWebhook}
                         className={styles.webhookInput}
                       />
                       <button
                         className={styles.metafyToggleButton}
                         onClick={handleSaveWebhook}
-                        disabled={isSavingWebhook}
+                        disabled={isSavingWebhook || !canUseWebhook}
                       >
                         {isSavingWebhook ? 'Saving...' : 'Save'}
                       </button>
                     </div>
+                    {!canUseWebhook && (
+                      <p className={styles.webhookLockedNote}>
+                        This is a supporter perk.{' '}
+                        <a
+                          href={TALISHAR_METAFY_URL}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Become a supporter
+                        </a>{' '}
+                        to send your match results anywhere you like.
+                      </p>
+                    )}
                   </div>
                 )}
               </div>
