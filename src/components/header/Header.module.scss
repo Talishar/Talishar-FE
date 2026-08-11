@@ -93,7 +93,24 @@
         }
 
         &.login {
-          padding: 5px;
+          height: auto;
+          min-width: 0;
+          padding: 8px 18px;
+          margin: 0 0 0 8px;
+          border-radius: 6px;
+          color: #000;
+          font-weight: 600;
+          line-height: 1;
+
+          &:focus,
+          &:hover {
+            color: #000;
+          }
+
+          &::before,
+          &::after {
+            display: none !important;
+          }
         }
 
         &.profileLink {
