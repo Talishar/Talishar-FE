@@ -1,14 +1,18 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, Suspense } from 'react';
+import { lazyWithRetry } from 'utils/lazyWithRetry';
 import ReactDOM from 'react-dom';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import styles from './EndGameScreen.module.css';
 import { useGetHeroMasteryQuery, useGetPopUpContentQuery } from 'features/api/apiSlice';
 import { END_GAME_STATS, PROCESS_INPUT } from 'appConstants';
 import { getGameInfo, submitButton } from 'features/game/GameSlice';
-import EndGameStats, {
-  type EndGameData,
-  type EndGameStatsRef
+import type {
+  EndGameData,
+  EndGameStatsRef
 } from '../endGameStats/EndGameStats';
+const EndGameStats = lazyWithRetry(
+  () => import('../endGameStats/EndGameStats')
+);
 import EndGameMenuOptions from '../endGameMenuOptions/EndGameMenuOptions';
 import { shallowEqual } from 'react-redux';
 import useShowModal from 'hooks/useShowModals';
@@ -110,13 +114,14 @@ const EndGameScreen = () => {
         showPortrait
       />
     ) : undefined;
-
     content = (
-      <EndGameStats
-        ref={endGameStatsRef}
-        {...endGameDataWithHeroes}
-        masteryProgress={masteryProgress}
-      />
+      <Suspense fallback={<div>{t('END_GAME.LOADING')}</div>}>
+        <EndGameStats
+          ref={endGameStatsRef}
+          {...endGameDataWithHeroes}
+          masteryProgress={masteryProgress}
+        />      
+      </Suspense>
     );
   }
 
