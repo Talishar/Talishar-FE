@@ -152,7 +152,9 @@ export const HEROES_OF_RATHE: {
   { value: 'JDG006', label: 'Theryon Magister of Justice', young: true }, 
    */
   { value: 'SPW001', label: 'Killjoy, the Crooked Blade', young: true },
-  { value: 'SPW003', label: 'Zane, Broadly Beloved', young: true }
+  { value: 'SPW003', label: 'Zane, Broadly Beloved', young: true },
+  { value: 'MPA002', label: 'Dr. Mortimer, Blight of the Pits' },
+  { value: 'MPA003', label: 'Dr. Mortimer', young: true }
 ];
 
 export const CLASS_OF_RATHE: { label: string }[] = [
