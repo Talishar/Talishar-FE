@@ -15,7 +15,6 @@ import {
   Setting,
   updateOptions
 } from 'features/options/optionsSlice';
-import { selectCurrentUser } from 'features/auth/authSlice';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { useEffect } from 'react';
 import { useCookies } from 'react-cookie';
@@ -31,7 +30,6 @@ const SettingsPage = () => {
   usePageTitle(t('PAGES.SETTINGS'));
   const { setTransparency } = useTheme();
   const settingsData = useAppSelector(getSettingsEntity);
-  const currentUserID = useAppSelector(selectCurrentUser);
   const dispatch = useAppDispatch();
   const [windowWidth] = useWindowDimensions();
   const isMobile = windowWidth < 768;
@@ -65,8 +63,7 @@ const SettingsPage = () => {
     dispatch(
       updateOptions({
         game: profileGameInfo,
-        settings: [{ name: name, value: value }],
-        userID: currentUserID ? String(currentUserID) : undefined
+        settings: [{ name: name, value: value }]
       })
     );
   };
