@@ -590,8 +590,6 @@
     "BAZAAR_LINK": "Liez votre compte FaB Bazaar dans votre <1>profil</1> pour voir vos decks ici.",
     "COMING_SOON": "À venir!",
     "GAME_FORMAT": "Format de la partie",
-    "HINT_DECK_CONFIGURED": "Cliquez <1>Rejoindre</1> sur n'importe quel jeu ouvert pour rejoindre instantanément.",
-    "HINT_SELECT_DECK": "Sélectionnez un deck ci-dessus, puis cliquez sur <1>Rejoindre</1> sur n'importe quel jeu ouvert.",
     "IMPORT_DECK": "Importer un deck",
     "IMPORT_DECK_URL": "Importer l'URL du deck",
     "IMPORT_HELP": "Lien du deck — URL de FaBrary.net",

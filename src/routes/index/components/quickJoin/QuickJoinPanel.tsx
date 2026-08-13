@@ -239,20 +239,6 @@ const QuickJoinPanel = ({ embedded = false }: Props) => {
         {deckSource === 'talishar' ? talisharContent : bazaarContent}
       </div>
 
-      <p className={styles.hint}>
-        {hasDeckConfigured ? (
-          <Trans
-            i18nKey="JOIN.HINT_DECK_CONFIGURED"
-            components={{ 1: <strong /> }}
-          />
-        ) : (
-          <Trans
-            i18nKey="JOIN.HINT_SELECT_DECK"
-            components={{ 1: <strong /> }}
-          />
-        )}
-      </p>
-
       {error && (
         <div className={styles.errorBox} role="alert">
           <span>{error}</span>
