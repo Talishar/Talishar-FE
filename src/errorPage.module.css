@@ -1,17 +1,26 @@
 .container {
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: 100vh;
+  align-items: flex-start;
+  min-height: calc(100vh - 80px);
   max-width: var(--aspect);
   margin: 0 auto;
+  padding: 24px 16px;
 }
 
 .article {
   background: var(--theme-card-background, #1e2329);
-  width: 460px;
+  width: min(560px, 100%);
   border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
   border-radius: 10px;
+  color: var(--theme-text, #f4eded);
+}
+
+.article h1,
+.article p,
+.article span,
+.article kbd {
+  color: inherit;
 }
 
 .refreshInstructions kbd {
@@ -30,8 +39,13 @@
 }
 
 @media (max-width: 768px) {
+  .container {
+    padding: 0;
+  }
+
   .article {
     width: 100%;
     border: none;
+    border-radius: 0;
   }
 }
