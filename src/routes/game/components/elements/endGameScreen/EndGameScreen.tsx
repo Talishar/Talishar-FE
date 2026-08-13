@@ -48,8 +48,9 @@ const EndGameScreen = () => {
     authKey: gameInfo.authKey,
     popupType: END_GAME_STATS
   });
+  const masteryGameIdentifier = gameInfo.gameGUID || gameInfo.gameID;
   const { data: masteryData } = useGetHeroMasteryQuery(
-    { gameKey: `talishar:${gameInfo.gameID}`, scope: 'award' },
+    { gameKey: `talishar:${masteryGameIdentifier}`, scope: 'award' },
     { skip: !isLoggedIn || !!gameInfo.roguelikeGameID }
   );
 
