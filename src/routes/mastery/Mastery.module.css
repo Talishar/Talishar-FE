@@ -119,7 +119,7 @@
 .filters button:hover,
 .filters .activeFilter {
   background: var(--theme-primary, #d4af37) !important;
-  color: var(--theme-text-primary, #fff) !important;
+  color: var(--near-black, #0d0d0f);
 }
 
 .filters button:focus-visible,
