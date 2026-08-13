@@ -6,6 +6,7 @@ import {
   useLoginMutation
 } from 'features/api/apiSlice';
 import useAuth from 'hooks/useAuth';
+import { clearSupporterStatusCache } from 'hooks/useSupporterStatus';
 import { toast } from 'react-hot-toast';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
@@ -56,6 +57,7 @@ export const LoginForm = () => {
       }
       if (resp?.isUserLoggedIn) {
         toast.success(t('USER.LOGIN.LOGGED_IN'), { position: 'top-center' });
+        clearSupporterStatusCache();
         refetch();
         setLoggedIn(
           resp?.loggedInUserID ?? '0',

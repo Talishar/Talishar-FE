@@ -4,6 +4,7 @@ import { toast } from 'react-hot-toast';
 import styles from './profile.module.css';
 import { MetafyCommunity } from 'interface/API/MetafyAPI.php';
 import { useRefreshMetafyCommunitiesMutation } from 'features/api/apiSlice';
+import { clearSupporterStatusCache } from 'hooks/useSupporterStatus';
 
 interface MetafySectionProps {
   isMetafyLinked: boolean;
@@ -28,6 +29,7 @@ const MetafySection: React.FC<MetafySectionProps> = ({
     if (isRefreshing) return;
     try {
       await refreshMetafyCommunities().unwrap();
+      clearSupporterStatusCache();
       toast.success(t('PROFILE.METAFY_REFRESHED'), {
         position: 'top-center'
       });
