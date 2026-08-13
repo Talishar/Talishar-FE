@@ -204,9 +204,13 @@
 .tab {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5em;
+  flex: 1 1 0;
+  width: auto !important;
+  min-width: 0;
   padding: 0.6em 0.25em;
-  margin-right: 1.5em;
+  margin-right: 0;
   background: transparent !important;
   border: none !important;
   border-bottom: 2px solid transparent !important;
@@ -242,6 +246,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
+  flex: 0 0 auto;
   min-width: 1.4em;
   height: 1.4em;
   padding: 0 0.3em;
@@ -249,6 +255,8 @@
   border-radius: 10px;
   font-size: 0.78rem;
   font-weight: 700;
+  line-height: 1;
+  text-align: center;
   color: rgba(255, 255, 255, 0.6);
 }
 
