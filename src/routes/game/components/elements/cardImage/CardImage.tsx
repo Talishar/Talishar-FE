@@ -3,6 +3,7 @@ import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import classNames from 'classnames';
 import { AltArt } from 'features/GameStaticInfo';
+import { DISABLE_ALT_ARTS } from 'features/options/constants';
 import styles from './CardImage.module.css';
 
 const UNKNOWN_IMAGE = 'Difficulties';
@@ -61,6 +62,10 @@ export const CardImage = React.memo((props: CardImage) => {
   const opponentAltArts = useAppSelector(
     (state: RootState) => state.game.gameInfo.opponentAltArts
   );
+  const altArtsDisabled = useAppSelector(
+    (state: RootState) =>
+      String(state.settings?.entities?.[DISABLE_ALT_ARTS]?.value) === '1'
+  );
 
   let src = props.src;
   const { isShuffling, isOpponent, preferEnglishArt } = props;
@@ -81,10 +86,9 @@ export const CardImage = React.memo((props: CardImage) => {
   const cardNumber =
     firstDash === -1 ? baseFilename : baseFilename.slice(0, firstDash);
 
-  const altPath = findAltArtPath(
-    isOpponent ? opponentAltArts : altArts,
-    cardNumber
-  );
+  const altPath = altArtsDisabled
+    ? undefined
+    : findAltArtPath(isOpponent ? opponentAltArts : altArts, cardNumber);
   if (altPath && !(preferEnglishArt && isNonEnglishPromoAltArt(altPath))) {
     const altFilename = isCropped ? `${altPath}_cropped` : altPath;
     src = `${directory}/${altFilename}.webp`;
