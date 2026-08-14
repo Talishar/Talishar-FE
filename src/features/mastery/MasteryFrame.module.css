@@ -3,11 +3,13 @@
   --mastery-highlight: rgba(255, 255, 255, 0.48);
   --mastery-shadow: #171717;
   --mastery-glow: transparent;
+  --mastery-pad: 5px;
+  --mastery-gem: 9px;
   position: relative;
   isolation: isolate;
   display: inline-grid;
   place-items: center;
-  padding: 5px;
+  padding: var(--mastery-pad);
   border-radius: 50%;
   background: linear-gradient(
     145deg,
@@ -47,16 +49,42 @@
   pointer-events: none;
 }
 
-.gem {
+.ornaments {
   position: absolute;
   z-index: 4;
-  bottom: -4px;
+  inset: 0;
+  pointer-events: none;
+}
+
+.orn {
+  --orn-angle: 0deg;
+  position: absolute;
+  inset: 0;
+  rotate: var(--orn-angle);
+}
+
+.orn::before {
+  content: '';
+  position: absolute;
+  bottom: var(--orn-drop, calc(var(--orn-size) / -2 + 0.5px));
   left: 50%;
-  display: none;
-  width: 10px;
-  height: 10px;
+  width: var(--orn-size);
+  height: var(--orn-size);
   translate: -50% 0;
-  rotate: 45deg;
+}
+
+.gem,
+.gemSmall {
+  --orn-size: var(--mastery-gem);
+}
+
+.gemSmall {
+  --orn-size: calc(var(--mastery-gem) * 0.66);
+}
+
+.gem::before,
+.gemSmall::before {
+  rotate: calc(45deg - var(--orn-angle));
   border: 2px solid var(--mastery-shadow);
   background: linear-gradient(
     135deg,
@@ -64,7 +92,75 @@
     var(--mastery-color) 58%
   );
   box-shadow: 0 0 7px var(--mastery-glow);
-  pointer-events: none;
+}
+
+.gemSmall::before {
+  border-width: 1.5px;
+}
+
+.blade {
+  --orn-size: calc(var(--mastery-gem) * 0.46);
+  --orn-drop: calc(var(--mastery-gem) * -0.42);
+}
+
+.blade::before {
+  height: calc(var(--mastery-gem) * 1.35);
+  background: linear-gradient(
+    180deg,
+    var(--mastery-highlight),
+    var(--mastery-color) 55%,
+    var(--mastery-shadow)
+  );
+  box-shadow: 0 0 6px var(--mastery-glow);
+  clip-path: polygon(50% 0, 100% 26%, 100% 74%, 50% 100%, 0 74%, 0 26%);
+}
+
+.stud {
+  --orn-size: calc(var(--mastery-gem) * 0.44);
+}
+
+.stud::before {
+  border: 1px solid var(--mastery-shadow);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 34% 30%,
+    var(--mastery-highlight),
+    var(--mastery-color) 72%
+  );
+  box-shadow: 0 0 5px var(--mastery-glow);
+}
+
+.ring {
+  position: absolute;
+  inset: calc(var(--mastery-pad) * -0.9);
+  border: 1px solid color-mix(in srgb, var(--mastery-highlight) 45%, transparent);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--mastery-glow), inset 0 0 0 1px rgba(0, 0, 0, 0.35);
+}
+
+.crest {
+  position: absolute;
+  top: calc(var(--mastery-gem) * -1.25);
+  left: 50%;
+  width: calc(var(--mastery-gem) * 2.1);
+  height: calc(var(--mastery-gem) * 1.2);
+  translate: -50% 0;
+  background: linear-gradient(
+    180deg,
+    var(--mastery-highlight),
+    var(--mastery-color) 58%,
+    var(--mastery-shadow)
+  );
+  box-shadow: 0 0 8px var(--mastery-glow);
+  clip-path: polygon(
+    50% 0,
+    64% 44%,
+    100% 22%,
+    90% 100%,
+    10% 100%,
+    0 22%,
+    36% 44%
+  );
 }
 
 .mastery_0 {
@@ -77,196 +173,125 @@
   display: none;
 }
 
-/* 5 games: simple bronze. */
-.mastery_1 {
-  --mastery-color: #a9632f;
-  --mastery-highlight: #dda06b;
-  --mastery-shadow: #4a2413;
-  padding: 4px;
-}
-
-/* 15 games: bronze with one small lower ornament. */
+/* 5 / 10 games: rust */
+.mastery_1,
 .mastery_2 {
-  --mastery-color: #ad6732;
-  --mastery-highlight: #efb478;
-  --mastery-shadow: #4a2413;
+  --mastery-color: #513328;
+  --mastery-highlight: #825b45;
+  --mastery-shadow: #1a0e0a;
+  --mastery-pad: 4px;
 }
 
-.mastery_2 .gem {
-  display: block;
-  width: 8px;
-  height: 8px;
-}
-
-/* 25 games: brighter, more geometric silver. */
-.mastery_3 {
-  --mastery-color: #929eab;
-  --mastery-highlight: #edf2f6;
-  --mastery-shadow: #3d4752;
-  background: conic-gradient(
-    from 22.5deg,
-    var(--mastery-highlight),
-    var(--mastery-shadow),
-    var(--mastery-color),
-    var(--mastery-highlight)
-  );
-}
-
-.mastery_3::before {
-  opacity: 0.65;
-  clip-path: polygon(
-    50% 0,
-    61% 5%,
-    75% 3%,
-    84% 16%,
-    97% 25%,
-    95% 39%,
-    100% 50%,
-    95% 61%,
-    97% 75%,
-    84% 84%,
-    75% 97%,
-    61% 95%,
-    50% 100%,
-    39% 95%,
-    25% 97%,
-    16% 84%,
-    3% 75%,
-    5% 61%,
-    0 50%,
-    5% 39%,
-    3% 25%,
-    16% 16%,
-    25% 3%,
-    39% 5%
-  );
-}
-
-/* 50 games: polished silver with a clean double-ring treatment. */
+/* 15 / 25 games: bronze. */
+.mastery_3,
 .mastery_4 {
-  --mastery-color: #b7c2cc;
-  --mastery-highlight: #ffffff;
-  --mastery-shadow: #46515e;
-  --mastery-glow: rgba(210, 229, 240, 0.18);
-  padding: 6px;
-  background: conic-gradient(from 30deg, #fff, #73818e, #dce5eb, #596571, #fff);
+  --mastery-color: #c07b28;
+  --mastery-highlight: #f7c682;
+  --mastery-shadow: #4a2a0b;
+  --mastery-pad: 5px;
 }
 
-.mastery_4::after {
-  inset: 3px;
-  border-width: 2px;
+/* 35 / 50 games: silver. */
+.mastery_5,
+.mastery_6 {
+  --mastery-color: #99a5b1;
+  --mastery-highlight: #eff4f8;
+  --mastery-shadow: #414b56;
+  --mastery-pad: 5px;
 }
 
-/* 100 games: restrained gold. */
-.mastery_5 {
+/* 75 / 100 games: gold. */
+.mastery_7,
+.mastery_8 {
   --mastery-color: #c99228;
   --mastery-highlight: #ffe48a;
   --mastery-shadow: #68400f;
   --mastery-glow: rgba(255, 195, 53, 0.18);
-  padding: 5px;
+  --mastery-pad: 6px;
 }
 
-/* 150 games: richer gold with a lower jewel. */
-.mastery_6 {
-  --mastery-color: #d5a12e;
-  --mastery-highlight: #fff0a5;
-  --mastery-shadow: #6c3b09;
-  --mastery-glow: rgba(255, 196, 43, 0.25);
-  padding: 6px;
+/* 150 / 200 games: emerald. */
+.mastery_9,
+.mastery_10 {
+  --mastery-color: #1e9b78;
+  --mastery-highlight: #8bebc7;
+  --mastery-shadow: #0c3d2f;
+  --mastery-glow: rgba(45, 209, 158, 0.2);
+  --mastery-pad: 6px;
+}
+
+/* 250 / 350 games: diamond */
+.mastery_11,
+.mastery_12 {
+  --mastery-color: #3d78d4;
+  --mastery-highlight: #cfeaff;
+  --mastery-shadow: #14264d;
+  --mastery-glow: rgba(88, 156, 255, 0.32);
+  --mastery-pad: 7px;
+}
+
+/* 500 / 750 games: amethyst. */
+.mastery_13,
+.mastery_14 {
+  --mastery-color: #7a4fcd;
+  --mastery-highlight: #d5b6ff;
+  --mastery-shadow: #2c1552;
+  --mastery-glow: rgba(146, 92, 235, 0.3);
+  --mastery-pad: 7px;
+}
+
+/* 1,000 games: crimson. */
+.mastery_15 {
+  --mastery-color: #ab181b;
+  --mastery-highlight: #ff9d8f;
+  --mastery-shadow: #3b0708;
+  --mastery-glow: rgba(190, 26, 30, 0.4);
+  --mastery-pad: 8px;
+  --mastery-gem: 11px;
+}
+
+.mastery_2,
+.mastery_4,
+.mastery_6,
+.mastery_8,
+.mastery_10,
+.mastery_12,
+.mastery_14,
+.mastery_15 {
   background: conic-gradient(
-    from 0deg,
+    from 30deg,
     var(--mastery-highlight),
     var(--mastery-shadow),
     var(--mastery-color),
     var(--mastery-highlight),
-    var(--mastery-color)
+    var(--mastery-shadow),
+    var(--mastery-highlight)
   );
 }
 
-.mastery_6 .gem {
-  display: block;
-  width: 12px;
-  height: 12px;
-}
-
-/* 250 games: cool platinum, distinguished by weight rather than wings. */
-.mastery_7 {
-  --mastery-color: #bad2d6;
-  --mastery-highlight: #ffffff;
-  --mastery-shadow: #4a6870;
-  --mastery-glow: rgba(186, 232, 240, 0.3);
-  padding: 7px;
-  background: conic-gradient(from 45deg, #fff, #708e96, #dcf0ef, #526f77, #fff);
-}
-
-.mastery_7::after {
+.mastery_11::after,
+.mastery_12::after,
+.mastery_13::after,
+.mastery_14::after,
+.mastery_15::after {
   inset: 3px;
   border-width: 2px;
-  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.7),
-    0 0 0 1px rgba(223, 250, 250, 0.45);
 }
 
-/* 500 games: clean circular diamond-blue frame. */
-.mastery_8 {
-  --mastery-color: #5ed2e5;
-  --mastery-highlight: #f0ffff;
-  --mastery-shadow: #31547c;
-  --mastery-glow: rgba(73, 218, 255, 0.45);
-  padding: 7px;
-  background: conic-gradient(
-    from 22.5deg,
-    #fff,
-    #56c9df,
-    #736be0,
-    #dffeff,
-    #278bab,
-    #fff
-  );
+.mastery_15 {
+  filter: drop-shadow(0 0 5px rgba(160, 16, 20, 0.45));
 }
 
-.mastery_8::before {
-  inset: -3px;
-  border-radius: 50%;
-  opacity: 0.68;
-  background: conic-gradient(#fff, #56cfe4, #6c63d8, #fff, #2aa4c5, #fff);
-}
-
-.mastery_8 .gem {
-  display: none;
-}
-
-/* 1,000 games: deep blood red with restrained antique-gold accents. */
-.mastery_9 {
-  --mastery-color: #9f1013;
-  --mastery-highlight: #d8a64b;
-  --mastery-shadow: #350607;
-  --mastery-glow: rgba(164, 18, 20, 0.42);
-  padding: 8px;
-  background: linear-gradient(
-    145deg,
-    #d3a34b 0 8%,
-    #a81215 8% 74%,
-    #4b080a 74% 92%,
-    #b98738 92%
-  );
-  filter: drop-shadow(0 0 5px rgba(148, 14, 17, 0.42));
-}
-
-.mastery_9::before {
-  inset: -3px;
-  border-radius: 50%;
-  opacity: 0.84;
-  background: #970d10;
-  box-shadow: 0 0 0 1px #c18c38;
-}
-
-.mastery_9 .gem {
-  display: none;
+.mastery_15::before {
+  opacity: 0.85;
+  background: var(--mastery-color);
+  box-shadow: 0 0 0 1px var(--mastery-highlight);
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .mastery_8 .gem,
-  .mastery_9 .gem {
+  .mastery_14 .gem::before,
+  .mastery_15 .gem::before,
+  .mastery_15 .crest {
     animation: masteryGemGlow 2.8s ease-in-out infinite;
   }
 }

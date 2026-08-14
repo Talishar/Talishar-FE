@@ -374,6 +374,7 @@ export const URL_END_POINT = {
   SYNC_METAFY_SUBSCRIBERS: 'APIs/SyncMetafySubscribers.php',
   GET_APP_INFO: 'AccountFiles/GetAppInfoAPI.php',
   GET_HERO_MASTERY: 'APIs/GetHeroMastery.php',
+  SAVE_HERO_MASTERY_FRAME: 'APIs/SaveHeroMasteryFrame.php',
   GENERATE_AUTH_TOKEN: 'AccountFiles/GenerateAuthTokenAPI.php'
 };
 

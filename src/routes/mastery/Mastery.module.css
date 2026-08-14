@@ -37,17 +37,6 @@
   margin: 0 0 0.75rem;
 }
 
-.collectionSummary {
-  margin: 0 !important;
-  color: var(--theme-text-muted, rgba(244, 237, 237, 0.58));
-  font-size: 0.7rem;
-  line-height: 1.2;
-}
-
-.collectionSummary span {
-  color: var(--theme-primary, #d4af37);
-}
-
 .toolbarControls {
   display: flex;
   align-items: center;
@@ -193,6 +182,19 @@
 .groupHeading small {
   color: var(--theme-text-muted, #888);
   font-size: 0.82em;
+}
+
+.groupSummary {
+  margin-left: auto;
+  padding-left: 0.6rem;
+  color: var(--theme-text-muted, rgba(244, 237, 237, 0.58));
+  font-size: 0.72rem;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.groupSummary span {
+  color: var(--theme-primary, #d4af37);
 }
 
 .grid {
@@ -380,9 +382,6 @@
   .betaNotice {
     width: 100%;
     box-sizing: border-box;
-  }
-  .collectionSummary {
-    text-align: right;
   }
   .toolbarControls {
     flex-wrap: wrap;

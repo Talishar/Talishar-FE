@@ -12,8 +12,10 @@ import useSupporterStatus from 'hooks/useSupporterStatus';
 import {
   useGetFavoriteDecksQuery,
   useGetCosmeticsQuery,
+  useGetHeroMasteryQuery,
   useLazyGetDeckCardsQuery,
   useSaveDeckCosmeticsMutation,
+  useSaveHeroMasteryFrameMutation,
   useDeleteDeckMutation,
   useAddFavoriteDeckMutation,
   useUpdateFavoriteDeckMutation
@@ -39,6 +41,8 @@ import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { getReadableFormatName } from 'utils/formatUtils';
 import { HEROES_OF_RATHE } from 'routes/index/components/filter/constants';
+import MasteryFrame from 'features/mastery/MasteryFrame';
+import { DEFAULT_FRAME, ROMAN_LEVELS } from 'features/mastery/mastery';
 import styles from './decks.module.css';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -161,8 +165,10 @@ export const DecksPage = () => {
     refetch: refetchDecks
   } = useGetFavoriteDecksQuery(undefined);
   const { data: cosmeticsData } = useGetCosmeticsQuery(undefined);
+  const { data: masteryData } = useGetHeroMasteryQuery(undefined);
   const [fetchDeckCards] = useLazyGetDeckCardsQuery();
   const [saveDeckCosmetics] = useSaveDeckCosmeticsMutation();
+  const [saveHeroMasteryFrame] = useSaveHeroMasteryFrameMutation();
   const [deleteDeck] = useDeleteDeckMutation();
   const [addFavoriteDeck] = useAddFavoriteDeckMutation();
   const [updateFavoriteDeck] = useUpdateFavoriteDeckMutation();
@@ -185,6 +191,7 @@ export const DecksPage = () => {
     Record<string, string>
   >({});
   const [updatingDeckLink, setUpdatingDeckLink] = useState<string | null>(null);
+  const [savingFrameHero, setSavingFrameHero] = useState<string | null>(null);
   const [hoverPreview, setHoverPreview] = useState<HoverPreviewState | null>(
     null
   );
@@ -198,6 +205,12 @@ export const DecksPage = () => {
   const decks = useMemo(
     () => [...rawDecks].sort((a, b) => b.index - a.index),
     [rawDecks]
+  );
+
+  const masteryByHero = useMemo(
+    () =>
+      new Map((masteryData?.heroes ?? []).map((hero) => [hero.heroId, hero])),
+    [masteryData]
   );
 
   useEffect(() => {
@@ -424,6 +437,23 @@ export const DecksPage = () => {
     }
   };
 
+  const handleMasteryFrameSelect = async (
+    heroId: string,
+    level: number | null
+  ) => {
+    setSavingFrameHero(heroId);
+    try {
+      await saveHeroMasteryFrame({ heroId, level }).unwrap();
+      toast.success(t('DECKS.MASTERY_FRAME_SAVED'), { position: 'top-center' });
+    } catch (err: any) {
+      toast.error(err?.data?.message ?? t('DECKS.MASTERY_FRAME_ERROR'), {
+        position: 'top-center'
+      });
+    } finally {
+      setSavingFrameHero(null);
+    }
+  };
+
   const handleDeleteDeckMessage = (resp: DeleteDeckAPIResponse): string => {
     if (resp.message === 'Deck deleted successfully.') {
       return 'The deck has been removed from your favorites list. It is still available to view on the deckbuilding site.';
@@ -453,6 +483,89 @@ export const DecksPage = () => {
   };
 
   const showUpsell = !isSupporter;
+
+  const renderMasteryFrames = (heroId: string) => {
+    const progress = masteryByHero.get(heroId);
+    const earned = progress?.level ?? 0;
+    const heroName =
+      HEROES_OF_RATHE.find((hero) => hero.value === heroId)?.label ?? heroId;
+
+    if (earned === 0) {
+      return (
+        <>
+          <label className={styles.pickerLabel}>
+            <strong>{t('DECKS.MASTERY_FRAME')}</strong>
+          </label>
+          <p className={styles.pickerHint}>
+            {t('DECKS.MASTERY_FRAME_LOCKED', { hero: heroName })}
+          </p>
+        </>
+      );
+    }
+
+    const options: (typeof DEFAULT_FRAME | number)[] = [
+      DEFAULT_FRAME,
+      ...Array.from({ length: earned + 1 }, (_, index) => index)
+    ];
+    const selected = progress?.displayLevel ?? DEFAULT_FRAME;
+    const isSaving = savingFrameHero === heroId;
+
+    return (
+      <>
+        <label className={styles.pickerLabel}>
+          <strong>{t('DECKS.MASTERY_FRAME')}</strong>
+        </label>
+        <p className={styles.pickerHint}>
+          {t('DECKS.MASTERY_FRAME_HINT', { hero: heroName })}
+        </p>
+        <div className={styles.thumbGrid}>
+          {options.map((option) => {
+            const isDefault = option === DEFAULT_FRAME;
+            const previewLevel = isDefault ? earned : (option as number);
+            const label = isDefault
+              ? t('DECKS.MASTERY_FRAME_DEFAULT', {
+                  mastery: t('MASTERY.LEVEL', { level: ROMAN_LEVELS[earned] })
+                })
+              : previewLevel === 0
+              ? t('DECKS.MASTERY_FRAME_NONE')
+              : t('MASTERY.LEVEL', { level: ROMAN_LEVELS[previewLevel] });
+            const isSelected = selected === option;
+            return (
+              <button
+                type="button"
+                key={`frame-${heroId}-${option}`}
+                className={`${styles.frameThumbWrapper} ${
+                  isSelected ? styles.frameSelected : ''
+                }`}
+                onClick={() =>
+                  handleMasteryFrameSelect(
+                    heroId,
+                    isDefault ? null : previewLevel
+                  )
+                }
+                disabled={isSaving}
+                aria-pressed={isSelected}
+                title={label}
+              >
+                <MasteryFrame
+                  level={previewLevel}
+                  className={styles.framePreview}
+                >
+                  <img
+                    src={generateCroppedImageUrl(heroId)}
+                    alt=""
+                    draggable={false}
+                    loading="lazy"
+                  />
+                </MasteryFrame>
+                <span className={styles.thumbLabel}>{label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </>
+    );
+  };
 
   const renderAltArtRow = (
     deck: FavoriteDeck,
@@ -602,6 +715,7 @@ export const DecksPage = () => {
         const tokens = deckTokens[deck.link] ?? [];
         const isLoadingCards = !!loadingCards[deck.link];
         const isSaving = !!saving[deck.link];
+        const deckHero = selectedHeroByDeck[deck.link] || deck.hero;
 
         return (
           <div className={styles.deckCard} key={deck.key}>
@@ -682,6 +796,8 @@ export const DecksPage = () => {
                     </span>
                   )}
                 </div>
+
+                {!!deckHero && renderMasteryFrames(deckHero)}
 
                 <label className={styles.pickerLabel}>
                   <strong>{t('DECKS.PLAYMAT')}</strong>

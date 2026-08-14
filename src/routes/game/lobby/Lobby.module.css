@@ -101,6 +101,9 @@ h3 {
 }
 
 .leftCol {
+  --mastery-frame: #513328;
+  --mastery-frame-inner: rgba(255, 255, 255, 0.35);
+  --mastery-frame-spread: 55%;
   background-size: cover;
   background-position: center;
   height: 100%;
@@ -113,13 +116,29 @@ h3 {
 
 .leftCol[data-mastery-level]:not([data-mastery-level='0']),
 .rightCol[data-mastery-level]:not([data-mastery-level='0']) {
-  border: 4px solid #b87333;
-  box-shadow: inset 0 0 0 2px rgba(255,255,255,.35), 0 0 22px rgba(184,115,51,.45);
+  --mastery-orn-rail: 4px;
+  box-shadow: 0 0 22px color-mix(in srgb, var(--mastery-frame) var(--mastery-frame-spread), transparent);
 }
-.leftCol[data-mastery-level='3'], .leftCol[data-mastery-level='4'], .rightCol[data-mastery-level='3'], .rightCol[data-mastery-level='4'] { border-color: #e0ad3f; }
-.leftCol[data-mastery-level='5'], .leftCol[data-mastery-level='6'], .rightCol[data-mastery-level='5'], .rightCol[data-mastery-level='6'] { border-color: #9b70d7; }
-.leftCol[data-mastery-level='7'], .leftCol[data-mastery-level='8'], .rightCol[data-mastery-level='7'], .rightCol[data-mastery-level='8'] { border-color: #df5b55; }
-.leftCol[data-mastery-level='9'], .rightCol[data-mastery-level='9'] { border-color: #f5e6a3; box-shadow: inset 0 0 0 2px white, 0 0 28px rgba(245,230,163,.75); }
+
+.leftCol[data-mastery-level]:not([data-mastery-level='0'])::after,
+.rightCol[data-mastery-level]:not([data-mastery-level='0'])::after {
+  content: '';
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  border: var(--mastery-orn-rail) solid var(--mastery-frame);
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 2px var(--mastery-frame-inner);
+  pointer-events: none;
+}
+.leftCol[data-mastery-level='1'], .leftCol[data-mastery-level='2'], .rightCol[data-mastery-level='1'], .rightCol[data-mastery-level='2'] { --mastery-frame: #513328; }
+.leftCol[data-mastery-level='3'], .leftCol[data-mastery-level='4'], .rightCol[data-mastery-level='3'], .rightCol[data-mastery-level='4'] { --mastery-frame: #c07b28; }
+.leftCol[data-mastery-level='5'], .leftCol[data-mastery-level='6'], .rightCol[data-mastery-level='5'], .rightCol[data-mastery-level='6'] { --mastery-frame: #b5c1cd; }
+.leftCol[data-mastery-level='7'], .leftCol[data-mastery-level='8'], .rightCol[data-mastery-level='7'], .rightCol[data-mastery-level='8'] { --mastery-frame: #e0ad3f; }
+.leftCol[data-mastery-level='9'], .leftCol[data-mastery-level='10'], .rightCol[data-mastery-level='9'], .rightCol[data-mastery-level='10'] { --mastery-frame: #2bb790; }
+.leftCol[data-mastery-level='11'], .leftCol[data-mastery-level='12'], .rightCol[data-mastery-level='11'], .rightCol[data-mastery-level='12'] { --mastery-frame: #5c9be0; }
+.leftCol[data-mastery-level='13'], .leftCol[data-mastery-level='14'], .rightCol[data-mastery-level='13'], .rightCol[data-mastery-level='14'] { --mastery-frame: #9b70d7; }
+.leftCol[data-mastery-level='15'], .rightCol[data-mastery-level='15'] { --mastery-frame: #df5b55; --mastery-frame-inner: rgba(255,255,255,.55); --mastery-frame-spread: 75%; }
 
 .leftCol::before {
   content: '';
@@ -145,6 +164,9 @@ h3 {
 }
 
 .rightCol {
+  --mastery-frame: #513328;
+  --mastery-frame-inner: rgba(255, 255, 255, 0.35);
+  --mastery-frame-spread: 55%;
   text-align: right;
   background-size: cover;
   background-position: center;
@@ -187,10 +209,12 @@ h3 {
 
   .leftCol {
     background-position: center 10%;
+    --mastery-orn-gem: 12px;
   }
 
   .rightCol {
     background-position: center 10%;
+    --mastery-orn-gem: 12px;
   }
 }
 
@@ -202,10 +226,12 @@ h3 {
 
   .leftCol {
     background-position: center 20%;
+    --mastery-orn-gem: 8px;
   }
 
   .rightCol {
     background-position: center 20%;
+    --mastery-orn-gem: 8px;
   }
 
   .dimPic {
@@ -270,6 +296,9 @@ h3 {
 }
 
 .dimPic {
+  /* One size drives the name and the icons beside it, so the row stays
+     proportioned when the fluid name size hits its clamp floor. */
+  --lobby-name-size: clamp(0.7rem, 7cqi, 1.15rem);
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -311,11 +340,13 @@ h3 {
   display: flex;
   align-items: center;
   flex-shrink: 0;
+  /* Sizes the icons off the name rather than the h3 they share a row with. */
+  font-size: var(--lobby-name-size);
 }
 
 .lobbyIcon {
-  height: 1.1em;
-  width: 1.1em;
+  height: 1.15em;
+  width: 1.15em;
   object-fit: contain;
 }
 
@@ -329,7 +360,7 @@ h3 {
 
 /* Fluid, container-relative sizing so the name fits the column at any width */
 .dimPic > h3 .lobbyPlayerName {
-  font-size: clamp(0.7rem, 7cqi, 1.15rem);
+  font-size: var(--lobby-name-size);
   font-weight: 600;
   letter-spacing: 0;
   color: rgba(255, 255, 255, 0.95);
@@ -706,10 +737,12 @@ nav {
 
   .leftCol {
     background-position: center 25%;
+    --mastery-orn-gem: 10px;
   }
 
   .rightCol {
     background-position: center 25%;
+    --mastery-orn-gem: 10px;
   }
 
   .smallButton {

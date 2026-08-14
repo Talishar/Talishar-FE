@@ -1,0 +1,199 @@
+.layer {
+  --orn-base: var(--mastery-frame, #513328);
+  --orn-color: var(--orn-base);
+  --orn-highlight: color-mix(in srgb, var(--orn-base) 40%, #ffffff);
+  --orn-shadow: color-mix(in srgb, var(--orn-base) 45%, #000000);
+  --orn-glow: color-mix(in srgb, var(--orn-base) 45%, transparent);
+  --orn-gem: var(--mastery-orn-gem, 13px);
+  --orn-rail: var(--mastery-orn-rail, 0px);
+  --orn-edge: calc(var(--orn-rail) + 5px);
+  /* Corners hug the rail: 2px clears the inner highlight line drawn inside it. */
+  --orn-corner-edge: calc(var(--orn-rail) + 1px);
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.orn {
+  position: absolute;
+}
+
+.edgeTop {
+  top: var(--orn-top-inset, var(--orn-inset));
+  left: var(--orn-pos, 50%);
+  translate: -50% 0;
+}
+
+.edgeLeft,
+.edgeRight {
+  top: var(--orn-pos, 50%);
+  translate: 0 -50%;
+}
+
+.edgeLeft {
+  left: var(--orn-inset);
+}
+
+.edgeRight {
+  right: var(--orn-inset);
+}
+
+.gem,
+.gemSmall,
+.cornerGem {
+  --orn-size: var(--orn-gem);
+  --orn-inset: calc(var(--orn-size) * 0.207);
+  width: var(--orn-size);
+  height: var(--orn-size);
+  rotate: 45deg;
+  border: 2px solid var(--orn-shadow);
+  background: linear-gradient(
+    135deg,
+    var(--orn-highlight),
+    var(--orn-color) 58%
+  );
+  box-shadow: 0 0 7px var(--orn-glow);
+}
+
+.gemSmall {
+  --orn-size: calc(var(--orn-gem) * 0.66);
+  border-width: 1.5px;
+}
+
+.blade {
+  --orn-inset: 0px;
+  width: calc(var(--orn-gem) * 0.46);
+  height: calc(var(--orn-gem) * 2.2);
+  background: linear-gradient(
+    90deg,
+    var(--orn-highlight),
+    var(--orn-color) 55%,
+    var(--orn-shadow)
+  );
+  box-shadow: 0 0 6px var(--orn-glow);
+  clip-path: polygon(50% 0, 100% 22%, 100% 78%, 50% 100%, 0 78%, 0 22%);
+}
+
+.edgeRight.blade {
+  background: linear-gradient(
+    270deg,
+    var(--orn-highlight),
+    var(--orn-color) 55%,
+    var(--orn-shadow)
+  );
+}
+
+.inlay {
+  position: absolute;
+  inset: var(--orn-edge);
+  border: 1px solid color-mix(in srgb, var(--orn-highlight) 45%, transparent);
+  border-radius: inherit;
+  box-shadow: 0 0 8px var(--orn-glow);
+}
+
+.corner {
+  position: absolute;
+  width: calc(var(--orn-gem) * 1.8);
+  height: calc(var(--orn-gem) * 1.8);
+  border: 0 solid var(--orn-highlight);
+  opacity: 0.9;
+}
+
+.cornerGem {
+  --orn-size: calc(var(--orn-gem) * 0.58);
+  position: absolute;
+  margin: calc(var(--orn-size) / -2);
+}
+
+.cornerTL {
+  top: var(--orn-corner-edge);
+  left: var(--orn-corner-edge);
+  border-top-width: 2px;
+  border-left-width: 2px;
+}
+
+.cornerTR {
+  top: var(--orn-corner-edge);
+  right: var(--orn-corner-edge);
+  border-top-width: 2px;
+  border-right-width: 2px;
+}
+
+.cornerBL {
+  bottom: var(--orn-corner-edge);
+  left: var(--orn-corner-edge);
+  border-bottom-width: 2px;
+  border-left-width: 2px;
+}
+
+.cornerBR {
+  bottom: var(--orn-corner-edge);
+  right: var(--orn-corner-edge);
+  border-bottom-width: 2px;
+  border-right-width: 2px;
+}
+
+.cornerTL .cornerGem {
+  top: 0;
+  left: 0;
+}
+
+.cornerTR .cornerGem {
+  top: 0;
+  right: 0;
+}
+
+.cornerBL .cornerGem {
+  bottom: 0;
+  left: 0;
+}
+
+.cornerBR .cornerGem {
+  bottom: 0;
+  right: 0;
+}
+
+.crest {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: calc(var(--orn-gem) * 2.1);
+  height: calc(var(--orn-gem) * 1.1);
+  translate: -50% 0;
+  background: linear-gradient(
+    180deg,
+    var(--orn-highlight),
+    var(--orn-color) 58%,
+    var(--orn-shadow)
+  );
+  box-shadow: 0 0 8px var(--orn-glow);
+  clip-path: polygon(
+    50% 0,
+    64% 44%,
+    100% 22%,
+    90% 100%,
+    10% 100%,
+    0 22%,
+    36% 44%
+  );
+}
+
+.crested {
+  --orn-top-inset: calc(var(--orn-gem) * 1.1);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .crested .gem,
+  .crested .gemSmall,
+  .crested .crest {
+    animation: masteryBorderGlow 2.8s ease-in-out infinite;
+  }
+}
+
+@keyframes masteryBorderGlow {
+  50% {
+    box-shadow: 0 0 13px var(--orn-glow);
+  }
+}

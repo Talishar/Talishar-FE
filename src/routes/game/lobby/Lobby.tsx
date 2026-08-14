@@ -49,6 +49,8 @@ import {
 } from 'appConstants';
 import { JUDGE_HUB_DISCORD_URL } from 'constants/socialLinks';
 import { getReadableFormatName } from 'utils/formatUtils';
+import { masteryLevelPreview } from 'features/mastery/mastery';
+import MasteryBorder from 'features/mastery/MasteryBorder';
 
 const COMPETITIVE_FORMATS = new Set([
   GAME_FORMAT.COMPETITIVE_CC,
@@ -158,10 +160,11 @@ const Lobby = () => {
     useAuth();
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const { playerID, gameID, authKey } = gameInfo;
-  const { data: masteryData } = useGetHeroMasteryQuery(
-    { gameName: gameID, scope: 'game' },
-    { skip: !isLoggedIn }
-  );
+  const { data: masteryData, refetch: refetchMastery } =
+    useGetHeroMasteryQuery(
+      { gameName: gameID, scope: 'game' },
+      { skip: !isLoggedIn }
+    );
   const [acceptedDisclaimer, setAcceptedDisclaimer] = useState<boolean>(
     () => localStorage.getItem('openFormatDisclaimerAccepted') === 'true'
   );
@@ -333,6 +336,15 @@ const Lobby = () => {
     }
   }, [gameLobby?.theirHero]);
 
+  // Mastery is fetched once on mount, usually before the opponent has joined, so
+  // their entry is missing from gamePlayers and their frame renders as level 0.
+  // Refetch whenever their hero appears or changes.
+  useEffect(() => {
+    if (!isLoggedIn) return;
+    if (!gameLobby?.theirHero || gameLobby.theirHero === 'CardBack') return;
+    refetchMastery();
+  }, [isLoggedIn, gameLobby?.theirHero, refetchMastery]);
+
   const handleEquipmentClick = () => {
     setActiveTab('equipment');
   };
@@ -469,9 +481,13 @@ const Lobby = () => {
   const rightHero =
     gameLobby?.theirHero === 'CardBack' ? 'UNKNOWNHERO' : gameLobby?.theirHero;
   const leftMasteryLevel =
-    masteryData?.gamePlayers?.[String(playerID)]?.level ?? 0;
+    masteryLevelPreview('masteryLevel') ??
+    masteryData?.gamePlayers?.[String(playerID)]?.level ??
+    0;
   const rightMasteryLevel =
-    masteryData?.gamePlayers?.[String(playerID === 1 ? 2 : 1)]?.level ?? 0;
+    masteryLevelPreview('opponentMasteryLevel') ??
+    masteryData?.gamePlayers?.[String(playerID === 1 ? 2 : 1)]?.level ??
+    0;
 
   const leftPic = `url(${generateCroppedImageUrl(leftHero)})`;
   const lobbyFormatName = getReadableFormatName(
@@ -979,6 +995,7 @@ const Lobby = () => {
                   style={{ backgroundImage: leftPic }}
                   data-mastery-level={leftMasteryLevel}
                 >
+                  <MasteryBorder level={leftMasteryLevel} />
                   <div className={styles.dimPic}>
                     <h3 aria-busy={isLoading}>
                       {createPatreonIconMap(
@@ -1021,6 +1038,7 @@ const Lobby = () => {
                   style={{ backgroundImage: rightPic }}
                   data-mastery-level={rightMasteryLevel}
                 >
+                  <MasteryBorder level={rightMasteryLevel} />
                   {playerID === 1 &&
                     gameLobby?.theirHero &&
                     gameLobby.theirHero !== 'CardBack' &&
