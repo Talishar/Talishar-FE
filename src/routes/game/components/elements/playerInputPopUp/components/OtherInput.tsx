@@ -1,13 +1,9 @@
-import { Suspense } from 'react';
+import React from 'react';
 import CardDisplay from '../../cardDisplay/CardDisplay';
+import SearchCardInput from '../../searchCardInput/SearchCardInput';
 import { NAME_A_CARD } from '../constants';
 import { FormProps } from '../playerInputPopupTypes';
 import styles from '../PlayerInputPopUp.module.css';
-import { lazyWithRetry } from 'utils/lazyWithRetry';
-
-const SearchCardInput = lazyWithRetry(
-  () => import('../../searchCardInput/SearchCardInput')
-);
 
 export const OtherInput = (props: FormProps) => {
   const {
@@ -104,11 +100,7 @@ export const OtherInput = (props: FormProps) => {
             </button>
           </div>
         ) : null}
-        {id === NAME_A_CARD && (
-          <Suspense fallback={null}>
-            <SearchCardInput />
-          </Suspense>
-        )}
+        {id === NAME_A_CARD && <SearchCardInput />}
       </div>
     </form>
   );
