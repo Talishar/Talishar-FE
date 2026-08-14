@@ -1464,7 +1464,7 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                     </select>
                   </label>
                 )}
-                <label>
+                <label className={styles.toggleLabel}>
                   <input
                     type="checkbox"
                     role="switch"
@@ -1476,7 +1476,6 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                     }
                   />
                   {t('MENU.CREATE_GAME.SINGLE_PLAYER')}
-                  <div>&nbsp;</div>
                 </label>
                 {isLoggedIn && deckTestMode && (
                   <label>

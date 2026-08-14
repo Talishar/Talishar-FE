@@ -39,6 +39,42 @@
   margin-bottom: 0 !important;
 }
 
+.embeddedForm select,
+.embeddedForm select:hover,
+.embeddedForm select:focus,
+.embeddedForm select:active {
+  border-color: var(--theme-form-border, #797c80) !important;
+  box-shadow: none !important;
+}
+
+.embeddedForm input[type='checkbox'][role='switch']:not(:checked),
+.formContainer input[type='checkbox'][role='switch']:not(:checked) {
+  --switch-background-color: #3c4147 !important;
+  background-color: var(--near-black) !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+}
+
+.toggleLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  margin: 0 0 1rem;
+  padding: 2px 0 2px 2px;
+}
+
+.toggleLabel input[type='checkbox'] {
+  flex-shrink: 0;
+  margin: 0;
+}
+
+.embeddedForm input[type='checkbox'][role='switch']:checked,
+.formContainer input[type='checkbox'][role='switch']:checked {
+  background-color: #6f767e !important;
+  border-color: #6f767e !important;
+}
+
 .guestHiddenField {
   display: none !important;
 }

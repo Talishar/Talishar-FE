@@ -88,11 +88,23 @@
   font-size: 0.9rem;
   cursor: pointer;
   margin: 0;
+  padding: 2px 0 2px 2px;
 }
 
 .toggleLabel input[type='checkbox'] {
   flex-shrink: 0;
   margin: 0;
+}
+
+.toggleLabel input[type='checkbox'][role='switch']:not(:checked) {
+  --switch-background-color: #3c4147 !important;
+  background-color: var(--near-black) !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+}
+
+.toggleLabel input[type='checkbox'][role='switch']:checked {
+  background-color: #6f767e !important;
+  border-color: #6f767e !important;
 }
 
 /* Error box mirrors the look of existing fieldError patterns */
@@ -216,6 +228,23 @@
 .bazaarMessage a {
   color: var(--theme-primary, #d4af37);
   text-decoration: underline;
+}
+
+:global(#quickJoinFavoriteDeck),
+:global(#quickJoinFavoriteDeck:hover),
+:global(#quickJoinFavoriteDeck:focus),
+:global(#quickJoinFavoriteDeck[aria-expanded='true']) {
+  border-color: transparent;
+  background: var(--theme-form-background, #33383d);
+  box-shadow: none;
+}
+
+:global(#quickJoinFavoriteDeck ~ [role='listbox'] [role='option']:hover),
+:global(#quickJoinFavoriteDeck ~ [role='listbox'] [role='option']:focus) {
+  background-color: var(
+    --dropdown-hover-background-color,
+    rgba(212, 175, 55, 0.15)
+  );
 }
 
 .bazaarError {
