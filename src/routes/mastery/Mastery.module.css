@@ -198,6 +198,7 @@
 }
 
 .grid {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
   align-items: start;
@@ -280,12 +281,15 @@
   z-index: 5;
   left: 50%;
   bottom: calc(100% + 0.4rem);
-  display: none;
   width: 250px;
+  max-width: calc(100vw - 1.5rem);
   min-height: 132px;
   margin: 0 !important;
   padding: 0.85rem;
-  translate: -50% 0;
+  translate: calc(-50% + var(--detail-shift, 0px)) 0;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
   border: 1px solid
     color-mix(in srgb, var(--theme-primary, #d4af37) 55%, transparent);
   border-radius: 5px;
@@ -359,7 +363,8 @@
 .heroCard:hover .detail,
 .heroCard:focus-visible .detail,
 .heroCard[data-expanded='true'] .detail {
-  display: block;
+  visibility: visible;
+  opacity: 1;
 }
 
 .status,

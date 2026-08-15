@@ -36,6 +36,23 @@ const devGamesForHero = (
   return minimum + (seededNumber(heroId) % Math.max(1, maximum - minimum));
 };
 
+/* Keep a hero's detail popup inside the grid; edge columns would otherwise
+   centre it off the side of the screen. */
+const alignDetail = (card: HTMLElement) => {
+  const detail = card.querySelector<HTMLElement>(`.${styles.detail}`);
+  const grid = card.parentElement;
+  if (!detail || !grid) return;
+
+  card.style.setProperty('--detail-shift', '0px');
+  const bounds = grid.getBoundingClientRect();
+  const rect = detail.getBoundingClientRect();
+  const overflowLeft = bounds.left - rect.left;
+  const overflowRight = rect.right - bounds.right;
+  const shift =
+    overflowLeft > 0 ? overflowLeft : overflowRight > 0 ? -overflowRight : 0;
+  card.style.setProperty('--detail-shift', `${Math.round(shift)}px`);
+};
+
 const Mastery = () => {
   const { t } = useTranslation();
   const { data, isLoading, error } = useGetHeroMasteryQuery();
@@ -260,11 +277,16 @@ const Mastery = () => {
                             data-expanded={expandedHero === hero.value}
                             aria-describedby={detailId}
                             aria-expanded={expandedHero === hero.value}
-                            onClick={() =>
+                            onMouseEnter={(event) =>
+                              alignDetail(event.currentTarget)
+                            }
+                            onFocus={(event) => alignDetail(event.currentTarget)}
+                            onClick={(event) => {
+                              alignDetail(event.currentTarget);
                               setExpandedHero((current) =>
                                 current === hero.value ? null : hero.value
-                              )
-                            }
+                              );
+                            }}
                             onKeyDown={(event) => {
                               if (event.key === 'Escape') setExpandedHero(null);
                             }}

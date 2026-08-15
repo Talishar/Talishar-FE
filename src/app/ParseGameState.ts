@@ -302,7 +302,6 @@ export default function ParseGameState(input: any) {
   const result: GameState = {
     gameInfo: {
       gameID: 0,
-      gameGUID: '',
       playerID: 0,
       authKey: '',
       isPrivateLobby: false,

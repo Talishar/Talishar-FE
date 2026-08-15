@@ -187,6 +187,7 @@ const STICKY_PLAYER_FIELDS = [
 ] as const;
 
 const FALLBACK_GAME_INFO_FIELDS = [
+  'gameGUID',
   'roguelikeGameID',
   'isPrivate',
   'isReplay',
