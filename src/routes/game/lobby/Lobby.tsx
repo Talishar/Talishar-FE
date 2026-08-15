@@ -160,11 +160,10 @@ const Lobby = () => {
     useAuth();
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const { playerID, gameID, authKey } = gameInfo;
-  const { data: masteryData, refetch: refetchMastery } =
-    useGetHeroMasteryQuery(
-      { gameName: gameID, scope: 'game' },
-      { skip: !isLoggedIn }
-    );
+  const { data: masteryData, refetch: refetchMastery } = useGetHeroMasteryQuery(
+    { gameName: gameID, scope: 'game' },
+    { skip: !isLoggedIn }
+  );
   const [acceptedDisclaimer, setAcceptedDisclaimer] = useState<boolean>(
     () => localStorage.getItem('openFormatDisclaimerAccepted') === 'true'
   );

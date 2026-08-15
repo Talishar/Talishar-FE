@@ -1,4 +1,3 @@
-import React from 'react';
 import CombatChainLink from 'features/CombatChainLink';
 import styles from '../CountersOverlay.module.css';
 import { TooltipWrapper } from 'components/Tooltip/TooltipWrapper';

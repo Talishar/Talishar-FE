@@ -9,32 +9,35 @@ import { TALISHAR_DISCORD_URL } from 'constants/socialLinks';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 import { useTranslation } from 'react-i18next';
 
-const formatDate = (timestamp: string) => {
-  return new Date(timestamp)
-    .toLocaleDateString('en-US', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric'
-    })
-    .replace(/(\d+)/, (day) => {
-      const d = parseInt(day);
-      const suffix =
-        d % 10 === 1 && d !== 11
-          ? 'st'
-          : d % 10 === 2 && d !== 12
-          ? 'nd'
-          : d % 10 === 3 && d !== 13
-          ? 'rd'
-          : 'th';
-      return day + suffix;
-    });
+const formatDate = (timestamp: string, locale: string) => {
+  const formatted = new Date(timestamp).toLocaleDateString(locale, {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  });
+
+  // Ordinal suffixes only make sense in English.
+  if (!locale.startsWith('en')) return formatted;
+
+  return formatted.replace(/(\d+)/, (day) => {
+    const d = parseInt(day);
+    const suffix =
+      d % 10 === 1 && d !== 11
+        ? 'st'
+        : d % 10 === 2 && d !== 12
+        ? 'nd'
+        : d % 10 === 3 && d !== 13
+        ? 'rd'
+        : 'th';
+    return day + suffix;
+  });
 };
 
 const News = () => {
   const [discordMessages, setDiscordMessages] = useState<DiscordMessage[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   // Initial stuff to allow the lang to change
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     const loadContent = async () => {
@@ -64,7 +67,7 @@ const News = () => {
           rel="noopener noreferrer"
           className={styles.viewAllLink}
         >
-          {t('NEWS.VIEW_ALL')}→
+          {t('NEWS.VIEW_ALL')} →
         </a>
       </div>
       <div className={styles.newsHorizontalList}>
@@ -83,7 +86,7 @@ const News = () => {
                   {message.author}
                 </strong>
                 <span className={styles.newsCardDate}>
-                  {formatDate(message.timestamp)}
+                  {formatDate(message.timestamp, i18n.language)}
                 </span>
               </div>
               {message.content && (

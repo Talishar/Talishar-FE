@@ -50,10 +50,10 @@ import useAdScript, { wasAdProviderLoadedInDocument } from 'hooks/useAdScript';
 const TOAST_STYLE: React.CSSProperties = {
   background: 'var(--theme-tertiary)',
   color: 'var(--white)',
-  border: '2px solid var(--theme-border)',
+  border: '1px solid var(--theme-border)',
   padding: '0.5rem',
   wordBreak: 'break-word',
-  maxWidth: '100vh',
+  maxWidth: '100vw',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   userSelect: 'none',

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useGetHeroMasteryQuery } from 'features/api/apiSlice';
 import { HEROES_OF_RATHE } from 'routes/index/components/filter/constants';

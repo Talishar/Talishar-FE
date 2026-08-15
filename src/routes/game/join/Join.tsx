@@ -391,7 +391,7 @@ const JoinGame = () => {
                           id="favoriteDeck"
                           {...register('favoriteDeck')}
                         />
-                        {t('JOIN.SAVE_DECK_FAVOURITES')}
+                        {t('JOIN.SAVE_DECK_FAVORITES')}
                       </label>
                     )}
                     <label style={{ marginTop: '1rem' }}>
@@ -424,7 +424,7 @@ const JoinGame = () => {
               className={styles.buttonClass}
               disabled={isSubmitting}
               aria-busy={isSubmitting}
-              style={{ marginTop: '27px' }}
+              style={{ marginTop: '18px' }}
             >
               {isSubmitting ? t('JOIN.JOINING_GAME') : t('JOIN.JOIN')}
             </button>

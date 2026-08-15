@@ -44,9 +44,11 @@ describe('ad provider security kill switch', () => {
 
 describe('video ad hit-area containment', () => {
   afterEach(() => {
-    document.body.querySelectorAll(':scope > :not(#root)').forEach((element) => {
-      element.remove();
-    });
+    document.body
+      .querySelectorAll(':scope > :not(#root)')
+      .forEach((element) => {
+        element.remove();
+      });
   });
 
   it('keeps transparent provider wrappers click-through', () => {

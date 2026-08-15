@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { FaQuestionCircle, FaChevronUp, FaChevronDown } from 'react-icons/fa';
 import { toast } from 'react-hot-toast';
 import { ImageSelect } from 'components/ImageSelect';
@@ -44,7 +44,6 @@ const QuickJoinPanel = ({ embedded = false }: Props) => {
     error,
     importDeckError,
     isJoining,
-    hasDeckConfigured,
     favoriteDeckOptions,
     isFavoritesLoading,
     bazaarDeckOptions,
@@ -97,7 +96,9 @@ const QuickJoinPanel = ({ embedded = false }: Props) => {
           options={favoriteDeckOptions}
           value={selectedFavoriteDeck}
           onChange={setSelectedFavoriteDeck}
-          placeholder={isFavoritesLoading ? 'Loading…' : 'Select a saved deck'}
+          placeholder={
+            isFavoritesLoading ? t('BASE.LOADING') : t('JOIN.SELECT_DECK')
+          }
           aria-busy={isFavoritesLoading}
           aria-label={t('JOIN.SELECT_DECK')}
         />
@@ -131,7 +132,7 @@ const QuickJoinPanel = ({ embedded = false }: Props) => {
         <input
           type="text"
           className={styles.textInput}
-          placeholder="Paste deck list URL"
+          placeholder={t('JOIN.DECK_URL_PLACEHOLDER')}
           value={importDeckUrl}
           ref={importDeckInputRef}
           maxLength={500}
@@ -147,12 +148,12 @@ const QuickJoinPanel = ({ embedded = false }: Props) => {
             const match = text.match(/https?:\/\/[^\s"'<>]+/);
             if (match) {
               setImportDeckUrl(match[0].slice(0, 500));
-              toast.success('URL extracted from pasted content');
+              toast.success(t('JOIN.URL_EXTRACTED'));
             } else {
-              toast.error('Pasted content does not appear to be a valid URL');
+              toast.error(t('JOIN.PASTE_NOT_URL'));
             }
           }}
-          aria-label="Deck URL"
+          aria-label={t('JOIN.DECK_URL_LABEL')}
           aria-invalid={importDeckError ? 'true' : undefined}
           aria-describedby={
             importDeckError ? 'quickJoinDeckUrlError' : undefined
@@ -176,7 +177,7 @@ const QuickJoinPanel = ({ embedded = false }: Props) => {
           checked={saveDeck}
           onChange={(e) => setSaveDeck(e.target.checked)}
         />
-        {t('JOIN.SAVE_DECK_FAVOURITES')}
+        {t('JOIN.SAVE_DECK_FAVORITES')}
       </label>
     </>
   );
@@ -187,7 +188,11 @@ const QuickJoinPanel = ({ embedded = false }: Props) => {
         options={bazaarDeckOptions}
         value={selectedBazaarDeck}
         onChange={setSelectedBazaarDeck}
-        placeholder={isBazaarLoading ? 'Loading…' : 'Select a FaB Bazaar deck'}
+        placeholder={
+          isBazaarLoading
+            ? t('BASE.LOADING')
+            : t('MENU.CREATE_GAME.SELECT_BAZAAR_DECK_PLACEHOLDER')
+        }
         aria-busy={isBazaarLoading}
         aria-label={t('MENU.CREATE_GAME.SELECT_BAZAAR_DECK_PLACEHOLDER')}
       />
@@ -264,7 +269,11 @@ const QuickJoinPanel = ({ embedded = false }: Props) => {
           className={styles.toggleButton}
           onClick={() => setIsExpanded(!isExpanded)}
           aria-expanded={isExpanded}
-          aria-label={isExpanded ? 'Minimize panel' : 'Expand panel'}
+          aria-label={
+            isExpanded
+              ? t('UNITED_GAME_PANEL.MINIMIZE')
+              : t('UNITED_GAME_PANEL.EXPAND')
+          }
         >
           {isExpanded ? <FaChevronUp size={16} /> : <FaChevronDown size={16} />}
         </button>

@@ -220,13 +220,21 @@
 }
 
 .clearSelectionLink {
+  width: auto;
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: none;
   font-size: 0.85em;
+  font-family: inherit;
   color: var(--theme-primary, #d4af37);
   text-decoration: none;
   cursor: pointer;
 }
 
 .clearSelectionLink:hover {
+  background: none;
+  color: var(--theme-primary, #d4af37);
   text-decoration: underline;
 }
 

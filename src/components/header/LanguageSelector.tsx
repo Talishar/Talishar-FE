@@ -46,18 +46,15 @@ const LanguageSelector = ({
       ref={dropdownRef}
     >
       {inDropdown ? (
-        <a
-          href="#"
-          onClick={(e) => {
-            e.preventDefault();
-            setIsOpen(!isOpen);
-          }}
+        <button
+          type="button"
+          onClick={() => setIsOpen(!isOpen)}
           aria-label={t('HEADER.LANGUAGE_SELECTOR.LANGUAGES')}
           aria-expanded={isOpen}
           aria-haspopup="menu"
         >
           <BsTranslate /> <span>{t('HEADER.LANGUAGE_SELECTOR.LANGUAGE')}</span>
-        </a>
+        </button>
       ) : (
         <button
           type="button"
@@ -76,11 +73,10 @@ const LanguageSelector = ({
       {isOpen && (
         <div className={styles.dropdownMenu} role="menu">
           {I18N_SUPPORTED_LANGUAGE_CODES.map((code) => (
-            <a
+            <button
               key={code}
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
+              type="button"
+              onClick={() => {
                 changeLanguage(code);
                 setIsOpen(false);
               }}
@@ -88,7 +84,7 @@ const LanguageSelector = ({
               role="menuitem"
             >
               {I18N_LANGUAGE_LABELS[code]}
-            </a>
+            </button>
           ))}
         </div>
       )}

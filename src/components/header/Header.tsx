@@ -1,5 +1,5 @@
 import useAuth from 'hooks/useAuth';
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, NavLink, Outlet } from 'react-router-dom';
 import styles from './Header.module.scss';
 import TalisharLogo from '../../img/CoinLogo.png';
@@ -107,7 +107,7 @@ const Header = () => {
               border: '1px solid var(--theme-border)',
               padding: '0.5rem',
               wordBreak: 'break-word',
-              maxWidth: '100vh',
+              maxWidth: '100vw',
               overflow: 'hidden',
               textOverflow: 'ellipsis',
               userSelect: 'none',
@@ -182,7 +182,12 @@ const Header = () => {
                     }`}
                   />
                   {pendingRequestCount > 0 && (
-                    <span className={styles.notificationBadge}>
+                    <span
+                      className={styles.notificationBadge}
+                      aria-label={t('HEADER.PENDING_REQUESTS', {
+                        count: pendingRequestCount
+                      })}
+                    >
                       {pendingRequestCount}
                     </span>
                   )}
@@ -207,13 +212,7 @@ const Header = () => {
                     <LanguageSelector inDropdown />
                     {document.fullscreenEnabled && (
                       <li>
-                        <a
-                          href="#"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            handleFullscreenToggle();
-                          }}
-                        >
+                        <button type="button" onClick={handleFullscreenToggle}>
                           {isFullscreen ? (
                             <BsFullscreenExit />
                           ) : (
@@ -224,7 +223,7 @@ const Header = () => {
                               ? t('HEADER.EXIT_FULLSCREEN')
                               : t('HEADER.FULLSCREEN')}
                           </span>
-                        </a>
+                        </button>
                       </li>
                     )}
                     {isMod && (
@@ -298,7 +297,12 @@ const Header = () => {
                 <Link to="/user" onClick={closeMobileMenu}>
                   <BsPersonFill /> <span>{t('HEADER.PROFILE')}</span>
                   {pendingRequestCount > 0 && (
-                    <span className={styles.notificationBadge}>
+                    <span
+                      className={styles.notificationBadge}
+                      aria-label={t('HEADER.PENDING_REQUESTS', {
+                        count: pendingRequestCount
+                      })}
+                    >
                       {pendingRequestCount}
                     </span>
                   )}
@@ -333,20 +337,14 @@ const Header = () => {
             )}
             {document.fullscreenEnabled && (
               <li>
-                <a
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleFullscreenToggle();
-                  }}
-                >
+                <button type="button" onClick={handleFullscreenToggle}>
                   {isFullscreen ? <BsFullscreenExit /> : <BsFullscreen />}
                   <span>
                     {isFullscreen
                       ? t('HEADER.EXIT_FULLSCREEN')
                       : t('HEADER.FULLSCREEN')}
                   </span>
-                </a>
+                </button>
               </li>
             )}
             {isLoggedIn && (

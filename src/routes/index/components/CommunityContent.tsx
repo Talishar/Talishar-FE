@@ -42,7 +42,7 @@ const CommunityContent: React.FC<CommunityContentProps> = ({
   const [videos, setVideos] = useState<ContentVideo[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [loading, setLoading] = useState(true);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const cleanTitle = (title: string): string => {
     let cleaned = title.replace(/https?:\/\/\S+/gi, '').trim();
@@ -90,7 +90,7 @@ const CommunityContent: React.FC<CommunityContentProps> = ({
   };
 
   const formatDate = (timestamp: string): string =>
-    new Date(timestamp).toLocaleDateString('en-US', {
+    new Date(timestamp).toLocaleDateString(i18n.language, {
       year: 'numeric',
       month: 'long',
       day: 'numeric'

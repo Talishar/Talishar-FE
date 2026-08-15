@@ -164,7 +164,8 @@ function parseCards(input: any, reverse = false): Card[] {
   if (!Array.isArray(input)) return [];
   const result: Card[] = [];
   if (reverse) {
-    for (let i = input.length - 1; i >= 0; i--) result.push(ParseCard(input[i]));
+    for (let i = input.length - 1; i >= 0; i--)
+      result.push(ParseCard(input[i]));
   } else {
     for (const cardObj of input) result.push(ParseCard(cardObj));
   }

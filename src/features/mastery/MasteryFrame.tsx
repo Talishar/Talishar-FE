@@ -36,7 +36,11 @@ const MasteryFrame = ({ level, children, className, title }: Props) => {
   const tier = ornamentTier(level);
   return (
     <div
-      className={classNames(styles.frame, styles[`mastery_${level}`], className)}
+      className={classNames(
+        styles.frame,
+        styles[`mastery_${level}`],
+        className
+      )}
       data-mastery-level={level}
       title={title}
     >
@@ -51,7 +55,9 @@ const MasteryFrame = ({ level, children, className, title }: Props) => {
                 key={ornament.key}
                 className={classNames(styles.orn, styles[ornament.type])}
                 style={
-                  { '--orn-angle': `${ornament.angle}deg` } as React.CSSProperties
+                  {
+                    '--orn-angle': `${ornament.angle}deg`
+                  } as React.CSSProperties
                 }
               />
             )

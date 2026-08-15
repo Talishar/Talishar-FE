@@ -24,7 +24,8 @@
   cursor: pointer;
   font-size: 0.85em;
   position: relative;
-  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease,
+    color 0.15s ease;
   z-index: 101;
   white-space: normal;
   margin-bottom: 0;
@@ -104,8 +105,12 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .dropdown {
@@ -115,7 +120,8 @@
   border-radius: 10px;
   min-width: 280px;
   max-width: calc(100vw - 2em);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.04);
   z-index: 9999;
   animation: slideDown 0.18s cubic-bezier(0.16, 1, 0.3, 1);
   top: auto;

@@ -47,9 +47,7 @@
 }
 
 .gem {
-  transition:
-    background-color 0.15s ease-out,
-    box-shadow 0.15s ease-out,
+  transition: background-color 0.15s ease-out, box-shadow 0.15s ease-out,
     filter 0.15s ease-out;
 }
 

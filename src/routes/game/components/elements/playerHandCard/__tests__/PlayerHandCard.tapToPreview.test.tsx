@@ -23,9 +23,9 @@ vi.mock('../../cardImage/CardImage', () => ({
 }));
 
 vi.mock('features/game/GameSlice', async () => {
-  const actual = await vi.importActual<typeof import('features/game/GameSlice')>(
-    'features/game/GameSlice'
-  );
+  const actual = await vi.importActual<
+    typeof import('features/game/GameSlice')
+  >('features/game/GameSlice');
   return {
     ...actual,
     playCard: Object.assign(
@@ -63,7 +63,9 @@ const tapCard = (el: HTMLElement) => {
 };
 
 const renderHandCard = (cookieEnabled: boolean) => {
-  document.cookie = `${TAP_TO_PREVIEW_PLAY_COOKIE}=${cookieEnabled ? 'true' : 'false'}; path=/`;
+  document.cookie = `${TAP_TO_PREVIEW_PLAY_COOKIE}=${
+    cookieEnabled ? 'true' : 'false'
+  }; path=/`;
   const addCardToPlayedCards = vi.fn();
   const view = renderWithProviders(
     <CookiesProvider>

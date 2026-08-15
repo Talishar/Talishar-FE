@@ -133,7 +133,8 @@
 .ring {
   position: absolute;
   inset: calc(var(--mastery-pad) * -0.9);
-  border: 1px solid color-mix(in srgb, var(--mastery-highlight) 45%, transparent);
+  border: 1px solid
+    color-mix(in srgb, var(--mastery-highlight) 45%, transparent);
   border-radius: 50%;
   box-shadow: 0 0 8px var(--mastery-glow), inset 0 0 0 1px rgba(0, 0, 0, 0.35);
 }

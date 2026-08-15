@@ -51,8 +51,8 @@ const AboutSection: React.FC = () => {
       answer: t('ABOUT.FAQ.WHERE_PLAY_A')
     },
     {
-      question: t('ABOUT.FAQ.HOW_CONTRIBUTER_Q'),
-      answer: t('ABOUT.FAQ.HOW_CONTRIBUTER_A')
+      question: t('ABOUT.FAQ.HOW_CONTRIBUTOR_Q'),
+      answer: t('ABOUT.FAQ.HOW_CONTRIBUTOR_A')
     }
   ];
 
@@ -224,52 +224,40 @@ const AboutSection: React.FC = () => {
           </div>
 
           <div className={styles.section}>
-            <div className={styles.lssGrid}>
-              <div>
-                <h3 className={styles.sectionTitle}>
-                  {t('ABOUT.UNOFFICIAL_TITLE')}
-                </h3>
-                <p className={styles.bodyText}>
-                  <Trans
-                    i18nKey="ABOUT.LSS_RELATIONSHIP_DESCRIPTION"
-                    components={[
-                      <p key="lss-p0" className={styles.bodyText} />,
-                      <p key="lss-p1" className={styles.bodyText} />,
-                      <a
-                        key="lss-discord"
-                        href={TALISHAR_DISCORD_URL}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      />,
-                      <a
-                        key="lss-rules"
-                        href="https://fabtcg.com/rules/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      />
-                    ]}
-                  />
-                </p>
-              </div>
-              <div>
-                <h3 className={styles.sectionTitle}>
-                  {t('ABOUT.LSS_RELATIONSHIP_TITLE')}
-                </h3>
-                <p className={styles.bodyText}>
-                  {t('ABOUT.WHO_MAINTAINS_DESCRIPTION')}
-                </p>
-                {!isSupporter && (
+            <h3 className={styles.sectionTitle}>
+              {t('ABOUT.UNOFFICIAL_TITLE')}
+            </h3>
+            <div className={styles.bodyText}>
+              <Trans
+                i18nKey="ABOUT.LSS_RELATIONSHIP_DESCRIPTION"
+                components={[
+                  <p key="lss-p0" className={styles.bodyText} />,
+                  <p key="lss-p1" className={styles.bodyText} />,
                   <a
-                    href={TALISHAR_METAFY_URL}
+                    key="lss-discord"
+                    href={TALISHAR_DISCORD_URL}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={styles.metafyButton}
-                  >
-                    {t('ABOUT.SUPPORT_METAFY')}
-                  </a>
-                )}
-              </div>
+                  />,
+                  <a
+                    key="lss-rules"
+                    href="https://fabtcg.com/rules/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  />
+                ]}
+              />
             </div>
+            {!isSupporter && (
+              <a
+                href={TALISHAR_METAFY_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.metafyButton}
+              >
+                {t('ABOUT.SUPPORT_METAFY')}
+              </a>
+            )}
           </div>
 
           <div className={styles.section}>
@@ -311,18 +299,27 @@ const AboutSection: React.FC = () => {
               {faqs.map((faq, index) => (
                 <div key={index} className={styles.faqItem}>
                   <button
+                    type="button"
                     className={styles.faqQuestion}
+                    aria-expanded={expandedFAQ === index}
+                    aria-controls={`faq-answer-${index}`}
+                    id={`faq-question-${index}`}
                     onClick={() =>
                       setExpandedFAQ(expandedFAQ === index ? null : index)
                     }
                   >
                     <span>{faq.question}</span>
-                    <span className={styles.faqToggle}>
+                    <span className={styles.faqToggle} aria-hidden="true">
                       {expandedFAQ === index ? '−' : '+'}
                     </span>
                   </button>
                   {expandedFAQ === index && (
-                    <div className={styles.faqAnswer}>
+                    <div
+                      className={styles.faqAnswer}
+                      id={`faq-answer-${index}`}
+                      role="region"
+                      aria-labelledby={`faq-question-${index}`}
+                    >
                       <p>{parseHtmlToReactElements(faq.answer)}</p>
                     </div>
                   )}

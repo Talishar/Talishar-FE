@@ -958,19 +958,24 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                   )}
                 />
               )}
-              {!isEmbedded && isLoggedIn && selectedMasteryHero && (() => {
-                const mastery = selectedMasteryProgress ?? emptyMastery(selectedMasteryHero);
-                return (
-                  <MasteryProgressCard
-                    heroId={selectedMasteryHero}
-                    games={mastery.qualifyingGames}
-                    level={mastery.level}
-                    nextThreshold={mastery.nextThreshold}
-                    gamesToNext={mastery.gamesToNext}
-                    compact
-                  />
-                );
-              })()}
+              {!isEmbedded &&
+                isLoggedIn &&
+                selectedMasteryHero &&
+                (() => {
+                  const mastery =
+                    selectedMasteryProgress ??
+                    emptyMastery(selectedMasteryHero);
+                  return (
+                    <MasteryProgressCard
+                      heroId={selectedMasteryHero}
+                      games={mastery.qualifyingGames}
+                      level={mastery.level}
+                      nextThreshold={mastery.nextThreshold}
+                      gamesToNext={mastery.gamesToNext}
+                      compact
+                    />
+                  );
+                })()}
               {(isPreconFormat(formFormat || selectedFormat) ||
                 (!isEmbedded && standaloneDeckSource === 'talishar')) && (
                 <fieldset>
@@ -1045,7 +1050,7 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                         id="favoriteDeck"
                         {...register('favoriteDeck')}
                       />
-                      {t('MENU.CREATE_GAME.SAVE_DECK_FAVOURITES')}
+                      {t('MENU.CREATE_GAME.SAVE_DECK_FAVORITES')}
                     </label>
                   )}
                 </fieldset>
@@ -1146,18 +1151,15 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                       )}
                     </label>
                     {selectedHeroes.length > 0 && (
-                      <a
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          clearSelections();
-                        }}
+                      <button
+                        type="button"
+                        onClick={clearSelections}
                         className={styles.clearSelectionLink}
                       >
                         {t(
                           'MENU.CREATE_GAME.GAME_DESCRIPTIONS.HERO_SELECT.CLEAR'
                         )}
-                      </a>
+                      </button>
                     )}
                   </div>
                   <input
@@ -1245,18 +1247,15 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                       )}
                     </label>
                     {selectedHeroes.length > 0 && (
-                      <a
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          clearSelections();
-                        }}
+                      <button
+                        type="button"
+                        onClick={clearSelections}
                         className={styles.clearSelectionLink}
                       >
                         {t(
                           'MENU.CREATE_GAME.GAME_DESCRIPTIONS.HERO_SELECT.CLEAR'
                         )}
-                      </a>
+                      </button>
                     )}
                   </div>
                   <input
@@ -1316,16 +1315,13 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                       )}
                     </label>
                     {selectedClasses.length > 0 && (
-                      <a
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          clearSelections();
-                        }}
+                      <button
+                        type="button"
+                        onClick={clearSelections}
                         className={styles.clearSelectionLink}
                       >
                         {t('MENU.CREATE_GAME.CLEAR_SELECTION')}
-                      </a>
+                      </button>
                     )}
                   </div>
                   <input
@@ -1482,16 +1478,13 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                     {t('MENU.CREATE_GAME.AI_DECK')}
                     <select
                       id="deckTestDeck"
-                      aria-label="deckTestDeck"
+                      aria-label={t('MENU.CREATE_GAME.AI_DECK')}
                       {...register('deckTestDeck')}
                       aria-invalid={errors.format?.message ? 'true' : undefined}
                     >
                       <option value={AI_DECK.COMBAT_DUMMY}>
                         {t('MENU.CREATE_GAME.PRACTICE_DUMMY')}
                       </option>
-                      {/*                       <option value={AI_DECK.IRABLITZ}>
-                        Ira (SAGE)
-                      </option> */}
                       <option value={AI_DECK.FAICC}>
                         {t('MENU.CREATE_GAME.FAI_CC')}
                       </option>

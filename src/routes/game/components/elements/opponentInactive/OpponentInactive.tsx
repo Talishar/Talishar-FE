@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { submitButton } from 'features/game/GameSlice';
 import { useSubmitChatMutation } from 'features/api/apiSlice';
 import { getGameInfo } from 'features/game/GameSlice';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { shallowEqual } from 'react-redux';
 import styles from './OpponentInactive.module.css';
 
@@ -101,8 +101,7 @@ export default function OpponentInactive() {
     const seconds = Math.max(0, Math.ceil((remainingMs as number) / 1000));
     // The bar depletes across the visible window rather than the full timeout,
     // so it actually travels over the few seconds it is on screen.
-    const remainingFraction =
-      (remainingMs as number) / COUNTDOWN_VISIBLE_MS;
+    const remainingFraction = (remainingMs as number) / COUNTDOWN_VISIBLE_MS;
 
     let countdownMessage: string;
     if (amIOnTheClock) {

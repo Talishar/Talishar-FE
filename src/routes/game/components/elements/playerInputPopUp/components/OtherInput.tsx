@@ -1,4 +1,3 @@
-import React from 'react';
 import CardDisplay from '../../cardDisplay/CardDisplay';
 import SearchCardInput from '../../searchCardInput/SearchCardInput';
 import { NAME_A_CARD } from '../constants';

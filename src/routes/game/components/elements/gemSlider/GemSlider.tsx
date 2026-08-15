@@ -1,4 +1,3 @@
-import React from 'react';
 import { useAppDispatch } from 'app/Hooks';
 import gemOn from '../../../../../img/elements/hexagonRedGemGlow.png';
 import gemOff from '../../../../../img/elements/hexagonGrayGem.png';

@@ -374,128 +374,47 @@ function downloadViaBackend(
   document.body.removeChild(form);
 }
 
-const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>((data, ref) => {
-  const [statsTab, setStatsTab] = useState<'deck' | 'activated'>('deck');
-  const [sortField, setSortField] = useState<
-    'played' | 'blocked' | 'pitched' | 'discarded' | 'hits' | 'cardName' | null
-  >(null);
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
-  const [showAllCards, setShowAllCards] = useState(false);
-  const statsRef = useRef<HTMLDivElement>(null);
-  const [heroDataUrls, setHeroDataUrls] = useState<{
-    yourHero?: string;
-    opponentHero?: string;
-  }>({});
-  const [excludeLastTurn, setExcludeLastTurn] = useState(false);
-  const [hoveredChartTurn, setHoveredChartTurn] = useState<number | null>(null);
-  const [isExportingImage, setIsExportingImage] = useState(false);
+const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
+  (data, ref) => {
+    const [statsTab, setStatsTab] = useState<'deck' | 'activated'>('deck');
+    const [sortField, setSortField] = useState<
+      | 'played'
+      | 'blocked'
+      | 'pitched'
+      | 'discarded'
+      | 'hits'
+      | 'cardName'
+      | null
+    >(null);
+    const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+    const [showAllCards, setShowAllCards] = useState(false);
+    const statsRef = useRef<HTMLDivElement>(null);
+    const [heroDataUrls, setHeroDataUrls] = useState<{
+      yourHero?: string;
+      opponentHero?: string;
+    }>({});
+    const [excludeLastTurn, setExcludeLastTurn] = useState(false);
+    const [hoveredChartTurn, setHoveredChartTurn] = useState<number | null>(
+      null
+    );
+    const [isExportingImage, setIsExportingImage] = useState(false);
 
-  const { t } = useTranslation();
+    const { t } = useTranslation();
 
-  const { currentTheme } = useTheme();
-  const themeColor = currentTheme.colors.primary;
+    const { currentTheme } = useTheme();
+    const themeColor = currentTheme.colors.primary;
 
-  const colorblindSetting = useSetting({ settingName: COLORBLIND_MODE });
-  const useAccessibleCharts = String(colorblindSetting?.value) === '1';
+    const colorblindSetting = useSetting({ settingName: COLORBLIND_MODE });
+    const useAccessibleCharts = String(colorblindSetting?.value) === '1';
 
-  const chartColors = useAccessibleCharts && !isExportingImage
-    ? ACCESSIBLE_CHART_COLORS
-    : { you: themeColor, opponent: '#ef4444' };
+    const chartColors =
+      useAccessibleCharts && !isExportingImage
+        ? ACCESSIBLE_CHART_COLORS
+        : { you: themeColor, opponent: '#ef4444' };
 
-  const { isSupporter, showAds } = useSupporterStatus();
+    const { isSupporter, showAds } = useSupporterStatus();
 
-  const [turnSortField, setTurnSortField] = useState<
-    | 'turnNo'
-    | 'cardsUsed'
-    | 'cardsBlocked'
-    | 'cardsPitched'
-    | 'cardsDiscarded'
-    | 'cardsLeft'
-    | 'resourcesUsed'
-    | 'resourcesLeft'
-    | 'damageThreatened'
-    | 'damageDealt'
-    | 'damageBlocked'
-    | 'damagePrevented'
-    | 'damageTaken'
-    | 'lifeGained'
-    | 'lifeLost'
-    | 'totalValue'
-    | null
-  >(null);
-  const [turnSortDirection, setTurnSortDirection] = useState<'asc' | 'desc'>(
-    'desc'
-  );
-
-  const imageToDataUrl = async (heroName: string): Promise<string | null> => {
-    try {
-      const response = await fetch(
-        `${BACKEND_URL}GetHeroImage.php?hero=${encodeURIComponent(heroName)}`
-      );
-
-      if (!response.ok) {
-        return null;
-      }
-
-      const data = await response.json();
-
-      if (data.error) {
-        return null;
-      }
-
-      if (data.dataUrl) {
-        return data.dataUrl;
-      }
-
-      return null;
-    } catch (error) {
-      return null;
-    }
-  };
-
-  // Load hero images on component mount or when data changes
-  useEffect(() => {
-    const loadHeroImages = async () => {
-      const urls: { yourHero?: string; opponentHero?: string } = {};
-
-      if (data.yourHero) {
-        const dataUrl = await imageToDataUrl(data.yourHero);
-        if (dataUrl) {
-          urls.yourHero = dataUrl;
-        }
-      }
-
-      if (data.opponentHero) {
-        const dataUrl = await imageToDataUrl(data.opponentHero);
-        if (dataUrl) {
-          urls.opponentHero = dataUrl;
-        }
-      }
-
-      setHeroDataUrls(urls);
-    };
-
-    // Don't fetch hero images for spectators
-    if (data.playerID !== 3) {
-      loadHeroImages();
-    }
-  }, [data.yourHero, data.opponentHero, data.playerID]);
-
-  const handleSort = (
-    field: 'played' | 'blocked' | 'pitched' | 'discarded' | 'hits' | 'cardName'
-  ) => {
-    if (sortField === field) {
-      // Toggle direction if same field
-      setSortDirection(sortDirection === 'desc' ? 'asc' : 'desc');
-    } else {
-      // New field, default to descending
-      setSortField(field);
-      setSortDirection('desc');
-    }
-  };
-
-  const handleTurnSort = (
-    field:
+    const [turnSortField, setTurnSortField] = useState<
       | 'turnNo'
       | 'cardsUsed'
       | 'cardsBlocked'
@@ -512,1535 +431,2537 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>((data, ref) 
       | 'lifeGained'
       | 'lifeLost'
       | 'totalValue'
-  ) => {
-    if (turnSortField === field) {
-      // Toggle direction if same field
-      setTurnSortDirection(turnSortDirection === 'desc' ? 'asc' : 'desc');
-    } else {
-      // New field, default to descending
-      setTurnSortField(field);
-      setTurnSortDirection('desc');
-    }
-  };
-
-  // Helper function to get stats based on toggle
-  const getStats = () => {
-    if (excludeLastTurn) {
-      return {
-        totalDamageThreatened: data.totalDamageThreatened_NoLast,
-        totalDamageDealt: data.totalDamageDealt_NoLast,
-        averageDamageThreatenedPerTurn:
-          data.averageDamageThreatenedPerTurn_NoLast,
-        averageDamageDealtPerTurn: data.averageDamageDealtPerTurn_NoLast,
-        averageDamageThreatenedPerCard:
-          data.averageDamageThreatenedPerCard_NoLast,
-        averageResourcesUsedPerTurn: data.averageResourcesUsedPerTurn_NoLast,
-        averageCardsLeftOverPerTurn: data.averageCardsLeftOverPerTurn_NoLast,
-        totalLifeGained: data.totalLifeGained_NoLast,
-        totalDamageBlocked: data.totalDamageBlocked_NoLast,
-        totalDamagePrevented: data.totalDamagePrevented_NoLast,
-        totalLifeLost: data.totalLifeLost_NoLast,
-        averageCombatValuePerTurn: data.averageCombatValuePerTurn_NoLast,
-        averageValuePerTurn: data.averageValuePerTurn_NoLast
-      };
-    }
-    return {
-      totalDamageThreatened: data.totalDamageThreatened,
-      totalDamageDealt: data.totalDamageDealt,
-      averageDamageThreatenedPerTurn: data.averageDamageThreatenedPerTurn,
-      averageDamageDealtPerTurn: data.averageDamageDealtPerTurn,
-      averageDamageThreatenedPerCard: data.averageDamageThreatenedPerCard,
-      averageResourcesUsedPerTurn: data.averageResourcesUsedPerTurn,
-      averageCardsLeftOverPerTurn: data.averageCardsLeftOverPerTurn,
-      totalLifeGained: data.totalLifeGained,
-      totalDamageBlocked: data.totalDamageBlocked,
-      totalDamagePrevented: data.totalDamagePrevented,
-      totalLifeLost: data.totalLifeLost,
-      averageCombatValuePerTurn: data.averageCombatValuePerTurn,
-      averageValuePerTurn: data.averageValuePerTurn
-    };
-  };
-
-  const stats = useMemo(getStats, [excludeLastTurn, data]);
-
-  const chartData = useMemo(() => {
-    if (!data.turnResults) return [];
-
-    const yourStartingLife = data.startingLife ?? 40;
-    const opponentData = data.bothPlayersData?.[data.playerID === 1 ? 2 : 1] as
-      | EndGameData
-      | undefined;
-    const opponentStartingLife =
-      data.opponentStartingLife ?? opponentData?.startingLife ?? 40;
-
-    const entries = Object.entries(data.turnResults)
-      .map(([key, turn]) => ({
-        turnNo:
-          turn.turnNo !== undefined
-            ? turn.turnNo
-            : Number(key.replace('turn_', '')),
-        turn
-      }))
-      .sort((a, b) => a.turnNo - b.turnNo)
-      .filter((e) => e.turnNo > 0);
-
-    let yourLife = yourStartingLife;
-    let opponentLife = opponentStartingLife;
-
-    return entries.map(({ turnNo, turn }) => {
-      const turnValue =
-        (+turn.damageThreatened || 0) +
-        (+turn.damageBlocked || 0) +
-        (+turn.damagePrevented || 0) +
-        (+turn.lifeGained || 0) +
-        (+turn.lifeLost || 0);
-      const turnDealt = parseInt(String(turn.damageDealt), 10) || 0;
-
-      if (turn.lifeAtTurnEnd != null) {
-        yourLife = Number(turn.lifeAtTurnEnd);
-      } else {
-        yourLife -= +turn.damageTaken || 0;
-        yourLife += +turn.lifeLost || 0; // lifeLost is stored negative by backend
-        yourLife += +turn.lifeGained || 0;
-        yourLife = Math.max(0, yourLife);
-      }
-
-      if (turn.opponentLifeAtTurnEnd != null) {
-        opponentLife = Number(turn.opponentLifeAtTurnEnd);
-      } else {
-        opponentLife -= turnDealt;
-        opponentLife = Math.max(0, opponentLife);
-      }
-
-      const turnTaken = parseInt(String(turn.damageTaken), 10) || 0;
-
-      return {
-        turn: turnNo,
-        avgValue: turnValue,
-        avgThreatened: parseInt(String(turn.damageThreatened), 10) || 0,
-        avgDealt: turnDealt,
-        damageTaken: turnTaken,
-        yourLife,
-        opponentLife
-      };
-    });
-  }, [
-    data.turnResults,
-    data.startingLife,
-    data.opponentStartingLife,
-    data.playerID,
-    data.bothPlayersData
-  ]);
-
-  const filteredChartData = useMemo(() => {
-    if (!excludeLastTurn || chartData.length === 0) return chartData;
-    return chartData.slice(0, -1);
-  }, [chartData, excludeLastTurn]);
-
-  const lifeChartData = useMemo(() => {
-    const oppPlayerID = data.playerID === 1 ? 2 : 1;
-    const oppData = data.bothPlayersData?.[oppPlayerID] as
-      | EndGameData
-      | undefined;
-    const startYour = data.startingLife ?? 40;
-    const startOpp = data.opponentStartingLife ?? oppData?.startingLife ?? 40;
-    return [
-      { turn: 0, yourLife: startYour, opponentLife: startOpp },
-      ...filteredChartData
-    ];
-  }, [
-    filteredChartData,
-    data.startingLife,
-    data.opponentStartingLife,
-    data.playerID,
-    data.bothPlayersData
-  ]);
-
-  const avgChartValue = useMemo(() => {
-    if (filteredChartData.length === 0) return 0;
-    return Math.round(
-      filteredChartData.reduce((sum, d) => sum + d.avgValue, 0) /
-        filteredChartData.length
+      | null
+    >(null);
+    const [turnSortDirection, setTurnSortDirection] = useState<'asc' | 'desc'>(
+      'desc'
     );
-  }, [filteredChartData]);
 
-  const avgThreatenedValue = useMemo(() => {
-    if (filteredChartData.length === 0) return 0;
-    return Math.round(
-      filteredChartData.reduce((sum, d) => sum + d.avgThreatened, 0) /
-        filteredChartData.length
-    );
-  }, [filteredChartData]);
-
-  const handleExportScreenshot = async () => {
-    if (!statsRef.current) return;
-
-    const timestamp = new Date()
-      .toISOString()
-      .replace(/[:.]/g, '-')
-      .slice(0, -5);
-    const filename = `game-stats-${timestamp}.png`;
-
-    // Request save dialog while user gesture is still fresh, before any async work
-    let fileHandle: any = null;
-    if ('showSaveFilePicker' in window) {
+    const imageToDataUrl = async (heroName: string): Promise<string | null> => {
       try {
-        fileHandle = await (window as any).showSaveFilePicker({
-          suggestedName: filename,
-          types: [
-            {
-              description: t('END_GAME.PNG_IMAGE'),
-              accept: { 'image/png': ['.png'] }
-            }
-          ]
-        });
-      } catch (e) {
-        if ((e as Error).name === 'AbortError') return;
-      }
-    }
-
-    setIsExportingImage(true);
-    await new Promise<void>((resolve) => {
-      requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
-    });
-
-    const exportEl = statsRef.current;
-    if (!exportEl) {
-      setIsExportingImage(false);
-      return;
-    }
-
-    try {
-      // Wait for hero images to load if they haven't yet
-      const requiredHeroImages: string[] = [];
-      if (data.yourHero) requiredHeroImages.push('yourHero');
-      if (data.opponentHero) requiredHeroImages.push('opponentHero');
-
-      if (requiredHeroImages.length > 0) {
-        const startTime = Date.now();
-        const maxWait = 5000;
-        while (Date.now() - startTime < maxWait) {
-          const allLoaded = requiredHeroImages.every(
-            (hero) => heroDataUrls[hero as keyof typeof heroDataUrls]
-          );
-          if (allLoaded) break;
-          await new Promise((resolve) => setTimeout(resolve, 100));
-        }
-      }
-
-      // Pre-load all img elements
-      const images = exportEl.querySelectorAll('img');
-      await Promise.all(
-        Array.from(images).map(
-          (img) =>
-            new Promise<void>((resolve) => {
-              if (img.complete) resolve();
-              else {
-                img.onload = () => resolve();
-                img.onerror = () => resolve();
-              }
-            })
-        )
-      );
-
-      const canvas = await html2canvas(exportEl, {
-        backgroundColor: '#0a0a0a',
-        scale: Math.min(window.devicePixelRatio, 2),
-        logging: false,
-        useCORS: true,
-        allowTaint: true,
-        onclone: (clonedDocument) => {
-          const clonedExportEl = clonedDocument.querySelector(
-            `.${styles.statsContainer}`
-          );
-          if (!clonedExportEl) return;
-
-          // html2canvas parses styles even on display:none descendants. Remove
-          // excluded charts so their modern CSS colors never reach its parser.
-          clonedExportEl
-            .querySelectorAll(`.${styles.hideOnExport}`)
-            .forEach((element) => element.remove());
-
-          const watermark = clonedExportEl.querySelector(
-            `.${styles.watermark}`
-          ) as HTMLElement | null;
-          const heroPortraits = clonedExportEl.querySelector(
-            `.${styles.showOnExport}`
-          ) as HTMLElement | null;
-          if (watermark) watermark.style.display = 'block';
-          if (heroPortraits) heroPortraits.style.display = 'flex';
-        }
-      });
-
-      if (fileHandle) {
-        const pngBlob = await new Promise<Blob | null>((resolve) =>
-          canvas.toBlob(resolve)
+        const response = await fetch(
+          `${BACKEND_URL}GetHeroImage.php?hero=${encodeURIComponent(heroName)}`
         );
-        if (!pngBlob) throw new Error('Failed to convert canvas to blob');
-        const writable = await fileHandle.createWritable();
-        await writable.write(pngBlob);
-        await writable.close();
-      } else {
-        downloadViaBackend('png', filename, canvas.toDataURL('image/png'));
-      }
-    } catch (error) {
-      console.error('Error exporting screenshot:', error);
-      alert(t('END_GAME.EXPORT_IMAGE_ERROR', { error }));
-    } finally {
-      setIsExportingImage(false);
-    }
-  };
 
-  const handleExportCSV = async () => {
-    try {
+        if (!response.ok) {
+          return null;
+        }
+
+        const data = await response.json();
+
+        if (data.error) {
+          return null;
+        }
+
+        if (data.dataUrl) {
+          return data.dataUrl;
+        }
+
+        return null;
+      } catch (error) {
+        return null;
+      }
+    };
+
+    // Load hero images on component mount or when data changes
+    useEffect(() => {
+      const loadHeroImages = async () => {
+        const urls: { yourHero?: string; opponentHero?: string } = {};
+
+        if (data.yourHero) {
+          const dataUrl = await imageToDataUrl(data.yourHero);
+          if (dataUrl) {
+            urls.yourHero = dataUrl;
+          }
+        }
+
+        if (data.opponentHero) {
+          const dataUrl = await imageToDataUrl(data.opponentHero);
+          if (dataUrl) {
+            urls.opponentHero = dataUrl;
+          }
+        }
+
+        setHeroDataUrls(urls);
+      };
+
+      // Don't fetch hero images for spectators
+      if (data.playerID !== 3) {
+        loadHeroImages();
+      }
+    }, [data.yourHero, data.opponentHero, data.playerID]);
+
+    const handleSort = (
+      field:
+        | 'played'
+        | 'blocked'
+        | 'pitched'
+        | 'discarded'
+        | 'hits'
+        | 'cardName'
+    ) => {
+      if (sortField === field) {
+        // Toggle direction if same field
+        setSortDirection(sortDirection === 'desc' ? 'asc' : 'desc');
+      } else {
+        // New field, default to descending
+        setSortField(field);
+        setSortDirection('desc');
+      }
+    };
+
+    const handleTurnSort = (
+      field:
+        | 'turnNo'
+        | 'cardsUsed'
+        | 'cardsBlocked'
+        | 'cardsPitched'
+        | 'cardsDiscarded'
+        | 'cardsLeft'
+        | 'resourcesUsed'
+        | 'resourcesLeft'
+        | 'damageThreatened'
+        | 'damageDealt'
+        | 'damageBlocked'
+        | 'damagePrevented'
+        | 'damageTaken'
+        | 'lifeGained'
+        | 'lifeLost'
+        | 'totalValue'
+    ) => {
+      if (turnSortField === field) {
+        // Toggle direction if same field
+        setTurnSortDirection(turnSortDirection === 'desc' ? 'asc' : 'desc');
+      } else {
+        // New field, default to descending
+        setTurnSortField(field);
+        setTurnSortDirection('desc');
+      }
+    };
+
+    // Helper function to get stats based on toggle
+    const getStats = () => {
+      if (excludeLastTurn) {
+        return {
+          totalDamageThreatened: data.totalDamageThreatened_NoLast,
+          totalDamageDealt: data.totalDamageDealt_NoLast,
+          averageDamageThreatenedPerTurn:
+            data.averageDamageThreatenedPerTurn_NoLast,
+          averageDamageDealtPerTurn: data.averageDamageDealtPerTurn_NoLast,
+          averageDamageThreatenedPerCard:
+            data.averageDamageThreatenedPerCard_NoLast,
+          averageResourcesUsedPerTurn: data.averageResourcesUsedPerTurn_NoLast,
+          averageCardsLeftOverPerTurn: data.averageCardsLeftOverPerTurn_NoLast,
+          totalLifeGained: data.totalLifeGained_NoLast,
+          totalDamageBlocked: data.totalDamageBlocked_NoLast,
+          totalDamagePrevented: data.totalDamagePrevented_NoLast,
+          totalLifeLost: data.totalLifeLost_NoLast,
+          averageCombatValuePerTurn: data.averageCombatValuePerTurn_NoLast,
+          averageValuePerTurn: data.averageValuePerTurn_NoLast
+        };
+      }
+      return {
+        totalDamageThreatened: data.totalDamageThreatened,
+        totalDamageDealt: data.totalDamageDealt,
+        averageDamageThreatenedPerTurn: data.averageDamageThreatenedPerTurn,
+        averageDamageDealtPerTurn: data.averageDamageDealtPerTurn,
+        averageDamageThreatenedPerCard: data.averageDamageThreatenedPerCard,
+        averageResourcesUsedPerTurn: data.averageResourcesUsedPerTurn,
+        averageCardsLeftOverPerTurn: data.averageCardsLeftOverPerTurn,
+        totalLifeGained: data.totalLifeGained,
+        totalDamageBlocked: data.totalDamageBlocked,
+        totalDamagePrevented: data.totalDamagePrevented,
+        totalLifeLost: data.totalLifeLost,
+        averageCombatValuePerTurn: data.averageCombatValuePerTurn,
+        averageValuePerTurn: data.averageValuePerTurn
+      };
+    };
+
+    const stats = useMemo(getStats, [excludeLastTurn, data]);
+
+    const chartData = useMemo(() => {
+      if (!data.turnResults) return [];
+
+      const yourStartingLife = data.startingLife ?? 40;
+      const opponentData = data.bothPlayersData?.[
+        data.playerID === 1 ? 2 : 1
+      ] as EndGameData | undefined;
+      const opponentStartingLife =
+        data.opponentStartingLife ?? opponentData?.startingLife ?? 40;
+
+      const entries = Object.entries(data.turnResults)
+        .map(([key, turn]) => ({
+          turnNo:
+            turn.turnNo !== undefined
+              ? turn.turnNo
+              : Number(key.replace('turn_', '')),
+          turn
+        }))
+        .sort((a, b) => a.turnNo - b.turnNo)
+        .filter((e) => e.turnNo > 0);
+
+      let yourLife = yourStartingLife;
+      let opponentLife = opponentStartingLife;
+
+      return entries.map(({ turnNo, turn }) => {
+        const turnValue =
+          (+turn.damageThreatened || 0) +
+          (+turn.damageBlocked || 0) +
+          (+turn.damagePrevented || 0) +
+          (+turn.lifeGained || 0) +
+          (+turn.lifeLost || 0);
+        const turnDealt = parseInt(String(turn.damageDealt), 10) || 0;
+
+        if (turn.lifeAtTurnEnd != null) {
+          yourLife = Number(turn.lifeAtTurnEnd);
+        } else {
+          yourLife -= +turn.damageTaken || 0;
+          yourLife += +turn.lifeLost || 0; // lifeLost is stored negative by backend
+          yourLife += +turn.lifeGained || 0;
+          yourLife = Math.max(0, yourLife);
+        }
+
+        if (turn.opponentLifeAtTurnEnd != null) {
+          opponentLife = Number(turn.opponentLifeAtTurnEnd);
+        } else {
+          opponentLife -= turnDealt;
+          opponentLife = Math.max(0, opponentLife);
+        }
+
+        const turnTaken = parseInt(String(turn.damageTaken), 10) || 0;
+
+        return {
+          turn: turnNo,
+          avgValue: turnValue,
+          avgThreatened: parseInt(String(turn.damageThreatened), 10) || 0,
+          avgDealt: turnDealt,
+          damageTaken: turnTaken,
+          yourLife,
+          opponentLife
+        };
+      });
+    }, [
+      data.turnResults,
+      data.startingLife,
+      data.opponentStartingLife,
+      data.playerID,
+      data.bothPlayersData
+    ]);
+
+    const filteredChartData = useMemo(() => {
+      if (!excludeLastTurn || chartData.length === 0) return chartData;
+      return chartData.slice(0, -1);
+    }, [chartData, excludeLastTurn]);
+
+    const lifeChartData = useMemo(() => {
+      const oppPlayerID = data.playerID === 1 ? 2 : 1;
+      const oppData = data.bothPlayersData?.[oppPlayerID] as
+        | EndGameData
+        | undefined;
+      const startYour = data.startingLife ?? 40;
+      const startOpp = data.opponentStartingLife ?? oppData?.startingLife ?? 40;
+      return [
+        { turn: 0, yourLife: startYour, opponentLife: startOpp },
+        ...filteredChartData
+      ];
+    }, [
+      filteredChartData,
+      data.startingLife,
+      data.opponentStartingLife,
+      data.playerID,
+      data.bothPlayersData
+    ]);
+
+    const avgChartValue = useMemo(() => {
+      if (filteredChartData.length === 0) return 0;
+      return Math.round(
+        filteredChartData.reduce((sum, d) => sum + d.avgValue, 0) /
+          filteredChartData.length
+      );
+    }, [filteredChartData]);
+
+    const avgThreatenedValue = useMemo(() => {
+      if (filteredChartData.length === 0) return 0;
+      return Math.round(
+        filteredChartData.reduce((sum, d) => sum + d.avgThreatened, 0) /
+          filteredChartData.length
+      );
+    }, [filteredChartData]);
+
+    const handleExportScreenshot = async () => {
+      if (!statsRef.current) return;
+
       const timestamp = new Date()
         .toISOString()
         .replace(/[:.]/g, '-')
         .slice(0, -5);
-      let csvContent = '';
+      const filename = `game-stats-${timestamp}.png`;
 
-      csvContent += '========== STATS PROVIDED BY TALISHAR ==========\n';
-      csvContent += 'Support our work on Metafy!\n';
-      csvContent += 'https://metafy.gg/@Talishar\n\n';
-
-      const formatHeroName = (heroName: string): string => {
-        return heroName
-          .split('_')
-          .map(
-            (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-          )
-          .join(' ');
-      };
-
-      const generatePlayerStatsSection = (
-        playerData: EndGameData,
-        playerName: string,
-        heroName?: string
-      ) => {
-        let content = `\n========== ${playerName} ==========\n`;
-        if (heroName) {
-          const formattedHeroName = formatHeroName(heroName);
-          content += `Hero: ${formattedHeroName}\n`;
-        }
-        content += `\nGAME SUMMARY\n`;
-
-        let firstPlayerLabel = 'N/A';
-        if (
-          playerData.firstPlayer !== undefined &&
-          playerData.firstPlayer !== null
-        ) {
-          if (
-            playerData.playerID &&
-            playerData.firstPlayer === playerData.playerID
-          ) {
-            firstPlayerLabel = 'Yes';
-          } else if (
-            playerData.playerID &&
-            playerData.firstPlayer !== playerData.playerID
-          ) {
-            firstPlayerLabel = 'No';
-          } else {
-            firstPlayerLabel = playerData.firstPlayer.toString();
-          }
-        }
-        content += `First Player,${firstPlayerLabel}\n`;
-
-        let resultLabel = 'N/A';
-        if (playerData.result !== undefined && playerData.result !== null) {
-          if (playerData.playerID) {
-            resultLabel = playerData.result === 1 ? 'Winner' : 'Loser';
-          } else {
-            resultLabel =
-              playerData.result === 1 ? 'Player 1 Wins' : 'Player 2 Wins';
-          }
-        }
-        // Override resultLabel if we have winner data available
-        if (
-          data.winner !== undefined &&
-          data.winner !== null &&
-          playerData.playerID
-        ) {
-          resultLabel =
-            data.winner === playerData.playerID ? 'Winner' : 'Loser';
-        }
-        content += `Result,${resultLabel}\n`;
-        content += `Turns,${playerData.turns || 'N/A'}\n`;
-        content += `Your Time,${fancyTimeFormat(playerData.yourTime)}\n`;
-        content += `Total Game Time,${fancyTimeFormat(
-          playerData.totalTime
-        )}\n\n`;
-
-        content += 'GAME STATISTICS\n';
-        content += `Avg Value per Turn,${
-          playerData.averageValuePerTurn || 0
-        }\n`;
-        content += `Avg Damage Threatened per Turn,${
-          playerData.averageDamageThreatenedPerTurn || 0
-        }\n`;
-        content += `Avg Damage Dealt per Turn,${
-          playerData.averageDamageDealtPerTurn || 0
-        }\n`;
-        content += `Avg Damage Threatened per Card,${
-          playerData.averageDamageThreatenedPerCard || 0
-        }\n`;
-        content += `Avg Resources Used per Turn,${
-          playerData.averageResourcesUsedPerTurn || 0
-        }\n`;
-        content += `Avg Cards Left Over per Turn,${
-          playerData.averageCardsLeftOverPerTurn || 0
-        }\n`;
-        content += `Avg Combat Value per Turn,${
-          playerData.averageCombatValuePerTurn || 0
-        }\n`;
-        content += `Total Damage Threatened,${
-          playerData.totalDamageThreatened || 0
-        }\n`;
-        content += `Total Damage Dealt,${playerData.totalDamageDealt || 0}\n`;
-        content += `Total Damage Blocked,${
-          playerData.totalDamageBlocked || 0
-        }\n`;
-        content += `Total Damage Prevented,${
-          playerData.totalDamagePrevented || 0
-        }\n`;
-        content += `Total Life Gained,${playerData.totalLifeGained || 0}\n\n`;
-        content += `Total Life Self-Lost,${playerData.totalLifeLost || 0}\n\n`;
-
-        content += 'CARD PLAY STATS\n';
-        content += 'Card Name,Played,Blocked,Pitched,Discarded,Times Hit';
-
-        const hasCharged = playerData.cardResults?.some((c) => c.charged > 0);
-        const hasKatsuDiscard = playerData.cardResults?.some(
-          (c) => c.katsuDiscard > 0
-        );
-
-        if (hasCharged) content += ',Times Charged';
-        if (hasKatsuDiscard) content += ',Times Katsu Discarded';
-        content += '\n';
-
-        const csvPlayedCards = [
-          ...(playerData.cardResults ?? []),
-          ...(playerData.arenaCardResults ?? []).filter((r) => r.pitched > 0)
-        ];
-        csvPlayedCards.forEach((result) => {
-          const cardName = result.cardName.replace(/,/g, ';');
-          const cardNameWithPitch =
-            result.pitchValue > 0
-              ? `${cardName} (${result.pitchValue})`
-              : cardName;
-          content += `"${cardNameWithPitch}",${result.played},${result.blocked},${result.pitched},${result.discarded},${result.hits}`;
-          if (hasCharged) content += `,${result.charged}`;
-          if (hasKatsuDiscard) content += `,${result.katsuDiscard}`;
-          content += '\n';
-        });
-
-        const activatedArenaResults = mergeCompanionPairs([
-          ...(playerData.arenaCardResults ?? []).filter(
-            (r) =>
-              (r.activated ?? 0) > 0 ||
-              (r.passiveTriggered ?? 0) > 0 ||
-              r.hits > 0 ||
-              r.blocked > 0
-          ),
-          ...(playerData.cardResults ?? []).filter(
-            (r) => (r.activated ?? 0) > 0 || (r.passiveTriggered ?? 0) > 0
-          )
-        ]).sort((a, b) => a.cardName.localeCompare(b.cardName));
-        if (activatedArenaResults.length > 0) {
-          const csvHasPitched = activatedArenaResults.some(
-            (r) => r.pitched > 0
-          );
-          content += '\nCARD ACTIVATED STATS\n';
-          content += `Card Name,Activated,Passive Triggers,Blocked${
-            csvHasPitched ? ',Pitched' : ''
-          },Times Hit\n`;
-          activatedArenaResults.forEach((result) => {
-            const cardName = result.cardName.replace(/,/g, ';');
-            content += `"${cardName}",${result.activated ?? 0},${
-              result.passiveTriggered ?? 0
-            },${result.blocked}${csvHasPitched ? `,${result.pitched}` : ''},${
-              result.hits
-            }\n`;
-          });
-        }
-
-        const playedTokenResults = playerData.tokenResults?.filter(
-          (r) => r.played > 0
-        );
-        if (playedTokenResults && playedTokenResults.length > 0) {
-          content += '\nNON-DECK CARDS\n';
-          content += 'Card Name,Played,Blocked,Pitched,Times Hit\n';
-          playedTokenResults.forEach((result) => {
-            const cardName = result.cardName.replace(/,/g, ';');
-            content += `"${cardName}",${result.played},${result.blocked},${result.pitched},${result.hits}\n`;
-          });
-        }
-
-        content += '\nTURN BY TURN BREAKDOWN\n';
-        content +=
-          'Turn,Cards Played,Cards Blocked,Cards Pitched,Cards Discarded,Cards Left,Resources Used,Resources Left,';
-        content +=
-          'Damage Threatened,Damage Dealt,Damage Blocked,Damage Prevented,Damage Taken,Life Gained,Total Value\n';
-
-        if (
-          playerData.turnResults &&
-          Object.keys(playerData.turnResults).length > 0
-        ) {
-          Object.keys(playerData.turnResults).forEach((key, ix) => {
-            const turn = playerData.turnResults[key];
-            const totalValue =
-              +turn.damageThreatened +
-              +turn.damageBlocked +
-              +turn.damagePrevented +
-              +turn.lifeGained +
-              +turn.lifeLost;
-            content += `${ix + 1},${turn.cardsUsed},${turn.cardsBlocked},${
-              turn.cardsPitched
-            },${turn.cardsDiscarded},${turn.cardsLeft},`;
-            content += `${turn.resourcesUsed},${turn.resourcesLeft},`;
-            content += `${turn.damageThreatened},${turn.damageDealt},`;
-            content += `${turn.damageBlocked},${turn.damagePrevented},`;
-            content += `${turn.damageTaken},${turn.lifeGained},${totalValue}\n`;
-          });
-        }
-
-        return content;
-      };
-
-      csvContent += generatePlayerStatsSection(
-        data,
-        `PLAYER ${data.playerID}`,
-        data.yourHero
-      );
-
-      if (data.bothPlayersData) {
-        const opponentPlayerID = data.playerID === 1 ? 2 : 1;
-        const opponentData = data.bothPlayersData[opponentPlayerID];
-
-        if (opponentData && opponentData.cardResults) {
-          const opponentDataWithID = {
-            ...opponentData,
-            playerID: opponentPlayerID
-          };
-          csvContent += generatePlayerStatsSection(
-            opponentDataWithID as EndGameData,
-            `PLAYER ${opponentPlayerID}`,
-            data.opponentHero
-          );
-        } else {
-          console.warn(
-            'Opponent data not yet loaded. Please click "Switch player stats" to load opponent data before exporting.'
-          );
-          csvContent +=
-            '\n\nNote: Opponent stats not available. Click "Switch player stats" to load them first.\n';
-        }
-      } else {
-        console.warn('No bothPlayersData cache available');
-        csvContent += '\n\nNote: Opponent stats not available\n';
-      }
-
+      // Request save dialog while user gesture is still fresh, before any async work
+      let fileHandle: any = null;
       if ('showSaveFilePicker' in window) {
         try {
-          const handle = await (window as any).showSaveFilePicker({
-            suggestedName: `game-stats-${timestamp}.csv`,
+          fileHandle = await (window as any).showSaveFilePicker({
+            suggestedName: filename,
             types: [
               {
-                description: t('END_GAME.CSV_FILE'),
-                accept: { 'text/csv': ['.csv'] }
+                description: t('END_GAME.PNG_IMAGE'),
+                accept: { 'image/png': ['.png'] }
               }
             ]
           });
-          const writable = await handle.createWritable();
-          await writable.write(
-            new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
-          );
-          await writable.close();
-          return;
         } catch (e) {
           if ((e as Error).name === 'AbortError') return;
         }
       }
-      downloadViaBackend('csv', `game-stats-${timestamp}.csv`, csvContent);
-    } catch (error) {
-      console.error('Error exporting CSV:', error);
-      alert(t('END_GAME.EXPORT_CSV_ERROR', { error }));
-    }
-  };
 
-  // Expose the export function to parent component
-  useImperativeHandle(ref, () => ({
-    exportScreenshot: handleExportScreenshot,
-    exportCSV: handleExportCSV
-  }));
+      setIsExportingImage(true);
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+      });
 
-  const filteredCardResults = useMemo(() => {
-    if (!data.cardResults) return data.cardResults;
-    // Non-deck cards that were pitched (e.g. Heart of Fyendal gem) belong in the played stats view
-    const pitchedArenaCards = (data.arenaCardResults ?? []).filter(
-      (r) => r.pitched > 0
-    );
-    if (showAllCards) return [...data.cardResults, ...pitchedArenaCards];
-    return [
-      ...data.cardResults.filter(
-        (r) =>
-          r.played > 0 ||
-          r.blocked > 0 ||
-          r.pitched > 0 ||
-          r.discarded > 0 ||
-          r.hits > 0
-      ),
-      ...pitchedArenaCards
-    ];
-  }, [data.cardResults, data.arenaCardResults, showAllCards]);
+      const exportEl = statsRef.current;
+      if (!exportEl) {
+        setIsExportingImage(false);
+        return;
+      }
 
-  const activatedCardResults = useMemo(() => {
-    const fromArena = (data.arenaCardResults ?? []).filter(
-      (r) =>
-        (r.activated ?? 0) > 0 ||
-        (r.passiveTriggered ?? 0) > 0 ||
-        r.hits > 0 ||
-        r.blocked > 0
-    );
-    const fromDeck = data.cardResults.filter(
-      (r) => (r.activated ?? 0) > 0 || (r.passiveTriggered ?? 0) > 0
-    );
-    return mergeCompanionPairs([...fromArena, ...fromDeck]).sort((a, b) =>
-      a.cardName.localeCompare(b.cardName)
-    );
-  }, [data.arenaCardResults, data.cardResults]);
+      try {
+        // Wait for hero images to load if they haven't yet
+        const requiredHeroImages: string[] = [];
+        if (data.yourHero) requiredHeroImages.push('yourHero');
+        if (data.opponentHero) requiredHeroImages.push('opponentHero');
 
-  const sortedCardResults = useMemo(() => {
-    if (!filteredCardResults || !sortField) {
-      return filteredCardResults;
-    }
-
-    return [...filteredCardResults].sort((a, b) => {
-      if (sortField === 'cardName') {
-        const aValue = a.cardName.toLowerCase();
-        const bValue = b.cardName.toLowerCase();
-
-        if (sortDirection === 'desc') {
-          return bValue.localeCompare(aValue);
-        } else {
-          return aValue.localeCompare(bValue);
+        if (requiredHeroImages.length > 0) {
+          const startTime = Date.now();
+          const maxWait = 5000;
+          while (Date.now() - startTime < maxWait) {
+            const allLoaded = requiredHeroImages.every(
+              (hero) => heroDataUrls[hero as keyof typeof heroDataUrls]
+            );
+            if (allLoaded) break;
+            await new Promise((resolve) => setTimeout(resolve, 100));
+          }
         }
-      } else {
-        const aValue = a[sortField];
-        const bValue = b[sortField];
 
-        if (sortDirection === 'desc') {
+        // Pre-load all img elements
+        const images = exportEl.querySelectorAll('img');
+        await Promise.all(
+          Array.from(images).map(
+            (img) =>
+              new Promise<void>((resolve) => {
+                if (img.complete) resolve();
+                else {
+                  img.onload = () => resolve();
+                  img.onerror = () => resolve();
+                }
+              })
+          )
+        );
+
+        const canvas = await html2canvas(exportEl, {
+          backgroundColor: '#0a0a0a',
+          scale: Math.min(window.devicePixelRatio, 2),
+          logging: false,
+          useCORS: true,
+          allowTaint: true,
+          onclone: (clonedDocument) => {
+            const clonedExportEl = clonedDocument.querySelector(
+              `.${styles.statsContainer}`
+            );
+            if (!clonedExportEl) return;
+
+            // html2canvas parses styles even on display:none descendants. Remove
+            // excluded charts so their modern CSS colors never reach its parser.
+            clonedExportEl
+              .querySelectorAll(`.${styles.hideOnExport}`)
+              .forEach((element) => element.remove());
+
+            const watermark = clonedExportEl.querySelector(
+              `.${styles.watermark}`
+            ) as HTMLElement | null;
+            const heroPortraits = clonedExportEl.querySelector(
+              `.${styles.showOnExport}`
+            ) as HTMLElement | null;
+            if (watermark) watermark.style.display = 'block';
+            if (heroPortraits) heroPortraits.style.display = 'flex';
+          }
+        });
+
+        if (fileHandle) {
+          const pngBlob = await new Promise<Blob | null>((resolve) =>
+            canvas.toBlob(resolve)
+          );
+          if (!pngBlob) throw new Error('Failed to convert canvas to blob');
+          const writable = await fileHandle.createWritable();
+          await writable.write(pngBlob);
+          await writable.close();
+        } else {
+          downloadViaBackend('png', filename, canvas.toDataURL('image/png'));
+        }
+      } catch (error) {
+        console.error('Error exporting screenshot:', error);
+        alert(t('END_GAME.EXPORT_IMAGE_ERROR', { error }));
+      } finally {
+        setIsExportingImage(false);
+      }
+    };
+
+    const handleExportCSV = async () => {
+      try {
+        const timestamp = new Date()
+          .toISOString()
+          .replace(/[:.]/g, '-')
+          .slice(0, -5);
+        let csvContent = '';
+
+        csvContent += '========== STATS PROVIDED BY TALISHAR ==========\n';
+        csvContent += 'Support our work on Metafy!\n';
+        csvContent += 'https://metafy.gg/@Talishar\n\n';
+
+        const formatHeroName = (heroName: string): string => {
+          return heroName
+            .split('_')
+            .map(
+              (word) =>
+                word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+            )
+            .join(' ');
+        };
+
+        const generatePlayerStatsSection = (
+          playerData: EndGameData,
+          playerName: string,
+          heroName?: string
+        ) => {
+          let content = `\n========== ${playerName} ==========\n`;
+          if (heroName) {
+            const formattedHeroName = formatHeroName(heroName);
+            content += `Hero: ${formattedHeroName}\n`;
+          }
+          content += `\nGAME SUMMARY\n`;
+
+          let firstPlayerLabel = 'N/A';
+          if (
+            playerData.firstPlayer !== undefined &&
+            playerData.firstPlayer !== null
+          ) {
+            if (
+              playerData.playerID &&
+              playerData.firstPlayer === playerData.playerID
+            ) {
+              firstPlayerLabel = 'Yes';
+            } else if (
+              playerData.playerID &&
+              playerData.firstPlayer !== playerData.playerID
+            ) {
+              firstPlayerLabel = 'No';
+            } else {
+              firstPlayerLabel = playerData.firstPlayer.toString();
+            }
+          }
+          content += `First Player,${firstPlayerLabel}\n`;
+
+          let resultLabel = 'N/A';
+          if (playerData.result !== undefined && playerData.result !== null) {
+            if (playerData.playerID) {
+              resultLabel = playerData.result === 1 ? 'Winner' : 'Loser';
+            } else {
+              resultLabel =
+                playerData.result === 1 ? 'Player 1 Wins' : 'Player 2 Wins';
+            }
+          }
+          // Override resultLabel if we have winner data available
+          if (
+            data.winner !== undefined &&
+            data.winner !== null &&
+            playerData.playerID
+          ) {
+            resultLabel =
+              data.winner === playerData.playerID ? 'Winner' : 'Loser';
+          }
+          content += `Result,${resultLabel}\n`;
+          content += `Turns,${playerData.turns || 'N/A'}\n`;
+          content += `Your Time,${fancyTimeFormat(playerData.yourTime)}\n`;
+          content += `Total Game Time,${fancyTimeFormat(
+            playerData.totalTime
+          )}\n\n`;
+
+          content += 'GAME STATISTICS\n';
+          content += `Avg Value per Turn,${
+            playerData.averageValuePerTurn || 0
+          }\n`;
+          content += `Avg Damage Threatened per Turn,${
+            playerData.averageDamageThreatenedPerTurn || 0
+          }\n`;
+          content += `Avg Damage Dealt per Turn,${
+            playerData.averageDamageDealtPerTurn || 0
+          }\n`;
+          content += `Avg Damage Threatened per Card,${
+            playerData.averageDamageThreatenedPerCard || 0
+          }\n`;
+          content += `Avg Resources Used per Turn,${
+            playerData.averageResourcesUsedPerTurn || 0
+          }\n`;
+          content += `Avg Cards Left Over per Turn,${
+            playerData.averageCardsLeftOverPerTurn || 0
+          }\n`;
+          content += `Avg Combat Value per Turn,${
+            playerData.averageCombatValuePerTurn || 0
+          }\n`;
+          content += `Total Damage Threatened,${
+            playerData.totalDamageThreatened || 0
+          }\n`;
+          content += `Total Damage Dealt,${playerData.totalDamageDealt || 0}\n`;
+          content += `Total Damage Blocked,${
+            playerData.totalDamageBlocked || 0
+          }\n`;
+          content += `Total Damage Prevented,${
+            playerData.totalDamagePrevented || 0
+          }\n`;
+          content += `Total Life Gained,${playerData.totalLifeGained || 0}\n\n`;
+          content += `Total Life Self-Lost,${
+            playerData.totalLifeLost || 0
+          }\n\n`;
+
+          content += 'CARD PLAY STATS\n';
+          content += 'Card Name,Played,Blocked,Pitched,Discarded,Times Hit';
+
+          const hasCharged = playerData.cardResults?.some((c) => c.charged > 0);
+          const hasKatsuDiscard = playerData.cardResults?.some(
+            (c) => c.katsuDiscard > 0
+          );
+
+          if (hasCharged) content += ',Times Charged';
+          if (hasKatsuDiscard) content += ',Times Katsu Discarded';
+          content += '\n';
+
+          const csvPlayedCards = [
+            ...(playerData.cardResults ?? []),
+            ...(playerData.arenaCardResults ?? []).filter((r) => r.pitched > 0)
+          ];
+          csvPlayedCards.forEach((result) => {
+            const cardName = result.cardName.replace(/,/g, ';');
+            const cardNameWithPitch =
+              result.pitchValue > 0
+                ? `${cardName} (${result.pitchValue})`
+                : cardName;
+            content += `"${cardNameWithPitch}",${result.played},${result.blocked},${result.pitched},${result.discarded},${result.hits}`;
+            if (hasCharged) content += `,${result.charged}`;
+            if (hasKatsuDiscard) content += `,${result.katsuDiscard}`;
+            content += '\n';
+          });
+
+          const activatedArenaResults = mergeCompanionPairs([
+            ...(playerData.arenaCardResults ?? []).filter(
+              (r) =>
+                (r.activated ?? 0) > 0 ||
+                (r.passiveTriggered ?? 0) > 0 ||
+                r.hits > 0 ||
+                r.blocked > 0
+            ),
+            ...(playerData.cardResults ?? []).filter(
+              (r) => (r.activated ?? 0) > 0 || (r.passiveTriggered ?? 0) > 0
+            )
+          ]).sort((a, b) => a.cardName.localeCompare(b.cardName));
+          if (activatedArenaResults.length > 0) {
+            const csvHasPitched = activatedArenaResults.some(
+              (r) => r.pitched > 0
+            );
+            content += '\nCARD ACTIVATED STATS\n';
+            content += `Card Name,Activated,Passive Triggers,Blocked${
+              csvHasPitched ? ',Pitched' : ''
+            },Times Hit\n`;
+            activatedArenaResults.forEach((result) => {
+              const cardName = result.cardName.replace(/,/g, ';');
+              content += `"${cardName}",${result.activated ?? 0},${
+                result.passiveTriggered ?? 0
+              },${result.blocked}${csvHasPitched ? `,${result.pitched}` : ''},${
+                result.hits
+              }\n`;
+            });
+          }
+
+          const playedTokenResults = playerData.tokenResults?.filter(
+            (r) => r.played > 0
+          );
+          if (playedTokenResults && playedTokenResults.length > 0) {
+            content += '\nNON-DECK CARDS\n';
+            content += 'Card Name,Played,Blocked,Pitched,Times Hit\n';
+            playedTokenResults.forEach((result) => {
+              const cardName = result.cardName.replace(/,/g, ';');
+              content += `"${cardName}",${result.played},${result.blocked},${result.pitched},${result.hits}\n`;
+            });
+          }
+
+          content += '\nTURN BY TURN BREAKDOWN\n';
+          content +=
+            'Turn,Cards Played,Cards Blocked,Cards Pitched,Cards Discarded,Cards Left,Resources Used,Resources Left,';
+          content +=
+            'Damage Threatened,Damage Dealt,Damage Blocked,Damage Prevented,Damage Taken,Life Gained,Total Value\n';
+
+          if (
+            playerData.turnResults &&
+            Object.keys(playerData.turnResults).length > 0
+          ) {
+            Object.keys(playerData.turnResults).forEach((key, ix) => {
+              const turn = playerData.turnResults[key];
+              const totalValue =
+                +turn.damageThreatened +
+                +turn.damageBlocked +
+                +turn.damagePrevented +
+                +turn.lifeGained +
+                +turn.lifeLost;
+              content += `${ix + 1},${turn.cardsUsed},${turn.cardsBlocked},${
+                turn.cardsPitched
+              },${turn.cardsDiscarded},${turn.cardsLeft},`;
+              content += `${turn.resourcesUsed},${turn.resourcesLeft},`;
+              content += `${turn.damageThreatened},${turn.damageDealt},`;
+              content += `${turn.damageBlocked},${turn.damagePrevented},`;
+              content += `${turn.damageTaken},${turn.lifeGained},${totalValue}\n`;
+            });
+          }
+
+          return content;
+        };
+
+        csvContent += generatePlayerStatsSection(
+          data,
+          `PLAYER ${data.playerID}`,
+          data.yourHero
+        );
+
+        if (data.bothPlayersData) {
+          const opponentPlayerID = data.playerID === 1 ? 2 : 1;
+          const opponentData = data.bothPlayersData[opponentPlayerID];
+
+          if (opponentData && opponentData.cardResults) {
+            const opponentDataWithID = {
+              ...opponentData,
+              playerID: opponentPlayerID
+            };
+            csvContent += generatePlayerStatsSection(
+              opponentDataWithID as EndGameData,
+              `PLAYER ${opponentPlayerID}`,
+              data.opponentHero
+            );
+          } else {
+            console.warn(
+              'Opponent data not yet loaded. Please click "Switch player stats" to load opponent data before exporting.'
+            );
+            csvContent +=
+              '\n\nNote: Opponent stats not available. Click "Switch player stats" to load them first.\n';
+          }
+        } else {
+          console.warn('No bothPlayersData cache available');
+          csvContent += '\n\nNote: Opponent stats not available\n';
+        }
+
+        if ('showSaveFilePicker' in window) {
+          try {
+            const handle = await (window as any).showSaveFilePicker({
+              suggestedName: `game-stats-${timestamp}.csv`,
+              types: [
+                {
+                  description: t('END_GAME.CSV_FILE'),
+                  accept: { 'text/csv': ['.csv'] }
+                }
+              ]
+            });
+            const writable = await handle.createWritable();
+            await writable.write(
+              new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+            );
+            await writable.close();
+            return;
+          } catch (e) {
+            if ((e as Error).name === 'AbortError') return;
+          }
+        }
+        downloadViaBackend('csv', `game-stats-${timestamp}.csv`, csvContent);
+      } catch (error) {
+        console.error('Error exporting CSV:', error);
+        alert(t('END_GAME.EXPORT_CSV_ERROR', { error }));
+      }
+    };
+
+    // Expose the export function to parent component
+    useImperativeHandle(ref, () => ({
+      exportScreenshot: handleExportScreenshot,
+      exportCSV: handleExportCSV
+    }));
+
+    const filteredCardResults = useMemo(() => {
+      if (!data.cardResults) return data.cardResults;
+      // Non-deck cards that were pitched (e.g. Heart of Fyendal gem) belong in the played stats view
+      const pitchedArenaCards = (data.arenaCardResults ?? []).filter(
+        (r) => r.pitched > 0
+      );
+      if (showAllCards) return [...data.cardResults, ...pitchedArenaCards];
+      return [
+        ...data.cardResults.filter(
+          (r) =>
+            r.played > 0 ||
+            r.blocked > 0 ||
+            r.pitched > 0 ||
+            r.discarded > 0 ||
+            r.hits > 0
+        ),
+        ...pitchedArenaCards
+      ];
+    }, [data.cardResults, data.arenaCardResults, showAllCards]);
+
+    const activatedCardResults = useMemo(() => {
+      const fromArena = (data.arenaCardResults ?? []).filter(
+        (r) =>
+          (r.activated ?? 0) > 0 ||
+          (r.passiveTriggered ?? 0) > 0 ||
+          r.hits > 0 ||
+          r.blocked > 0
+      );
+      const fromDeck = data.cardResults.filter(
+        (r) => (r.activated ?? 0) > 0 || (r.passiveTriggered ?? 0) > 0
+      );
+      return mergeCompanionPairs([...fromArena, ...fromDeck]).sort((a, b) =>
+        a.cardName.localeCompare(b.cardName)
+      );
+    }, [data.arenaCardResults, data.cardResults]);
+
+    const sortedCardResults = useMemo(() => {
+      if (!filteredCardResults || !sortField) {
+        return filteredCardResults;
+      }
+
+      return [...filteredCardResults].sort((a, b) => {
+        if (sortField === 'cardName') {
+          const aValue = a.cardName.toLowerCase();
+          const bValue = b.cardName.toLowerCase();
+
+          if (sortDirection === 'desc') {
+            return bValue.localeCompare(aValue);
+          } else {
+            return aValue.localeCompare(bValue);
+          }
+        } else {
+          const aValue = a[sortField];
+          const bValue = b[sortField];
+
+          if (sortDirection === 'desc') {
+            return bValue - aValue;
+          } else {
+            return aValue - bValue;
+          }
+        }
+      });
+    }, [filteredCardResults, sortField, sortDirection]);
+
+    const sortedTurnResults = useMemo(() => {
+      if (!data.turnResults || !turnSortField) {
+        return null;
+      }
+
+      const turnArray = Object.entries(data.turnResults).map(
+        ([key, value]) => ({
+          key,
+          ...value
+        })
+      );
+
+      const sorted = turnArray.sort((a, b) => {
+        let aValue: number;
+        let bValue: number;
+
+        if (turnSortField === 'turnNo') {
+          // Sort by turn number (use turnNo from data or fallback to calculation)
+          aValue =
+            a.turnNo !== undefined
+              ? a.turnNo
+              : Object.keys(data.turnResults).indexOf(a.key);
+          bValue =
+            b.turnNo !== undefined
+              ? b.turnNo
+              : Object.keys(data.turnResults).indexOf(b.key);
+        } else if (turnSortField === 'totalValue') {
+          aValue =
+            (+a.damageThreatened || 0) +
+            (+a.damageBlocked || 0) +
+            (+a.damagePrevented || 0) +
+            (+a.lifeGained || 0) +
+            (+a.lifeLost || 0);
+          bValue =
+            (+b.damageThreatened || 0) +
+            (+b.damageBlocked || 0) +
+            (+b.damagePrevented || 0) +
+            (+b.lifeGained || 0) +
+            (+b.lifeLost || 0);
+        } else {
+          aValue = a[turnSortField] || 0;
+          bValue = b[turnSortField] || 0;
+        }
+
+        if (turnSortDirection === 'desc') {
           return bValue - aValue;
         } else {
           return aValue - bValue;
         }
-      }
-    });
-  }, [filteredCardResults, sortField, sortDirection]);
+      });
 
-  const sortedTurnResults = useMemo(() => {
-    if (!data.turnResults || !turnSortField) {
-      return null;
+      return sorted;
+    }, [data.turnResults, turnSortField, turnSortDirection]);
+
+    // Helper function to check if columns should be hidden - We hide those 3 collumns for irrelevant heroes
+    const shouldHideDamagePrevented = useMemo(() => {
+      if (!data.turnResults || Object.keys(data.turnResults).length === 0)
+        return true;
+      const hasAnyNonZero = Object.values(data.turnResults).some((turn) => {
+        const value = parseInt(String(turn.damagePrevented), 10) || 0;
+        return value !== 0;
+      });
+      return !hasAnyNonZero;
+    }, [data.turnResults]);
+
+    const shouldHideLifeGained = useMemo(() => {
+      if (!data.turnResults || Object.keys(data.turnResults).length === 0)
+        return true;
+      const hasAnyNonZero = Object.values(data.turnResults).some((turn) => {
+        const value = parseInt(String(turn.lifeGained), 10) || 0;
+        return value !== 0;
+      });
+      return !hasAnyNonZero;
+    }, [data.turnResults]);
+
+    const shouldHideLifeLost = useMemo(() => {
+      if (!data.turnResults || Object.keys(data.turnResults).length === 0)
+        return true;
+      const hasAnyNonZero = Object.values(data.turnResults).some((turn) => {
+        const value = parseInt(String(turn.lifeLost), 10) || 0;
+        return value !== 0;
+      });
+      return !hasAnyNonZero;
+    }, [data.turnResults]);
+
+    const shouldHideCardsDiscarded = useMemo(() => {
+      if (!data.turnResults || Object.keys(data.turnResults).length === 0)
+        return true;
+      const hasAnyNonZero = Object.values(data.turnResults).some((turn) => {
+        const value = parseInt(String(turn.cardsDiscarded), 10) || 0;
+        return value !== 0;
+      });
+      return !hasAnyNonZero;
+    }, [data.turnResults]);
+
+    // Calculate the Life column span based on hidden columns
+    const lifeColSpan =
+      (shouldHideLifeGained ? 0 : 1) + (shouldHideLifeLost ? 0 : 1);
+
+    function fancyTimeFormat(duration: number | undefined) {
+      duration = duration ?? 0;
+      // Hours, minutes and seconds
+      const hrs = ~~(duration / 3600);
+      const mins = ~~((duration % 3600) / 60);
+      const secs = ~~duration % 60;
+
+      let ret = '';
+
+      if (hrs > 0) {
+        ret += '' + hrs + ':' + (mins < 10 ? '0' : '');
+      }
+
+      ret += '' + mins + ':' + (secs < 10 ? '0' : '');
+      ret += '' + secs;
+
+      return ret;
+    }
+    const ChartTooltip = ({
+      active,
+      payload,
+      label
+    }: {
+      active?: boolean;
+      payload?: any[];
+      label?: number;
+    }) => {
+      if (!active || !payload?.length) return null;
+      return (
+        <div
+          style={{
+            background: 'rgba(10,10,10,0.92)',
+            border: '1px solid rgba(255,255,255,0.12)',
+            borderRadius: '4px',
+            padding: '4px 8px',
+            fontSize: '0.68em',
+            pointerEvents: 'none',
+            whiteSpace: 'nowrap'
+          }}
+        >
+          <p style={{ margin: '0 0 2px', color: 'rgba(255,255,255,0.45)' }}>
+            {label === 0
+              ? t('END_GAME.START')
+              : t('END_GAME.TURN_LABEL', { turn: label })}
+          </p>
+          {payload.map((entry, i) => (
+            <p
+              key={i}
+              style={{
+                margin: 0,
+                color: entry.color ?? chartColors.you,
+                fontWeight: 600
+              }}
+            >
+              {entry.name}: {entry.value}
+            </p>
+          ))}
+        </div>
+      );
+    };
+
+    let numCharged = 0;
+    for (let i = 0; i < (data.cardResults?.length ?? 0); i++) {
+      numCharged += data.cardResults[i].charged;
     }
 
-    const turnArray = Object.entries(data.turnResults).map(([key, value]) => ({
-      key,
-      ...value
-    }));
-
-    const sorted = turnArray.sort((a, b) => {
-      let aValue: number;
-      let bValue: number;
-
-      if (turnSortField === 'turnNo') {
-        // Sort by turn number (use turnNo from data or fallback to calculation)
-        aValue =
-          a.turnNo !== undefined
-            ? a.turnNo
-            : Object.keys(data.turnResults).indexOf(a.key);
-        bValue =
-          b.turnNo !== undefined
-            ? b.turnNo
-            : Object.keys(data.turnResults).indexOf(b.key);
-      } else if (turnSortField === 'totalValue') {
-        aValue =
-          (+a.damageThreatened || 0) +
-          (+a.damageBlocked || 0) +
-          (+a.damagePrevented || 0) +
-          (+a.lifeGained || 0) +
-          (+a.lifeLost || 0);
-        bValue =
-          (+b.damageThreatened || 0) +
-          (+b.damageBlocked || 0) +
-          (+b.damagePrevented || 0) +
-          (+b.lifeGained || 0) +
-          (+b.lifeLost || 0);
-      } else {
-        aValue = a[turnSortField] || 0;
-        bValue = b[turnSortField] || 0;
-      }
-
-      if (turnSortDirection === 'desc') {
-        return bValue - aValue;
-      } else {
-        return aValue - bValue;
-      }
-    });
-
-    return sorted;
-  }, [data.turnResults, turnSortField, turnSortDirection]);
-
-  // Helper function to check if columns should be hidden - We hide those 3 collumns for irrelevant heroes
-  const shouldHideDamagePrevented = useMemo(() => {
-    if (!data.turnResults || Object.keys(data.turnResults).length === 0)
-      return true;
-    const hasAnyNonZero = Object.values(data.turnResults).some((turn) => {
-      const value = parseInt(String(turn.damagePrevented), 10) || 0;
-      return value !== 0;
-    });
-    return !hasAnyNonZero;
-  }, [data.turnResults]);
-
-  const shouldHideLifeGained = useMemo(() => {
-    if (!data.turnResults || Object.keys(data.turnResults).length === 0)
-      return true;
-    const hasAnyNonZero = Object.values(data.turnResults).some((turn) => {
-      const value = parseInt(String(turn.lifeGained), 10) || 0;
-      return value !== 0;
-    });
-    return !hasAnyNonZero;
-  }, [data.turnResults]);
-
-  const shouldHideLifeLost = useMemo(() => {
-    if (!data.turnResults || Object.keys(data.turnResults).length === 0)
-      return true;
-    const hasAnyNonZero = Object.values(data.turnResults).some((turn) => {
-      const value = parseInt(String(turn.lifeLost), 10) || 0;
-      return value !== 0;
-    });
-    return !hasAnyNonZero;
-  }, [data.turnResults]);
-
-  const shouldHideCardsDiscarded = useMemo(() => {
-    if (!data.turnResults || Object.keys(data.turnResults).length === 0)
-      return true;
-    const hasAnyNonZero = Object.values(data.turnResults).some((turn) => {
-      const value = parseInt(String(turn.cardsDiscarded), 10) || 0;
-      return value !== 0;
-    });
-    return !hasAnyNonZero;
-  }, [data.turnResults]);
-
-  // Calculate the Life column span based on hidden columns
-  const lifeColSpan =
-    (shouldHideLifeGained ? 0 : 1) + (shouldHideLifeLost ? 0 : 1);
-
-  function fancyTimeFormat(duration: number | undefined) {
-    duration = duration ?? 0;
-    // Hours, minutes and seconds
-    const hrs = ~~(duration / 3600);
-    const mins = ~~((duration % 3600) / 60);
-    const secs = ~~duration % 60;
-
-    let ret = '';
-
-    if (hrs > 0) {
-      ret += '' + hrs + ':' + (mins < 10 ? '0' : '');
+    let numKatsuDiscard = 0;
+    for (let i = 0; i < (data.cardResults?.length ?? 0); i++) {
+      numKatsuDiscard += data.cardResults[i].katsuDiscard;
     }
 
-    ret += '' + mins + ':' + (secs < 10 ? '0' : '');
-    ret += '' + secs;
+    let numDiscarded = 0;
+    for (let i = 0; i < (data.cardResults?.length ?? 0); i++) {
+      numDiscarded += data.cardResults[i].discarded;
+    }
 
-    return ret;
-  }
-  const ChartTooltip = ({
-    active,
-    payload,
-    label
-  }: {
-    active?: boolean;
-    payload?: any[];
-    label?: number;
-  }) => {
-    if (!active || !payload?.length) return null;
     return (
       <div
-        style={{
-          background: 'rgba(10,10,10,0.92)',
-          border: '1px solid rgba(255,255,255,0.12)',
-          borderRadius: '4px',
-          padding: '4px 8px',
-          fontSize: '0.68em',
-          pointerEvents: 'none',
-          whiteSpace: 'nowrap'
-        }}
+        ref={statsRef}
+        className={styles.endGameStats}
+        data-testid="test-stats"
       >
-        <p style={{ margin: '0 0 2px', color: 'rgba(255,255,255,0.45)' }}>
-          {label === 0
-            ? t('END_GAME.START')
-            : t('END_GAME.TURN_LABEL', { turn: label })}
-        </p>
-        {payload.map((entry, i) => (
-          <p
-            key={i}
-            style={{
-              margin: 0,
-              color: entry.color ?? chartColors.you,
-              fontWeight: 600
-            }}
-          >
-            {entry.name}: {entry.value}
-          </p>
-        ))}
-      </div>
-    );
-  };
+        <div className={styles.statsContent}>
+          <div className={styles.statsContainer}>
+            {/* Game Time & Summary Section */}
+            <div className={styles.statsSection}>
+              {data.winner !== undefined &&
+                data.playerID !== undefined &&
+                data.playerID !== 3 && (
+                  <div
+                    className={
+                      data.winner === data.playerID
+                        ? styles.outcomeVictory
+                        : styles.outcomeDefeat
+                    }
+                  >
+                    {data.winner === data.playerID ? (
+                      <ConfettiSvg />
+                    ) : (
+                      <RainSvg />
+                    )}
+                    {data.winner === data.playerID
+                      ? t('END_GAME.VICTORY')
+                      : t('END_GAME.DEFEAT')}
+                  </div>
+                )}
 
-  let numCharged = 0;
-  for (let i = 0; i < (data.cardResults?.length ?? 0); i++) {
-    numCharged += data.cardResults[i].charged;
-  }
-
-  let numKatsuDiscard = 0;
-  for (let i = 0; i < (data.cardResults?.length ?? 0); i++) {
-    numKatsuDiscard += data.cardResults[i].katsuDiscard;
-  }
-
-  let numDiscarded = 0;
-  for (let i = 0; i < (data.cardResults?.length ?? 0); i++) {
-    numDiscarded += data.cardResults[i].discarded;
-  }
-
-  return (
-    <div
-      ref={statsRef}
-      className={styles.endGameStats}
-      data-testid="test-stats"
-    >
-      <div className={styles.statsContent}>
-        <div className={styles.statsContainer}>
-          {/* Game Time & Summary Section */}
-          <div className={styles.statsSection}>
-            {data.winner !== undefined &&
-              data.playerID !== undefined &&
-              data.playerID !== 3 && (
-                <div
-                  className={
-                    data.winner === data.playerID
-                      ? styles.outcomeVictory
-                      : styles.outcomeDefeat
-                  }
-                >
-                  {data.winner === data.playerID ? (
-                    <ConfettiSvg />
-                  ) : (
-                    <RainSvg />
-                  )}
-                  {data.winner === data.playerID
-                    ? t('END_GAME.VICTORY')
-                    : t('END_GAME.DEFEAT')}
-                </div>
-              )}
-
-            <div className={styles.keyStats}>
-              <div className={styles.keyStat}>
-                <span className={styles.keyStatValue}>
-                  {stats.totalDamageThreatened ?? 0}
-                </span>
-                <span className={styles.keyStatLabel}>
-                  {t('END_GAME.DAMAGE_THREATENED')}
-                </span>
-              </div>
-              <div className={styles.keyStat}>
-                <span className={styles.keyStatValue}>
-                  {stats.totalDamageDealt ?? 0}
-                </span>
-                <span className={styles.keyStatLabel}>
-                  {t('END_GAME.DAMAGE_DEALT')}
-                </span>
-              </div>
-              <div className={styles.keyStat}>
-                <span className={styles.keyStatValue}>
-                  {stats.totalDamageBlocked ?? 0}
-                </span>
-                <span className={styles.keyStatLabel}>
-                  {t('END_GAME.DAMAGE_BLOCKED')}
-                </span>
-              </div>
-              {(stats.totalDamagePrevented ?? 0) > 0 && (
+              <div className={styles.keyStats}>
                 <div className={styles.keyStat}>
                   <span className={styles.keyStatValue}>
-                    {stats.totalDamagePrevented}
+                    {stats.totalDamageThreatened ?? 0}
                   </span>
                   <span className={styles.keyStatLabel}>
-                    {t('END_GAME.DAMAGE_PREVENTED')}
+                    {t('END_GAME.DAMAGE_THREATENED')}
                   </span>
                 </div>
+                <div className={styles.keyStat}>
+                  <span className={styles.keyStatValue}>
+                    {stats.totalDamageDealt ?? 0}
+                  </span>
+                  <span className={styles.keyStatLabel}>
+                    {t('END_GAME.DAMAGE_DEALT')}
+                  </span>
+                </div>
+                <div className={styles.keyStat}>
+                  <span className={styles.keyStatValue}>
+                    {stats.totalDamageBlocked ?? 0}
+                  </span>
+                  <span className={styles.keyStatLabel}>
+                    {t('END_GAME.DAMAGE_BLOCKED')}
+                  </span>
+                </div>
+                {(stats.totalDamagePrevented ?? 0) > 0 && (
+                  <div className={styles.keyStat}>
+                    <span className={styles.keyStatValue}>
+                      {stats.totalDamagePrevented}
+                    </span>
+                    <span className={styles.keyStatLabel}>
+                      {t('END_GAME.DAMAGE_PREVENTED')}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {data.masteryProgress && (
+                <div className={styles.masteryProgress}>
+                  {data.masteryProgress}
+                </div>
               )}
-            </div>
 
-            {data.masteryProgress && (
-              <div className={styles.masteryProgress}>
-                {data.masteryProgress}
-              </div>
-            )}
+              <hr className={styles.statsDivider} />
 
-            <hr className={styles.statsDivider} />
+              {/* Unified Stats Box */}
+              <div className={styles.infoBox}>
+                <div className={styles.disclaimer}>
+                  <em>{t('END_GAME.TURN_0_OMITTED')}</em>
+                  <label className={styles.excludeLastTurnLabel}>
+                    <input
+                      type="checkbox"
+                      checked={excludeLastTurn}
+                      onChange={(e) => setExcludeLastTurn(e.target.checked)}
+                      className={styles.excludeLastTurnCheckbox}
+                    />
+                    <span className={styles.excludeLastTurnText}>
+                      {t('END_GAME.EXCLUDE_LAST_TURN')}
+                    </span>
+                  </label>
+                </div>
 
-            {/* Unified Stats Box */}
-            <div className={styles.infoBox}>
-              <div className={styles.disclaimer}>
-                <em>{t('END_GAME.TURN_0_OMITTED')}</em>
-                <label className={styles.excludeLastTurnLabel}>
-                  <input
-                    type="checkbox"
-                    checked={excludeLastTurn}
-                    onChange={(e) => setExcludeLastTurn(e.target.checked)}
-                    className={styles.excludeLastTurnCheckbox}
-                  />
-                  <span className={styles.excludeLastTurnText}>
-                    {t('END_GAME.EXCLUDE_LAST_TURN')}
-                  </span>
-                </label>
-              </div>
-
-              {/* Avg Value per Turn - Top Priority */}
-              <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>
-                  {t('END_GAME.AVG_VALUE_PER_TURN')}
-                  <span
-                    className={styles.tooltipIcon}
-                    data-tooltip={t('END_GAME.AVG_VALUE_PER_TURN_TOOLTIP')}
-                  >
-                    ?
-                  </span>
-                </span>
-                <span className={styles.infoValue}>
-                  {stats.averageValuePerTurn}
-                </span>
-              </div>
-
-              {/* Other Average Values */}
-              <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>
-                  {t('END_GAME.AVG_DMG_THREATENED_PER_TURN')}
-                </span>
-                <span className={styles.infoValue}>
-                  {stats.averageDamageThreatenedPerTurn}
-                </span>
-              </div>
-              <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>
-                  {t('END_GAME.AVG_DMG_DEALT_PER_TURN')}
-                </span>
-                <span className={styles.infoValue}>
-                  {stats.averageDamageDealtPerTurn}
-                </span>
-              </div>
-              <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>
-                  {t('END_GAME.AVG_DMG_THREATENED_PER_CARD')}
-                </span>
-                <span className={styles.infoValue}>
-                  {stats.averageDamageThreatenedPerCard}
-                </span>
-              </div>
-              <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>
-                  {t('END_GAME.AVG_RESOURCES_USED_PER_TURN')}
-                </span>
-                <span className={styles.infoValue}>
-                  {stats.averageResourcesUsedPerTurn}
-                </span>
-              </div>
-              <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>
-                  {t('END_GAME.AVG_CARDS_LEFT_OVER_PER_TURN')}
-                </span>
-                <span className={styles.infoValue}>
-                  {stats.averageCardsLeftOverPerTurn}
-                </span>
-              </div>
-              <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>
-                  {t('END_GAME.AVG_COMBAT_VALUE_PER_TURN')}
-                </span>
-                <span className={styles.infoValue}>
-                  {stats.averageCombatValuePerTurn}
-                </span>
-              </div>
-
-              {/* Total Damage/Life Values */}
-              <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>
-                  {t('END_GAME.TOTAL_DAMAGE_THREATENED')}
-                </span>
-                <span className={styles.infoValue}>
-                  {stats.totalDamageThreatened}
-                </span>
-              </div>
-              <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>
-                  {t('END_GAME.TOTAL_DAMAGE_DEALT')}
-                </span>
-                <span className={styles.infoValue}>
-                  {stats.totalDamageDealt}
-                </span>
-              </div>
-              <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>
-                  {t('END_GAME.TOTAL_DAMAGE_BLOCKED')}
-                </span>
-                <span className={styles.infoValue}>
-                  {stats.totalDamageBlocked}
-                </span>
-              </div>
-
-              {(stats.totalDamagePrevented ?? 0) > 0 && (
+                {/* Avg Value per Turn - Top Priority */}
                 <div className={styles.infoRow}>
                   <span className={styles.infoLabel}>
-                    {t('END_GAME.TOTAL_DAMAGE_PREVENTED')}
+                    {t('END_GAME.AVG_VALUE_PER_TURN')}
                     <span
                       className={styles.tooltipIcon}
-                      data-tooltip={t(
-                        'END_GAME.TOTAL_DAMAGE_PREVENTED_TOOLTIP'
-                      )}
+                      data-tooltip={t('END_GAME.AVG_VALUE_PER_TURN_TOOLTIP')}
                     >
                       ?
                     </span>
                   </span>
                   <span className={styles.infoValue}>
-                    {stats.totalDamagePrevented}
+                    {stats.averageValuePerTurn}
                   </span>
                 </div>
-              )}
 
-              {!!stats.totalLifeGained && (
+                {/* Other Average Values */}
                 <div className={styles.infoRow}>
                   <span className={styles.infoLabel}>
-                    {t('END_GAME.TOTAL_LIFE_GAINED')}
+                    {t('END_GAME.AVG_DMG_THREATENED_PER_TURN')}
                   </span>
                   <span className={styles.infoValue}>
-                    {stats.totalLifeGained}
+                    {stats.averageDamageThreatenedPerTurn}
                   </span>
                 </div>
-              )}
-              {!!stats.totalLifeLost && (
                 <div className={styles.infoRow}>
                   <span className={styles.infoLabel}>
-                    {t('END_GAME.TOTAL_LIFE_SELF_LOST')}
+                    {t('END_GAME.AVG_DMG_DEALT_PER_TURN')}
                   </span>
                   <span className={styles.infoValue}>
-                    {stats.totalLifeLost}
+                    {stats.averageDamageDealtPerTurn}
                   </span>
                 </div>
-              )}
+                <div className={styles.infoRow}>
+                  <span className={styles.infoLabel}>
+                    {t('END_GAME.AVG_DMG_THREATENED_PER_CARD')}
+                  </span>
+                  <span className={styles.infoValue}>
+                    {stats.averageDamageThreatenedPerCard}
+                  </span>
+                </div>
+                <div className={styles.infoRow}>
+                  <span className={styles.infoLabel}>
+                    {t('END_GAME.AVG_RESOURCES_USED_PER_TURN')}
+                  </span>
+                  <span className={styles.infoValue}>
+                    {stats.averageResourcesUsedPerTurn}
+                  </span>
+                </div>
+                <div className={styles.infoRow}>
+                  <span className={styles.infoLabel}>
+                    {t('END_GAME.AVG_CARDS_LEFT_OVER_PER_TURN')}
+                  </span>
+                  <span className={styles.infoValue}>
+                    {stats.averageCardsLeftOverPerTurn}
+                  </span>
+                </div>
+                <div className={styles.infoRow}>
+                  <span className={styles.infoLabel}>
+                    {t('END_GAME.AVG_COMBAT_VALUE_PER_TURN')}
+                  </span>
+                  <span className={styles.infoValue}>
+                    {stats.averageCombatValuePerTurn}
+                  </span>
+                </div>
 
-              {/* Time Values */}
-              <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>
-                  {t('END_GAME.YOUR_TIME')}
-                </span>
-                <span className={styles.infoValue}>
-                  {fancyTimeFormat(data.yourTime)}
-                </span>
-              </div>
-              <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>
-                  {t('END_GAME.TOTAL_GAME_TIME')}
-                </span>
-                <span className={styles.infoValue}>
-                  {fancyTimeFormat(data.totalTime)}
-                </span>
-              </div>
-            </div>
+                {/* Total Damage/Life Values */}
+                <div className={styles.infoRow}>
+                  <span className={styles.infoLabel}>
+                    {t('END_GAME.TOTAL_DAMAGE_THREATENED')}
+                  </span>
+                  <span className={styles.infoValue}>
+                    {stats.totalDamageThreatened}
+                  </span>
+                </div>
+                <div className={styles.infoRow}>
+                  <span className={styles.infoLabel}>
+                    {t('END_GAME.TOTAL_DAMAGE_DEALT')}
+                  </span>
+                  <span className={styles.infoValue}>
+                    {stats.totalDamageDealt}
+                  </span>
+                </div>
+                <div className={styles.infoRow}>
+                  <span className={styles.infoLabel}>
+                    {t('END_GAME.TOTAL_DAMAGE_BLOCKED')}
+                  </span>
+                  <span className={styles.infoValue}>
+                    {stats.totalDamageBlocked}
+                  </span>
+                </div>
 
-            {/* Hero Portraits Section */}
-            {data.yourHero && data.opponentHero && (
-              <div
-                className={`${styles.heroPortraitsContainer} ${styles.showOnExport}`}
-              >
-                <h3 className={styles.heroTitle}>
-                  {t('END_GAME.HERO_MATCHUP')}
-                </h3>
-                <div className={styles.heroPortraits}>
-                  <div className={styles.heroColumn}>
-                    <p className={styles.heroLabel}>
-                      {t('END_GAME.YOUR_HERO')}
-                    </p>
-                    <div className={styles.heroImageWrapper}>
-                      {heroDataUrls.yourHero ? (
-                        <img
-                          src={heroDataUrls.yourHero}
-                          alt={t('END_GAME.YOUR_HERO')}
-                          className={styles.heroImage}
-                          onError={(e) => {
-                            console.error('Failed to display your hero image');
-                            (e.target as HTMLImageElement).style.display =
-                              'none';
-                          }}
-                        />
-                      ) : (
-                        <div className={styles.heroNameBox}>
-                          {data.yourHero}
-                        </div>
-                      )}
-                      {data.winner === data.playerID && (
-                        <div className={styles.winnerBadge}>
-                          {t('END_GAME.WINNER')}
-                        </div>
-                      )}
-                    </div>
+                {(stats.totalDamagePrevented ?? 0) > 0 && (
+                  <div className={styles.infoRow}>
+                    <span className={styles.infoLabel}>
+                      {t('END_GAME.TOTAL_DAMAGE_PREVENTED')}
+                      <span
+                        className={styles.tooltipIcon}
+                        data-tooltip={t(
+                          'END_GAME.TOTAL_DAMAGE_PREVENTED_TOOLTIP'
+                        )}
+                      >
+                        ?
+                      </span>
+                    </span>
+                    <span className={styles.infoValue}>
+                      {stats.totalDamagePrevented}
+                    </span>
                   </div>
-                  <div className={styles.heroVsLabel}>{t('END_GAME.VS')}</div>
-                  <div className={styles.heroColumn}>
-                    <p className={styles.heroLabel}>
-                      {t('END_GAME.OPPONENT_HERO')}
-                    </p>
-                    <div className={styles.heroImageWrapper}>
-                      {heroDataUrls.opponentHero ? (
-                        <img
-                          src={heroDataUrls.opponentHero}
-                          alt={t('END_GAME.OPPONENT_HERO')}
-                          className={styles.heroImage}
-                          onError={(e) => {
-                            console.error(
-                              'Failed to display opponent hero image'
-                            );
-                            (e.target as HTMLImageElement).style.display =
-                              'none';
-                          }}
-                        />
-                      ) : (
-                        <div className={styles.heroNameBox}>
-                          {data.opponentHero}
-                        </div>
-                      )}
-                      {data.winner !== data.playerID &&
-                        data.winner !== undefined && (
+                )}
+
+                {!!stats.totalLifeGained && (
+                  <div className={styles.infoRow}>
+                    <span className={styles.infoLabel}>
+                      {t('END_GAME.TOTAL_LIFE_GAINED')}
+                    </span>
+                    <span className={styles.infoValue}>
+                      {stats.totalLifeGained}
+                    </span>
+                  </div>
+                )}
+                {!!stats.totalLifeLost && (
+                  <div className={styles.infoRow}>
+                    <span className={styles.infoLabel}>
+                      {t('END_GAME.TOTAL_LIFE_SELF_LOST')}
+                    </span>
+                    <span className={styles.infoValue}>
+                      {stats.totalLifeLost}
+                    </span>
+                  </div>
+                )}
+
+                {/* Time Values */}
+                <div className={styles.infoRow}>
+                  <span className={styles.infoLabel}>
+                    {t('END_GAME.YOUR_TIME')}
+                  </span>
+                  <span className={styles.infoValue}>
+                    {fancyTimeFormat(data.yourTime)}
+                  </span>
+                </div>
+                <div className={styles.infoRow}>
+                  <span className={styles.infoLabel}>
+                    {t('END_GAME.TOTAL_GAME_TIME')}
+                  </span>
+                  <span className={styles.infoValue}>
+                    {fancyTimeFormat(data.totalTime)}
+                  </span>
+                </div>
+              </div>
+
+              {/* Hero Portraits Section */}
+              {data.yourHero && data.opponentHero && (
+                <div
+                  className={`${styles.heroPortraitsContainer} ${styles.showOnExport}`}
+                >
+                  <h3 className={styles.heroTitle}>
+                    {t('END_GAME.HERO_MATCHUP')}
+                  </h3>
+                  <div className={styles.heroPortraits}>
+                    <div className={styles.heroColumn}>
+                      <p className={styles.heroLabel}>
+                        {t('END_GAME.YOUR_HERO')}
+                      </p>
+                      <div className={styles.heroImageWrapper}>
+                        {heroDataUrls.yourHero ? (
+                          <img
+                            src={heroDataUrls.yourHero}
+                            alt={t('END_GAME.YOUR_HERO')}
+                            className={styles.heroImage}
+                            onError={(e) => {
+                              console.error(
+                                'Failed to display your hero image'
+                              );
+                              (e.target as HTMLImageElement).style.display =
+                                'none';
+                            }}
+                          />
+                        ) : (
+                          <div className={styles.heroNameBox}>
+                            {data.yourHero}
+                          </div>
+                        )}
+                        {data.winner === data.playerID && (
                           <div className={styles.winnerBadge}>
                             {t('END_GAME.WINNER')}
                           </div>
                         )}
+                      </div>
+                    </div>
+                    <div className={styles.heroVsLabel}>{t('END_GAME.VS')}</div>
+                    <div className={styles.heroColumn}>
+                      <p className={styles.heroLabel}>
+                        {t('END_GAME.OPPONENT_HERO')}
+                      </p>
+                      <div className={styles.heroImageWrapper}>
+                        {heroDataUrls.opponentHero ? (
+                          <img
+                            src={heroDataUrls.opponentHero}
+                            alt={t('END_GAME.OPPONENT_HERO')}
+                            className={styles.heroImage}
+                            onError={(e) => {
+                              console.error(
+                                'Failed to display opponent hero image'
+                              );
+                              (e.target as HTMLImageElement).style.display =
+                                'none';
+                            }}
+                          />
+                        ) : (
+                          <div className={styles.heroNameBox}>
+                            {data.opponentHero}
+                          </div>
+                        )}
+                        {data.winner !== data.playerID &&
+                          data.winner !== undefined && (
+                            <div className={styles.winnerBadge}>
+                              {t('END_GAME.WINNER')}
+                            </div>
+                          )}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
-
-            {/* Watermark - only visible in exports */}
-            <div className={styles.watermark}>
-              <div className={styles.watermarkContent}>
-                <span>{t('END_GAME.STATS_PROVIDED_BY')}</span>
-                <img
-                  src={TalisharLogo}
-                  alt={t('END_GAME.TALISHAR')}
-                  className={styles.watermarkLogo}
-                />
-                <span>
-                  <Trans
-                    i18nKey="END_GAME.WATERMARK"
-                    components={{
-                      2: (
-                        <a
-                          href={TALISHAR_METAFY_URL}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        />
-                      )
-                    }}
-                  />
-                </span>
-              </div>
-            </div>
-          </div>
-          <div className={styles.statsSection}>
-            <div className={styles.sectionHeaderContainer}>
-              <div className={styles.statsTabs}>
-                <button
-                  className={`${styles.statsTab} ${
-                    statsTab === 'deck' ? styles.statsTabActive : ''
-                  }`}
-                  onClick={() => setStatsTab('deck')}
-                >
-                  {t('END_GAME.CARD_PLAYED_STATS')}
-                </button>
-                <button
-                  className={`${styles.statsTab} ${
-                    statsTab === 'activated' ? styles.statsTabActive : ''
-                  }`}
-                  onClick={() => setStatsTab('activated')}
-                >
-                  {t('END_GAME.CARD_ACTIVATED_STATS')}
-                </button>
-              </div>
-              {statsTab === 'deck' && (
-                <label
-                  className={styles.excludeLastTurnLabel}
-                  title={t('END_GAME.SHOW_ALL_CARDS_TITLE')}
-                >
-                  <input
-                    type="checkbox"
-                    checked={showAllCards}
-                    onChange={(e) => setShowAllCards(e.target.checked)}
-                    className={styles.excludeLastTurnCheckbox}
-                  />
-                  <span className={styles.excludeLastTurnText}>
-                    {t('END_GAME.SHOW_ALL_CARDS')}
-                  </span>
-                </label>
               )}
+
+              {/* Watermark - only visible in exports */}
+              <div className={styles.watermark}>
+                <div className={styles.watermarkContent}>
+                  <span>{t('END_GAME.STATS_PROVIDED_BY')}</span>
+                  <img
+                    src={TalisharLogo}
+                    alt={t('END_GAME.TALISHAR')}
+                    className={styles.watermarkLogo}
+                  />
+                  <span>
+                    <Trans
+                      i18nKey="END_GAME.WATERMARK"
+                      components={{
+                        2: (
+                          <a
+                            href={TALISHAR_METAFY_URL}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          />
+                        )
+                      }}
+                    />
+                  </span>
+                </div>
+              </div>
             </div>
-            {statsTab === 'activated' ? (
-              <ScrollableTable>
-                <table className={styles.cardTable}>
-                  <thead>
-                    <tr className={styles.headers}>
-                      <th
-                        className={`${styles.firstHeadersStats} ${styles.hideOnExport}`}
-                      ></th>
-                      <th
-                        className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
-                      >
-                        {t('END_GAME.CARD_NAME')}
-                      </th>
-                      <th
-                        className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
-                      >
-                        {t('END_GAME.ACTIVATED')}
-                      </th>
-                      <th
-                        className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
-                      >
-                        {t('END_GAME.PASSIVE_TRIGGERED')}
-                      </th>
-                      <th
-                        className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
-                      >
-                        {t('END_GAME.BLOCKED')}
-                      </th>
-                      {activatedCardResults.some((r) => r.pitched > 0) && (
+            <div className={styles.statsSection}>
+              <div className={styles.sectionHeaderContainer}>
+                <div className={styles.statsTabs}>
+                  <button
+                    className={`${styles.statsTab} ${
+                      statsTab === 'deck' ? styles.statsTabActive : ''
+                    }`}
+                    onClick={() => setStatsTab('deck')}
+                  >
+                    {t('END_GAME.CARD_PLAYED_STATS')}
+                  </button>
+                  <button
+                    className={`${styles.statsTab} ${
+                      statsTab === 'activated' ? styles.statsTabActive : ''
+                    }`}
+                    onClick={() => setStatsTab('activated')}
+                  >
+                    {t('END_GAME.CARD_ACTIVATED_STATS')}
+                  </button>
+                </div>
+                {statsTab === 'deck' && (
+                  <label
+                    className={styles.excludeLastTurnLabel}
+                    title={t('END_GAME.SHOW_ALL_CARDS_TITLE')}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={showAllCards}
+                      onChange={(e) => setShowAllCards(e.target.checked)}
+                      className={styles.excludeLastTurnCheckbox}
+                    />
+                    <span className={styles.excludeLastTurnText}>
+                      {t('END_GAME.SHOW_ALL_CARDS')}
+                    </span>
+                  </label>
+                )}
+              </div>
+              {statsTab === 'activated' ? (
+                <ScrollableTable>
+                  <table className={styles.cardTable}>
+                    <thead>
+                      <tr className={styles.headers}>
+                        <th
+                          className={`${styles.firstHeadersStats} ${styles.hideOnExport}`}
+                        ></th>
                         <th
                           className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
                         >
-                          {t('END_GAME.PITCHED')}
+                          {t('END_GAME.CARD_NAME')}
                         </th>
-                      )}
-                      <th
-                        className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
-                      >
-                        {t('END_GAME.TIMES_HIT')}
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {activatedCardResults.map((result, ix) => {
-                      const card: Card = { cardNumber: result.cardId };
-                      return (
-                        <tr key={`activatedList${ix}`}>
-                          <td
-                            className={`${styles.card} ${styles.hideOnExport}`}
-                          >
-                            <Effect
-                              card={card}
-                              imgClassName={styles.cardZeroPitch}
-                            />
-                          </td>
-                          <td
-                            className={styles.zeroPitch}
-                            title={result.cardName}
-                          >
-                            {result.cardName}
-                          </td>
-                          <td className={styles.played}>
-                            {result.activated ?? 0}
-                          </td>
-                          <td className={styles.cardStat}>
-                            {result.passiveTriggered ?? 0}
-                          </td>
-                          <td className={styles.cardStat}>{result.blocked}</td>
-                          {activatedCardResults.some((r) => r.pitched > 0) && (
-                            <td className={styles.cardStat}>
-                              {result.pitched}
-                            </td>
-                          )}
-                          <td className={styles.cardStat}>{result.hits}</td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </ScrollableTable>
-            ) : (
-              <ScrollableTable>
-                <table className={styles.cardTable}>
-                  <thead>
-                    <tr className={styles.headers}>
-                      <th
-                        className={`${styles.firstHeadersStats} ${styles.hideOnExport}`}
-                      ></th>
-                      <th
-                        {...getSortableHeaderProps(
-                          () => handleSort('cardName'),
-                          sortField === 'cardName',
-                          sortDirection
-                        )}
-                        className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
-                        title={t('END_GAME.CLICK_TO_SORT')}
-                      >
-                        {t('END_GAME.CARD_NAME')}{' '}
-                        {sortField === 'cardName' &&
-                          (sortDirection === 'desc' ? '↓' : '↑')}
-                      </th>
-                      <th
-                        className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
-                        {...getSortableHeaderProps(
-                          () => handleSort('played'),
-                          sortField === 'played',
-                          sortDirection
-                        )}
-                        title={t('END_GAME.CLICK_TO_SORT')}
-                      >
-                        {t('END_GAME.PLAYED')}{' '}
-                        {sortField === 'played' &&
-                          (sortDirection === 'desc' ? '↓' : '↑')}
-                      </th>
-                      <th
-                        className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
-                        {...getSortableHeaderProps(
-                          () => handleSort('blocked'),
-                          sortField === 'blocked',
-                          sortDirection
-                        )}
-                        title={t('END_GAME.CLICK_TO_SORT')}
-                      >
-                        {t('END_GAME.BLOCKED')}{' '}
-                        {sortField === 'blocked' &&
-                          (sortDirection === 'desc' ? '↓' : '↑')}
-                      </th>
-                      <th
-                        className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
-                        {...getSortableHeaderProps(
-                          () => handleSort('pitched'),
-                          sortField === 'pitched',
-                          sortDirection
-                        )}
-                        title={t('END_GAME.CLICK_TO_SORT')}
-                      >
-                        {t('END_GAME.PITCHED')}{' '}
-                        {sortField === 'pitched' &&
-                          (sortDirection === 'desc' ? '↓' : '↑')}
-                      </th>
-                      {numDiscarded > 0 && (
-                        <th
-                          className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
-                          {...getSortableHeaderProps(
-                            () => handleSort('discarded'),
-                            sortField === 'discarded',
-                            sortDirection
-                          )}
-                          title={t('END_GAME.CLICK_TO_SORT')}
-                        >
-                          {t('END_GAME.DISCARDED')}{' '}
-                          {sortField === 'discarded' &&
-                            (sortDirection === 'desc' ? '↓' : '↑')}
-                        </th>
-                      )}
-                      <th
-                        className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
-                        {...getSortableHeaderProps(
-                          () => handleSort('hits'),
-                          sortField === 'hits',
-                          sortDirection
-                        )}
-                        title={t('END_GAME.CLICK_TO_SORT')}
-                      >
-                        {t('END_GAME.TIMES_HIT')}{' '}
-                        {sortField === 'hits' &&
-                          (sortDirection === 'desc' ? '↓' : '↑')}
-                      </th>
-                      {numCharged > 0 && (
                         <th
                           className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
                         >
-                          {t('END_GAME.TIMES_CHARGED')}
+                          {t('END_GAME.ACTIVATED')}
                         </th>
-                      )}
-                      {numKatsuDiscard > 0 && (
                         <th
                           className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
                         >
-                          {t('END_GAME.TIMES_KATSU_DISCARDED')}
+                          {t('END_GAME.PASSIVE_TRIGGERED')}
                         </th>
-                      )}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {!!sortedCardResults &&
-                      sortedCardResults?.map((result, ix) => {
-                        const card: Card = { cardNumber: result.cardId };
-                        let cardStyle = '';
-                        let cardBorderStyle = '';
-                        switch (result.pitchValue) {
-                          case 1:
-                            cardStyle = styles.onePitch;
-                            cardBorderStyle = styles.cardOnePitch;
-                            break;
-                          case 2:
-                            cardStyle = styles.twoPitch;
-                            cardBorderStyle = styles.cardTwoPitch;
-                            break;
-                          case 3:
-                            cardStyle = styles.threePitch;
-                            cardBorderStyle = styles.cardThreePitch;
-                            break;
-                          default:
-                            cardStyle = styles.zeroPitch;
-                            cardBorderStyle = styles.cardZeroPitch;
-                        }
-                        return (
-                          <tr key={`cardList${ix}`}>
-                            <td
-                              className={`${styles.card} ${styles.hideOnExport}`}
-                            >
-                              <Effect
-                                card={card}
-                                imgClassName={cardBorderStyle}
-                              />
-                            </td>
-                            <td className={cardStyle} title={result.cardName}>
-                              {result.cardName}
-                            </td>
-                            <td className={styles.played}>{result.played}</td>
-                            <td className={styles.blocked}>{result.blocked}</td>
-                            <td className={styles.pitched}>{result.pitched}</td>
-                            {numDiscarded > 0 && (
-                              <td className={styles.cardStat}>
-                                {result.discarded}
-                              </td>
-                            )}
-                            <td className={styles.cardStat}>{result.hits}</td>
-                            {numCharged > 0 && (
-                              <td className={styles.cardStat}>
-                                {result.charged}
-                              </td>
-                            )}
-                            {numKatsuDiscard > 0 && (
-                              <td className={styles.cardStat}>
-                                {result.katsuDiscard}
-                              </td>
-                            )}
-                          </tr>
-                        );
-                      })}
-                  </tbody>
-                </table>
-              </ScrollableTable>
-            )}
-            {statsTab === 'deck' &&
-              data.tokenResults &&
-              data.tokenResults.filter((r) => r.played > 0).length > 0 && (
-                <>
-                  <h3 className={styles.subSectionHeader}>
-                    {t('END_GAME.NON_DECK_CARDS_PLAYED')}
-                  </h3>
-                  <ScrollableTable>
-                    <table className={styles.cardTable}>
-                      <thead>
-                        <tr className={styles.headers}>
-                          <th
-                            className={`${styles.firstHeadersStats} ${styles.hideOnExport}`}
-                          ></th>
-                          <th
-                            className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
-                          >
-                            {t('END_GAME.CARD_NAME')}
-                          </th>
-                          <th
-                            className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
-                          >
-                            {t('END_GAME.PLAYED')}
-                          </th>
-                          <th
-                            className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
-                          >
-                            {t('END_GAME.BLOCKED')}
-                          </th>
+                        <th
+                          className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
+                        >
+                          {t('END_GAME.BLOCKED')}
+                        </th>
+                        {activatedCardResults.some((r) => r.pitched > 0) && (
                           <th
                             className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
                           >
                             {t('END_GAME.PITCHED')}
                           </th>
+                        )}
+                        <th
+                          className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
+                        >
+                          {t('END_GAME.TIMES_HIT')}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {activatedCardResults.map((result, ix) => {
+                        const card: Card = { cardNumber: result.cardId };
+                        return (
+                          <tr key={`activatedList${ix}`}>
+                            <td
+                              className={`${styles.card} ${styles.hideOnExport}`}
+                            >
+                              <Effect
+                                card={card}
+                                imgClassName={styles.cardZeroPitch}
+                              />
+                            </td>
+                            <td
+                              className={styles.zeroPitch}
+                              title={result.cardName}
+                            >
+                              {result.cardName}
+                            </td>
+                            <td className={styles.played}>
+                              {result.activated ?? 0}
+                            </td>
+                            <td className={styles.cardStat}>
+                              {result.passiveTriggered ?? 0}
+                            </td>
+                            <td className={styles.cardStat}>
+                              {result.blocked}
+                            </td>
+                            {activatedCardResults.some(
+                              (r) => r.pitched > 0
+                            ) && (
+                              <td className={styles.cardStat}>
+                                {result.pitched}
+                              </td>
+                            )}
+                            <td className={styles.cardStat}>{result.hits}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </ScrollableTable>
+              ) : (
+                <ScrollableTable>
+                  <table className={styles.cardTable}>
+                    <thead>
+                      <tr className={styles.headers}>
+                        <th
+                          className={`${styles.firstHeadersStats} ${styles.hideOnExport}`}
+                        ></th>
+                        <th
+                          {...getSortableHeaderProps(
+                            () => handleSort('cardName'),
+                            sortField === 'cardName',
+                            sortDirection
+                          )}
+                          className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
+                          title={t('END_GAME.CLICK_TO_SORT')}
+                        >
+                          {t('END_GAME.CARD_NAME')}{' '}
+                          {sortField === 'cardName' &&
+                            (sortDirection === 'desc' ? '↓' : '↑')}
+                        </th>
+                        <th
+                          className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
+                          {...getSortableHeaderProps(
+                            () => handleSort('played'),
+                            sortField === 'played',
+                            sortDirection
+                          )}
+                          title={t('END_GAME.CLICK_TO_SORT')}
+                        >
+                          {t('END_GAME.PLAYED')}{' '}
+                          {sortField === 'played' &&
+                            (sortDirection === 'desc' ? '↓' : '↑')}
+                        </th>
+                        <th
+                          className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
+                          {...getSortableHeaderProps(
+                            () => handleSort('blocked'),
+                            sortField === 'blocked',
+                            sortDirection
+                          )}
+                          title={t('END_GAME.CLICK_TO_SORT')}
+                        >
+                          {t('END_GAME.BLOCKED')}{' '}
+                          {sortField === 'blocked' &&
+                            (sortDirection === 'desc' ? '↓' : '↑')}
+                        </th>
+                        <th
+                          className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
+                          {...getSortableHeaderProps(
+                            () => handleSort('pitched'),
+                            sortField === 'pitched',
+                            sortDirection
+                          )}
+                          title={t('END_GAME.CLICK_TO_SORT')}
+                        >
+                          {t('END_GAME.PITCHED')}{' '}
+                          {sortField === 'pitched' &&
+                            (sortDirection === 'desc' ? '↓' : '↑')}
+                        </th>
+                        {numDiscarded > 0 && (
+                          <th
+                            className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
+                            {...getSortableHeaderProps(
+                              () => handleSort('discarded'),
+                              sortField === 'discarded',
+                              sortDirection
+                            )}
+                            title={t('END_GAME.CLICK_TO_SORT')}
+                          >
+                            {t('END_GAME.DISCARDED')}{' '}
+                            {sortField === 'discarded' &&
+                              (sortDirection === 'desc' ? '↓' : '↑')}
+                          </th>
+                        )}
+                        <th
+                          className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
+                          {...getSortableHeaderProps(
+                            () => handleSort('hits'),
+                            sortField === 'hits',
+                            sortDirection
+                          )}
+                          title={t('END_GAME.CLICK_TO_SORT')}
+                        >
+                          {t('END_GAME.TIMES_HIT')}{' '}
+                          {sortField === 'hits' &&
+                            (sortDirection === 'desc' ? '↓' : '↑')}
+                        </th>
+                        {numCharged > 0 && (
                           <th
                             className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
                           >
-                            {t('END_GAME.TIMES_HIT')}
+                            {t('END_GAME.TIMES_CHARGED')}
                           </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {data.tokenResults
-                          .filter((r) => r.played > 0)
-                          .map((result, ix) => {
-                            const card: Card = { cardNumber: result.cardId };
-                            let cardBorderStyle = '';
-                            switch (result.pitchValue) {
-                              case 1:
-                                cardBorderStyle = styles.cardOnePitch;
-                                break;
-                              case 2:
-                                cardBorderStyle = styles.cardTwoPitch;
-                                break;
-                              case 3:
-                                cardBorderStyle = styles.cardThreePitch;
-                                break;
-                              default:
-                                cardBorderStyle = styles.cardZeroPitch;
-                            }
-                            return (
-                              <tr key={`tokenList${ix}`}>
-                                <td
-                                  className={`${styles.card} ${styles.hideOnExport}`}
-                                >
-                                  <Effect
-                                    card={card}
-                                    imgClassName={cardBorderStyle}
-                                  />
-                                </td>
-                                <td
-                                  className={styles.zeroPitch}
-                                  title={result.cardName}
-                                >
-                                  {result.cardName}
-                                </td>
-                                <td className={styles.played}>
-                                  {result.played}
-                                </td>
-                                <td className={styles.blocked}>
-                                  {result.blocked}
-                                </td>
-                                <td className={styles.pitched}>
-                                  {result.pitched}
-                                </td>
+                        )}
+                        {numKatsuDiscard > 0 && (
+                          <th
+                            className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
+                          >
+                            {t('END_GAME.TIMES_KATSU_DISCARDED')}
+                          </th>
+                        )}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {!!sortedCardResults &&
+                        sortedCardResults?.map((result, ix) => {
+                          const card: Card = { cardNumber: result.cardId };
+                          let cardStyle = '';
+                          let cardBorderStyle = '';
+                          switch (result.pitchValue) {
+                            case 1:
+                              cardStyle = styles.onePitch;
+                              cardBorderStyle = styles.cardOnePitch;
+                              break;
+                            case 2:
+                              cardStyle = styles.twoPitch;
+                              cardBorderStyle = styles.cardTwoPitch;
+                              break;
+                            case 3:
+                              cardStyle = styles.threePitch;
+                              cardBorderStyle = styles.cardThreePitch;
+                              break;
+                            default:
+                              cardStyle = styles.zeroPitch;
+                              cardBorderStyle = styles.cardZeroPitch;
+                          }
+                          return (
+                            <tr key={`cardList${ix}`}>
+                              <td
+                                className={`${styles.card} ${styles.hideOnExport}`}
+                              >
+                                <Effect
+                                  card={card}
+                                  imgClassName={cardBorderStyle}
+                                />
+                              </td>
+                              <td className={cardStyle} title={result.cardName}>
+                                {result.cardName}
+                              </td>
+                              <td className={styles.played}>{result.played}</td>
+                              <td className={styles.blocked}>
+                                {result.blocked}
+                              </td>
+                              <td className={styles.pitched}>
+                                {result.pitched}
+                              </td>
+                              {numDiscarded > 0 && (
                                 <td className={styles.cardStat}>
-                                  {result.hits}
+                                  {result.discarded}
                                 </td>
-                              </tr>
-                            );
-                          })}
-                      </tbody>
-                    </table>
-                  </ScrollableTable>
-                </>
+                              )}
+                              <td className={styles.cardStat}>{result.hits}</td>
+                              {numCharged > 0 && (
+                                <td className={styles.cardStat}>
+                                  {result.charged}
+                                </td>
+                              )}
+                              {numKatsuDiscard > 0 && (
+                                <td className={styles.cardStat}>
+                                  {result.katsuDiscard}
+                                </td>
+                              )}
+                            </tr>
+                          );
+                        })}
+                    </tbody>
+                  </table>
+                </ScrollableTable>
               )}
+              {statsTab === 'deck' &&
+                data.tokenResults &&
+                data.tokenResults.filter((r) => r.played > 0).length > 0 && (
+                  <>
+                    <h3 className={styles.subSectionHeader}>
+                      {t('END_GAME.NON_DECK_CARDS_PLAYED')}
+                    </h3>
+                    <ScrollableTable>
+                      <table className={styles.cardTable}>
+                        <thead>
+                          <tr className={styles.headers}>
+                            <th
+                              className={`${styles.firstHeadersStats} ${styles.hideOnExport}`}
+                            ></th>
+                            <th
+                              className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
+                            >
+                              {t('END_GAME.CARD_NAME')}
+                            </th>
+                            <th
+                              className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
+                            >
+                              {t('END_GAME.PLAYED')}
+                            </th>
+                            <th
+                              className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
+                            >
+                              {t('END_GAME.BLOCKED')}
+                            </th>
+                            <th
+                              className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
+                            >
+                              {t('END_GAME.PITCHED')}
+                            </th>
+                            <th
+                              className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
+                            >
+                              {t('END_GAME.TIMES_HIT')}
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {data.tokenResults
+                            .filter((r) => r.played > 0)
+                            .map((result, ix) => {
+                              const card: Card = { cardNumber: result.cardId };
+                              let cardBorderStyle = '';
+                              switch (result.pitchValue) {
+                                case 1:
+                                  cardBorderStyle = styles.cardOnePitch;
+                                  break;
+                                case 2:
+                                  cardBorderStyle = styles.cardTwoPitch;
+                                  break;
+                                case 3:
+                                  cardBorderStyle = styles.cardThreePitch;
+                                  break;
+                                default:
+                                  cardBorderStyle = styles.cardZeroPitch;
+                              }
+                              return (
+                                <tr key={`tokenList${ix}`}>
+                                  <td
+                                    className={`${styles.card} ${styles.hideOnExport}`}
+                                  >
+                                    <Effect
+                                      card={card}
+                                      imgClassName={cardBorderStyle}
+                                    />
+                                  </td>
+                                  <td
+                                    className={styles.zeroPitch}
+                                    title={result.cardName}
+                                  >
+                                    {result.cardName}
+                                  </td>
+                                  <td className={styles.played}>
+                                    {result.played}
+                                  </td>
+                                  <td className={styles.blocked}>
+                                    {result.blocked}
+                                  </td>
+                                  <td className={styles.pitched}>
+                                    {result.pitched}
+                                  </td>
+                                  <td className={styles.cardStat}>
+                                    {result.hits}
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                        </tbody>
+                      </table>
+                    </ScrollableTable>
+                  </>
+                )}
+            </div>
+          </div>
+
+          {/* Ad above Turn by Turn Breakdown */}
+          {showAds && (
+            <div className={`${styles.adBlock} ${styles.hideOnExport}`}>
+              {!isSupporter && (
+                <div className={styles.adHeader}>
+                  <a
+                    href={TALISHAR_METAFY_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.removeAdsLink}
+                  >
+                    {t('UNITED_GAME_PANEL.REMOVE_ADS')}
+                  </a>
+                </div>
+              )}
+              <AdUnit placement="billboard-1" className={styles.desktopAd} />
+              <AdUnit placement="mobile-unit-1" className={styles.mobileAd} />
+            </div>
+          )}
+
+          {/* Turn by Turn Breakdown - Full Width Section */}
+          <div className={styles.turnBreakdownSection}>
+            <h2 className={styles.sectionHeader}>
+              {t('END_GAME.TURN_BY_TURN_BREAKDOWN')}
+              <span
+                className={styles.tooltipIconBreakdown}
+                data-tooltip={t('END_GAME.TURN_BREAKDOWN_TOOLTIP')}
+              >
+                ?
+              </span>
+            </h2>
+            <ScrollableTable>
+              <table className={styles.cardTable}>
+                <thead>
+                  <tr>
+                    <th
+                      className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
+                    >
+                      {t('END_GAME.TURN')}
+                    </th>
+                    <th
+                      colSpan={shouldHideCardsDiscarded ? 4 : 5}
+                      className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
+                    >
+                      {t('END_GAME.CARDS')}
+                    </th>
+                    <th
+                      colSpan={2}
+                      className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
+                    >
+                      {t('END_GAME.RESOURCES')}
+                    </th>
+                    <th
+                      colSpan={shouldHideDamagePrevented ? 4 : 5}
+                      className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
+                    >
+                      {t('END_GAME.DAMAGE')}
+                    </th>
+                    {lifeColSpan > 0 && (
+                      <th
+                        colSpan={lifeColSpan}
+                        className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
+                      >
+                        {t('END_GAME.LIFE')}
+                      </th>
+                    )}
+                    <th colSpan={1} className={styles.headersStats}>
+                      {t('END_GAME.VALUE')}
+                    </th>
+                  </tr>
+                  <tr>
+                    <th
+                      {...getSortableHeaderProps(
+                        () => handleTurnSort('turnNo'),
+                        turnSortField === 'turnNo',
+                        turnSortDirection
+                      )}
+                      className={styles.sortableHeader}
+                      title={t('END_GAME.CLICK_TO_SORT')}
+                    >
+                      #{' '}
+                      {turnSortField === 'turnNo' &&
+                        (turnSortDirection === 'desc' ? '↓' : '↑')}
+                    </th>
+                    <th
+                      {...getSortableHeaderProps(
+                        () => handleTurnSort('cardsUsed'),
+                        turnSortField === 'cardsUsed',
+                        turnSortDirection
+                      )}
+                      className={styles.sortableHeader}
+                      title={t('END_GAME.CLICK_TO_SORT')}
+                    >
+                      {t('END_GAME.PLAYED')}{' '}
+                      {turnSortField === 'cardsUsed' &&
+                        (turnSortDirection === 'desc' ? '↓' : '↑')}
+                    </th>
+                    <th
+                      {...getSortableHeaderProps(
+                        () => handleTurnSort('cardsBlocked'),
+                        turnSortField === 'cardsBlocked',
+                        turnSortDirection
+                      )}
+                      className={styles.sortableHeader}
+                      title={t('END_GAME.CLICK_TO_SORT')}
+                    >
+                      {t('END_GAME.BLOCKED')}{' '}
+                      {turnSortField === 'cardsBlocked' &&
+                        (turnSortDirection === 'desc' ? '↓' : '↑')}
+                    </th>
+                    <th
+                      {...getSortableHeaderProps(
+                        () => handleTurnSort('cardsPitched'),
+                        turnSortField === 'cardsPitched',
+                        turnSortDirection
+                      )}
+                      className={styles.sortableHeader}
+                      title={t('END_GAME.CLICK_TO_SORT')}
+                    >
+                      {t('END_GAME.PITCHED')}{' '}
+                      {turnSortField === 'cardsPitched' &&
+                        (turnSortDirection === 'desc' ? '↓' : '↑')}
+                    </th>
+                    {!shouldHideCardsDiscarded && (
+                      <th
+                        {...getSortableHeaderProps(
+                          () => handleTurnSort('cardsDiscarded'),
+                          turnSortField === 'cardsDiscarded',
+                          turnSortDirection
+                        )}
+                        className={styles.sortableHeader}
+                        title={t('END_GAME.CLICK_TO_SORT')}
+                      >
+                        {t('END_GAME.DISCARDED')}{' '}
+                        {turnSortField === 'cardsDiscarded' &&
+                          (turnSortDirection === 'desc' ? '↓' : '↑')}
+                      </th>
+                    )}
+                    <th
+                      {...getSortableHeaderProps(
+                        () => handleTurnSort('cardsLeft'),
+                        turnSortField === 'cardsLeft',
+                        turnSortDirection
+                      )}
+                      className={styles.sortableHeader}
+                      title={t('END_GAME.CLICK_TO_SORT')}
+                    >
+                      {t('END_GAME.LEFT')}{' '}
+                      {turnSortField === 'cardsLeft' &&
+                        (turnSortDirection === 'desc' ? '↓' : '↑')}
+                    </th>
+                    <th
+                      {...getSortableHeaderProps(
+                        () => handleTurnSort('resourcesUsed'),
+                        turnSortField === 'resourcesUsed',
+                        turnSortDirection
+                      )}
+                      className={styles.sortableHeader}
+                      title={t('END_GAME.CLICK_TO_SORT')}
+                    >
+                      {t('END_GAME.USED')}{' '}
+                      {turnSortField === 'resourcesUsed' &&
+                        (turnSortDirection === 'desc' ? '↓' : '↑')}
+                    </th>
+                    <th
+                      {...getSortableHeaderProps(
+                        () => handleTurnSort('resourcesLeft'),
+                        turnSortField === 'resourcesLeft',
+                        turnSortDirection
+                      )}
+                      className={styles.sortableHeader}
+                      title={t('END_GAME.CLICK_TO_SORT')}
+                    >
+                      {t('END_GAME.LEFT')}{' '}
+                      {turnSortField === 'resourcesLeft' &&
+                        (turnSortDirection === 'desc' ? '↓' : '↑')}
+                    </th>
+                    <th
+                      {...getSortableHeaderProps(
+                        () => handleTurnSort('damageThreatened'),
+                        turnSortField === 'damageThreatened',
+                        turnSortDirection
+                      )}
+                      className={styles.sortableHeader}
+                      title={t('END_GAME.CLICK_TO_SORT')}
+                    >
+                      {t('END_GAME.THREATENED')}{' '}
+                      {turnSortField === 'damageThreatened' &&
+                        (turnSortDirection === 'desc' ? '↓' : '↑')}
+                    </th>
+                    <th
+                      {...getSortableHeaderProps(
+                        () => handleTurnSort('damageDealt'),
+                        turnSortField === 'damageDealt',
+                        turnSortDirection
+                      )}
+                      className={styles.sortableHeader}
+                      title={t('END_GAME.CLICK_TO_SORT')}
+                    >
+                      {t('END_GAME.DEALT')}{' '}
+                      {turnSortField === 'damageDealt' &&
+                        (turnSortDirection === 'desc' ? '↓' : '↑')}
+                    </th>
+                    <th
+                      {...getSortableHeaderProps(
+                        () => handleTurnSort('damageBlocked'),
+                        turnSortField === 'damageBlocked',
+                        turnSortDirection
+                      )}
+                      className={styles.sortableHeader}
+                      title={t('END_GAME.CLICK_TO_SORT')}
+                    >
+                      {t('END_GAME.BLOCKED')}{' '}
+                      {turnSortField === 'damageBlocked' &&
+                        (turnSortDirection === 'desc' ? '↓' : '↑')}
+                    </th>
+                    {!shouldHideDamagePrevented && (
+                      <th
+                        {...getSortableHeaderProps(
+                          () => handleTurnSort('damagePrevented'),
+                          turnSortField === 'damagePrevented',
+                          turnSortDirection
+                        )}
+                        className={styles.sortableHeader}
+                        title={t('END_GAME.PREVENTED_TOOLTIP')}
+                      >
+                        {t('END_GAME.PREVENTED')}{' '}
+                        {turnSortField === 'damagePrevented' &&
+                          (turnSortDirection === 'desc' ? '↓' : '↑')}
+                      </th>
+                    )}
+                    <th
+                      {...getSortableHeaderProps(
+                        () => handleTurnSort('damageTaken'),
+                        turnSortField === 'damageTaken',
+                        turnSortDirection
+                      )}
+                      className={styles.sortableHeader}
+                      title={t('END_GAME.CLICK_TO_SORT')}
+                    >
+                      {t('END_GAME.TAKEN')}{' '}
+                      {turnSortField === 'damageTaken' &&
+                        (turnSortDirection === 'desc' ? '↓' : '↑')}
+                    </th>
+                    {!shouldHideLifeGained && (
+                      <th
+                        {...getSortableHeaderProps(
+                          () => handleTurnSort('lifeGained'),
+                          turnSortField === 'lifeGained',
+                          turnSortDirection
+                        )}
+                        className={styles.sortableHeader}
+                        title={t('END_GAME.CLICK_TO_SORT')}
+                      >
+                        {t('END_GAME.LIFE_GAINED')}{' '}
+                        {turnSortField === 'lifeGained' &&
+                          (turnSortDirection === 'desc' ? '↓' : '↑')}
+                      </th>
+                    )}
+                    {!shouldHideLifeLost && (
+                      <th
+                        {...getSortableHeaderProps(
+                          () => handleTurnSort('lifeLost'),
+                          turnSortField === 'lifeLost',
+                          turnSortDirection
+                        )}
+                        className={styles.sortableHeader}
+                        title={t('END_GAME.CLICK_TO_SORT')}
+                      >
+                        {t('END_GAME.SELF_LOST')}{' '}
+                        {turnSortField === 'lifeLost' &&
+                          (turnSortDirection === 'desc' ? '↓' : '↑')}
+                      </th>
+                    )}
+                    <th
+                      {...getSortableHeaderProps(
+                        () => handleTurnSort('totalValue'),
+                        turnSortField === 'totalValue',
+                        turnSortDirection
+                      )}
+                      className={styles.sortableHeader}
+                      title={t('END_GAME.CLICK_TO_SORT')}
+                    >
+                      {t('END_GAME.THIS_TURN')}{' '}
+                      {turnSortField === 'totalValue' &&
+                        (turnSortDirection === 'desc' ? '↓' : '↑')}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {sortedTurnResults
+                    ? sortedTurnResults.map((turnData, ix) => {
+                        // Hide turn #0 for the non-first player
+                        const rowTurnNo =
+                          turnData.turnNo !== undefined
+                            ? turnData.turnNo
+                            : Object.keys(data.turnResults).indexOf(
+                                turnData.key
+                              );
+                        return (
+                          <tr
+                            key={`turnList${ix}`}
+                            className={
+                              hoveredChartTurn === rowTurnNo
+                                ? styles.chartHighlightedRow
+                                : undefined
+                            }
+                          >
+                            <td className={styles.turnNo}>
+                              {turnData.turnNo !== undefined
+                                ? turnData.turnNo
+                                : Object.keys(data.turnResults).indexOf(
+                                    turnData.key
+                                  )}
+                            </td>
+                            <td className={styles.played}>
+                              {turnData.cardsUsed}
+                            </td>
+                            <td className={styles.blocked}>
+                              {turnData.cardsBlocked}
+                            </td>
+                            <td className={styles.pitched}>
+                              {turnData.cardsPitched}
+                            </td>
+                            {!shouldHideCardsDiscarded && (
+                              <td className={styles.pitched}>
+                                {turnData.cardsDiscarded}
+                              </td>
+                            )}
+                            <td className={styles.pitched}>
+                              {turnData.cardsLeft}
+                            </td>
+                            <td className={styles.pitched}>
+                              {turnData.resourcesUsed}
+                            </td>
+                            <td className={styles.pitched}>
+                              {turnData.resourcesLeft}
+                            </td>
+                            <td className={styles.pitched}>
+                              {parseInt(
+                                String(turnData.damageThreatened),
+                                10
+                              ) || 0}
+                            </td>
+                            <td className={styles.pitched}>
+                              {parseInt(String(turnData.damageDealt), 10) || 0}
+                            </td>
+                            <td className={styles.pitched}>
+                              {turnData.damageBlocked}
+                            </td>
+                            {!shouldHideDamagePrevented && (
+                              <td className={styles.pitched}>
+                                {turnData.damagePrevented}
+                              </td>
+                            )}
+                            <td className={styles.pitched}>
+                              {turnData.damageTaken}
+                            </td>
+                            {!shouldHideLifeGained && (
+                              <td className={styles.pitched}>
+                                {turnData.lifeGained}
+                              </td>
+                            )}
+                            {!shouldHideLifeLost && (
+                              <td className={styles.pitched}>
+                                {turnData.lifeLost}
+                              </td>
+                            )}
+                            <td className={styles.pitched}>
+                              {(
+                                +turnData.damageThreatened +
+                                +turnData.damageBlocked +
+                                +turnData.damagePrevented +
+                                +turnData.lifeGained +
+                                +turnData.lifeLost
+                              ).toString()}
+                            </td>
+                          </tr>
+                        );
+                      })
+                    : !!data.turnResults &&
+                      Object.keys(data.turnResults).map((key, ix) => {
+                        const turnNo = data.turnResults[key]?.turnNo;
+                        const rowTurnNo = turnNo !== undefined ? turnNo : ix;
+                        // Hide turn #0 for the non-first player
+                        return (
+                          <tr
+                            key={`turnList${ix}`}
+                            className={
+                              hoveredChartTurn === rowTurnNo
+                                ? styles.chartHighlightedRow
+                                : undefined
+                            }
+                          >
+                            <td className={styles.turnNo}>
+                              {turnNo !== undefined ? turnNo : ix}
+                            </td>
+                            <td className={styles.played}>
+                              {/* @ts-ignore */}
+                              {data.turnResults[key]?.cardsUsed}
+                            </td>
+                            <td className={styles.blocked}>
+                              {/* @ts-ignore */}
+                              {data.turnResults[key]?.cardsBlocked}
+                            </td>
+                            <td className={styles.pitched}>
+                              {/* @ts-ignore */}
+                              {data.turnResults[key]?.cardsPitched}
+                            </td>
+                            {!shouldHideCardsDiscarded && (
+                              <td className={styles.pitched}>
+                                {/* @ts-ignore */}
+                                {data.turnResults[key]?.cardsDiscarded}
+                              </td>
+                            )}
+                            <td className={styles.pitched}>
+                              {/* @ts-ignore */}
+                              {data.turnResults[key]?.cardsLeft}
+                            </td>
+                            <td className={styles.pitched}>
+                              {/* @ts-ignore */}
+                              {data.turnResults[key]?.resourcesUsed}
+                            </td>
+                            <td className={styles.pitched}>
+                              {/* @ts-ignore */}
+                              {data.turnResults[key]?.resourcesLeft}
+                            </td>
+                            <td className={styles.pitched}>
+                              {/* @ts-ignore */}
+                              {parseInt(
+                                String(data.turnResults[key]?.damageThreatened),
+                                10
+                              ) || 0}
+                            </td>
+                            <td className={styles.pitched}>
+                              {/* @ts-ignore */}
+                              {parseInt(
+                                String(data.turnResults[key]?.damageDealt),
+                                10
+                              ) || 0}
+                            </td>
+                            <td className={styles.pitched}>
+                              {/* @ts-ignore */}
+                              {data.turnResults[key]?.damageBlocked}
+                            </td>
+                            {!shouldHideDamagePrevented && (
+                              <td className={styles.pitched}>
+                                {/* @ts-ignore */}
+                                {data.turnResults[key]?.damagePrevented}
+                              </td>
+                            )}
+                            <td className={styles.pitched}>
+                              {/* @ts-ignore */}
+                              {data.turnResults[key]?.damageTaken}
+                            </td>
+                            {!shouldHideLifeGained && (
+                              <td className={styles.pitched}>
+                                {/* @ts-ignore */}
+                                {data.turnResults[key]?.lifeGained}
+                              </td>
+                            )}
+                            {!shouldHideLifeLost && (
+                              <td className={styles.pitched}>
+                                {/* @ts-ignore */}
+                                {data.turnResults[key]?.lifeLost}
+                              </td>
+                            )}
+                            <td className={styles.pitched}>
+                              {/* @ts-ignore */}
+                              {(
+                                +data.turnResults[key]?.damageThreatened +
+                                +data.turnResults[key]?.damageBlocked +
+                                +data.turnResults[key]?.damagePrevented +
+                                +data.turnResults[key]?.lifeGained +
+                                +data.turnResults[key]?.lifeLost
+                              ).toString()}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                </tbody>
+              </table>
+            </ScrollableTable>
           </div>
         </div>
 
-        {/* Ad above Turn by Turn Breakdown */}
+        {/* Per Turn Charts - SVGs are converted to static images before html2canvas capture */}
+        {filteredChartData.length > 1 && (
+          <div className={`${styles.chartsGrid} ${styles.hideOnExport}`}>
+            {/* Chart 1: Value Per Turn with reference lines */}
+            <div className={styles.turnBreakdownSection}>
+              <h2 className={styles.sectionHeader}>
+                {t('END_GAME.VALUE_PER_TURN')}
+              </h2>
+              <ResponsiveContainer width="100%" height={220}>
+                <AreaChart
+                  data={filteredChartData}
+                  margin={{ top: 5, right: 16, left: 0, bottom: 5 }}
+                  onMouseMove={(e) => {
+                    if (e.activeLabel !== undefined)
+                      setHoveredChartTurn(Number(e.activeLabel));
+                  }}
+                  onMouseLeave={() => setHoveredChartTurn(null)}
+                >
+                  <defs>
+                    <linearGradient
+                      id="egsColorValue"
+                      x1="0"
+                      y1="0"
+                      x2="0"
+                      y2="1"
+                    >
+                      <stop
+                        offset="5%"
+                        stopColor={chartColors.you}
+                        stopOpacity={0.3}
+                      />
+                      <stop
+                        offset="95%"
+                        stopColor={chartColors.you}
+                        stopOpacity={0}
+                      />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke="rgba(255,255,255,0.07)"
+                  />
+                  <XAxis
+                    dataKey="turn"
+                    stroke="rgba(255,255,255,0.25)"
+                    tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }}
+                  />
+                  <YAxis
+                    stroke="rgba(255,255,255,0.25)"
+                    tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }}
+                    width={30}
+                  />
+                  <Tooltip
+                    content={<ChartTooltip />}
+                    cursor={{ stroke: 'rgba(255,255,255,0.15)' }}
+                  />
+                  {avgChartValue > 0 && (
+                    <ReferenceLine
+                      y={avgChartValue}
+                      stroke="rgba(255,255,255,0.3)"
+                      strokeDasharray="5 3"
+                      label={{
+                        value: t('END_GAME.AVG_LABEL', {
+                          value: avgChartValue
+                        }),
+                        position: 'insideTopLeft',
+                        fill: 'rgba(255,255,255,0.4)',
+                        fontSize: 10
+                      }}
+                    />
+                  )}
+                  <Area
+                    type="monotone"
+                    dataKey="avgValue"
+                    name={t('END_GAME.VALUE')}
+                    stroke={chartColors.you}
+                    strokeWidth={2}
+                    fill="url(#egsColorValue)"
+                    dot={false}
+                    activeDot={{ r: 4, fill: chartColors.you }}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+
+            {/* Chart 2: Life Totals - both heroes overlaid */}
+            <div className={styles.turnBreakdownSection}>
+              <h2 className={styles.sectionHeader}>
+                {t('END_GAME.LIFE_TOTALS')}
+              </h2>
+              <ResponsiveContainer width="100%" height={220}>
+                <AreaChart
+                  data={lifeChartData}
+                  margin={{ top: 5, right: 16, left: 0, bottom: 5 }}
+                  onMouseMove={(e) => {
+                    if (e.activeLabel !== undefined)
+                      setHoveredChartTurn(Number(e.activeLabel));
+                  }}
+                  onMouseLeave={() => setHoveredChartTurn(null)}
+                >
+                  <defs>
+                    <linearGradient
+                      id="egsColorYourLife"
+                      x1="0"
+                      y1="0"
+                      x2="0"
+                      y2="1"
+                    >
+                      <stop
+                        offset="5%"
+                        stopColor={chartColors.you}
+                        stopOpacity={0.2}
+                      />
+                      <stop
+                        offset="95%"
+                        stopColor={chartColors.you}
+                        stopOpacity={0}
+                      />
+                    </linearGradient>
+                    <linearGradient
+                      id="egsColorOppLife"
+                      x1="0"
+                      y1="0"
+                      x2="0"
+                      y2="1"
+                    >
+                      <stop
+                        offset="5%"
+                        stopColor={chartColors.opponent}
+                        stopOpacity={0.15}
+                      />
+                      <stop
+                        offset="95%"
+                        stopColor={chartColors.opponent}
+                        stopOpacity={0}
+                      />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke="rgba(255,255,255,0.07)"
+                  />
+                  <XAxis
+                    dataKey="turn"
+                    stroke="rgba(255,255,255,0.25)"
+                    tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }}
+                    tickFormatter={(v) =>
+                      v === 0 ? t('END_GAME.START') : String(v)
+                    }
+                  />
+                  <YAxis
+                    stroke="rgba(255,255,255,0.25)"
+                    tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }}
+                    width={30}
+                    domain={[0, 'auto']}
+                  />
+                  <Tooltip
+                    content={<ChartTooltip />}
+                    cursor={{ stroke: 'rgba(255,255,255,0.15)' }}
+                  />
+                  <Legend
+                    verticalAlign="top"
+                    content={() => (
+                      <div
+                        style={{
+                          display: 'flex',
+                          gap: '12px',
+                          justifyContent: 'center',
+                          fontSize: '0.68em',
+                          paddingBottom: '6px',
+                          color: 'rgba(255,255,255,0.6)'
+                        }}
+                      >
+                        <span
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '4px'
+                          }}
+                        >
+                          <svg width="14" height="4">
+                            <line
+                              x1="0"
+                              y1="2"
+                              x2="14"
+                              y2="2"
+                              stroke={chartColors.you}
+                              strokeWidth="2"
+                            />
+                          </svg>
+                          {t('END_GAME.YOUR_LIFE')}
+                        </span>
+                        <span
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '4px'
+                          }}
+                        >
+                          <svg width="14" height="4">
+                            <line
+                              x1="0"
+                              y1="2"
+                              x2="14"
+                              y2="2"
+                              stroke={chartColors.opponent}
+                              strokeWidth="2"
+                            />
+                          </svg>
+                          {t('END_GAME.OPP_LIFE')}
+                        </span>
+                      </div>
+                    )}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="opponentLife"
+                    name={t('END_GAME.OPP_LIFE')}
+                    stroke={chartColors.opponent}
+                    strokeWidth={2}
+                    fill="url(#egsColorOppLife)"
+                    dot={false}
+                    activeDot={{ r: 4, fill: chartColors.opponent }}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="yourLife"
+                    name={t('END_GAME.YOUR_LIFE')}
+                    stroke={chartColors.you}
+                    strokeWidth={2}
+                    fill="url(#egsColorYourLife)"
+                    dot={false}
+                    activeDot={{ r: 4, fill: chartColors.you }}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+
+            {/* Chart 3: Pressure Exchange - your threatened vs damage taken */}
+            <div className={styles.turnBreakdownSection}>
+              <h2 className={styles.sectionHeader}>
+                {t('END_GAME.PRESSURE_EXCHANGE')}
+              </h2>
+              <ResponsiveContainer width="100%" height={220}>
+                <AreaChart
+                  data={filteredChartData}
+                  margin={{ top: 5, right: 16, left: 0, bottom: 5 }}
+                  onMouseMove={(e) => {
+                    if (e.activeLabel !== undefined)
+                      setHoveredChartTurn(Number(e.activeLabel));
+                  }}
+                  onMouseLeave={() => setHoveredChartTurn(null)}
+                >
+                  <defs>
+                    <linearGradient
+                      id="egsColorThreatened2"
+                      x1="0"
+                      y1="0"
+                      x2="0"
+                      y2="1"
+                    >
+                      <stop
+                        offset="5%"
+                        stopColor={chartColors.you}
+                        stopOpacity={0.25}
+                      />
+                      <stop
+                        offset="95%"
+                        stopColor={chartColors.you}
+                        stopOpacity={0}
+                      />
+                    </linearGradient>
+                    <linearGradient
+                      id="egsColorTaken"
+                      x1="0"
+                      y1="0"
+                      x2="0"
+                      y2="1"
+                    >
+                      <stop
+                        offset="5%"
+                        stopColor={chartColors.opponent}
+                        stopOpacity={0.2}
+                      />
+                      <stop
+                        offset="95%"
+                        stopColor={chartColors.opponent}
+                        stopOpacity={0}
+                      />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke="rgba(255,255,255,0.07)"
+                  />
+                  <XAxis
+                    dataKey="turn"
+                    stroke="rgba(255,255,255,0.25)"
+                    tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }}
+                  />
+                  <YAxis
+                    stroke="rgba(255,255,255,0.25)"
+                    tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }}
+                    width={30}
+                  />
+                  <Tooltip
+                    content={<ChartTooltip />}
+                    cursor={{ stroke: 'rgba(255,255,255,0.15)' }}
+                  />
+                  <Legend
+                    verticalAlign="top"
+                    content={() => (
+                      <div
+                        style={{
+                          display: 'flex',
+                          gap: '12px',
+                          justifyContent: 'center',
+                          fontSize: '0.68em',
+                          paddingBottom: '6px',
+                          color: 'rgba(255,255,255,0.6)'
+                        }}
+                      >
+                        <span
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '4px'
+                          }}
+                        >
+                          <svg width="14" height="4">
+                            <line
+                              x1="0"
+                              y1="2"
+                              x2="14"
+                              y2="2"
+                              stroke={chartColors.you}
+                              strokeWidth="2"
+                            />
+                          </svg>
+                          {t('END_GAME.YOU_THREATENED')}
+                        </span>
+                        <span
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '4px'
+                          }}
+                        >
+                          <svg width="14" height="4">
+                            <line
+                              x1="0"
+                              y1="2"
+                              x2="14"
+                              y2="2"
+                              stroke={chartColors.opponent}
+                              strokeWidth="2"
+                            />
+                          </svg>
+                          {t('END_GAME.YOU_TOOK')}
+                        </span>
+                      </div>
+                    )}
+                  />
+                  {avgThreatenedValue > 0 && (
+                    <ReferenceLine
+                      y={avgThreatenedValue}
+                      stroke="rgba(255,255,255,0.3)"
+                      strokeDasharray="5 3"
+                      label={{
+                        value: t('END_GAME.AVG_LABEL', {
+                          value: avgThreatenedValue
+                        }),
+                        position: 'insideTopLeft',
+                        fill: 'rgba(255,255,255,0.4)',
+                        fontSize: 10
+                      }}
+                    />
+                  )}
+                  <Area
+                    type="monotone"
+                    dataKey="avgThreatened"
+                    name={t('END_GAME.YOU_THREATENED')}
+                    stroke={chartColors.you}
+                    strokeWidth={2}
+                    fill="url(#egsColorThreatened2)"
+                    dot={false}
+                    activeDot={{ r: 4, fill: chartColors.you }}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="damageTaken"
+                    name={t('END_GAME.YOU_TOOK')}
+                    stroke={chartColors.opponent}
+                    strokeWidth={2}
+                    fill="url(#egsColorTaken)"
+                    dot={false}
+                    activeDot={{ r: 4, fill: chartColors.opponent }}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        )}
+
+        {/* Ad under charts */}
         {showAds && (
           <div className={`${styles.adBlock} ${styles.hideOnExport}`}>
             {!isSupporter && (
               <div className={styles.adHeader}>
                 <a
-                  href={TALISHAR_METAFY_URL}
+                  href="https://metafy.gg/@talishar/members"
                   target="_blank"
                   rel="noopener noreferrer"
                   className={styles.removeAdsLink}
@@ -2049,899 +2970,14 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>((data, ref) 
                 </a>
               </div>
             )}
-            <AdUnit placement="billboard-1" className={styles.desktopAd} />
-            <AdUnit placement="mobile-unit-1" className={styles.mobileAd} />
+            <AdUnit placement="billboard-2" className={styles.desktopAd} />
+            <AdUnit placement="mobile-unit-2" className={styles.mobileAd} />
           </div>
         )}
-
-        {/* Turn by Turn Breakdown - Full Width Section */}
-        <div className={styles.turnBreakdownSection}>
-          <h2 className={styles.sectionHeader}>
-            {t('END_GAME.TURN_BY_TURN_BREAKDOWN')}
-            <span
-              className={styles.tooltipIconBreakdown}
-              data-tooltip={t('END_GAME.TURN_BREAKDOWN_TOOLTIP')}
-            >
-              ?
-            </span>
-          </h2>
-          <ScrollableTable>
-            <table className={styles.cardTable}>
-              <thead>
-                <tr>
-                  <th
-                    className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
-                  >
-                    {t('END_GAME.TURN')}
-                  </th>
-                  <th
-                    colSpan={shouldHideCardsDiscarded ? 4 : 5}
-                    className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
-                  >
-                    {t('END_GAME.CARDS')}
-                  </th>
-                  <th
-                    colSpan={2}
-                    className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
-                  >
-                    {t('END_GAME.RESOURCES')}
-                  </th>
-                  <th
-                    colSpan={shouldHideDamagePrevented ? 4 : 5}
-                    className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
-                  >
-                    {t('END_GAME.DAMAGE')}
-                  </th>
-                  {lifeColSpan > 0 && (
-                    <th
-                      colSpan={lifeColSpan}
-                      className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
-                    >
-                      {t('END_GAME.LIFE')}
-                    </th>
-                  )}
-                  <th colSpan={1} className={styles.headersStats}>
-                    {t('END_GAME.VALUE')}
-                  </th>
-                </tr>
-                <tr>
-                  <th
-                    {...getSortableHeaderProps(
-                      () => handleTurnSort('turnNo'),
-                      turnSortField === 'turnNo',
-                      turnSortDirection
-                    )}
-                    className={styles.sortableHeader}
-                    title={t('END_GAME.CLICK_TO_SORT')}
-                  >
-                    #{' '}
-                    {turnSortField === 'turnNo' &&
-                      (turnSortDirection === 'desc' ? '↓' : '↑')}
-                  </th>
-                  <th
-                    {...getSortableHeaderProps(
-                      () => handleTurnSort('cardsUsed'),
-                      turnSortField === 'cardsUsed',
-                      turnSortDirection
-                    )}
-                    className={styles.sortableHeader}
-                    title={t('END_GAME.CLICK_TO_SORT')}
-                  >
-                    {t('END_GAME.PLAYED')}{' '}
-                    {turnSortField === 'cardsUsed' &&
-                      (turnSortDirection === 'desc' ? '↓' : '↑')}
-                  </th>
-                  <th
-                    {...getSortableHeaderProps(
-                      () => handleTurnSort('cardsBlocked'),
-                      turnSortField === 'cardsBlocked',
-                      turnSortDirection
-                    )}
-                    className={styles.sortableHeader}
-                    title={t('END_GAME.CLICK_TO_SORT')}
-                  >
-                    {t('END_GAME.BLOCKED')}{' '}
-                    {turnSortField === 'cardsBlocked' &&
-                      (turnSortDirection === 'desc' ? '↓' : '↑')}
-                  </th>
-                  <th
-                    {...getSortableHeaderProps(
-                      () => handleTurnSort('cardsPitched'),
-                      turnSortField === 'cardsPitched',
-                      turnSortDirection
-                    )}
-                    className={styles.sortableHeader}
-                    title={t('END_GAME.CLICK_TO_SORT')}
-                  >
-                    {t('END_GAME.PITCHED')}{' '}
-                    {turnSortField === 'cardsPitched' &&
-                      (turnSortDirection === 'desc' ? '↓' : '↑')}
-                  </th>
-                  {!shouldHideCardsDiscarded && (
-                    <th
-                      {...getSortableHeaderProps(
-                        () => handleTurnSort('cardsDiscarded'),
-                        turnSortField === 'cardsDiscarded',
-                        turnSortDirection
-                      )}
-                      className={styles.sortableHeader}
-                      title={t('END_GAME.CLICK_TO_SORT')}
-                    >
-                      {t('END_GAME.DISCARDED')}{' '}
-                      {turnSortField === 'cardsDiscarded' &&
-                        (turnSortDirection === 'desc' ? '↓' : '↑')}
-                    </th>
-                  )}
-                  <th
-                    {...getSortableHeaderProps(
-                      () => handleTurnSort('cardsLeft'),
-                      turnSortField === 'cardsLeft',
-                      turnSortDirection
-                    )}
-                    className={styles.sortableHeader}
-                    title={t('END_GAME.CLICK_TO_SORT')}
-                  >
-                    {t('END_GAME.LEFT')}{' '}
-                    {turnSortField === 'cardsLeft' &&
-                      (turnSortDirection === 'desc' ? '↓' : '↑')}
-                  </th>
-                  <th
-                    {...getSortableHeaderProps(
-                      () => handleTurnSort('resourcesUsed'),
-                      turnSortField === 'resourcesUsed',
-                      turnSortDirection
-                    )}
-                    className={styles.sortableHeader}
-                    title={t('END_GAME.CLICK_TO_SORT')}
-                  >
-                    {t('END_GAME.USED')}{' '}
-                    {turnSortField === 'resourcesUsed' &&
-                      (turnSortDirection === 'desc' ? '↓' : '↑')}
-                  </th>
-                  <th
-                    {...getSortableHeaderProps(
-                      () => handleTurnSort('resourcesLeft'),
-                      turnSortField === 'resourcesLeft',
-                      turnSortDirection
-                    )}
-                    className={styles.sortableHeader}
-                    title={t('END_GAME.CLICK_TO_SORT')}
-                  >
-                    {t('END_GAME.LEFT')}{' '}
-                    {turnSortField === 'resourcesLeft' &&
-                      (turnSortDirection === 'desc' ? '↓' : '↑')}
-                  </th>
-                  <th
-                    {...getSortableHeaderProps(
-                      () => handleTurnSort('damageThreatened'),
-                      turnSortField === 'damageThreatened',
-                      turnSortDirection
-                    )}
-                    className={styles.sortableHeader}
-                    title={t('END_GAME.CLICK_TO_SORT')}
-                  >
-                    {t('END_GAME.THREATENED')}{' '}
-                    {turnSortField === 'damageThreatened' &&
-                      (turnSortDirection === 'desc' ? '↓' : '↑')}
-                  </th>
-                  <th
-                    {...getSortableHeaderProps(
-                      () => handleTurnSort('damageDealt'),
-                      turnSortField === 'damageDealt',
-                      turnSortDirection
-                    )}
-                    className={styles.sortableHeader}
-                    title={t('END_GAME.CLICK_TO_SORT')}
-                  >
-                    {t('END_GAME.DEALT')}{' '}
-                    {turnSortField === 'damageDealt' &&
-                      (turnSortDirection === 'desc' ? '↓' : '↑')}
-                  </th>
-                  <th
-                    {...getSortableHeaderProps(
-                      () => handleTurnSort('damageBlocked'),
-                      turnSortField === 'damageBlocked',
-                      turnSortDirection
-                    )}
-                    className={styles.sortableHeader}
-                    title={t('END_GAME.CLICK_TO_SORT')}
-                  >
-                    {t('END_GAME.BLOCKED')}{' '}
-                    {turnSortField === 'damageBlocked' &&
-                      (turnSortDirection === 'desc' ? '↓' : '↑')}
-                  </th>
-                  {!shouldHideDamagePrevented && (
-                    <th
-                      {...getSortableHeaderProps(
-                        () => handleTurnSort('damagePrevented'),
-                        turnSortField === 'damagePrevented',
-                        turnSortDirection
-                      )}
-                      className={styles.sortableHeader}
-                      title={t('END_GAME.PREVENTED_TOOLTIP')}
-                    >
-                      {t('END_GAME.PREVENTED')}{' '}
-                      {turnSortField === 'damagePrevented' &&
-                        (turnSortDirection === 'desc' ? '↓' : '↑')}
-                    </th>
-                  )}
-                  <th
-                    {...getSortableHeaderProps(
-                      () => handleTurnSort('damageTaken'),
-                      turnSortField === 'damageTaken',
-                      turnSortDirection
-                    )}
-                    className={styles.sortableHeader}
-                    title={t('END_GAME.CLICK_TO_SORT')}
-                  >
-                    {t('END_GAME.TAKEN')}{' '}
-                    {turnSortField === 'damageTaken' &&
-                      (turnSortDirection === 'desc' ? '↓' : '↑')}
-                  </th>
-                  {!shouldHideLifeGained && (
-                    <th
-                      {...getSortableHeaderProps(
-                        () => handleTurnSort('lifeGained'),
-                        turnSortField === 'lifeGained',
-                        turnSortDirection
-                      )}
-                      className={styles.sortableHeader}
-                      title={t('END_GAME.CLICK_TO_SORT')}
-                    >
-                      {t('END_GAME.LIFE_GAINED')}{' '}
-                      {turnSortField === 'lifeGained' &&
-                        (turnSortDirection === 'desc' ? '↓' : '↑')}
-                    </th>
-                  )}
-                  {!shouldHideLifeLost && (
-                    <th
-                      {...getSortableHeaderProps(
-                        () => handleTurnSort('lifeLost'),
-                        turnSortField === 'lifeLost',
-                        turnSortDirection
-                      )}
-                      className={styles.sortableHeader}
-                      title={t('END_GAME.CLICK_TO_SORT')}
-                    >
-                      {t('END_GAME.SELF_LOST')}{' '}
-                      {turnSortField === 'lifeLost' &&
-                        (turnSortDirection === 'desc' ? '↓' : '↑')}
-                    </th>
-                  )}
-                  <th
-                    {...getSortableHeaderProps(
-                      () => handleTurnSort('totalValue'),
-                      turnSortField === 'totalValue',
-                      turnSortDirection
-                    )}
-                    className={styles.sortableHeader}
-                    title={t('END_GAME.CLICK_TO_SORT')}
-                  >
-                    {t('END_GAME.THIS_TURN')}{' '}
-                    {turnSortField === 'totalValue' &&
-                      (turnSortDirection === 'desc' ? '↓' : '↑')}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {sortedTurnResults
-                  ? sortedTurnResults.map((turnData, ix) => {
-                      // Hide turn #0 for the non-first player
-                      const rowTurnNo =
-                        turnData.turnNo !== undefined
-                          ? turnData.turnNo
-                          : Object.keys(data.turnResults).indexOf(turnData.key);
-                      return (
-                        <tr
-                          key={`turnList${ix}`}
-                          className={
-                            hoveredChartTurn === rowTurnNo
-                              ? styles.chartHighlightedRow
-                              : undefined
-                          }
-                        >
-                          <td className={styles.turnNo}>
-                            {turnData.turnNo !== undefined
-                              ? turnData.turnNo
-                              : Object.keys(data.turnResults).indexOf(
-                                  turnData.key
-                                )}
-                          </td>
-                          <td className={styles.played}>
-                            {turnData.cardsUsed}
-                          </td>
-                          <td className={styles.blocked}>
-                            {turnData.cardsBlocked}
-                          </td>
-                          <td className={styles.pitched}>
-                            {turnData.cardsPitched}
-                          </td>
-                          {!shouldHideCardsDiscarded && (
-                            <td className={styles.pitched}>
-                              {turnData.cardsDiscarded}
-                            </td>
-                          )}
-                          <td className={styles.pitched}>
-                            {turnData.cardsLeft}
-                          </td>
-                          <td className={styles.pitched}>
-                            {turnData.resourcesUsed}
-                          </td>
-                          <td className={styles.pitched}>
-                            {turnData.resourcesLeft}
-                          </td>
-                          <td className={styles.pitched}>
-                            {parseInt(String(turnData.damageThreatened), 10) ||
-                              0}
-                          </td>
-                          <td className={styles.pitched}>
-                            {parseInt(String(turnData.damageDealt), 10) || 0}
-                          </td>
-                          <td className={styles.pitched}>
-                            {turnData.damageBlocked}
-                          </td>
-                          {!shouldHideDamagePrevented && (
-                            <td className={styles.pitched}>
-                              {turnData.damagePrevented}
-                            </td>
-                          )}
-                          <td className={styles.pitched}>
-                            {turnData.damageTaken}
-                          </td>
-                          {!shouldHideLifeGained && (
-                            <td className={styles.pitched}>
-                              {turnData.lifeGained}
-                            </td>
-                          )}
-                          {!shouldHideLifeLost && (
-                            <td className={styles.pitched}>
-                              {turnData.lifeLost}
-                            </td>
-                          )}
-                          <td className={styles.pitched}>
-                            {(
-                              +turnData.damageThreatened +
-                              +turnData.damageBlocked +
-                              +turnData.damagePrevented +
-                              +turnData.lifeGained +
-                              +turnData.lifeLost
-                            ).toString()}
-                          </td>
-                        </tr>
-                      );
-                    })
-                  : !!data.turnResults &&
-                    Object.keys(data.turnResults).map((key, ix) => {
-                      const turnNo = data.turnResults[key]?.turnNo;
-                      const rowTurnNo = turnNo !== undefined ? turnNo : ix;
-                      // Hide turn #0 for the non-first player
-                      return (
-                        <tr
-                          key={`turnList${ix}`}
-                          className={
-                            hoveredChartTurn === rowTurnNo
-                              ? styles.chartHighlightedRow
-                              : undefined
-                          }
-                        >
-                          <td className={styles.turnNo}>
-                            {turnNo !== undefined ? turnNo : ix}
-                          </td>
-                          <td className={styles.played}>
-                            {/* @ts-ignore */}
-                            {data.turnResults[key]?.cardsUsed}
-                          </td>
-                          <td className={styles.blocked}>
-                            {/* @ts-ignore */}
-                            {data.turnResults[key]?.cardsBlocked}
-                          </td>
-                          <td className={styles.pitched}>
-                            {/* @ts-ignore */}
-                            {data.turnResults[key]?.cardsPitched}
-                          </td>
-                          {!shouldHideCardsDiscarded && (
-                            <td className={styles.pitched}>
-                              {/* @ts-ignore */}
-                              {data.turnResults[key]?.cardsDiscarded}
-                            </td>
-                          )}
-                          <td className={styles.pitched}>
-                            {/* @ts-ignore */}
-                            {data.turnResults[key]?.cardsLeft}
-                          </td>
-                          <td className={styles.pitched}>
-                            {/* @ts-ignore */}
-                            {data.turnResults[key]?.resourcesUsed}
-                          </td>
-                          <td className={styles.pitched}>
-                            {/* @ts-ignore */}
-                            {data.turnResults[key]?.resourcesLeft}
-                          </td>
-                          <td className={styles.pitched}>
-                            {/* @ts-ignore */}
-                            {parseInt(
-                              String(data.turnResults[key]?.damageThreatened),
-                              10
-                            ) || 0}
-                          </td>
-                          <td className={styles.pitched}>
-                            {/* @ts-ignore */}
-                            {parseInt(
-                              String(data.turnResults[key]?.damageDealt),
-                              10
-                            ) || 0}
-                          </td>
-                          <td className={styles.pitched}>
-                            {/* @ts-ignore */}
-                            {data.turnResults[key]?.damageBlocked}
-                          </td>
-                          {!shouldHideDamagePrevented && (
-                            <td className={styles.pitched}>
-                              {/* @ts-ignore */}
-                              {data.turnResults[key]?.damagePrevented}
-                            </td>
-                          )}
-                          <td className={styles.pitched}>
-                            {/* @ts-ignore */}
-                            {data.turnResults[key]?.damageTaken}
-                          </td>
-                          {!shouldHideLifeGained && (
-                            <td className={styles.pitched}>
-                              {/* @ts-ignore */}
-                              {data.turnResults[key]?.lifeGained}
-                            </td>
-                          )}
-                          {!shouldHideLifeLost && (
-                            <td className={styles.pitched}>
-                              {/* @ts-ignore */}
-                              {data.turnResults[key]?.lifeLost}
-                            </td>
-                          )}
-                          <td className={styles.pitched}>
-                            {/* @ts-ignore */}
-                            {(
-                              +data.turnResults[key]?.damageThreatened +
-                              +data.turnResults[key]?.damageBlocked +
-                              +data.turnResults[key]?.damagePrevented +
-                              +data.turnResults[key]?.lifeGained +
-                              +data.turnResults[key]?.lifeLost
-                            ).toString()}
-                          </td>
-                        </tr>
-                      );
-                    })}
-              </tbody>
-            </table>
-          </ScrollableTable>
-        </div>
       </div>
-
-      {/* Per Turn Charts - SVGs are converted to static images before html2canvas capture */}
-      {filteredChartData.length > 1 && (
-        <div className={`${styles.chartsGrid} ${styles.hideOnExport}`}>
-          {/* Chart 1: Value Per Turn with reference lines */}
-          <div className={styles.turnBreakdownSection}>
-            <h2 className={styles.sectionHeader}>
-              {t('END_GAME.VALUE_PER_TURN')}
-            </h2>
-            <ResponsiveContainer width="100%" height={220}>
-              <AreaChart
-                data={filteredChartData}
-                margin={{ top: 5, right: 16, left: 0, bottom: 5 }}
-                onMouseMove={(e) => {
-                  if (e.activeLabel !== undefined)
-                    setHoveredChartTurn(Number(e.activeLabel));
-                }}
-                onMouseLeave={() => setHoveredChartTurn(null)}
-              >
-                <defs>
-                  <linearGradient
-                    id="egsColorValue"
-                    x1="0"
-                    y1="0"
-                    x2="0"
-                    y2="1"
-                  >
-                    <stop
-                      offset="5%"
-                      stopColor={chartColors.you}
-                      stopOpacity={0.3}
-                    />
-                    <stop
-                      offset="95%"
-                      stopColor={chartColors.you}
-                      stopOpacity={0}
-                    />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid
-                  strokeDasharray="3 3"
-                  stroke="rgba(255,255,255,0.07)"
-                />
-                <XAxis
-                  dataKey="turn"
-                  stroke="rgba(255,255,255,0.25)"
-                  tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }}
-                />
-                <YAxis
-                  stroke="rgba(255,255,255,0.25)"
-                  tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }}
-                  width={30}
-                />
-                <Tooltip
-                  content={<ChartTooltip />}
-                  cursor={{ stroke: 'rgba(255,255,255,0.15)' }}
-                />
-                {avgChartValue > 0 && (
-                  <ReferenceLine
-                    y={avgChartValue}
-                    stroke="rgba(255,255,255,0.3)"
-                    strokeDasharray="5 3"
-                    label={{
-                      value: t('END_GAME.AVG_LABEL', {
-                        value: avgChartValue
-                      }),
-                      position: 'insideTopLeft',
-                      fill: 'rgba(255,255,255,0.4)',
-                      fontSize: 10
-                    }}
-                  />
-                )}
-                <Area
-                  type="monotone"
-                  dataKey="avgValue"
-                  name={t('END_GAME.VALUE')}
-                  stroke={chartColors.you}
-                  strokeWidth={2}
-                  fill="url(#egsColorValue)"
-                  dot={false}
-                  activeDot={{ r: 4, fill: chartColors.you }}
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-
-          {/* Chart 2: Life Totals - both heroes overlaid */}
-          <div className={styles.turnBreakdownSection}>
-            <h2 className={styles.sectionHeader}>
-              {t('END_GAME.LIFE_TOTALS')}
-            </h2>
-            <ResponsiveContainer width="100%" height={220}>
-              <AreaChart
-                data={lifeChartData}
-                margin={{ top: 5, right: 16, left: 0, bottom: 5 }}
-                onMouseMove={(e) => {
-                  if (e.activeLabel !== undefined)
-                    setHoveredChartTurn(Number(e.activeLabel));
-                }}
-                onMouseLeave={() => setHoveredChartTurn(null)}
-              >
-                <defs>
-                  <linearGradient
-                    id="egsColorYourLife"
-                    x1="0"
-                    y1="0"
-                    x2="0"
-                    y2="1"
-                  >
-                    <stop
-                      offset="5%"
-                      stopColor={chartColors.you}
-                      stopOpacity={0.2}
-                    />
-                    <stop
-                      offset="95%"
-                      stopColor={chartColors.you}
-                      stopOpacity={0}
-                    />
-                  </linearGradient>
-                  <linearGradient
-                    id="egsColorOppLife"
-                    x1="0"
-                    y1="0"
-                    x2="0"
-                    y2="1"
-                  >
-                    <stop
-                      offset="5%"
-                      stopColor={chartColors.opponent}
-                      stopOpacity={0.15}
-                    />
-                    <stop
-                      offset="95%"
-                      stopColor={chartColors.opponent}
-                      stopOpacity={0}
-                    />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid
-                  strokeDasharray="3 3"
-                  stroke="rgba(255,255,255,0.07)"
-                />
-                <XAxis
-                  dataKey="turn"
-                  stroke="rgba(255,255,255,0.25)"
-                  tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }}
-                  tickFormatter={(v) =>
-                    v === 0 ? t('END_GAME.START') : String(v)
-                  }
-                />
-                <YAxis
-                  stroke="rgba(255,255,255,0.25)"
-                  tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }}
-                  width={30}
-                  domain={[0, 'auto']}
-                />
-                <Tooltip
-                  content={<ChartTooltip />}
-                  cursor={{ stroke: 'rgba(255,255,255,0.15)' }}
-                />
-                <Legend
-                  verticalAlign="top"
-                  content={() => (
-                    <div
-                      style={{
-                        display: 'flex',
-                        gap: '12px',
-                        justifyContent: 'center',
-                        fontSize: '0.68em',
-                        paddingBottom: '6px',
-                        color: 'rgba(255,255,255,0.6)'
-                      }}
-                    >
-                      <span
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '4px'
-                        }}
-                      >
-                        <svg width="14" height="4">
-                          <line
-                            x1="0"
-                            y1="2"
-                            x2="14"
-                            y2="2"
-                            stroke={chartColors.you}
-                            strokeWidth="2"
-                          />
-                        </svg>
-                        {t('END_GAME.YOUR_LIFE')}
-                      </span>
-                      <span
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '4px'
-                        }}
-                      >
-                        <svg width="14" height="4">
-                          <line
-                            x1="0"
-                            y1="2"
-                            x2="14"
-                            y2="2"
-                            stroke={chartColors.opponent}
-                            strokeWidth="2"
-                          />
-                        </svg>
-                        {t('END_GAME.OPP_LIFE')}
-                      </span>
-                    </div>
-                  )}
-                />
-                <Area
-                  type="monotone"
-                  dataKey="opponentLife"
-                  name={t('END_GAME.OPP_LIFE')}
-                  stroke={chartColors.opponent}
-                  strokeWidth={2}
-                  fill="url(#egsColorOppLife)"
-                  dot={false}
-                  activeDot={{ r: 4, fill: chartColors.opponent }}
-                />
-                <Area
-                  type="monotone"
-                  dataKey="yourLife"
-                  name={t('END_GAME.YOUR_LIFE')}
-                  stroke={chartColors.you}
-                  strokeWidth={2}
-                  fill="url(#egsColorYourLife)"
-                  dot={false}
-                  activeDot={{ r: 4, fill: chartColors.you }}
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-
-          {/* Chart 3: Pressure Exchange - your threatened vs damage taken */}
-          <div className={styles.turnBreakdownSection}>
-            <h2 className={styles.sectionHeader}>
-              {t('END_GAME.PRESSURE_EXCHANGE')}
-            </h2>
-            <ResponsiveContainer width="100%" height={220}>
-              <AreaChart
-                data={filteredChartData}
-                margin={{ top: 5, right: 16, left: 0, bottom: 5 }}
-                onMouseMove={(e) => {
-                  if (e.activeLabel !== undefined)
-                    setHoveredChartTurn(Number(e.activeLabel));
-                }}
-                onMouseLeave={() => setHoveredChartTurn(null)}
-              >
-                <defs>
-                  <linearGradient
-                    id="egsColorThreatened2"
-                    x1="0"
-                    y1="0"
-                    x2="0"
-                    y2="1"
-                  >
-                    <stop
-                      offset="5%"
-                      stopColor={chartColors.you}
-                      stopOpacity={0.25}
-                    />
-                    <stop
-                      offset="95%"
-                      stopColor={chartColors.you}
-                      stopOpacity={0}
-                    />
-                  </linearGradient>
-                  <linearGradient
-                    id="egsColorTaken"
-                    x1="0"
-                    y1="0"
-                    x2="0"
-                    y2="1"
-                  >
-                    <stop
-                      offset="5%"
-                      stopColor={chartColors.opponent}
-                      stopOpacity={0.2}
-                    />
-                    <stop
-                      offset="95%"
-                      stopColor={chartColors.opponent}
-                      stopOpacity={0}
-                    />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid
-                  strokeDasharray="3 3"
-                  stroke="rgba(255,255,255,0.07)"
-                />
-                <XAxis
-                  dataKey="turn"
-                  stroke="rgba(255,255,255,0.25)"
-                  tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }}
-                />
-                <YAxis
-                  stroke="rgba(255,255,255,0.25)"
-                  tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }}
-                  width={30}
-                />
-                <Tooltip
-                  content={<ChartTooltip />}
-                  cursor={{ stroke: 'rgba(255,255,255,0.15)' }}
-                />
-                <Legend
-                  verticalAlign="top"
-                  content={() => (
-                    <div
-                      style={{
-                        display: 'flex',
-                        gap: '12px',
-                        justifyContent: 'center',
-                        fontSize: '0.68em',
-                        paddingBottom: '6px',
-                        color: 'rgba(255,255,255,0.6)'
-                      }}
-                    >
-                      <span
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '4px'
-                        }}
-                      >
-                        <svg width="14" height="4">
-                          <line
-                            x1="0"
-                            y1="2"
-                            x2="14"
-                            y2="2"
-                            stroke={chartColors.you}
-                            strokeWidth="2"
-                          />
-                        </svg>
-                        {t('END_GAME.YOU_THREATENED')}
-                      </span>
-                      <span
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '4px'
-                        }}
-                      >
-                        <svg width="14" height="4">
-                          <line
-                            x1="0"
-                            y1="2"
-                            x2="14"
-                            y2="2"
-                            stroke={chartColors.opponent}
-                            strokeWidth="2"
-                          />
-                        </svg>
-                        {t('END_GAME.YOU_TOOK')}
-                      </span>
-                    </div>
-                  )}
-                />
-                {avgThreatenedValue > 0 && (
-                  <ReferenceLine
-                    y={avgThreatenedValue}
-                    stroke="rgba(255,255,255,0.3)"
-                    strokeDasharray="5 3"
-                    label={{
-                      value: t('END_GAME.AVG_LABEL', {
-                        value: avgThreatenedValue
-                      }),
-                      position: 'insideTopLeft',
-                      fill: 'rgba(255,255,255,0.4)',
-                      fontSize: 10
-                    }}
-                  />
-                )}
-                <Area
-                  type="monotone"
-                  dataKey="avgThreatened"
-                  name={t('END_GAME.YOU_THREATENED')}
-                  stroke={chartColors.you}
-                  strokeWidth={2}
-                  fill="url(#egsColorThreatened2)"
-                  dot={false}
-                  activeDot={{ r: 4, fill: chartColors.you }}
-                />
-                <Area
-                  type="monotone"
-                  dataKey="damageTaken"
-                  name={t('END_GAME.YOU_TOOK')}
-                  stroke={chartColors.opponent}
-                  strokeWidth={2}
-                  fill="url(#egsColorTaken)"
-                  dot={false}
-                  activeDot={{ r: 4, fill: chartColors.opponent }}
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-      )}
-
-      {/* Ad under charts */}
-      {showAds && (
-        <div className={`${styles.adBlock} ${styles.hideOnExport}`}>
-          {!isSupporter && (
-            <div className={styles.adHeader}>
-              <a
-                href="https://metafy.gg/@talishar/members"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.removeAdsLink}
-              >
-                {t('UNITED_GAME_PANEL.REMOVE_ADS')}
-              </a>
-            </div>
-          )}
-          <AdUnit placement="billboard-2" className={styles.desktopAd} />
-          <AdUnit placement="mobile-unit-2" className={styles.mobileAd} />
-        </div>
-      )}
-    </div>
-  );
-});
+    );
+  }
+);
 
 EndGameStats.displayName = 'EndGameStats';
 

@@ -6,7 +6,7 @@ import {
   Outlet,
   Route
 } from 'react-router-dom';
-import React, { lazy, Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 import { ErrorPage } from 'errorPage';
 import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
 import { useTranslation } from 'react-i18next';

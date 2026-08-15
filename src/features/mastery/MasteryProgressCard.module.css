@@ -1,12 +1,63 @@
-.card { margin: .75rem 0 1rem; padding: .85rem 1rem; border: 1px solid rgba(205,151,84,.3); border-radius: 8px; background: linear-gradient(110deg, rgba(119,66,37,.18), rgba(255,255,255,.025)); color: #eee8df; }
-.card strong, .card b, .card small { display: block; }
-.card strong { font-family: Georgia, serif; }
-.card b { margin-top: .25rem; color: #e8c47c; font-size: .85rem; }
-.card small { color: #b9b0a5; }
-.track { height: 7px; margin: .55rem 0 .4rem; overflow: hidden; border-radius: 999px; background: rgba(255,255,255,.1); }
-.track i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #934d33, #e2b45e); box-shadow: 0 0 12px rgba(226,180,94,.35); }
-.unlockLabel { display: block; margin-bottom: .35rem; color: #f0c76d; font-size: .7rem; font-weight: 900; letter-spacing: .14em; }
-.unlocked { border-color: #ddb561; background: radial-gradient(circle at 50% 0, rgba(229,187,99,.22), rgba(76,40,27,.2)); box-shadow: 0 0 24px rgba(221,181,97,.16); text-align: center; }
+.card {
+  margin: 0.75rem 0 1rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(205, 151, 84, 0.3);
+  border-radius: 8px;
+  background: linear-gradient(
+    110deg,
+    rgba(119, 66, 37, 0.18),
+    rgba(255, 255, 255, 0.025)
+  );
+  color: #eee8df;
+}
+.card strong,
+.card b,
+.card small {
+  display: block;
+}
+.card strong {
+  font-family: Georgia, serif;
+}
+.card b {
+  margin-top: 0.25rem;
+  color: #e8c47c;
+  font-size: 0.85rem;
+}
+.card small {
+  color: #b9b0a5;
+}
+.track {
+  height: 7px;
+  margin: 0.55rem 0 0.4rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+}
+.track i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #934d33, #e2b45e);
+  box-shadow: 0 0 12px rgba(226, 180, 94, 0.35);
+}
+.unlockLabel {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: #f0c76d;
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+}
+.unlocked {
+  border-color: #ddb561;
+  background: radial-gradient(
+    circle at 50% 0,
+    rgba(229, 187, 99, 0.22),
+    rgba(76, 40, 27, 0.2)
+  );
+  box-shadow: 0 0 24px rgba(221, 181, 97, 0.16);
+  text-align: center;
+}
 .compact {
   max-width: 640px;
   margin: -0.15rem 0 0;

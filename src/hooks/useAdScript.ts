@@ -166,9 +166,7 @@ function purgeAdElement(node: Element): boolean {
 function purgeAdElementOrDescendants(node: Element) {
   if (purgeAdElement(node)) return;
 
-  node
-    .querySelectorAll?.('script[src*="rev.iq"]')
-    .forEach((el) => el.remove());
+  node.querySelectorAll?.('script[src*="rev.iq"]').forEach((el) => el.remove());
   node.querySelectorAll?.(AD_SELECTORS)?.forEach((el) => el.remove());
 }
 

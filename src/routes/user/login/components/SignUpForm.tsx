@@ -71,7 +71,7 @@ export const SignUpForm = () => {
           <input
             id="userId"
             type="text"
-            placeholder="Bravo"
+            placeholder="bravo"
             autoComplete="username"
             {...register('userId')}
             aria-invalid={errors.userId?.message ? 'true' : undefined}
@@ -83,7 +83,7 @@ export const SignUpForm = () => {
           <input
             id="email"
             type="email"
-            placeholder="Bravo@talishar.net"
+            placeholder="bravo@talishar.net"
             autoComplete="email"
             {...register('email')}
             aria-invalid={errors.email?.message ? 'true' : undefined}
@@ -149,9 +149,16 @@ export const SignUpForm = () => {
             <Trans
               i18nKey="USER.LOGIN.TALISHAR_CONSENT"
               components={[
-                <span
+                <button
                   key="not-judge-s0"
-                  onClick={() => setDisclaimerOpen(true)}
+                  type="button"
+                  onClick={(e) => {
+                    // Keep the click from reaching the surrounding <label>,
+                    // which would otherwise toggle the consent checkbox.
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setDisclaimerOpen(true);
+                  }}
                   className={styles.link}
                 />
               ]}
