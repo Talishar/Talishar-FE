@@ -901,8 +901,8 @@
     "LEVEL": "Mastery {{level}}",
     "LOADING": "Gathering your heroes…",
     "LOAD_ERROR": "Hero Mastery could not be loaded.",
-    "MAXIMUM_REACHED": "Maximum Mastery reached",
-    "ONE_MORE_GAME": "One more game to unlock {{mastery}}",
+    "MAXIMUM_REACHED": "- Maximum Mastery reached",
+    "ONE_MORE_GAME": "- One more game to unlock {{mastery}}",
     "SORT": {
       "ALPHABETICAL": "Alphabetical",
       "LABEL": "Sort heroes",
