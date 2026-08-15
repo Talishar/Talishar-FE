@@ -44,9 +44,10 @@
   display: block;
   margin-bottom: 0.35rem;
   color: #f0c76d;
+  font-family: inherit;
   font-size: 0.7rem;
-  font-weight: 900;
-  letter-spacing: 0.14em;
+  font-weight: 600;
+  letter-spacing: 0.08em;
 }
 .unlocked {
   border-color: #ddb561;
@@ -55,7 +56,6 @@
     rgba(229, 187, 99, 0.22),
     rgba(76, 40, 27, 0.2)
   );
-  box-shadow: 0 0 24px rgba(221, 181, 97, 0.16);
   text-align: center;
 }
 .compact {
@@ -92,6 +92,13 @@
 .compact small {
   color: var(--theme-text-muted, #999);
   font-size: 0.72rem;
+}
+
+.compact.unlocked {
+  margin: 0.75rem 0 0.55rem;
+  padding: 0.7rem 0.85rem;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .withPortrait {
