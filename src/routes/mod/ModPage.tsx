@@ -666,39 +666,22 @@ const ModPage: React.FC = () => {
                           <strong>{metafySyncResult.cleared ?? 0}</strong>
                         </td>
                       </tr>
-                      {(metafySyncResult.backfilled ?? 0) > 0 && (
-                        <tr>
-                          <td style={{ padding: '2px 10px' }}>
-                            {t('MOD_PAGE.METAFY_ID_BACKFILLED')}:
-                          </td>
-                          <td style={{ color: '#00bcd4' }}>
-                            <strong>{metafySyncResult.backfilled}</strong>
-                          </td>
-                        </tr>
-                      )}
-                      {metafySyncResult.forcedNoMetafyIdClear ? (
-                        <tr>
-                          <td style={{ padding: '2px 10px' }}>
-                            {t('MOD_PAGE.CLEARED_NO_METAFY_ID')}:
-                          </td>
-                          <td style={{ color: '#FF9800' }}>
-                            <strong>
-                              {metafySyncResult.clearedNoMetafyId ?? 0}
-                            </strong>
-                          </td>
-                        </tr>
-                      ) : (
-                        <tr>
-                          <td style={{ padding: '2px 10px' }}>
-                            {t('MOD_PAGE.SKIPPED_NO_METAFY_ID')}:
-                          </td>
-                          <td style={{ color: '#aaa' }}>
-                            <strong>
-                              {metafySyncResult.skippedNoMetafyId ?? 0}
-                            </strong>
-                          </td>
-                        </tr>
-                      )}
+                      <tr>
+                        <td style={{ padding: '2px 10px' }}>
+                          {t('MOD_PAGE.SUPPORTERS_GRANTED')}:
+                        </td>
+                        <td style={{ color: '#00bcd4' }}>
+                          <strong>{metafySyncResult.granted ?? 0}</strong>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style={{ padding: '2px 10px' }}>
+                          {t('MOD_PAGE.UNMATCHED_ACCOUNTS')}:
+                        </td>
+                        <td style={{ color: '#aaa' }}>
+                          <strong>{metafySyncResult.unmatched ?? 0}</strong>
+                        </td>
+                      </tr>
                     </tbody>
                   </table>
                   {metafySyncResult.clearedUsers?.length > 0 && (
@@ -713,16 +696,16 @@ const ModPage: React.FC = () => {
                       {metafySyncResult.clearedUsers.join(', ')}
                     </p>
                   )}
-                  {metafySyncResult.clearedNoMetafyIdUsers?.length > 0 && (
+                  {metafySyncResult.grantedUsers?.length > 0 && (
                     <p
                       style={{
                         marginTop: '4px',
-                        color: '#FF9800',
+                        color: '#00bcd4',
                         fontSize: '12px'
                       }}
                     >
-                      <strong>{t('MOD_PAGE.CLEARED_NO_METAFY_ID')}:</strong>{' '}
-                      {metafySyncResult.clearedNoMetafyIdUsers.join(', ')}
+                      <strong>{t('MOD_PAGE.SUPPORTERS_GRANTED')}:</strong>{' '}
+                      {metafySyncResult.grantedUsers.join(', ')}
                     </p>
                   )}
                   {metafySyncResult.skippedUsers?.length > 0 && (

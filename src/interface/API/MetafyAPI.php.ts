@@ -58,6 +58,10 @@ export interface MetafySignupResponse {
 
 export interface RefreshMetafyCommunitiesResponse {
   message?: string;
+  /**
+   * 'not_authenticated' | 'no_access_token' | 'token_expired' | 'missing_scope'
+   * | 'metafy_unavailable' | 'db_error'
+   */
   error?: string;
   metafyCommunities?: MetafyCommunity[];
   isMetafySupporter?: boolean;

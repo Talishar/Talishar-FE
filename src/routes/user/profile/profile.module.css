@@ -154,6 +154,16 @@
   background: transparent;
 }
 
+/* Functional warning: the account is linked but cannot resolve supporter status. */
+.metafyReauthNotice {
+  margin: 0.5rem 0;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid rgba(255, 152, 0, 0.45);
+  border-radius: 4px;
+  background: rgba(255, 152, 0, 0.08);
+  font-size: 0.9rem;
+}
+
 .patreonSection {
   margin: 0;
   padding: 0;

@@ -10,6 +10,8 @@ interface MetafySectionProps {
   isMetafyLinked: boolean;
   metafyCommunities: MetafyCommunity[];
   metafyInfo: string;
+  /** Stored token cannot read subscriptions; only re-linking fixes it. */
+  needsReauth?: boolean;
   className?: string;
 }
 
@@ -17,6 +19,7 @@ const MetafySection: React.FC<MetafySectionProps> = ({
   isMetafyLinked,
   metafyCommunities,
   metafyInfo,
+  needsReauth = false,
   className
 }) => {
   const { t } = useTranslation();
@@ -36,10 +39,29 @@ const MetafySection: React.FC<MetafySectionProps> = ({
     } catch (err: any) {
       const status = err?.status;
       const errorCode = err?.data?.error;
-      // Token expired or not linked - redirect to OAuth re-auth
+
+      // Signed out: sending the user through Metafy OAuth would drop them back here
+      // in the same state, so say what actually needs to happen.
+      if (errorCode === 'not_authenticated') {
+        toast.error(t('PROFILE.METAFY_NOT_SIGNED_IN'), {
+          position: 'top-center'
+        });
+        return;
+      }
+
+      // Metafy itself is unreachable. Nothing was changed, so re-linking is not the fix.
+      if (status === 503 || errorCode === 'metafy_unavailable') {
+        toast.error(t('PROFILE.METAFY_UNAVAILABLE'), {
+          position: 'top-center'
+        });
+        return;
+      }
+
+      // Token expired, revoked, or under-scoped: only a fresh OAuth grant fixes these.
       if (
         status === 401 ||
         errorCode === 'token_expired' ||
+        errorCode === 'missing_scope' ||
         errorCode === 'no_access_token'
       ) {
         toast(t('PROFILE.METAFY_REDIRECTING'), {
@@ -48,11 +70,12 @@ const MetafySection: React.FC<MetafySectionProps> = ({
         if (metafyInfo) {
           window.location.href = metafyInfo;
         }
-      } else {
-        toast.error(t('PROFILE.METAFY_REFRESH_FAILED'), {
-          position: 'top-center'
-        });
+        return;
       }
+
+      toast.error(t('PROFILE.METAFY_REFRESH_FAILED'), {
+        position: 'top-center'
+      });
     }
   };
 
@@ -83,6 +106,12 @@ const MetafySection: React.FC<MetafySectionProps> = ({
       )}
       {isMetafyLinked && (
         <>
+          {needsReauth && (
+            <p className={styles.metafyReauthNotice}>
+              {t('PROFILE.METAFY_REAUTH_REQUIRED')}{' '}
+              <a href={metafyInfo}>{t('PROFILE.RECONNECT_METAFY')}</a>
+            </p>
+          )}
           <p>
             {t('PROFILE.METAFY_LINKED')} <br />
             <a href={metafyInfo ?? '#'} onClick={handleRefresh}>
