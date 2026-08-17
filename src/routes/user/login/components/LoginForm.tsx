@@ -13,6 +13,7 @@ import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { LoginValidationType } from './validation';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
+import { PasswordInput } from './PasswordInput';
 
 const getLoginBody = ({
   userID,
@@ -176,21 +177,11 @@ export const LoginForm = () => {
             </div>
           )}
           <label htmlFor="password">{t('USER.LOGIN.PASSWORD')}</label>
-          <input
-            id="password"
-            type="password"
-            placeholder="********"
-            {...register('password')}
-            aria-invalid={errors.password?.message ? 'true' : undefined}
-            aria-describedby={
-              errors.password?.message ? 'password-error' : undefined
-            }
+          <PasswordInput
+            register={register}
+            autoComplete="current-password"
+            errorMessage={errors.password?.message}
           />
-          {errors.password?.message && (
-            <div id="password-error" className={styles.fieldError} role="alert">
-              {errors.password?.message}
-            </div>
-          )}
           <input
             id="rememberMe"
             type="checkbox"

@@ -188,6 +188,52 @@ textarea:focus {
   box-shadow: 0 0 0 3px var(--theme-primary-focus, rgba(212, 175, 55, 0.1)) !important;
 }
 
+input[type='text']:autofill,
+input[type='email']:autofill,
+input[type='password']:autofill,
+input[type='number']:autofill,
+input[type='url']:autofill {
+  -webkit-text-fill-color: var(--theme-text, #f4eded) !important;
+  -webkit-box-shadow: 0 0 0 100px var(--theme-form-background, #33383d) inset !important;
+  box-shadow: 0 0 0 100px var(--theme-form-background, #33383d) inset !important;
+  caret-color: var(--theme-text, #f4eded) !important;
+  filter: none !important;
+}
+
+input[type='text']:-webkit-autofill,
+input[type='email']:-webkit-autofill,
+input[type='password']:-webkit-autofill,
+input[type='number']:-webkit-autofill,
+input[type='url']:-webkit-autofill {
+  -webkit-text-fill-color: var(--theme-text, #f4eded) !important;
+  -webkit-box-shadow: 0 0 0 100px var(--theme-form-background, #33383d) inset !important;
+  box-shadow: 0 0 0 100px var(--theme-form-background, #33383d) inset !important;
+  caret-color: var(--theme-text, #f4eded) !important;
+  filter: none !important;
+}
+
+input[type='text']:autofill:focus,
+input[type='email']:autofill:focus,
+input[type='password']:autofill:focus,
+input[type='number']:autofill:focus,
+input[type='url']:autofill:focus {
+  -webkit-box-shadow: 0 0 0 100px var(--theme-form-active, #33383d) inset,
+    0 0 0 3px var(--theme-primary-focus, rgba(212, 175, 55, 0.1)) !important;
+  box-shadow: 0 0 0 100px var(--theme-form-active, #33383d) inset,
+    0 0 0 3px var(--theme-primary-focus, rgba(212, 175, 55, 0.1)) !important;
+}
+
+input[type='text']:-webkit-autofill:focus,
+input[type='email']:-webkit-autofill:focus,
+input[type='password']:-webkit-autofill:focus,
+input[type='number']:-webkit-autofill:focus,
+input[type='url']:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 100px var(--theme-form-active, #33383d) inset,
+    0 0 0 3px var(--theme-primary-focus, rgba(212, 175, 55, 0.1)) !important;
+  box-shadow: 0 0 0 100px var(--theme-form-active, #33383d) inset,
+    0 0 0 3px var(--theme-primary-focus, rgba(212, 175, 55, 0.1)) !important;
+}
+
 html,
 body {
   overflow-y: auto;
