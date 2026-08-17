@@ -232,9 +232,10 @@ body {
 // Import Pico
 @import '@picocss/pico/scss/pico';
 
-:root {
-  --tooltip-background-color: rgba(8, 10, 12, 0.98);
-  --tooltip-color: #ffffff;
+:root,
+:root[data-theme] {
+  --tooltip-background-color: var(--theme-card-background, #1e2329);
+  --tooltip-color: var(--theme-text, #f4eded);
   --tooltip-border-color: color-mix(
     in srgb,
     var(--theme-primary, #d4af37) 48%,
