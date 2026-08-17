@@ -41,25 +41,27 @@ export const OptInput = (props: FormProps) => {
   const { cards, buttons, onClickButton } = props;
 
   const maxButtonsPerIndex = 2;
-  const buttonsCountPerIndex = new Map();
+  const chooseButton = buttons.find((b) => b.caption === 'Choose');
+  const effectiveMaxButtonsPerIndex = chooseButton ? 1 : maxButtonsPerIndex;
+  const claimedButtons = new Set<number>();
   const cardWithButtons = cards.map((card, index) => {
-    buttonsCountPerIndex.set(index, 0);
-    const chooseButton = buttons.find((b) => b.caption === 'Choose');
-    const effectiveMaxButtonsPerIndex = chooseButton ? 1 : maxButtonsPerIndex;
+    const cardButtons: Button[] = [];
+    buttons.forEach((button, buttonIndex) => {
+      if (
+        cardButtons.length >= effectiveMaxButtonsPerIndex ||
+        claimedButtons.has(buttonIndex) ||
+        button.buttonInput !== card.cardNumber ||
+        cardButtons.some((claimed) => claimed.caption === button.caption)
+      ) {
+        return;
+      }
+      claimedButtons.add(buttonIndex);
+      cardButtons.push(button);
+    });
     return {
       ...card,
       key: index,
-      buttons: buttons.filter((button) => {
-        const buttonsAdded = buttonsCountPerIndex.get(index);
-        if (
-          buttonsAdded < effectiveMaxButtonsPerIndex &&
-          button.buttonInput === card.cardNumber
-        ) {
-          buttonsCountPerIndex.set(index, buttonsAdded + 1);
-          return true;
-        }
-        return false;
-      })
+      buttons: cardButtons
     };
   });
 
