@@ -27,10 +27,12 @@ const MAX_RETRIES = 5;
 
 interface GameStateHandlerProps {
   onInitialStateReceived?: (gameID: number) => void;
+  onLoadingError?: (message: string) => void;
 }
 
 const GameStateHandler = ({
-  onInitialStateReceived
+  onInitialStateReceived,
+  onLoadingError
 }: GameStateHandlerProps) => {
   const { t } = useTranslation();
   const { gameID } = useParams();
@@ -55,10 +57,15 @@ const GameStateHandler = ({
   const [forceRetry, setForceRetry] = useState(0);
   const gameOverRef = useRef(false);
   const onInitialStateReceivedRef = useRef(onInitialStateReceived);
+  const onLoadingErrorRef = useRef(onLoadingError);
 
   useEffect(() => {
     onInitialStateReceivedRef.current = onInitialStateReceived;
   }, [onInitialStateReceived]);
+
+  useEffect(() => {
+    onLoadingErrorRef.current = onLoadingError;
+  }, [onLoadingError]);
 
   useEffect(() => {
     return () => {
@@ -187,9 +194,11 @@ const GameStateHandler = ({
                 errorMsg.includes('game no longer exists') ||
                 errorMsg.includes('does not exist')
               ) {
-                toast.error(
-                  t('GAME_STATE.GAME_ERROR', { message: data.error })
-                );
+                const message = t('GAME_STATE.GAME_ERROR', {
+                  message: data.error
+                });
+                onLoadingErrorRef.current?.(message);
+                toast.error(message);
                 source.close();
                 if (navigateTimerRef.current === null) {
                   navigateTimerRef.current = setTimeout(() => {
@@ -201,7 +210,9 @@ const GameStateHandler = ({
               }
 
               if (errorMsg.includes('required to spectate')) {
-                toast.error(t('SPECTATOR.LOGIN_REQUIRED_BODY'));
+                const message = t('SPECTATOR.LOGIN_REQUIRED_BODY');
+                onLoadingErrorRef.current?.(message);
+                toast.error(message);
                 source.close();
                 return;
               }
@@ -210,16 +221,20 @@ const GameStateHandler = ({
                 errorMsg.includes('invalid auth') ||
                 errorMsg.includes('authkey')
               ) {
-                toast.error(
-                  t('GAME_STATE.AUTH_ERROR', { message: data.error })
-                );
+                const message = t('GAME_STATE.AUTH_ERROR', {
+                  message: data.error
+                });
+                onLoadingErrorRef.current?.(message);
+                toast.error(message);
                 source.close();
                 return;
               }
 
-              toast.error(
-                t('GAME_STATE.SERVER_ERROR', { message: data.error })
-              );
+              const message = t('GAME_STATE.SERVER_ERROR', {
+                message: data.error
+              });
+              onLoadingErrorRef.current?.(message);
+              toast.error(message);
               return;
             }
 
@@ -308,7 +323,9 @@ const GameStateHandler = ({
             scheduleRetry(retryDelay);
           } else {
             if (retryCountRef.current === MAX_RETRIES + 1) {
-              toast.error(t('GAME_STATE.CONNECTION_LOST'));
+              const message = t('GAME_STATE.CONNECTION_LOST');
+              onLoadingErrorRef.current?.(message);
+              toast.error(message);
             }
             scheduleRetry(10000);
           }
