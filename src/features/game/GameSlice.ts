@@ -675,6 +675,7 @@ export const gameSlice = createSlice({
     },
     clearGetLobbyRefresh: (state) => {
       state.gameLobby = undefined;
+      state.gameDynamicInfo.lastUpdate = 0;
     },
     toggleShowModals: (state) => {
       state.showModals = !state.showModals;
@@ -885,22 +886,33 @@ export const gameSlice = createSlice({
       state.isUpdateInProgress = false;
       state.isPlayerInputInProgress = false;
 
-      state.gameInfo.isPrivateLobby =
-        action.payload.isPrivateLobby ?? state.gameInfo.isPrivateLobby;
-      state.gameDynamicInfo.lastUpdate = action.payload.lastUpdate;
-      state.chatLog = action.payload.gameLog?.split('<br>');
-      state.playerTwo.Name = action.payload.theirName;
+      if (action.payload.lastUpdate !== undefined) {
+        state.gameDynamicInfo.lastUpdate = action.payload.lastUpdate;
+      }
 
-      // gameInfo
-      state.gameLobby = action.payload;
+      if (action.payload.theirHero === undefined) {
+        if (state.gameLobby === undefined) {
+          state.gameLobby = action.payload;
+        } else {
+          Object.assign(state.gameLobby, action.payload);
+        }
+      } else {
+        state.gameInfo.isPrivateLobby =
+          action.payload.isPrivateLobby ?? state.gameInfo.isPrivateLobby;
+        state.chatLog = action.payload.gameLog?.split('<br>');
+        state.playerTwo.Name = action.payload.theirName;
+
+        // gameInfo
+        state.gameLobby = action.payload;
+
+        state.chatEnabled = action.payload.chatEnabled ?? false;
+        state.opponentIsTyping = action.payload.opponentIsTyping ?? false;
+        state.opponentPresence = null;
+      }
 
       // set isFullRematch to false
       state.isFullRematch = false;
       state.hasGameEnded = false;
-
-      state.chatEnabled = action.payload.chatEnabled ?? false;
-      state.opponentIsTyping = action.payload.opponentIsTyping ?? false;
-      state.opponentPresence = null;
 
       return state;
     });
