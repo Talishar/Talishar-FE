@@ -35,3 +35,24 @@
     animation: none !important;
   }
 }
+
+.trivia {
+  max-width: 34rem;
+  margin: 0.25rem 0 0;
+  padding-top: 0.9rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(244, 237, 237, 0.55);
+  font-size: 0.85rem;
+  font-style: italic;
+  line-height: 1.5;
+  animation: triviaFadeIn 400ms ease-out;
+}
+
+@keyframes triviaFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
