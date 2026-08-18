@@ -115,6 +115,8 @@ const OptionsSettings = () => {
       String(settingsData[optConst.ALWAYS_SHOW_COUNTERS]?.value) === '1',
     hideHandFromFriends:
       settingsData[optConst.HIDE_HAND_FROM_FRIENDS]?.value === '1',
+    hideGamesFromFriends:
+      settingsData[optConst.HIDE_GAMES_FROM_FRIENDS]?.value === '1',
     gemsOffByDefault: settingsData[optConst.GEMS_OFF_BY_DEFAULT]?.value === '1'
   };
 
@@ -283,6 +285,18 @@ const OptionsSettings = () => {
               handleSettingsChange({
                 name: optConst.HIDE_HAND_FROM_FRIENDS,
                 value: initialValues.hideHandFromFriends ? '0' : '1'
+              })
+            }
+          />
+          <CheckboxSetting
+            name="hideGamesFromFriends"
+            label={t('SETTINGS.HIDE_GAMES_FROM_FRIENDS')}
+            tooltip={t('SETTINGS.HIDE_GAMES_FROM_FRIENDS_TOOLTIP')}
+            checked={initialValues.hideGamesFromFriends}
+            onChange={() =>
+              handleSettingsChange({
+                name: optConst.HIDE_GAMES_FROM_FRIENDS,
+                value: initialValues.hideGamesFromFriends ? '0' : '1'
               })
             }
           />

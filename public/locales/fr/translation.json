@@ -1508,6 +1508,8 @@
     "DISABLE_HERO_INTRO_ANIMATION": "Désactiver l'animation d'introduction du héros",
     "DISABLE_PARTICLE_EFFECTS": "Désactiver les effets de particules",
     "GAME_SETTINGS": "Paramètres du jeu",
+    "HIDE_GAMES_FROM_FRIENDS": "Cacher vos parties à votre liste d'amis",
+    "HIDE_GAMES_FROM_FRIENDS_TOOLTIP": "Vos parties n'apparaissent plus dans les listes de parties ouvertes et de parties en cours de vos amis. Les autres joueurs les voient toujours.",
     "HIDE_HAND_FROM_FRIENDS": "Cacher la main des amis",
     "HIDE_HAND_FROM_FRIENDS_TOOLTIP": "Ne montrez pas le contenu de votre main à vos amis.",
     "LANGUAGE_EXPERIMENTAL_TOAST": "Fonctionnalité expérimentale uniquement pour les images de cartes pour le moment. ",
