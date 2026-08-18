@@ -102,7 +102,9 @@ const SettingsPage = () => {
     alwaysShowCounters:
       String(settingsData[optConst.ALWAYS_SHOW_COUNTERS]?.value) === '1',
     hideHandFromFriends:
-      String(settingsData[optConst.HIDE_HAND_FROM_FRIENDS]?.value) === '1'
+      String(settingsData[optConst.HIDE_HAND_FROM_FRIENDS]?.value) === '1',
+    gemsOffByDefault:
+      String(settingsData[optConst.GEMS_OFF_BY_DEFAULT]?.value) === '1'
   };
 
   const priorityOptions = [
@@ -157,6 +159,18 @@ const SettingsPage = () => {
                 handleSettingsChange({
                   name: optConst.HOLD_PRIORITY_SETTING,
                   value: value
+                })
+              }
+            />
+            <CheckboxSetting
+              name="gemsOffByDefault"
+              label={t('SETTINGS.GEMS_OFF_BY_DEFAULT')}
+              tooltip={t('SETTINGS.GEMS_OFF_BY_DEFAULT_TOOLTIP')}
+              checked={initialValues.gemsOffByDefault}
+              onChange={() =>
+                handleSettingsChange({
+                  name: optConst.GEMS_OFF_BY_DEFAULT,
+                  value: initialValues.gemsOffByDefault ? '0' : '1'
                 })
               }
             />

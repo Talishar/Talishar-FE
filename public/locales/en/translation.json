@@ -1569,6 +1569,8 @@
     "DISABLE_HERO_INTRO_ANIMATION": "Disable Hero Intro Animation",
     "DISABLE_PARTICLE_EFFECTS": "Disable Particle Effects",
     "GAME_SETTINGS": "Game Settings",
+    "GEMS_OFF_BY_DEFAULT": "Start Gems Switched Off",
+    "GEMS_OFF_BY_DEFAULT_TOOLTIP": "Equipment, hero, items, auras, etc. enter play with their gem switched off, so their optional triggers stay inactive until you switch the gem on. Cards whose gem is always on are unaffected.",
     "HIDE_HAND_FROM_FRIENDS": "Hide hand from friends",
     "HIDE_HAND_FROM_FRIENDS_TOOLTIP": "Do not show your hand content to your friends.",
     "LANGUAGE_EXPERIMENTAL_TOAST": "This experimental feature currently applies only to card images. Please report any errors on Discord.",

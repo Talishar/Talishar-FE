@@ -114,7 +114,8 @@ const OptionsSettings = () => {
     alwaysShowCounters:
       String(settingsData[optConst.ALWAYS_SHOW_COUNTERS]?.value) === '1',
     hideHandFromFriends:
-      settingsData[optConst.HIDE_HAND_FROM_FRIENDS]?.value === '1'
+      settingsData[optConst.HIDE_HAND_FROM_FRIENDS]?.value === '1',
+    gemsOffByDefault: settingsData[optConst.GEMS_OFF_BY_DEFAULT]?.value === '1'
   };
 
   useShortcut(DEFAULT_SHORTCUTS.TOGGLE_MANUAL_MODE, () => {
@@ -169,6 +170,18 @@ const OptionsSettings = () => {
               handleSettingsChange({
                 name: optConst.HOLD_PRIORITY_SETTING,
                 value: value
+              })
+            }
+          />
+          <CheckboxSetting
+            name="gemsOffByDefault"
+            label={t('SETTINGS.GEMS_OFF_BY_DEFAULT')}
+            tooltip={t('SETTINGS.GEMS_OFF_BY_DEFAULT_TOOLTIP')}
+            checked={initialValues.gemsOffByDefault}
+            onChange={() =>
+              handleSettingsChange({
+                name: optConst.GEMS_OFF_BY_DEFAULT,
+                value: initialValues.gemsOffByDefault ? '0' : '1'
               })
             }
           />
