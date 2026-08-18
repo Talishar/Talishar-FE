@@ -440,6 +440,7 @@
     "EDIT_DECK": "Edit Deck",
     "ENABLE_CHAT_QUERY": "Do you want to enable chat?",
     "EQUIPMENT": "Equipment",
+    "EMPTY_EQUIPMENT_WARNING": "You appear to have empty equipment in the following slot(s): {{slots}}. Is this correct?",
     "EXPAND_FILTERS": "Expand filters",
     "FILTERS": "Filters",
     "FIRST": "First",

@@ -85,6 +85,10 @@ import {
 } from 'features/options/optionsSlice';
 import { DISABLE_ALT_ARTS } from 'features/options/constants';
 import { useTranslation, Trans } from 'react-i18next';
+import {
+  EquipmentSlotName,
+  getEmptyEquipmentSlots
+} from './equipmentWarning';
 
 // FaBrary uses hyphens (e.g. "briar-warden-of-thorns"), Talishar uses underscores.
 const normalizeHeroId = (id: string) => id.toLowerCase().replace(/-/g, '_');
@@ -712,6 +716,29 @@ const Lobby = () => {
   const leaveLobby = classNames(styles.buttonClass, 'outline');
 
   const handleFormSubmission = async (values: DeckResponse) => {
+    const emptyEquipmentSlots = getEmptyEquipmentSlots(
+      values,
+      data.deck.modular
+    );
+
+    if (emptyEquipmentSlots.length > 0) {
+      const equipmentSlotLabels: Record<EquipmentSlotName, string> = {
+        head: t('GAME_LOBBY.HEAD'),
+        chest: t('GAME_LOBBY.CHEST'),
+        arms: t('GAME_LOBBY.ARMS'),
+        legs: t('GAME_LOBBY.LEGS')
+      };
+      const confirmed = window.confirm(
+        t('GAME_LOBBY.EMPTY_EQUIPMENT_WARNING', {
+          slots: emptyEquipmentSlots
+            .map((slot) => equipmentSlotLabels[slot])
+            .join(', ')
+        })
+      );
+
+      if (!confirmed) return;
+    }
+
     const matchupIdToRestore = selectedMatchupId;
     setIsSubmitting(true);
 
