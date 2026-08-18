@@ -140,6 +140,11 @@ const Lobby = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [pendingEquipmentSubmission, setPendingEquipmentSubmission] =
+    useState<{
+      values: DeckResponse;
+      emptySlots: EquipmentSlotName[];
+    } | null>(null);
   const [selectedMatchupId, setSelectedMatchupId] = useState<string | null>(
     null
   );
@@ -715,28 +720,23 @@ const Lobby = () => {
   //const needToDoDisclaimer = false;
   const leaveLobby = classNames(styles.buttonClass, 'outline');
 
-  const handleFormSubmission = async (values: DeckResponse) => {
-    const emptyEquipmentSlots = getEmptyEquipmentSlots(
-      values,
-      data.deck.modular
-    );
-
-    if (emptyEquipmentSlots.length > 0) {
-      const equipmentSlotLabels: Record<EquipmentSlotName, string> = {
-        head: t('GAME_LOBBY.HEAD'),
-        chest: t('GAME_LOBBY.CHEST'),
-        arms: t('GAME_LOBBY.ARMS'),
-        legs: t('GAME_LOBBY.LEGS')
-      };
-      const confirmed = window.confirm(
-        t('GAME_LOBBY.EMPTY_EQUIPMENT_WARNING', {
-          slots: emptyEquipmentSlots
-            .map((slot) => equipmentSlotLabels[slot])
-            .join(', ')
-        })
+  const handleFormSubmission = async (
+    values: DeckResponse,
+    equipmentWarningConfirmed = false
+  ) => {
+    if (!equipmentWarningConfirmed) {
+      const emptyEquipmentSlots = getEmptyEquipmentSlots(
+        values,
+        data.deck.modular
       );
 
-      if (!confirmed) return;
+      if (emptyEquipmentSlots.length > 0) {
+        setPendingEquipmentSubmission({
+          values,
+          emptySlots: emptyEquipmentSlots
+        });
+        return;
+      }
     }
 
     const matchupIdToRestore = selectedMatchupId;
@@ -917,8 +917,50 @@ const Lobby = () => {
     }
   };
 
+  const equipmentSlotLabels: Record<EquipmentSlotName, string> = {
+    head: t('GAME_LOBBY.HEAD'),
+    chest: t('GAME_LOBBY.CHEST'),
+    arms: t('GAME_LOBBY.ARMS'),
+    legs: t('GAME_LOBBY.LEGS')
+  };
+
+  const confirmEquipmentSubmission = () => {
+    if (!pendingEquipmentSubmission) return;
+
+    const { values } = pendingEquipmentSubmission;
+    setPendingEquipmentSubmission(null);
+    void handleFormSubmission(values, true);
+  };
+
   return (
     <main className={mainClassNames}>
+      {pendingEquipmentSubmission &&
+        createPortal(
+          <dialog open className={styles.modal}>
+            <article>
+              <header>
+                {t('GAME_LOBBY.EMPTY_EQUIPMENT_WARNING', {
+                  count: pendingEquipmentSubmission.emptySlots.length,
+                  slots: pendingEquipmentSubmission.emptySlots
+                    .map((slot) => equipmentSlotLabels[slot])
+                    .join(', ')
+                })}
+              </header>
+              <div className={styles.modalButtons}>
+                <button type="button" onClick={confirmEquipmentSubmission}>
+                  {t('GAME_LOBBY.YES')}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPendingEquipmentSubmission(null)}
+                >
+                  {t('GAME_LOBBY.NO')}
+                </button>
+              </div>
+            </article>
+          </dialog>,
+          document.body
+        )}
       {gameLobby?.chatInvited &&
         showChatModal &&
         createPortal(
@@ -1001,7 +1043,7 @@ const Lobby = () => {
           legs: initialEquipment(data.deck.legs),
           assignedModulars: { head: [], chest: [], arms: [], legs: [] }
         }}
-        onSubmit={handleFormSubmission}
+        onSubmit={(values) => handleFormSubmission(values)}
         validationSchema={deckValidation(deckSize, maxDeckSize, handsTotal)}
         validateOnChange={true}
         validateOnBlur={true}

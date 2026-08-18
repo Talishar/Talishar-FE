@@ -1256,6 +1256,18 @@ button.secondary:hover {
   transition: all 0.2s;
 }
 
+.modalButtons {
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
+  width: 100%;
+}
+
+.modalButtons button {
+  flex-grow: 1;
+  min-width: 8em;
+}
+
 .modal article button:first-of-type {
   background-color: var(--theme-primary);
   color: var(--primary-inverse);
