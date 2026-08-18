@@ -108,16 +108,17 @@ const OptionsSettings = () => {
     disableFabInsights: settingsData['DisableFabInsights']?.value === '1',
     disableHeroIntro: settingsData['DisableHeroIntro']?.value === '1',
     mirroredBoardLayout:
-      settingsData[optConst.MIRRORED_BOARD_LAYOUT]?.value === '1',
+      String(settingsData[optConst.MIRRORED_BOARD_LAYOUT]?.value) === '1',
     mirroredPlayerBoardLayout:
-      settingsData[optConst.MIRRORED_PLAYER_BOARD_LAYOUT]?.value === '1',
+      String(settingsData[optConst.MIRRORED_PLAYER_BOARD_LAYOUT]?.value) === '1',
     alwaysShowCounters:
       String(settingsData[optConst.ALWAYS_SHOW_COUNTERS]?.value) === '1',
     hideHandFromFriends:
       settingsData[optConst.HIDE_HAND_FROM_FRIENDS]?.value === '1',
     hideGamesFromFriends:
       settingsData[optConst.HIDE_GAMES_FROM_FRIENDS]?.value === '1',
-    gemsOffByDefault: settingsData[optConst.GEMS_OFF_BY_DEFAULT]?.value === '1'
+    gemsOffByDefault:
+      String(settingsData[optConst.GEMS_OFF_BY_DEFAULT]?.value) === '1'
   };
 
   useShortcut(DEFAULT_SHORTCUTS.TOGGLE_MANUAL_MODE, () => {

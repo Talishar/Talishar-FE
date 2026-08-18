@@ -96,9 +96,9 @@ const SettingsPage = () => {
       String(settingsData['DisableFabInsights']?.value) === '1',
     disableHeroIntro: String(settingsData['DisableHeroIntro']?.value) === '1',
     mirroredBoardLayout:
-      settingsData?.[optConst.MIRRORED_BOARD_LAYOUT]?.value === '1',
+      String(settingsData?.[optConst.MIRRORED_BOARD_LAYOUT]?.value) === '1',
     mirroredPlayerBoardLayout:
-      settingsData?.[optConst.MIRRORED_PLAYER_BOARD_LAYOUT]?.value === '1',
+      String(settingsData?.[optConst.MIRRORED_PLAYER_BOARD_LAYOUT]?.value) === '1',
     alwaysShowCounters:
       String(settingsData[optConst.ALWAYS_SHOW_COUNTERS]?.value) === '1',
     hideHandFromFriends:
