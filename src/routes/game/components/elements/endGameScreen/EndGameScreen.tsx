@@ -2,7 +2,10 @@ import React, { useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import styles from './EndGameScreen.module.css';
-import { useGetHeroMasteryQuery, useGetPopUpContentQuery } from 'features/api/apiSlice';
+import {
+  useGetHeroMasteryQuery,
+  useGetPopUpContentQuery
+} from 'features/api/apiSlice';
 import { END_GAME_STATS, PROCESS_INPUT } from 'appConstants';
 import { getGameInfo, submitButton } from 'features/game/GameSlice';
 import EndGameStats, {
@@ -44,8 +47,9 @@ const EndGameScreen = () => {
     authKey: gameInfo.authKey,
     popupType: END_GAME_STATS
   });
+  const masteryGameIdentifier = gameInfo.gameGUID || gameInfo.gameID;
   const { data: masteryData } = useGetHeroMasteryQuery(
-    { gameKey: `talishar:${gameInfo.gameID}`, scope: 'award' },
+    { gameKey: `talishar:${masteryGameIdentifier}`, scope: 'award' },
     { skip: !isLoggedIn || !!gameInfo.roguelikeGameID }
   );
 

@@ -91,12 +91,19 @@
       display: flex;
       align-items: center;
       gap: 6px;
+      width: auto;
+      margin: 0;
       padding: 8px 12px;
+      background: none;
+      border: none;
+      font-family: inherit;
+      font-size: inherit;
       color: var(--snow);
       text-decoration: none;
       border-right: 1px solid var(--theme-border, rgba(255, 255, 255, 0.1));
       transition: background-color 0.2s ease;
       white-space: nowrap;
+      cursor: pointer;
 
       &:last-child {
         border-right: none;
@@ -241,7 +248,8 @@
       font-size: 15px;
       font-weight: 500;
       border-left: 3px solid transparent;
-      transition: background-color 150ms ease, color 150ms ease, border-left-color 150ms ease;
+      transition: background-color 150ms ease, color 150ms ease,
+        border-left-color 150ms ease;
 
       &:hover {
         background-color: var(--theme-form-background, #33383d);

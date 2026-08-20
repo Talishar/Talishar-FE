@@ -9,6 +9,7 @@ import useAuth from 'hooks/useAuth';
 import { toast } from 'react-hot-toast';
 import { useState } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
+import { PasswordInput } from './PasswordInput';
 
 export const SignUpForm = () => {
   const [disclaimerOpen, setDisclaimerOpen] = useState(false);
@@ -71,7 +72,7 @@ export const SignUpForm = () => {
           <input
             id="userId"
             type="text"
-            placeholder="Bravo"
+            placeholder="bravo"
             autoComplete="username"
             {...register('userId')}
             aria-invalid={errors.userId?.message ? 'true' : undefined}
@@ -83,7 +84,7 @@ export const SignUpForm = () => {
           <input
             id="email"
             type="email"
-            placeholder="Bravo@talishar.net"
+            placeholder="bravo@talishar.net"
             autoComplete="email"
             {...register('email')}
             aria-invalid={errors.email?.message ? 'true' : undefined}
@@ -95,22 +96,11 @@ export const SignUpForm = () => {
             </div>
           )}
           <label htmlFor="password">{t('USER.LOGIN.PASSWORD')}</label>
-          <input
-            id="password"
-            type="password"
-            placeholder="********"
+          <PasswordInput
+            register={register}
             autoComplete="new-password"
-            {...register('password')}
-            aria-invalid={errors.password?.message ? 'true' : undefined}
-            aria-describedby={
-              errors.password?.message ? 'password-error' : undefined
-            }
+            errorMessage={errors.password?.message}
           />
-          {errors.password?.message && (
-            <div id="password-error" className={styles.fieldError} role="alert">
-              {errors.password?.message}
-            </div>
-          )}
           <label htmlFor="passwordRepeat">
             {t('USER.LOGIN.CONFIRM_PASSWORD')}
           </label>
@@ -149,9 +139,16 @@ export const SignUpForm = () => {
             <Trans
               i18nKey="USER.LOGIN.TALISHAR_CONSENT"
               components={[
-                <span
+                <button
                   key="not-judge-s0"
-                  onClick={() => setDisclaimerOpen(true)}
+                  type="button"
+                  onClick={(e) => {
+                    // Keep the click from reaching the surrounding <label>,
+                    // which would otherwise toggle the consent checkbox.
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setDisclaimerOpen(true);
+                  }}
                   className={styles.link}
                 />
               ]}

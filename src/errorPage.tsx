@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate, useRouteError } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import styles from './errorPage.module.css';
@@ -68,9 +67,7 @@ export const ErrorPage = () => {
       <article className={styles.article}>
         <h1 style={{ marginBottom: '12px' }}>
           {t(
-            hasStaleAssets
-              ? 'ERROR_PAGE.STALE_CACHE_TITLE'
-              : 'ERROR_PAGE.TITLE'
+            hasStaleAssets ? 'ERROR_PAGE.STALE_CACHE_TITLE' : 'ERROR_PAGE.TITLE'
           )}
         </h1>
         {hasStaleAssets ? (
@@ -100,7 +97,7 @@ export const ErrorPage = () => {
         <img
           src={errorCardSrc}
           alt=""
-          style={{ maxWidth: '100%', maxHeight: '100%', marginBottom: '19px' }}
+          style={{ maxWidth: '100%', maxHeight: '100%', marginBottom: '18px' }}
         />
         <button
           onClick={(e) => {

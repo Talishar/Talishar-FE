@@ -15,6 +15,8 @@ export interface UserProfileAPIResponse {
   metafyInfo?: string;
   isMetafyLinked?: boolean;
   isMetafySupporter?: boolean;
+  /** True when the stored Metafy token cannot read subscriptions and the user must re-link. */
+  metafyNeedsReauth?: boolean;
   metafyCommunities?: MetafyCommunity[];
 }
 

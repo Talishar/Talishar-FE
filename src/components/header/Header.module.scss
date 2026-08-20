@@ -98,12 +98,16 @@
           padding: 8px 18px;
           margin: 0 0 0 8px;
           border-radius: 6px;
+          background-color: var(--theme-primary);
+          border: 1px solid var(--theme-primary);
           color: #000;
           font-weight: 600;
           line-height: 1;
 
           &:focus,
           &:hover {
+            background-color: var(--theme-primary-hover);
+            border-color: var(--theme-primary-hover);
             color: #000;
           }
 

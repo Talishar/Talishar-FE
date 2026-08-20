@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
@@ -64,10 +64,9 @@ export default function ChatBox() {
   // Mount the panel and controls first, then parse the game log when the
   // browser is idle. This keeps opening chat responsive on slower phones.
   useEffect(() => {
-    const idleId = window.requestIdleCallback?.(
-      () => setLogReady(true),
-      { timeout: 250 }
-    );
+    const idleId = window.requestIdleCallback?.(() => setLogReady(true), {
+      timeout: 250
+    });
     const timeoutId =
       idleId === undefined
         ? window.setTimeout(() => setLogReady(true), 0)

@@ -291,27 +291,6 @@ const ReplayGame = () => {
         )}
       </section>
 
-      {/*       <details className={styles.manualReplay}>
-        <summary>Load by replay number</summary>
-        <div>
-          <label htmlFor="replayNumber">Replay game number:</label>
-          <input
-            id="replayNumber"
-            type="number"
-            placeholder="Enter replay number"
-            {...register('replayNumber', { valueAsNumber: true })}
-          ></input>
-          <button
-            type="submit"
-            className={buttonClass}
-            disabled={isLoadingReplay}
-            aria-busy={isLoadingReplay}
-          >
-            Replay Game
-          </button>
-        </div>
-      </details> */}
-
       {errors.root?.serverError && (
         <div className={styles.errorContainer}>
           <strong className={styles.errorTitle}>

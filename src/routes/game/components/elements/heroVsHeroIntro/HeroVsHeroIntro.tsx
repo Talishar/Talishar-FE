@@ -23,6 +23,7 @@ import { getSettingsEntity } from 'features/options/optionsSlice';
 import styles from './HeroVsHeroIntro.module.css';
 import { METAFY_TIER_MAP, MetafyTierName } from 'utils/patronIcons';
 import { useGetHeroMasteryQuery } from 'features/api/apiSlice';
+import { masteryLevelPreview } from 'features/mastery/mastery';
 import useAuth from 'hooks/useAuth';
 
 const formatHeroName = (id: string | undefined): string => {
@@ -302,9 +303,13 @@ const HeroVsHeroIntro = () => {
   const yourHero = playerID === 1 ? playerOneHero : playerTwoHero;
   const opponentHero = playerID === 1 ? playerTwoHero : playerOneHero;
   const yourMasteryLevel =
-    masteryData?.gamePlayers?.[String(playerID)]?.level ?? 0;
+    masteryLevelPreview('masteryLevel') ??
+    masteryData?.gamePlayers?.[String(playerID)]?.level ??
+    0;
   const opponentMasteryLevel =
-    masteryData?.gamePlayers?.[String(playerID === 1 ? 2 : 1)]?.level ?? 0;
+    masteryLevelPreview('opponentMasteryLevel') ??
+    masteryData?.gamePlayers?.[String(playerID === 1 ? 2 : 1)]?.level ??
+    0;
   const yourPatronInfo =
     playerID === 1 ? playerOnePatronInfo : playerTwoPatronInfo;
   const opponentPatronInfo =

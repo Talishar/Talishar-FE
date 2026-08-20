@@ -102,3 +102,15 @@
   font-weight: 600;
   color: var(--theme-primary, #d4af37);
 }
+
+.tooltip a {
+  color: var(--theme-primary, #d4af37);
+}
+
+.tooltip [style*='color'] {
+  color: inherit !important;
+}
+
+.tooltip [style*='background'] {
+  background-color: transparent !important;
+}

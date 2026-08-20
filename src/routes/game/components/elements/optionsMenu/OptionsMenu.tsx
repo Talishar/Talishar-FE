@@ -44,9 +44,7 @@ const OptionsContent = () => {
   const [selectedCardBack, setSelectedCardBack] = useState(
     deckCardBackId ?? '0'
   );
-  const [selectedPlaymat, setSelectedPlaymat] = useState(
-    deckPlaymatId ?? '0'
-  );
+  const [selectedPlaymat, setSelectedPlaymat] = useState(deckPlaymatId ?? '0');
   const { data: cosmeticsData } = useGetCosmeticsQuery(undefined, {
     skip: !canCustomizeDeck
   });
@@ -331,9 +329,7 @@ const OptionsContent = () => {
                         rel="noreferrer"
                       />
                     ),
-                    2: (
-                      <a href="/user/decks" target="_blank" rel="noreferrer" />
-                    )
+                    2: <a href="/user/decks" target="_blank" rel="noreferrer" />
                   }}
                 />
               </p>

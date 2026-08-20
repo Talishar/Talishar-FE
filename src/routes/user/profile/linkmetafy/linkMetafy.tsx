@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { usePageTitle } from 'hooks/usePageTitle';
 import SwordLoader from 'components/SwordLoader/SwordLoader';
+import { clearSupporterStatusCache } from 'hooks/useSupporterStatus';
 import styles from './linkMetafy.module.css';
 
 export interface MetafyLoginResponse {
@@ -26,6 +27,7 @@ const LinkMetafy = () => {
     })
       .unwrap()
       .then((data: MetafyLoginResponse) => {
+        clearSupporterStatusCache();
         if (data.message === 'ok') {
           toast.success(t('LINK_METAFY_PAGE.SUCCESS'), {
             position: 'top-center'

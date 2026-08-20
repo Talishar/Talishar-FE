@@ -120,7 +120,7 @@ export const CosmeticsSection: React.FC<CosmeticsSectionProps> = ({
       <label className={styles.cardBackTitle}>
         <strong>{t('OPTIONS_MENU.PLAYMAT')}</strong>
         {!data?.playmats?.length && (
-          <p>{t('OPTIONS_MENU.LOGIN_TO_CUSTOMISE_PLAYMAT')}</p>
+          <p>{t('OPTIONS_MENU.LOGIN_TO_CUSTOMIZE_PLAYMAT')}</p>
         )}
         <div className={styles.playmatListContainer}>
           {renderPlaymatThumb('0')}

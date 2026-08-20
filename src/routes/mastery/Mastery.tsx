@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useGetHeroMasteryQuery } from 'features/api/apiSlice';
 import { HEROES_OF_RATHE } from 'routes/index/components/filter/constants';
@@ -36,6 +36,23 @@ const devGamesForHero = (
   return minimum + (seededNumber(heroId) % Math.max(1, maximum - minimum));
 };
 
+/* Keep a hero's detail popup inside the grid; edge columns would otherwise
+   centre it off the side of the screen. */
+const alignDetail = (card: HTMLElement) => {
+  const detail = card.querySelector<HTMLElement>(`.${styles.detail}`);
+  const grid = card.parentElement;
+  if (!detail || !grid) return;
+
+  card.style.setProperty('--detail-shift', '0px');
+  const bounds = grid.getBoundingClientRect();
+  const rect = detail.getBoundingClientRect();
+  const overflowLeft = bounds.left - rect.left;
+  const overflowRight = rect.right - bounds.right;
+  const shift =
+    overflowLeft > 0 ? overflowLeft : overflowRight > 0 ? -overflowRight : 0;
+  card.style.setProperty('--detail-shift', `${Math.round(shift)}px`);
+};
+
 const Mastery = () => {
   const { t } = useTranslation();
   const { data, isLoading, error } = useGetHeroMasteryQuery();
@@ -43,13 +60,15 @@ const Mastery = () => {
   const [sortOrder, setSortOrder] = useState<SortOrder>('rank');
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
   const [expandedHero, setExpandedHero] = useState<string | null>(null);
+  const milestones = import.meta.env.DEV
+    ? MASTERY_MILESTONES
+    : data?.milestones ?? MASTERY_MILESTONES;
   const progress = useMemo(() => {
     const result = new Map(
       (data?.heroes ?? []).map((hero) => [hero.heroId, hero])
     );
 
     if (import.meta.env.DEV) {
-      const milestones = data?.milestones ?? MASTERY_MILESTONES;
       (data?.heroGroups?.classicConstructed ?? []).forEach((heroId, index) => {
         const qualifyingGames = devGamesForHero(heroId, index, milestones);
         const level = milestones.filter(
@@ -60,6 +79,8 @@ const Mastery = () => {
           heroId,
           qualifyingGames,
           level,
+          displayLevel: null,
+          frameLevel: level,
           asset: null,
           nextThreshold,
           gamesToNext:
@@ -69,7 +90,7 @@ const Mastery = () => {
     }
 
     return result;
-  }, [data]);
+  }, [data, milestones]);
 
   const groups = useMemo(() => {
     const makeGroup = (name: string, heroIds: string[] = []) => {
@@ -93,12 +114,10 @@ const Mastery = () => {
     ];
   }, [data?.heroGroups, t]);
 
-  const availableHeroes = useMemo(() => {
-    const unique = new Map(
-      groups.flatMap((group) => group.heroes).map((hero) => [hero.value, hero])
-    );
-    return [...unique.values()];
-  }, [groups]);
+  const playedCount = (heroes: { value: string }[]) =>
+    heroes.filter(
+      (hero) => (progress.get(hero.value)?.qualifyingGames ?? 0) > 0
+    ).length;
 
   const visible = (heroId: string) => {
     const games = progress.get(heroId)?.qualifyingGames ?? 0;
@@ -121,9 +140,6 @@ const Mastery = () => {
       return gamesDifference || left.label.localeCompare(right.label);
     });
 
-  const playedCount = availableHeroes.filter(
-    (hero) => (progress.get(hero.value)?.qualifyingGames ?? 0) > 0
-  ).length;
   const filterLabels: Record<Filter, string> = {
     all: t('MASTERY.FILTER.ALL'),
     played: t('MASTERY.FILTER.PLAYED'),
@@ -139,13 +155,6 @@ const Mastery = () => {
             <Trans
               i18nKey="MASTERY.BETA_NOTICE"
               components={{ strong: <strong /> }}
-            />
-          </p>
-          <p className={styles.collectionSummary}>
-            <Trans
-              i18nKey="MASTERY.COLLECTION_SUMMARY"
-              values={{ played: playedCount, total: availableHeroes.length }}
-              components={{ count: <span /> }}
             />
           </p>
           <div className={styles.toolbarControls}>
@@ -215,6 +224,16 @@ const Mastery = () => {
                     {collapsed[group.name] && <path d="M8 4v8" />}
                   </svg>
                   <b>{group.name}</b> <small>({heroes.length})</small>
+                  <span className={styles.groupSummary}>
+                    <Trans
+                      i18nKey="MASTERY.COLLECTION_SUMMARY"
+                      values={{
+                        played: playedCount(group.heroes),
+                        total: group.heroes.length
+                      }}
+                      components={{ count: <span /> }}
+                    />
+                  </span>
                 </button>
                 {!collapsed[group.name] &&
                   (heroes.length ? (
@@ -222,10 +241,7 @@ const Mastery = () => {
                       {heroes.map((hero) => {
                         const item =
                           progress.get(hero.value) ?? emptyMastery(hero.value);
-                        const start = progressStart(
-                          item.level,
-                          data?.milestones
-                        );
+                        const start = progressStart(item.level, milestones);
                         const end = item.nextThreshold ?? item.qualifyingGames;
                         const percent =
                           end === start
@@ -261,11 +277,16 @@ const Mastery = () => {
                             data-expanded={expandedHero === hero.value}
                             aria-describedby={detailId}
                             aria-expanded={expandedHero === hero.value}
-                            onClick={() =>
+                            onMouseEnter={(event) =>
+                              alignDetail(event.currentTarget)
+                            }
+                            onFocus={(event) => alignDetail(event.currentTarget)}
+                            onClick={(event) => {
+                              alignDetail(event.currentTarget);
                               setExpandedHero((current) =>
                                 current === hero.value ? null : hero.value
-                              )
-                            }
+                              );
+                            }}
                             onKeyDown={(event) => {
                               if (event.key === 'Escape') setExpandedHero(null);
                             }}

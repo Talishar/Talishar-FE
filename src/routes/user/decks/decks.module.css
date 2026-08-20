@@ -358,6 +358,74 @@
   border-color: #d4af37;
 }
 
+.frameThumbWrapper {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4em;
+  width: 92px;
+  flex-shrink: 0;
+  padding: 0.5em 0.2em 0.4em;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.frameThumbWrapper:hover,
+.frameThumbWrapper:focus-visible {
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.frameThumbWrapper:focus-visible {
+  outline: 1px solid rgba(255, 255, 255, 0.45);
+  outline-offset: 2px;
+}
+
+.frameThumbWrapper:disabled {
+  cursor: progress;
+}
+
+.frameSelected,
+.frameSelected:hover,
+.frameSelected:focus-visible {
+  border-color: #d4af37;
+  background: rgba(212, 175, 55, 0.1);
+}
+
+.frameSelected .thumbLabel {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.framePreview {
+  transition: transform 0.12s ease;
+}
+
+.frameThumbWrapper:hover .framePreview {
+  transform: translateY(-2px);
+}
+
+.frameThumbWrapper:active .framePreview {
+  transform: scale(0.96);
+}
+
+.framePreview img {
+  display: block;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .framePreview {
+    transition: none;
+  }
+}
+
 .thumbLabel {
   font-size: 0.72em;
   color: rgba(255, 255, 255, 0.65);

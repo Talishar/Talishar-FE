@@ -50,10 +50,10 @@ import useAdScript, { wasAdProviderLoadedInDocument } from 'hooks/useAdScript';
 const TOAST_STYLE: React.CSSProperties = {
   background: 'var(--theme-tertiary)',
   color: 'var(--white)',
-  border: '2px solid var(--theme-border)',
+  border: '1px solid var(--theme-border)',
   padding: '0.5rem',
   wordBreak: 'break-word',
-  maxWidth: '100vh',
+  maxWidth: '100vw',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   userSelect: 'none',
@@ -63,6 +63,11 @@ const TOAST_STYLE: React.CSSProperties = {
   zIndex: 10001
 };
 const TOAST_OPTIONS = { style: TOAST_STYLE };
+
+const isLoadingErrorPreviewEnabled = () =>
+  import.meta.env.DEV &&
+  typeof window !== 'undefined' &&
+  new URLSearchParams(window.location.search).get('loadingErrorTest') === '1';
 
 function Play({ isRoguelike }: { isRoguelike: boolean }) {
   const needsCleanDocument = useRef(wasAdProviderLoadedInDocument());
@@ -96,6 +101,14 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
   );
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const [loadedGameID, setLoadedGameID] = useState<number | null>(null);
+  const developmentLoadingError = isLoadingErrorPreviewEnabled()
+    ? t('GAME_STATE.GAME_ERROR', {
+        message: 'Development preview: This game no longer exists.'
+      })
+    : null;
+  const [loadingError, setLoadingError] = useState<string | null>(
+    developmentLoadingError
+  );
   const isGameStateLoading =
     gameInfo.gameID <= 0 || loadedGameID !== gameInfo.gameID;
   const canPassPhase = useAppSelector(
@@ -105,6 +118,10 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
   useEffect(() => {
     dispatch(setIsRoguelike(isRoguelike));
   }, [isRoguelike]);
+
+  useEffect(() => {
+    setLoadingError(developmentLoadingError);
+  }, [gameInfo.gameID, developmentLoadingError]);
 
   useEffect(() => {
     if (gameInfo.gameID) {
@@ -230,12 +247,17 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
         <OpponentInactive />
         <CardPortal />
         <GameStateHandler
-          onInitialStateReceived={(receivedGameID) =>
-            setLoadedGameID(receivedGameID)
-          }
+          onInitialStateReceived={(receivedGameID) => {
+            setLoadedGameID(receivedGameID);
+            setLoadingError(null);
+          }}
+          onLoadingError={setLoadingError}
         />
         {isGameStateLoading && (
-          <LoadingScreen message={t('GAME_STATE.LOADING')} />
+          <LoadingScreen
+            message={t('GAME_STATE.LOADING')}
+            detail={loadingError}
+          />
         )}
         <SpectatorLoginRequired />
         <EventsHandler />

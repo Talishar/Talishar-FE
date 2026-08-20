@@ -60,7 +60,21 @@
 }
 
 .link {
+  display: inline;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: none;
+  font: inherit;
   font-weight: 600;
+  color: var(--theme-primary);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.link:hover {
+  background: none;
   color: var(--theme-primary);
 }
 

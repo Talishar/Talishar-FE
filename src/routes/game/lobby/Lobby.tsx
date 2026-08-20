@@ -49,6 +49,8 @@ import {
 } from 'appConstants';
 import { JUDGE_HUB_DISCORD_URL } from 'constants/socialLinks';
 import { getReadableFormatName } from 'utils/formatUtils';
+import { masteryLevelPreview } from 'features/mastery/mastery';
+import MasteryBorder from 'features/mastery/MasteryBorder';
 
 const COMPETITIVE_FORMATS = new Set([
   GAME_FORMAT.COMPETITIVE_CC,
@@ -83,6 +85,10 @@ import {
 } from 'features/options/optionsSlice';
 import { DISABLE_ALT_ARTS } from 'features/options/constants';
 import { useTranslation, Trans } from 'react-i18next';
+import {
+  EquipmentSlotName,
+  getEmptyEquipmentSlots
+} from './equipmentWarning';
 
 // FaBrary uses hyphens (e.g. "briar-warden-of-thorns"), Talishar uses underscores.
 const normalizeHeroId = (id: string) => id.toLowerCase().replace(/-/g, '_');
@@ -134,6 +140,11 @@ const Lobby = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [pendingEquipmentSubmission, setPendingEquipmentSubmission] =
+    useState<{
+      values: DeckResponse;
+      emptySlots: EquipmentSlotName[];
+    } | null>(null);
   const [selectedMatchupId, setSelectedMatchupId] = useState<string | null>(
     null
   );
@@ -158,7 +169,7 @@ const Lobby = () => {
     useAuth();
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const { playerID, gameID, authKey } = gameInfo;
-  const { data: masteryData } = useGetHeroMasteryQuery(
+  const { data: masteryData, refetch: refetchMastery } = useGetHeroMasteryQuery(
     { gameName: gameID, scope: 'game' },
     { skip: !isLoggedIn }
   );
@@ -333,6 +344,15 @@ const Lobby = () => {
     }
   }, [gameLobby?.theirHero]);
 
+  // Mastery is fetched once on mount, usually before the opponent has joined, so
+  // their entry is missing from gamePlayers and their frame renders as level 0.
+  // Refetch whenever their hero appears or changes.
+  useEffect(() => {
+    if (!isLoggedIn) return;
+    if (!gameLobby?.theirHero || gameLobby.theirHero === 'CardBack') return;
+    refetchMastery();
+  }, [isLoggedIn, gameLobby?.theirHero, refetchMastery]);
+
   const handleEquipmentClick = () => {
     setActiveTab('equipment');
   };
@@ -469,9 +489,13 @@ const Lobby = () => {
   const rightHero =
     gameLobby?.theirHero === 'CardBack' ? 'UNKNOWNHERO' : gameLobby?.theirHero;
   const leftMasteryLevel =
-    masteryData?.gamePlayers?.[String(playerID)]?.level ?? 0;
+    masteryLevelPreview('masteryLevel') ??
+    masteryData?.gamePlayers?.[String(playerID)]?.level ??
+    0;
   const rightMasteryLevel =
-    masteryData?.gamePlayers?.[String(playerID === 1 ? 2 : 1)]?.level ?? 0;
+    masteryLevelPreview('opponentMasteryLevel') ??
+    masteryData?.gamePlayers?.[String(playerID === 1 ? 2 : 1)]?.level ??
+    0;
 
   const leftPic = `url(${generateCroppedImageUrl(leftHero)})`;
   const lobbyFormatName = getReadableFormatName(
@@ -696,7 +720,25 @@ const Lobby = () => {
   //const needToDoDisclaimer = false;
   const leaveLobby = classNames(styles.buttonClass, 'outline');
 
-  const handleFormSubmission = async (values: DeckResponse) => {
+  const handleFormSubmission = async (
+    values: DeckResponse,
+    equipmentWarningConfirmed = false
+  ) => {
+    if (!equipmentWarningConfirmed) {
+      const emptyEquipmentSlots = getEmptyEquipmentSlots(
+        values,
+        data.deck.modular
+      );
+
+      if (emptyEquipmentSlots.length > 0) {
+        setPendingEquipmentSubmission({
+          values,
+          emptySlots: emptyEquipmentSlots
+        });
+        return;
+      }
+    }
+
     const matchupIdToRestore = selectedMatchupId;
     setIsSubmitting(true);
 
@@ -875,8 +917,50 @@ const Lobby = () => {
     }
   };
 
+  const equipmentSlotLabels: Record<EquipmentSlotName, string> = {
+    head: t('GAME_LOBBY.HEAD'),
+    chest: t('GAME_LOBBY.CHEST'),
+    arms: t('GAME_LOBBY.ARMS'),
+    legs: t('GAME_LOBBY.LEGS')
+  };
+
+  const confirmEquipmentSubmission = () => {
+    if (!pendingEquipmentSubmission) return;
+
+    const { values } = pendingEquipmentSubmission;
+    setPendingEquipmentSubmission(null);
+    void handleFormSubmission(values, true);
+  };
+
   return (
     <main className={mainClassNames}>
+      {pendingEquipmentSubmission &&
+        createPortal(
+          <dialog open className={styles.modal}>
+            <article>
+              <header>
+                {t('GAME_LOBBY.EMPTY_EQUIPMENT_WARNING', {
+                  count: pendingEquipmentSubmission.emptySlots.length,
+                  slots: pendingEquipmentSubmission.emptySlots
+                    .map((slot) => equipmentSlotLabels[slot])
+                    .join(', ')
+                })}
+              </header>
+              <div className={styles.modalButtons}>
+                <button type="button" onClick={confirmEquipmentSubmission}>
+                  {t('GAME_LOBBY.YES')}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPendingEquipmentSubmission(null)}
+                >
+                  {t('GAME_LOBBY.NO')}
+                </button>
+              </div>
+            </article>
+          </dialog>,
+          document.body
+        )}
       {gameLobby?.chatInvited &&
         showChatModal &&
         createPortal(
@@ -959,7 +1043,7 @@ const Lobby = () => {
           legs: initialEquipment(data.deck.legs),
           assignedModulars: { head: [], chest: [], arms: [], legs: [] }
         }}
-        onSubmit={handleFormSubmission}
+        onSubmit={(values) => handleFormSubmission(values)}
         validationSchema={deckValidation(deckSize, maxDeckSize, handsTotal)}
         validateOnChange={true}
         validateOnBlur={true}
@@ -979,6 +1063,7 @@ const Lobby = () => {
                   style={{ backgroundImage: leftPic }}
                   data-mastery-level={leftMasteryLevel}
                 >
+                  <MasteryBorder level={leftMasteryLevel} />
                   <div className={styles.dimPic}>
                     <h3 aria-busy={isLoading}>
                       {createPatreonIconMap(
@@ -1021,6 +1106,7 @@ const Lobby = () => {
                   style={{ backgroundImage: rightPic }}
                   data-mastery-level={rightMasteryLevel}
                 >
+                  <MasteryBorder level={rightMasteryLevel} />
                   {playerID === 1 &&
                     gameLobby?.theirHero &&
                     gameLobby.theirHero !== 'CardBack' &&

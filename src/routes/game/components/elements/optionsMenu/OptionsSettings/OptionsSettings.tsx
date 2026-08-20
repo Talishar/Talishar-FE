@@ -108,13 +108,17 @@ const OptionsSettings = () => {
     disableFabInsights: settingsData['DisableFabInsights']?.value === '1',
     disableHeroIntro: settingsData['DisableHeroIntro']?.value === '1',
     mirroredBoardLayout:
-      settingsData[optConst.MIRRORED_BOARD_LAYOUT]?.value === '1',
+      String(settingsData[optConst.MIRRORED_BOARD_LAYOUT]?.value) === '1',
     mirroredPlayerBoardLayout:
-      settingsData[optConst.MIRRORED_PLAYER_BOARD_LAYOUT]?.value === '1',
+      String(settingsData[optConst.MIRRORED_PLAYER_BOARD_LAYOUT]?.value) === '1',
     alwaysShowCounters:
       String(settingsData[optConst.ALWAYS_SHOW_COUNTERS]?.value) === '1',
     hideHandFromFriends:
-      settingsData[optConst.HIDE_HAND_FROM_FRIENDS]?.value === '1'
+      settingsData[optConst.HIDE_HAND_FROM_FRIENDS]?.value === '1',
+    hideGamesFromFriends:
+      settingsData[optConst.HIDE_GAMES_FROM_FRIENDS]?.value === '1',
+    gemsOffByDefault:
+      String(settingsData[optConst.GEMS_OFF_BY_DEFAULT]?.value) === '1'
   };
 
   useShortcut(DEFAULT_SHORTCUTS.TOGGLE_MANUAL_MODE, () => {
@@ -169,6 +173,18 @@ const OptionsSettings = () => {
               handleSettingsChange({
                 name: optConst.HOLD_PRIORITY_SETTING,
                 value: value
+              })
+            }
+          />
+          <CheckboxSetting
+            name="gemsOffByDefault"
+            label={t('SETTINGS.GEMS_OFF_BY_DEFAULT')}
+            tooltip={t('SETTINGS.GEMS_OFF_BY_DEFAULT_TOOLTIP')}
+            checked={initialValues.gemsOffByDefault}
+            onChange={() =>
+              handleSettingsChange({
+                name: optConst.GEMS_OFF_BY_DEFAULT,
+                value: initialValues.gemsOffByDefault ? '0' : '1'
               })
             }
           />
@@ -270,6 +286,18 @@ const OptionsSettings = () => {
               handleSettingsChange({
                 name: optConst.HIDE_HAND_FROM_FRIENDS,
                 value: initialValues.hideHandFromFriends ? '0' : '1'
+              })
+            }
+          />
+          <CheckboxSetting
+            name="hideGamesFromFriends"
+            label={t('SETTINGS.HIDE_GAMES_FROM_FRIENDS')}
+            tooltip={t('SETTINGS.HIDE_GAMES_FROM_FRIENDS_TOOLTIP')}
+            checked={initialValues.hideGamesFromFriends}
+            onChange={() =>
+              handleSettingsChange({
+                name: optConst.HIDE_GAMES_FROM_FRIENDS,
+                value: initialValues.hideGamesFromFriends ? '0' : '1'
               })
             }
           />

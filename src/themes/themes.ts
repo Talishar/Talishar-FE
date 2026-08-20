@@ -922,10 +922,7 @@ export const themes: Theme[] = [
   }
 ];
 
-export const getThemeById = (
-  id: string,
-  transparency = 0.98
-): Theme => {
+export const getThemeById = (id: string, transparency = 0.98): Theme => {
   const theme = themes.find((theme) => theme.id === id) || themes[0];
   const clampedTransparency = Math.max(0, Math.min(1, transparency)); // Clamp between 0 and 1
 

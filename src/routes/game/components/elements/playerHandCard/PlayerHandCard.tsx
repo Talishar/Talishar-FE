@@ -27,6 +27,7 @@ import { createPortal } from 'react-dom';
 import { CARD_SQUARES_PATH, getCollectionCardImagePath } from 'utils';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import { formatRestriction } from 'data/keywords';
+import { useTranslation } from 'react-i18next';
 import {
   buildHandCardSelectionKey,
   clearTapToPreviewSelection,
@@ -86,6 +87,7 @@ export const PlayerHandCard = React.memo(
     const [isDragging, setIsDragging] = useState(false);
     const [snapback, setSnapback] = useState<boolean>(true);
     const { getLanguage } = useLanguageSelector();
+    const { t } = useTranslation();
 
     // ref to determine if we have a long press or a short tap.
     const timerRef = useRef<ReturnType<typeof setTimeout>>();
@@ -121,10 +123,10 @@ export const PlayerHandCard = React.memo(
       zone: isArsenal
         ? 'arsenal'
         : isBanished
-          ? 'banished'
-          : isGraveyard
-            ? 'graveyard'
-            : 'hand'
+        ? 'banished'
+        : isGraveyard
+        ? 'graveyard'
+        : 'hand'
     });
 
     const src = getCollectionCardImagePath({
@@ -289,23 +291,25 @@ export const PlayerHandCard = React.memo(
       <div className={styles.iconCol}>
         {isArsenal === true && (
           <div className={styles.icon}>
-            <GiCannon title="Arsenal" />
+            <GiCannon title={t('ZONES.ARSENAL')} />
           </div>
         )}
         {isBanished === true && (
           <div className={styles.icon}>
-            <GiFluffySwirl title="Banished Zone" />
+            <GiFluffySwirl title={t('ZONES.BANISH')} />
           </div>
         )}
         {isGraveyard === true && (
           <div className={styles.icon}>
-            <GiTombstone title="Graveyard" />
+            <GiTombstone title={t('ZONES.GRAVEYARD')} />
           </div>
         )}
         {!!card.restriction && (
           <div className={styles.icon}>
             <GiDialPadlock
-              title={`Cannot play: ${formatRestriction(card.restriction)}`}
+              title={t('PLAYER_HAND_CARD.CANNOT_PLAY', {
+                reason: formatRestriction(card.restriction)
+              })}
             />
           </div>
         )}

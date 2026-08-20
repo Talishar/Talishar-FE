@@ -48,6 +48,7 @@ function HealthDisplay(props: Player) {
 
 const ManualModeHealth = ({ isPlayer }: { isPlayer: boolean }) => {
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const onAddResourceClick = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
@@ -80,11 +81,29 @@ const ManualModeHealth = ({ isPlayer }: { isPlayer: boolean }) => {
   };
   return (
     <div>
-      <button className={styles.drawButton} onClick={onAddResourceClick}>
-        <AiOutlinePlus />
+      <button
+        type="button"
+        className={styles.drawButton}
+        onClick={onAddResourceClick}
+        aria-label={t(
+          isPlayer
+            ? 'MANUAL_MODE_PANEL.ADD_1_HP_PLAYER'
+            : 'MANUAL_MODE_PANEL.ADD_1_HP_OPPONENT'
+        )}
+      >
+        <AiOutlinePlus aria-hidden="true" />
       </button>
-      <button className={styles.drawButton} onClick={onSubtractResourceClick}>
-        <AiOutlineMinus />
+      <button
+        type="button"
+        className={styles.drawButton}
+        onClick={onSubtractResourceClick}
+        aria-label={t(
+          isPlayer
+            ? 'MANUAL_MODE_PANEL.REMOVE_1_HP_PLAYER'
+            : 'MANUAL_MODE_PANEL.REMOVE_1_HP_OPPONENT'
+        )}
+      >
+        <AiOutlineMinus aria-hidden="true" />
       </button>
     </div>
   );
@@ -123,9 +142,7 @@ export function ActionPointDisplay(props: Player) {
             >{`${APAvailable} AP`}</div>
             {isManualMode && <ManualMode />}
           </motion.div>
-        ) : (
-          <div></div>
-        )}
+        ) : null}
       </AnimatePresence>
     </>
   );
@@ -133,6 +150,7 @@ export function ActionPointDisplay(props: Player) {
 
 const ManualMode = () => {
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const onAddResourceClick = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
@@ -161,11 +179,21 @@ const ManualMode = () => {
   };
   return (
     <div>
-      <button className={styles.drawButton} onClick={onAddResourceClick}>
-        <AiOutlinePlus />
+      <button
+        type="button"
+        className={styles.drawButton}
+        onClick={onAddResourceClick}
+        aria-label={t('MANUAL_MODE_PANEL.ADD_1_ACTION_POINT')}
+      >
+        <AiOutlinePlus aria-hidden="true" />
       </button>
-      <button className={styles.drawButton} onClick={onSubtractResourceClick}>
-        <AiOutlineMinus />
+      <button
+        type="button"
+        className={styles.drawButton}
+        onClick={onSubtractResourceClick}
+        aria-label={t('MANUAL_MODE_PANEL.REMOVE_1_ACTION_POINT')}
+      >
+        <AiOutlineMinus aria-hidden="true" />
       </button>
     </div>
   );

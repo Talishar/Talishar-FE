@@ -37,4 +37,14 @@ i18n
     }
   });
 
+// Keep <html lang> in sync so screen readers and search engines see the
+// language the user is actually reading.
+const syncDocumentLanguage = (language: string) => {
+  if (typeof document === 'undefined' || !language) return;
+  document.documentElement.lang = language;
+};
+
+syncDocumentLanguage(i18n.resolvedLanguage ?? i18n.language);
+i18n.on('languageChanged', syncDocumentLanguage);
+
 export default i18n;

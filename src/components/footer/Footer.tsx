@@ -132,16 +132,13 @@ const Footer = () => {
             >
               <Link to="/privacy">{t('FOOTER.PRIVACY_POLICY')}</Link>
               <Link to="/terms-of-service">{t('FOOTER.TERMS_OF_SERVICE')}</Link>
-              <a
-                href="#"
+              <button
+                type="button"
                 className={styles.cookiePreferencesButton}
-                onClick={(e) => {
-                  e.preventDefault();
-                  reopenCookieConsent();
-                }}
+                onClick={() => reopenCookieConsent()}
               >
                 {t('FOOTER.COOKIE_PREFERENCES')}
-              </a>
+              </button>
             </nav>
 
             <div className={styles.disclaimer}>

@@ -56,7 +56,6 @@ const ChooseFirstTurn = () => {
       <article className={styles.container}>
         <hgroup style={{ width: '100%' }}>
           <h3>{t('GAME_LOBBY.YOU_WON_DIE')}</h3>
-          {/* <h5>Their hero is {gameLobby?.theirHeroName}</h5> */}
           <h5>{t('GAME_LOBBY.FIRST_OR_SECOND')}</h5>
         </hgroup>
         <div className={styles.buttons}>

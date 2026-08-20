@@ -10,7 +10,6 @@
   margin: 0 auto;
 }
 
-
 .guideGrid {
   display: flex;
   flex-direction: column;
@@ -49,7 +48,11 @@
   width: 50%;
   min-height: 280px;
   overflow: hidden;
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.05), rgba(212, 175, 55, 0.1));
+  background: linear-gradient(
+    135deg,
+    rgba(212, 175, 55, 0.05),
+    rgba(212, 175, 55, 0.1)
+  );
   flex-shrink: 0;
 
   @media (max-width: 768px) {
@@ -85,7 +88,7 @@
   flex-grow: 1;
   display: -webkit-box;
   -webkit-line-clamp: 5;
-  line-clamp: 5;  
+  line-clamp: 5;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -121,12 +124,12 @@
   color: inherit;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
-  
+
   &:hover {
     border-color: var(--theme-primary);
     transform: translateY(-8px);
     box-shadow: 0 12px 24px rgba(212, 175, 55, 0.2);
-    
+
     .guideImage {
       transform: scale(1.05);
     }
@@ -141,7 +144,11 @@
   width: 100%;
   aspect-ratio: 16 / 10;
   overflow: hidden;
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.05), rgba(212, 175, 55, 0.1));
+  background: linear-gradient(
+    135deg,
+    rgba(212, 175, 55, 0.05),
+    rgba(212, 175, 55, 0.1)
+  );
   position: relative;
   flex-shrink: 0;
 }
@@ -160,7 +167,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, rgba(74, 80, 86, 0.3), rgba(96, 101, 105, 0.3));
+  background: linear-gradient(
+    135deg,
+    rgba(74, 80, 86, 0.3),
+    rgba(96, 101, 105, 0.3)
+  );
   color: var(--theme-text-muted);
   font-size: 0.9rem;
 }
@@ -232,7 +243,7 @@
 .guideMetadata {
   display: flex;
   justify-content: space-between;
-  align-items:last baseline;
+  align-items: last baseline;
   gap: 1rem;
 }
 
@@ -260,7 +271,7 @@
   font-size: 1rem;
   color: var(--theme-primary);
   font-weight: 700;
-  
+
   &.freeForSupporters {
     font-size: 0.8rem;
     background: rgba(212, 175, 55, 0.15);
@@ -386,7 +397,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  
+
   &:hover {
     background: var(--theme-primary-hover);
     transform: scale(1.05);
@@ -427,7 +438,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  
+
   &:hover:not(:disabled) {
     background: var(--theme-primary);
     border-color: var(--theme-primary);

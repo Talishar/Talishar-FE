@@ -10,7 +10,8 @@ export const Privacy = () => {
   return (
     <main>
       <article className={styles.privacyContainer}>
-        <h1>{t('PRIVACY_PAGE.DISCLAIMER_TITLE')}</h1>
+        <h1>{t('PRIVACY_PAGE.PRIVACY_POLICY_TITLE')}</h1>
+        <h2>{t('PRIVACY_PAGE.DISCLAIMER_TITLE')}</h2>
         <p>
           <Trans i18nKey="PRIVACY_PAGE.AFFILIATION_DISCLAIMER">
             Talishar is in no way affiliated with Legend Story Studios. Legend
@@ -25,19 +26,17 @@ export const Privacy = () => {
             .
           </Trans>
         </p>
-        <h1>{t('PRIVACY_PAGE.REMEMBER_ME_TITLE')}</h1>
+        <h2>{t('PRIVACY_PAGE.REMEMBER_ME_TITLE')}</h2>
         <p>{t('PRIVACY_PAGE.REMEMBER_ME_DESCRIPTION')}</p>
-        <h1>{t('PRIVACY_PAGE.AUTHORIZATION_KEY_TITLE')}</h1>
+        <h2>{t('PRIVACY_PAGE.AUTHORIZATION_KEY_TITLE')}</h2>
         <p>{t('PRIVACY_PAGE.AUTHORIZATION_KEY_DESCRIPTION')}</p>
-        <h1>{t('PRIVACY_PAGE.COOKIE_PREFERENCES_TITLE')}</h1>
+        <h2>{t('PRIVACY_PAGE.COOKIE_PREFERENCES_TITLE')}</h2>
         <p>{t('PRIVACY_PAGE.COOKIE_PREFERENCES_DESCRIPTION')}</p>
         <p>
           <button type="button" onClick={() => reopenCookieConsent()}>
             {t('PRIVACY_PAGE.OPEN_COOKIE_SETTINGS')}
           </button>
         </p>
-
-        <h1>{t('PRIVACY_PAGE.PRIVACY_POLICY_TITLE')}</h1>
 
         <h2>{t('PRIVACY_PAGE.DATA_COLLECTION_TITLE')}</h2>
         <p>{t('PRIVACY_PAGE.DATA_COLLECTION_DESCRIPTION')}</p>
@@ -242,7 +241,7 @@ export const Privacy = () => {
             {t('PRIVACY_PAGE.LAST_UPDATED', { date: 'January 23, 2026' })}
           </strong>
         </p>
-        <h1>{t('PRIVACY_PAGE.CREDITS_TITLE')}</h1>
+        <h2>{t('PRIVACY_PAGE.CREDITS_TITLE')}</h2>
         <p>{t('PRIVACY_PAGE.CREDITS_DESCRIPTION')}</p>
       </article>
     </main>

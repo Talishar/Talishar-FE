@@ -44,9 +44,11 @@ describe('ad provider security kill switch', () => {
 
 describe('video ad hit-area containment', () => {
   afterEach(() => {
-    document.body.querySelectorAll(':scope > :not(#root)').forEach((element) => {
-      element.remove();
-    });
+    document.body
+      .querySelectorAll(':scope > :not(#root)')
+      .forEach((element) => {
+        element.remove();
+      });
   });
 
   it('keeps transparent provider wrappers click-through', () => {
@@ -70,5 +72,30 @@ describe('video ad hit-area containment', () => {
       'none'
     );
     expect(iframe.style.getPropertyValue('pointer-events')).toBe('auto');
+  });
+
+  it('keeps a non-semantic provider close control clickable', () => {
+    const wrapper = document.createElement('div');
+    const providerContainer = document.createElement('div');
+    const closeControl = document.createElement('div');
+    const closeIcon = document.createElementNS(
+      'http://www.w3.org/2000/svg',
+      'svg'
+    );
+
+    providerContainer.id = 'reviq-player';
+    closeControl.className = 'Primis-player-close-control';
+    closeControl.appendChild(closeIcon);
+    providerContainer.appendChild(closeControl);
+    wrapper.appendChild(providerContainer);
+    document.body.appendChild(wrapper);
+
+    (window as any)._talishar_lockOverlays();
+
+    expect(wrapper.style.getPropertyValue('pointer-events')).toBe('none');
+    expect(providerContainer.style.getPropertyValue('pointer-events')).toBe(
+      'none'
+    );
+    expect(closeControl.style.getPropertyValue('pointer-events')).toBe('auto');
   });
 });

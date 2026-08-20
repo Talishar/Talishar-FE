@@ -166,9 +166,7 @@ function purgeAdElement(node: Element): boolean {
 function purgeAdElementOrDescendants(node: Element) {
   if (purgeAdElement(node)) return;
 
-  node
-    .querySelectorAll?.('script[src*="rev.iq"]')
-    .forEach((el) => el.remove());
+  node.querySelectorAll?.('script[src*="rev.iq"]').forEach((el) => el.remove());
   node.querySelectorAll?.(AD_SELECTORS)?.forEach((el) => el.remove());
 }
 
@@ -233,8 +231,15 @@ const CMP_SELECTOR =
 
 const VIDEO_AD_CONTAINER_SELECTOR =
   '[id^="reviq-"], [id^="prims_"], [id^="primis"], [class*="primis"]';
+const VIDEO_AD_DISMISS_SELECTOR =
+  '[aria-label*="close" i], [aria-label*="dismiss" i], ' +
+  '[title*="close" i], [title*="dismiss" i], ' +
+  '[id*="close" i], [id*="dismiss" i], ' +
+  '[class*="close" i], [class*="dismiss" i], ' +
+  '[data-action*="close" i], [data-action*="dismiss" i]';
 const VIDEO_AD_INTERACTIVE_SELECTOR =
-  'iframe, video, a, button, input, select, [role="button"], [tabindex]';
+  'iframe, video, a, button, input, select, [role="button"], [tabindex], ' +
+  VIDEO_AD_DISMISS_SELECTOR;
 const VIDEO_AD_Z_INDEX = '9999';
 
 function isCMPElement(el: Element): boolean {

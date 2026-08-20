@@ -352,6 +352,19 @@ export const parseHtmlToReactElements = (htmlString: string): ReactNode => {
         }
       }
 
+      // Anything opening in a new tab must be isolated from the opener, even
+      // when the source markup forgot to say so.
+      if (props.target === '_blank') {
+        const relParts = new Set(
+          String(props.rel ?? '')
+            .split(/\s+/)
+            .filter(Boolean)
+        );
+        relParts.add('noopener');
+        relParts.add('noreferrer');
+        props.rel = Array.from(relParts).join(' ');
+      }
+
       if (allowedAttrs.has('title')) {
         const title = element.getAttribute('title');
         if (title) {

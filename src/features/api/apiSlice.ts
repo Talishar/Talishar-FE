@@ -105,7 +105,11 @@ import {
   GetSavedReplaysResponse,
   SetReplayFavoriteRequest
 } from 'interface/API/GetSavedReplays.php';
-import { HeroMasteryResponse } from 'interface/API/HeroMastery';
+import {
+  HeroMasteryResponse,
+  SaveHeroMasteryFrameRequest,
+  SaveHeroMasteryFrameResponse
+} from 'interface/API/HeroMastery';
 
 export interface GetLastActiveGameResponse {
   gameExists: boolean;
@@ -210,6 +214,20 @@ export const apiSlice = createApi({
         responseHandler: parseResponse
       }),
       providesTags: ['HeroMastery']
+    }),
+    saveHeroMasteryFrame: builder.mutation<
+      SaveHeroMasteryFrameResponse,
+      SaveHeroMasteryFrameRequest
+    >({
+      query: (body: SaveHeroMasteryFrameRequest) => {
+        return {
+          url: URL_END_POINT.SAVE_HERO_MASTERY_FRAME,
+          method: 'POST',
+          body: body,
+          responseHandler: parseResponse
+        };
+      },
+      invalidatesTags: ['HeroMastery']
     }),
     getPopUpContent: builder.query({
       query: ({
@@ -1241,6 +1259,7 @@ export const apiSlice = createApi({
 // Export the auto-generated hook for the `getPosts` query endpoint
 export const {
   useGetHeroMasteryQuery,
+  useSaveHeroMasteryFrameMutation,
   useGetPopUpContentQuery,
   useSubmitChatMutation,
   useGetGameListQuery,

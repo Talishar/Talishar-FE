@@ -15,6 +15,8 @@ import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
+const LOBBY_POLL_TIMEOUT_MS = 12000;
+
 export const LobbyUpdateHandler = React.memo(() => {
   // Initial stuff to allow the lang to change
   const { t } = useTranslation();
@@ -61,12 +63,12 @@ export const LobbyUpdateHandler = React.memo(() => {
       })
     );
 
-    // timeout if longer than 10 seconds. Will clear this interval on next poll
+    // Allow the server's 8-second long poll a buffer for network/processing time.
     timeoutRef.current = setTimeout(() => {
       timeoutRef.current = undefined;
       controller.abort();
       dispatch(setIsUpdateInProgressFalse());
-    }, 10000);
+    }, LOBBY_POLL_TIMEOUT_MS);
   }, [gameInfo.gameID, isUpdateInProgress, dispatch]);
 
   useEffect(() => {

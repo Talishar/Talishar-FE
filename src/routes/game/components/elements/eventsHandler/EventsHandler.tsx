@@ -212,9 +212,9 @@ export const EventsHandler = React.memo(() => {
         switch (event.eventType) {
           case 'ROLL':
             toast(
-              (t) => (
-                <DismissibleToast t={t}>
-                  Die rolled, result:
+              (toastInstance) => (
+                <DismissibleToast t={toastInstance}>
+                  {t('EVENTS.DIE_ROLLED')}
                   <div className={styles.die}>{dieRoll(event.eventValue)}</div>
                 </DismissibleToast>
               ),

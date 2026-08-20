@@ -15,7 +15,6 @@ import {
   Setting,
   updateOptions
 } from 'features/options/optionsSlice';
-import { selectCurrentUser } from 'features/auth/authSlice';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { useEffect } from 'react';
 import { useCookies } from 'react-cookie';
@@ -31,7 +30,6 @@ const SettingsPage = () => {
   usePageTitle(t('PAGES.SETTINGS'));
   const { setTransparency } = useTheme();
   const settingsData = useAppSelector(getSettingsEntity);
-  const currentUserID = useAppSelector(selectCurrentUser);
   const dispatch = useAppDispatch();
   const [windowWidth] = useWindowDimensions();
   const isMobile = windowWidth < 768;
@@ -65,8 +63,7 @@ const SettingsPage = () => {
     dispatch(
       updateOptions({
         game: profileGameInfo,
-        settings: [{ name: name, value: value }],
-        userID: currentUserID ? String(currentUserID) : undefined
+        settings: [{ name: name, value: value }]
       })
     );
   };
@@ -99,13 +96,17 @@ const SettingsPage = () => {
       String(settingsData['DisableFabInsights']?.value) === '1',
     disableHeroIntro: String(settingsData['DisableHeroIntro']?.value) === '1',
     mirroredBoardLayout:
-      settingsData?.[optConst.MIRRORED_BOARD_LAYOUT]?.value === '1',
+      String(settingsData?.[optConst.MIRRORED_BOARD_LAYOUT]?.value) === '1',
     mirroredPlayerBoardLayout:
-      settingsData?.[optConst.MIRRORED_PLAYER_BOARD_LAYOUT]?.value === '1',
+      String(settingsData?.[optConst.MIRRORED_PLAYER_BOARD_LAYOUT]?.value) === '1',
     alwaysShowCounters:
       String(settingsData[optConst.ALWAYS_SHOW_COUNTERS]?.value) === '1',
     hideHandFromFriends:
-      String(settingsData[optConst.HIDE_HAND_FROM_FRIENDS]?.value) === '1'
+      String(settingsData[optConst.HIDE_HAND_FROM_FRIENDS]?.value) === '1',
+    hideGamesFromFriends:
+      String(settingsData[optConst.HIDE_GAMES_FROM_FRIENDS]?.value) === '1',
+    gemsOffByDefault:
+      String(settingsData[optConst.GEMS_OFF_BY_DEFAULT]?.value) === '1'
   };
 
   const priorityOptions = [
@@ -160,6 +161,18 @@ const SettingsPage = () => {
                 handleSettingsChange({
                   name: optConst.HOLD_PRIORITY_SETTING,
                   value: value
+                })
+              }
+            />
+            <CheckboxSetting
+              name="gemsOffByDefault"
+              label={t('SETTINGS.GEMS_OFF_BY_DEFAULT')}
+              tooltip={t('SETTINGS.GEMS_OFF_BY_DEFAULT_TOOLTIP')}
+              checked={initialValues.gemsOffByDefault}
+              onChange={() =>
+                handleSettingsChange({
+                  name: optConst.GEMS_OFF_BY_DEFAULT,
+                  value: initialValues.gemsOffByDefault ? '0' : '1'
                 })
               }
             />
@@ -256,6 +269,18 @@ const SettingsPage = () => {
                 handleSettingsChange({
                   name: optConst.HIDE_HAND_FROM_FRIENDS,
                   value: initialValues.hideHandFromFriends ? '0' : '1'
+                })
+              }
+            />
+            <CheckboxSetting
+              name="hideGamesFromFriends"
+              label={t('SETTINGS.HIDE_GAMES_FROM_FRIENDS')}
+              tooltip={t('SETTINGS.HIDE_GAMES_FROM_FRIENDS_TOOLTIP')}
+              checked={initialValues.hideGamesFromFriends}
+              onChange={() =>
+                handleSettingsChange({
+                  name: optConst.HIDE_GAMES_FROM_FRIENDS,
+                  value: initialValues.hideGamesFromFriends ? '0' : '1'
                 })
               }
             />

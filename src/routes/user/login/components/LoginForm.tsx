@@ -6,12 +6,14 @@ import {
   useLoginMutation
 } from 'features/api/apiSlice';
 import useAuth from 'hooks/useAuth';
+import { clearSupporterStatusCache } from 'hooks/useSupporterStatus';
 import { toast } from 'react-hot-toast';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { LoginValidationType } from './validation';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
+import { PasswordInput } from './PasswordInput';
 
 const getLoginBody = ({
   userID,
@@ -56,6 +58,7 @@ export const LoginForm = () => {
       }
       if (resp?.isUserLoggedIn) {
         toast.success(t('USER.LOGIN.LOGGED_IN'), { position: 'top-center' });
+        clearSupporterStatusCache();
         refetch();
         setLoggedIn(
           resp?.loggedInUserID ?? '0',
@@ -174,21 +177,11 @@ export const LoginForm = () => {
             </div>
           )}
           <label htmlFor="password">{t('USER.LOGIN.PASSWORD')}</label>
-          <input
-            id="password"
-            type="password"
-            placeholder="********"
-            {...register('password')}
-            aria-invalid={errors.password?.message ? 'true' : undefined}
-            aria-describedby={
-              errors.password?.message ? 'password-error' : undefined
-            }
+          <PasswordInput
+            register={register}
+            autoComplete="current-password"
+            errorMessage={errors.password?.message}
           />
-          {errors.password?.message && (
-            <div id="password-error" className={styles.fieldError} role="alert">
-              {errors.password?.message}
-            </div>
-          )}
           <input
             id="rememberMe"
             type="checkbox"
@@ -214,10 +207,6 @@ export const LoginForm = () => {
               <small>Forgotten Password?</small>
             </p>
           </Link> */}
-          {/*           <p className={styles.fieldError}>
-            <br />
-              <small>⚠️ Due to some recent issues on the website, your account might have been deleted. If you cannot log in, try signing up again. Thank you for your comprehension</small>
-            </p> */}
           <button
             type="submit"
             disabled={isSubmitting}

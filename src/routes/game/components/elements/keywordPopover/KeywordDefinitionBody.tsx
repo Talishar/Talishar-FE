@@ -1,4 +1,3 @@
-import React from 'react';
 import { CrRule, KeywordEntry } from 'data/keywords';
 import { CR_TEXT } from 'data/keywords/generated/crText';
 import styles from './KeywordPopover.module.css';

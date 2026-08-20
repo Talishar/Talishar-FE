@@ -13,7 +13,7 @@ interface GuideGridProps {
 const AD_INTERVAL = 3;
 
 const GuideGrid: React.FC<GuideGridProps> = ({ guides, showAds = false }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const formatPrice = (
     guide: MetafyGuide
   ): {
@@ -38,7 +38,7 @@ const GuideGrid: React.FC<GuideGridProps> = ({ guides, showAds = false }) => {
   const formatDate = (dateString: string): string => {
     try {
       const date = new Date(dateString);
-      return date.toLocaleDateString('en-US', {
+      return date.toLocaleDateString(i18n.language, {
         year: 'numeric',
         month: 'short',
         day: 'numeric'
