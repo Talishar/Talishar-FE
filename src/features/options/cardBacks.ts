@@ -219,7 +219,8 @@ export const PLAYMATS = {
   '43': 'TaddleDown',
   '44': 'Omens',
   '45': 'TheLostPrince',
-  '46': 'CoaxACommotion'
+  '46': 'CoaxACommotion',
+  '47': 'hammerhead'
 } as { [key: string]: string };
 
 /* Display names for playmats (user-friendly formatting) */
@@ -270,7 +271,8 @@ export const PLAYMAT_DISPLAY_NAMES = {
   '43': 'Taddle Down',
   '44': 'Omens of the Third Age',
   '45': 'Talishar, The Lost Prince',
-  '46': 'Coax A Commotion'
+  '46': 'Coax A Commotion',
+  '47': 'Hammerhead'
 } as { [key: string]: string };
 
 /* Default playmats available to all players */
@@ -300,5 +302,6 @@ export const PLAYER_PLAYMATS = [
   '36',
   '42',
   '44',
-  '46'
+  '46',
+  '47'
 ];
