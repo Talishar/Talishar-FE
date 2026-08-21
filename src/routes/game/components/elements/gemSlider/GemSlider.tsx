@@ -9,7 +9,7 @@ import { shallowEqual } from 'react-redux';
 import { getGameInfo } from 'features/game/GameSlice';
 import { useTranslation } from 'react-i18next';
 import { TooltipWrapper } from 'components/Tooltip/TooltipWrapper';
-import { useCookies } from 'react-cookie';
+import { useCookieString } from 'utils/cookieStore';
 import {
   areEquipmentGemButtonsDisabled,
   DISABLE_EQUIPMENT_GEM_BUTTONS_COOKIE
@@ -26,16 +26,15 @@ const GemSlider = (props: GemSlider) => {
   const { playerID } = useAppSelector(getGameInfo, shallowEqual);
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const [cookies] = useCookies([DISABLE_EQUIPMENT_GEM_BUTTONS_COOKIE]);
+  const gemButtonsDisabled = useCookieString(
+    DISABLE_EQUIPMENT_GEM_BUTTONS_COOKIE
+  );
 
   if (props.gem === undefined || props.gem === 'none') return null;
 
   const isActive = props.gem === 'active';
   const equipmentGemHidden =
-    !props.zone &&
-    areEquipmentGemButtonsDisabled(
-      cookies[DISABLE_EQUIPMENT_GEM_BUTTONS_COOKIE]
-    );
+    !props.zone && areEquipmentGemButtonsDisabled(gemButtonsDisabled);
 
   if (equipmentGemHidden) return null;
 

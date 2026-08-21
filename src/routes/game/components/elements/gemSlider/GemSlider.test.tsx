@@ -21,8 +21,8 @@ vi.mock('features/game/GameSlice', () => ({
   submitButton: mocks.submitButton
 }));
 
-vi.mock('react-cookie', () => ({
-  useCookies: () => [mocks.cookies]
+vi.mock('utils/cookieStore', () => ({
+  useCookieString: (name: string) => mocks.cookies[name]
 }));
 
 describe('GemSlider', () => {

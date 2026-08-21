@@ -290,15 +290,37 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .mastery_14 .gem::before,
-  .mastery_15 .gem::before,
-  .mastery_15 .crest {
+  .mastery_14 .gem::after,
+  .mastery_15 .gem::after {
+    content: '';
+    position: absolute;
+    bottom: var(--orn-drop, calc(var(--orn-size) / -2 + 0.5px));
+    left: 50%;
+    width: var(--orn-size);
+    height: var(--orn-size);
+    translate: -50% 0;
+    rotate: calc(45deg - var(--orn-angle));
+    box-shadow: 0 0 13px var(--mastery-glow);
+    opacity: 0;
+    pointer-events: none;
+    will-change: opacity;
+    animation: masteryGemGlow 2.8s ease-in-out infinite;
+  }
+
+  .mastery_15 .crest::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    box-shadow: 0 0 13px var(--mastery-glow);
+    opacity: 0;
+    pointer-events: none;
+    will-change: opacity;
     animation: masteryGemGlow 2.8s ease-in-out infinite;
   }
 }
 
 @keyframes masteryGemGlow {
   50% {
-    box-shadow: 0 0 13px var(--mastery-glow);
+    opacity: 1;
   }
 }

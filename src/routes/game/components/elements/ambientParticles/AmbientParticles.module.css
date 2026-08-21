@@ -5,6 +5,7 @@
   pointer-events: none;
   z-index: 1; /* above the playmat backgrounds, below interactive zones */
   border-radius: 5px;
+  contain: layout paint;
 }
 
 .ambientLayerGlobal {
@@ -13,6 +14,7 @@
   overflow: hidden;
   pointer-events: none;
   z-index: 9999; /* below nav (10000) but above page content */
+  contain: layout paint;
 }
 
 .mote,
@@ -21,7 +23,6 @@
   bottom: -10px;
   border-radius: 50%;
   opacity: 0;
-  will-change: transform, opacity;
   animation: rise var(--duration) linear var(--delay) infinite;
 }
 
@@ -66,7 +67,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ambientLayer {
+  .ambientLayer,
+  .ambientLayerGlobal {
     display: none;
   }
 }

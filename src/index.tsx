@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { store } from './app/Store';
 import reportWebVitals from './reportWebVitals';
 import { CookiesProvider } from 'react-cookie';
+import { appCookies } from 'utils/cookieStore';
 import './index.scss';
 import { router } from 'routes';
 import { RouterProvider } from 'react-router-dom';
@@ -22,7 +23,7 @@ const root = createRoot(container);
 
 root.render(
   <StrictMode>
-    <CookiesProvider>
+    <CookiesProvider cookies={appCookies}>
       <ThemeProvider>
         <Provider store={store}>
           <RouterProvider router={router} />

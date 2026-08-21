@@ -28,30 +28,54 @@ export default function PermanentsZone(prop: Displayrow) {
   const isDragging = useRef(false);
   const dragStartX = useRef(0);
   const dragScrollLeft = useRef(0);
+  const activePointerId = useRef<number | null>(null);
 
   const permanents = useAppSelector((state: RootState) =>
     selectPermanentsAsStack(state, isPlayer)
   );
 
-  const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    isDragging.current = true;
-    dragStartX.current = e.pageX - (scrollRef.current?.offsetLeft ?? 0);
-    dragScrollLeft.current = scrollRef.current?.scrollLeft ?? 0;
-    if (scrollRef.current) scrollRef.current.style.cursor = 'grabbing';
-  }, []);
-
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    if (!isDragging.current || !scrollRef.current) return;
-    e.preventDefault();
-    const x = e.pageX - scrollRef.current.offsetLeft;
-    const walk = x - dragStartX.current;
-    scrollRef.current.scrollLeft = dragScrollLeft.current - walk;
-  }, []);
-
-  const handleMouseUp = useCallback(() => {
+  const finishDragging = useCallback(() => {
+    const element = scrollRef.current;
+    if (
+      element &&
+      activePointerId.current !== null &&
+      element.hasPointerCapture(activePointerId.current)
+    ) {
+      element.releasePointerCapture(activePointerId.current);
+    }
     isDragging.current = false;
-    if (scrollRef.current) scrollRef.current.style.cursor = '';
+    activePointerId.current = null;
   }, []);
+
+  const handlePointerDown = useCallback(
+    (event: React.PointerEvent<HTMLDivElement>) => {
+      if (event.pointerType !== 'mouse' || event.button !== 0) return;
+      const element = scrollRef.current;
+      if (!element) return;
+
+      dragStartX.current = event.clientX;
+      dragScrollLeft.current = element.scrollLeft;
+      isDragging.current = true;
+      activePointerId.current = event.pointerId;
+      element.setPointerCapture(event.pointerId);
+    },
+    []
+  );
+
+  const handlePointerMove = useCallback(
+    (event: React.PointerEvent<HTMLDivElement>) => {
+      if (!isDragging.current || activePointerId.current !== event.pointerId) {
+        return;
+      }
+      event.preventDefault();
+      const element = scrollRef.current;
+      if (element) {
+        element.scrollLeft =
+          dragScrollLeft.current - (event.clientX - dragStartX.current);
+      }
+    },
+    []
+  );
 
   if (!permanents.length) {
     return (
@@ -68,10 +92,11 @@ export default function PermanentsZone(prop: Displayrow) {
       <div
         ref={scrollRef}
         className={styles.permanentsInner}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={finishDragging}
+        onPointerCancel={finishDragging}
+        onLostPointerCapture={finishDragging}
       >
         <motion.div className={styles.permanentsZone} layout>
           <AnimatePresence>

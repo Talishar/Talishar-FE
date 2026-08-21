@@ -9,6 +9,8 @@ import {
   addActionPointPopup
 } from 'features/game/GameSlice';
 
+const NO_POPUPS: never[] = [];
+
 interface ActionPointDisplayProps {
   isPlayer?: boolean;
 }
@@ -36,7 +38,7 @@ export default function ActionPointDisplay(props: ActionPointDisplayProps) {
     const popups = props.isPlayer
       ? state.game.actionPointPopups?.playerOne
       : state.game.actionPointPopups?.playerTwo;
-    return Array.isArray(popups) ? popups : [];
+    return Array.isArray(popups) ? popups : NO_POPUPS;
   });
 
   // Track AP changes and spawn action point popups for gains only

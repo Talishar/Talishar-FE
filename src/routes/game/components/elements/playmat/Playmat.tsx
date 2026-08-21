@@ -1,10 +1,11 @@
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
-import { useCookies } from 'react-cookie';
+import { useCookieString } from 'utils/cookieStore';
+import { useMemo } from 'react';
 
 import styles from './Playmat.module.css';
 export const Playmat = ({ isPlayer }: { isPlayer: boolean }) => {
-  const [cookies] = useCookies(['playmatIntensity']);
+  const playmatIntensity = useCookieString('playmatIntensity');
 
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
@@ -36,11 +37,14 @@ export const Playmat = ({ isPlayer }: { isPlayer: boolean }) => {
     playmat = isPlayer ? playerOnePlaymat : playerTwoPlaymat;
   }
 
-  const styleToApply = {
-    backgroundImage: `url(/playmats/${playmat}.webp)`,
-    filter: `brightness(${cookies.playmatIntensity ?? 0.65})`,
-    borderRadius: `10px`
-  };
+  const styleToApply = useMemo(
+    () => ({
+      backgroundImage: `url(/playmats/${playmat}.webp)`,
+      filter: `brightness(${playmatIntensity ?? 0.65})`,
+      borderRadius: `10px`
+    }),
+    [playmat, playmatIntensity]
+  );
 
   const playmatClass = isPlayer ? styles.playerOne : styles.playerTwo;
 

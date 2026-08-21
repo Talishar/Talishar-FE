@@ -15,6 +15,8 @@ import {
 import HeroTransformEventCard from '../../elements/eventsHandler/HeroTransformEventCard';
 import styles from './HeroZone.module.css';
 
+const NO_POPUPS: never[] = [];
+
 export const HeroZone = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
   const dispatch = useAppDispatch();
@@ -66,14 +68,14 @@ export const HeroZone = React.memo((prop: Displayrow) => {
     const popups = isPlayer
       ? state.game.damagePopups?.playerOne
       : state.game.damagePopups?.playerTwo;
-    return Array.isArray(popups) ? popups : [];
+    return Array.isArray(popups) ? popups : NO_POPUPS;
   });
 
   const healingPopups = useAppSelector((state: RootState) => {
     const popups = isPlayer
       ? state.game.healingPopups?.playerOne
       : state.game.healingPopups?.playerTwo;
-    return Array.isArray(popups) ? popups : [];
+    return Array.isArray(popups) ? popups : NO_POPUPS;
   });
 
   // Track health changes and spawn damage/healing popups
