@@ -140,14 +140,6 @@ const HandZone = React.memo(function HandZone(prop: Player) {
       {handCards.map((card: Card, index: number) => (
         <CardDisplay card={card} key={cardKeys[index]} isPlayer={isPlayer} />
       ))}
-      {!isPlayer && cardCount > 0 && (
-        <span
-          className={styles.handCount}
-          aria-label={`${cardCount} cards in hand`}
-        >
-          {cardCount}
-        </span>
-      )}
     </div>
   );
 });

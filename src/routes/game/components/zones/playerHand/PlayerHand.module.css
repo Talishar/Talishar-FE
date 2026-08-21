@@ -96,9 +96,14 @@
   transform: scale(0.96);
 }
 
-.scrollButtonHidden {
+.scrollButton.scrollButtonHidden {
   opacity: 0;
   pointer-events: none;
+  width: 0;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
 }
 
 @media (orientation: portrait) and (max-width: 768px) {

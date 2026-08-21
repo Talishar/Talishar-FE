@@ -51,21 +51,10 @@
   outline-offset: -1px;
 }
 
-.handCount {
-  position: absolute;
-  top: -0.5em;
-  left: 50%;
-  transform: translateX(-50%) rotate(180deg);
-  padding: 0.05em 0.55em;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background-color: rgba(12, 12, 14, 0.82);
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 1.2em;
-  font-weight: 600;
-  line-height: 1.4;
-  font-variant-numeric: tabular-nums;
-  pointer-events: none;
+@media (max-width: 1200px) {
+  .isOpponent {
+    z-index: 40;
+  }
 }
 
 @media (orientation: portrait) {
