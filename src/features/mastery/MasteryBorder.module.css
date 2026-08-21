@@ -185,15 +185,22 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .crested .gem,
-  .crested .gemSmall,
-  .crested .crest {
+  .crested .gem::after,
+  .crested .gemSmall::after,
+  .crested .crest::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    box-shadow: 0 0 13px var(--orn-glow);
+    opacity: 0;
+    will-change: opacity;
     animation: masteryBorderGlow 2.8s ease-in-out infinite;
   }
 }
 
 @keyframes masteryBorderGlow {
   50% {
-    box-shadow: 0 0 13px var(--orn-glow);
+    opacity: 1;
   }
 }

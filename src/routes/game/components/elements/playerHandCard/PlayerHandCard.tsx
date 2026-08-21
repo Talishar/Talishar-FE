@@ -39,6 +39,16 @@ const ScreenPercentageForCardPlayed = 0.25;
 const supportsHover =
   typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches;
 
+const CARD_INITIAL = { opacity: 0, y: 100 };
+const CARD_ANIMATE = { opacity: 1, y: 0 };
+const CARD_WHILE_DRAG = { scale: 1.05 };
+const CARD_WHILE_HOVER = { scale: 1.1, y: -50, zIndex: 1000 };
+const CARD_TRANSITION = {
+  layout: { type: 'spring' as const, stiffness: 520, damping: 38, mass: 0.72 },
+  opacity: { duration: 0.14, ease: 'easeOut' as const },
+  y: { duration: 0.14, ease: 'easeOut' as const }
+};
+
 export interface HandCard {
   isArsenal?: boolean;
   isGraveyard?: boolean;
@@ -366,19 +376,13 @@ export const PlayerHandCard = React.memo(
           onPointerUp={handlePointerUp}
           dragSnapToOrigin={snapback}
           dragMomentum={false}
-          initial={{ opacity: 0, y: 100 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{
-            layout: { type: 'spring', stiffness: 520, damping: 38, mass: 0.72 },
-            opacity: { duration: 0.14, ease: 'easeOut' },
-            y: { duration: 0.14, ease: 'easeOut' }
-          }}
+          initial={CARD_INITIAL}
+          animate={CARD_ANIMATE}
+          transition={CARD_TRANSITION}
           whileHover={
-            isDragging || !supportsHover
-              ? undefined
-              : { scale: 1.1, y: -50, zIndex: 1000 }
+            isDragging || !supportsHover ? undefined : CARD_WHILE_HOVER
           }
-          whileDrag={{ scale: 1.05 }}
+          whileDrag={CARD_WHILE_DRAG}
         >
           <CardPopUp
             containerClass={styles.imgContainer}

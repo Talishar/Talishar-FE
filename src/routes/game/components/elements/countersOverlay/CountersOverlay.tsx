@@ -36,7 +36,7 @@ const INCLUDED_COUNTERS = new Set([
   'counters'
 ]);
 
-export interface CountersProp extends Card {
+export interface CountersProp extends Partial<Card> {
   num?: number;
   numDescription?: string;
   activeCombatChain?: CombatChainLink;

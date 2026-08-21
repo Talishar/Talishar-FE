@@ -71,12 +71,35 @@ const StaticSurface = ({
   className,
   containerRef,
   disableShadow: _disableShadow,
+  onHoverStart,
+  onHoverEnd,
+  onMouseEnter,
+  onMouseLeave,
+  onPointerDown,
   ...handlers
-}: SurfaceProps) => (
-  <motion.div className={className} ref={containerRef} {...handlers}>
-    {children}
-  </motion.div>
-);
+}: SurfaceProps) => {
+  const handlePointerEnter = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.pointerType !== 'touch') onHoverStart?.();
+  };
+  const handlePointerLeave = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.pointerType !== 'touch') onHoverEnd?.();
+  };
+
+  return (
+    <div
+      className={className}
+      ref={containerRef}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      onPointerDown={onPointerDown}
+      onPointerEnter={handlePointerEnter}
+      onPointerLeave={handlePointerLeave}
+      {...handlers}
+    >
+      {children}
+    </div>
+  );
+};
 
 const TiltSurface = ({
   children,
@@ -94,9 +117,10 @@ const TiltSurface = ({
   const rotateY = useSpring(rotateYTarget, TILT_SPRING_CONFIG);
 
   const boxShadow = useTransform([rotateX, rotateY], ([rx, ry]: number[]) => {
-    const offsetX = -ry * 1.2;
-    const offsetY = rx * 1.2 + 8;
-    const blur = 18 + Math.abs(rx) * 0.7 + Math.abs(ry) * 0.7;
+    if (disableShadow) return 'none';
+    const offsetX = Math.round(-ry * 1.2);
+    const offsetY = Math.round(rx * 1.2 + 8);
+    const blur = Math.round(18 + Math.abs(rx) * 0.7 + Math.abs(ry) * 0.7);
     return `${offsetX}px ${offsetY}px ${blur}px rgba(0,0,0,0.52)`;
   });
 
@@ -131,7 +155,7 @@ const TiltSurface = ({
         rotateX,
         rotateY,
         transformPerspective: 600,
-        boxShadow: disableShadow ? 'none' : boxShadow
+        boxShadow
       }}
       {...handlers}
     >

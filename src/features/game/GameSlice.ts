@@ -987,6 +987,26 @@ const selectPlayerOnePermanents = (state: RootState) =>
 const selectPlayerTwoPermanents = (state: RootState) =>
   state.game.playerTwo.Permanents;
 
+const stacksTogether = (a: Card, b: Card): boolean => {
+  const aKeys = Object.keys(a) as (keyof Card)[];
+  const bKeys = Object.keys(b) as (keyof Card)[];
+  let aCount = 0;
+  for (const key of aKeys) {
+    if (key === 'actionDataOverride') continue;
+    aCount++;
+    if (!(key in b)) return false;
+    const aValue = a[key];
+    const bValue = b[key];
+    if (aValue === bValue) continue;
+    if (!isEqual(aValue, bValue)) return false;
+  }
+  let bCount = 0;
+  for (const key of bKeys) {
+    if (key !== 'actionDataOverride') bCount++;
+  }
+  return aCount === bCount;
+};
+
 const buildPermanentsAsStack = (
   permanents: Card[] | undefined
 ): CardStack[] => {
@@ -997,9 +1017,10 @@ const buildPermanentsAsStack = (
   const byCardNumber = new Map<string, number[]>();
   let idIndex = 0;
 
-  for (const currentCard of [...cards].sort((a, b) =>
-    a.cardNumber.localeCompare(b.cardNumber)
-  )) {
+  const sorted = cards.slice();
+  sorted.sort((a, b) => a.cardNumber.localeCompare(b.cardNumber));
+
+  for (const currentCard of sorted) {
     if (currentCard.cardNumber === 'EVR070') {
       result.push({
         card: currentCard,
@@ -1009,18 +1030,12 @@ const buildPermanentsAsStack = (
       continue;
     }
 
-    const curNormalized = { ...currentCard, actionDataOverride: '' };
     const candidates = byCardNumber.get(currentCard.cardNumber);
     let matched = false;
 
     if (candidates) {
       for (const idx of candidates) {
-        if (
-          isEqual(
-            { ...result[idx].card, actionDataOverride: '' },
-            curNormalized
-          )
-        ) {
+        if (stacksTogether(result[idx].card, currentCard)) {
           result[idx].count++;
           matched = true;
           break;

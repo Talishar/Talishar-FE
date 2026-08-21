@@ -64,10 +64,17 @@ export default function Effects(props: Player) {
     return <div className={classCSS}></div>;
   }
 
+  const seen = new Map<string, number>();
   return (
     <div className={classCSS}>
-      {effects.map((card: Card, index: number) => {
-        return <Effect card={card} key={index} isPlayer={props.isPlayer} />;
+      {effects.map((card: Card) => {
+        const occurrence = seen.get(card.cardNumber) ?? 0;
+        seen.set(card.cardNumber, occurrence + 1);
+        const key =
+          card.uniqueId && card.uniqueId !== '-'
+            ? card.uniqueId
+            : `${card.cardNumber}#${occurrence}`;
+        return <Effect card={card} key={key} isPlayer={props.isPlayer} />;
       })}
     </div>
   );

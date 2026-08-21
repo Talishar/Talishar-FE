@@ -77,6 +77,41 @@ function importanceClass(message: string) {
   return cacheSet(importanceCache, message, computeImportanceClass(message));
 }
 
+type LogFlags = {
+  isChat: boolean;
+  turnMarker: RegExpMatchArray | null;
+  isCombatStart: boolean;
+  isCombatEnd: boolean;
+  closesCombatChain: boolean;
+  hasCombatSignal: boolean;
+  isPass: boolean;
+  isUndo: boolean;
+  isUndoLimit: boolean;
+};
+
+const flagsCache = new Map<string, LogFlags>();
+
+function computeFlags(message: string): LogFlags {
+  const text = plainText(message);
+  return {
+    isChat: CHAT_RE.test(message),
+    turnMarker: text.match(TURN_MARKER_RE),
+    isCombatStart: COMBAT_START_RE.test(text),
+    isCombatEnd: COMBAT_END_RE.test(text),
+    closesCombatChain: COMBAT_CHAIN_CLOSED_RE.test(text),
+    hasCombatSignal: COMBAT_SIGNAL_RE.test(text),
+    isPass: PASS_RE.test(text),
+    isUndo: UNDO_RE.test(text),
+    isUndoLimit: UNDO_LIMIT_RE.test(text)
+  };
+}
+
+function flagsFor(message: string): LogFlags {
+  const cached = flagsCache.get(message);
+  if (cached !== undefined) return cached;
+  return cacheSet(flagsCache, message, computeFlags(message));
+}
+
 function TurnDivider({
   marker,
   playerNames
@@ -140,26 +175,26 @@ const Message = React.memo(function Message({
 });
 Message.displayName = 'LogMessage';
 
+type RepeatFlag = 'isPass' | 'isUndo';
+
 function repeatedEventEnd(
   messages: LogMessage[],
   start: number,
-  matcher: RegExp
+  flag: RepeatFlag
 ) {
-  if (!matcher.test(plainText(messages[start].message))) return start;
+  if (!flagsFor(messages[start].message)[flag]) return start;
 
   let end = start;
-  while (
-    end + 1 < messages.length &&
-    !CHAT_RE.test(messages[end + 1].message) &&
-    matcher.test(plainText(messages[end + 1].message))
-  ) {
+  while (end + 1 < messages.length) {
+    const next = flagsFor(messages[end + 1].message);
+    if (next.isChat || !next[flag]) break;
     end++;
   }
   return end;
 }
 
 function undoLimitSequence(messages: LogMessage[], start: number) {
-  if (!UNDO_RE.test(plainText(messages[start].message))) return null;
+  if (!flagsFor(messages[start].message).isUndo) return null;
 
   let end = start;
   let undoCount = 1;
@@ -169,13 +204,13 @@ function undoLimitSequence(messages: LogMessage[], start: number) {
   // Treat the uninterrupted undo/warning run as one sequence regardless of order.
   while (end + 1 < messages.length) {
     const next = messages[end + 1];
-    const text = plainText(next.message);
-    if (UNDO_RE.test(text)) {
+    const flags = flagsFor(next.message);
+    if (flags.isUndo) {
       undoCount++;
       end++;
       continue;
     }
-    if (UNDO_LIMIT_RE.test(text)) {
+    if (flags.isUndoLimit) {
       warning = next;
       end++;
       continue;
@@ -221,8 +256,8 @@ function RepeatedMessages({
       index = undoSequence.end;
       continue;
     }
-    const passEnd = repeatedEventEnd(entries, index, PASS_RE);
-    const undoEnd = repeatedEventEnd(entries, index, UNDO_RE);
+    const passEnd = repeatedEventEnd(entries, index, 'isPass');
+    const undoEnd = repeatedEventEnd(entries, index, 'isUndo');
     const end = Math.max(passEnd, undoEnd);
 
     output.push(
@@ -241,23 +276,19 @@ function RepeatedMessages({
 }
 
 function combatGroupEnd(messages: LogMessage[], start: number) {
-  if (!COMBAT_START_RE.test(plainText(messages[start].message))) return -1;
+  if (!flagsFor(messages[start].message).isCombatStart) return -1;
 
   for (let index = start + 1; index < messages.length; index++) {
-    const text = plainText(messages[index].message);
-    if (
-      TURN_MARKER_RE.test(text) ||
-      CHAT_RE.test(messages[index].message) ||
-      COMBAT_START_RE.test(text)
-    )
+    const flags = flagsFor(messages[index].message);
+    if (flags.turnMarker !== null || flags.isChat || flags.isCombatStart)
       return -1;
-    if (COMBAT_END_RE.test(text)) {
-      const segment = messages.slice(start, index + 1);
-      return segment.some((entry) =>
-        COMBAT_SIGNAL_RE.test(plainText(entry.message))
-      )
-        ? index
-        : -1;
+    if (flags.isCombatEnd) {
+      // Scanned in place; the old `.slice(...).some(...)` allocated a fresh
+      // segment array for every candidate group on every pass.
+      for (let scan = start; scan <= index; scan++) {
+        if (flagsFor(messages[scan].message).hasCombatSignal) return index;
+      }
+      return -1;
     }
   }
   return -1;
@@ -272,19 +303,23 @@ const GameLogMessages = React.memo(function GameLogMessages({
 }: Props) {
   const { t } = useTranslation();
   const output = React.useMemo(() => {
-    const messages = (chatLog ?? [])
-      .map((message, originalIndex) => ({ message, originalIndex }))
-      .filter((entry) => {
-        if (chatFilter === 'chat') return CHAT_RE.test(entry.message);
-        if (chatFilter === 'log') return !CHAT_RE.test(entry.message);
-        return true;
-      });
+    const messages: LogMessage[] = [];
+    const log = chatLog ?? [];
+    for (let originalIndex = 0; originalIndex < log.length; originalIndex++) {
+      const message = log[originalIndex];
+      if (chatFilter !== 'none') {
+        const isChat = flagsFor(message).isChat;
+        if (chatFilter === 'chat' ? !isChat : isChat) continue;
+      }
+      messages.push({ message, originalIndex });
+    }
     const nextOutput: React.ReactNode[] = [];
     let chainLinkNumber = 0;
 
     for (let index = 0; index < messages.length; index++) {
       const entry = messages[index];
-      const turnMarker = plainText(entry.message).match(TURN_MARKER_RE);
+      const entryFlags = flagsFor(entry.message);
+      const turnMarker = entryFlags.turnMarker;
       if (turnMarker) {
         nextOutput.push(
           <TurnDivider
@@ -299,9 +334,9 @@ const GameLogMessages = React.memo(function GameLogMessages({
       const groupEnd = combatGroupEnd(messages, index);
       if (groupEnd !== -1) {
         chainLinkNumber++;
-        const closesCombatChain = COMBAT_CHAIN_CLOSED_RE.test(
-          plainText(messages[groupEnd].message)
-        );
+        const closesCombatChain = flagsFor(
+          messages[groupEnd].message
+        ).closesCombatChain;
         nextOutput.push(
           <section
             className={styles.combatGroup}
@@ -346,8 +381,8 @@ const GameLogMessages = React.memo(function GameLogMessages({
         continue;
       }
 
-      const passEnd = repeatedEventEnd(messages, index, PASS_RE);
-      const undoEnd = repeatedEventEnd(messages, index, UNDO_RE);
+      const passEnd = repeatedEventEnd(messages, index, 'isPass');
+      const undoEnd = repeatedEventEnd(messages, index, 'isUndo');
       const end = Math.max(passEnd, undoEnd);
       nextOutput.push(
         <Message
@@ -359,8 +394,7 @@ const GameLogMessages = React.memo(function GameLogMessages({
         />
       );
       index = end;
-      if (COMBAT_CHAIN_CLOSED_RE.test(plainText(entry.message)))
-        chainLinkNumber = 0;
+      if (entryFlags.closesCombatChain) chainLinkNumber = 0;
     }
 
     return nextOutput;

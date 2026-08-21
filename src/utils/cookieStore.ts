@@ -23,6 +23,7 @@ const notify = () => {
 };
 
 const refresh = () => {
+  syncedThisTask = false;
   rawCookie = typeof document === 'undefined' ? '' : document.cookie;
   const next = appCookies.getAll();
 
@@ -61,12 +62,22 @@ const subscribe = (onStoreChange: () => void) => {
   };
 };
 
+let syncedThisTask = false;
+const syncOncePerTask = () => {
+  if (syncedThisTask) return;
+  syncedThisTask = true;
+  queueMicrotask(() => {
+    syncedThisTask = false;
+  });
+  syncFromDocument();
+};
+
 const getters = new Map<string, () => unknown>();
 const getterFor = (name: string) => {
   let getter = getters.get(name);
   if (getter === undefined) {
     getter = () => {
-      syncFromDocument();
+      syncOncePerTask();
       return snapshot[name];
     };
     getters.set(name, getter);
@@ -90,5 +101,6 @@ export function readCookie(name: string): unknown {
 }
 
 export function refreshCookieSnapshot(): void {
+  syncedThisTask = false;
   if (syncFromDocument()) notify();
 }

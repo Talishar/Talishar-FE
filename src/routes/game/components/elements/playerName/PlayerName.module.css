@@ -230,7 +230,6 @@
     inset 0 0 6px var(--theme-primary-focus);
   border-radius: 0.3em;
   position: relative;
-  animation: playerNamePatronShine 2s ease-in-out infinite;
 }
 
 .playerName.pvtVoidPatron {
@@ -246,7 +245,6 @@
     inset 0 0 6px var(--theme-primary-focus);
   border-radius: 0.3em;
   position: relative;
-  animation: playerNamePatronShine 2s ease-in-out infinite;
 }
 
 .playerName.contributor {
@@ -262,7 +260,6 @@
     inset 0 0 6px var(--theme-primary-focus);
   border-radius: 0.3em;
   position: relative;
-  animation: playerNamePatronShine 2s ease-in-out infinite;
 }
 
 .playerName.metafy {
@@ -278,16 +275,39 @@
     inset 0 0 6px var(--theme-primary-focus);
   border-radius: 0.3em;
   position: relative;
+}
+
+.playerName.patron::before,
+.playerName.pvtVoidPatron::before,
+.playerName.contributor::before,
+.playerName.metafy::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 0.3em;
+  pointer-events: none;
+  background-color: rgba(255, 255, 255, 0.05);
+  opacity: 0;
+  will-change: opacity;
   animation: playerNamePatronShine 2s ease-in-out infinite;
 }
 
 @keyframes playerNamePatronShine {
   0%,
   100% {
-    filter: brightness(1);
+    opacity: 0;
   }
   50% {
-    filter: brightness(1.05);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .playerName.patron::before,
+  .playerName.pvtVoidPatron::before,
+  .playerName.contributor::before,
+  .playerName.metafy::before {
+    animation: none;
   }
 }
 

@@ -19,33 +19,29 @@ import LoadingScreen from 'components/LoadingScreen/LoadingScreen';
 import SpectatorLoginRequired from 'components/SpectatorLoginRequired';
 import HeroVsHeroIntro from '../components/elements/heroVsHeroIntro/HeroVsHeroIntro';
 import OpponentInactive from '../components/elements/opponentInactive/OpponentInactive';
-import { useCookies } from 'react-cookie';
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState
+} from 'react';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '../../../app/Hooks';
-import {
-  setIsRoguelike,
-  setHeroInfo,
-  getGameInfo,
-  submitButton
-} from '../../../features/game/GameSlice';
-import {
-  fetchAllSettings,
-  settingUpdated
-} from 'features/options/optionsSlice';
-import {
-  SHORTCUT_ATTACK_THRESHOLD,
-  SKIP_AR_WINDOW,
-  SKIP_DR_WINDOW
-} from 'features/options/constants';
+import { setIsRoguelike, getGameInfo } from '../../../features/game/GameSlice';
+import { fetchAllSettings } from 'features/options/optionsSlice';
 import { Toaster } from 'react-hot-toast';
 import { shallowEqual } from 'react-redux';
 import { PanelProvider } from '../components/leftColumn/PanelContext';
-import { RootState } from 'app/Store';
-import { PROCESS_INPUT } from 'appConstants';
 import usePlayerPresenceReporter from 'hooks/usePlayerPresenceReporter';
 import useAdScript, { wasAdProviderLoadedInDocument } from 'hooks/useAdScript';
+import {
+  CardScaleVariables,
+  HeroInfoSync,
+  ReplayAdvanceButton,
+  TurnChangeSettingsSync
+} from './PlaySideEffects';
 
 const TOAST_STYLE: React.CSSProperties = {
   background: 'var(--theme-tertiary)',
@@ -69,6 +65,64 @@ const isLoadingErrorPreviewEnabled = () =>
   typeof window !== 'undefined' &&
   new URLSearchParams(window.location.search).get('loadingErrorTest') === '1';
 
+const GameSurface = React.memo(function GameSurface() {
+  return (
+    <div className="app" key="app">
+      <ChatCardDetail />
+      <LeftColumn />
+      <div className="gameZone">
+        <Board />
+        {/* Rendered after Board so the opponent's hand paints over the
+            board zones instead of behind them. */}
+        <HandZone isPlayer={false} />
+        <ChainLinkSummaryContainer />
+        <HandZone isPlayer />
+        <PlayerHand />
+      </div>
+      <RightColumn />
+    </div>
+  );
+});
+
+const GameOverlays = React.memo(function GameOverlays() {
+  return (
+    <>
+      <CardListZone />
+      <ActiveLayersZone />
+      <OptionsMenu />
+      <InventoryModal />
+      <PlayerInputPopUp />
+      <OpponentInactive />
+      <CardPortal />
+    </>
+  );
+});
+
+const GameSurfaceInline = () => {
+  useAppSelector((state: any) => state.game.canPassPhase);
+  return (
+    <div className="app" key="app">
+      <ChatCardDetail />
+      <LeftColumn />
+      <div className="gameZone">
+        <Board />
+        <HandZone isPlayer={false} />
+        <ChainLinkSummaryContainer />
+        <HandZone isPlayer />
+        <PlayerHand />
+      </div>
+      <RightColumn />
+    </div>
+  );
+};
+
+const HeroIntroGate = () => {
+  const heroIntroShown = useAppSelector(
+    (state: any) => state.game.heroIntroShown
+  );
+  return heroIntroShown ? null : <HeroVsHeroIntro />;
+};
+
 function Play({ isRoguelike }: { isRoguelike: boolean }) {
   const needsCleanDocument = useRef(wasAdProviderLoadedInDocument());
   useLayoutEffect(() => {
@@ -82,23 +136,7 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
   usePageTitle(t('PAGES.GAME_PLAY'));
   usePlayerPresenceReporter();
 
-  const [cookies] = useCookies([
-    'experimental',
-    'cardSize',
-    'transparencyIntensity',
-    'hoverImageSize'
-  ]);
-
   const dispatch = useAppDispatch();
-  const playerOneHeroCardNumber = useAppSelector(
-    (state: RootState) => state.game.playerOne?.Hero?.cardNumber
-  );
-  const playerTwoHeroCardNumber = useAppSelector(
-    (state: RootState) => state.game.playerTwo?.Hero?.cardNumber
-  );
-  const heroIntroShown = useAppSelector(
-    (state: any) => state.game.heroIntroShown
-  );
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const [loadedGameID, setLoadedGameID] = useState<number | null>(null);
   const developmentLoadingError = isLoadingErrorPreviewEnabled()
@@ -111,9 +149,6 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
   );
   const isGameStateLoading =
     gameInfo.gameID <= 0 || loadedGameID !== gameInfo.gameID;
-  const canPassPhase = useAppSelector(
-    (state: RootState) => state.game.canPassPhase
-  );
 
   useEffect(() => {
     dispatch(setIsRoguelike(isRoguelike));
@@ -129,94 +164,10 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
     }
   }, [gameInfo.gameID, dispatch]);
 
-  const turnNo = useAppSelector(
-    (state: any) => state.game.gameDynamicInfo?.turnNo
-  );
-  const turnPlayer = useAppSelector((state: any) => state.game.turnPlayer);
-  const prevTurnNoRef = useRef<number | undefined>(undefined);
-  const prevTurnPlayerRef = useRef<number | undefined>(undefined);
-  useEffect(() => {
-    if (prevTurnNoRef.current === undefined) {
-      prevTurnNoRef.current = turnNo;
-      prevTurnPlayerRef.current = turnPlayer;
-      return;
-    }
-    if (
-      turnNo !== prevTurnNoRef.current ||
-      turnPlayer !== prevTurnPlayerRef.current
-    ) {
-      prevTurnNoRef.current = turnNo;
-      prevTurnPlayerRef.current = turnPlayer;
-      dispatch(settingUpdated({ name: SHORTCUT_ATTACK_THRESHOLD, value: '0' }));
-      dispatch(settingUpdated({ name: SKIP_AR_WINDOW, value: '0' }));
-      dispatch(settingUpdated({ name: SKIP_DR_WINDOW, value: '0' }));
-    }
-  }, [turnNo, turnPlayer, dispatch]);
-
-  // Dispatch hero info once game state is fully populated
-  useEffect(() => {
-    const playerID = gameInfo?.playerID;
-
-    if (playerID && playerOneHeroCardNumber && playerTwoHeroCardNumber) {
-      if (!gameInfo?.opponentHeroCardNumber) {
-        const yourCardNumber =
-          playerID === 1 ? playerOneHeroCardNumber : playerTwoHeroCardNumber;
-        const opponentCardNumber =
-          playerID === 1 ? playerTwoHeroCardNumber : playerOneHeroCardNumber;
-
-        dispatch(
-          setHeroInfo({
-            heroName: gameInfo?.heroName,
-            yourHeroCardNumber: yourCardNumber,
-            opponentHeroCardNumber: opponentCardNumber
-          })
-        );
-      }
-    }
-  }, [
-    playerOneHeroCardNumber,
-    playerTwoHeroCardNumber,
-    gameInfo?.playerID,
-    gameInfo?.opponentHeroCardNumber,
-    gameInfo?.heroName,
-    dispatch
-  ]);
-
-  useEffect(() => {
-    if (cookies.cardSize) {
-      document.documentElement.style.setProperty(
-        '--card-scale',
-        cookies.cardSize
-      );
-    } else {
-      document.documentElement.style.setProperty('--card-scale', '1');
-    }
-  }, [cookies.cardSize]);
-
-  useEffect(() => {
-    if (cookies.transparencyIntensity) {
-      document.documentElement.style.setProperty(
-        '--transparency-intensity',
-        cookies.transparencyIntensity
-      );
-    } else {
-      document.documentElement.style.setProperty(
-        '--transparency-intensity',
-        '1'
-      );
-    }
-  }, [cookies.transparencyIntensity]);
-
-  useEffect(() => {
-    if (cookies.hoverImageSize) {
-      document.documentElement.style.setProperty(
-        '--hover-img-scale',
-        cookies.hoverImageSize
-      );
-    } else {
-      document.documentElement.style.setProperty('--hover-img-scale', '1');
-    }
-  }, [cookies.hoverImageSize]);
+  const handleInitialStateReceived = useCallback((receivedGameID: number) => {
+    setLoadedGameID(receivedGameID);
+    setLoadingError(null);
+  }, []);
 
   if (needsCleanDocument.current) {
     return null;
@@ -226,31 +177,14 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
     <PanelProvider>
       <div className="centering">
         <Toaster position="top-left" toastOptions={TOAST_OPTIONS} />
-        <div className="app" key="app">
-          <ChatCardDetail />
-          <LeftColumn />
-          <div className="gameZone">
-            <HandZone isPlayer={false} />
-            <Board />
-            <ChainLinkSummaryContainer />
-            <HandZone isPlayer />
-            <PlayerHand />
-          </div>
-          <RightColumn />
-        </div>
-        {!heroIntroShown && <HeroVsHeroIntro />}
-        <CardListZone />
-        <ActiveLayersZone />
-        <OptionsMenu />
-        <InventoryModal />
-        <PlayerInputPopUp />
-        <OpponentInactive />
-        <CardPortal />
+        <GameSurfaceInline />
+        <HeroIntroGate />
+        <GameOverlays />
+        <CardScaleVariables />
+        <TurnChangeSettingsSync />
+        <HeroInfoSync />
         <GameStateHandler
-          onInitialStateReceived={(receivedGameID) => {
-            setLoadedGameID(receivedGameID);
-            setLoadingError(null);
-          }}
+          onInitialStateReceived={handleInitialStateReceived}
           onLoadingError={setLoadingError}
         />
         {isGameStateLoading && (
@@ -261,17 +195,7 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
         )}
         <SpectatorLoginRequired />
         <EventsHandler />
-        {gameInfo.isReplay && canPassPhase === true && (
-          <button
-            type="button"
-            className="replayAdvanceButton"
-            onClick={() =>
-              dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }))
-            }
-          >
-            {t('PLAY.ADVANCE_REPLAY')}
-          </button>
-        )}
+        <ReplayAdvanceButton />
       </div>
     </PanelProvider>
   );
