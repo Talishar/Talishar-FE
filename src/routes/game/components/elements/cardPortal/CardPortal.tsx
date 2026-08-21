@@ -8,7 +8,7 @@ import { doubleFacedCardsMappings } from './constants';
 import classNames from 'classnames';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { CARD_IMAGES_PATH, getCollectionCardImagePath } from 'utils';
-import { useCookies } from 'react-cookie';
+import { useCookieString } from 'utils/cookieStore';
 import { createPortal } from 'react-dom';
 import { isMeldCard } from 'constants/meldCards';
 import CardKeywordStrip from './CardKeywordStrip';
@@ -75,8 +75,7 @@ function getSrcs({
 
 export default function CardPortal() {
   const popup = useAppSelector((state: RootState) => state.game.popup);
-  const [cookies] = useCookies(['hoverImageSize']);
-  const hoverImageSize = Number(cookies.hoverImageSize) || 1;
+  const hoverImageSize = Number(useCookieString('hoverImageSize')) || 1;
   const { getLanguage } = useLanguageSelector();
   const [windowWidth, windowHeight] = useWindowDimensions();
 

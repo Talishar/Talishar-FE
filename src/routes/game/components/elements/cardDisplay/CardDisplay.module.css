@@ -113,17 +113,34 @@
 .isTargeted {
   border: 2px solid rgba(255, 60, 60, 0.9);
   border-radius: 7%;
-  will-change: filter;
+}
+
+.isTargeted::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 7%;
+  pointer-events: none;
+  box-shadow: 0 0 10px 2px rgba(255, 40, 40, 1);
+  opacity: 0.55;
+  will-change: opacity;
   animation: targetedPulse 2s ease-in-out infinite;
 }
 
 @keyframes targetedPulse {
   0%,
   100% {
-    filter: drop-shadow(0 0 5px rgba(255, 40, 40, 0.75));
+    opacity: 0.55;
   }
   50% {
-    filter: drop-shadow(0 0 10px rgba(255, 40, 40, 1));
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .isTargeted::after {
+    animation: none;
+    opacity: 0.85;
   }
 }
 
@@ -214,13 +231,13 @@
   box-shadow: 0 0 5px 5px rgba(24, 177, 29, 0.5);
 }
 
-/* Playable card (border6) hover lift animation */
-.card:has(.img.border6):hover {
+/* Playable card hover lift; `.playable` is set in CardDisplay to avoid :has(). */
+.card.playable:hover {
   transform: translateY(-3px) scale(1.02);
   z-index: 10;
 }
 
-.card:has(.img.border6):hover .img.border6 {
+.card.playable:hover .img.border6 {
   box-shadow: 0 0 4px 4px chartreuse, 0 4px 4px rgba(0, 0, 0, 0.45);
 }
 

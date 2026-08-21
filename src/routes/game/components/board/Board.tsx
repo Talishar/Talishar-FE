@@ -5,7 +5,7 @@ import PlayerBoardGrid from '../playerBoardGrid/PlayerBoardGrid';
 import OpponentBoardGrid from '../opponentBoardGrid/OpponentBoardGrid';
 import GridBoard from './../gridBoard';
 import useWindowDimensions from 'hooks/useWindowDimensions';
-import { useCookies } from 'react-cookie';
+import { useCookieString } from 'utils/cookieStore';
 import ExperimentalTurnWidget from '../elements/experimentalTurnWidget';
 import TurnWidget from '../elements/turnWidget/TurnWidget';
 import ManualModePanel from '../leftColumn/ManualModePanel/ManualModePanel';
@@ -20,7 +20,7 @@ export interface playAreaDimensions {
 
 export function Board() {
   const [width, height] = useWindowDimensions();
-  const [cookies] = useCookies(['experimental']);
+  const experimental = useCookieString('experimental');
   const { playerID, isReplay } = useAppSelector(getGameInfo);
   const spectatorCameraView = useAppSelector(
     (state: RootState) => state.game.spectatorCameraView
@@ -42,7 +42,7 @@ export function Board() {
             <CombatChain />
           </div>
           <div className={styles.healthContainer}>
-            {cookies.experimental ? <ExperimentalTurnWidget /> : <TurnWidget />}
+            {experimental ? <ExperimentalTurnWidget /> : <TurnWidget />}
           </div>
         </div>
         <div className={styles.playerPromptSlot}>

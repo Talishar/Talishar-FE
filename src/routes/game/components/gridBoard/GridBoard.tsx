@@ -26,14 +26,14 @@ import Playmat from '../elements/playmat';
 import AmbientParticles from '../elements/ambientParticles';
 
 import styles from './GridBoard.module.css';
-import { useCookies } from 'react-cookie';
+import { useCookieString } from 'utils/cookieStore';
 import ExperimentalTurnWidget from '../elements/experimentalTurnWidget';
 import TurnWidget from '../elements/turnWidget/TurnWidget';
 import ManualModePanel from '../leftColumn/ManualModePanel/ManualModePanel';
 import usePlayerPromptOwner from '../elements/playerPrompt/usePlayerPromptOwner';
 
 const GridBoard = () => {
-  const [cookies] = useCookies(['experimental']);
+  const experimental = useCookieString('experimental');
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
   );
@@ -129,7 +129,7 @@ const GridBoard = () => {
           <GraveyardZone isPlayer={false} />
         </div>
         <div className={styles.healthWidget}>
-          {cookies.experimental ? <ExperimentalTurnWidget /> : <TurnWidget />}
+          {experimental ? <ExperimentalTurnWidget /> : <TurnWidget />}
         </div>
         <div className={styles.pOneGraveyard}>
           <GraveyardZone isPlayer={true} />

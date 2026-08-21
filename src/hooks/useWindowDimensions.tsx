@@ -11,7 +11,13 @@ export default function useWindowDimensions(): [number, number] {
     const handleResize = () => {
       cancelAnimationFrame(rafId);
       rafId = requestAnimationFrame(() => {
-        setDims([window.innerWidth, window.innerHeight]);
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        setDims((previous) =>
+          previous[0] === width && previous[1] === height
+            ? previous
+            : [width, height]
+        );
       });
     };
     window.addEventListener('resize', handleResize, { passive: true });

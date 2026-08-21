@@ -133,7 +133,8 @@ export const CardDisplay = (prop: CardProp) => {
 
   const cardStyle = classNames(styles.card, styles.normalSize, {
     [styles.biggerSize]: prop.makeMeBigger,
-    [styles.showCountersOnHover]: showCountersOnHover
+    [styles.showCountersOnHover]: showCountersOnHover,
+    [styles.playable]: card.borderColor == '6'
   });
 
   const renderNumUses = (numUses: number) => {

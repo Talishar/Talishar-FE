@@ -3,7 +3,7 @@ import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import Displayrow from 'interface/Displayrow';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { useCookies } from 'react-cookie';
+import { useCookieString } from 'utils/cookieStore';
 import ResourcesParticle, {
   PitchColor
 } from '../ResourcesParticle/ResourcesParticle';
@@ -30,7 +30,7 @@ export default function PitchDisplay(prop: Displayrow) {
   const { isPlayer } = prop;
   const [particles, setParticles] = useState<Particle[]>([]);
   const [pulses, setPulses] = useState<Particle[]>([]);
-  const [cookies] = useCookies(['disableParticles']);
+  const disableParticles = useCookieString('disableParticles');
   const prefersReducedMotion = useReducedMotion();
   const particleCounter = useRef(0);
 
@@ -46,7 +46,7 @@ export default function PitchDisplay(prop: Displayrow) {
 
   // Detect when a new card is added to pitch and spawn particles
   React.useEffect(() => {
-    if (cookies.disableParticles === 'true' || prefersReducedMotion) return;
+    if (disableParticles === 'true' || prefersReducedMotion) return;
     if (pitchZone && pitchZone.length > 0) {
       const newestCard = pitchZone[0];
       const pitchColor = getPitchColor(
@@ -61,7 +61,7 @@ export default function PitchDisplay(prop: Displayrow) {
       setParticles((prev) => [...prev, ...newParticles]);
       setPulses((prev) => [...prev, { id: `pulse-${batch}`, pitchColor }]);
     }
-  }, [pitchZone?.length, cookies.disableParticles, prefersReducedMotion]);
+  }, [pitchZone?.length, disableParticles, prefersReducedMotion]);
 
   const removeParticle = (id: string) => {
     setParticles((prev) => prev.filter((p) => p.id !== id));

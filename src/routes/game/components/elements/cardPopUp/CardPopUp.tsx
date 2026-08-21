@@ -1,15 +1,9 @@
 import { useAppDispatch } from 'app/Hooks';
 import { clearPopUp, setPopUp } from 'features/game/GameSlice';
-import {
-  ReactNode,
-  useEffect,
-  useId,
-  useRef,
-  useSyncExternalStore
-} from 'react';
+import React, { ReactNode, useEffect, useId, useRef } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { useCookies } from 'react-cookie';
 import { CARD_BACK } from 'features/options/cardBacks';
+import { useCookieString } from 'utils/cookieStore';
 import {
   TAP_TO_PREVIEW_PLAY_COOKIE,
   buildBoardCardSelectionKey,
@@ -19,7 +13,7 @@ import {
   resolveTapToPreviewPlay,
   setTapToPreviewSelectedCardKey,
   shouldDismissStickyPreviewOnOutsideTap,
-  subscribeTapToPreviewSelection
+  useIsTapToPreviewSelected
 } from '../playerHandCard/tapToPreviewPlay';
 
 const supportsHover =
@@ -56,6 +50,96 @@ const SKIP_POPUP_CARDS = new Set<string>([
 
 const TILT_SPRING_CONFIG = { stiffness: 180, damping: 22, mass: 0.6 };
 
+type SurfaceProps = {
+  children: ReactNode;
+  className?: string;
+  containerRef: React.RefObject<HTMLDivElement>;
+  disableShadow?: boolean;
+  onClick: () => void;
+  onPointerDown: (event: React.PointerEvent<HTMLDivElement>) => void;
+  onMouseEnter: () => void;
+  onMouseLeave: () => void;
+  onTouchStart: () => void;
+  onTouchEnd: () => void;
+  onTouchMove: () => void;
+  onHoverStart?: () => void;
+  onHoverEnd?: () => void;
+};
+
+const StaticSurface = ({
+  children,
+  className,
+  containerRef,
+  disableShadow: _disableShadow,
+  ...handlers
+}: SurfaceProps) => (
+  <motion.div className={className} ref={containerRef} {...handlers}>
+    {children}
+  </motion.div>
+);
+
+const TiltSurface = ({
+  children,
+  className,
+  containerRef,
+  disableShadow,
+  onMouseLeave,
+  ...handlers
+}: SurfaceProps) => {
+  // Owned here rather than shared with CardPopUp, so nothing mutates a prop.
+  const hoverRect = useRef<DOMRect | null>(null);
+  const rotateXTarget = useMotionValue(0);
+  const rotateYTarget = useMotionValue(0);
+  const rotateX = useSpring(rotateXTarget, TILT_SPRING_CONFIG);
+  const rotateY = useSpring(rotateYTarget, TILT_SPRING_CONFIG);
+
+  const boxShadow = useTransform([rotateX, rotateY], ([rx, ry]: number[]) => {
+    const offsetX = -ry * 1.2;
+    const offsetY = rx * 1.2 + 8;
+    const blur = 18 + Math.abs(rx) * 0.7 + Math.abs(ry) * 0.7;
+    return `${offsetX}px ${offsetY}px ${blur}px rgba(0,0,0,0.52)`;
+  });
+
+  const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
+    const element = containerRef.current;
+    if (!element) return;
+    let rect = hoverRect.current;
+    if (!rect) {
+      rect = element.getBoundingClientRect();
+      hoverRect.current = rect;
+    }
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    rotateXTarget.set(-((event.clientY - cy) / (rect.height / 2)) * 8);
+    rotateYTarget.set(((event.clientX - cx) / (rect.width / 2)) * 8);
+  };
+
+  const handleMouseLeave = () => {
+    hoverRect.current = null;
+    onMouseLeave();
+    rotateXTarget.set(0);
+    rotateYTarget.set(0);
+  };
+
+  return (
+    <motion.div
+      className={className}
+      ref={containerRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        rotateX,
+        rotateY,
+        transformPerspective: 600,
+        boxShadow: disableShadow ? 'none' : boxShadow
+      }}
+      {...handlers}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
 type CardPopUpProps = {
   children: ReactNode;
   cardNumber: string;
@@ -86,13 +170,11 @@ export default function CardPopUp({
 }: CardPopUpProps) {
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
-  const [cookies] = useCookies(['disableCardTilt', TAP_TO_PREVIEW_PLAY_COOKIE]);
+  const disableCardTilt = useCookieString('disableCardTilt');
+  const tapToPreviewCookie = useCookieString(TAP_TO_PREVIEW_PLAY_COOKIE);
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const touchPopupShown = useRef(false);
-  const hoverRect = useRef<DOMRect | null>(null);
   const lastPointerTypeRef = useRef<string | null>(null);
-  // Per-instance id so two board cards with the same cardNumber stay distinct
-  // (e.g. duplicate permanents / effects). Hand cards pass tapPreviewKey instead.
   const instanceId = useId();
 
   const selectionKey =
@@ -103,62 +185,22 @@ export default function CardPopUp({
       instanceId
     });
 
-  const cookieEnabled = isTapToPreviewPlayEnabled(
-    cookies[TAP_TO_PREVIEW_PLAY_COOKIE]
-  );
+  const cookieEnabled = isTapToPreviewPlayEnabled(tapToPreviewCookie);
 
   const isTapToPreviewContext = () =>
     cookieEnabled && (lastPointerTypeRef.current === 'touch' || !supportsHover);
 
-  const selectedKey = useSyncExternalStore(
-    subscribeTapToPreviewSelection,
-    getTapToPreviewSelectedCardKey,
-    getTapToPreviewSelectedCardKey
-  );
-  const stickyActive = cookieEnabled && selectedKey === selectionKey;
+  const isSelected = useIsTapToPreviewSelected(selectionKey);
+  const stickyActive = cookieEnabled && isSelected;
 
   const tiltEnabled =
-    supportsHover && !disableTilt && cookies.disableCardTilt !== 'true';
-
-  const rotateXTarget = useMotionValue(0);
-  const rotateYTarget = useMotionValue(0);
-  const rotateX = useSpring(rotateXTarget, TILT_SPRING_CONFIG);
-  const rotateY = useSpring(rotateYTarget, TILT_SPRING_CONFIG);
-  // Gates the tilt/shadow to a hard "off" state. Kept as its own motion value
-  // (rather than branching the style object between a spring and a static
-  // literal) because Framer Motion animates a style key's value across
-  // renders even when it switches from a MotionValue to a plain number, so a
-  // ternary style object would still visibly decay instead of snapping off.
-  const intensity = useMotionValue(1);
-  const boxShadow = useTransform(
-    [rotateX, rotateY, intensity],
-    ([rx, ry, i]: number[]) => {
-      if (i === 0) return 'none';
-      const offsetX = -ry * 1.2;
-      const offsetY = rx * 1.2 + 8;
-      const blur = 18 + Math.abs(rx) * 0.7 + Math.abs(ry) * 0.7;
-      return `${offsetX}px ${offsetY}px ${blur}px rgba(0,0,0,0.52)`;
-    }
-  );
+    supportsHover && !disableTilt && disableCardTilt !== 'true';
 
   useEffect(() => {
     return () => {
       if (longPressTimer.current) clearTimeout(longPressTimer.current);
     };
   }, []);
-
-  useEffect(() => {
-    if (disableTilt) {
-      hoverRect.current = null;
-      rotateXTarget.jump(0);
-      rotateYTarget.jump(0);
-      rotateX.jump(0);
-      rotateY.jump(0);
-      intensity.jump(0);
-    } else {
-      intensity.jump(1);
-    }
-  }, [disableTilt, rotateXTarget, rotateYTarget, rotateX, rotateY, intensity]);
 
   useEffect(() => {
     if (!stickyActive) return;
@@ -171,7 +213,7 @@ export default function CardPopUp({
       if (
         !shouldDismissStickyPreviewOnOutsideTap({
           enabled: true,
-          selectedKey
+          selectedKey: getTapToPreviewSelectedCardKey()
         })
       ) {
         return;
@@ -182,27 +224,13 @@ export default function CardPopUp({
 
     document.addEventListener('pointerdown', onPointerDown);
     return () => document.removeEventListener('pointerdown', onPointerDown);
-  }, [stickyActive, selectedKey, dispatch]);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!tiltEnabled || !ref.current) return;
-    let rect = hoverRect.current;
-    if (!rect) {
-      rect = ref.current.getBoundingClientRect();
-      hoverRect.current = rect;
-    }
-    const cx = rect.left + rect.width / 2;
-    const cy = rect.top + rect.height / 2;
-    rotateXTarget.set(-((e.clientY - cy) / (rect.height / 2)) * 8);
-    rotateYTarget.set(((e.clientX - cx) / (rect.width / 2)) * 8);
-  };
+  }, [stickyActive, dispatch]);
 
   const showPreview = () => {
     if (ref.current === null) {
       return;
     }
     const rect = ref.current.getBoundingClientRect();
-    hoverRect.current = rect;
     if (isHidden === true || SKIP_POPUP_CARDS.has(cardNumber)) {
       return;
     }
@@ -223,17 +251,14 @@ export default function CardPopUp({
   };
 
   const clearPopUpUnlessSticky = () => {
-    if (selectedKey === selectionKey) {
+    if (getTapToPreviewSelectedCardKey() === selectionKey) {
       return;
     }
     dispatch(clearPopUp());
   };
 
   const handleMouseLeave = () => {
-    hoverRect.current = null;
     clearPopUpUnlessSticky();
-    rotateXTarget.set(0);
-    rotateYTarget.set(0);
   };
 
   const handleTouchStart = () => {
@@ -254,10 +279,7 @@ export default function CardPopUp({
       longPressTimer.current = null;
     }
     if (touchPopupShown.current) {
-      hoverRect.current = null;
-      clearPopUpUnlessSticky();
-      rotateXTarget.set(0);
-      rotateYTarget.set(0);
+      handleMouseLeave();
       touchPopupShown.current = false;
     }
   };
@@ -295,34 +317,26 @@ export default function CardPopUp({
     handleMouseLeave();
   };
 
+  const Surface = tiltEnabled ? TiltSurface : StaticSurface;
+
   return (
-    <motion.div
+    <Surface
       className={containerClass}
+      containerRef={ref}
+      disableShadow={disableShadow}
       onClick={handleOnClick}
       onPointerDown={(event) => {
         lastPointerTypeRef.current = event.pointerType;
       }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      onMouseMove={tiltEnabled ? handleMouseMove : undefined}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
       onTouchMove={handleTouchMove}
       onHoverStart={onHoverStart}
       onHoverEnd={onHoverEnd}
-      ref={ref}
-      style={
-        tiltEnabled
-          ? {
-              rotateX,
-              rotateY,
-              transformPerspective: 600,
-              boxShadow: disableShadow ? 'none' : boxShadow
-            }
-          : undefined
-      }
     >
       {children}
-    </motion.div>
+    </Surface>
   );
 }

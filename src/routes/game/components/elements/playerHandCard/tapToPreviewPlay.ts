@@ -1,3 +1,5 @@
+import { useCallback, useSyncExternalStore } from 'react';
+
 /** Cookie name for the client-only "tap to preview before playing" option. */
 export const TAP_TO_PREVIEW_PLAY_COOKIE = 'tapToPreviewPlay';
 
@@ -116,4 +118,13 @@ export function isTapToPreviewPlayEnabled(
   cookieValue: string | undefined
 ): boolean {
   return cookieValue === 'true';
+}
+
+export function useIsTapToPreviewSelected(cardKey: string): boolean {
+  const getSnapshot = useCallback(() => selectedCardKey === cardKey, [cardKey]);
+  return useSyncExternalStore(
+    subscribeTapToPreviewSelection,
+    getSnapshot,
+    getSnapshot
+  );
 }
