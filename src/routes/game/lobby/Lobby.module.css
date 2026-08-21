@@ -503,6 +503,7 @@ h3 {
   flex: 0 0 auto;
   width: 13px;
   height: 13px;
+  translate: 0 1px;
   opacity: 0.72;
 }
 
@@ -527,6 +528,7 @@ h3 {
   flex: 0 0 auto;
   width: 5px;
   height: 5px;
+  translate: 0 1px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.4);
   animation: lobbyPresencePulse 2.4s ease-in-out infinite;
