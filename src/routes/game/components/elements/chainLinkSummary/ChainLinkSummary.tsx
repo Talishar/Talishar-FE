@@ -21,6 +21,8 @@ import { useTranslation } from 'react-i18next';
 
 const EndGameScreen = lazy(() => import('../endGameScreen/EndGameScreen'));
 
+const NO_CHAIN_LINKS: CombatChainLink[] = [];
+
 export const ChainLinkSummaryContainer = () => {
   const { t } = useTranslation();
   const chainLinkSummary = useAppSelector(
@@ -38,7 +40,7 @@ export const ChainLinkSummaryContainer = () => {
     (state: RootState) => state.game.gameDynamicInfo.lastUpdate
   );
   const oldCombatChain = useAppSelector(
-    (state: RootState) => state.game.oldCombatChain ?? []
+    (state: RootState) => state.game.oldCombatChain ?? NO_CHAIN_LINKS
   );
 
   const dispatch = useAppDispatch();

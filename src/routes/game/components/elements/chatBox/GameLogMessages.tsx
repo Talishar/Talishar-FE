@@ -37,13 +37,32 @@ type Props = {
   mobile?: boolean;
 };
 
-function plainText(message: string) {
-  return message
-    .replace(/<[^>]+>/g, '')
-    .replace(/{{.*?\|(.+?)(?:\|.*?)?}}/g, '$1');
+const TAG_RE = /<[^>]+>/g;
+const CARD_TOKEN_RE = /{{.*?\|(.+?)(?:\|.*?)?}}/g;
+const DERIVED_CACHE_LIMIT = 4000;
+const plainTextCache = new Map<string, string>();
+const importanceCache = new Map<string, string | undefined>();
+
+function cacheSet<V>(cache: Map<string, V>, key: string, value: V): V {
+  if (cache.size >= DERIVED_CACHE_LIMIT) {
+    const oldestKey = cache.keys().next().value;
+    if (oldestKey !== undefined) cache.delete(oldestKey);
+  }
+  cache.set(key, value);
+  return value;
 }
 
-function importanceClass(message: string) {
+function plainText(message: string) {
+  const cached = plainTextCache.get(message);
+  if (cached !== undefined) return cached;
+  return cacheSet(
+    plainTextCache,
+    message,
+    message.replace(TAG_RE, '').replace(CARD_TOKEN_RE, '$1')
+  );
+}
+
+function computeImportanceClass(message: string) {
   const text = plainText(message);
   if (PASS_RE.test(text) || MUTED_COMBAT_END_RE.test(text))
     return styles.logMuted;
@@ -51,6 +70,11 @@ function importanceClass(message: string) {
   if (ACTION_RE.test(text)) return styles.logAction;
   if (IRREVERSIBLE_RE.test(text)) return styles.logIrreversible;
   return undefined;
+}
+
+function importanceClass(message: string) {
+  if (importanceCache.has(message)) return importanceCache.get(message);
+  return cacheSet(importanceCache, message, computeImportanceClass(message));
 }
 
 function TurnDivider({
@@ -79,37 +103,42 @@ function TurnDivider({
   );
 }
 
-function Message({
-  entry,
+function RepeatBadge({ repeatCount }: { repeatCount: number }) {
+  const { t } = useTranslation();
+  return (
+    <span className={styles.logRepeatCount}>
+      {' '}
+      {t('GAME_LOG.REPEAT_COUNT', { count: repeatCount })}
+    </span>
+  );
+}
+
+const Message = React.memo(function Message({
+  message,
   transformMessage,
   mobile,
   repeatCount = 1
 }: {
-  entry: LogMessage;
+  message: string;
   transformMessage: (message: string) => string;
   mobile: boolean;
   repeatCount?: number;
 }) {
-  const { t } = useTranslation();
   const className = classNames(
     mobile ? styles.chatMobileMessage : styles.chatMessage,
-    importanceClass(entry.message)
+    importanceClass(message)
   );
   return (
     <div
       className={className}
       title={repeatCount > 1 ? `${repeatCount} repeated log events` : undefined}
     >
-      {parseHtmlToReactElements(transformMessage(entry.message))}
-      {repeatCount > 1 && (
-        <span className={styles.logRepeatCount}>
-          {' '}
-          {t('GAME_LOG.REPEAT_COUNT', { count: repeatCount })}
-        </span>
-      )}
+      {parseHtmlToReactElements(transformMessage(message))}
+      {repeatCount > 1 && <RepeatBadge repeatCount={repeatCount} />}
     </div>
   );
-}
+});
+Message.displayName = 'LogMessage';
 
 function repeatedEventEnd(
   messages: LogMessage[],
@@ -175,7 +204,7 @@ function RepeatedMessages({
       output.push(
         <Message
           key={entry.originalIndex}
-          entry={entry}
+          message={entry.message}
           transformMessage={transformMessage}
           mobile={mobile}
           repeatCount={undoSequence.undoCount}
@@ -184,7 +213,7 @@ function RepeatedMessages({
       output.push(
         <Message
           key={undoSequence.warning.originalIndex}
-          entry={undoSequence.warning}
+          message={undoSequence.warning.message}
           transformMessage={transformMessage}
           mobile={mobile}
         />
@@ -199,7 +228,7 @@ function RepeatedMessages({
     output.push(
       <Message
         key={entry.originalIndex}
-        entry={entry}
+        message={entry.message}
         transformMessage={transformMessage}
         mobile={mobile}
         repeatCount={end - index + 1}
@@ -299,7 +328,7 @@ const GameLogMessages = React.memo(function GameLogMessages({
         nextOutput.push(
           <Message
             key={entry.originalIndex}
-            entry={entry}
+            message={entry.message}
             transformMessage={transformMessage}
             mobile={mobile}
             repeatCount={undoSequence.undoCount}
@@ -308,7 +337,7 @@ const GameLogMessages = React.memo(function GameLogMessages({
         nextOutput.push(
           <Message
             key={undoSequence.warning.originalIndex}
-            entry={undoSequence.warning}
+            message={undoSequence.warning.message}
             transformMessage={transformMessage}
             mobile={mobile}
           />
@@ -323,7 +352,7 @@ const GameLogMessages = React.memo(function GameLogMessages({
       nextOutput.push(
         <Message
           key={entry.originalIndex}
-          entry={entry}
+          message={entry.message}
           transformMessage={transformMessage}
           mobile={mobile}
           repeatCount={end - index + 1}

@@ -28,15 +28,27 @@ const isNonEnglishPromoAltArt = (altPath: string): boolean => {
   return false;
 };
 
+const altArtIndexCache = new WeakMap<AltArt[], Map<string, string>>();
+
+const getAltArtIndex = (altArts: AltArt[]): Map<string, string> => {
+  const cached = altArtIndexCache.get(altArts);
+  if (cached !== undefined) return cached;
+
+  const index = new Map<string, string>();
+  for (let i = altArts.length - 1; i >= 0; i--) {
+    const { cardId, altPath } = altArts[i];
+    if (!index.has(cardId)) index.set(cardId, altPath);
+  }
+  altArtIndexCache.set(altArts, index);
+  return index;
+};
+
 const findAltArtPath = (
   altArts: AltArt[] | undefined,
   cardNumber: string
 ): string | undefined => {
-  if (!altArts) return undefined;
-  for (let i = altArts.length - 1; i >= 0; i--) {
-    if (altArts[i].cardId === cardNumber) return altArts[i].altPath;
-  }
-  return undefined;
+  if (!altArts || altArts.length === 0) return undefined;
+  return getAltArtIndex(altArts).get(cardNumber);
 };
 
 const getDirectory = (path: string): string => {

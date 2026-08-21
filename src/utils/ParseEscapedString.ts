@@ -139,7 +139,7 @@ const parseStyleString = (styleStr: string): { [key: string]: string } => {
  * Parse HTML string into React elements, handling both HTML and card references
  * This allows proper event handling without violating CSP
  */
-export const parseHtmlToReactElements = (htmlString: string): ReactNode => {
+const parseHtmlToReactElementsUncached = (htmlString: string): ReactNode => {
   if (!htmlString) return null;
 
   // First, replace card references with placeholder markers to preserve them through HTML parsing
@@ -407,6 +407,24 @@ export const parseHtmlToReactElements = (htmlString: string): ReactNode => {
   }
 
   return nodeArray.length === 1 ? nodeArray[0] : nodeArray;
+};
+
+const PARSE_CACHE_LIMIT = 4000;
+const parseCache = new Map<string, ReactNode>();
+
+export const parseHtmlToReactElements = (htmlString: string): ReactNode => {
+  if (!htmlString) return null;
+
+  const cached = parseCache.get(htmlString);
+  if (cached !== undefined) return cached;
+
+  const parsed = parseHtmlToReactElementsUncached(htmlString);
+  if (parseCache.size >= PARSE_CACHE_LIMIT) {
+    const oldestKey = parseCache.keys().next().value;
+    if (oldestKey !== undefined) parseCache.delete(oldestKey);
+  }
+  parseCache.set(htmlString, parsed);
+  return parsed;
 };
 
 /**

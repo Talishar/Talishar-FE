@@ -71,11 +71,34 @@ export default function OpponentInactive() {
       setRemainingMs(null);
       return;
     }
-    const tick = () =>
-      setRemainingMs(inactivityDeadline - (Date.now() + serverTimeOffset));
-    tick();
-    const interval = setInterval(tick, TICK_MS);
-    return () => clearInterval(interval);
+
+    const remainingFrom = (now: number) =>
+      inactivityDeadline - (now + serverTimeOffset);
+
+    let interval: ReturnType<typeof setInterval> | null = null;
+    let startTimer: ReturnType<typeof setTimeout> | null = null;
+
+    const startTicking = () => {
+      if (interval !== null) return;
+      setRemainingMs(remainingFrom(Date.now()));
+      interval = setInterval(
+        () => setRemainingMs(remainingFrom(Date.now())),
+        TICK_MS
+      );
+    };
+
+    const untilVisible = remainingFrom(Date.now()) - COUNTDOWN_VISIBLE_MS;
+    if (untilVisible <= 0) {
+      startTicking();
+    } else {
+      setRemainingMs(remainingFrom(Date.now()));
+      startTimer = setTimeout(startTicking, untilVisible);
+    }
+
+    return () => {
+      if (interval !== null) clearInterval(interval);
+      if (startTimer !== null) clearTimeout(startTimer);
+    };
   }, [inactivityDeadline, serverTimeOffset, turnPhase]);
 
   const expired =
@@ -124,7 +147,10 @@ export default function OpponentInactive() {
           <div
             className={styles.progressFill}
             style={{
-              width: `${Math.max(0, Math.min(100, remainingFraction * 100))}%`
+              transform: `scaleX(${Math.max(
+                0,
+                Math.min(1, remainingFraction)
+              )})`
             }}
           />
         </div>

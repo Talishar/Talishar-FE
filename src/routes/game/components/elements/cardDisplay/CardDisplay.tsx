@@ -9,9 +9,18 @@ import CardPopUp from '../cardPopUp/CardPopUp';
 import CombatChainLink from 'features/CombatChainLink';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
-import React, { useState, useRef, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import { CARD_SQUARES_PATH, getCollectionCardImagePath } from 'utils';
+
+const subCardProps = new Map<string, Card>();
+const getSubCardProp = (cardNumber: string): Card => {
+  const cached = subCardProps.get(cardNumber);
+  if (cached !== undefined) return cached;
+  const created: Card = { cardNumber };
+  subCardProps.set(cardNumber, created);
+  return created;
+};
 
 export interface CardProp {
   makeMeBigger?: boolean;
@@ -60,7 +69,6 @@ export const CardDisplay = (prop: CardProp) => {
   ) ?? { cardNumber: '' };
   const { getLanguage } = useLanguageSelector();
   const [showSubCards, setShowSubCards] = useState(false);
-  const subCardRef = useRef(null);
   const handleHoverStart = useCallback(() => setShowSubCards(true), []);
   const handleHoverEnd = useCallback(() => setShowSubCards(false), []);
   const subCardsToShow = useMemo(() => {
@@ -167,7 +175,6 @@ export const CardDisplay = (prop: CardProp) => {
         return (
           <div
             key={subCardKey}
-            ref={subCardRef}
             style={{
               top: `calc(-0.15 * ${ix + 1} * var(--card-size))`,
               zIndex: `-${ix + 1}`,
@@ -176,7 +183,7 @@ export const CardDisplay = (prop: CardProp) => {
             className={styles.subCard}
           >
             <CardDisplay
-              card={{ cardNumber: subCardNumber }}
+              card={getSubCardProp(subCardNumber)}
               preventUseOnClick
               isPlayer={!isOpponentCard}
             />
