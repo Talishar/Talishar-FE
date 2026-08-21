@@ -42,7 +42,6 @@ import {
   ReplayAdvanceButton,
   TurnChangeSettingsSync
 } from './PlaySideEffects';
-import { RootState } from 'app/Store';
 
 const TOAST_STYLE: React.CSSProperties = {
   background: 'var(--theme-tertiary)',
@@ -99,9 +98,27 @@ const GameOverlays = React.memo(function GameOverlays() {
   );
 });
 
+const GameSurfaceInline = () => {
+  useAppSelector((state: any) => state.game.canPassPhase);
+  return (
+    <div className="app" key="app">
+      <ChatCardDetail />
+      <LeftColumn />
+      <div className="gameZone">
+        <Board />
+        <HandZone isPlayer={false} />
+        <ChainLinkSummaryContainer />
+        <HandZone isPlayer />
+        <PlayerHand />
+      </div>
+      <RightColumn />
+    </div>
+  );
+};
+
 const HeroIntroGate = () => {
   const heroIntroShown = useAppSelector(
-    (state: RootState) => state.game.heroIntroShown
+    (state: any) => state.game.heroIntroShown
   );
   return heroIntroShown ? null : <HeroVsHeroIntro />;
 };
@@ -160,7 +177,7 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
     <PanelProvider>
       <div className="centering">
         <Toaster position="top-left" toastOptions={TOAST_OPTIONS} />
-        <GameSurface />
+        <GameSurfaceInline />
         <HeroIntroGate />
         <GameOverlays />
         <CardScaleVariables />

@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
 import CombatChain from '../combatChain/CombatChain';
 import styles from './Board.module.css';
 import PlayerPrompt from '../elements/playerPrompt/PlayerPrompt';
 import PlayerBoardGrid from '../playerBoardGrid/PlayerBoardGrid';
 import OpponentBoardGrid from '../opponentBoardGrid/OpponentBoardGrid';
 import GridBoard from './../gridBoard';
+import useWindowDimensions from 'hooks/useWindowDimensions';
 import { useCookieString } from 'utils/cookieStore';
 import ExperimentalTurnWidget from '../elements/experimentalTurnWidget';
 import TurnWidget from '../elements/turnWidget/TurnWidget';
@@ -18,42 +18,16 @@ export interface playAreaDimensions {
   dimension: number;
 }
 
-const usePortraitOrientation = () => {
-  const [isPortrait, setIsPortrait] = useState(
-    () => window.innerHeight > window.innerWidth
-  );
-
-  useEffect(() => {
-    let frameId = 0;
-    const updateOrientation = () => {
-      if (frameId !== 0) cancelAnimationFrame(frameId);
-      frameId = requestAnimationFrame(() => {
-        frameId = 0;
-        const nextIsPortrait = window.innerHeight > window.innerWidth;
-        setIsPortrait((previous) =>
-          previous === nextIsPortrait ? previous : nextIsPortrait
-        );
-      });
-    };
-
-    window.addEventListener('resize', updateOrientation, { passive: true });
-    return () => {
-      window.removeEventListener('resize', updateOrientation);
-      if (frameId !== 0) cancelAnimationFrame(frameId);
-    };
-  }, []);
-
-  return isPortrait;
-};
-
 export function Board() {
-  const useOldScreen = usePortraitOrientation();
+  const [width, height] = useWindowDimensions();
   const experimental = useCookieString('experimental');
   const { playerID, isReplay } = useAppSelector(getGameInfo);
   const spectatorCameraView = useAppSelector(
     (state: RootState) => state.game.spectatorCameraView
   );
 
+  const useOldScreen = height > width;
+  // const useOldScreen = true;
   const isSpectatorViewingPlayer2 =
     (playerID === 3 || isReplay) && spectatorCameraView === 2;
 

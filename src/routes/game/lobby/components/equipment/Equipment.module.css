@@ -45,11 +45,15 @@
   max-height: 100%;
   max-width: 100%;
   border-radius: 0.5em;
-  transition: transform 0.1s;
+  transition: width 0.1s, height 0.1s, margin 0.1s;
 }
 
 .card:hover {
-  transform: scale(1.05);
+  height: 105%;
+  width: 105%;
+  max-height: 105%;
+  max-width: 105%;
+  margin: -2.5%;
 }
 
 .spacerDiv {
