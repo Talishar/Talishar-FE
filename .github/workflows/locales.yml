@@ -3,9 +3,14 @@ on:
   pull_request:
     branches:
       - main
-  push:
-    branches:
-      - main
+    paths:
+      - "src/**/*.js"
+      - "src/**/*.jsx"
+      - "src/**/*.ts"
+      - "src/**/*.tsx"
+      - "i18next.config.ts"
+      - "package.json"
+      - "package-lock.json"
 
 permissions:
   contents: read

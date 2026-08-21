@@ -25,4 +25,8 @@ export default defineConfig({
     sort: true, // can be also a sort function => i.e. (a, b) => a.key > b.key ? -1 : a.key < b.key ? 1 : 0, // sort in reverse order
     indentation: 2, // can be also a string
   },
+  lint: {
+    // Keyboard key labels such as Ctrl, Shift, and Cmd are not translated.
+    ignoredTags: ['kbd'],
+  },
 })
