@@ -102,7 +102,7 @@ export const themes: Theme[] = [
       primary: '#d4af37',
       primaryInverse: '#000000',
       primaryHover: '#e8c547',
-      primaryFocus: 'rgba(212, 175, 55, 0.125)',
+      primaryFocus: '#423f2c',
 
       secondary: '#3d3d52',
       secondaryHover: '#4d4d62',
@@ -167,7 +167,7 @@ export const themes: Theme[] = [
       primary: '#a0762e',
       primaryInverse: '#ffffff',
       primaryHover: '#7d5a22',
-      primaryFocus: 'rgba(160, 118, 46, 0.2)',
+      primaryFocus: '#f2ece2',
 
       secondary: '#e2e8f0',
       secondaryHover: '#cbd5e0',
@@ -232,7 +232,7 @@ export const themes: Theme[] = [
       primary: '#d4af37',
       primaryInverse: '#1a1a1a',
       primaryHover: '#e0bb47',
-      primaryFocus: 'rgba(212, 175, 55, 0.125)',
+      primaryFocus: '#564f39',
 
       secondary: '#5a5a5a',
       secondaryHover: '#6a6a6a',
@@ -297,7 +297,7 @@ export const themes: Theme[] = [
       primary: '#60a5fa',
       primaryInverse: '#0a0e27',
       primaryHover: '#93c5fd',
-      primaryFocus: 'rgba(96, 165, 250, 0.125)',
+      primaryFocus: '#283a60',
 
       secondary: '#475569',
       secondaryHover: '#64748b',
@@ -362,7 +362,7 @@ export const themes: Theme[] = [
       primary: '#8b5cf6',
       primaryInverse: '#0f0a15',
       primaryHover: '#a78bfa',
-      primaryFocus: 'rgba(139, 92, 246, 0.125)',
+      primaryFocus: '#31214f',
 
       secondary: '#5a3d80',
       secondaryHover: '#6f5199',
@@ -427,7 +427,7 @@ export const themes: Theme[] = [
       primary: '#d63033',
       primaryInverse: '#0d0a0a',
       primaryHover: '#f04d50',
-      primaryFocus: 'rgba(214, 48, 51, 0.125)',
+      primaryFocus: '#401a1b',
 
       secondary: '#3a3333',
       secondaryHover: '#4a4444',
@@ -492,7 +492,7 @@ export const themes: Theme[] = [
       primary: '#34d356',
       primaryInverse: '#0d1410',
       primaryHover: '#52e070',
-      primaryFocus: 'rgba(52, 211, 86, 0.125)',
+      primaryFocus: '#1f452b',
 
       secondary: '#3a4548',
       secondaryHover: '#4a5558',
@@ -557,7 +557,7 @@ export const themes: Theme[] = [
       primary: '#d74bb8',
       primaryInverse: '#110914',
       primaryHover: '#ed5ed0',
-      primaryFocus: 'rgba(215, 75, 184, 0.125)',
+      primaryFocus: '#431f3e',
 
       secondary: '#3d3642',
       secondaryHover: '#4d464f',
@@ -622,7 +622,7 @@ export const themes: Theme[] = [
       primary: '#c9a227',
       primaryInverse: '#0f0d0a',
       primaryHover: '#dbb03a',
-      primaryFocus: 'rgba(201, 162, 39, 0.125)',
+      primaryFocus: '#423519',
 
       secondary: '#3a3838',
       secondaryHover: '#4a4848',
@@ -687,7 +687,7 @@ export const themes: Theme[] = [
       primary: '#c9a227',
       primaryInverse: '#0f1419',
       primaryHover: '#dbb03a',
-      primaryFocus: 'rgba(201, 162, 39, 0.125)',
+      primaryFocus: '#3d392d',
 
       secondary: '#3a3d47',
       secondaryHover: '#4a4d57',
@@ -752,7 +752,7 @@ export const themes: Theme[] = [
       primary: '#d63545',
       primaryInverse: '#0a0e12',
       primaryHover: '#f04452',
-      primaryFocus: 'rgba(214, 53, 69, 0.125)',
+      primaryFocus: '#442730',
 
       secondary: '#404550',
       secondaryHover: '#50555f',
@@ -817,7 +817,7 @@ export const themes: Theme[] = [
       primary: '#2563eb',
       primaryInverse: '#0a0f1a',
       primaryHover: '#3b82f6',
-      primaryFocus: 'rgba(37, 99, 235, 0.125)',
+      primaryFocus: '#172b51',
 
       secondary: '#3d4a5f',
       secondaryHover: '#4d5a6f',
@@ -882,7 +882,7 @@ export const themes: Theme[] = [
       primary: '#e67e22',
       primaryInverse: '#15100a',
       primaryHover: '#f59e3f',
-      primaryFocus: 'rgba(230, 126, 34, 0.125)',
+      primaryFocus: '#482e13',
 
       secondary: '#464032',
       secondaryHover: '#56504f',

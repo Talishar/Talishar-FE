@@ -48,7 +48,10 @@ import {
   FABRARY_DECK_URL_BASE
 } from 'appConstants';
 import { JUDGE_HUB_DISCORD_URL } from 'constants/socialLinks';
-import { getReadableFormatName } from 'utils/formatUtils';
+import {
+  getReadableFormatName,
+  getShortFormatName
+} from 'utils/formatUtils';
 import { masteryLevelPreview } from 'features/mastery/mastery';
 import MasteryBorder from 'features/mastery/MasteryBorder';
 
@@ -89,6 +92,9 @@ import {
   EquipmentSlotName,
   getEmptyEquipmentSlots
 } from './equipmentWarning';
+import { getLobbyPresenceMessage } from 'features/LobbyPresence';
+
+const OPPONENT_UNREADY_MESSAGE_MS = 3000;
 
 // FaBrary uses hyphens (e.g. "briar-warden-of-thorns"), Talishar uses underscores.
 const normalizeHeroId = (id: string) => id.toLowerCase().replace(/-/g, '_');
@@ -140,6 +146,10 @@ const Lobby = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [isStartingGame, setIsStartingGame] = useState(false);
+  const [opponentUnready, setOpponentUnready] = useState(false);
+  const previousOpponentReadyRef = useRef<boolean>();
+  const opponentUnreadyTimerRef = useRef<ReturnType<typeof setTimeout>>();
   const [pendingEquipmentSubmission, setPendingEquipmentSubmission] =
     useState<{
       values: DeckResponse;
@@ -189,6 +199,67 @@ const Lobby = () => {
   const settingsData = useAppSelector(getSettingsEntity);
   const isMuted = settingsData['MuteSound']?.value === '1';
   const isStreamerMode = String(settingsData['IsStreamerMode']?.value) === '1';
+
+  useEffect(() => {
+    previousOpponentReadyRef.current = undefined;
+    setOpponentUnready(false);
+    setIsStartingGame(false);
+    if (opponentUnreadyTimerRef.current !== undefined) {
+      clearTimeout(opponentUnreadyTimerRef.current);
+      opponentUnreadyTimerRef.current = undefined;
+    }
+  }, [gameID]);
+
+  useEffect(() => {
+    const opponentReady = gameLobby?.opponentSideboardSubmitted;
+    if (opponentReady === undefined) return;
+
+    if (previousOpponentReadyRef.current === true && !opponentReady) {
+      setOpponentUnready(true);
+      if (opponentUnreadyTimerRef.current !== undefined) {
+        clearTimeout(opponentUnreadyTimerRef.current);
+      }
+      opponentUnreadyTimerRef.current = setTimeout(() => {
+        setOpponentUnready(false);
+        opponentUnreadyTimerRef.current = undefined;
+      }, OPPONENT_UNREADY_MESSAGE_MS);
+    } else if (opponentReady) {
+      setOpponentUnready(false);
+      if (opponentUnreadyTimerRef.current !== undefined) {
+        clearTimeout(opponentUnreadyTimerRef.current);
+        opponentUnreadyTimerRef.current = undefined;
+      }
+    }
+
+    previousOpponentReadyRef.current = opponentReady;
+  }, [gameLobby?.opponentSideboardSubmitted]);
+
+  useEffect(
+    () => () => {
+      if (opponentUnreadyTimerRef.current !== undefined) {
+        clearTimeout(opponentUnreadyTimerRef.current);
+      }
+    },
+    []
+  );
+
+  const hasOpponent =
+    !!gameLobby?.theirHero && gameLobby.theirHero !== 'CardBack';
+  const lobbyPresenceMessage = getLobbyPresenceMessage({
+    hasOpponent,
+    isSideboarding: gameLobby?.isSideboarding === true,
+    opponentReady: gameLobby?.opponentSideboardSubmitted === true,
+    opponentUnready,
+    bothReady: isStartingGame || gameLobby?.isMainGameReady === true
+  });
+  const lobbyPresenceState: 'ready' | 'unready' | 'waiting' =
+    isStartingGame ||
+    gameLobby?.isMainGameReady === true ||
+    gameLobby?.opponentSideboardSubmitted === true
+      ? 'ready'
+      : opponentUnready
+      ? 'unready'
+      : 'waiting';
 
   useLayoutEffect(() => {
     dispatch(clearGetLobbyRefresh());
@@ -498,9 +569,9 @@ const Lobby = () => {
     0;
 
   const leftPic = `url(${generateCroppedImageUrl(leftHero)})`;
-  const lobbyFormatName = getReadableFormatName(
-    String(gameLobby?.format ?? data.format ?? '')
-  );
+  const lobbyFormatCode = String(gameLobby?.format ?? data.format ?? '');
+  const lobbyFormatName = getReadableFormatName(lobbyFormatCode);
+  const lobbyFormatShortName = getShortFormatName(lobbyFormatCode);
   const rawLobbyDescription = (gameLobby?.gameDescription ?? '').trim();
   const lobbyDescription =
     rawLobbyDescription && rawLobbyDescription !== 'Game #'
@@ -527,33 +598,62 @@ const Lobby = () => {
   const lobbyTooltip = lobbyTooltipParts.length
     ? lobbyTooltipParts.join('\n')
     : undefined;
-  const showLobbySettings = lobbyMetaLine !== '' || lobbyDescription !== '';
-  const lobbySettingsItems = (
+  const showLobbySettings =
+    lobbyMetaLine !== '' ||
+    lobbyDescription !== '' ||
+    lobbyPresenceMessage !== null;
+  const lobbySettingsContent = (
     <>
-      {lobbyVisibilityLabel !== '' && (
-        <span
-          className={classNames(styles.lobbySettingsItem, {
-            [styles.lobbySettingsPrivate]: gameLobby?.isPrivateLobby === true
+      <div className={styles.lobbySettingsRow}>
+        <div
+          className={classNames(styles.lobbySettingsDetails, {
+            [styles.lobbySettingsDetailsFull]: !lobbyPresenceMessage
           })}
         >
-          {gameLobby?.isPrivateLobby ? (
-            <FaLock aria-hidden="true" />
-          ) : (
-            <FaGlobeAmericas aria-hidden="true" />
+          {lobbyVisibilityLabel !== '' && (
+            <span
+              className={classNames(styles.lobbySettingsItem, {
+                [styles.lobbySettingsPrivate]:
+                  gameLobby?.isPrivateLobby === true
+              })}
+            >
+              {gameLobby?.isPrivateLobby ? (
+                <FaLock aria-hidden="true" />
+              ) : (
+                <FaGlobeAmericas aria-hidden="true" />
+              )}
+              <span className={styles.lobbySettingsLabel}>
+                {lobbyVisibilityLabel}
+              </span>
+            </span>
           )}
-          {lobbyVisibilityLabel}
-        </span>
-      )}
-      {lobbyFormatName !== '' && (
-        <span className={styles.lobbySettingsItem}>{lobbyFormatName}</span>
-      )}
+          {lobbyFormatShortName !== '' && (
+            <span className={styles.lobbySettingsItem} title={lobbyFormatName}>
+              <span className={styles.lobbySettingsLabel}>
+                {lobbyFormatShortName}
+              </span>
+            </span>
+          )}
+        </div>
+        {lobbyPresenceMessage && (
+          <span
+            className={classNames(styles.lobbyPresence, {
+              [styles.lobbyPresenceReady]: lobbyPresenceState === 'ready',
+              [styles.lobbyPresenceUnready]: lobbyPresenceState === 'unready'
+            })}
+            role="status"
+            aria-live="polite"
+            title={lobbyPresenceMessage}
+          >
+            <span className={styles.lobbyPresenceDot} aria-hidden="true" />
+            <span className={styles.lobbySettingsLabel}>
+              {lobbyPresenceMessage}
+            </span>
+          </span>
+        )}
+      </div>
       {lobbyDescription !== '' && (
-        <span
-          className={classNames(
-            styles.lobbySettingsItem,
-            styles.lobbySettingsDescription
-          )}
-        >
+        <span className={styles.lobbySettingsDescription}>
           {lobbyDescription}
         </span>
       )}
@@ -903,6 +1003,7 @@ const Lobby = () => {
 
       // If game started, capture and store the auth key for future use
       if (submitResponse?.gameStarted && submitResponse?.authKey && gameID) {
+        setIsStartingGame(true);
         saveGameAuthKey(gameID, submitResponse.authKey, playerID);
         // The existing useEffect in this component will navigate to /game/play/{gameID}
         // when gameLobby?.isMainGameReady becomes true
@@ -1185,7 +1286,7 @@ const Lobby = () => {
 
             {!isWideScreen && showLobbySettings && (
               <div className={styles.lobbySettingsBar} title={lobbyTooltip}>
-                {lobbySettingsItems}
+                {lobbySettingsContent}
               </div>
             )}
 
@@ -1289,11 +1390,6 @@ const Lobby = () => {
                       </button>
                     </li>
                   </ul>
-                  {showLobbySettings && (
-                    <div className={styles.inlineNavMeta} title={lobbyTooltip}>
-                      {lobbySettingsItems}
-                    </div>
-                  )}
                   <div style={{ marginLeft: 'auto' }}>
                     <DesktopDeckSelectionButtons
                       deckIndexed={deckIndexed}
@@ -1361,6 +1457,14 @@ const Lobby = () => {
                     : styles.chatAreaContainer
                 }
               >
+                {isWideScreen && showLobbySettings && (
+                  <div
+                    className={styles.desktopLobbySettingsBar}
+                    title={lobbyTooltip}
+                  >
+                    {lobbySettingsContent}
+                  </div>
+                )}
                 <LobbyChat />
               </div>
             )}

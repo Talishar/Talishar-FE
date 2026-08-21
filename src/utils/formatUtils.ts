@@ -66,3 +66,23 @@ export const getReadableFormatName = (format: string): string => {
   const key = resolvedFormat.toLowerCase().replace(/[_\s]/g, '');
   return formatMap[key] || resolvedFormat;
 };
+
+/**
+ * Compact display name for tight UI (lobby bars, chips).
+ * Abbreviates the well-known long format names: Classic Constructed -> CC,
+ * Living Legend -> LL, Competitive -> Comp.
+ */
+export const getShortFormatName = (format: string): string => {
+  const readable = getReadableFormatName(format);
+  if (!readable) return '';
+
+  return readable
+    .replace(/Classic Constructed/gi, 'CC')
+    .replace(/Living Legend/gi, 'LL')
+    .replace(/Silver Age/gi, 'SA')
+    .replace(/Golden Age/gi, 'GA')
+    .replace(/Competitive/gi, 'Comp')
+    .replace(/Preconstructed Decks/gi, 'Precon')
+    .replace(/Draft \/ Limited/gi, 'Draft')
+    .trim();
+};

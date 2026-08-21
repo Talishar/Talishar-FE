@@ -179,6 +179,14 @@
   user-select: text;
 }
 
+.flushTop {
+  padding-top: 0;
+}
+
+.flushTop .chatBoxInner {
+  margin-top: 0;
+}
+
 .chatBoxInner {
   font-weight: 400;
   font-size: max(1em, 14px);
