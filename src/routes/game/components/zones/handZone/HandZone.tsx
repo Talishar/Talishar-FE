@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
 import styles from './HandZone.module.css';
 import { RootState } from 'app/Store';
@@ -60,11 +60,12 @@ const HandZone = React.memo(function HandZone(prop: Player) {
   const canOpenHandList =
     cardCount > 0 &&
     (isPlayer ||
-      handCards.some(
+      (handCards?.some(
         (card: Card) => card.cardNumber.toLowerCase() !== handCardBackNumber
-      ));
+      ) ??
+        false));
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const zone = zoneRef.current;
     const firstCard = zone?.querySelector(':scope > div') as HTMLElement | null;
     const cardWidth = firstCard?.offsetWidth ?? 0;
@@ -86,6 +87,18 @@ const HandZone = React.memo(function HandZone(prop: Player) {
       setOverlap(0);
     }
   }, [cardCount, windowWidth]);
+
+  // Backend uniqueIds fall back to '-', so duplicates are deduped by a
+  // per-cardNumber occurrence counter rather than by position.
+  const cardKeys = useMemo(() => {
+    const seen = new Map<string, number>();
+    return (handCards ?? []).map((card: Card) => {
+      if (card.uniqueId && card.uniqueId !== '-') return card.uniqueId;
+      const occurrence = seen.get(card.cardNumber) ?? 0;
+      seen.set(card.cardNumber, occurrence + 1);
+      return `${card.cardNumber}#${occurrence}`;
+    });
+  }, [handCards]);
 
   const displayRow = classNames(
     styles.handZone,
@@ -124,9 +137,17 @@ const HandZone = React.memo(function HandZone(prop: Player) {
         canOpenHandList ? `Click to view ${zoneTitle.toLowerCase()}` : undefined
       }
     >
-      {handCards.map((card: Card, index: number) => {
-        return <CardDisplay card={card} key={index} isPlayer={isPlayer} />;
-      })}
+      {handCards.map((card: Card, index: number) => (
+        <CardDisplay card={card} key={cardKeys[index]} isPlayer={isPlayer} />
+      ))}
+      {!isPlayer && cardCount > 0 && (
+        <span
+          className={styles.handCount}
+          aria-label={`${cardCount} cards in hand`}
+        >
+          {cardCount}
+        </span>
+      )}
     </div>
   );
 });
