@@ -127,7 +127,7 @@ h3 {
   overflow: hidden;
   transition: none;
   position: relative;
-  border-radius: 5px 0 0 5px;
+  border-radius: 8px;
 }
 
 .leftCol[data-mastery-level]:not([data-mastery-level='0']),
@@ -221,7 +221,7 @@ h3 {
   overflow: hidden;
   transition: none;
   position: relative;
-  border-radius: 0 5px 5px 0;
+  border-radius: 8px;
 }
 
 .rightCol::before {
