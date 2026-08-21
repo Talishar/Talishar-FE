@@ -13,7 +13,9 @@ import '../GameViewport.css';
 import styles from './Lobby.module.css';
 import Equipment from './components/equipment/Equipment';
 import classNames from 'classnames';
-import { FaExclamationCircle, FaLock, FaGlobeAmericas } from 'react-icons/fa';
+import { FaExclamationCircle } from 'react-icons/fa';
+import { LuGlobe } from 'react-icons/lu';
+import { RiSpyLine } from 'react-icons/ri';
 import { GiCapeArmor } from 'react-icons/gi';
 import { SiBookstack } from 'react-icons/si';
 import { MdArrowDropDown, MdArrowRight } from 'react-icons/md';
@@ -48,10 +50,7 @@ import {
   FABRARY_DECK_URL_BASE
 } from 'appConstants';
 import { JUDGE_HUB_DISCORD_URL } from 'constants/socialLinks';
-import {
-  getReadableFormatName,
-  getShortFormatName
-} from 'utils/formatUtils';
+import { getReadableFormatName, getShortFormatName } from 'utils/formatUtils';
 import { masteryLevelPreview } from 'features/mastery/mastery';
 import MasteryBorder from 'features/mastery/MasteryBorder';
 
@@ -88,10 +87,7 @@ import {
 } from 'features/options/optionsSlice';
 import { DISABLE_ALT_ARTS } from 'features/options/constants';
 import { useTranslation, Trans } from 'react-i18next';
-import {
-  EquipmentSlotName,
-  getEmptyEquipmentSlots
-} from './equipmentWarning';
+import { EquipmentSlotName, getEmptyEquipmentSlots } from './equipmentWarning';
 import { getLobbyPresenceMessage } from 'features/LobbyPresence';
 
 const OPPONENT_UNREADY_MESSAGE_MS = 3000;
@@ -150,11 +146,10 @@ const Lobby = () => {
   const [opponentUnready, setOpponentUnready] = useState(false);
   const previousOpponentReadyRef = useRef<boolean>();
   const opponentUnreadyTimerRef = useRef<ReturnType<typeof setTimeout>>();
-  const [pendingEquipmentSubmission, setPendingEquipmentSubmission] =
-    useState<{
-      values: DeckResponse;
-      emptySlots: EquipmentSlotName[];
-    } | null>(null);
+  const [pendingEquipmentSubmission, setPendingEquipmentSubmission] = useState<{
+    values: DeckResponse;
+    emptySlots: EquipmentSlotName[];
+  } | null>(null);
   const [selectedMatchupId, setSelectedMatchupId] = useState<string | null>(
     null
   );
@@ -250,7 +245,10 @@ const Lobby = () => {
     isSideboarding: gameLobby?.isSideboarding === true,
     opponentReady: gameLobby?.opponentSideboardSubmitted === true,
     opponentUnready,
-    bothReady: isStartingGame || gameLobby?.isMainGameReady === true
+    bothReady: isStartingGame || gameLobby?.isMainGameReady === true,
+    // The backend only sends this field during the choose-first-player phase,
+    // so false means that phase is live and the opponent is the one choosing.
+    opponentChoosingFirstPlayer: gameLobby?.amIChoosingFirstPlayer === false
   });
   const lobbyPresenceState: 'ready' | 'unready' | 'waiting' =
     isStartingGame ||
@@ -618,9 +616,9 @@ const Lobby = () => {
               })}
             >
               {gameLobby?.isPrivateLobby ? (
-                <FaLock aria-hidden="true" />
+                <RiSpyLine aria-hidden="true" />
               ) : (
-                <FaGlobeAmericas aria-hidden="true" />
+                <LuGlobe aria-hidden="true" />
               )}
               <span className={styles.lobbySettingsLabel}>
                 {lobbyVisibilityLabel}
@@ -669,9 +667,13 @@ const Lobby = () => {
   const deckClasses = classNames(styles.tabButton, {
     [styles.tabActive]: activeTab === 'deck'
   });
-  const chatClasses = classNames({});
-  const matchupClasses = classNames({});
-  const leaveClasses = classNames('outline');
+  const chatClasses = classNames(styles.tabButton, {
+    [styles.tabActive]: activeTab === 'chat'
+  });
+  const matchupClasses = classNames(styles.tabButton, {
+    [styles.tabActive]: activeTab === 'matchups'
+  });
+  const leaveClasses = classNames(styles.lobbySecondaryButton);
 
   const handleLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -1158,6 +1160,8 @@ const Lobby = () => {
               <CardPopUp
                 cardNumber={data.deck.hero}
                 containerClass={styles.leftCol}
+                disableTilt
+                disableShadow
               >
                 <div
                   className={styles.leftCol}
@@ -1201,6 +1205,8 @@ const Lobby = () => {
               <CardPopUp
                 cardNumber={gameLobby?.theirHero ?? 'CardBack'}
                 containerClass={styles.rightCol}
+                disableTilt
+                disableShadow
               >
                 <div
                   className={styles.rightCol}

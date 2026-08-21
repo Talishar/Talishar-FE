@@ -1,13 +1,29 @@
 .chatBox {
-  overflow-y: scroll;
+  overflow-y: auto;
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0.1em;
-  right: 0;
+  inset: 0;
   --game-log-accent: var(--theme-text);
   --game-log-critical: #fca52c;
   contain: paint;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
+}
+
+.chatBox::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chatBox::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chatBox::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 4px;
+}
+
+.chatBox::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .chatMessage,

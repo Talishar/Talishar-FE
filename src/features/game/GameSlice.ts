@@ -877,14 +877,15 @@ export const gameSlice = createSlice({
 
     // gameLobby
     builder.addCase(gameLobby.fulfilled, (state, action) => {
+      state.isUpdateInProgress = false;
+      state.isPlayerInputInProgress = false;
+
       if (action.payload === undefined) {
         return state;
       }
       if (action.meta.arg.game.gameID !== state.gameInfo.gameID) {
         return state;
       }
-      state.isUpdateInProgress = false;
-      state.isPlayerInputInProgress = false;
 
       if (action.payload.lastUpdate !== undefined) {
         state.gameDynamicInfo.lastUpdate = action.payload.lastUpdate;

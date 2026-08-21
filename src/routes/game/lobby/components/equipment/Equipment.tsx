@@ -1,4 +1,4 @@
-import { Field, FieldArray, useFormikContext } from 'formik';
+import { Field, useFormikContext } from 'formik';
 import React from 'react';
 import CardImage from 'routes/game/components/elements/cardImage/CardImage';
 import {
@@ -93,11 +93,12 @@ const Equipment = ({
 
   const handleModularDragStart = (e: React.DragEvent, card: string) => {
     clearCardPreview();
-    e.dataTransfer.setData(
+    const { dataTransfer } = e;
+    dataTransfer.setData(
       'text/plain',
       JSON.stringify({ card, from: 'modular' })
     );
-    e.dataTransfer.effectAllowed = 'move';
+    dataTransfer.effectAllowed = 'move';
   };
 
   const handleAssignedDragStart = (
@@ -105,11 +106,12 @@ const Equipment = ({
     card: string,
     fromField: EquipFieldName
   ) => {
-    e.dataTransfer.setData(
+    const { dataTransfer } = e;
+    dataTransfer.setData(
       'text/plain',
       JSON.stringify({ card, from: fromField })
     );
-    e.dataTransfer.effectAllowed = 'move';
+    dataTransfer.effectAllowed = 'move';
   };
 
   const handleEquipmentDrop = (e: React.DragEvent, field: EquipFieldName) => {
@@ -171,7 +173,9 @@ const Equipment = ({
     field: EquipFieldName,
     baseList: string[]
   ) => {
-    const fullList = [...baseList, ...assigned[field], 'NONE00'];
+    const visibleCards = [...baseList, ...assigned[field]].filter(
+      (card) => card !== 'NONE00'
+    );
 
     return (
       <div
@@ -182,8 +186,17 @@ const Equipment = ({
         <h3>{label}</h3>
 
         <div className={styles.categoryContainer}>
-          {fullList.map((card, i) => {
+          <Field
+            type="radio"
+            name={field}
+            value="NONE00"
+            className={styles.hiddenUnequippedInput}
+            aria-hidden="true"
+            tabIndex={-1}
+          />
+          {visibleCards.map((card, i) => {
             const isAssigned = assigned[field].includes(card);
+            const isEquipped = values[field] === card;
 
             return (
               <div
@@ -197,7 +210,18 @@ const Equipment = ({
                 }
               >
                 <label>
-                  <Field type="radio" name={field} value={card} />
+                  <Field
+                    type="radio"
+                    name={field}
+                    value={card}
+                    aria-label={`${label}: ${card}`}
+                    onClick={(event: React.MouseEvent<HTMLInputElement>) => {
+                      if (isEquipped) {
+                        event.preventDefault();
+                        setFieldValue(field, 'NONE00');
+                      }
+                    }}
+                  />
                   <CardPopUp cardNumber={card}>
                     <CardImage
                       src={getCardSrc(card)}
@@ -219,102 +243,103 @@ const Equipment = ({
       <div className={styles.eqCategory}>
         <h3>{t('GAME_LOBBY.WEAPONS')}</h3>
 
-        <FieldArray
-          name="weapons"
-          render={(arrayHelpers) => (
-            <div className={styles.categoryContainer}>
-              {hands.map((weapon, ix) => {
-                const id = weapon.id.split('-')[0];
-                const checked = values.weapons.some((w) => w.id === weapon.id);
+        <div className={styles.categoryContainer}>
+          {hands
+            .filter((weapon) => weapon.img !== 'NONE00')
+            .map((weapon, ix) => {
+              const id = weapon.id.split('-')[0];
+              const checked = values.weapons.some((w) => w.id === weapon.id);
 
-                return (
-                  <div key={`weapon-${ix}`} className={styles.cardContainer}>
-                    <label>
-                      <input
-                        type="checkbox"
-                        checked={checked}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            if (weapon.img === 'NONE00') {
-                              // Selecting "None Equipped" clears everything else
-                              setFieldValue('weapons', [weapon]);
-                            } else if (weapon.numHands === 2) {
-                              // Remove all non-quiver/non-companion weapons, keep quivers and companions
-                              const equipmentExceptions = values.weapons.filter(
-                                (w) =>
-                                  (w.isQuiver || w.isCompanion) &&
-                                  w.img !== 'NONE00'
-                              );
-                              const newWeapons = [
-                                weapon,
-                                ...equipmentExceptions
-                              ];
-                              setFieldValue('weapons', newWeapons);
-                            } else if (
-                              weapon.isOffhand &&
+              return (
+                <div key={`weapon-${ix}`} className={styles.cardContainer}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={checked}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          if (weapon.img === 'NONE00') {
+                            // Selecting "None Equipped" clears everything else
+                            setFieldValue('weapons', [weapon]);
+                          } else if (weapon.numHands === 2) {
+                            // Remove all non-quiver/non-companion weapons, keep quivers and companions
+                            const equipmentExceptions = values.weapons.filter(
+                              (w) =>
+                                (w.isQuiver || w.isCompanion) &&
+                                w.img !== 'NONE00'
+                            );
+                            const newWeapons = [weapon, ...equipmentExceptions];
+                            setFieldValue('weapons', newWeapons);
+                          } else if (
+                            weapon.isOffhand &&
+                            !weapon.isQuiver &&
+                            !weapon.isCompanion
+                          ) {
+                            // If adding an off-hand (regular off-hand, not quiver/companion), remove other off-hands and NONE00
+                            const nonOffhands = values.weapons.filter(
+                              (w) =>
+                                (!w.isOffhand || w.isQuiver || w.isCompanion) &&
+                                w.img !== 'NONE00'
+                            );
+                            const newWeapons = [...nonOffhands, weapon];
+                            setFieldValue('weapons', newWeapons);
+                          } else {
+                            const currentWeapons = values.weapons.filter(
+                              (w) => w.img !== 'NONE00'
+                            );
+                            const twoHandedIndex = currentWeapons.findIndex(
+                              (w) => w.numHands === 2
+                            );
+                            if (
+                              twoHandedIndex !== -1 &&
                               !weapon.isQuiver &&
                               !weapon.isCompanion
                             ) {
-                              // If adding an off-hand (regular off-hand, not quiver/companion), remove other off-hands and NONE00
-                              const nonOffhands = values.weapons.filter(
-                                (w) =>
-                                  (!w.isOffhand ||
-                                    w.isQuiver ||
-                                    w.isCompanion) &&
-                                  w.img !== 'NONE00'
+                              // Remove the 2-handed weapon first (unless adding a quiver or companion)
+                              const updatedWeapons = currentWeapons.filter(
+                                (_, idx) => idx !== twoHandedIndex
                               );
-                              const newWeapons = [...nonOffhands, weapon];
-                              setFieldValue('weapons', newWeapons);
+                              setFieldValue('weapons', [
+                                ...updatedWeapons,
+                                weapon
+                              ]);
                             } else {
-                              const currentWeapons = values.weapons.filter(
-                                (w) => w.img !== 'NONE00'
-                              );
-                              const twoHandedIndex = currentWeapons.findIndex(
-                                (w) => w.numHands === 2
-                              );
-                              if (
-                                twoHandedIndex !== -1 &&
-                                !weapon.isQuiver &&
-                                !weapon.isCompanion
-                              ) {
-                                // Remove the 2-handed weapon first (unless adding a quiver or companion)
-                                const updatedWeapons = currentWeapons.filter(
-                                  (_, idx) => idx !== twoHandedIndex
-                                );
-                                setFieldValue('weapons', [
-                                  ...updatedWeapons,
-                                  weapon
-                                ]);
-                              } else {
-                                // No 2-handed weapon, or adding a quiver/companion - just add it (NONE00 already stripped)
-                                setFieldValue('weapons', [
-                                  ...currentWeapons,
-                                  weapon
-                                ]);
-                              }
+                              // No 2-handed weapon, or adding a quiver/companion - just add it (NONE00 already stripped)
+                              setFieldValue('weapons', [
+                                ...currentWeapons,
+                                weapon
+                              ]);
                             }
-                          } else {
-                            const idx = values.weapons.findIndex(
-                              (w) => w.id === weapon.id
-                            );
-                            if (idx !== -1) arrayHelpers.remove(idx);
                           }
-                        }}
+                        } else {
+                          const remainingWeapons = values.weapons.filter(
+                            (w) => w.id !== weapon.id && w.img !== 'NONE00'
+                          );
+                          const unequippedWeapon = hands.find(
+                            (w) => w.img === 'NONE00'
+                          );
+
+                          setFieldValue(
+                            'weapons',
+                            remainingWeapons.length > 0 || !unequippedWeapon
+                              ? remainingWeapons
+                              : [unequippedWeapon]
+                          );
+                        }
+                      }}
+                    />
+                    <CardPopUp cardNumber={id}>
+                      <CardImage
+                        src={getCardSrc(id)}
+                        draggable={false}
+                        className={styles.card}
                       />
-                      <CardPopUp cardNumber={id}>
-                        <CardImage
-                          src={getCardSrc(id)}
-                          draggable={false}
-                          className={styles.card}
-                        />
-                      </CardPopUp>
-                    </label>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        />
+                    </CardPopUp>
+                  </label>
+                </div>
+              );
+            })}
+        </div>
       </div>
 
       {renderEquipZone(t('GAME_LOBBY.HEAD'), 'head', baseEquipment.head)}

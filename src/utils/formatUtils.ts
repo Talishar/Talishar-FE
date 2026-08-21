@@ -23,10 +23,6 @@ const numericFormatCodeMap: { [key: string]: string } = {
   '-2': 'precon'
 };
 
-/**
- * Helper function to convert format codes to readable names
- * Used across multiple components for consistent format display
- */
 export const getReadableFormatName = (format: string): string => {
   if (!format) return '';
 
@@ -67,11 +63,6 @@ export const getReadableFormatName = (format: string): string => {
   return formatMap[key] || resolvedFormat;
 };
 
-/**
- * Compact display name for tight UI (lobby bars, chips).
- * Abbreviates the well-known long format names: Classic Constructed -> CC,
- * Living Legend -> LL, Competitive -> Comp.
- */
 export const getShortFormatName = (format: string): string => {
   const readable = getReadableFormatName(format);
   if (!readable) return '';
@@ -79,8 +70,8 @@ export const getShortFormatName = (format: string): string => {
   return readable
     .replace(/Classic Constructed/gi, 'CC')
     .replace(/Living Legend/gi, 'LL')
-    .replace(/Silver Age/gi, 'SA')
-    .replace(/Golden Age/gi, 'GA')
+    .replace(/Silver Age/gi, 'SAGE')
+    .replace(/Golden Age/gi, 'GAGE')
     .replace(/Competitive/gi, 'Comp')
     .replace(/Preconstructed Decks/gi, 'Precon')
     .replace(/Draft \/ Limited/gi, 'Draft')

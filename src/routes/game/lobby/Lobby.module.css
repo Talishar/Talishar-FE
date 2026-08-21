@@ -3,10 +3,26 @@ h3 {
 }
 
 .lobbyClass {
+  --lobby-control-background: var(--theme-card-background, #1e2329);
+  --lobby-control-border: var(--theme-border-light, rgba(255, 255, 255, 0.12));
+  --lobby-control-color: var(--theme-text-muted, #9aa0a6);
+  --lobby-control-hover-border: var(--theme-border, rgba(255, 255, 255, 0.2));
+  --lobby-control-hover-color: var(--theme-text-secondary, #d0d3d6);
   user-select: none;
   margin: auto;
   max-width: 2560px;
   display: flex;
+}
+
+.lobbyClass button:hover {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.lobbyClass button:focus,
+.lobbyClass button:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .titleContainer {
@@ -42,7 +58,7 @@ h3 {
 
 .smallButton:hover {
   background: var(--theme-primary-focus);
-  border-color: var(--theme-primary);
+  border-color: var(--theme-border);
   color: var(--theme-text);
   text-decoration-color: var(--theme-primary);
   transform: none;
@@ -51,7 +67,7 @@ h3 {
 
 .smallButton.active {
   background: var(--theme-primary-focus);
-  border-color: var(--theme-primary);
+  border-color: var(--theme-border);
   color: var(--theme-primary);
   text-decoration-color: var(--theme-primary);
   box-shadow: none;
@@ -109,7 +125,7 @@ h3 {
   height: 100%;
   border: none;
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: none;
   position: relative;
   border-radius: 5px 0 0 5px;
 }
@@ -117,12 +133,7 @@ h3 {
 .leftCol[data-mastery-level]:not([data-mastery-level='0']),
 .rightCol[data-mastery-level]:not([data-mastery-level='0']) {
   --mastery-orn-rail: 4px;
-  box-shadow: 0 0 22px
-    color-mix(
-      in srgb,
-      var(--mastery-frame) var(--mastery-frame-spread),
-      transparent
-    );
+  box-shadow: none;
 }
 
 .leftCol[data-mastery-level]:not([data-mastery-level='0'])::after,
@@ -186,26 +197,16 @@ h3 {
 }
 
 .leftCol::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, var(--primary-focus) 0%, transparent 40%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  z-index: 1;
-  pointer-events: none;
+  display: none;
 }
 
 .leftCol:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 20px var(--primary-focus);
+  transform: none;
+  box-shadow: none;
 }
 
 .leftCol:hover::before {
-  opacity: 1;
+  opacity: 0;
 }
 
 .rightCol {
@@ -218,32 +219,22 @@ h3 {
   height: 100%;
   border: none;
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: none;
   position: relative;
   border-radius: 0 5px 5px 0;
 }
 
 .rightCol::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(225deg, var(--primary-focus) 0%, transparent 40%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  z-index: 1;
-  pointer-events: none;
+  display: none;
 }
 
 .rightCol:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 20px var(--primary-focus);
+  transform: none;
+  box-shadow: none;
 }
 
 .rightCol:hover::before {
-  opacity: 1;
+  opacity: 0;
 }
 
 @media (min-width: 1200px) and (pointer: coarse) {
@@ -295,10 +286,9 @@ h3 {
 
   .lobbySettingsBar {
     min-height: 0;
-    padding: 0.22rem 0.5rem;
-    font-size: 0.64rem;
+    padding: 4px 8px;
+    font-size: 11px;
   }
-
 
   .lobbySettingsDescription {
     display: none;
@@ -437,15 +427,22 @@ h3 {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 0.1rem;
+  gap: 2px;
   width: 100%;
-  min-height: 1.75rem;
-  padding: 0.3rem 0.65rem;
+  min-height: 26px;
+  padding: 5px 9px;
   background: rgba(0, 0, 0, 0.72);
   color: rgba(255, 255, 255, 0.7);
-  font-size: 0.7rem;
+  font-size: 12px;
   font-weight: 500;
   letter-spacing: 0.01em;
+  container-type: inline-size;
+}
+
+@container (max-width: 330px) {
+  .lobbySettingsDetails > .lobbySettingsItem:first-child .lobbySettingsLabel {
+    display: none;
+  }
 }
 
 .lobbySettingsRow {
@@ -453,7 +450,7 @@ h3 {
   flex-wrap: nowrap;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
+  gap: 10px;
   width: 100%;
   min-width: 0;
 }
@@ -477,8 +474,8 @@ h3 {
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
-  gap: 0.5rem;
-  flex: 0 4 auto;
+  flex: 0 0 auto;
+  gap: 12px;
   min-width: 0;
 }
 
@@ -504,13 +501,9 @@ h3 {
 
 .lobbySettingsItem svg {
   flex: 0 0 auto;
-  font-size: 0.9em;
-  opacity: 0.6;
-}
-
-.lobbySettingsDetails > .lobbySettingsItem + .lobbySettingsItem {
-  padding-left: 0.5rem;
-  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  width: 13px;
+  height: 13px;
+  opacity: 0.72;
 }
 
 .lobbySettingsPrivate {
@@ -521,7 +514,7 @@ h3 {
   display: inline-flex;
   align-items: center;
   flex: 0 1 auto;
-  gap: 0.5em;
+  gap: 6px;
   min-width: 0;
   color: rgba(255, 255, 255, 0.78);
   font-size: inherit;
@@ -621,7 +614,7 @@ h3 {
   color: white;
   opacity: 1;
   text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.9), 0 0 6px rgba(255, 255, 255, 0.2);
-  transform: translateY(-1px);
+  transform: none;
 }
 
 .selectedMatchupIndicator {
@@ -643,11 +636,11 @@ h3 {
 }
 
 .leftCol:hover {
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 20px var(--primary-focus);
+  box-shadow: none;
 }
 
 .rightCol:hover {
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 20px var(--primary-focus);
+  box-shadow: none;
 }
 
 .inLineNav {
@@ -675,30 +668,63 @@ h3 {
   align-items: center;
   padding: 0.25rem 1.1rem;
   border-radius: 6px;
-  border: 1px solid var(--theme-border-light);
-  background: color-mix(in srgb, var(--theme-text) 4%, transparent);
-  color: var(--theme-text-muted);
+  border: 1px solid var(--lobby-control-border) !important;
+  background: var(--lobby-control-background) !important;
+  color: var(--lobby-control-color) !important;
   transition: all 0.2s ease;
   cursor: pointer;
   font-weight: 500;
   font-size: 0.9em;
   gap: 0.4rem;
   letter-spacing: 0.01em;
+  font-family: inherit !important;
+  margin-bottom: 0;
 }
 
 .tabButton:hover {
-  background: color-mix(in srgb, var(--theme-text) 8%, transparent);
-  color: var(--theme-text-secondary);
-  border-color: var(--theme-border);
+  background: var(--lobby-control-background) !important;
+  color: var(--lobby-control-hover-color) !important;
+  border-color: var(--lobby-control-hover-border) !important;
   transform: none;
   box-shadow: none;
 }
 
 .tabButton.tabActive {
-  background: var(--theme-primary-focus);
-  color: var(--theme-primary);
-  border-color: var(--theme-primary);
-  box-shadow: 0 0 8px var(--theme-primary-focus);
+  background: color-mix(
+    in srgb,
+    var(--theme-text) 10%,
+    var(--lobby-control-background)
+  ) !important;
+  color: var(--theme-text-secondary) !important;
+  border-color: var(--lobby-control-border) !important;
+  box-shadow: none;
+}
+
+.tabButton:focus-visible {
+  outline: none;
+  border-color: var(--lobby-control-hover-border) !important;
+  box-shadow: 0 0 0 2px var(--lobby-control-hover-border) !important;
+}
+
+.lobbySecondaryButton {
+  width: auto;
+  margin: 0;
+  padding: 0.45rem 1rem;
+  border: 1px solid var(--lobby-control-border) !important;
+  border-radius: 6px;
+  background: var(--lobby-control-background) !important;
+  color: var(--lobby-control-color) !important;
+  font-family: inherit !important;
+  font-size: 0.9em;
+  font-weight: 600;
+}
+
+.lobbySecondaryButton:hover {
+  border-color: var(--lobby-control-hover-border) !important;
+  background: var(--lobby-control-background) !important;
+  color: var(--lobby-control-hover-color) !important;
+  transform: none;
+  box-shadow: none;
 }
 
 .tabButton .icon {
@@ -1497,14 +1523,15 @@ button.secondary:hover {
 
 .selectionButton {
   padding: 0.25rem 1.1rem;
-  border: 1px solid var(--theme-border);
-  background-color: var(--theme-card-background);
+  border: 1px solid var(--lobby-control-border) !important;
+  background-color: var(--lobby-control-background) !important;
   border-radius: 6px;
   cursor: pointer;
   font-size: 0.9em;
   font-weight: 500;
   transition: all 0.2s ease;
-  color: var(--theme-text-secondary);
+  color: var(--lobby-control-color) !important;
+  font-family: inherit !important;
   white-space: nowrap;
   width: auto;
   min-width: fit-content;
@@ -1512,15 +1539,15 @@ button.secondary:hover {
 }
 
 .selectionButton:hover {
-  background-color: var(--theme-section-background);
-  border-color: var(--theme-primary);
-  color: var(--theme-text);
+  background-color: var(--lobby-control-background) !important;
+  border-color: var(--lobby-control-hover-border) !important;
+  color: var(--lobby-control-hover-color) !important;
 }
 
 .selectionButton:active {
-  background-color: var(--theme-primary);
-  color: var(--theme-primary-inverse);
-  border-color: var(--theme-primary);
+  background-color: var(--lobby-control-background) !important;
+  color: var(--lobby-control-hover-color) !important;
+  border-color: var(--lobby-control-hover-border) !important;
   font-weight: 600;
 }
 

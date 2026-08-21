@@ -127,19 +127,23 @@ const Matchups = ({
                     }}
                   >
                     <span className={styles.matchupName}>{matchup.name}</span>
-                    {isSelected && (
-                      <span className={styles.selectedBadge}>
-                        {t('GAME_LOBBY.SELECTED')}
-                      </span>
-                    )}
-                    {isSuggested && (
-                      <span className={styles.suggestedBadge}>
-                        {t('GAME_LOBBY.SUGGESTED')}
-                      </span>
-                    )}
-                    {turnOrderIndicator && (
-                      <span className={styles.turnOrderBadge}>
-                        {turnOrderIndicator}
+                    {(isSelected || isSuggested || turnOrderIndicator) && (
+                      <span className={styles.matchupBadges}>
+                        {isSelected && (
+                          <span className={styles.selectedBadge}>
+                            {t('GAME_LOBBY.SELECTED')}
+                          </span>
+                        )}
+                        {isSuggested && (
+                          <span className={styles.suggestedBadge}>
+                            {t('GAME_LOBBY.SUGGESTED')}
+                          </span>
+                        )}
+                        {turnOrderIndicator && (
+                          <span className={styles.turnOrderBadge}>
+                            {turnOrderIndicator}
+                          </span>
+                        )}
                       </span>
                     )}
                   </button>
