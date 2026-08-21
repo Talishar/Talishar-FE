@@ -35,14 +35,11 @@
 .isOpponent {
   --hand-hidden: calc(var(--card-size) * -0.28);
   --hand-offset: 0px;
-  top: calc(var(--hand-hidden) + var(--hand-offset));
+  top: 0;
   z-index: 90;
-  transition: top 0.18s ease;
-  -webkit-transform: rotate(180deg); /* Chrome and other webkit browsers */
-  -moz-transform: rotate(180deg); /* FF */
-  -o-transform: rotate(180deg); /* Opera */
-  -ms-transform: rotate(180deg); /* IE9 */
-  transform: rotate(180deg); /* W3C compliant browsers */
+  transform: translateY(calc(var(--hand-hidden) + var(--hand-offset)))
+    rotate(180deg);
+  transition: transform 0.18s ease;
 }
 
 .isOpponent > div {

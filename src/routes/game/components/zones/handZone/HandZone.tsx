@@ -7,7 +7,6 @@ import { Card } from 'features/Card';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { setCardListFocus, clearCardListFocus } from 'features/game/GameSlice';
-import useWindowDimensions from 'hooks/useWindowDimensions';
 
 const CARD_GAP = 5; // matches the flex gap in HandZone.module.css
 const ZONE_MAX_WIDTH = 0.6; // matches max-width: 60% in HandZone.module.css
@@ -52,10 +51,8 @@ const HandZone = React.memo(function HandZone(prop: Player) {
     (state: RootState) => state.game.cardListFocus
   );
 
-  const [windowWidth] = useWindowDimensions();
   const zoneRef = useRef<HTMLDivElement>(null);
   const [isOverflowing, setIsOverflowing] = useState(false);
-  const [overlap, setOverlap] = useState(0);
   const cardCount = handCards?.length ?? 0;
   const canOpenHandList =
     cardCount > 0 &&
@@ -67,26 +64,53 @@ const HandZone = React.memo(function HandZone(prop: Player) {
 
   useLayoutEffect(() => {
     const zone = zoneRef.current;
-    const firstCard = zone?.querySelector(':scope > div') as HTMLElement | null;
-    const cardWidth = firstCard?.offsetWidth ?? 0;
-    if (!zone || !cardWidth || cardCount === 0) {
-      setIsOverflowing(false);
-      setOverlap(0);
-      return;
-    }
-    const naturalWidth = cardCount * (cardWidth + CARD_GAP) - CARD_GAP;
-    const availableWidth = windowWidth * ZONE_MAX_WIDTH;
-    setIsOverflowing(naturalWidth > availableWidth);
-    if (cardCount > 1) {
-      const idealOverlap =
-        (availableWidth - cardWidth) / (cardCount - 1) - cardWidth - CARD_GAP;
-      setOverlap(
-        Math.max(Math.min(idealOverlap, 0), -MAX_OVERLAP_RATIO * cardWidth)
+    if (!zone) return;
+
+    let frameId = 0;
+    const measure = () => {
+      frameId = 0;
+      const firstCard = zone.querySelector(
+        ':scope > div'
+      ) as HTMLElement | null;
+      const cardWidth = firstCard?.offsetWidth ?? 0;
+      if (!cardWidth || cardCount === 0) {
+        zone.style.removeProperty('--hand-overlap');
+        setIsOverflowing(false);
+        return;
+      }
+
+      const naturalWidth = cardCount * (cardWidth + CARD_GAP) - CARD_GAP;
+      const availableWidth =
+        document.documentElement.clientWidth * ZONE_MAX_WIDTH;
+      const overflowing = naturalWidth > availableWidth;
+      setIsOverflowing((previous) =>
+        previous === overflowing ? previous : overflowing
       );
-    } else {
-      setOverlap(0);
-    }
-  }, [cardCount, windowWidth]);
+
+      if (overflowing && cardCount > 1) {
+        const idealOverlap =
+          (availableWidth - cardWidth) / (cardCount - 1) - cardWidth - CARD_GAP;
+        const overlap = Math.max(
+          Math.min(idealOverlap, 0),
+          -MAX_OVERLAP_RATIO * cardWidth
+        );
+        zone.style.setProperty('--hand-overlap', `${overlap}px`);
+      } else {
+        zone.style.removeProperty('--hand-overlap');
+      }
+    };
+    const scheduleMeasure = () => {
+      if (frameId !== 0) cancelAnimationFrame(frameId);
+      frameId = requestAnimationFrame(measure);
+    };
+
+    measure();
+    window.addEventListener('resize', scheduleMeasure, { passive: true });
+    return () => {
+      window.removeEventListener('resize', scheduleMeasure);
+      if (frameId !== 0) cancelAnimationFrame(frameId);
+    };
+  }, [cardCount]);
 
   // Backend uniqueIds fall back to '-', so duplicates are deduped by a
   // per-cardNumber occurrence counter rather than by position.
@@ -127,11 +151,6 @@ const HandZone = React.memo(function HandZone(prop: Player) {
     <div
       className={classNames(displayRow, { [styles.compact]: compactActive })}
       ref={zoneRef}
-      style={
-        compactActive
-          ? ({ '--hand-overlap': `${overlap}px` } as React.CSSProperties)
-          : undefined
-      }
       onClick={openHandList}
       title={
         canOpenHandList ? `Click to view ${zoneTitle.toLowerCase()}` : undefined

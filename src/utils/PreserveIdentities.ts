@@ -52,7 +52,11 @@ export function preserveIdentities<T>(prev: T | undefined, next: T): T {
     const prevObj = prev as Record<string, unknown>;
     const nextObj = next as Record<string, unknown>;
     const nextKeys = Object.keys(nextObj);
-    let allSame = Object.keys(prevObj).length === nextKeys.length;
+    const prevKeyCount = Object.keys(prevObj).length;
+    if (nextKeys.length === 0) {
+      return (prevKeyCount === 0 ? prev : next) as T;
+    }
+    let allSame = prevKeyCount === nextKeys.length;
     let out: Record<string, unknown> | null = null;
     for (let i = 0; i < nextKeys.length; i++) {
       const key = nextKeys[i];
