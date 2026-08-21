@@ -402,49 +402,37 @@ export default function PlayerHand() {
 
   useEffect(() => {
     const handRow = handRowRef.current;
-    if (!handRow) {
-      return;
-    }
-    const cardElements = (Array.from(handRow.children) as HTMLElement[]).filter(
-      (el) => !el.dataset.zoneSeparator
-    );
-    if (cardElements.length === 0) {
-      return;
-    }
-    if (cardElements.length === 1) {
-      const rect = cardElements[0].getBoundingClientRect();
-      const singleCardStep = Math.max(72, Math.min(220, rect.width * 0.9));
-      setHandReorderStepPx(singleCardStep);
-      return;
-    }
-    const centers = cardElements.map((element) => {
-      const rect = element.getBoundingClientRect();
-      return rect.left + rect.width / 2;
-    });
-    let totalGap = 0;
-    let gapCount = 0;
-    for (let index = 1; index < centers.length; index++) {
-      const gap = Math.abs(centers[index] - centers[index - 1]);
-      if (gap > 1) {
-        totalGap += gap;
-        gapCount += 1;
-      }
-    }
-    if (gapCount > 0) {
-      const measuredStep = totalGap / gapCount;
-      const clampedStep = Math.max(72, Math.min(220, measuredStep));
-      setHandReorderStepPx(clampedStep);
-    }
-  }, [orderedHandCards.length, width, height]);
-
-  useEffect(() => {
-    const handRow = handRowRef.current;
     if (!handRow) return;
 
     const cardElements = (Array.from(handRow.children) as HTMLElement[]).filter(
       (el) => !el.dataset.zoneSeparator
     );
     const N = cardElements.length;
+
+    const rects = cardElements.map((element) =>
+      element.getBoundingClientRect()
+    );
+
+    if (N === 1) {
+      setHandReorderStepPx(Math.max(72, Math.min(220, rects[0].width * 0.9)));
+    } else if (N > 1) {
+      let totalGap = 0;
+      let gapCount = 0;
+      let previousCenter = rects[0].left + rects[0].width / 2;
+      for (let index = 1; index < N; index++) {
+        const center = rects[index].left + rects[index].width / 2;
+        const gap = Math.abs(center - previousCenter);
+        if (gap > 1) {
+          totalGap += gap;
+          gapCount += 1;
+        }
+        previousCenter = center;
+      }
+      if (gapCount > 0) {
+        setHandReorderStepPx(Math.max(72, Math.min(220, totalGap / gapCount)));
+      }
+    }
+
     if (N <= 1) {
       setCardSpacingPx(null);
       setMaxScrollOffset(0);
@@ -456,7 +444,7 @@ export default function PlayerHand() {
     const containerWidth =
       scrollInnerRef.current?.clientWidth ?? handRow.offsetWidth;
     // getBoundingClientRect().width is the intrinsic card width, unaffected by margin-right
-    const cardWidth = cardElements[0].getBoundingClientRect().width;
+    const cardWidth = rects[0].width;
     const isPortrait = window.innerHeight > window.innerWidth;
     const defaultSpacing = isPortrait
       ? window.innerHeight * 0.01

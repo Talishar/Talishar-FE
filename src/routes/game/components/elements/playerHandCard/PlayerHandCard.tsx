@@ -1,9 +1,6 @@
 import React, { useRef, useState, useMemo } from 'react';
-import {
-  clearPopUp,
-  playCard,
-  removeCardFromHand
-} from 'features/game/GameSlice';
+import { playCard, removeCardFromHand } from 'features/game/GameSlice';
+import { clearCardPreview } from '../cardPortal/cardPreviewStore';
 import {
   GiTombstone,
   GiFluffySwirl,
@@ -122,6 +119,22 @@ export const PlayerHandCard = React.memo(
     const dragY = useMotionValue(0);
     const dispatch = useAppDispatch();
 
+    const imgStyles = useMemo(
+      () =>
+        classNames(styles.img, {
+          [styles.border1]: card?.borderColor == '1',
+          [styles.border2]: card?.borderColor == '2',
+          [styles.border3]: card?.borderColor == '3',
+          [styles.border4]: card?.borderColor == '4',
+          [styles.border5]: card?.borderColor == '5',
+          [styles.border6]: card?.borderColor == '6',
+          [styles.border7]: card?.borderColor == '7',
+          [styles.border8]: card?.borderColor == '8',
+          [styles.border9]: card?.borderColor == '9'
+        }),
+      [card?.borderColor]
+    );
+
     if (card === undefined) {
       return <div className={styles.handCard}></div>;
     }
@@ -148,7 +161,7 @@ export const PlayerHandCard = React.memo(
     const playCardFunc = () => {
       clearTapToPreviewSelection();
       dispatch(playCard({ cardParams: card }));
-      dispatch(clearPopUp());
+      clearCardPreview();
       if (!isBanished && !isGraveyard && !isArsenal) {
         dispatch(removeCardFromHand({ card }));
       }
@@ -251,7 +264,7 @@ export const PlayerHandCard = React.memo(
         if (!isLongPress.current) {
           // Keep sticky preview while this hand card is selected.
           if (getTapToPreviewSelectedCardKey() !== selectionKey) {
-            dispatch(clearPopUp());
+            clearCardPreview();
           }
           hasDispatchedClearRef.current = true;
           setCanPopup(false);
@@ -280,22 +293,6 @@ export const PlayerHandCard = React.memo(
     const stopPressTimer = () => {
       clearTimeout(timerRef.current);
     };
-
-    const imgStyles = useMemo(
-      () =>
-        classNames(styles.img, {
-          [styles.border1]: card.borderColor == '1',
-          [styles.border2]: card.borderColor == '2',
-          [styles.border3]: card.borderColor == '3',
-          [styles.border4]: card.borderColor == '4',
-          [styles.border5]: card.borderColor == '5',
-          [styles.border6]: card.borderColor == '6',
-          [styles.border7]: card.borderColor == '7',
-          [styles.border8]: card.borderColor == '8',
-          [styles.border9]: card.borderColor == '9'
-        }),
-      [card.borderColor]
-    );
 
     const iconColumn = (
       <div className={styles.iconCol}>

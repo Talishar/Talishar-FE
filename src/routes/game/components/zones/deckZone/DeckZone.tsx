@@ -5,7 +5,7 @@ import Displayrow from 'interface/Displayrow';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import styles from './DeckZone.module.css';
 import { setCardListFocus, clearCardListFocus } from 'features/game/GameSlice';
-import useWindowDimensions from 'hooks/useWindowDimensions';
+import { useMediaQuery } from 'hooks/useMediaQuery';
 import * as optConst from 'features/options/constants';
 import { useTranslation } from 'react-i18next';
 
@@ -15,7 +15,6 @@ export const DeckZone = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const [windowWidth] = useWindowDimensions();
   const alwaysShowCounters = useAppSelector(
     (state: RootState) =>
       String(
@@ -78,7 +77,7 @@ export const DeckZone = React.memo((prop: Displayrow) => {
     currentDeckPlayerID === 1 ? clashRevealP1Card : clashRevealP2Card;
   const showClash = !!clashCard;
 
-  const isMobileOrTablet = windowWidth <= 1024;
+  const isMobileOrTablet = useMediaQuery('(max-width: 1024px)');
   const safeCount = deckCards ?? 0;
   const baseOffsetY = safeCount * -0.24;
   const baseOffsetX = safeCount * 0.24;

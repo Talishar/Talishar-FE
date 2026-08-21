@@ -5,7 +5,7 @@ import { setCardListFocus, clearCardListFocus } from 'features/game/GameSlice';
 import Displayrow from 'interface/Displayrow';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import styles from './BanishZone.module.css';
-import useWindowDimensions from 'hooks/useWindowDimensions';
+import { useMediaQuery } from 'hooks/useMediaQuery';
 import * as optConst from 'features/options/constants';
 import { useTranslation } from 'react-i18next';
 
@@ -15,7 +15,6 @@ export const BanishZone = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const [windowWidth] = useWindowDimensions();
   const alwaysShowCounters = useAppSelector(
     (state: RootState) =>
       String(
@@ -32,7 +31,7 @@ export const BanishZone = React.memo((prop: Displayrow) => {
   );
 
   const totalCards = banishZone?.length ?? 0;
-  const isMobileOrTablet = windowWidth <= 1024;
+  const isMobileOrTablet = useMediaQuery('(max-width: 1024px)');
   const baseOffsetY = totalCards * -0.24;
   const baseOffsetX = totalCards * 0.24;
 

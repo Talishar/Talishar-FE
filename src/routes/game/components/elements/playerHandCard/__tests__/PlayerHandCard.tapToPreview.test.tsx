@@ -8,6 +8,10 @@ import {
   clearTapToPreviewSelection,
   getTapToPreviewSelectedCardKey
 } from '../tapToPreviewPlay';
+import {
+  clearCardPreview,
+  getCardPreview
+} from '../../cardPortal/cardPreviewStore';
 import { Card } from 'features/Card';
 
 vi.mock('hooks/useLanguageSelector', () => ({
@@ -105,6 +109,7 @@ const renderTwoHandCards = () => {
 describe('PlayerHandCard tap to preview play', () => {
   beforeEach(() => {
     clearTapToPreviewSelection();
+    clearCardPreview();
     document.cookie = `${TAP_TO_PREVIEW_PLAY_COOKIE}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
   });
 
@@ -115,7 +120,7 @@ describe('PlayerHandCard tap to preview play', () => {
     await waitFor(() => {
       expect(addCardToPlayedCards).toHaveBeenCalledWith('WTR001');
     });
-    expect(store.getState().game.popup?.popupOn).not.toBe(true);
+    expect(getCardPreview().popupOn).not.toBe(true);
   });
 
   it('tap A → preview A; tap A again → play A', async () => {
@@ -125,14 +130,14 @@ describe('PlayerHandCard tap to preview play', () => {
     tapCard(cardImg);
 
     await waitFor(() => {
-      expect(store.getState().game.popup?.popupOn).toBe(true);
-      expect(store.getState().game.popup?.popupCard?.cardNumber).toBe('WTR001');
+      expect(getCardPreview().popupOn).toBe(true);
+      expect(getCardPreview().popupCard?.cardNumber).toBe('WTR001');
     });
     expect(addCardToPlayedCards).not.toHaveBeenCalled();
     expect(getTapToPreviewSelectedCardKey()).toBe('id:hand-1');
 
     fireEvent.mouseLeave(cardImg);
-    expect(store.getState().game.popup?.popupOn).toBe(true);
+    expect(getCardPreview().popupOn).toBe(true);
 
     tapCard(cardImg);
 
@@ -148,12 +153,12 @@ describe('PlayerHandCard tap to preview play', () => {
 
     tapCard(images[0]);
     await waitFor(() => {
-      expect(store.getState().game.popup?.popupCard?.cardNumber).toBe('WTR001');
+      expect(getCardPreview().popupCard?.cardNumber).toBe('WTR001');
     });
 
     tapCard(images[1]);
     await waitFor(() => {
-      expect(store.getState().game.popup?.popupCard?.cardNumber).toBe('WTR002');
+      expect(getCardPreview().popupCard?.cardNumber).toBe('WTR002');
     });
     expect(addCardToPlayedCards).not.toHaveBeenCalled();
     expect(getTapToPreviewSelectedCardKey()).toBe('id:hand-2');
@@ -164,14 +169,14 @@ describe('PlayerHandCard tap to preview play', () => {
     tapCard(screen.getByTestId('card-image'));
 
     await waitFor(() => {
-      expect(store.getState().game.popup?.popupOn).toBe(true);
+      expect(getCardPreview().popupOn).toBe(true);
     });
     expect(getTapToPreviewSelectedCardKey()).toBe('id:hand-1');
 
     fireEvent.pointerDown(document.body, { pointerType: 'touch' });
 
     await waitFor(() => {
-      expect(store.getState().game.popup?.popupOn).not.toBe(true);
+      expect(getCardPreview().popupOn).not.toBe(true);
     });
     expect(getTapToPreviewSelectedCardKey()).toBeNull();
     expect(addCardToPlayedCards).not.toHaveBeenCalled();
@@ -183,18 +188,18 @@ describe('PlayerHandCard tap to preview play', () => {
 
     tapCard(cardImg);
     await waitFor(() => {
-      expect(store.getState().game.popup?.popupOn).toBe(true);
+      expect(getCardPreview().popupOn).toBe(true);
     });
 
     fireEvent.pointerDown(document.body, { pointerType: 'touch' });
     await waitFor(() => {
-      expect(store.getState().game.popup?.popupOn).not.toBe(true);
+      expect(getCardPreview().popupOn).not.toBe(true);
     });
 
     tapCard(cardImg);
     await waitFor(() => {
-      expect(store.getState().game.popup?.popupOn).toBe(true);
-      expect(store.getState().game.popup?.popupCard?.cardNumber).toBe('WTR001');
+      expect(getCardPreview().popupOn).toBe(true);
+      expect(getCardPreview().popupCard?.cardNumber).toBe('WTR001');
     });
     expect(addCardToPlayedCards).not.toHaveBeenCalled();
   });

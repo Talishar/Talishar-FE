@@ -1,13 +1,12 @@
 import { Field, FieldArray, useFormikContext } from 'formik';
 import React from 'react';
-import { useAppDispatch } from 'app/Hooks';
 import CardImage from 'routes/game/components/elements/cardImage/CardImage';
 import {
   DeckResponse,
   GetLobbyInfoResponse,
   Weapon
 } from 'interface/API/GetLobbyInfo.php';
-import { clearPopUp } from 'features/game/GameSlice';
+import { clearCardPreview } from 'routes/game/components/elements/cardPortal/cardPreviewStore';
 import styles from './Equipment.module.css';
 import CardPopUp from 'routes/game/components/elements/cardPopUp/CardPopUp';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
@@ -62,7 +61,6 @@ const Equipment = ({
   setAssigned
 }: EquipmentProps) => {
   const { values, setFieldValue } = useFormikContext<DeckResponse>();
-  const dispatch = useAppDispatch();
   const { getLanguage } = useLanguageSelector();
   const locale = getLanguage();
   // Initial stuff to allow the lang to change
@@ -94,7 +92,7 @@ const Equipment = ({
     });
 
   const handleModularDragStart = (e: React.DragEvent, card: string) => {
-    dispatch(clearPopUp());
+    clearCardPreview();
     e.dataTransfer.setData(
       'text/plain',
       JSON.stringify({ card, from: 'modular' })

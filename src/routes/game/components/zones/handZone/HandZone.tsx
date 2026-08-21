@@ -5,13 +5,16 @@ import { RootState } from 'app/Store';
 import Player from 'interface/Player';
 import { Card } from 'features/Card';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
-import { useAppDispatch, useAppSelector } from 'app/Hooks';
+import { useAppDispatch, useAppSelector, useAppStore } from 'app/Hooks';
 import { setCardListFocus, clearCardListFocus } from 'features/game/GameSlice';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 
 const CARD_GAP = 5; // matches the flex gap in HandZone.module.css
 const ZONE_MAX_WIDTH = 0.6; // matches max-width: 60% in HandZone.module.css
 const MAX_OVERLAP_RATIO = 0.88; // never hide more than 88% of a card
+
+type HandLayout = { isOverflowing: boolean; overlap: number };
+const EMPTY_HAND_LAYOUT: HandLayout = { isOverflowing: false, overlap: 0 };
 
 const HandZone = React.memo(function HandZone(prop: Player) {
   const { isPlayer } = prop;
@@ -48,14 +51,12 @@ const HandZone = React.memo(function HandZone(prop: Player) {
   const isReplay = useAppSelector(
     (state: RootState) => state.game.gameInfo.isReplay
   );
-  const cardListFocus = useAppSelector(
-    (state: RootState) => state.game.cardListFocus
-  );
+  const store = useAppStore();
 
   const [windowWidth] = useWindowDimensions();
   const zoneRef = useRef<HTMLDivElement>(null);
-  const [isOverflowing, setIsOverflowing] = useState(false);
-  const [overlap, setOverlap] = useState(0);
+  const [layout, setLayout] = useState<HandLayout>(EMPTY_HAND_LAYOUT);
+  const { isOverflowing, overlap } = layout;
   const cardCount = handCards?.length ?? 0;
   const canOpenHandList =
     cardCount > 0 &&
@@ -70,22 +71,31 @@ const HandZone = React.memo(function HandZone(prop: Player) {
     const firstCard = zone?.querySelector(':scope > div') as HTMLElement | null;
     const cardWidth = firstCard?.offsetWidth ?? 0;
     if (!zone || !cardWidth || cardCount === 0) {
-      setIsOverflowing(false);
-      setOverlap(0);
+      setLayout((previous) =>
+        previous.isOverflowing || previous.overlap !== 0
+          ? EMPTY_HAND_LAYOUT
+          : previous
+      );
       return;
     }
     const naturalWidth = cardCount * (cardWidth + CARD_GAP) - CARD_GAP;
     const availableWidth = windowWidth * ZONE_MAX_WIDTH;
-    setIsOverflowing(naturalWidth > availableWidth);
+    const nextIsOverflowing = naturalWidth > availableWidth;
+    let nextOverlap = 0;
     if (cardCount > 1) {
       const idealOverlap =
         (availableWidth - cardWidth) / (cardCount - 1) - cardWidth - CARD_GAP;
-      setOverlap(
-        Math.max(Math.min(idealOverlap, 0), -MAX_OVERLAP_RATIO * cardWidth)
+      nextOverlap = Math.max(
+        Math.min(idealOverlap, 0),
+        -MAX_OVERLAP_RATIO * cardWidth
       );
-    } else {
-      setOverlap(0);
     }
+    setLayout((previous) =>
+      previous.isOverflowing === nextIsOverflowing &&
+      previous.overlap === nextOverlap
+        ? previous
+        : { isOverflowing: nextIsOverflowing, overlap: nextOverlap }
+    );
   }, [cardCount, windowWidth]);
 
   // Backend uniqueIds fall back to '-', so duplicates are deduped by a
@@ -114,6 +124,7 @@ const HandZone = React.memo(function HandZone(prop: Player) {
 
   const openHandList = () => {
     if (!canOpenHandList) return;
+    const cardListFocus = store.getState().game.cardListFocus;
     if (cardListFocus?.active && cardListFocus?.name === zoneTitle) {
       dispatch(clearCardListFocus());
     } else {

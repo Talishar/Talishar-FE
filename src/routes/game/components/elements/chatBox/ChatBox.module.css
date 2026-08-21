@@ -7,6 +7,15 @@
   right: 0;
   --game-log-accent: var(--theme-text);
   --game-log-critical: #fca52c;
+  contain: paint;
+}
+
+.chatMessage,
+.chatMobileMessage,
+.combatGroup,
+.turnDivider {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 1.5em;
 }
 
 .chatMessage {
