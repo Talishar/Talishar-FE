@@ -49,8 +49,10 @@ export interface EquipmentProps {
 
 interface DragPayload {
   card: string;
-  from?: string;
+  from: 'modular' | EquipFieldName;
 }
+
+const MODULAR_DRAG_TYPE = 'application/x-talishar-modular-equipment';
 
 const Equipment = ({
   baseEquipment,
@@ -63,6 +65,7 @@ const Equipment = ({
   const { values, setFieldValue } = useFormikContext<DeckResponse>();
   const { getLanguage } = useLanguageSelector();
   const locale = getLanguage();
+  const activeDrag = React.useRef<DragPayload | null>(null);
   // Initial stuff to allow the lang to change
   const { t } = useTranslation();
 
@@ -77,11 +80,45 @@ const Equipment = ({
   };
 
   const parseDragPayload = (e: React.DragEvent): DragPayload | null => {
-    try {
-      return JSON.parse(e.dataTransfer.getData('text/plain'));
-    } catch {
-      return null;
+    const serializedPayload =
+      e.dataTransfer.getData(MODULAR_DRAG_TYPE) ||
+      e.dataTransfer.getData('text/plain');
+
+    if (serializedPayload) {
+      try {
+        const payload = JSON.parse(serializedPayload) as Partial<DragPayload>;
+        if (
+          typeof payload.card === 'string' &&
+          (payload.from === 'modular' ||
+            EQUIP_FIELDS.includes(payload.from as EquipFieldName))
+        ) {
+          return payload as DragPayload;
+        }
+      } catch {
+        // Some browsers do not reliably expose custom drag data on drop.
+      }
     }
+
+    return activeDrag.current;
+  };
+
+  const writeDragPayload = (e: React.DragEvent, payload: DragPayload) => {
+    activeDrag.current = payload;
+    const serializedPayload = JSON.stringify(payload);
+    const { dataTransfer } = e;
+    dataTransfer.setData(MODULAR_DRAG_TYPE, serializedPayload);
+    dataTransfer.setData('text/plain', serializedPayload);
+    dataTransfer.effectAllowed = 'move';
+  };
+
+  const allowEquipmentDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    const { dataTransfer } = e;
+    dataTransfer.dropEffect = 'move';
+  };
+
+  const finishDrag = () => {
+    activeDrag.current = null;
   };
 
   const getCardSrc = (card: string) =>
@@ -93,12 +130,7 @@ const Equipment = ({
 
   const handleModularDragStart = (e: React.DragEvent, card: string) => {
     clearCardPreview();
-    const { dataTransfer } = e;
-    dataTransfer.setData(
-      'text/plain',
-      JSON.stringify({ card, from: 'modular' })
-    );
-    dataTransfer.effectAllowed = 'move';
+    writeDragPayload(e, { card, from: 'modular' });
   };
 
   const handleAssignedDragStart = (
@@ -106,42 +138,39 @@ const Equipment = ({
     card: string,
     fromField: EquipFieldName
   ) => {
-    const { dataTransfer } = e;
-    dataTransfer.setData(
-      'text/plain',
-      JSON.stringify({ card, from: fromField })
-    );
-    dataTransfer.effectAllowed = 'move';
+    clearCardPreview();
+    writeDragPayload(e, { card, from: fromField });
   };
 
   const handleEquipmentDrop = (e: React.DragEvent, field: EquipFieldName) => {
     e.preventDefault();
     const data = parseDragPayload(e);
+    finishDrag();
     if (!data) return;
 
     const { card, from } = data;
 
-    if (from && EQUIP_FIELDS.includes(from as EquipFieldName)) {
+    if (EQUIP_FIELDS.includes(from as EquipFieldName)) {
       const fromField = from as EquipFieldName;
-
-      setAssigned((prev) => ({
-        ...prev,
-        [fromField]: removeOne(prev[fromField], card)
-      }));
 
       if (values[fromField] === card) {
         setFieldValue(fromField, 'NONE00');
       }
     }
 
-    if (!from || from === 'modular') {
+    if (from === 'modular') {
       setModularState((prev) => removeOne(prev, card));
     }
 
-    setAssigned((prev) => ({
-      ...prev,
-      [field]: [...prev[field], card]
-    }));
+    setAssigned((prev) => {
+      const next = { ...prev };
+      if (EQUIP_FIELDS.includes(from as EquipFieldName)) {
+        const fromField = from as EquipFieldName;
+        next[fromField] = removeOne(prev[fromField], card);
+      }
+      next[field] = [...next[field], card];
+      return next;
+    });
 
     setFieldValue(field, card);
   };
@@ -149,6 +178,7 @@ const Equipment = ({
   const handleReturnToModular = (e: React.DragEvent) => {
     e.preventDefault();
     const data = parseDragPayload(e);
+    finishDrag();
     if (!data) return;
 
     const { card, from } = data;
@@ -179,8 +209,8 @@ const Equipment = ({
 
     return (
       <div
-        className={styles.eqCategory}
-        onDragOver={(e) => e.preventDefault()}
+        className={`${styles.eqCategory} ${styles.equipmentDropZone}`}
+        onDragOver={allowEquipmentDrop}
         onDrop={(e) => handleEquipmentDrop(e, field)}
       >
         <h3>{label}</h3>
@@ -208,6 +238,7 @@ const Equipment = ({
                     ? (e) => handleAssignedDragStart(e, card, field)
                     : undefined
                 }
+                onDragEnd={isAssigned ? finishDrag : undefined}
               >
                 <label>
                   <Field
@@ -222,7 +253,7 @@ const Equipment = ({
                       }
                     }}
                   />
-                  <CardPopUp cardNumber={card}>
+                  <CardPopUp cardNumber={card} disableTilt={isAssigned}>
                     <CardImage
                       src={getCardSrc(card)}
                       draggable={false}
@@ -362,10 +393,11 @@ const Equipment = ({
         </div>
       )}
 
-      {modularState.length > 0 && (
+      {(modularState.length > 0 ||
+        EQUIP_FIELDS.some((field) => assigned[field].length > 0)) && (
         <div
-          className={styles.eqCategory}
-          onDragOver={(e) => e.preventDefault()}
+          className={`${styles.eqCategory} ${styles.equipmentDropZone}`}
+          onDragOver={allowEquipmentDrop}
           onDrop={handleReturnToModular}
         >
           <div style={{ display: 'flex', flexDirection: 'row' }}>
@@ -382,12 +414,13 @@ const Equipment = ({
                 className={styles.cardContainer}
                 draggable
                 onDragStart={(e) => handleModularDragStart(e, card)}
+                onDragEnd={finishDrag}
               >
-                <CardPopUp cardNumber={card}>
+                <CardPopUp cardNumber={card} disableTilt>
                   <CardImage
                     src={getCardSrc(card)}
                     className={styles.card}
-                    draggable
+                    draggable={false}
                   />
                 </CardPopUp>
               </div>
