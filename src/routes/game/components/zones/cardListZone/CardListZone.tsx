@@ -16,10 +16,14 @@ import { DEFAULT_SHORTCUTS } from 'appConstants';
 import { motion, AnimatePresence } from 'framer-motion';
 import useShowModal from 'hooks/useShowModals';
 import { shallowEqual } from 'react-redux';
-import { Card } from 'features/Card';
+import { Card, isAllyCard } from 'features/Card';
 import { useTranslation } from 'react-i18next';
 
 const SORT_PREFERENCE_KEY = 'cardListZone_sortPreference';
+
+const matchesQuery = (card: Card, normalizedQuery: string): boolean =>
+  (card.cardName?.toLowerCase().includes(normalizedQuery) ?? false) ||
+  (card.sType?.toLowerCase().includes(normalizedQuery) ?? false);
 
 export const CardListZone = () => {
   const showModal = useShowModal();
@@ -105,7 +109,7 @@ export const CardListZone = () => {
     if (!reversedList || !searchQuery) return reversedList;
     const normalizedQuery = searchQuery.toLowerCase();
     return reversedList.filter((card: Card) =>
-      card.cardName?.toLowerCase().includes(normalizedQuery)
+      matchesQuery(card, normalizedQuery)
     );
   }, [reversedList, searchQuery]);
 
@@ -187,6 +191,7 @@ export const CardListZone = () => {
                       card={card}
                       key={`${card.cardNumber}_${ix}`}
                       isPlayer={!isOpponentZone}
+                      highlightSubtype={isAllyCard(card)}
                     />
                   ))
                 ) : searchQuery ? (
@@ -258,7 +263,7 @@ const CardListZoneAPI = ({
   if (filteredCards && searchQuery) {
     const normalizedQuery = searchQuery.toLowerCase();
     filteredCards = filteredCards.filter((card: Card) =>
-      card.cardName?.toLowerCase().includes(normalizedQuery)
+      matchesQuery(card, normalizedQuery)
     );
   }
 
@@ -279,6 +284,7 @@ const CardListZoneAPI = ({
                 card={card}
                 key={`${card.cardNumber}_${ix}`}
                 isPlayer={!isOpponentZone}
+                highlightSubtype={isAllyCard(card)}
               />
             );
           })

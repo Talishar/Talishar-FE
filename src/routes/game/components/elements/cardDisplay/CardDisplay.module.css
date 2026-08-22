@@ -231,6 +231,12 @@
   box-shadow: 0 0 5px 5px rgba(24, 177, 29, 0.5);
 }
 
+.subtypeHighlight {
+  outline: 2px solid rgb(21, 155, 25);
+  outline-offset: -2px;
+  border-radius: 7%;
+}
+
 /* Playable card hover lift; `.playable` is set in CardDisplay to avoid :has(). */
 .card.playable:hover {
   transform: translateY(-3px) scale(1.02);

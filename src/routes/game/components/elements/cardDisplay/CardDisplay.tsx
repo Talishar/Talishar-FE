@@ -80,6 +80,7 @@ export interface CardProp {
   isShuffling?: boolean;
   showCountersOnHover?: boolean;
   disableTilt?: boolean;
+  highlightSubtype?: boolean; // draws a subtype outline (used to pick Allies out of a graveyard list)
   children?: React.ReactNode;
 }
 
@@ -93,6 +94,7 @@ export const CardDisplay = (prop: CardProp) => {
     isShuffling,
     showCountersOnHover,
     disableTilt,
+    highlightSubtype,
     children
   } = prop;
   const dispatch = useAppDispatch();
@@ -213,7 +215,8 @@ export const CardDisplay = (prop: CardProp) => {
         src={imageSrc}
         alt={card?.cardName ?? prop.name ?? ''}
         className={classNames(styles.img, borderClassFor(card.borderColor), {
-          [styles.tapped]: card.tapped
+          [styles.tapped]: card.tapped,
+          [styles.subtypeHighlight]: highlightSubtype
         })}
         isShuffling={isShuffling}
         isOpponent={isOpponentCard}

@@ -10,7 +10,7 @@ import {
 import { preserveIdentities } from 'utils/PreserveIdentities';
 import InitialGameState from './InitialGameState';
 import GameStaticInfo, { AltArt } from '../GameStaticInfo';
-import { Card } from '../Card';
+import { Card, isAllyCard } from '../Card';
 import { BACKEND_URL, ROGUELIKE_URL, URL_END_POINT } from 'appConstants';
 import Button from '../Button';
 import GameState from '../GameState';
@@ -497,6 +497,9 @@ export const gameSlice = createSlice({
               if (aBack && bBack) return 0;
               if (aBack) return 1;
               if (bBack) return -1;
+              const aAlly = isAllyCard(a);
+              const bAlly = isAllyCard(b);
+              if (aAlly !== bAlly) return aAlly ? 1 : -1;
               return b.cardNumber.localeCompare(a.cardNumber);
             }
           );
