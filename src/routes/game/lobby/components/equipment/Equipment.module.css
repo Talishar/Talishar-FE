@@ -35,6 +35,15 @@
   display: none !important;
 }
 
+.dropPlaceholder {
+  box-sizing: border-box;
+  border: 2px solid var(--theme-primary);
+  border-radius: 0.5em;
+  background: transparent;
+  opacity: 0.75;
+  pointer-events: none;
+}
+
 .card {
   display: block;
   box-sizing: border-box;

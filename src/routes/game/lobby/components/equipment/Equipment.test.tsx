@@ -117,6 +117,9 @@ describe('lobby modular equipment drag and drop', () => {
     const firstTransfer = createDataTransfer();
 
     expect(headDropZone).toBeInTheDocument();
+    expect(
+      headDropZone.querySelector(`.${styles.dropPlaceholder}`)
+    ).not.toBeInTheDocument();
     expect(image).toHaveAttribute('draggable', 'false');
 
     fireEvent.dragStart(source, { dataTransfer: firstTransfer });
@@ -134,11 +137,19 @@ describe('lobby modular equipment drag and drop', () => {
     firstTransfer.data.clear();
     fireEvent.dragOver(headDropZone, { dataTransfer: firstTransfer });
     expect(firstTransfer.dropEffect).toBe('move');
+    const placeholder = headDropZone.querySelector(
+      `.${styles.dropPlaceholder}`
+    );
+    expect(placeholder).toBeInTheDocument();
+    expect(placeholder?.querySelector('img')).not.toBeInTheDocument();
     fireEvent.drop(headDropZone, { dataTransfer: firstTransfer });
 
     expect(getDropZone('Head')).toContainElement(
       screen.getByRole('img', { name: 'modular-card' })
     );
+    expect(
+      getDropZone('Head').querySelector(`.${styles.dropPlaceholder}`)
+    ).not.toBeInTheDocument();
 
     const modularDropZone = getDropZone('Modular');
     expect(modularDropZone).toBeInTheDocument();

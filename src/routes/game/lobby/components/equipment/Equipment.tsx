@@ -66,6 +66,8 @@ const Equipment = ({
   const { getLanguage } = useLanguageSelector();
   const locale = getLanguage();
   const activeDrag = React.useRef<DragPayload | null>(null);
+  const [activeDropTarget, setActiveDropTarget] =
+    React.useState<EquipFieldName | null>(null);
   // Initial stuff to allow the lang to change
   const { t } = useTranslation();
 
@@ -111,14 +113,22 @@ const Equipment = ({
     dataTransfer.effectAllowed = 'move';
   };
 
-  const allowEquipmentDrop = (e: React.DragEvent) => {
+  const allowEquipmentDrop = (e: React.DragEvent, field?: EquipFieldName) => {
     e.preventDefault();
     const { dataTransfer } = e;
     dataTransfer.dropEffect = 'move';
+    if (field && activeDropTarget !== field) setActiveDropTarget(field);
   };
 
   const finishDrag = () => {
     activeDrag.current = null;
+    setActiveDropTarget(null);
+  };
+
+  const handleDropTargetLeave = (e: React.DragEvent) => {
+    const nextTarget = e.relatedTarget as Node | null;
+    if (nextTarget && e.currentTarget.contains(nextTarget)) return;
+    setActiveDropTarget(null);
   };
 
   const getCardSrc = (card: string) =>
@@ -210,7 +220,8 @@ const Equipment = ({
     return (
       <div
         className={`${styles.eqCategory} ${styles.equipmentDropZone}`}
-        onDragOver={allowEquipmentDrop}
+        onDragOver={(e) => allowEquipmentDrop(e, field)}
+        onDragLeave={handleDropTargetLeave}
         onDrop={(e) => handleEquipmentDrop(e, field)}
       >
         <h3>{label}</h3>
@@ -264,6 +275,12 @@ const Equipment = ({
               </div>
             );
           })}
+          {activeDropTarget === field && (
+            <div
+              className={`${styles.cardContainer} ${styles.dropPlaceholder}`}
+              aria-hidden="true"
+            />
+          )}
         </div>
       </div>
     );
