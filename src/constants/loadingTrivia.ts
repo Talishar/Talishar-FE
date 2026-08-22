@@ -77,7 +77,6 @@ export const LOADING_TRIVIA: string[] = [
   'Testing a new deck is a great way to discover every bad matchup simultaneously.',
   'Netdecking saves time you can spend misplaying the deck instead.',
   'Brew responsibly.',
-  'Cut one card. Add it back ten minutes later.',
   'Sideboarding: remove six cards, add six cards, regret twelve decisions.',
   'The last three sideboard slots are mostly emotional support.',
   '“It’s good into the meta” is how it begins.',
