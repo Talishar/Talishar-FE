@@ -8,6 +8,7 @@ import PageBanner from 'components/PageBanner/PageBanner';
 import {
   MASTERY_MILESTONES,
   emptyMastery,
+  masteryLevel,
   progressStart,
   ROMAN_LEVELS
 } from 'features/mastery/mastery';
@@ -71,9 +72,7 @@ const Mastery = () => {
     if (import.meta.env.DEV) {
       (data?.heroGroups?.classicConstructed ?? []).forEach((heroId, index) => {
         const qualifyingGames = devGamesForHero(heroId, index, milestones);
-        const level = milestones.filter(
-          (threshold) => qualifyingGames >= threshold
-        ).length;
+        const level = masteryLevel(qualifyingGames, milestones);
         const nextThreshold = milestones[level] ?? null;
         result.set(heroId, {
           heroId,
