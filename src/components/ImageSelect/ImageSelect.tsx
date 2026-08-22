@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import styles from './ImageSelect.module.css';
 
 export interface ImageSelectOption {
@@ -31,14 +31,11 @@ export const ImageSelect: React.FC<ImageSelectProps> = ({
   id
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<
-    ImageSelectOption | undefined
-  >(options.find((opt) => opt.value === value));
+  const selectedOption = useMemo(
+    () => options.find((option) => option.value === value),
+    [options, value]
+  );
   const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setSelectedOption(options.find((opt) => opt.value === value));
-  }, [value, options]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -68,7 +65,6 @@ export const ImageSelect: React.FC<ImageSelectProps> = ({
   }, [isOpen]);
 
   const handleSelect = (option: ImageSelectOption) => {
-    setSelectedOption(option);
     onChange(option.value);
     setIsOpen(false);
   };
