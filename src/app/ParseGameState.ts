@@ -10,8 +10,13 @@ import Player from '../features/Player';
 // single poll/SSE push even though the pattern never changes.
 const IMAGE_PATH_RE = /.\/Images\//gm;
 
+const CARD_NAME_CACHE = new Map<string, string>();
+
 function GetCardName(cardNumber: string): string {
   if (!cardNumber || cardNumber === 'blank') return '';
+
+  const cachedName = CARD_NAME_CACHE.get(cardNumber);
+  if (cachedName !== undefined) return cachedName;
 
   let end = cardNumber.length;
   if (cardNumber.endsWith('_red')) end -= 4;
@@ -37,6 +42,7 @@ function GetCardName(cardNumber: string): string {
     wordCount += 1;
   }
 
+  CARD_NAME_CACHE.set(cardNumber, result);
   return result;
 }
 
