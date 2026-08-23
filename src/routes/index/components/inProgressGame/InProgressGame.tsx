@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { IGameInProgress } from '../gameList/GameList';
 import styles from './InProgressGame.module.scss';
-import { RiSwordLine } from 'react-icons/ri';
+import { RiSwordLine, RiEyeLine } from 'react-icons/ri';
 import { generateCroppedImageUrl } from '../../../../utils/cropImages';
 import FriendBadge from '../gameList/FriendBadge';
 import { useTranslation } from 'react-i18next';
@@ -10,17 +10,25 @@ export const InProgressGame = ({
   entry,
   isFriendsGame = false,
   friendName,
-  formatLabel
+  formatLabel,
+  isFeatured = false,
+  masteryLevel
 }: {
   entry: IGameInProgress;
   isFriendsGame?: boolean;
   friendName?: string;
   formatLabel?: string;
+  isFeatured?: boolean;
+  masteryLevel?: number;
 }) => {
   const hasFormatLabel = !!formatLabel;
-  const buttonClass = styles.button;
+  const spectatorCount = entry.spectatorCount ?? 0;
+  const buttonClass = classNames(styles.button, {
+    [styles.buttonFeatured]: isFeatured
+  });
   const gameItemClass = classNames(styles.gameItem, {
-    [styles.gameItemNoFormat]: !hasFormatLabel
+    [styles.gameItemNoFormat]: !hasFormatLabel,
+    [styles.gameItemFeatured]: isFeatured
   });
   const matchupBlockClass = classNames(styles.matchupBlock, {
     [styles.matchupBlockNoFormat]: !hasFormatLabel
@@ -59,6 +67,22 @@ export const InProgressGame = ({
         </div>
         {formatLabel && (
           <span className={styles.formatLabel}>{formatLabel}</span>
+        )}
+        {spectatorCount > 0 && (
+          <span
+            className={styles.spectatorCount}
+            title={t('IN_PROGRESS_GAME.SPECTATOR_COUNT', {
+              count: spectatorCount
+            })}
+          >
+            <RiEyeLine aria-hidden="true" />
+            {spectatorCount}
+          </span>
+        )}
+        {isFeatured && !!masteryLevel && (
+          <span className={styles.masteryLevel}>
+            {t('IN_PROGRESS_GAME.MASTERY_LEVEL', { level: masteryLevel })}
+          </span>
         )}
       </div>
       <FriendBadge

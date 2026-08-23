@@ -38,6 +38,7 @@ export interface IGameInProgress {
   gameCreator?: string; // Username of the game creator (p1)
   p2Username?: string; // Username of player 2
   visibility?: string; // "0" = private, "1" = public, "2" = friends-only
+  spectatorCount?: number; // Logged-in spectators seen in the last 45 seconds
 }
 
 export interface GameListResponse {
@@ -48,7 +49,17 @@ export interface GameListResponse {
   LastGameName?: number;
   LastPlayerID?: number;
   LastAuthKey?: string;
+  featuredGame?: string; // Auto-selected match pinned above the in-progress list
+  featuredMasteryLevel?: number; // Lower of the two players' hero mastery levels
+  featuredSpectators?: number;
 }
+
+const USE_DEV_FAKE_GAMES = false; // Set to true to enable fake games for testing
+
+// Fake games stand in for the API entirely, so the list can be worked on
+// without a backend or a logged-in session. Index.tsx reads this to render the
+// list at all when logged out.
+export const DEV_FAKE_MODE = import.meta.env.DEV && USE_DEV_FAKE_GAMES;
 
 const GameList = () => {
   const [cookies, setCookie, removeCookie] = useCookies([
@@ -60,17 +71,22 @@ const GameList = () => {
   // Initial stuff to allow the lang to change
   const { t } = useTranslation();
   const { isLoggedIn, isLoading: isAuthLoading } = useAuth();
-  const canAccessPublicGames = !isAuthLoading && isLoggedIn;
+  const devFakeMode = DEV_FAKE_MODE;
+  const canAccessPublicGames = devFakeMode || (!isAuthLoading && isLoggedIn);
 
   const {
     data: apiData,
-    isLoading,
-    error,
+    isLoading: isQueryLoading,
+    error: queryError,
     refetch,
     isFetching
   } = useGetGameListQuery(undefined, {
     skip: !canAccessPublicGames
   });
+  // In fake mode the list renders from local data, so a missing or failing
+  // backend must not blank it out.
+  const isLoading = devFakeMode ? false : isQueryLoading;
+  const error = devFakeMode ? undefined : queryError;
 
   const HERO_LIST = [
     'WTR001',
@@ -91,30 +107,51 @@ const GameList = () => {
     GAME_FORMAT.GAGE
   ];
 
-  const USE_DEV_FAKE_GAMES = false; // Set to true to enable fake games for testing
-
-  const DEV_FAKE_OPEN: IOpenGame[] =
-    import.meta.env.DEV && USE_DEV_FAKE_GAMES
-      ? Array.from({ length: 20 }, (_, i) => ({
-          gameName: 80000 + i,
-          p1Hero: HERO_LIST[i % HERO_LIST.length],
-          format: FORMAT_LIST[i % FORMAT_LIST.length],
-          formatName: FORMAT_LIST[i % FORMAT_LIST.length],
-          description: `Dev test game ${i + 1}`,
-          visibility: '1'
-        }))
-      : [];
-  const DEV_FAKE_IN_PROGRESS: IGameInProgress[] =
-    import.meta.env.DEV && USE_DEV_FAKE_GAMES
-      ? Array.from({ length: 20 }, (_, i) => ({
+  const DEV_FAKE_OPEN: IOpenGame[] = devFakeMode
+    ? Array.from({ length: 20 }, (_, i) => ({
+        gameName: 80000 + i,
+        p1Hero: HERO_LIST[i % HERO_LIST.length],
+        format: FORMAT_LIST[i % FORMAT_LIST.length],
+        formatName: FORMAT_LIST[i % FORMAT_LIST.length],
+        description: `Dev test game ${i + 1}`,
+        visibility: '1'
+      }))
+    : [];
+  // Stands in for what the server picks: a busy, high-mastery match.
+  const DEV_FAKE_FEATURED: IGameInProgress = {
+    gameName: 90999,
+    p1Hero: 'UPR001',
+    p2Hero: 'ROS001',
+    format: GAME_FORMAT.COMPETITIVE_CC,
+    secondsSinceLastUpdate: 12,
+    visibility: '1',
+    spectatorCount: 14
+  };
+  const DEV_FAKE_IN_PROGRESS: IGameInProgress[] = devFakeMode
+    ? [
+        DEV_FAKE_FEATURED,
+        ...Array.from({ length: 20 }, (_, i) => ({
           gameName: 90000 + i,
           p1Hero: HERO_LIST[i % HERO_LIST.length],
           p2Hero: HERO_LIST[(i + 5) % HERO_LIST.length],
           format: FORMAT_LIST[i % FORMAT_LIST.length],
           secondsSinceLastUpdate: Math.floor(Math.random() * 600),
-          visibility: '1'
+          visibility: '1',
+          // Most games draw nobody; a couple pick up a watcher or two.
+          spectatorCount: i % 5 === 0 ? (i % 3) + 1 : 0
         }))
-      : [];
+      ]
+    : [];
+
+  const devFakeResponse: GameListResponse = {
+    openGames: DEV_FAKE_OPEN,
+    gamesInProgress: DEV_FAKE_IN_PROGRESS,
+    gameInProgressCount: DEV_FAKE_IN_PROGRESS.length,
+    canSeeQueue: true,
+    featuredGame: String(DEV_FAKE_FEATURED.gameName),
+    featuredMasteryLevel: 8,
+    featuredSpectators: DEV_FAKE_FEATURED.spectatorCount
+  };
 
   const data: typeof apiData = apiData
     ? {
@@ -123,8 +160,21 @@ const GameList = () => {
         gamesInProgress: [
           ...DEV_FAKE_IN_PROGRESS,
           ...(apiData.gamesInProgress ?? [])
-        ]
+        ],
+        // The tab badge normally reports the server's own count, which knows
+        // nothing about the fakes.
+        gameInProgressCount:
+          (apiData.gameInProgressCount ?? 0) + DEV_FAKE_IN_PROGRESS.length,
+        ...(devFakeMode
+          ? {
+              featuredGame: devFakeResponse.featuredGame,
+              featuredMasteryLevel: devFakeResponse.featuredMasteryLevel,
+              featuredSpectators: devFakeResponse.featuredSpectators
+            }
+          : {})
       }
+    : devFakeMode
+    ? devFakeResponse
     : apiData;
   const { data: friendsData } = useGetFriendsListQuery(undefined, {
     skip: !isLoggedIn
@@ -392,15 +442,24 @@ const GameList = () => {
   });
   const displayInProgressGames = sortedInProgressGames;
 
+  const featuredGame = data?.featuredGame
+    ? displayInProgressGames.find(
+        (game) => String(game.gameName) === String(data.featuredGame)
+      )
+    : undefined;
+  const unfeaturedInProgressGames = featuredGame
+    ? displayInProgressGames.filter((game) => game !== featuredGame)
+    : displayInProgressGames;
+
   const friendGamesInProgress = includeFriendsGames
-    ? displayInProgressGames.filter(
+    ? unfeaturedInProgressGames.filter(
         (game) =>
           (game.gameCreator && friendUsernames.has(game.gameCreator)) ||
           (game.p2Username && friendUsernames.has(game.p2Username))
       )
     : [];
 
-  const otherGamesInProgress = displayInProgressGames.filter(
+  const otherGamesInProgress = unfeaturedInProgressGames.filter(
     (game) =>
       !(
         (game.gameCreator && friendUsernames.has(game.gameCreator)) ||
@@ -745,6 +804,27 @@ const GameList = () => {
             </>
           ) : (
             <div data-testid="games-in-progress" ref={parent}>
+              {featuredGame && (
+                <div className={styles.featuredSection}>
+                  <div className={styles.featuredHeading}>
+                    {t('GAME_LIST.FEATURED_MATCH', 'Featured match')}
+                  </div>
+                  <InProgressGame
+                    entry={featuredGame}
+                    isFeatured
+                    masteryLevel={data?.featuredMasteryLevel}
+                    isFriendsGame={
+                      !!(
+                        (featuredGame.gameCreator &&
+                          friendUsernames.has(featuredGame.gameCreator)) ||
+                        (featuredGame.p2Username &&
+                          friendUsernames.has(featuredGame.p2Username))
+                      )
+                    }
+                    formatLabel={getFormatLabel(featuredGame.format)}
+                  />
+                </div>
+              )}
               {[...friendGamesInProgress, ...otherGamesInProgress].map(
                 (entry) => {
                   const isFriendsGame = !!(

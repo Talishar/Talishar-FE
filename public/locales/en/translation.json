@@ -388,6 +388,7 @@
   },
   "GAME_LIST": {
     "DISABLE_EXPERIMENTAL": "Disable experimental features",
+    "FEATURED_MATCH": "Featured match",
     "FORMATS": {
       "BLITZ": "Blitz",
       "CC": "Classic Constructed",
@@ -598,7 +599,10 @@
     "VIEW": "View your inventory"
   },
   "IN_PROGRESS_GAME": {
-    "SPECTATE": "Spectate"
+    "MASTERY_LEVEL": "Mastery {{level}}+",
+    "SPECTATE": "Spectate",
+    "SPECTATOR_COUNT_one": "{{count}} spectator",
+    "SPECTATOR_COUNT_other": "{{count}} spectators"
   },
   "JOIN": {
     "BACK": "Back",
