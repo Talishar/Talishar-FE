@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import {
   useGetGameListQuery,
   useGetFriendsListQuery
@@ -55,6 +55,33 @@ export interface GameListResponse {
 }
 
 const USE_DEV_FAKE_GAMES = false; // Set to true to enable fake games for testing
+const DEV_HERO_LIST = [
+  'WTR001',
+  'ARC001',
+  'MON001',
+  'UPR001',
+  'ELE001',
+  'ROS001',
+  'HNT001',
+  'SUP001'
+];
+const DEV_FORMAT_LIST = [
+  GAME_FORMAT.COMPETITIVE_CC,
+  GAME_FORMAT.BLITZ,
+  GAME_FORMAT.COMMONER,
+  GAME_FORMAT.DRAFT,
+  GAME_FORMAT.SEALED,
+  GAME_FORMAT.GAGE
+];
+const DEV_FAKE_FEATURED: IGameInProgress = {
+  gameName: 90999,
+  p1Hero: 'UPR001',
+  p2Hero: 'ROS001',
+  format: GAME_FORMAT.COMPETITIVE_CC,
+  secondsSinceLastUpdate: 12,
+  visibility: '1',
+  spectatorCount: 14
+};
 
 // Fake games stand in for the API entirely, so the list can be worked on
 // without a backend or a logged-in session. Index.tsx reads this to render the
@@ -88,94 +115,80 @@ const GameList = () => {
   const isLoading = devFakeMode ? false : isQueryLoading;
   const error = devFakeMode ? undefined : queryError;
 
-  const HERO_LIST = [
-    'WTR001',
-    'ARC001',
-    'MON001',
-    'UPR001',
-    'ELE001',
-    'ROS001',
-    'HNT001',
-    'SUP001'
-  ];
-  const FORMAT_LIST = [
-    GAME_FORMAT.COMPETITIVE_CC,
-    GAME_FORMAT.BLITZ,
-    GAME_FORMAT.COMMONER,
-    GAME_FORMAT.DRAFT,
-    GAME_FORMAT.SEALED,
-    GAME_FORMAT.GAGE
-  ];
+  const DEV_FAKE_OPEN: IOpenGame[] = useMemo(
+    () =>
+      devFakeMode
+        ? Array.from({ length: 20 }, (_, i) => ({
+            gameName: 80000 + i,
+            p1Hero: DEV_HERO_LIST[i % DEV_HERO_LIST.length],
+            format: DEV_FORMAT_LIST[i % DEV_FORMAT_LIST.length],
+            formatName: DEV_FORMAT_LIST[i % DEV_FORMAT_LIST.length],
+            description: `Dev test game ${i + 1}`,
+            visibility: '1'
+          }))
+        : [],
+    [devFakeMode]
+  );
+  const DEV_FAKE_IN_PROGRESS: IGameInProgress[] = useMemo(
+    () =>
+      devFakeMode
+        ? [
+            DEV_FAKE_FEATURED,
+            ...Array.from({ length: 20 }, (_, i) => ({
+              gameName: 90000 + i,
+              p1Hero: DEV_HERO_LIST[i % DEV_HERO_LIST.length],
+              p2Hero: DEV_HERO_LIST[(i + 5) % DEV_HERO_LIST.length],
+              format: DEV_FORMAT_LIST[i % DEV_FORMAT_LIST.length],
+              secondsSinceLastUpdate: Math.floor(Math.random() * 600),
+              visibility: '1',
+              // Most games draw nobody; a couple pick up a watcher or two.
+              spectatorCount: i % 5 === 0 ? (i % 3) + 1 : 0
+            }))
+          ]
+        : [],
+    [devFakeMode]
+  );
 
-  const DEV_FAKE_OPEN: IOpenGame[] = devFakeMode
-    ? Array.from({ length: 20 }, (_, i) => ({
-        gameName: 80000 + i,
-        p1Hero: HERO_LIST[i % HERO_LIST.length],
-        format: FORMAT_LIST[i % FORMAT_LIST.length],
-        formatName: FORMAT_LIST[i % FORMAT_LIST.length],
-        description: `Dev test game ${i + 1}`,
-        visibility: '1'
-      }))
-    : [];
-  // Stands in for what the server picks: a busy, high-mastery match.
-  const DEV_FAKE_FEATURED: IGameInProgress = {
-    gameName: 90999,
-    p1Hero: 'UPR001',
-    p2Hero: 'ROS001',
-    format: GAME_FORMAT.COMPETITIVE_CC,
-    secondsSinceLastUpdate: 12,
-    visibility: '1',
-    spectatorCount: 14
-  };
-  const DEV_FAKE_IN_PROGRESS: IGameInProgress[] = devFakeMode
-    ? [
-        DEV_FAKE_FEATURED,
-        ...Array.from({ length: 20 }, (_, i) => ({
-          gameName: 90000 + i,
-          p1Hero: HERO_LIST[i % HERO_LIST.length],
-          p2Hero: HERO_LIST[(i + 5) % HERO_LIST.length],
-          format: FORMAT_LIST[i % FORMAT_LIST.length],
-          secondsSinceLastUpdate: Math.floor(Math.random() * 600),
-          visibility: '1',
-          // Most games draw nobody; a couple pick up a watcher or two.
-          spectatorCount: i % 5 === 0 ? (i % 3) + 1 : 0
-        }))
-      ]
-    : [];
+  const devFakeResponse: GameListResponse = useMemo(
+    () => ({
+      openGames: DEV_FAKE_OPEN,
+      gamesInProgress: DEV_FAKE_IN_PROGRESS,
+      gameInProgressCount: DEV_FAKE_IN_PROGRESS.length,
+      canSeeQueue: true,
+      featuredGame: String(DEV_FAKE_FEATURED.gameName),
+      featuredMasteryLevel: 8,
+      featuredSpectators: DEV_FAKE_FEATURED.spectatorCount
+    }),
+    [DEV_FAKE_IN_PROGRESS, DEV_FAKE_OPEN]
+  );
 
-  const devFakeResponse: GameListResponse = {
-    openGames: DEV_FAKE_OPEN,
-    gamesInProgress: DEV_FAKE_IN_PROGRESS,
-    gameInProgressCount: DEV_FAKE_IN_PROGRESS.length,
-    canSeeQueue: true,
-    featuredGame: String(DEV_FAKE_FEATURED.gameName),
-    featuredMasteryLevel: 8,
-    featuredSpectators: DEV_FAKE_FEATURED.spectatorCount
-  };
-
-  const data: typeof apiData = apiData
-    ? {
-        ...apiData,
-        openGames: [...DEV_FAKE_OPEN, ...(apiData.openGames ?? [])],
-        gamesInProgress: [
-          ...DEV_FAKE_IN_PROGRESS,
-          ...(apiData.gamesInProgress ?? [])
-        ],
-        // The tab badge normally reports the server's own count, which knows
-        // nothing about the fakes.
-        gameInProgressCount:
-          (apiData.gameInProgressCount ?? 0) + DEV_FAKE_IN_PROGRESS.length,
-        ...(devFakeMode
-          ? {
-              featuredGame: devFakeResponse.featuredGame,
-              featuredMasteryLevel: devFakeResponse.featuredMasteryLevel,
-              featuredSpectators: devFakeResponse.featuredSpectators
-            }
-          : {})
-      }
-    : devFakeMode
-    ? devFakeResponse
-    : apiData;
+  const data: typeof apiData = useMemo(
+    () =>
+      apiData
+        ? {
+            ...apiData,
+            openGames: [...DEV_FAKE_OPEN, ...(apiData.openGames ?? [])],
+            gamesInProgress: [
+              ...DEV_FAKE_IN_PROGRESS,
+              ...(apiData.gamesInProgress ?? [])
+            ],
+            // The tab badge normally reports the server's own count, which knows
+            // nothing about the fakes.
+            gameInProgressCount:
+              (apiData.gameInProgressCount ?? 0) + DEV_FAKE_IN_PROGRESS.length,
+            ...(devFakeMode
+              ? {
+                  featuredGame: devFakeResponse.featuredGame,
+                  featuredMasteryLevel: devFakeResponse.featuredMasteryLevel,
+                  featuredSpectators: devFakeResponse.featuredSpectators
+                }
+              : {})
+          }
+        : devFakeMode
+        ? devFakeResponse
+        : apiData,
+    [DEV_FAKE_IN_PROGRESS, DEV_FAKE_OPEN, apiData, devFakeMode, devFakeResponse]
+  );
   const { data: friendsData } = useGetFriendsListQuery(undefined, {
     skip: !isLoggedIn
   });
@@ -363,46 +376,47 @@ const GameList = () => {
     setInProgressFormatFilters(formats);
   };
 
-  const heroCountsOpen = new Map<string, number>();
-  if (data?.openGames) {
-    data.openGames.forEach((game: IOpenGame) => {
-      if (game.p1Hero)
-        heroCountsOpen.set(
-          game.p1Hero,
-          (heroCountsOpen.get(game.p1Hero) ?? 0) + 1
-        );
+  const { heroCountsOpen, heroCountsInProgress } = useMemo(() => {
+    const open = new Map<string, number>();
+    data?.openGames?.forEach((game: IOpenGame) => {
+      if (game.p1Hero) {
+        open.set(game.p1Hero, (open.get(game.p1Hero) ?? 0) + 1);
+      }
     });
-  }
 
-  const heroCountsInProgress = new Map<string, number>();
-  if (data?.gamesInProgress) {
-    data.gamesInProgress.forEach((game: IGameInProgress) => {
-      if (game.p1Hero)
-        heroCountsInProgress.set(
-          game.p1Hero,
-          (heroCountsInProgress.get(game.p1Hero) ?? 0) + 1
-        );
-      if (game.p2Hero)
-        heroCountsInProgress.set(
-          game.p2Hero,
-          (heroCountsInProgress.get(game.p2Hero) ?? 0) + 1
-        );
+    const inProgress = new Map<string, number>();
+    data?.gamesInProgress?.forEach((game: IGameInProgress) => {
+      if (game.p1Hero) {
+        inProgress.set(game.p1Hero, (inProgress.get(game.p1Hero) ?? 0) + 1);
+      }
+      if (game.p2Hero) {
+        inProgress.set(game.p2Hero, (inProgress.get(game.p2Hero) ?? 0) + 1);
+      }
     });
-  }
+
+    return {
+      heroCountsOpen: open,
+      heroCountsInProgress: inProgress
+    };
+  }, [data?.gamesInProgress, data?.openGames]);
 
   const heroCounts =
     activeTab === 'open' ? heroCountsOpen : heroCountsInProgress;
 
   // Create a set of friend usernames for quick lookup
-  const friendUsernames = new Set(
-    friendsData?.friends?.map((f: Friend) => f.username) || []
+  const friendUsernames = useMemo(
+    () => new Set(friendsData?.friends?.map((f: Friend) => f.username) || []),
+    [friendsData?.friends]
   );
+  const blockedUsernames = useMemo(() => new Set(blockedUsers), [blockedUsers]);
+  const selectedHeroes = useMemo(() => new Set(heroFilter), [heroFilter]);
 
   // Filter games
-  const filteredGamesInProgress = data?.gamesInProgress
-    ? data.gamesInProgress.filter((game: IGameInProgress) => {
+  const filteredGamesInProgress = useMemo(
+    () =>
+      data?.gamesInProgress?.filter((game: IGameInProgress) => {
         // Hide games created by blocked users
-        if (game.gameCreator && blockedUsers.includes(game.gameCreator)) {
+        if (game.gameCreator && blockedUsernames.has(game.gameCreator)) {
           return false;
         }
 
@@ -412,11 +426,10 @@ const GameList = () => {
         }
 
         // Apply hero filter
-        if (heroFilter.length > 0) {
+        if (selectedHeroes.size > 0) {
           if (
-            !heroFilter.find(
-              (hero) => hero === game.p1Hero || hero === game.p2Hero
-            )
+            !selectedHeroes.has(game.p1Hero ?? '') &&
+            !selectedHeroes.has(game.p2Hero ?? '')
           ) {
             return false;
           }
@@ -428,50 +441,73 @@ const GameList = () => {
         }
 
         return true;
-      })
-    : [];
+      }) ?? [],
+    [
+      blockedUsernames,
+      data?.gamesInProgress,
+      inProgressFormatFilters,
+      selectedHeroes
+    ]
+  );
 
   // Separate friend games from other games
 
-  const sortedInProgressGames = [...filteredGamesInProgress].sort((a, b) => {
-    const fmtA = normalizeFormat(a.format) ?? a.format;
-    const fmtB = normalizeFormat(b.format) ?? b.format;
-    const cmp = fmtA.localeCompare(fmtB);
-    if (cmp !== 0) return cmp;
-    return b.gameName - a.gameName; // newest first within same format
-  });
+  const sortedInProgressGames = useMemo(
+    () =>
+      [...filteredGamesInProgress].sort((a, b) => {
+        const fmtA = normalizeFormat(a.format) ?? a.format;
+        const fmtB = normalizeFormat(b.format) ?? b.format;
+        const cmp = fmtA.localeCompare(fmtB);
+        if (cmp !== 0) return cmp;
+        return b.gameName - a.gameName; // newest first within same format
+      }),
+    [filteredGamesInProgress]
+  );
   const displayInProgressGames = sortedInProgressGames;
 
-  const featuredGame = data?.featuredGame
-    ? displayInProgressGames.find(
-        (game) => String(game.gameName) === String(data.featuredGame)
-      )
-    : undefined;
-  const unfeaturedInProgressGames = featuredGame
-    ? displayInProgressGames.filter((game) => game !== featuredGame)
-    : displayInProgressGames;
+  const { featuredGame, unfeaturedInProgressGames } = useMemo(() => {
+    const featured = data?.featuredGame
+      ? displayInProgressGames.find(
+          (game) => String(game.gameName) === String(data.featuredGame)
+        )
+      : undefined;
 
-  const friendGamesInProgress = includeFriendsGames
-    ? unfeaturedInProgressGames.filter(
-        (game) =>
-          (game.gameCreator && friendUsernames.has(game.gameCreator)) ||
-          (game.p2Username && friendUsernames.has(game.p2Username))
-      )
-    : [];
+    return {
+      featuredGame: featured,
+      unfeaturedInProgressGames: featured
+        ? displayInProgressGames.filter((game) => game !== featured)
+        : displayInProgressGames
+    };
+  }, [data?.featuredGame, displayInProgressGames]);
 
-  const otherGamesInProgress = unfeaturedInProgressGames.filter(
-    (game) =>
-      !(
+  const { friendGamesInProgress, otherGamesInProgress } = useMemo(() => {
+    const friendGames: IGameInProgress[] = [];
+    const otherGames: IGameInProgress[] = [];
+
+    unfeaturedInProgressGames.forEach((game) => {
+      const isFriendGame = Boolean(
         (game.gameCreator && friendUsernames.has(game.gameCreator)) ||
-        (game.p2Username && friendUsernames.has(game.p2Username))
-      )
-  );
+          (game.p2Username && friendUsernames.has(game.p2Username))
+      );
+      if (includeFriendsGames && isFriendGame) {
+        friendGames.push(game);
+      } else if (!isFriendGame) {
+        otherGames.push(game);
+      }
+    });
 
-  const sortedOpenGames = data?.openGames
-    ? data.openGames
-        .filter((game: IOpenGame) => {
+    return {
+      friendGamesInProgress: friendGames,
+      otherGamesInProgress: otherGames
+    };
+  }, [friendUsernames, includeFriendsGames, unfeaturedInProgressGames]);
+
+  const sortedOpenGames = useMemo(
+    () =>
+      data?.openGames
+        ?.filter((game: IOpenGame) => {
           // Hide games created by blocked users
-          if (game.gameCreator && blockedUsers.includes(game.gameCreator)) {
+          if (game.gameCreator && blockedUsernames.has(game.gameCreator)) {
             return false;
           }
 
@@ -483,18 +519,24 @@ const GameList = () => {
             return false;
           }
 
-          // Apply hero filter
-          if (
-            heroFilter.length === 0 ||
-            heroFilter.find((hero) => hero === game.p1Hero)
-          ) {
-            // Apply format filter
-            return inProgressFormatFilters.has(game.format);
-          }
-          return false;
+          // Apply hero and format filters
+          return (
+            (selectedHeroes.size === 0 ||
+              selectedHeroes.has(game.p1Hero ?? '')) &&
+            inProgressFormatFilters.has(game.format)
+          );
         })
-        .sort((a: IOpenGame, b: IOpenGame) => a.format.localeCompare(b.format))
-    : [];
+        .sort((a: IOpenGame, b: IOpenGame) =>
+          a.format.localeCompare(b.format)
+        ) ?? [],
+    [
+      blockedUsernames,
+      data?.openGames,
+      friendUsernames,
+      inProgressFormatFilters,
+      selectedHeroes
+    ]
+  );
 
   const handleReloadClick = () => {
     const now = Date.now();
@@ -577,16 +619,34 @@ const GameList = () => {
   const displayOpenGames = sortedOpenGames;
 
   // Count friend games in each tab for the badge indicator
-  const friendOpenGamesCount = sortedOpenGames.filter(
-    (game: IOpenGame) =>
-      game.gameCreator && friendUsernames.has(game.gameCreator)
-  ).length;
+  const friendOpenGamesCount = useMemo(
+    () =>
+      sortedOpenGames.reduce(
+        (count, game: IOpenGame) =>
+          count +
+          Number(
+            Boolean(game.gameCreator && friendUsernames.has(game.gameCreator))
+          ),
+        0
+      ),
+    [friendUsernames, sortedOpenGames]
+  );
 
-  const friendInProgressCount = filteredGamesInProgress.filter(
-    (game: IGameInProgress) =>
-      (game.gameCreator && friendUsernames.has(game.gameCreator)) ||
-      (game.p2Username && friendUsernames.has(game.p2Username))
-  ).length;
+  const friendInProgressCount = useMemo(
+    () =>
+      filteredGamesInProgress.reduce(
+        (count, game: IGameInProgress) =>
+          count +
+          Number(
+            Boolean(
+              (game.gameCreator && friendUsernames.has(game.gameCreator)) ||
+                (game.p2Username && friendUsernames.has(game.p2Username))
+            )
+          ),
+        0
+      ),
+    [filteredGamesInProgress, friendUsernames]
+  );
 
   return (
     <article
