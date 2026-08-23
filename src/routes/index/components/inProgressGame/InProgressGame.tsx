@@ -68,7 +68,7 @@ export const InProgressGame = ({
         {formatLabel && (
           <span className={styles.formatLabel}>{formatLabel}</span>
         )}
-        {spectatorCount > 0 && (
+        {isFeatured && spectatorCount > 0 && (
           <span
             className={styles.spectatorCount}
             title={t('IN_PROGRESS_GAME.SPECTATOR_COUNT', {
