@@ -28,6 +28,7 @@ import useAuth from 'hooks/useAuth';
 import { CHAT_WHEEL } from 'constants/chatMessages';
 import { isHandCardRotationHeld } from 'utils/handCardRotation';
 import { useTranslation } from 'react-i18next';
+import { addQuickChatRecent, getQuickChatRecents } from './quickChatRecents';
 
 interface ChatOptionsProps {
   setModalDisplay: (arg0: boolean) => void;
@@ -272,28 +273,9 @@ const ChatWheel = ({ usePrimary = false }: { usePrimary?: boolean }) => {
   );
 };
 
-const RECENTS_KEY = 'talishar_chat_recents';
 const RECENTS_COLLAPSED_KEY = 'talishar_chat_recents_collapsed';
-const MAX_RECENTS = 5;
 
-function getRecents(): number[] {
-  try {
-    return JSON.parse(localStorage.getItem(RECENTS_KEY) ?? '[]');
-  } catch {
-    return [];
-  }
-}
-
-function addRecent(key: number): void {
-  const recents = getRecents().filter((k) => k !== key);
-  recents.unshift(key);
-  localStorage.setItem(
-    RECENTS_KEY,
-    JSON.stringify(recents.slice(0, MAX_RECENTS))
-  );
-}
-
-const QUICK_CHAT_COOLDOWN_MS = 3000;
+const QUICK_CHAT_COOLDOWN_MS = 1500;
 let lastQuickChatSent = 0;
 let quickChatToastPending = false;
 
@@ -304,7 +286,7 @@ const ChatOptions = ({ setModalDisplay }: ChatOptionsProps) => {
     getGameInfo,
     shallowEqual
   );
-  const [recents, setRecents] = React.useState<number[]>(getRecents);
+  const [recents, setRecents] = React.useState<number[]>(getQuickChatRecents);
   const [recentsCollapsed, setRecentsCollapsed] = React.useState<boolean>(
     () => localStorage.getItem(RECENTS_COLLAPSED_KEY) === 'true'
   );
@@ -334,8 +316,7 @@ const ChatOptions = ({ setModalDisplay }: ChatOptionsProps) => {
     }
     lastQuickChatSent = now;
     submitChat({ playerID, gameID, authKey, quickChat: key });
-    addRecent(key);
-    setRecents(getRecents());
+    setRecents(addQuickChatRecent(key));
     setModalDisplay(false);
   };
 
