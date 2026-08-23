@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useNavigate, useRouteError } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import styles from './errorPage.module.css';
@@ -7,10 +8,27 @@ const STALE_ASSET_ERROR_PATTERNS = [
   'failed to fetch dynamically imported module',
   'error loading dynamically imported module',
   'importing a module script failed',
+  'is not a valid javascript mime type',
+  'disallowed mime type',
+  'expected a javascript module script',
+  'failed to load module script',
   'loading chunk',
   'chunkloaderror',
   'unable to preload css'
 ];
+
+const STALE_ASSET_RELOAD_KEY = 'talishar.staleAssetReload';
+const STALE_ASSET_RELOAD_WINDOW_MS = 60000;
+
+export const shouldAutoReloadForStaleAssets = (
+  now: number,
+  lastReload: string | null
+) => {
+  if (lastReload === null) return true;
+  const previous = parseInt(lastReload);
+  if (Number.isNaN(previous)) return true;
+  return now - previous > STALE_ASSET_RELOAD_WINDOW_MS;
+};
 
 export const isStaleAssetError = (message: string) => {
   const normalizedMessage = message.toLowerCase();
@@ -55,6 +73,20 @@ export const ErrorPage = () => {
   }
 
   const hasStaleAssets = isStaleAssetError(`${statusText} ${errMessage}`);
+
+  useEffect(() => {
+    if (!hasStaleAssets) return;
+    // Storage throws in some private browsing modes: without it there is no way
+    // to tell a first reload from a loop, so leave the manual instructions up.
+    try {
+      const lastReload = window.sessionStorage.getItem(STALE_ASSET_RELOAD_KEY);
+      if (!shouldAutoReloadForStaleAssets(Date.now(), lastReload)) return;
+      window.sessionStorage.setItem(STALE_ASSET_RELOAD_KEY, String(Date.now()));
+    } catch {
+      return;
+    }
+    window.location.reload();
+  }, [hasStaleAssets]);
 
   const errorCardSrc = getCollectionCardImagePath({
     path: CARD_IMAGES_PATH,

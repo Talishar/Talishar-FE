@@ -22,6 +22,18 @@
   max-width: 420px;
 }
 
+@media (max-width: 768px), (orientation: portrait) {
+  .modal {
+    left: 50%;
+    width: min(420px, calc(100vw - 1.5rem));
+  }
+
+  .container {
+    min-width: 0;
+    width: 100%;
+  }
+}
+
 .header {
   padding: 1.1rem 1.25rem 0.85rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
