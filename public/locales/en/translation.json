@@ -1649,6 +1649,16 @@
     "SPACEBAR": "[spacebar]",
     "WAIT": "WAIT"
   },
+  "UNDO_REASON": {
+    "FORGOT_TRIGGER": "Forgot a trigger",
+    "GIVEN": "Reason given: {{reason}}",
+    "MISCLICK": "Misclick",
+    "PASS_TOO_FAST": "Passed too fast",
+    "SKIP": "Skip",
+    "SUBTITLE": "Optionally add a reason to your request.",
+    "TITLE": "Undo request sent",
+    "WRONG_TARGET": "Wrong target"
+  },
   "UNITED_GAME_PANEL": {
     "EXPAND": "Expand panel",
     "GAME_SETUP": "Game Setup",

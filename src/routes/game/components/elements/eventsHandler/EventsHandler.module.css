@@ -330,3 +330,10 @@
   border-color: rgba(255, 255, 255, 0.3);
   color: white;
 }
+
+.dialogDetail {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.55);
+}

@@ -8,6 +8,7 @@ import PlayerHand from '../components/zones/playerHand/PlayerHand';
 import OptionsMenu from '../components/elements/optionsMenu/OptionsMenu';
 import InventoryModal from '../components/elements/inventory/InventoryModal';
 import EventsHandler from '../components/elements/eventsHandler/EventsHandler';
+import UndoReasonPrompt from '../components/elements/undoReasonPrompt/UndoReasonPrompt';
 import PlayerInputPopUp from '../components/elements/playerInputPopUp/PlayerInputPopUp';
 import CardPortal from '../components/elements/cardPortal/CardPortal';
 import ChatCardDetail from '../components/elements/chatCardDetail/ChatCardDetail';
@@ -195,6 +196,7 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
         )}
         <SpectatorLoginRequired />
         <EventsHandler />
+        <UndoReasonPrompt />
         <ReplayAdvanceButton />
       </div>
     </PanelProvider>

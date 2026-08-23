@@ -58,6 +58,10 @@ export default interface GameState {
   optionsMenu?: {
     active?: boolean;
   };
+  undoReasonPrompt?: {
+    active?: boolean;
+    dismissed?: boolean;
+  };
   inventoryOpen?: boolean;
   playerInputPopUp?: {
     active?: boolean;

@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
-import { PROCESS_INPUT } from 'appConstants';
+import { PROCESS_INPUT, UNDO_REASONS } from 'appConstants';
 import { getGameInfo, submitButton } from 'features/game/GameSlice';
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -47,6 +47,9 @@ const DismissibleToast = ({
   );
 };
 import {
+  clearUndoReasonPrompt,
+  dismissUndoReasonPrompt,
+  openUndoReasonPrompt,
   setShuffling,
   setAddBotDeck,
   setClashReveal,
@@ -80,6 +83,22 @@ const parseCardEvent = (
   };
 };
 
+const UNDO_REQUEST_EVENT_TYPES = new Set([
+  'REQUESTUNDO',
+  'REQUESTTHISTURNUNDO',
+  'REQUESTLASTTURNUNDO',
+  'REQUESTCHAINLINKUNDO'
+]);
+
+// Undo requests carry "requesterID:reasonCode" so the opponent gets told why.
+const parseUndoReason = (eventValue: string | undefined): number => {
+  const raw = eventValue ?? '';
+  const colonIndex = raw.indexOf(':');
+  if (colonIndex === -1) return 0;
+  const code = parseInt(raw.slice(colonIndex + 1));
+  return Number.isNaN(code) ? 0 : code;
+};
+
 export const EventsHandler = React.memo(() => {
   const { t } = useTranslation();
   const events = useAppSelector(
@@ -90,6 +109,7 @@ export const EventsHandler = React.memo(() => {
 
   const [showModal, setShowModal] = useState(false);
   const [modal, setModal] = useState('');
+  const [modalDetail, setModalDetail] = useState('');
   const [modalType, setModalType] = useState(ModalType.RequestChat);
   const { playerID } = useAppSelector(getGameInfo, shallowEqual);
   const hasPriority = useAppSelector(
@@ -100,6 +120,12 @@ export const EventsHandler = React.memo(() => {
   const [playShuffleSound] = useSound(shuffleSound, { volume: 0.5 });
   const [playPrioritySound] = useSound(prioritySound);
   const dispatch = useAppDispatch();
+
+  const undoReasonText = (eventValue: string | undefined) => {
+    const code = parseUndoReason(eventValue);
+    const reason = UNDO_REASONS.find((entry) => entry.code === code);
+    return reason ? t('UNDO_REASON.GIVEN', { reason: t(reason.key) }) : '';
+  };
 
   const isUndoModal = (type: ModalType) =>
     type === ModalType.RequestUndo ||
@@ -161,6 +187,18 @@ export const EventsHandler = React.memo(() => {
   useEffect(() => {
     if (events && events !== lastProcessedEventsRef.current) {
       lastProcessedEventsRef.current = events;
+      if (playerID !== 3) {
+        const myUndoRequest = events.find(
+          (event) =>
+            UNDO_REQUEST_EVENT_TYPES.has(event.eventType) &&
+            parseInt(event.eventValue ?? '') === playerID
+        );
+        if (myUndoRequest === undefined) dispatch(clearUndoReasonPrompt());
+        else if (parseUndoReason(myUndoRequest.eventValue) === 0)
+          dispatch(openUndoReasonPrompt());
+        else dispatch(dismissUndoReasonPrompt());
+      }
+
       const CLASH_DISPLAY_DURATION = 7600;
       const CLASH_FIRST_DURATION = 3600;
 
@@ -338,6 +376,7 @@ export const EventsHandler = React.memo(() => {
             ) {
               setShowModal(true);
               setModalType(ModalType.RequestChat);
+              setModalDetail('');
               setModal('Do you want to enable chat?');
             }
             continue;
@@ -348,6 +387,7 @@ export const EventsHandler = React.memo(() => {
             ) {
               setShowModal(true);
               setModalType(ModalType.RequestUndo);
+              setModalDetail(undoReasonText(event.eventValue));
               setModal(
                 'Do you want to allow the opponent to undo their last action?'
               );
@@ -360,6 +400,7 @@ export const EventsHandler = React.memo(() => {
             ) {
               setShowModal(true);
               setModalType(ModalType.RequestThisTurnUndo);
+              setModalDetail(undoReasonText(event.eventValue));
               setModal('Do you want to allow the opponent to undo this turn?');
             }
             continue;
@@ -367,6 +408,7 @@ export const EventsHandler = React.memo(() => {
             if (parseInt(event.eventValue ?? '0') !== playerID) {
               setShowModal(true);
               setModalType(ModalType.RequestLastTurnUndo);
+              setModalDetail(undoReasonText(event.eventValue));
               setModal(
                 'Do you want to allow the opponent to revert to last turn?'
               );
@@ -379,6 +421,7 @@ export const EventsHandler = React.memo(() => {
             ) {
               setShowModal(true);
               setModalType(ModalType.RequestChainLinkUndo);
+              setModalDetail(undoReasonText(event.eventValue));
               setModal(
                 'Do you want to allow the opponent to revert to the start of the chain link?'
               );
@@ -446,7 +489,12 @@ export const EventsHandler = React.memo(() => {
         {createPortal(
           <dialog open className={styles.modal}>
             <div className={styles.container}>
-              <div className={styles.dialogHeader}>{modal}</div>
+              <div className={styles.dialogHeader}>
+                {modal}
+                {modalDetail !== '' && isUndoModal(modalType) && (
+                  <div className={styles.dialogDetail}>{modalDetail}</div>
+                )}
+              </div>
               <div className={styles.dialogFooter}>
                 <button onClick={clickYes}>{t('GAME_LOBBY.YES')}</button>
                 <button onClick={clickNo}>{t('GAME_LOBBY.NO')}</button>

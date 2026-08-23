@@ -80,6 +80,7 @@ export const PROCESS_INPUT = {
   UNDO: 10000,
   CANCEL_BLOCKS: 10001,
   REVERT_TO_PRIOR_TURN: 10003,
+  UNDO_REASON: 10021,
 
   // Manual Mode
   ADD_ACTION_POINT: 10002,
@@ -126,6 +127,13 @@ export const PROCESS_INPUT = {
   DECLINE_CHAT: 100020,
   CONFIRM_CHAIN_LINK_UNDO: 100022
 };
+
+export const UNDO_REASONS = [
+  { code: 1, key: 'UNDO_REASON.MISCLICK' },
+  { code: 2, key: 'UNDO_REASON.PASS_TOO_FAST' },
+  { code: 3, key: 'UNDO_REASON.FORGOT_TRIGGER' },
+  { code: 4, key: 'UNDO_REASON.WRONG_TARGET' }
+] as const;
 
 // Default shortcut inputs
 export const DEFAULT_SHORTCUTS = {
