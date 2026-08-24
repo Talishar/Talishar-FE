@@ -33,6 +33,8 @@ const DESCRIPTION_KEY_MAP: Record<string, string> = {
   'Prefer slow decks (control)': 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.CONTROL',
   'Casual / relaxed play': 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.CASUAL',
   'Looking for a quick game': 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.QUICK',
+  'Looking for advice/coaching':
+    'MENU.CREATE_GAME.GAME_DESCRIPTIONS.ADVICE_COACHING',
   'New player learning the game':
     'MENU.CREATE_GAME.GAME_DESCRIPTIONS.NEW_PLAYER',
   'Practicing a new hero': 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.NEW_HERO',

@@ -976,6 +976,7 @@
       },
       "GAME_DESCRIPTION": "Game Description",
       "GAME_DESCRIPTIONS": {
+        "ADVICE_COACHING": "Looking for advice/coaching",
         "AGGRO": "Prefer fast decks (aggro)",
         "BEST_DECK": "Looking for best deck in the format",
         "CASUAL": "Casual / relaxed play",
