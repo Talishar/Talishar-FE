@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
-import { PROCESS_INPUT, UNDO_REASONS } from 'appConstants';
+import { PROCESS_INPUT, SHOW_UNDO_REASONS, UNDO_REASONS } from 'appConstants';
 import { getGameInfo, submitButton } from 'features/game/GameSlice';
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -122,6 +122,7 @@ export const EventsHandler = React.memo(() => {
   const dispatch = useAppDispatch();
 
   const undoReasonText = (eventValue: string | undefined) => {
+    if (!SHOW_UNDO_REASONS) return '';
     const code = parseUndoReason(eventValue);
     const reason = UNDO_REASONS.find((entry) => entry.code === code);
     return reason ? t('UNDO_REASON.GIVEN', { reason: t(reason.key) }) : '';

@@ -135,6 +135,9 @@ export const UNDO_REASONS = [
   { code: 4, key: 'UNDO_REASON.WRONG_TARGET' }
 ] as const;
 
+// Keep the undo-reason implementation available while its UI is temporarily hidden.
+export const SHOW_UNDO_REASONS = false;
+
 // Default shortcut inputs
 export const DEFAULT_SHORTCUTS = {
   TOGGLE_OPTIONS_MENU: 'KeyM',

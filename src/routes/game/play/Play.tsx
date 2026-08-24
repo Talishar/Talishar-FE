@@ -43,6 +43,7 @@ import {
   ReplayAdvanceButton,
   TurnChangeSettingsSync
 } from './PlaySideEffects';
+import { SHOW_UNDO_REASONS } from 'appConstants';
 
 const TOAST_STYLE: React.CSSProperties = {
   background: 'var(--theme-tertiary)',
@@ -196,7 +197,7 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
         )}
         <SpectatorLoginRequired />
         <EventsHandler />
-        <UndoReasonPrompt />
+        {SHOW_UNDO_REASONS && <UndoReasonPrompt />}
         <ReplayAdvanceButton />
       </div>
     </PanelProvider>
