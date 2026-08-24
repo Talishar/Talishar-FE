@@ -122,6 +122,19 @@
   height: 100%;
 }
 
+.movementEventCard .movementEventCardDisplay {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .movementEvent {
+    --movement-card-size: clamp(7rem, 30vw, 7.75rem);
+  }
+}
+
 .revealEvent {
   --movement-accent: #8ed8ff;
   --movement-glow: rgba(74, 187, 255, 0.24);

@@ -95,3 +95,11 @@
   pointer-events: none;
   box-sizing: border-box;
 }
+
+@media (max-width: 600px) {
+  .spectatorCountCompact {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+  }
+}
