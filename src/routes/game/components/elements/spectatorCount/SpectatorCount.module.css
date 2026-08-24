@@ -38,12 +38,14 @@
   line-height: var(--tooltip-line-height);
   white-space: nowrap;
   z-index: var(--tooltip-z-index);
-  max-height: 200px;
-  overflow-y: auto;
-}
-
-.tooltip div + div {
-  margin-top: 0.25em;
+  max-width: none;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  row-gap: 0.25em;
+  column-gap: 1.25em;
 }
 
 @media (max-width: 950px) {

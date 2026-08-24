@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useLayoutEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
@@ -12,26 +12,46 @@ interface TooltipPortalProps {
   names: string[];
 }
 
-function TooltipPortal({ anchorRef, names }: TooltipPortalProps) {
-  const [pos, setPos] = useState({ top: 0, left: 0 });
+const TOOLTIP_MARGIN = 8;
 
-  useEffect(() => {
-    if (anchorRef.current) {
-      const rect = anchorRef.current.getBoundingClientRect();
-      setPos({
-        top: rect.bottom + window.scrollY + 4,
-        left: rect.left + window.scrollX + rect.width / 2
-      });
-    }
+function TooltipPortal({ anchorRef, names }: TooltipPortalProps) {
+  const [pos, setPos] = useState({ top: 0, left: 0, maxHeight: 0 });
+  const tooltipRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    if (!anchorRef.current) return;
+    const rect = anchorRef.current.getBoundingClientRect();
+    setPos({
+      top: rect.bottom + window.scrollY + 4,
+      left: rect.left + window.scrollX + rect.width / 2,
+      maxHeight: Math.max(
+        window.innerHeight - rect.bottom - 4 - TOOLTIP_MARGIN,
+        0
+      )
+    });
   }, [anchorRef]);
+
+  useLayoutEffect(() => {
+    const tooltip = tooltipRef.current;
+    if (!tooltip || pos.maxHeight === 0) return;
+    const rect = tooltip.getBoundingClientRect();
+    const overflowRight = rect.right - (window.innerWidth - TOOLTIP_MARGIN);
+    const overflowLeft = TOOLTIP_MARGIN - rect.left;
+    const shift = overflowRight > 0 ? -overflowRight : Math.max(overflowLeft, 0);
+    if (shift !== 0) {
+      setPos((prev) => ({ ...prev, left: prev.left + shift }));
+    }
+  }, [pos.maxHeight, names]);
 
   return ReactDOM.createPortal(
     <div
+      ref={tooltipRef}
       className={styles.tooltip}
       style={{
         position: 'absolute',
         top: pos.top,
         left: pos.left,
+        maxHeight: pos.maxHeight || undefined,
         transform: 'translateX(-50%)'
       }}
     >
