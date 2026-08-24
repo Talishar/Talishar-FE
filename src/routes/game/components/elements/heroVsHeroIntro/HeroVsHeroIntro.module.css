@@ -10,6 +10,7 @@
   background-position: center;
   z-index: 9999;
   overflow: hidden;
+  cursor: pointer;
 }
 
 /* Dark cinematic overlay */
@@ -183,7 +184,7 @@
   width: 420px;
   height: 300px;
   clip-path: inset(calc(-1 * var(--bleed)) 0px 0px 0px round var(--radius));
-  cursor: default;
+  cursor: pointer;
   will-change: transform;
 }
 
