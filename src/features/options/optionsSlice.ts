@@ -153,6 +153,7 @@ const optionsSlice = createSlice({
   reducers: {
     settingAdded: settingsAdapter.addOne,
     settingUpdated: settingsAdapter.upsertOne,
+    settingsUpdated: settingsAdapter.upsertMany,
     settingsReceived(state, action) {
       settingsAdapter.setAll(state, action.payload.Settings);
     },
@@ -202,5 +203,10 @@ export const getSettingsLanguage = (state: RootState) =>
 export default optionsSlice.reducer;
 
 const { actions } = optionsSlice;
-export const { settingAdded, settingUpdated, settingsReceived, setLanguage } =
-  actions;
+export const {
+  settingAdded,
+  settingUpdated,
+  settingsUpdated,
+  settingsReceived,
+  setLanguage
+} = actions;

@@ -37,26 +37,23 @@ export const HeroZone = React.memo((prop: Displayrow) => {
     return { ...cardToDisplay, subcards: soulSubcards };
   }, [cardToDisplay, soulCards]);
 
-  const { transformCard, transformTrigger } = useAppSelector(
-    (state: RootState) => {
-      const viewerPlayerID = state.game.gameInfo.playerID;
-      const displayedPlayerID =
-        viewerPlayerID === 1 || viewerPlayerID === 2
-          ? isPlayer
-            ? viewerPlayerID
-            : 3 - viewerPlayerID
-          : isPlayer
-          ? 1
-          : 2;
+  const transformCard = useAppSelector((state: RootState) => {
+    const viewerPlayerID = state.game.gameInfo.playerID;
+    const displayedPlayerID =
+      viewerPlayerID === 1 || viewerPlayerID === 2
+        ? isPlayer
+          ? viewerPlayerID
+          : 3 - viewerPlayerID
+        : isPlayer
+        ? 1
+        : 2;
 
-      return {
-        transformCard:
-          displayedPlayerID === 1
-            ? state.game.heroTransformP1Card
-            : state.game.heroTransformP2Card,
-        transformTrigger: state.game.heroTransformTrigger
-      };
-    }
+    return displayedPlayerID === 1
+      ? state.game.heroTransformP1Card
+      : state.game.heroTransformP2Card;
+  });
+  const transformTrigger = useAppSelector(
+    (state: RootState) => state.game.heroTransformTrigger
   );
 
   // Use the same logic as HealthDisplay/TurnWidget - isPlayer determines the health

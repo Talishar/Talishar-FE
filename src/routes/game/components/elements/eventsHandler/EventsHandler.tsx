@@ -6,7 +6,6 @@ import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { toast } from 'react-hot-toast';
 import useSound from 'use-sound';
-import { getSettingsEntity } from 'features/options/optionsSlice';
 import shuffleSound from 'sounds/shuffle.m4a';
 import prioritySound from 'sounds/prioritySound.wav';
 import {
@@ -115,8 +114,9 @@ export const EventsHandler = React.memo(() => {
   const hasPriority = useAppSelector(
     (state: RootState) => state.game.hasPriority
   );
-  const settingsData = useAppSelector(getSettingsEntity);
-  const isMuted = settingsData['MuteSound']?.value === '1';
+  const isMuted = useAppSelector(
+    (state: RootState) => state.settings.entities['MuteSound']?.value === '1'
+  );
   const [playShuffleSound] = useSound(shuffleSound, { volume: 0.5 });
   const [playPrioritySound] = useSound(prioritySound);
   const dispatch = useAppDispatch();

@@ -83,13 +83,13 @@
 }
 
 .isFrozen {
-  background-image: url('../../../../../img/elements/frozenOverlay.png');
+  background-image: url('../../../../../img/elements/frozenOverlay.webp');
   background-repeat: no-repeat;
   background-size: 100% 100%;
 }
 
 .holoCounters {
-  background-image: url('../../../../../img/elements/holoOverlay.png');
+  background-image: url('../../../../../img/elements/holoOverlay.webp');
   background-repeat: no-repeat;
   background-size: 100% 100%;
 }
@@ -97,7 +97,7 @@
 .marked {
   animation: glitch 0.1s;
   animation-delay: 0.2s;
-  background-image: url('../../../../../img/elements/markedOverlay.png');
+  background-image: url('../../../../../img/elements/markedOverlay.webp');
   background-repeat: no-repeat;
   background-size: 100% 100%;
   opacity: 0.8;
