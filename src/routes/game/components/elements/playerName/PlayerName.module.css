@@ -216,98 +216,12 @@
   pointer-events: none;
 }
 
-.playerName.patron {
-  border: 1px solid var(--theme-primary-focus);
-  background: linear-gradient(rgba(50, 10, 10, 0.6), rgba(50, 10, 10, 0.6)),
-    linear-gradient(
-      135deg,
-      var(--theme-primary-focus),
-      rgba(255, 237, 78, 0.05)
-    );
-  box-shadow: 0 0 6px var(--theme-primary-focus),
-    0 0 12px var(--theme-primary-focus), 0 0 18px var(--theme-primary-focus),
-    inset 0 0 6px var(--theme-primary-focus);
-  border-radius: 0.3em;
-  position: relative;
-}
-
-.playerName.pvtVoidPatron {
-  border: 1px solid var(--theme-primary-focus);
-  background: linear-gradient(rgba(50, 10, 10, 0.6), rgba(50, 10, 10, 0.6)),
-    linear-gradient(
-      135deg,
-      var(--theme-primary-focus),
-      rgba(255, 237, 78, 0.05)
-    );
-  box-shadow: 0 0 6px var(--theme-primary-focus),
-    0 0 12px var(--theme-primary-focus), 0 0 18px var(--theme-primary-focus),
-    inset 0 0 6px var(--theme-primary-focus);
-  border-radius: 0.3em;
-  position: relative;
-}
-
-.playerName.contributor {
-  border: 1px solid var(--theme-primary-focus);
-  background: linear-gradient(rgba(50, 10, 10, 0.6), rgba(50, 10, 10, 0.6)),
-    linear-gradient(
-      135deg,
-      var(--theme-primary-focus),
-      rgba(255, 237, 78, 0.05)
-    );
-  box-shadow: 0 0 6px var(--theme-primary-focus),
-    0 0 12px var(--theme-primary-focus), 0 0 18px var(--theme-primary-focus),
-    inset 0 0 6px var(--theme-primary-focus);
-  border-radius: 0.3em;
-  position: relative;
-}
-
+.playerName.patron,
+.playerName.pvtVoidPatron,
+.playerName.contributor,
 .playerName.metafy {
-  border: 1px solid var(--theme-primary-focus);
-  background: linear-gradient(rgba(50, 10, 10, 0.6), rgba(50, 10, 10, 0.6)),
-    linear-gradient(
-      135deg,
-      var(--theme-primary-focus),
-      rgba(255, 237, 78, 0.05)
-    );
-  box-shadow: 0 0 6px var(--theme-primary-focus),
-    0 0 12px var(--theme-primary-focus), 0 0 18px var(--theme-primary-focus),
-    inset 0 0 6px var(--theme-primary-focus);
-  border-radius: 0.3em;
-  position: relative;
-}
-
-.playerName.patron::before,
-.playerName.pvtVoidPatron::before,
-.playerName.contributor::before,
-.playerName.metafy::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 0.3em;
-  pointer-events: none;
-  background-color: rgba(255, 255, 255, 0.05);
-  opacity: 0;
-  will-change: opacity;
-  animation: playerNamePatronShine 2s ease-in-out infinite;
-}
-
-@keyframes playerNamePatronShine {
-  0%,
-  100% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .playerName.patron::before,
-  .playerName.pvtVoidPatron::before,
-  .playerName.contributor::before,
-  .playerName.metafy::before {
-    animation: none;
-  }
+  border: 1px solid #6e5c23;
+  box-shadow: none;
 }
 
 .icon {
