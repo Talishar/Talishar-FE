@@ -387,7 +387,7 @@
   padding: 0.5em 0.2em 0.4em;
   border: 2px solid transparent;
   border-radius: 8px;
-  background: transparent;
+  background: #151718;
   cursor: pointer;
   transition: border-color 0.15s ease, background-color 0.15s ease;
 }
@@ -395,7 +395,7 @@
 .frameThumbWrapper:hover,
 .frameThumbWrapper:focus-visible {
   border-color: rgba(255, 255, 255, 0.18);
-  background: rgba(255, 255, 255, 0.04);
+  background: #1d2022;
 }
 
 .frameThumbWrapper:focus-visible {
@@ -411,7 +411,7 @@
 .frameSelected:hover,
 .frameSelected:focus-visible {
   border-color: #d4af37;
-  background: rgba(212, 175, 55, 0.1);
+  background: #1d2022;
 }
 
 .frameSelected .thumbLabel {
