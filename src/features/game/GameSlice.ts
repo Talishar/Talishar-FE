@@ -7,7 +7,10 @@ import {
   original,
   type Draft
 } from '@reduxjs/toolkit';
-import { preserveIdentities } from 'utils/PreserveIdentities';
+import {
+  preserveIdentities,
+  preserveStringArray
+} from 'utils/PreserveIdentities';
 import InitialGameState from './InitialGameState';
 import GameStaticInfo, { AltArt } from '../GameStaticInfo';
 import { Card, isAllyCard } from '../Card';
@@ -262,7 +265,7 @@ function mergeReceivedGameState(
     }
   }
 
-  state.chatLog = preserveIdentities(prevGame.chatLog, payload.chatLog);
+  state.chatLog = preserveStringArray(prevGame.chatLog, payload.chatLog);
   state.opponentIsTyping = payload.opponentIsTyping ?? false;
   state.opponentPresence = payload.opponentPresence ?? null;
   state.amIActivePlayer = payload.amIActivePlayer;

@@ -434,7 +434,9 @@ export default function ParseGameState(input: any) {
   const chatArray = input.chatLog ? input.chatLog.split('<br>') : [];
 
   result.chatLog = chatArray.map((message: string) => {
-    return message.replace(IMAGE_PATH_RE, '/images/');
+    return message.indexOf('/Images/', 1) === -1
+      ? message
+      : message.replace(IMAGE_PATH_RE, '/images/');
   });
 
   // activeplayer

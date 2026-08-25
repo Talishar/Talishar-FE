@@ -29,6 +29,13 @@ const IRREVERSIBLE_RE =
 
 type LogMessage = { message: string; originalIndex: number };
 
+type OutputCheckpoint = {
+  nextMessageIndex: number;
+  nextOriginalIndex: number;
+  outputLength: number;
+  chainLinkNumber: number;
+};
+
 type Props = {
   chatLog?: string[];
   chatFilter: ChatFilter;
@@ -302,6 +309,17 @@ const GameLogMessages = React.memo(function GameLogMessages({
   mobile = false
 }: Props) {
   const { t } = useTranslation();
+  const outputCacheRef = React.useRef<{
+    chatLog: string[] | undefined;
+    chatFilter: ChatFilter;
+    transformMessage: Props['transformMessage'];
+    playerOneName: string;
+    playerTwoName: string;
+    mobile: boolean;
+    translate: typeof t;
+    output: React.ReactNode[];
+    checkpoints: OutputCheckpoint[];
+  }>();
   const output = React.useMemo(() => {
     const messages: LogMessage[] = [];
     const log = chatLog ?? [];
@@ -313,10 +331,69 @@ const GameLogMessages = React.memo(function GameLogMessages({
       }
       messages.push({ message, originalIndex });
     }
-    const nextOutput: React.ReactNode[] = [];
-    let chainLinkNumber = 0;
 
-    for (let index = 0; index < messages.length; index++) {
+    const previous = outputCacheRef.current;
+    let reusableCheckpointIndex = -1;
+    if (
+      previous &&
+      previous.chatFilter === chatFilter &&
+      previous.transformMessage === transformMessage &&
+      previous.playerOneName === playerNames[0] &&
+      previous.playerTwoName === playerNames[1] &&
+      previous.mobile === mobile &&
+      previous.translate === t
+    ) {
+      const previousLog = previous.chatLog ?? [];
+      const commonLength = Math.min(previousLog.length, log.length);
+      let commonPrefixLength = 0;
+      while (
+        commonPrefixLength < commonLength &&
+        previousLog[commonPrefixLength] === log[commonPrefixLength]
+      ) {
+        commonPrefixLength++;
+      }
+
+      for (let i = previous.checkpoints.length - 1; i >= 0; i--) {
+        if (previous.checkpoints[i].nextOriginalIndex <= commonPrefixLength) {
+          reusableCheckpointIndex = i;
+          break;
+        }
+      }
+    }
+
+    const reusableCheckpoint =
+      reusableCheckpointIndex === -1 || !previous
+        ? undefined
+        : previous.checkpoints[reusableCheckpointIndex];
+    const nextOutput =
+      reusableCheckpoint && previous
+        ? previous.output.slice(0, reusableCheckpoint.outputLength)
+        : [];
+    const checkpoints =
+      reusableCheckpoint && previous
+        ? previous.checkpoints.slice(0, reusableCheckpointIndex + 1)
+        : [];
+    let startIndex = reusableCheckpoint?.nextMessageIndex ?? 0;
+    let chainLinkNumber = 0;
+    if (reusableCheckpoint) {
+      chainLinkNumber = reusableCheckpoint.chainLinkNumber;
+      startIndex = Math.min(startIndex, messages.length);
+    }
+    let hasOpenCombatStart = false;
+
+    const recordCheckpoint = (
+      nextMessageIndex: number,
+      nextOriginalIndex: number
+    ) => {
+      checkpoints.push({
+        nextMessageIndex,
+        nextOriginalIndex,
+        outputLength: nextOutput.length,
+        chainLinkNumber
+      });
+    };
+
+    for (let index = startIndex; index < messages.length; index++) {
       const entry = messages[index];
       const entryFlags = flagsFor(entry.message);
       const turnMarker = entryFlags.turnMarker;
@@ -328,6 +405,8 @@ const GameLogMessages = React.memo(function GameLogMessages({
             playerNames={playerNames}
           />
         );
+        hasOpenCombatStart = false;
+        recordCheckpoint(index + 1, entry.originalIndex + 1);
         continue;
       }
 
@@ -354,8 +433,17 @@ const GameLogMessages = React.memo(function GameLogMessages({
           </section>
         );
         if (closesCombatChain) chainLinkNumber = 0;
+        hasOpenCombatStart = false;
         index = groupEnd;
+        recordCheckpoint(groupEnd + 1, messages[groupEnd].originalIndex + 1);
         continue;
+      }
+
+      if (entryFlags.isCombatStart) {
+        if (hasOpenCombatStart) {
+          recordCheckpoint(index, entry.originalIndex + 1);
+        }
+        hasOpenCombatStart = true;
       }
 
       const undoSequence = undoLimitSequence(messages, index);
@@ -395,8 +483,29 @@ const GameLogMessages = React.memo(function GameLogMessages({
       );
       index = end;
       if (entryFlags.closesCombatChain) chainLinkNumber = 0;
+      if (entryFlags.isChat || entryFlags.isCombatEnd) {
+        hasOpenCombatStart = false;
+      }
+      if (
+        entryFlags.isChat ||
+        entryFlags.isCombatEnd ||
+        (!hasOpenCombatStart && !entryFlags.isPass && !entryFlags.isUndo)
+      ) {
+        recordCheckpoint(end + 1, messages[end].originalIndex + 1);
+      }
     }
 
+    outputCacheRef.current = {
+      chatLog,
+      chatFilter,
+      transformMessage,
+      playerOneName: playerNames[0],
+      playerTwoName: playerNames[1],
+      mobile,
+      translate: t,
+      output: nextOutput,
+      checkpoints
+    };
     return nextOutput;
   }, [chatLog, chatFilter, transformMessage, playerNames, mobile, t]);
 

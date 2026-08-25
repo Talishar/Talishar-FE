@@ -71,3 +71,17 @@ export function preserveIdentities<T>(prev: T | undefined, next: T): T {
   }
   return next;
 }
+
+export function preserveStringArray(
+  prev: string[] | undefined,
+  next: string[] | undefined
+): string[] | undefined {
+  if (prev === next) return prev;
+  if (prev === undefined || next === undefined) return next;
+  if (prev.length !== next.length) return next;
+
+  for (let i = 0; i < next.length; i++) {
+    if (prev[i] !== next[i]) return next;
+  }
+  return prev;
+}

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import styles from './ReorderLayers.module.css';
 import CardDisplay from '../../../elements/cardDisplay/CardDisplay';
 import { Card } from 'features/Card';
@@ -9,19 +9,22 @@ import { PROCESS_INPUT } from 'appConstants';
 import { getGameInfo } from 'features/game/GameSlice';
 import { shallowEqual } from 'react-redux';
 
+const prepareCards = (cards: Card[]): Card[] =>
+  cards.map((card) => ({ ...card, borderColor: '8' } as Card));
+
 const ReorderLayers = ({ cards }: { cards: Card[] }) => {
   const { gameID, playerID, authKey } = useAppSelector(
     getGameInfo,
     shallowEqual
   );
-  const [cardList, setCardList] = React.useState<Card[]>([]);
-  useMemo(() => {
-    setCardList(
-      cards.map((card) => {
-        return { ...card, borderColor: '8' } as Card;
-      }) ?? []
-    );
-  }, [cards]);
+  const [previousCards, setPreviousCards] = React.useState(cards);
+  const [cardList, setCardList] = React.useState<Card[]>(() =>
+    prepareCards(cards)
+  );
+  if (cards !== previousCards) {
+    setPreviousCards(cards);
+    setCardList(prepareCards(cards));
+  }
   const [processInputAPI] = useProcessInputAPIMutation();
 
   const changeCardOrder = (newOrder: Card[]) => {

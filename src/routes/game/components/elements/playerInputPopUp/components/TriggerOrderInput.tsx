@@ -1,5 +1,5 @@
 import { FormProps } from '../playerInputPopupTypes';
-import React, { useMemo, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import styles from '../PlayerInputPopUp.module.css';
 import CardDisplay from '../../cardDisplay/CardDisplay';
@@ -13,6 +13,16 @@ import classNames from 'classnames';
 
 let change = false;
 let buttonClick = false;
+const prepareCards = (cards: Card[]): Card[] =>
+  cards.map(
+    (card, index) =>
+      ({
+        ...card,
+        borderColor: '8',
+        uniqueId: `${card.cardNumber}-${index}`
+      } as Card)
+  );
+
 const TriggerOrdering = ({ topCards }: { topCards: Card[] }) => {
   const { gameID, playerID, authKey } = useAppSelector(
     getGameInfo,
@@ -20,19 +30,14 @@ const TriggerOrdering = ({ topCards }: { topCards: Card[] }) => {
   );
 
   const { t } = useTranslation();
-  const [cardListTop, setCardListTop] = React.useState<Card[]>([]);
-
-  useMemo(() => {
-    setCardListTop(
-      topCards.map((card, index) => {
-        return {
-          ...card,
-          borderColor: '8',
-          uniqueId: `${card.cardNumber}-${index}`
-        } as Card;
-      }) ?? []
-    );
-  }, [topCards]);
+  const [previousTopCards, setPreviousTopCards] = React.useState(topCards);
+  const [cardListTop, setCardListTop] = React.useState<Card[]>(() =>
+    prepareCards(topCards)
+  );
+  if (topCards !== previousTopCards) {
+    setPreviousTopCards(topCards);
+    setCardListTop(prepareCards(topCards));
+  }
 
   const [processInputAPI] = useProcessInputAPIMutation();
 
