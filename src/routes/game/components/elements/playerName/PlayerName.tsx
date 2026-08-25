@@ -192,10 +192,20 @@ export default function PlayerName(player: Player) {
   const [blockUser] = useBlockUserMutation();
   const [unblockUser] = useUnblockUserMutation();
 
-  const { data: sentData, refetch: refetchSent } =
-    useGetSentRequestsQuery(undefined);
-  const { data: blockedData, refetch: refetchBlocked } =
-    useGetBlockedUsersQuery(undefined);
+  const shouldLoadRelationships =
+    isDropdownOpen && !player.isPlayer && playerID !== 3 && !isPracticeDummy;
+  const {
+    data: sentData,
+    refetch: refetchSent,
+    isFetching: isSentRequestsFetching
+  } = useGetSentRequestsQuery(undefined, { skip: !shouldLoadRelationships });
+  const {
+    data: blockedData,
+    refetch: refetchBlocked,
+    isFetching: isBlockedUsersFetching
+  } = useGetBlockedUsersQuery(undefined, { skip: !shouldLoadRelationships });
+  const areRelationshipsLoading =
+    isSentRequestsFetching || isBlockedUsersFetching;
 
   // Memoized: only rebuilt when the underlying list reference changes
   const sentRequestsByUsername = useMemo(
@@ -402,8 +412,9 @@ export default function PlayerName(player: Player) {
           >
             <button
               className={`${styles.dropdownOption} ${
-                hasRequestSent ? styles.disabled : ''
+                hasRequestSent || areRelationshipsLoading ? styles.disabled : ''
               }`}
+              disabled={areRelationshipsLoading}
               onClick={
                 hasRequestSent ? handleCancelFriendRequest : handleAddFriend
               }
@@ -420,8 +431,9 @@ export default function PlayerName(player: Player) {
             </button>
             <button
               className={`${styles.dropdownOption} ${
-                isBlocked ? styles.disabled : ''
+                isBlocked || areRelationshipsLoading ? styles.disabled : ''
               }`}
+              disabled={areRelationshipsLoading}
               onClick={isBlocked ? handleUnblockUser : handleBlockUser}
               title={
                 isBlocked ? t('PROFILE.UNBLOCK_USER') : t('PROFILE.BLOCK_USER')

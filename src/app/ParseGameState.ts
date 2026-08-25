@@ -178,6 +178,16 @@ function parseCards(input: any, reverse = false): Card[] {
   return result;
 }
 
+function appendParsedCards(result: Card[], input: any, zone?: string): void {
+  if (!Array.isArray(input)) return;
+
+  for (const cardObj of input) {
+    const card = ParseCard(cardObj);
+    if (zone !== undefined) card.zone = zone;
+    result.push(card);
+  }
+}
+
 interface PlayerKeyMap {
   equipment: string;
   hand: string;
@@ -285,18 +295,11 @@ function ParsePlayer(input: any, keys: PlayerKeyMap): Player {
   player.Arsenal = parseCards(input[keys.arsenal]);
 
   // Allies, auras, items and permanents all share one pile on the frontend.
-  player.Permanents = [
-    ...parseCards(input[keys.allies]),
-    ...parseCards(input[keys.auras]).map((card) => ({
-      ...card,
-      zone: ZONE.AURAS
-    })),
-    ...parseCards(input[keys.items]).map((card) => ({
-      ...card,
-      zone: ZONE.ITEMS
-    })),
-    ...parseCards(input[keys.permanents])
-  ];
+  player.Permanents = [];
+  appendParsedCards(player.Permanents, input[keys.allies]);
+  appendParsedCards(player.Permanents, input[keys.auras], ZONE.AURAS);
+  appendParsedCards(player.Permanents, input[keys.items], ZONE.ITEMS);
+  appendParsedCards(player.Permanents, input[keys.permanents]);
 
   player.Effects = parseCards(input[keys.effects]);
   player.ActionPoints = input[keys.actionPoints];
