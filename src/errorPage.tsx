@@ -1,8 +1,13 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate, useRouteError } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import styles from './errorPage.module.css';
-import { CARD_IMAGES_PATH, getCollectionCardImagePath } from 'utils';
+import { CLOUD_IMAGES_URL } from 'appConstants';
+import {
+  CARD_IMAGES_PATH,
+  DEFAULT_LANGUAGE,
+  LOCALE_DICTIONARY
+} from 'utils/multilanguage/constants';
 
 const STALE_ASSET_ERROR_PATTERNS = [
   'failed to fetch dynamically imported module',
@@ -19,6 +24,8 @@ const STALE_ASSET_ERROR_PATTERNS = [
 
 const STALE_ASSET_RELOAD_KEY = 'talishar.staleAssetReload';
 const STALE_ASSET_RELOAD_WINDOW_MS = 60000;
+
+export const ERROR_CARD_SRC = `${CLOUD_IMAGES_URL}/${CARD_IMAGES_PATH}/${LOCALE_DICTIONARY[DEFAULT_LANGUAGE]}/WTR224.webp`;
 
 export const shouldAutoReloadForStaleAssets = (
   now: number,
@@ -88,12 +95,6 @@ export const ErrorPage = () => {
     window.location.reload();
   }, [hasStaleAssets]);
 
-  const errorCardSrc = getCollectionCardImagePath({
-    path: CARD_IMAGES_PATH,
-    locale: 'en',
-    cardNumber: 'WTR224'
-  });
-
   return (
     <main className={styles.container}>
       <article className={styles.article}>
@@ -127,7 +128,7 @@ export const ErrorPage = () => {
           </>
         )}
         <img
-          src={errorCardSrc}
+          src={ERROR_CARD_SRC}
           alt=""
           style={{ maxWidth: '100%', maxHeight: '100%', marginBottom: '18px' }}
         />

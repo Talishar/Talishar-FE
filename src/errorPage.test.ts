@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isStaleAssetError } from './errorPage';
+import { ERROR_CARD_SRC, isStaleAssetError } from './errorPage';
 
 describe('isStaleAssetError', () => {
   it.each([
@@ -12,6 +12,16 @@ describe('isStaleAssetError', () => {
   });
 
   it('does not hide unrelated error details', () => {
-    expect(isStaleAssetError('The requested game could not be found')).toBe(false);
+    expect(isStaleAssetError('The requested game could not be found')).toBe(
+      false
+    );
+  });
+});
+
+describe('error card', () => {
+  it('keeps the same fixed English image URL without the full card resolver', () => {
+    expect(ERROR_CARD_SRC).toBe(
+      'https://images.talishar.net/public/cardimages/english/WTR224.webp'
+    );
   });
 });

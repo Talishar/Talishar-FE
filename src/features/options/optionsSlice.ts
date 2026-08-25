@@ -15,7 +15,7 @@ import {
 import GameStaticInfo from 'features/GameStaticInfo';
 import { ProcessInputAPI } from 'interface/API/ProcessInputAPI';
 import { toast } from 'react-hot-toast';
-import { loadInitialLanguage } from 'utils';
+import { loadInitialLanguage } from 'utils/multilanguage/languagePreference';
 
 export interface GameOptions {
   Settings: Setting[];
