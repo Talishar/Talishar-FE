@@ -12,9 +12,34 @@ import {
   FRENCH_PRINTED_COLLECTIONS,
   JAPANESE_LANGUAGE_PRINTED_COLLECTIONS
 } from './constants';
-import { historyPack1, historyPack2, setIDs } from './collectionMaps';
 import { CollectionCardImagePathData } from './types';
 import { CLOUD_IMAGES_URL } from 'appConstants';
+
+type CardNumberMap = Record<string, string>;
+
+const EMPTY_MAP: CardNumberMap = {};
+
+let setIDs: CardNumberMap = EMPTY_MAP;
+let historyPack1: CardNumberMap = EMPTY_MAP;
+let historyPack2: CardNumberMap = EMPTY_MAP;
+
+let collectionMapsPromise: Promise<void> | null = null;
+
+export const loadCollectionMaps = (): Promise<void> => {
+  if (collectionMapsPromise === null) {
+    collectionMapsPromise = import('./collectionMaps').then((maps) => {
+      setIDs = maps.setIDs;
+      historyPack1 = maps.historyPack1;
+      historyPack2 = maps.historyPack2;
+    });
+  }
+  return collectionMapsPromise;
+};
+
+export const ensureCollectionMapsForLocale = (
+  locale: string
+): Promise<void> =>
+  locale === DEFAULT_LANGUAGE ? Promise.resolve() : loadCollectionMaps();
 
 const hasOwn = (obj: Record<string, string>, key: string): boolean =>
   Object.prototype.hasOwnProperty.call(obj, key);
@@ -94,10 +119,10 @@ export const getCollectionCardImagePath = ({
     languagePath: LOCALE_DICTIONARY[DEFAULT_LANGUAGE],
     cardNumber
   };
-  const collectionCode = getCollectionCode(cardNumber);
-  const setID = getSetID(cardNumber);
-
   if (locale !== DEFAULT_LANGUAGE && !isAlternativeArt(cardNumber)) {
+    const collectionCode = getCollectionCode(cardNumber);
+    const setID = getSetID(cardNumber);
+
     if (isJapaneseCard(locale, collectionCode)) {
       Object.assign(cardPathData, { languagePath: LOCALE_DICTIONARY[locale] });
     } else if (isEuropeanCard(locale, setID, collectionCode)) {

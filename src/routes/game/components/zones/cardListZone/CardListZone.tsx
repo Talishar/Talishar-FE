@@ -18,12 +18,9 @@ import useShowModal from 'hooks/useShowModals';
 import { shallowEqual } from 'react-redux';
 import { Card, isAllyCard } from 'features/Card';
 import { useTranslation } from 'react-i18next';
+import { filterCardsByQuery, selectCardListLastUpdate } from './cardListUtils';
 
 const SORT_PREFERENCE_KEY = 'cardListZone_sortPreference';
-
-const matchesQuery = (card: Card, normalizedQuery: string): boolean =>
-  (card.cardName?.toLowerCase().includes(normalizedQuery) ?? false) ||
-  (card.sType?.toLowerCase().includes(normalizedQuery) ?? false);
 
 export const CardListZone = () => {
   const showModal = useShowModal();
@@ -106,11 +103,7 @@ export const CardListZone = () => {
   );
 
   const filteredList = useMemo(() => {
-    if (!reversedList || !searchQuery) return reversedList;
-    const normalizedQuery = searchQuery.toLowerCase();
-    return reversedList.filter((card: Card) =>
-      matchesQuery(card, normalizedQuery)
-    );
+    return filterCardsByQuery(reversedList, searchQuery);
   }, [reversedList, searchQuery]);
 
   const closeCardList = () => {
@@ -229,9 +222,7 @@ const CardListZoneAPI = ({
     (state: RootState) => state.game.cardListFocus
   );
   const dispatch = useAppDispatch();
-  const { lastUpdate } = useAppSelector(
-    (state: RootState) => state.game.gameDynamicInfo
-  );
+  const lastUpdate = useAppSelector(selectCardListLastUpdate);
   const { isLoading, isError, data } = useGetPopUpContentQuery({
     ...gameInfo,
     lastUpdate,
@@ -259,13 +250,10 @@ const CardListZoneAPI = ({
   // Use Redux cardList if available (for sorting), otherwise use API data
   const cardsToDisplay = cardList?.cardList || data?.cards;
 
-  let filteredCards = cardsToDisplay ?? null;
-  if (filteredCards && searchQuery) {
-    const normalizedQuery = searchQuery.toLowerCase();
-    filteredCards = filteredCards.filter((card: Card) =>
-      matchesQuery(card, normalizedQuery)
-    );
-  }
+  const filteredCards = useMemo(
+    () => filterCardsByQuery(cardsToDisplay ?? null, searchQuery),
+    [cardsToDisplay, searchQuery]
+  );
 
   let content;
   if (isLoading) {

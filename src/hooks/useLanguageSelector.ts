@@ -4,6 +4,8 @@ import {
   cacheLanguage,
   loadInitialLanguage
 } from 'utils/multilanguage/languagePreference';
+import { DEFAULT_LANGUAGE } from 'utils/multilanguage/constants';
+import { ensureCollectionMapsForLocale } from 'utils/multilanguage/multilanguage';
 import {
   setLanguage as setLanguageSlice,
   getSettingsLanguage
@@ -20,9 +22,17 @@ export const useLanguageSelector = () => {
 
   const setLanguage = useCallback(
     (languageSelected: string) => {
-      dispatch(setLanguageSlice({ languageSelected }));
-      localStorage.setItem('language', languageSelected);
-      cacheLanguage(languageSelected);
+      const apply = () => {
+        dispatch(setLanguageSlice({ languageSelected }));
+        localStorage.setItem('language', languageSelected);
+        cacheLanguage(languageSelected);
+      };
+
+      if (languageSelected === DEFAULT_LANGUAGE) {
+        apply();
+        return;
+      }
+      void ensureCollectionMapsForLocale(languageSelected).then(apply, apply);
     },
     [dispatch]
   );
