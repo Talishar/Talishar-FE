@@ -22,7 +22,7 @@ export interface CardStack {
   id: string;
 }
 
-export default function PermanentsZone(prop: Displayrow) {
+function PermanentsZone(prop: Displayrow) {
   const { isPlayer } = prop;
   const scrollRef = useRef<HTMLDivElement>(null);
   const isDragging = useRef(false);
@@ -131,3 +131,5 @@ export default function PermanentsZone(prop: Displayrow) {
     </div>
   );
 }
+
+export default React.memo(PermanentsZone);

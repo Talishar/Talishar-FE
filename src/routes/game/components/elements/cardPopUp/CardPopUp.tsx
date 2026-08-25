@@ -59,7 +59,6 @@ type SurfaceProps = {
   className?: string;
   containerRef: React.RefObject<HTMLDivElement>;
   tiltEnabled: boolean;
-  disableShadow?: boolean;
   onClick: () => void;
   onPointerDown: (event: React.PointerEvent<HTMLDivElement>) => void;
   onMouseEnter: () => void;
@@ -76,7 +75,6 @@ const CardSurface = ({
   className,
   containerRef,
   tiltEnabled,
-  disableShadow,
   onHoverStart,
   onHoverEnd,
   onMouseEnter,
@@ -86,8 +84,7 @@ const CardSurface = ({
 }: SurfaceProps) => {
   const { handleMouseMove, handleMouseLeave } = useCardTilt(
     containerRef,
-    tiltEnabled,
-    disableShadow
+    tiltEnabled
   );
 
   const handlePointerEnter = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -129,7 +126,6 @@ type CardPopUpProps = {
   onHoverEnd?: () => void;
   isOpponent?: boolean;
   disableTilt?: boolean;
-  disableShadow?: boolean;
   /** Override sticky-selection key (hand cards pass a unique id-based key). */
   tapPreviewKey?: string;
 };
@@ -144,7 +140,6 @@ export default function CardPopUp({
   onHoverEnd,
   isOpponent,
   disableTilt,
-  disableShadow,
   tapPreviewKey
 }: CardPopUpProps) {
   const ref = useRef<HTMLDivElement>(null);
@@ -296,7 +291,6 @@ export default function CardPopUp({
       className={containerClass}
       containerRef={ref}
       tiltEnabled={tiltEnabled}
-      disableShadow={disableShadow}
       onClick={handleOnClick}
       onPointerDown={(event) => {
         lastPointerTypeRef.current = event.pointerType;

@@ -18,7 +18,6 @@ type TiltRuntime = {
   frame: number;
   lastTime: number;
   transform: string;
-  shadow: string;
   rect: DOMRect | null;
   active: boolean;
 };
@@ -33,19 +32,9 @@ const createRuntime = (): TiltRuntime => ({
   frame: 0,
   lastTime: 0,
   transform: '',
-  shadow: '',
   rect: null,
   active: false
 });
-
-const shadowFor = (rotateX: number, rotateY: number): string => {
-  const offsetX = Math.round(-rotateY * 1.2);
-  const offsetY = Math.round(rotateX * 1.2 + 8);
-  const blur = Math.round(
-    18 + Math.abs(rotateX) * 0.7 + Math.abs(rotateY) * 0.7
-  );
-  return `${offsetX}px ${offsetY}px ${blur}px rgba(0,0,0,0.52)`;
-};
 
 /**
  * Pointer-driven card tilt written straight to the DOM, replacing the
@@ -53,15 +42,11 @@ const shadowFor = (rotateX: number, rotateY: number): string => {
  */
 export function useCardTilt(
   containerRef: React.RefObject<HTMLElement>,
-  enabled: boolean,
-  disableShadow: boolean | undefined
+  enabled: boolean
 ) {
   const runtimeRef = useRef<TiltRuntime>();
   if (runtimeRef.current === undefined) runtimeRef.current = createRuntime();
   const runtime = runtimeRef.current;
-
-  const disableShadowRef = useRef(disableShadow);
-  disableShadowRef.current = disableShadow;
 
   const settle = useCallback(() => {
     const element = containerRef.current;
@@ -70,9 +55,7 @@ export function useCardTilt(
     element.style.transform = '';
     element.style.willChange = '';
     element.style.transition = '';
-    if (!disableShadowRef.current) element.style.boxShadow = '';
     runtime.transform = '';
-    runtime.shadow = '';
   }, [containerRef, runtime]);
 
   const step = useCallback(
@@ -127,14 +110,6 @@ export function useCardTilt(
         element.style.transform = transform;
       }
 
-      if (!disableShadowRef.current) {
-        const shadow = shadowFor(runtime.x, runtime.y);
-        if (shadow !== runtime.shadow) {
-          runtime.shadow = shadow;
-          element.style.boxShadow = shadow;
-        }
-      }
-
       if (!atRest) {
         runtime.frame = requestAnimationFrame(step);
         return;
@@ -167,9 +142,7 @@ export function useCardTilt(
         runtime.active = true;
         // The stylesheet transitions `transform`, which would fight the spring.
         element.style.transition = 'none';
-        element.style.willChange = disableShadowRef.current
-          ? 'transform'
-          : 'transform, box-shadow';
+        element.style.willChange = 'transform';
       }
 
       const centerX = rect.left + rect.width / 2;

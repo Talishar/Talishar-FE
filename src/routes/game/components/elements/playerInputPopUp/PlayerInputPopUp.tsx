@@ -197,14 +197,25 @@ export default function PlayerInputPopUp() {
   const usesOtherInput = !PlayerInputFormTypeMap[popupId];
   const popupCardCount = popupCards?.length ?? 0;
   const showCardSearch = usesOtherInput && popupCardCount >= 8;
-  let cardListKey = '';
-  if (popupCards) {
-    for (let index = 0; index < popupCards.length; index += 1) {
-      const card = popupCards[index];
-      if (index > 0) cardListKey += '|';
-      cardListKey += `${card.cardNumber}:${card.actionDataOverride ?? ''}`;
+  const { cardListKey, normalizedCardText } = useMemo(() => {
+    let nextCardListKey = '';
+    const nextNormalizedCardText: string[] = [];
+    const cards = popupCards ?? [];
+
+    for (let index = 0; index < cards.length; index += 1) {
+      const card = cards[index];
+      if (index > 0) nextCardListKey += '|';
+      nextCardListKey += `${card.cardNumber}:${card.actionDataOverride ?? ''}`;
+      nextNormalizedCardText.push(
+        `${card.cardName ?? ''} ${card.cardNumber}`.toLocaleLowerCase()
+      );
     }
-  }
+
+    return {
+      cardListKey: nextCardListKey,
+      normalizedCardText: nextNormalizedCardText
+    };
+  }, [popupCards]);
   const filteredCardEntries = useMemo(() => {
     const cards: Card[] = [];
     const originalIndexes: number[] = [];
@@ -221,9 +232,7 @@ export default function PlayerInputPopUp() {
       const card = popupCards[originalIndex];
       if (
         normalizedSearch &&
-        !`${card.cardName ?? ''} ${card.cardNumber}`
-          .toLocaleLowerCase()
-          .includes(normalizedSearch)
+        !normalizedCardText[originalIndex].includes(normalizedSearch)
       ) {
         continue;
       }
@@ -232,7 +241,7 @@ export default function PlayerInputPopUp() {
     }
 
     return { cards, originalIndexes };
-  }, [popupCards, cardSearch, showCardSearch]);
+  }, [popupCards, normalizedCardText, cardSearch, showCardSearch]);
 
   useEffect(() => {
     setCardSearch('');

@@ -26,7 +26,7 @@ const PITCH_CARD_INITIALS = [
   { y: '4.5em' }
 ];
 
-export default function PitchZone(prop: Displayrow) {
+function PitchZone(prop: Displayrow) {
   const { isPlayer } = prop;
   const { DisplayRow } = prop;
   const dispatch = useAppDispatch();
@@ -105,3 +105,5 @@ export default function PitchZone(prop: Displayrow) {
     </div>
   );
 }
+
+export default React.memo(PitchZone);

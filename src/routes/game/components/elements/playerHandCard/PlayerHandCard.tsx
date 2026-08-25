@@ -386,7 +386,6 @@ export const PlayerHandCard = React.memo(
             cardNumber={card.cardNumber}
             isHidden={!canPopUp}
             disableTilt={isDragging}
-            disableShadow
             tapPreviewKey={selectionKey}
             onClick={handlePlayFromTap}
           >

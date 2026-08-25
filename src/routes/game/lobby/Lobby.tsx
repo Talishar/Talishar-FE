@@ -1161,7 +1161,6 @@ const Lobby = () => {
                 cardNumber={data.deck.hero}
                 containerClass={styles.leftCol}
                 disableTilt
-                disableShadow
               >
                 <div
                   className={styles.leftCol}
@@ -1206,7 +1205,6 @@ const Lobby = () => {
                 cardNumber={gameLobby?.theirHero ?? 'CardBack'}
                 containerClass={styles.rightCol}
                 disableTilt
-                disableShadow
               >
                 <div
                   className={styles.rightCol}

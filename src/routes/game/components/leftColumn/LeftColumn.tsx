@@ -1,3 +1,4 @@
+import React from 'react';
 import ActiveEffects from '../activeEffects/ActiveEffects';
 import PlayerName from '../elements/playerName/PlayerName';
 import DevToolPanel from './DevToolPanel/DevToolPanel';
@@ -8,7 +9,7 @@ import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import { useMediaQuery } from 'hooks/useMediaQuery';
 
-export default function LeftColumn() {
+function LeftColumn() {
   const isMobile = useMediaQuery('(max-width: 1199px)');
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
@@ -27,3 +28,5 @@ export default function LeftColumn() {
     </div>
   );
 }
+
+export default React.memo(LeftColumn);

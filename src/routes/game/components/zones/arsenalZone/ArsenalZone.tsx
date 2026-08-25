@@ -1,3 +1,4 @@
+import React from 'react';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import Displayrow from 'interface/Displayrow';
@@ -6,7 +7,7 @@ import { Card } from 'features/Card';
 import styles from './ArsenalZone.module.css';
 import { useTranslation } from 'react-i18next';
 
-export default function ArsenalZone(prop: Displayrow) {
+function ArsenalZone(prop: Displayrow) {
   const { isPlayer } = prop;
   const { t } = useTranslation();
 
@@ -132,3 +133,5 @@ export default function ArsenalZone(prop: Displayrow) {
     </div>
   );
 }
+
+export default React.memo(ArsenalZone);

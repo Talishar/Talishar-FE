@@ -23,104 +23,113 @@ const EndGameScreen = lazy(() => import('../endGameScreen/EndGameScreen'));
 
 const NO_CHAIN_LINKS: CombatChainLink[] = [];
 
-export const ChainLinkSummaryContainer = () => {
-  const { t } = useTranslation();
-  const chainLinkSummary = useAppSelector(
-    (state: RootState) => state.game.chainLinkSummary,
-    shallowEqual
-  );
-  const gameInfo = useAppSelector(getGameInfo, shallowEqual);
-  const turnPhase = useAppSelector(
-    (state: RootState) => state.game.turnPhase?.turnPhase
-  );
-  const hasGameEnded = useAppSelector(
-    (state: RootState) => state.game.hasGameEnded
-  );
-  const lastUpdate = useAppSelector(
-    (state: RootState) => state.game.gameDynamicInfo.lastUpdate
-  );
-  const oldCombatChain = useAppSelector(
-    (state: RootState) => state.game.oldCombatChain ?? NO_CHAIN_LINKS
-  );
+export const selectVisibleChainSummaryLastUpdate = (state: RootState) =>
+  state.game.chainLinkSummary?.show
+    ? state.game.gameDynamicInfo.lastUpdate
+    : undefined;
 
-  const dispatch = useAppDispatch();
+export const selectVisibleOldCombatChain = (state: RootState) =>
+  state.game.chainLinkSummary?.show &&
+  state.game.chainLinkSummary.view === 'all'
+    ? state.game.oldCombatChain ?? NO_CHAIN_LINKS
+    : NO_CHAIN_LINKS;
 
-  // if the game is over display the end game stats screen
-  useEffect(() => {
-    if (!!turnPhase && turnPhase === 'OVER') {
-      dispatch(hideActiveLayer());
-    }
-  }, [turnPhase, dispatch]);
+export const ChainLinkSummaryContainer = React.memo(
+  function ChainLinkSummaryContainer() {
+    const { t } = useTranslation();
+    const chainLinkSummary = useAppSelector(
+      (state: RootState) => state.game.chainLinkSummary,
+      shallowEqual
+    );
+    const gameInfo = useAppSelector(getGameInfo, shallowEqual);
+    const turnPhase = useAppSelector(
+      (state: RootState) => state.game.turnPhase?.turnPhase
+    );
+    const hasGameEnded = useAppSelector(
+      (state: RootState) => state.game.hasGameEnded
+    );
+    const lastUpdate = useAppSelector(selectVisibleChainSummaryLastUpdate);
+    const oldCombatChain = useAppSelector(selectVisibleOldCombatChain);
 
-  const props = {
-    lastUpdate: lastUpdate,
-    ...gameInfo
-  };
+    const dispatch = useAppDispatch();
 
-  let chainLinkContent: React.ReactNode = null;
-  if (chainLinkSummary?.show && chainLinkSummary.view === 'all') {
-    chainLinkContent = (
-      <div
-        className={styles.emptyOutside}
-        onClick={() => dispatch(hideChainLinkSummary())}
-      >
+    // if the game is over display the end game stats screen
+    useEffect(() => {
+      if (!!turnPhase && turnPhase === 'OVER') {
+        dispatch(hideActiveLayer());
+      }
+    }, [turnPhase, dispatch]);
+
+    const props = {
+      lastUpdate: lastUpdate,
+      ...gameInfo
+    };
+
+    let chainLinkContent: React.ReactNode = null;
+    if (chainLinkSummary?.show && chainLinkSummary.view === 'all') {
+      chainLinkContent = (
         <div
-          className={styles.allLinksBox}
-          onClick={(e) => e.stopPropagation()}
+          className={styles.emptyOutside}
+          onClick={() => dispatch(hideChainLinkSummary())}
         >
-          <div className={styles.cardListTitleContainer}>
-            <h3 className={styles.title}>
-              {t('CHAIN_LINK_SUMMARY.COMBAT_CHAIN')}
-            </h3>
-            <button
-              type="button"
-              className={styles.cardListCloseIcon}
-              onClick={() => dispatch(hideChainLinkSummary())}
-              aria-label={t('PLAYER_INPUT.CLOSE_POPUP')}
-            >
-              <FaTimes aria-hidden="true" />
-            </button>
-          </div>
-          <div className={styles.allLinksGrid}>
-            {oldCombatChain.map((_: CombatChainLink, index: number) => (
-              <ChainLinkSummary
-                key={index}
-                {...props}
-                chainLinkIndex={index}
-                presentation="inline"
-              />
-            ))}
+          <div
+            className={styles.allLinksBox}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className={styles.cardListTitleContainer}>
+              <h3 className={styles.title}>
+                {t('CHAIN_LINK_SUMMARY.COMBAT_CHAIN')}
+              </h3>
+              <button
+                type="button"
+                className={styles.cardListCloseIcon}
+                onClick={() => dispatch(hideChainLinkSummary())}
+                aria-label={t('PLAYER_INPUT.CLOSE_POPUP')}
+              >
+                <FaTimes aria-hidden="true" />
+              </button>
+            </div>
+            <div className={styles.allLinksGrid}>
+              {oldCombatChain.map((_: CombatChainLink, index: number) => (
+                <ChainLinkSummary
+                  key={index}
+                  {...props}
+                  chainLinkIndex={index}
+                  presentation="inline"
+                />
+              ))}
+            </div>
           </div>
         </div>
-      </div>
-    );
-  } else if (chainLinkSummary?.show) {
-    chainLinkContent = (
-      <div>
-        <ChainLinkSummary
-          {...props}
-          chainLinkIndex={chainLinkSummary.index}
-          presentation={
-            chainLinkSummary.view === 'preview' ? 'preview' : 'dialog'
-          }
-        />
-      </div>
+      );
+    } else if (chainLinkSummary?.show) {
+      chainLinkContent = (
+        <div>
+          <ChainLinkSummary
+            {...props}
+            chainLinkIndex={chainLinkSummary.index}
+            presentation={
+              chainLinkSummary.view === 'preview' ? 'preview' : 'dialog'
+            }
+          />
+        </div>
+      );
+    }
+
+    return (
+      <>
+        {hasGameEnded && (
+          <div style={chainLinkSummary?.show ? { display: 'none' } : undefined}>
+            <Suspense fallback={null}>
+              <EndGameScreen />
+            </Suspense>
+          </div>
+        )}
+        {chainLinkContent}
+      </>
     );
   }
-
-  return (
-    <>
-      {hasGameEnded && (
-        <div style={chainLinkSummary?.show ? { display: 'none' } : undefined}>
-          <Suspense fallback={null}>
-            <EndGameScreen />
-          </Suspense>
-        </div>
-      )}
-      {chainLinkContent}
-    </>
-  );
-};
+);
 
 interface ChainLinkSummaryProps extends GameStaticInfo {
   chainLinkIndex?: number;
