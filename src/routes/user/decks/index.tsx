@@ -811,7 +811,7 @@ export const DecksPage = () => {
                         key={`playmat-${id}`}
                         className={styles.playmatThumbWrapper}
                         onClick={() => handlePlaymatSelect(deck, id)}
-                        title={getPlaymatDisplayName(id)}
+                        aria-label={getPlaymatDisplayName(id)}
                       >
                         <img
                           src={getPlaymatThumbnailPath(id)}
@@ -845,7 +845,7 @@ export const DecksPage = () => {
                         key={`cardback-${id}`}
                         className={styles.cardBackThumbWrapper}
                         onClick={() => handleCardBackSelect(deck, id)}
-                        title={cb.name}
+                        aria-label={cb.name}
                       >
                         <img
                           src={getCollectionCardImagePath({

@@ -327,6 +327,24 @@
   background: transparent;
 }
 
+.playmatThumbWrapper:hover,
+.playmatThumbWrapper:focus,
+.playmatThumbWrapper:active,
+.cardBackThumbWrapper:hover,
+.cardBackThumbWrapper:focus,
+.cardBackThumbWrapper:active {
+  background: transparent;
+  color: inherit;
+  box-shadow: none;
+  transform: none;
+}
+
+.playmatThumbWrapper:focus-visible,
+.cardBackThumbWrapper:focus-visible {
+  outline: 1px solid rgba(255, 255, 255, 0.45);
+  outline-offset: 3px;
+}
+
 .playmatThumb {
   width: 128px;
   height: 85px;
