@@ -19,6 +19,8 @@ import { useEffect, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 
+const AUTH_REFRESH_INTERVAL_MS = 10 * 60 * 1000;
+
 // List of mod usernames - should match backend list
 const MOD_USERNAMES = [
   'OotTheMonk',
@@ -43,7 +45,15 @@ export default function useAuth() {
     error,
     data,
     refetch: refetchAuth
-  } = useLoginWithCookieQuery({}, { refetchOnMountOrArgChange: 600 });
+  } = useLoginWithCookieQuery(
+    {},
+    {
+      refetchOnMountOrArgChange: 600,
+      // RTK Query shares one polling timer for all subscriptions to this
+      // query key. A manual interval here would create one timer per useAuth.
+      pollingInterval: currentUserId ? AUTH_REFRESH_INTERVAL_MS : 0
+    }
+  );
   const [authCheckTimedOut, setAuthCheckTimedOut] = useState(false);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -153,16 +163,6 @@ export default function useAuth() {
       }
     }
   }, [data, setLoggedIn, dispatch]);
-
-  useEffect(() => {
-    if (isLoggedIn && !isLoading) {
-      const authRefreshInterval = setInterval(() => {
-        refetchAuth();
-      }, 10 * 60 * 1000); // 10 minutes
-
-      return () => clearInterval(authRefreshInterval);
-    }
-  }, [isLoggedIn, isLoading, refetchAuth]);
 
   return {
     isLoggedIn,

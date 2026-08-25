@@ -50,7 +50,7 @@ const selectPlayableGraveyardCards = createSelector(
     cards?.filter((card: Card) => card.action != null && card.action != 0)
 );
 
-export default function PlayerHand() {
+function PlayerHand() {
   const { t } = useTranslation();
   const [width, height] = useWindowDimensions();
 
@@ -1064,3 +1064,5 @@ export default function PlayerHand() {
     </>
   );
 }
+
+export default React.memo(PlayerHand);

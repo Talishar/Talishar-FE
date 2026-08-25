@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import screenfull from 'screenfull';
 import { useTranslation } from 'react-i18next';
@@ -26,6 +26,7 @@ import { RootState } from 'app/Store';
 import { usePanelContext } from '../../leftColumn/PanelContext';
 import useSetting from 'hooks/useSetting';
 import { MANUAL_MODE } from 'features/options/constants';
+import { useMediaQuery } from 'hooks/useMediaQuery';
 
 function FullScreenButton() {
   const { t } = useTranslation();
@@ -187,8 +188,9 @@ function MobileOverflowMenu({ isSpectator }: { isSpectator: boolean }) {
 }
 
 function MenuContent() {
-  const [isMobile, setIsMobile] = useState(false);
-  const [isTablet, setIsTablet] = useState(false);
+  const isMobile = useMediaQuery('(max-width: 599px)');
+  const isNarrow = useMediaQuery('(max-width: 1199px)');
+  const isTablet = !isMobile && isNarrow;
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
   );
@@ -196,24 +198,6 @@ function MenuContent() {
     (state: RootState) => state.game.gameInfo.isReplay
   );
   const isSpectator = playerID === 3;
-
-  useEffect(() => {
-    let rafId = 0;
-    const handleResize = () => {
-      cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(() => {
-        const width = window.innerWidth;
-        setIsMobile(width < 600);
-        setIsTablet(width >= 600 && width < 1200);
-      });
-    };
-    window.addEventListener('resize', handleResize, { passive: true });
-    handleResize();
-    return () => {
-      cancelAnimationFrame(rafId);
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
 
   // Replay controls are provided by the replay panel and Advance replay button.
   // Normal game controls (including undo) must not alter replay state.

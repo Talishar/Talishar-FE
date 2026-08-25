@@ -1,3 +1,4 @@
+import React from 'react';
 import CombatChain from '../combatChain/CombatChain';
 import styles from './Board.module.css';
 import PlayerPrompt from '../elements/playerPrompt/PlayerPrompt';
@@ -18,7 +19,7 @@ export interface playAreaDimensions {
   dimension: number;
 }
 
-export function Board() {
+export const Board = React.memo(function Board() {
   const useOldScreen = useMediaQuery('(orientation: portrait)');
   const experimental = useCookieString('experimental');
   const { playerID, isReplay } = useAppSelector(getGameInfo);
@@ -51,4 +52,4 @@ export function Board() {
     );
   }
   return <GridBoard />;
-}
+});

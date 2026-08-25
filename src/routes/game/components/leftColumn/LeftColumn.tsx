@@ -1,4 +1,3 @@
-import { useState, useEffect, useRef } from 'react';
 import ActiveEffects from '../activeEffects/ActiveEffects';
 import PlayerName from '../elements/playerName/PlayerName';
 import DevToolPanel from './DevToolPanel/DevToolPanel';
@@ -7,30 +6,13 @@ import SpectatorCameraPanel from './SpectatorCameraPanel/SpectatorCameraPanel';
 import styles from './LeftColumn.module.css';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
+import { useMediaQuery } from 'hooks/useMediaQuery';
 
 export default function LeftColumn() {
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useMediaQuery('(max-width: 1199px)');
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
   );
-  const rafRef = useRef<number>(0);
-
-  useEffect(() => {
-    const handleResize = () => {
-      // Throttle through rAF so rapid window-resize events only cause one
-      // setState per animation frame instead of one per pixel dragged.
-      cancelAnimationFrame(rafRef.current);
-      rafRef.current = requestAnimationFrame(() => {
-        setIsMobile(window.innerWidth < 1200);
-      });
-    };
-    window.addEventListener('resize', handleResize);
-    handleResize();
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      cancelAnimationFrame(rafRef.current);
-    };
-  }, []);
 
   const isSpectator = playerID === 3;
 

@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from 'react';
+import { createSelector } from '@reduxjs/toolkit';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import classNames from 'classnames';
@@ -7,6 +8,20 @@ import { DISABLE_ALT_ARTS } from 'features/options/constants';
 import styles from './CardImage.module.css';
 
 const UNKNOWN_IMAGE = 'Difficulties';
+
+const selectCardImagePreferences = createSelector(
+  [
+    (state: RootState) => state.game.gameInfo.altArts,
+    (state: RootState) => state.game.gameInfo.opponentAltArts,
+    (state: RootState) =>
+      String(state.settings?.entities?.[DISABLE_ALT_ARTS]?.value) === '1'
+  ],
+  (altArts, opponentAltArts, altArtsDisabled) => ({
+    altArts,
+    opponentAltArts,
+    altArtsDisabled
+  })
+);
 
 // Alt arts of promos printed in a non-English language.
 const NON_ENGLISH_PROMO_ALT_ARTS = [
@@ -68,15 +83,8 @@ export interface CardImage {
 }
 
 export const CardImage = React.memo((props: CardImage) => {
-  const altArts = useAppSelector(
-    (state: RootState) => state.game.gameInfo.altArts
-  );
-  const opponentAltArts = useAppSelector(
-    (state: RootState) => state.game.gameInfo.opponentAltArts
-  );
-  const altArtsDisabled = useAppSelector(
-    (state: RootState) =>
-      String(state.settings?.entities?.[DISABLE_ALT_ARTS]?.value) === '1'
+  const { altArts, opponentAltArts, altArtsDisabled } = useAppSelector(
+    selectCardImagePreferences
   );
 
   let src = props.src;
