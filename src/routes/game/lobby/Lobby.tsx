@@ -45,9 +45,7 @@ import LobbyUpdateHandler from './components/updateHandler/SideboardUpdateHandle
 import {
   GAME_FORMAT,
   BREAKPOINT_EXTRA_LARGE,
-  QUERY_STATUS,
-  FAB_BAZAAR_DECK_URL_BASE,
-  FABRARY_DECK_URL_BASE
+  QUERY_STATUS
 } from 'appConstants';
 import { JUDGE_HUB_DISCORD_URL } from 'constants/socialLinks';
 import { getReadableFormatName, getShortFormatName } from 'utils/formatUtils';
@@ -89,6 +87,10 @@ import { DISABLE_ALT_ARTS } from 'features/options/constants';
 import { useTranslation, Trans } from 'react-i18next';
 import { EquipmentSlotName, getEmptyEquipmentSlots } from './equipmentWarning';
 import { getLobbyPresenceMessage } from 'features/LobbyPresence';
+import {
+  extractBazaarDeckIdFromLink,
+  supportsAutomaticMatchups
+} from './deckLinkProviders';
 
 const OPPONENT_UNREADY_MESSAGE_MS = 3000;
 
@@ -107,27 +109,6 @@ const normalizeMatchupName = (name: string): string =>
     .trim()
     .toLowerCase()
     .replace(/\s+/g, '_');
-
-const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
-  if (!deckLink) return null;
-  // Strip the "{index}<fav>" prefix that appears when a favorite deck link is stored
-  // e.g. "20<fav>https://fabrary.net/decks/..." → "https://fabrary.net/decks/..."
-  const favMarker = deckLink.indexOf('<fav>');
-  const cleanedLink =
-    favMarker !== -1 ? deckLink.slice(favMarker + 5) : deckLink;
-  const bases = [FAB_BAZAAR_DECK_URL_BASE, FABRARY_DECK_URL_BASE];
-  for (const base of bases) {
-    const normalizedBase = base.endsWith('/') ? base : `${base}/`;
-    if (cleanedLink.startsWith(normalizedBase)) {
-      const deckId = cleanedLink
-        .slice(normalizedBase.length)
-        .split('?')[0]
-        .trim();
-      return deckId || null;
-    }
-  }
-  return null;
-};
 
 const Lobby = () => {
   const { t } = useTranslation();
@@ -186,7 +167,7 @@ const Lobby = () => {
     shallowEqual
   );
   const initialGameLobbyRef = useRef(gameLobby);
-  const isBazaarDeckInLobby = !!extractBazaarDeckIdFromLink(
+  const supportsAutomaticMatchupsInLobby = supportsAutomaticMatchups(
     gameLobby?.myDeckLink
   );
   const shouldShowMatchupsUI = (gameLobby?.matchups?.length ?? 0) > 0;
@@ -440,7 +421,7 @@ const Lobby = () => {
   const suggestedMatchupId = useMemo(() => {
     if (!gameLobby?.theirHero || gameLobby.theirHero === 'CardBack')
       return null;
-    if (!isBazaarDeckInLobby) return null;
+    if (!supportsAutomaticMatchupsInLobby) return null;
     const opponentHero = normalizeHeroId(gameLobby.theirHero ?? '');
     const matchingMatchup = (gameLobby?.matchups ?? []).find(
       (matchup: Matchup) => {
@@ -458,7 +439,11 @@ const Lobby = () => {
       }
     );
     return matchingMatchup?.matchupId ?? null;
-  }, [gameLobby?.theirHero, gameLobby?.matchups, isBazaarDeckInLobby]);
+  }, [
+    gameLobby?.theirHero,
+    gameLobby?.matchups,
+    supportsAutomaticMatchupsInLobby
+  ]);
 
   // Note functions
   const getPlayerNoteKey = (username: string) => `player_note_${username}`;
@@ -932,9 +917,9 @@ const Lobby = () => {
     // submitting to Talishar, because the Talishar submit may start the game
     // immediately and any lobby refresh that follows could trigger the
     // auto-apply matchup effect with a stale/new key.
-    const bazaarDeckId =
-      gameInfo.bazaarDeckId ??
-      extractBazaarDeckIdFromLink(gameLobby?.myDeckLink);
+    // The deck URL is authoritative. Never send a Fabrary deck ID to Bazaar,
+    // even if stale game state still contains a Bazaar ID from an earlier game.
+    const bazaarDeckId = extractBazaarDeckIdFromLink(gameLobby?.myDeckLink);
     const opponentHeroId = gameLobby?.theirHero;
     let resolvedMetafyId = metafyId;
     let resolvedMetafyHash = metafyHash;
