@@ -13,9 +13,6 @@ import {
   observeLongTasks,
   reportPerformanceMetric
 } from 'utils/performanceMetrics';
-import { loadInitialLanguage } from 'utils/multilanguage/languagePreference';
-import { DEFAULT_LANGUAGE } from 'utils/multilanguage/constants';
-import { ensureCollectionMapsForLocale } from 'utils/multilanguage/multilanguage';
 
 import './i18n';
 
@@ -24,25 +21,17 @@ import './i18n';
 const container = document.getElementById('root')!;
 const root = createRoot(container);
 
-const renderApp = () =>
-  root.render(
-    <StrictMode>
-      <CookiesProvider cookies={appCookies}>
-        <ThemeProvider>
-          <Provider store={store}>
-            <RouterProvider router={router} />
-          </Provider>
-        </ThemeProvider>
-      </CookiesProvider>
-    </StrictMode>
-  );
-
-const initialLanguage = loadInitialLanguage();
-if (initialLanguage === DEFAULT_LANGUAGE) {
-  renderApp();
-} else {
-  void ensureCollectionMapsForLocale(initialLanguage).then(renderApp, renderApp);
-}
+root.render(
+  <StrictMode>
+    <CookiesProvider cookies={appCookies}>
+      <ThemeProvider>
+        <Provider store={store}>
+          <RouterProvider router={router} />
+        </Provider>
+      </ThemeProvider>
+    </CookiesProvider>
+  </StrictMode>
+);
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
