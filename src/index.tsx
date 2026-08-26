@@ -13,8 +13,13 @@ import {
   observeLongTasks,
   reportPerformanceMetric
 } from 'utils/performanceMetrics';
+import { attemptAssetRecovery } from 'utils/assetRecovery';
 
 import './i18n';
+
+window.addEventListener('vite:preloadError', (event) => {
+  if (attemptAssetRecovery()) event.preventDefault();
+});
 
 // Because we *must* have a root else the site won't work at all.
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

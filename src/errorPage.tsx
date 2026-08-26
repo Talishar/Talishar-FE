@@ -8,6 +8,10 @@ import {
   DEFAULT_LANGUAGE,
   LOCALE_DICTIONARY
 } from 'utils/multilanguage/constants';
+import {
+  attemptAssetRecovery,
+  shouldAttemptAssetRecovery
+} from 'utils/assetRecovery';
 
 const STALE_ASSET_ERROR_PATTERNS = [
   'failed to fetch dynamically imported module',
@@ -22,20 +26,9 @@ const STALE_ASSET_ERROR_PATTERNS = [
   'unable to preload css'
 ];
 
-const STALE_ASSET_RELOAD_KEY = 'talishar.staleAssetReload';
-const STALE_ASSET_RELOAD_WINDOW_MS = 60000;
-
 export const ERROR_CARD_SRC = `${CLOUD_IMAGES_URL}/${CARD_IMAGES_PATH}/${LOCALE_DICTIONARY[DEFAULT_LANGUAGE]}/WTR224.webp`;
 
-export const shouldAutoReloadForStaleAssets = (
-  now: number,
-  lastReload: string | null
-) => {
-  if (lastReload === null) return true;
-  const previous = parseInt(lastReload);
-  if (Number.isNaN(previous)) return true;
-  return now - previous > STALE_ASSET_RELOAD_WINDOW_MS;
-};
+export const shouldAutoReloadForStaleAssets = shouldAttemptAssetRecovery;
 
 export const isStaleAssetError = (message: string) => {
   const normalizedMessage = message.toLowerCase();
@@ -83,16 +76,7 @@ export const ErrorPage = () => {
 
   useEffect(() => {
     if (!hasStaleAssets) return;
-    // Storage throws in some private browsing modes: without it there is no way
-    // to tell a first reload from a loop, so leave the manual instructions up.
-    try {
-      const lastReload = window.sessionStorage.getItem(STALE_ASSET_RELOAD_KEY);
-      if (!shouldAutoReloadForStaleAssets(Date.now(), lastReload)) return;
-      window.sessionStorage.setItem(STALE_ASSET_RELOAD_KEY, String(Date.now()));
-    } catch {
-      return;
-    }
-    window.location.reload();
+    attemptAssetRecovery();
   }, [hasStaleAssets]);
 
   return (

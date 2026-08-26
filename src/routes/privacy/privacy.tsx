@@ -1,6 +1,6 @@
 import { useTranslation, Trans } from 'react-i18next';
 import { TALISHAR_DISCORD_URL } from 'constants/socialLinks';
-import { reopenCookieConsent } from 'utils/cookieConsent';
+import { reopenCookieConsent } from 'utils/privacyPreferences';
 import { usePageTitle } from 'hooks/usePageTitle';
 import styles from './Privacy.module.css';
 

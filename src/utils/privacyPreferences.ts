@@ -25,12 +25,15 @@ export function loadGoogleAnalytics(): void {
     return;
   }
 
-  const w = window as any;
+  const w = window as Window & {
+    dataLayer?: unknown[][];
+    gtag?: (...args: unknown[]) => void;
+  };
   w.dataLayer = w.dataLayer || [];
   w.gtag =
     w.gtag ||
-    function gtag() {
-      w.dataLayer.push(arguments);
+    function gtag(...args: unknown[]) {
+      w.dataLayer?.push(args);
     };
   w.gtag('js', new Date());
   w.gtag('config', GA_MEASUREMENT_ID);
