@@ -16,8 +16,13 @@ import {
 import { loadInitialLanguage } from 'utils/multilanguage/languagePreference';
 import { DEFAULT_LANGUAGE } from 'utils/multilanguage/constants';
 import { ensureCollectionMapsForLocale } from 'utils/multilanguage/multilanguage';
+import { attemptAssetRecovery } from 'utils/assetRecovery';
 
 import './i18n';
+
+window.addEventListener('vite:preloadError', (event) => {
+  if (attemptAssetRecovery()) event.preventDefault();
+});
 
 // Because we *must* have a root else the site won't work at all.
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
