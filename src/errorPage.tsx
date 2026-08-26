@@ -1,16 +1,34 @@
+import React, { useEffect } from 'react';
 import { useNavigate, useRouteError } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import styles from './errorPage.module.css';
-import { CARD_IMAGES_PATH, getCollectionCardImagePath } from 'utils';
+import { CLOUD_IMAGES_URL } from 'appConstants';
+import {
+  CARD_IMAGES_PATH,
+  DEFAULT_LANGUAGE,
+  LOCALE_DICTIONARY
+} from 'utils/multilanguage/constants';
+import {
+  attemptAssetRecovery,
+  shouldAttemptAssetRecovery
+} from 'utils/assetRecovery';
 
 const STALE_ASSET_ERROR_PATTERNS = [
   'failed to fetch dynamically imported module',
   'error loading dynamically imported module',
   'importing a module script failed',
+  'is not a valid javascript mime type',
+  'disallowed mime type',
+  'expected a javascript module script',
+  'failed to load module script',
   'loading chunk',
   'chunkloaderror',
   'unable to preload css'
 ];
+
+export const ERROR_CARD_SRC = `${CLOUD_IMAGES_URL}/${CARD_IMAGES_PATH}/${LOCALE_DICTIONARY[DEFAULT_LANGUAGE]}/WTR224.webp`;
+
+export const shouldAutoReloadForStaleAssets = shouldAttemptAssetRecovery;
 
 export const isStaleAssetError = (message: string) => {
   const normalizedMessage = message.toLowerCase();
@@ -56,11 +74,10 @@ export const ErrorPage = () => {
 
   const hasStaleAssets = isStaleAssetError(`${statusText} ${errMessage}`);
 
-  const errorCardSrc = getCollectionCardImagePath({
-    path: CARD_IMAGES_PATH,
-    locale: 'en',
-    cardNumber: 'WTR224'
-  });
+  useEffect(() => {
+    if (!hasStaleAssets) return;
+    attemptAssetRecovery();
+  }, [hasStaleAssets]);
 
   return (
     <main className={styles.container}>
@@ -95,7 +112,7 @@ export const ErrorPage = () => {
           </>
         )}
         <img
-          src={errorCardSrc}
+          src={ERROR_CARD_SRC}
           alt=""
           style={{ maxWidth: '100%', maxHeight: '100%', marginBottom: '18px' }}
         />

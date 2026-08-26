@@ -34,3 +34,29 @@ export interface Card {
   isOpponent?: boolean; // isOpponent = whether the card belongs to the opponent
   holoCounters?: boolean; // holoCounters = 1 if the card has holographic counters
 }
+
+const COMMA = 44;
+
+export const cardHasSubtype = (
+  card: Card | undefined,
+  subtype: string
+): boolean => {
+  const sType = card?.sType;
+  if (!sType) return false;
+
+  let index = sType.indexOf(subtype);
+  while (index !== -1) {
+    const end = index + subtype.length;
+    if (
+      (index === 0 || sType.charCodeAt(index - 1) === COMMA) &&
+      (end === sType.length || sType.charCodeAt(end) === COMMA)
+    ) {
+      return true;
+    }
+    index = sType.indexOf(subtype, index + 1);
+  }
+  return false;
+};
+
+export const isAllyCard = (card: Card | undefined): boolean =>
+  cardHasSubtype(card, 'Ally');

@@ -7,10 +7,13 @@ import {
   original,
   type Draft
 } from '@reduxjs/toolkit';
-import { preserveIdentities } from 'utils/PreserveIdentities';
+import {
+  preserveIdentities,
+  preserveStringArray
+} from 'utils/PreserveIdentities';
 import InitialGameState from './InitialGameState';
 import GameStaticInfo, { AltArt } from '../GameStaticInfo';
-import { Card } from '../Card';
+import { Card, isAllyCard } from '../Card';
 import { BACKEND_URL, ROGUELIKE_URL, URL_END_POINT } from 'appConstants';
 import Button from '../Button';
 import GameState from '../GameState';
@@ -262,7 +265,7 @@ function mergeReceivedGameState(
     }
   }
 
-  state.chatLog = preserveIdentities(prevGame.chatLog, payload.chatLog);
+  state.chatLog = preserveStringArray(prevGame.chatLog, payload.chatLog);
   state.opponentIsTyping = payload.opponentIsTyping ?? false;
   state.opponentPresence = payload.opponentPresence ?? null;
   state.amIActivePlayer = payload.amIActivePlayer;
@@ -497,6 +500,9 @@ export const gameSlice = createSlice({
               if (aBack && bBack) return 0;
               if (aBack) return 1;
               if (bBack) return -1;
+              const aAlly = isAllyCard(a);
+              const bAlly = isAllyCard(b);
+              if (aAlly !== bAlly) return aAlly ? 1 : -1;
               return b.cardNumber.localeCompare(a.cardNumber);
             }
           );
@@ -511,6 +517,21 @@ export const gameSlice = createSlice({
     removeHealingPopup: healingPopupReducers.remove,
     addActionPointPopup: actionPointPopupReducers.add,
     removeActionPointPopup: actionPointPopupReducers.remove,
+    openUndoReasonPrompt: (state) => {
+      if (state.undoReasonPrompt?.dismissed) return;
+      if (state.undoReasonPrompt?.active) return;
+      state.undoReasonPrompt = { active: true, dismissed: false };
+    },
+    dismissUndoReasonPrompt: (state) => {
+      if (state.undoReasonPrompt?.dismissed && !state.undoReasonPrompt?.active)
+        return;
+      state.undoReasonPrompt = { active: false, dismissed: true };
+    },
+    clearUndoReasonPrompt: (state) => {
+      if (!state.undoReasonPrompt?.active && !state.undoReasonPrompt?.dismissed)
+        return;
+      state.undoReasonPrompt = { active: false, dismissed: false };
+    },
     openOptionsMenu: (state) => {
       state.optionsMenu = { active: true };
     },
@@ -877,14 +898,15 @@ export const gameSlice = createSlice({
 
     // gameLobby
     builder.addCase(gameLobby.fulfilled, (state, action) => {
+      state.isUpdateInProgress = false;
+      state.isPlayerInputInProgress = false;
+
       if (action.payload === undefined) {
         return state;
       }
       if (action.meta.arg.game.gameID !== state.gameInfo.gameID) {
         return state;
       }
-      state.isUpdateInProgress = false;
-      state.isPlayerInputInProgress = false;
 
       if (action.payload.lastUpdate !== undefined) {
         state.gameDynamicInfo.lastUpdate = action.payload.lastUpdate;
@@ -943,6 +965,9 @@ export const {
   removeCardFromHand,
   openOptionsMenu,
   closeOptionsMenu,
+  openUndoReasonPrompt,
+  dismissUndoReasonPrompt,
+  clearUndoReasonPrompt,
   openInventory,
   closeInventory,
   showChainLinkSummary,

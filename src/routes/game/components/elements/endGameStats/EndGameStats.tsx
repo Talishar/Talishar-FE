@@ -14,7 +14,6 @@ import {
   KeyboardEvent,
   ThHTMLAttributes
 } from 'react';
-import html2canvas from 'html2canvas-pro';
 import { Trans, useTranslation } from 'react-i18next';
 import TalisharLogo from 'img/TalisharLogo.webp';
 import { BACKEND_URL } from 'appConstants';
@@ -727,6 +726,9 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
       }
 
       try {
+        // html2canvas is large. Start loading it only after a player chooses to export.
+        const html2canvasPromise = import('html2canvas-pro');
+
         // Wait for hero images to load if they haven't yet
         const requiredHeroImages: string[] = [];
         if (data.yourHero) requiredHeroImages.push('yourHero');
@@ -759,6 +761,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
           )
         );
 
+        const { default: html2canvas } = await html2canvasPromise;
         const canvas = await html2canvas(exportEl, {
           backgroundColor: '#0a0a0a',
           scale: Math.min(window.devicePixelRatio, 2),

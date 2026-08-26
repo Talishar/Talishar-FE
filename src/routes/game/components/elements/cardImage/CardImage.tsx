@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from 'react';
+import { createSelector } from '@reduxjs/toolkit';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import classNames from 'classnames';
@@ -7,6 +8,20 @@ import { DISABLE_ALT_ARTS } from 'features/options/constants';
 import styles from './CardImage.module.css';
 
 const UNKNOWN_IMAGE = 'Difficulties';
+
+const selectCardImagePreferences = createSelector(
+  [
+    (state: RootState) => state.game.gameInfo.altArts,
+    (state: RootState) => state.game.gameInfo.opponentAltArts,
+    (state: RootState) =>
+      String(state.settings?.entities?.[DISABLE_ALT_ARTS]?.value) === '1'
+  ],
+  (altArts, opponentAltArts, altArtsDisabled) => ({
+    altArts,
+    opponentAltArts,
+    altArtsDisabled
+  })
+);
 
 // Alt arts of promos printed in a non-English language.
 const NON_ENGLISH_PROMO_ALT_ARTS = [
@@ -56,31 +71,21 @@ const getDirectory = (path: string): string => {
   return lastSlash === -1 ? '' : path.slice(0, lastSlash);
 };
 
-export interface CardImage {
-  src: string;
-  alt?: string;
-  className?: string;
-  //@ts-ignore Booleanish is allowed, right?
-  draggable?: Booleanish;
-  isShuffling?: boolean;
-  isOpponent?: boolean;
-  preferEnglishArt?: boolean;
-}
+export type ParsedCardImageSource = {
+  directory: string;
+  baseFilename: string;
+  cardNumber: string;
+  isCropped: boolean;
+};
 
-export const CardImage = React.memo((props: CardImage) => {
-  const altArts = useAppSelector(
-    (state: RootState) => state.game.gameInfo.altArts
-  );
-  const opponentAltArts = useAppSelector(
-    (state: RootState) => state.game.gameInfo.opponentAltArts
-  );
-  const altArtsDisabled = useAppSelector(
-    (state: RootState) =>
-      String(state.settings?.entities?.[DISABLE_ALT_ARTS]?.value) === '1'
-  );
+const CARD_IMAGE_SOURCE_CACHE_LIMIT = 4096;
+// Parsing depends only on the exact URL string; the bound prevents paths from
+// old languages/games accumulating for the lifetime of a long-lived tab.
+const cardImageSourceCache = new Map<string, ParsedCardImageSource>();
 
-  let src = props.src;
-  const { isShuffling, isOpponent, preferEnglishArt } = props;
+export function parseCardImageSource(src: string): ParsedCardImageSource {
+  const cached = cardImageSourceCache.get(src);
+  if (cached !== undefined) return cached;
 
   const lastSlash = src.lastIndexOf('/');
   const directory = lastSlash === -1 ? '' : src.slice(0, lastSlash);
@@ -97,6 +102,35 @@ export const CardImage = React.memo((props: CardImage) => {
   const firstDash = baseFilename.indexOf('-');
   const cardNumber =
     firstDash === -1 ? baseFilename : baseFilename.slice(0, firstDash);
+
+  const parsed = { directory, baseFilename, cardNumber, isCropped };
+  if (cardImageSourceCache.size >= CARD_IMAGE_SOURCE_CACHE_LIMIT) {
+    const oldestSource = cardImageSourceCache.keys().next().value;
+    if (oldestSource !== undefined) cardImageSourceCache.delete(oldestSource);
+  }
+  cardImageSourceCache.set(src, parsed);
+  return parsed;
+}
+
+export interface CardImage {
+  src: string;
+  alt?: string;
+  className?: string;
+  draggable?: React.ImgHTMLAttributes<HTMLImageElement>['draggable'];
+  isShuffling?: boolean;
+  isOpponent?: boolean;
+  preferEnglishArt?: boolean;
+}
+
+export const CardImage = React.memo((props: CardImage) => {
+  const { altArts, opponentAltArts, altArtsDisabled } = useAppSelector(
+    selectCardImagePreferences
+  );
+
+  let src = props.src;
+  const { isShuffling, isOpponent, preferEnglishArt } = props;
+  const { directory, baseFilename, cardNumber, isCropped } =
+    parseCardImageSource(src);
 
   const altPath = altArtsDisabled
     ? undefined

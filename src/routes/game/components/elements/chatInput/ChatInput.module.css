@@ -179,13 +179,29 @@
 }
 
 .primaryQuickChatButton button {
-  background-color: var(--theme-primary) !important;
-  color: var(--primary-inverse) !important;
+  background-color: var(--lobby-control-background, #1e2329) !important;
+  color: var(--lobby-control-color, #9aa0a6) !important;
+  border: 1px solid var(--lobby-control-border, rgba(255, 255, 255, 0.12)) !important;
+  font-family: inherit !important;
   margin-bottom: 0.25em;
 }
 
 .primaryQuickChatButton button:hover {
-  border: 2px solid var(--theme-primary) !important;
+  background-color: var(--lobby-control-background, #1e2329) !important;
+  color: var(--lobby-control-hover-color, #d0d3d6) !important;
+  border: 1px solid var(--lobby-control-hover-border, rgba(255, 255, 255, 0.2)) !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.primaryQuickChatButton button:focus-visible {
+  outline: none;
+  border-color: var(
+    --lobby-control-hover-border,
+    rgba(255, 255, 255, 0.2)
+  ) !important;
+  box-shadow: 0 0 0 2px
+    var(--lobby-control-hover-border, rgba(255, 255, 255, 0.2)) !important;
 }
 
 .floatingOverlay {

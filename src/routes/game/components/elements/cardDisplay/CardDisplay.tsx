@@ -69,6 +69,7 @@ const EMPTY_SUBCARDS: string[] = [];
 const TARGETED_TRIM_RE = /^\/|\/$|^\s*\/\s*/g;
 
 export interface CardProp {
+  containerClassName?: string;
   makeMeBigger?: boolean;
   num?: number;
   name?: string;
@@ -80,6 +81,7 @@ export interface CardProp {
   isShuffling?: boolean;
   showCountersOnHover?: boolean;
   disableTilt?: boolean;
+  highlightSubtype?: boolean; // draws a subtype outline (used to pick Allies out of a graveyard list)
   children?: React.ReactNode;
 }
 
@@ -93,6 +95,8 @@ export const CardDisplay = (prop: CardProp) => {
     isShuffling,
     showCountersOnHover,
     disableTilt,
+    highlightSubtype,
+    containerClassName,
     children
   } = prop;
   const dispatch = useAppDispatch();
@@ -165,11 +169,16 @@ export const CardDisplay = (prop: CardProp) => {
     !!card.restriction ||
     isTargeted;
 
-  const cardStyle = classNames(styles.card, styles.normalSize, {
-    [styles.biggerSize]: prop.makeMeBigger,
-    [styles.showCountersOnHover]: showCountersOnHover,
-    [styles.playable]: card.borderColor == '6'
-  });
+  const cardStyle = classNames(
+    styles.card,
+    styles.normalSize,
+    containerClassName,
+    {
+      [styles.biggerSize]: prop.makeMeBigger,
+      [styles.showCountersOnHover]: showCountersOnHover,
+      [styles.playable]: card.borderColor == '6'
+    }
+  );
 
   const countersLabel = isTargeted
     ? card.label?.replace('Targeted', '').replace(TARGETED_TRIM_RE, '').trim()
@@ -213,7 +222,8 @@ export const CardDisplay = (prop: CardProp) => {
         src={imageSrc}
         alt={card?.cardName ?? prop.name ?? ''}
         className={classNames(styles.img, borderClassFor(card.borderColor), {
-          [styles.tapped]: card.tapped
+          [styles.tapped]: card.tapped,
+          [styles.subtypeHighlight]: highlightSubtype
         })}
         isShuffling={isShuffling}
         isOpponent={isOpponentCard}

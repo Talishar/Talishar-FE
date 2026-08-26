@@ -47,7 +47,7 @@
 
 .matchupContainer input[type='text']:focus {
   outline: none;
-  border-color: var(--theme-primary, #d4af37);
+  border-color: var(--theme-border, rgba(255, 255, 255, 0.2));
 }
 
 .emptyMatchupContainer {
@@ -75,11 +75,23 @@
   justify-content: space-between;
 }
 
-.matchupButtonSelected {
-  background-color: var(--theme-secondary, #606569) !important;
-  border-color: var(--theme-secondary-hover, #757a7f) !important;
-  color: var(--theme-secondary-inverse, #ffffff) !important;
-  box-shadow: 0 0 0 2px var(--theme-primary, #d4af37) inset;
+.matchupBadges {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.35rem;
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+
+.matchups button.matchupButtonSelected {
+  background-color: transparent !important;
+  border-color: var(
+    --lobby-control-border,
+    rgba(255, 255, 255, 0.12)
+  ) !important;
+  color: var(--theme-text-secondary, #d0d3d6) !important;
+  box-shadow: none;
 }
 
 .selectedBadge {
@@ -93,11 +105,14 @@
   border: 1px solid var(--theme-border-light);
 }
 
-.matchupButtonSuggested {
-  background-color: var(--theme-secondary, #606569) !important;
-  border-color: var(--theme-secondary-hover, #757a7f) !important;
-  color: var(--theme-secondary-inverse, #ffffff) !important;
-  box-shadow: 0 0 0 2px var(--theme-primary, #d4af37) inset;
+.matchups button.matchupButtonSuggested {
+  background-color: transparent !important;
+  border-color: var(
+    --lobby-control-border,
+    rgba(255, 255, 255, 0.12)
+  ) !important;
+  color: var(--theme-text-secondary, #d0d3d6) !important;
+  box-shadow: none;
 }
 
 .suggestedBadge {
@@ -126,10 +141,11 @@
   gap: 0.5rem;
   width: 100%;
   padding: 0.5rem 0.75rem;
-  background: transparent;
-  border: 1px solid var(--theme-border-light);
+  background: transparent !important;
+  border: 1px solid var(--lobby-control-border, rgba(255, 255, 255, 0.12)) !important;
   border-radius: 6px;
-  color: var(--theme-text);
+  color: var(--theme-text) !important;
+  font-family: inherit !important;
   font-weight: 400;
   font-size: 0.875rem;
   cursor: pointer;
@@ -140,9 +156,12 @@
 }
 
 .matchups button:hover {
-  background: color-mix(in srgb, var(--theme-text) 5%, transparent);
-  border-color: var(--theme-primary, #d4af37);
-  color: var(--theme-text);
+  background: color-mix(in srgb, var(--theme-text) 5%, transparent) !important;
+  border-color: var(
+    --lobby-control-hover-border,
+    rgba(255, 255, 255, 0.2)
+  ) !important;
+  color: var(--lobby-control-hover-color, #e5e5e5) !important;
   transform: none;
 }
 
@@ -153,8 +172,18 @@
 }
 
 .matchups button:active {
-  background: color-mix(in srgb, var(--theme-text) 8%, transparent);
+  background: color-mix(in srgb, var(--theme-text) 8%, transparent) !important;
   transform: none;
+}
+
+.matchups button:focus-visible {
+  outline: none;
+  border-color: var(
+    --lobby-control-hover-border,
+    rgba(255, 255, 255, 0.2)
+  ) !important;
+  box-shadow: 0 0 0 2px
+    var(--lobby-control-hover-border, rgba(255, 255, 255, 0.2)) !important;
 }
 
 .matchupName {
@@ -180,11 +209,10 @@
   flex-shrink: 0;
   background: rgba(212, 175, 55, 0.15);
   color: var(--theme-primary, #d4af37);
-  border: 1px solid rgba(212, 175, 55, 0.3);
+  border: 1px solid var(--theme-border-light);
   box-shadow: none;
   min-width: 2.2rem;
   width: 2.2rem;
-  margin-left: auto;
 }
 
 /* Tablet: 3 columns, uniform sizing - also applies to touch devices above 1200px */

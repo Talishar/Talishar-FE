@@ -14,7 +14,7 @@ import {
 import TalisharLogo from '../../img/TalisharLogo.webp';
 import styles from './Footer.module.scss';
 import useSupporterStatus from 'hooks/useSupporterStatus';
-import { reopenCookieConsent } from 'utils/cookieConsent';
+import { reopenCookieConsent } from 'utils/privacyPreferences';
 
 const Footer = () => {
   const { isSupporter, showAds } = useSupporterStatus();

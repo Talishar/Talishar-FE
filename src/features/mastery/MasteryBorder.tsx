@@ -24,13 +24,6 @@ const ORNAMENTS: Ornament[] = [
   { key: 'right', type: 'blade', edge: 'right', pos: '50%', from: 3 }
 ];
 
-const CORNERS = [
-  { key: 'cornerTL', from: 4 },
-  { key: 'cornerTR', from: 4 },
-  { key: 'cornerBL', from: 5 },
-  { key: 'cornerBR', from: 5 }
-] as const;
-
 const EDGES = {
   top: 'edgeTop',
   left: 'edgeLeft',
@@ -50,14 +43,6 @@ const MasteryBorder = ({ level, className }: Props) => {
       aria-hidden="true"
     >
       {tier >= 6 && <span className={styles.inlay} />}
-      {CORNERS.filter((corner) => tier >= corner.from).map((corner) => (
-        <span
-          key={corner.key}
-          className={classNames(styles.corner, styles[corner.key])}
-        >
-          {tier >= 7 && <span className={styles.cornerGem} />}
-        </span>
-      ))}
       {tier >= 8 && <span className={styles.crest} />}
       {ORNAMENTS.filter((ornament) => tier >= ornament.from).map((ornament) => (
         <span

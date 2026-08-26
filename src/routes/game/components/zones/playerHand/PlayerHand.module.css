@@ -68,11 +68,10 @@
   justify-content: center;
   position: relative;
   z-index: 500;
-  transition: color 0.15s, background 0.15s, opacity 0.2s, transform 0.1s;
+  transition: color 0.15s, background 0.15s, opacity 0.2s, transform 0.1s,
+    visibility 0.2s;
   padding: 0;
   opacity: 1;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06),
     0 2px 8px rgba(0, 0, 0, 0.5);
 }
@@ -99,11 +98,7 @@
 .scrollButton.scrollButtonHidden {
   opacity: 0;
   pointer-events: none;
-  width: 0;
-  min-width: 0;
-  padding: 0;
-  border: 0;
-  overflow: hidden;
+  visibility: hidden;
 }
 
 @media (orientation: portrait) and (max-width: 768px) {

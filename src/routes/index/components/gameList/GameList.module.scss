@@ -421,3 +421,19 @@
     }
   }
 }
+
+.featuredSection {
+  padding-bottom: 0.6rem;
+  margin-bottom: 0.4rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.featuredHeading {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  margin-bottom: 0.35rem;
+  padding-left: 0.3rem;
+}

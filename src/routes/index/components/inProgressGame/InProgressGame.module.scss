@@ -108,3 +108,38 @@
     font-size: 0.65em;
   }
 }
+
+.gameItemFeatured {
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 0.55rem 0.5rem;
+
+  &:hover {
+    transform: none;
+    background-color: rgba(255, 255, 255, 0.06);
+  }
+}
+
+.buttonFeatured {
+  border-color: rgba(255, 255, 255, 0.24);
+}
+
+.spectatorCount {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  font-size: 0.7em;
+  font-variant-numeric: tabular-nums;
+  color: var(--theme-text, #f4eded);
+  opacity: 0.75;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.masteryLevel {
+  font-size: 0.7em;
+  color: var(--theme-text, #f4eded);
+  opacity: 0.55;
+  white-space: nowrap;
+  flex-shrink: 0;
+}

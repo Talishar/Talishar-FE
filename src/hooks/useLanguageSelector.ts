@@ -1,6 +1,9 @@
 import { useCallback } from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
-import { cacheLanguage, loadInitialLanguage } from 'utils';
+import {
+  cacheLanguage,
+  loadInitialLanguage
+} from 'utils/multilanguage/languagePreference';
 import {
   setLanguage as setLanguageSlice,
   getSettingsLanguage

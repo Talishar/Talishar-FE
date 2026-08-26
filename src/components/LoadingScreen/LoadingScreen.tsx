@@ -7,13 +7,24 @@ import styles from './LoadingScreen.module.css';
 const TRIVIA_DELAY_MS = 700;
 const TRIVIA_ROTATE_MS = 12000;
 
-const pickTrivia = (previous: string | null): string => {
-  if (LOADING_TRIVIA.length === 0) return '';
-  const candidates =
-    LOADING_TRIVIA.length > 1
-      ? LOADING_TRIVIA.filter((trivia) => trivia !== previous)
-      : LOADING_TRIVIA;
-  return candidates[Math.floor(Math.random() * candidates.length)];
+export const pickTrivia = (
+  trivia: readonly string[],
+  previous: string | null,
+  random = Math.random
+): string => {
+  if (trivia.length === 0) return '';
+  if (trivia.length === 1) return trivia[0];
+
+  const previousIndex = previous === null ? -1 : trivia.indexOf(previous);
+  const candidateCount = previousIndex === -1 ? trivia.length : trivia.length - 1;
+  const candidateIndex = Math.floor(random() * candidateCount);
+
+  // Draw from n - 1 slots and skip the previous slot without allocating a new array.
+  return trivia[
+    previousIndex !== -1 && candidateIndex >= previousIndex
+      ? candidateIndex + 1
+      : candidateIndex
+  ];
 };
 
 const useLoadingTrivia = (enabled: boolean) => {
@@ -27,9 +38,10 @@ const useLoadingTrivia = (enabled: boolean) => {
 
     let rotateInterval: ReturnType<typeof setInterval> | undefined;
     const showTimeout = setTimeout(() => {
-      setTrivia(pickTrivia(null));
+      setTrivia(pickTrivia(LOADING_TRIVIA, null));
       rotateInterval = setInterval(
-        () => setTrivia((previous) => pickTrivia(previous)),
+        () =>
+          setTrivia((previous) => pickTrivia(LOADING_TRIVIA, previous)),
         TRIVIA_ROTATE_MS
       );
     }, TRIVIA_DELAY_MS);

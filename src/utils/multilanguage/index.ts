@@ -1,9 +1,9 @@
+export { getCollectionCardImagePath } from './multilanguage';
 export {
-  getCollectionCardImagePath,
   loadInitialLanguage,
   cacheLanguage,
   invalidateLanguageCache
-} from './multilanguage';
+} from './languagePreference';
 export {
   DEFAULT_LANGUAGE,
   CARD_IMAGES_PATH,

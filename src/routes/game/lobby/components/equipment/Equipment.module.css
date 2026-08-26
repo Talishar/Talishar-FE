@@ -31,10 +31,17 @@
   height: 100%;
 }
 
-.cardContainer:has(img[src*='NONE00']) {
-  height: 72px;
-  width: 72px;
-  opacity: 0.45;
+.hiddenUnequippedInput {
+  display: none !important;
+}
+
+.dropPlaceholder {
+  box-sizing: border-box;
+  border: 2px solid var(--theme-primary);
+  border-radius: 0.5em;
+  background: transparent;
+  opacity: 0.75;
+  pointer-events: none;
 }
 
 .card {
@@ -64,6 +71,12 @@
 .eqCategory {
   display: flex;
   flex-direction: column;
+}
+
+/* Keep empty equipment slots large enough to receive a drop. */
+.equipmentDropZone .categoryContainer {
+  min-width: 100px;
+  min-height: 100px;
 }
 
 .eqCategory > h3 {

@@ -119,6 +119,8 @@ const StickyFooter = ({
 
   const deckMetaText = isConfirmEnabled
     ? `/${deckSize}\u00a0\u00b7\u00a0\u2713\u00a0ready`
+    : errorArray[0]
+    ? `/${deckSize}\u00a0\u00b7\u00a0${errorArray[0]}`
     : needed > 0
     ? `/${deckSize}\u00a0\u00b7\u00a0need\u00a0${needed}\u00a0more`
     : `/${deckSize}`;
@@ -158,14 +160,21 @@ const StickyFooter = ({
             )}
           </div>
 
-          {/* Center: deck count */}
+          {/* Center: deck count and validation status */}
           <div
             className={`${styles.deckSection} ${
               isConfirmEnabled ? styles.deckReady : ''
-            }`}
+            } ${!isValid ? styles.deckInvalid : ''}`}
+            role="status"
+            aria-live="polite"
           >
-            <span className={styles.deckNumber}>{values.deck.length}</span>
-            <span className={styles.deckMeta}>{deckMetaText}</span>
+            <div className={styles.deckCountLine}>
+              {!isValid && errorArray[0] && (
+                <FaExclamationCircle className={styles.deckStatusIcon} />
+              )}
+              <span className={styles.deckNumber}>{values.deck.length}</span>
+              <span className={styles.deckMeta}>{deckMetaText}</span>
+            </div>
           </div>
 
           {/* Right: confirm / edit + optional leave */}
@@ -198,20 +207,16 @@ const StickyFooter = ({
               </button>
             )}
             {isWidescreen && (
-              <button className={leaveClass} onClick={handleLeave}>
+              <button
+                className={leaveClass}
+                onClick={handleLeave}
+                type="button"
+              >
                 {t('GAME_LOBBY.LEAVE')}
               </button>
             )}
           </div>
         </div>
-
-        {/* Alarm row - slides in only when deck is invalid */}
-        {!isValid && errorArray[0] && (
-          <div className={styles.alarmRow}>
-            <FaExclamationCircle className={styles.alarmIcon} />
-            <span>{errorArray[0]}</span>
-          </div>
-        )}
       </div>
     </div>
   );

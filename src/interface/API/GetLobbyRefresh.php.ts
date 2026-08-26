@@ -26,6 +26,9 @@ export interface GetLobbyRefreshResponse {
   submitSideboard?: string;
   myPriority?: boolean;
   isMainGameReady?: boolean;
+  isSideboarding?: boolean;
+  mySideboardSubmitted?: boolean;
+  opponentSideboardSubmitted?: boolean;
   canSubmitSideboard?: boolean;
   canUnreadySideboard?: boolean;
   myDeckLink?: string;

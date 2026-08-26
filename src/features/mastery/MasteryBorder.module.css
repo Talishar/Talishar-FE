@@ -7,8 +7,6 @@
   --orn-gem: var(--mastery-orn-gem, 13px);
   --orn-rail: var(--mastery-orn-rail, 0px);
   --orn-edge: calc(var(--orn-rail) + 5px);
-  /* Corners hug the rail: 2px clears the inner highlight line drawn inside it. */
-  --orn-corner-edge: calc(var(--orn-rail) + 1px);
   position: absolute;
   z-index: 5;
   inset: 0;
@@ -41,8 +39,7 @@
 }
 
 .gem,
-.gemSmall,
-.cornerGem {
+.gemSmall {
   --orn-size: var(--orn-gem);
   --orn-inset: calc(var(--orn-size) * 0.207);
   width: var(--orn-size);
@@ -91,68 +88,6 @@
   border: 1px solid color-mix(in srgb, var(--orn-highlight) 45%, transparent);
   border-radius: inherit;
   box-shadow: 0 0 8px var(--orn-glow);
-}
-
-.corner {
-  position: absolute;
-  width: calc(var(--orn-gem) * 1.8);
-  height: calc(var(--orn-gem) * 1.8);
-  border: 0 solid var(--orn-highlight);
-  opacity: 0.9;
-}
-
-.cornerGem {
-  --orn-size: calc(var(--orn-gem) * 0.58);
-  position: absolute;
-  margin: calc(var(--orn-size) / -2);
-}
-
-.cornerTL {
-  top: var(--orn-corner-edge);
-  left: var(--orn-corner-edge);
-  border-top-width: 2px;
-  border-left-width: 2px;
-}
-
-.cornerTR {
-  top: var(--orn-corner-edge);
-  right: var(--orn-corner-edge);
-  border-top-width: 2px;
-  border-right-width: 2px;
-}
-
-.cornerBL {
-  bottom: var(--orn-corner-edge);
-  left: var(--orn-corner-edge);
-  border-bottom-width: 2px;
-  border-left-width: 2px;
-}
-
-.cornerBR {
-  bottom: var(--orn-corner-edge);
-  right: var(--orn-corner-edge);
-  border-bottom-width: 2px;
-  border-right-width: 2px;
-}
-
-.cornerTL .cornerGem {
-  top: 0;
-  left: 0;
-}
-
-.cornerTR .cornerGem {
-  top: 0;
-  right: 0;
-}
-
-.cornerBL .cornerGem {
-  bottom: 0;
-  left: 0;
-}
-
-.cornerBR .cornerGem {
-  bottom: 0;
-  right: 0;
 }
 
 .crest {

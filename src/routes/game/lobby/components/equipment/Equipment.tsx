@@ -1,13 +1,12 @@
-import { Field, FieldArray, useFormikContext } from 'formik';
+import { Field, useFormikContext } from 'formik';
 import React from 'react';
-import { useAppDispatch } from 'app/Hooks';
 import CardImage from 'routes/game/components/elements/cardImage/CardImage';
 import {
   DeckResponse,
   GetLobbyInfoResponse,
   Weapon
 } from 'interface/API/GetLobbyInfo.php';
-import { clearPopUp } from 'features/game/GameSlice';
+import { clearCardPreview } from 'routes/game/components/elements/cardPortal/cardPreviewStore';
 import styles from './Equipment.module.css';
 import CardPopUp from 'routes/game/components/elements/cardPopUp/CardPopUp';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
@@ -50,8 +49,10 @@ export interface EquipmentProps {
 
 interface DragPayload {
   card: string;
-  from?: string;
+  from: 'modular' | EquipFieldName;
 }
+
+const MODULAR_DRAG_TYPE = 'application/x-talishar-modular-equipment';
 
 const Equipment = ({
   baseEquipment,
@@ -62,9 +63,11 @@ const Equipment = ({
   setAssigned
 }: EquipmentProps) => {
   const { values, setFieldValue } = useFormikContext<DeckResponse>();
-  const dispatch = useAppDispatch();
   const { getLanguage } = useLanguageSelector();
   const locale = getLanguage();
+  const activeDrag = React.useRef<DragPayload | null>(null);
+  const [activeDropTarget, setActiveDropTarget] =
+    React.useState<EquipFieldName | null>(null);
   // Initial stuff to allow the lang to change
   const { t } = useTranslation();
 
@@ -79,11 +82,53 @@ const Equipment = ({
   };
 
   const parseDragPayload = (e: React.DragEvent): DragPayload | null => {
-    try {
-      return JSON.parse(e.dataTransfer.getData('text/plain'));
-    } catch {
-      return null;
+    const serializedPayload =
+      e.dataTransfer.getData(MODULAR_DRAG_TYPE) ||
+      e.dataTransfer.getData('text/plain');
+
+    if (serializedPayload) {
+      try {
+        const payload = JSON.parse(serializedPayload) as Partial<DragPayload>;
+        if (
+          typeof payload.card === 'string' &&
+          (payload.from === 'modular' ||
+            EQUIP_FIELDS.includes(payload.from as EquipFieldName))
+        ) {
+          return payload as DragPayload;
+        }
+      } catch {
+        // Some browsers do not reliably expose custom drag data on drop.
+      }
     }
+
+    return activeDrag.current;
+  };
+
+  const writeDragPayload = (e: React.DragEvent, payload: DragPayload) => {
+    activeDrag.current = payload;
+    const serializedPayload = JSON.stringify(payload);
+    const { dataTransfer } = e;
+    dataTransfer.setData(MODULAR_DRAG_TYPE, serializedPayload);
+    dataTransfer.setData('text/plain', serializedPayload);
+    dataTransfer.effectAllowed = 'move';
+  };
+
+  const allowEquipmentDrop = (e: React.DragEvent, field?: EquipFieldName) => {
+    e.preventDefault();
+    const { dataTransfer } = e;
+    dataTransfer.dropEffect = 'move';
+    if (field && activeDropTarget !== field) setActiveDropTarget(field);
+  };
+
+  const finishDrag = () => {
+    activeDrag.current = null;
+    setActiveDropTarget(null);
+  };
+
+  const handleDropTargetLeave = (e: React.DragEvent) => {
+    const nextTarget = e.relatedTarget as Node | null;
+    if (nextTarget && e.currentTarget.contains(nextTarget)) return;
+    setActiveDropTarget(null);
   };
 
   const getCardSrc = (card: string) =>
@@ -94,12 +139,8 @@ const Equipment = ({
     });
 
   const handleModularDragStart = (e: React.DragEvent, card: string) => {
-    dispatch(clearPopUp());
-    e.dataTransfer.setData(
-      'text/plain',
-      JSON.stringify({ card, from: 'modular' })
-    );
-    e.dataTransfer.effectAllowed = 'move';
+    clearCardPreview();
+    writeDragPayload(e, { card, from: 'modular' });
   };
 
   const handleAssignedDragStart = (
@@ -107,41 +148,39 @@ const Equipment = ({
     card: string,
     fromField: EquipFieldName
   ) => {
-    e.dataTransfer.setData(
-      'text/plain',
-      JSON.stringify({ card, from: fromField })
-    );
-    e.dataTransfer.effectAllowed = 'move';
+    clearCardPreview();
+    writeDragPayload(e, { card, from: fromField });
   };
 
   const handleEquipmentDrop = (e: React.DragEvent, field: EquipFieldName) => {
     e.preventDefault();
     const data = parseDragPayload(e);
+    finishDrag();
     if (!data) return;
 
     const { card, from } = data;
 
-    if (from && EQUIP_FIELDS.includes(from as EquipFieldName)) {
+    if (EQUIP_FIELDS.includes(from as EquipFieldName)) {
       const fromField = from as EquipFieldName;
-
-      setAssigned((prev) => ({
-        ...prev,
-        [fromField]: removeOne(prev[fromField], card)
-      }));
 
       if (values[fromField] === card) {
         setFieldValue(fromField, 'NONE00');
       }
     }
 
-    if (!from || from === 'modular') {
+    if (from === 'modular') {
       setModularState((prev) => removeOne(prev, card));
     }
 
-    setAssigned((prev) => ({
-      ...prev,
-      [field]: [...prev[field], card]
-    }));
+    setAssigned((prev) => {
+      const next = { ...prev };
+      if (EQUIP_FIELDS.includes(from as EquipFieldName)) {
+        const fromField = from as EquipFieldName;
+        next[fromField] = removeOne(prev[fromField], card);
+      }
+      next[field] = [...next[field], card];
+      return next;
+    });
 
     setFieldValue(field, card);
   };
@@ -149,6 +188,7 @@ const Equipment = ({
   const handleReturnToModular = (e: React.DragEvent) => {
     e.preventDefault();
     const data = parseDragPayload(e);
+    finishDrag();
     if (!data) return;
 
     const { card, from } = data;
@@ -173,19 +213,31 @@ const Equipment = ({
     field: EquipFieldName,
     baseList: string[]
   ) => {
-    const fullList = [...baseList, ...assigned[field], 'NONE00'];
+    const visibleCards = [...baseList, ...assigned[field]].filter(
+      (card) => card !== 'NONE00'
+    );
 
     return (
       <div
-        className={styles.eqCategory}
-        onDragOver={(e) => e.preventDefault()}
+        className={`${styles.eqCategory} ${styles.equipmentDropZone}`}
+        onDragOver={(e) => allowEquipmentDrop(e, field)}
+        onDragLeave={handleDropTargetLeave}
         onDrop={(e) => handleEquipmentDrop(e, field)}
       >
         <h3>{label}</h3>
 
         <div className={styles.categoryContainer}>
-          {fullList.map((card, i) => {
+          <Field
+            type="radio"
+            name={field}
+            value="NONE00"
+            className={styles.hiddenUnequippedInput}
+            aria-hidden="true"
+            tabIndex={-1}
+          />
+          {visibleCards.map((card, i) => {
             const isAssigned = assigned[field].includes(card);
+            const isEquipped = values[field] === card;
 
             return (
               <div
@@ -197,10 +249,22 @@ const Equipment = ({
                     ? (e) => handleAssignedDragStart(e, card, field)
                     : undefined
                 }
+                onDragEnd={isAssigned ? finishDrag : undefined}
               >
                 <label>
-                  <Field type="radio" name={field} value={card} />
-                  <CardPopUp cardNumber={card}>
+                  <Field
+                    type="radio"
+                    name={field}
+                    value={card}
+                    aria-label={`${label}: ${card}`}
+                    onClick={(event: React.MouseEvent<HTMLInputElement>) => {
+                      if (isEquipped) {
+                        event.preventDefault();
+                        setFieldValue(field, 'NONE00');
+                      }
+                    }}
+                  />
+                  <CardPopUp cardNumber={card} disableTilt={isAssigned}>
                     <CardImage
                       src={getCardSrc(card)}
                       draggable={false}
@@ -211,6 +275,12 @@ const Equipment = ({
               </div>
             );
           })}
+          {activeDropTarget === field && (
+            <div
+              className={`${styles.cardContainer} ${styles.dropPlaceholder}`}
+              aria-hidden="true"
+            />
+          )}
         </div>
       </div>
     );
@@ -221,102 +291,103 @@ const Equipment = ({
       <div className={styles.eqCategory}>
         <h3>{t('GAME_LOBBY.WEAPONS')}</h3>
 
-        <FieldArray
-          name="weapons"
-          render={(arrayHelpers) => (
-            <div className={styles.categoryContainer}>
-              {hands.map((weapon, ix) => {
-                const id = weapon.id.split('-')[0];
-                const checked = values.weapons.some((w) => w.id === weapon.id);
+        <div className={styles.categoryContainer}>
+          {hands
+            .filter((weapon) => weapon.img !== 'NONE00')
+            .map((weapon, ix) => {
+              const id = weapon.id.split('-')[0];
+              const checked = values.weapons.some((w) => w.id === weapon.id);
 
-                return (
-                  <div key={`weapon-${ix}`} className={styles.cardContainer}>
-                    <label>
-                      <input
-                        type="checkbox"
-                        checked={checked}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            if (weapon.img === 'NONE00') {
-                              // Selecting "None Equipped" clears everything else
-                              setFieldValue('weapons', [weapon]);
-                            } else if (weapon.numHands === 2) {
-                              // Remove all non-quiver/non-companion weapons, keep quivers and companions
-                              const equipmentExceptions = values.weapons.filter(
-                                (w) =>
-                                  (w.isQuiver || w.isCompanion) &&
-                                  w.img !== 'NONE00'
-                              );
-                              const newWeapons = [
-                                weapon,
-                                ...equipmentExceptions
-                              ];
-                              setFieldValue('weapons', newWeapons);
-                            } else if (
-                              weapon.isOffhand &&
+              return (
+                <div key={`weapon-${ix}`} className={styles.cardContainer}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={checked}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          if (weapon.img === 'NONE00') {
+                            // Selecting "None Equipped" clears everything else
+                            setFieldValue('weapons', [weapon]);
+                          } else if (weapon.numHands === 2) {
+                            // Remove all non-quiver/non-companion weapons, keep quivers and companions
+                            const equipmentExceptions = values.weapons.filter(
+                              (w) =>
+                                (w.isQuiver || w.isCompanion) &&
+                                w.img !== 'NONE00'
+                            );
+                            const newWeapons = [weapon, ...equipmentExceptions];
+                            setFieldValue('weapons', newWeapons);
+                          } else if (
+                            weapon.isOffhand &&
+                            !weapon.isQuiver &&
+                            !weapon.isCompanion
+                          ) {
+                            // If adding an off-hand (regular off-hand, not quiver/companion), remove other off-hands and NONE00
+                            const nonOffhands = values.weapons.filter(
+                              (w) =>
+                                (!w.isOffhand || w.isQuiver || w.isCompanion) &&
+                                w.img !== 'NONE00'
+                            );
+                            const newWeapons = [...nonOffhands, weapon];
+                            setFieldValue('weapons', newWeapons);
+                          } else {
+                            const currentWeapons = values.weapons.filter(
+                              (w) => w.img !== 'NONE00'
+                            );
+                            const twoHandedIndex = currentWeapons.findIndex(
+                              (w) => w.numHands === 2
+                            );
+                            if (
+                              twoHandedIndex !== -1 &&
                               !weapon.isQuiver &&
                               !weapon.isCompanion
                             ) {
-                              // If adding an off-hand (regular off-hand, not quiver/companion), remove other off-hands and NONE00
-                              const nonOffhands = values.weapons.filter(
-                                (w) =>
-                                  (!w.isOffhand ||
-                                    w.isQuiver ||
-                                    w.isCompanion) &&
-                                  w.img !== 'NONE00'
+                              // Remove the 2-handed weapon first (unless adding a quiver or companion)
+                              const updatedWeapons = currentWeapons.filter(
+                                (_, idx) => idx !== twoHandedIndex
                               );
-                              const newWeapons = [...nonOffhands, weapon];
-                              setFieldValue('weapons', newWeapons);
+                              setFieldValue('weapons', [
+                                ...updatedWeapons,
+                                weapon
+                              ]);
                             } else {
-                              const currentWeapons = values.weapons.filter(
-                                (w) => w.img !== 'NONE00'
-                              );
-                              const twoHandedIndex = currentWeapons.findIndex(
-                                (w) => w.numHands === 2
-                              );
-                              if (
-                                twoHandedIndex !== -1 &&
-                                !weapon.isQuiver &&
-                                !weapon.isCompanion
-                              ) {
-                                // Remove the 2-handed weapon first (unless adding a quiver or companion)
-                                const updatedWeapons = currentWeapons.filter(
-                                  (_, idx) => idx !== twoHandedIndex
-                                );
-                                setFieldValue('weapons', [
-                                  ...updatedWeapons,
-                                  weapon
-                                ]);
-                              } else {
-                                // No 2-handed weapon, or adding a quiver/companion - just add it (NONE00 already stripped)
-                                setFieldValue('weapons', [
-                                  ...currentWeapons,
-                                  weapon
-                                ]);
-                              }
+                              // No 2-handed weapon, or adding a quiver/companion - just add it (NONE00 already stripped)
+                              setFieldValue('weapons', [
+                                ...currentWeapons,
+                                weapon
+                              ]);
                             }
-                          } else {
-                            const idx = values.weapons.findIndex(
-                              (w) => w.id === weapon.id
-                            );
-                            if (idx !== -1) arrayHelpers.remove(idx);
                           }
-                        }}
+                        } else {
+                          const remainingWeapons = values.weapons.filter(
+                            (w) => w.id !== weapon.id && w.img !== 'NONE00'
+                          );
+                          const unequippedWeapon = hands.find(
+                            (w) => w.img === 'NONE00'
+                          );
+
+                          setFieldValue(
+                            'weapons',
+                            remainingWeapons.length > 0 || !unequippedWeapon
+                              ? remainingWeapons
+                              : [unequippedWeapon]
+                          );
+                        }
+                      }}
+                    />
+                    <CardPopUp cardNumber={id}>
+                      <CardImage
+                        src={getCardSrc(id)}
+                        draggable={false}
+                        className={styles.card}
                       />
-                      <CardPopUp cardNumber={id}>
-                        <CardImage
-                          src={getCardSrc(id)}
-                          draggable={false}
-                          className={styles.card}
-                        />
-                      </CardPopUp>
-                    </label>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        />
+                    </CardPopUp>
+                  </label>
+                </div>
+              );
+            })}
+        </div>
       </div>
 
       {renderEquipZone(t('GAME_LOBBY.HEAD'), 'head', baseEquipment.head)}
@@ -339,10 +410,11 @@ const Equipment = ({
         </div>
       )}
 
-      {modularState.length > 0 && (
+      {(modularState.length > 0 ||
+        EQUIP_FIELDS.some((field) => assigned[field].length > 0)) && (
         <div
-          className={styles.eqCategory}
-          onDragOver={(e) => e.preventDefault()}
+          className={`${styles.eqCategory} ${styles.equipmentDropZone}`}
+          onDragOver={allowEquipmentDrop}
           onDrop={handleReturnToModular}
         >
           <div style={{ display: 'flex', flexDirection: 'row' }}>
@@ -359,12 +431,13 @@ const Equipment = ({
                 className={styles.cardContainer}
                 draggable
                 onDragStart={(e) => handleModularDragStart(e, card)}
+                onDragEnd={finishDrag}
               >
-                <CardPopUp cardNumber={card}>
+                <CardPopUp cardNumber={card} disableTilt>
                   <CardImage
                     src={getCardSrc(card)}
                     className={styles.card}
-                    draggable
+                    draggable={false}
                   />
                 </CardPopUp>
               </div>

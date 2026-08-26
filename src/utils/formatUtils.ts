@@ -23,10 +23,6 @@ const numericFormatCodeMap: { [key: string]: string } = {
   '-2': 'precon'
 };
 
-/**
- * Helper function to convert format codes to readable names
- * Used across multiple components for consistent format display
- */
 export const getReadableFormatName = (format: string): string => {
   if (!format) return '';
 
@@ -65,4 +61,19 @@ export const getReadableFormatName = (format: string): string => {
   const resolvedFormat = numericFormatCodeMap[format] ?? format;
   const key = resolvedFormat.toLowerCase().replace(/[_\s]/g, '');
   return formatMap[key] || resolvedFormat;
+};
+
+export const getShortFormatName = (format: string): string => {
+  const readable = getReadableFormatName(format);
+  if (!readable) return '';
+
+  return readable
+    .replace(/Classic Constructed/gi, 'CC')
+    .replace(/Living Legend/gi, 'LL')
+    .replace(/Silver Age/gi, 'SAGE')
+    .replace(/Golden Age/gi, 'GAGE')
+    .replace(/Competitive/gi, 'Comp')
+    .replace(/Preconstructed Decks/gi, 'Precon')
+    .replace(/Draft \/ Limited/gi, 'Draft')
+    .trim();
 };

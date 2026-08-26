@@ -15,7 +15,7 @@ import {
 import GameStaticInfo from 'features/GameStaticInfo';
 import { ProcessInputAPI } from 'interface/API/ProcessInputAPI';
 import { toast } from 'react-hot-toast';
-import { loadInitialLanguage } from 'utils';
+import { loadInitialLanguage } from 'utils/multilanguage/languagePreference';
 
 export interface GameOptions {
   Settings: Setting[];
@@ -36,14 +36,19 @@ export const settingsInitialState = settingsAdapter.getInitialState({
   language: loadInitialLanguage()
 });
 
+const SPECTATOR_PLAYER_ID = 3;
+const isSpectating = (game: GameStaticInfo) =>
+  Number(game.playerID) === SPECTATOR_PLAYER_ID;
+
 export const fetchAllSettings = createAsyncThunk(
   'options/fetchAllSettings',
   async (params: { game: GameStaticInfo }) => {
     const queryURL = `${BACKEND_URL}${URL_END_POINT.GET_POPUP}`;
+    const spectating = isSpectating(params.game);
     const queryParams = new URLSearchParams({
-      gameName: String(params.game.gameID),
-      playerID: String(params.game.playerID),
-      authKey: String(params.game.authKey),
+      gameName: spectating ? '0' : String(params.game.gameID),
+      playerID: spectating ? '0' : String(params.game.playerID),
+      authKey: spectating ? '' : String(params.game.authKey),
       popupType: PLAYER_OPTIONS
     });
 
@@ -98,10 +103,11 @@ export const updateOptions = createAsyncThunk(
     userID?: string;
   }) => {
     const queryURL = `${BACKEND_URL}${URL_END_POINT.PROCESS_INPUT_POST}`;
+    const spectating = isSpectating(game);
     const payload = {
-      playerID: game.playerID,
-      gameName: game.gameID,
-      authKey: game.authKey,
+      playerID: spectating ? 0 : game.playerID,
+      gameName: spectating ? 0 : game.gameID,
+      authKey: spectating ? '' : game.authKey,
       mode: PROCESS_INPUT.CHANGE_SETTING,
       submission: { settings: [...settings] },
       userID: userID
@@ -147,6 +153,7 @@ const optionsSlice = createSlice({
   reducers: {
     settingAdded: settingsAdapter.addOne,
     settingUpdated: settingsAdapter.upsertOne,
+    settingsUpdated: settingsAdapter.upsertMany,
     settingsReceived(state, action) {
       settingsAdapter.setAll(state, action.payload.Settings);
     },
@@ -196,5 +203,10 @@ export const getSettingsLanguage = (state: RootState) =>
 export default optionsSlice.reducer;
 
 const { actions } = optionsSlice;
-export const { settingAdded, settingUpdated, settingsReceived, setLanguage } =
-  actions;
+export const {
+  settingAdded,
+  settingUpdated,
+  settingsUpdated,
+  settingsReceived,
+  setLanguage
+} = actions;

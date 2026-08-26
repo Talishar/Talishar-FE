@@ -5,6 +5,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  contain: layout paint;
 }
 
 .wrapper::before {
@@ -44,12 +45,18 @@
   0%,
   100% {
     opacity: 1;
-    filter: drop-shadow(0 0 6px rgba(201, 168, 76, 0.5));
     transform: scale(1);
   }
   50% {
     opacity: 0.85;
-    filter: drop-shadow(0 0 16px rgba(201, 168, 76, 0.9));
     transform: scale(1.06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wrapper::before,
+  .wrapper::after,
+  .sword {
+    animation: none;
   }
 }

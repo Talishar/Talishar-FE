@@ -323,12 +323,35 @@ const HeroVsHeroIntro = () => {
   const opponentMetafyTierName = getBadgeLabel(opponentPatronInfo);
 
   const disableHeroIntro = settingsData['DisableHeroIntro']?.value === '1';
+  const shouldShowIntro =
+    playerID !== 3 &&
+    isVisible &&
+    !!yourHero &&
+    !!opponentHero &&
+    yourHero !== opponentHero &&
+    !disableHeroIntro;
 
   const handleDismiss = useCallback(() => {
     setIsVisible(false);
     dispatch(markHeroIntroAsShown());
     localStorage.setItem(getLocalStorageKey(), 'false');
   }, [dispatch, getLocalStorageKey]);
+
+  useEffect(() => {
+    if (!shouldShowIntro) return;
+
+    const blockPassShortcut = (event: KeyboardEvent) => {
+      if (event.code !== 'Space') return;
+
+      // The game controls remain mounted behind the intro. Swallow Space in
+      // the capture phase so an early keypress cannot pass the pregame prompt.
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    };
+
+    window.addEventListener('keydown', blockPassShortcut, true);
+    return () => window.removeEventListener('keydown', blockPassShortcut, true);
+  }, [shouldShowIntro]);
 
   // DEBUG: comment this to auto-dismiss disabled
   useEffect(() => {
@@ -337,15 +360,7 @@ const HeroVsHeroIntro = () => {
     return () => clearTimeout(t);
   }, [isVisible, settingsData, handleDismiss]);
 
-  if (
-    playerID === 3 ||
-    !isVisible ||
-    !yourHero ||
-    !opponentHero ||
-    yourHero === opponentHero ||
-    disableHeroIntro
-  )
-    return null;
+  if (!shouldShowIntro) return null;
 
   const cardSpring = { type: 'spring' as const, damping: 22, stiffness: 115 };
 
@@ -354,6 +369,7 @@ const HeroVsHeroIntro = () => {
       {isVisible && (
         <motion.div
           className={styles.introContainer}
+          onClick={handleDismiss}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -411,7 +427,10 @@ const HeroVsHeroIntro = () => {
 
           <motion.button
             className={styles.closeButton}
-            onClick={handleDismiss}
+            onClick={(event) => {
+              event.stopPropagation();
+              handleDismiss();
+            }}
             aria-label="Close hero intro"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

@@ -388,6 +388,7 @@
   },
   "GAME_LIST": {
     "DISABLE_EXPERIMENTAL": "Disable experimental features",
+    "FEATURED_MATCH": "Featured match",
     "FORMATS": {
       "BLITZ": "Blitz",
       "CC": "Classic Constructed",
@@ -598,7 +599,10 @@
     "VIEW": "View your inventory"
   },
   "IN_PROGRESS_GAME": {
-    "SPECTATE": "Spectate"
+    "MASTERY_LEVEL": "Mastery {{level}}+",
+    "SPECTATE": "Spectate",
+    "SPECTATOR_COUNT_one": "{{count}} spectator",
+    "SPECTATOR_COUNT_other": "{{count}} spectators"
   },
   "JOIN": {
     "BACK": "Back",
@@ -972,6 +976,7 @@
       },
       "GAME_DESCRIPTION": "Game Description",
       "GAME_DESCRIPTIONS": {
+        "ADVICE_COACHING": "Looking for advice/coaching",
         "AGGRO": "Prefer fast decks (aggro)",
         "BEST_DECK": "Looking for best deck in the format",
         "CASUAL": "Casual / relaxed play",
@@ -1644,6 +1649,16 @@
     "PASS": "PASS",
     "SPACEBAR": "[spacebar]",
     "WAIT": "WAIT"
+  },
+  "UNDO_REASON": {
+    "FORGOT_TRIGGER": "Forgot a trigger",
+    "GIVEN": "Reason given: {{reason}}",
+    "MISCLICK": "Misclick",
+    "PASS_TOO_FAST": "Passed too fast",
+    "SKIP": "Skip",
+    "SUBTITLE": "Optionally add a reason to your request.",
+    "TITLE": "Undo request sent",
+    "WRONG_TARGET": "Wrong target"
   },
   "UNITED_GAME_PANEL": {
     "EXPAND": "Expand panel",

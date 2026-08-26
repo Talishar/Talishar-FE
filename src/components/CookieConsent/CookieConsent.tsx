@@ -8,7 +8,7 @@ import {
   loadGoogleAnalytics,
   clearAnalyticsCookies,
   OPEN_COOKIE_CONSENT_EVENT
-} from 'utils/cookieConsent';
+} from 'utils/privacyPreferences';
 
 interface CookieConsentProps {
   onConsent?: (accepted: boolean) => void;

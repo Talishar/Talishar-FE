@@ -1,9 +1,8 @@
-import { useAppSelector } from 'app/Hooks';
 import { useMemo } from 'react';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
-import { RootState } from 'app/Store';
 import CardImage from '../cardImage/CardImage';
 import styles from './CardPortal.module.css';
+import { useCardPreview } from './cardPreviewStore';
 import { doubleFacedCardsMappings } from './constants';
 import classNames from 'classnames';
 import useWindowDimensions from 'hooks/useWindowDimensions';
@@ -74,7 +73,7 @@ function getSrcs({
 }
 
 export default function CardPortal() {
-  const popup = useAppSelector((state: RootState) => state.game.popup);
+  const popup = useCardPreview();
   const hoverImageSize = Number(useCookieString('hoverImageSize')) || 1;
   const { getLanguage } = useLanguageSelector();
   const [windowWidth, windowHeight] = useWindowDimensions();

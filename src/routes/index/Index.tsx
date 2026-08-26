@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { usePageTitle } from 'hooks/usePageTitle';
 import GameList from './components/gameList';
+import { DEV_FAKE_MODE } from './components/gameList/GameList';
 import styles from './Index.module.css';
 import News from 'routes/news';
 import CommunityContent from './components/CommunityContent';
@@ -213,7 +214,7 @@ const Index = () => {
                   !isLoggedIn ? ` ${styles.gridLoggedOut}` : ''
                 }`}
               >
-                {isLoggedIn && (
+                {(isLoggedIn || DEV_FAKE_MODE) && (
                   <div className={styles.gameListContainer}>
                     <GameList />
                   </div>

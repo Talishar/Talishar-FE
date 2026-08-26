@@ -1,5 +1,5 @@
 import { FormProps } from '../playerInputPopupTypes';
-import React, { useMemo, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import styles from '../PlayerInputPopUp.module.css';
 import CardDisplay from '../../../elements/cardDisplay/CardDisplay';
@@ -13,6 +13,16 @@ import classNames from 'classnames';
 
 let change = false;
 let buttonClick = false;
+const prepareCards = (cards: Card[]): Card[] =>
+  cards.map(
+    (card, index) =>
+      ({
+        ...card,
+        borderColor: '8',
+        uniqueId: `${card.cardNumber}-${index}`
+      } as Card)
+  );
+
 const ReorderOpt = ({
   topCards,
   bottomCards
@@ -26,29 +36,21 @@ const ReorderOpt = ({
   );
 
   const { t } = useTranslation();
-  const [cardListTop, setCardListTop] = React.useState<Card[]>([]);
-  const [cardListBottom, setCardListBottom] = React.useState<Card[]>([]);
-
-  useMemo(() => {
-    setCardListTop(
-      topCards.map((card, index) => {
-        return {
-          ...card,
-          borderColor: '8',
-          uniqueId: `${card.cardNumber}-${index}`
-        } as Card;
-      }) ?? []
-    );
-    setCardListBottom(
-      bottomCards.map((card, index) => {
-        return {
-          ...card,
-          borderColor: '8',
-          uniqueId: `${card.cardNumber}-${index}`
-        } as Card;
-      }) ?? []
-    );
-  }, [topCards, bottomCards]);
+  const [previousCards, setPreviousCards] = React.useState({
+    top: topCards,
+    bottom: bottomCards
+  });
+  const [cardListTop, setCardListTop] = React.useState<Card[]>(() =>
+    prepareCards(topCards)
+  );
+  const [cardListBottom, setCardListBottom] = React.useState<Card[]>(() =>
+    prepareCards(bottomCards)
+  );
+  if (topCards !== previousCards.top || bottomCards !== previousCards.bottom) {
+    setPreviousCards({ top: topCards, bottom: bottomCards });
+    setCardListTop(prepareCards(topCards));
+    setCardListBottom(prepareCards(bottomCards));
+  }
 
   const [processInputAPI] = useProcessInputAPIMutation();
 

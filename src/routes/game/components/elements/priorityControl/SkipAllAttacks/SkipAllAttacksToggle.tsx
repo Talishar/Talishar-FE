@@ -1,3 +1,4 @@
+import React from 'react';
 import styles from '../PriorityControl.module.css';
 import * as optConst from 'features/options/constants';
 import { useTranslation } from 'react-i18next';
@@ -6,8 +7,7 @@ import { GiBouncingSword } from 'react-icons/gi';
 import classNames from 'classnames';
 import {
   updateOptions,
-  Setting,
-  getSettingsEntity
+  Setting
 } from 'features/options/optionsSlice';
 import { getGameInfo } from 'features/game/GameSlice';
 import { shallowEqual } from 'react-redux';
@@ -22,16 +22,14 @@ const SkipAllAttacksToggle = ({
   activeBtnClass?: string;
   placement?: 'top' | 'top-end' | 'bottom';
 } = {}) => {
-  const settingsData = useAppSelector(getSettingsEntity);
+  const shortcutAttackThreshold = useAppSelector(
+    (state) =>
+      state.settings.entities[optConst.SHORTCUT_ATTACK_THRESHOLD]?.value
+  );
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const { isDisabled, triggerDisable } = useButtonDisableContext();
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
-
-  const initialValues = {
-    shortcutAttackThreshold:
-      settingsData[optConst.SHORTCUT_ATTACK_THRESHOLD]?.value
-  };
 
   const handleClickSkipAllAttacks = ({ name, value }: Setting) => {
     triggerDisable();
@@ -45,7 +43,7 @@ const SkipAllAttacksToggle = ({
 
   const buttonStyle = classNames(btnClass ?? styles.btn, {
     [activeBtnClass ?? styles.buttonActive]:
-      Number(initialValues.shortcutAttackThreshold) >= 2
+      Number(shortcutAttackThreshold) >= 2
   });
   return (
     <div>
@@ -57,7 +55,7 @@ const SkipAllAttacksToggle = ({
           e.currentTarget.blur();
           handleClickSkipAllAttacks({
             name: optConst.SHORTCUT_ATTACK_THRESHOLD,
-            value: Number(initialValues.shortcutAttackThreshold) ? 0 : 99
+            value: Number(shortcutAttackThreshold) ? 0 : 99
           });
         }}
         data-tooltip={t('MENU.SKIP_ATTACKS_TOOLTIP')}

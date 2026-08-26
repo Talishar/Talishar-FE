@@ -1,10 +1,11 @@
+import React from 'react';
 import CombatChain from '../combatChain/CombatChain';
 import styles from './Board.module.css';
 import PlayerPrompt from '../elements/playerPrompt/PlayerPrompt';
 import PlayerBoardGrid from '../playerBoardGrid/PlayerBoardGrid';
 import OpponentBoardGrid from '../opponentBoardGrid/OpponentBoardGrid';
 import GridBoard from './../gridBoard';
-import useWindowDimensions from 'hooks/useWindowDimensions';
+import { useMediaQuery } from 'hooks/useMediaQuery';
 import { useCookieString } from 'utils/cookieStore';
 import ExperimentalTurnWidget from '../elements/experimentalTurnWidget';
 import TurnWidget from '../elements/turnWidget/TurnWidget';
@@ -18,16 +19,14 @@ export interface playAreaDimensions {
   dimension: number;
 }
 
-export function Board() {
-  const [width, height] = useWindowDimensions();
+export const Board = React.memo(function Board() {
+  const useOldScreen = useMediaQuery('(orientation: portrait)');
   const experimental = useCookieString('experimental');
   const { playerID, isReplay } = useAppSelector(getGameInfo);
   const spectatorCameraView = useAppSelector(
     (state: RootState) => state.game.spectatorCameraView
   );
 
-  const useOldScreen = height > width;
-  // const useOldScreen = true;
   const isSpectatorViewingPlayer2 =
     (playerID === 3 || isReplay) && spectatorCameraView === 2;
 
@@ -53,4 +52,4 @@ export function Board() {
     );
   }
   return <GridBoard />;
-}
+});

@@ -24,11 +24,17 @@ import MetafyLogo from 'img/MetafyGradient.svg';
 import { useTranslation } from 'react-i18next';
 import useAuth from 'hooks/useAuth';
 import MasteryProgressCard from 'features/mastery/MasteryProgressCard';
+import { RootState } from 'app/Store';
 
 const EndGameScreen = () => {
   const dispatch = useAppDispatch();
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
-  const gameState = useAppSelector((state: any) => state.game, shallowEqual);
+  const playerOneHero = useAppSelector(
+    (state: RootState) => state.game.playerOne.Hero?.cardNumber
+  );
+  const playerTwoHero = useAppSelector(
+    (state: RootState) => state.game.playerTwo.Hero?.cardNumber
+  );
   const { t } = useTranslation();
   const { isLoggedIn } = useAuth();
   const [playerID, setPlayerID] = useState(gameInfo.playerID === 2 ? 2 : 1);
@@ -70,18 +76,14 @@ const EndGameScreen = () => {
   // If API doesn't have them, try gameState as fallback
   const yourHero =
     data?.yourHero ||
-    (playerID === 1
-      ? gameState?.playerOne?.Hero?.cardNumber
-      : gameState?.playerTwo?.Hero?.cardNumber) ||
+    (playerID === 1 ? playerOneHero : playerTwoHero) ||
     null;
 
   // For opponent hero: get from API data first, then fallback to gameState
   const opponentPlayerID = playerID === 1 ? 2 : 1;
   const opponentHero =
     data?.opponentHero ||
-    (opponentPlayerID === 1
-      ? gameState?.playerOne?.Hero?.cardNumber
-      : gameState?.playerTwo?.Hero?.cardNumber) ||
+    (opponentPlayerID === 1 ? playerOneHero : playerTwoHero) ||
     null;
 
   if (!showModal) return null;
@@ -289,4 +291,4 @@ const EndGameScreen = () => {
   );
 };
 
-export default EndGameScreen;
+export default React.memo(EndGameScreen);

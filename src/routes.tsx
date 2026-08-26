@@ -6,14 +6,14 @@ import {
   Outlet,
   Route
 } from 'react-router-dom';
-import { lazy, Suspense } from 'react';
+import React, { lazy, Suspense } from 'react';
 import { ErrorPage } from 'errorPage';
 import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
 import { useTranslation } from 'react-i18next';
 import useAuth from 'hooks/useAuth';
-import Header from 'components/header/Header';
 import LoadingScreen from 'components/LoadingScreen/LoadingScreen';
 
+const Header = lazy(() => import('components/header/Header'));
 const Index = lazy(() => import('./routes/index/Index'));
 const Play = lazy(() => import('routes/game/play/Play'));
 const JoinGame = lazy(() => import('routes/game/join/Join'));

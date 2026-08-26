@@ -111,27 +111,8 @@ export const getCollectionCardImagePath = ({
   return `${CLOUD_IMAGES_URL}/${path}/${cardPathData.languagePath}/${cardPathData.cardNumber}.webp`;
 };
 
-let cachedLanguage: string | null | undefined;
-
-if (typeof window !== 'undefined') {
-  window.addEventListener('storage', (e) => {
-    if (e.key === 'language' || e.key === null) {
-      cachedLanguage = undefined;
-    }
-  });
-}
-
-export const cacheLanguage = (language: string) => {
-  cachedLanguage = language;
-};
-
-export const invalidateLanguageCache = () => {
-  cachedLanguage = undefined;
-};
-
-export const loadInitialLanguage = () => {
-  if (cachedLanguage === undefined) {
-    cachedLanguage = localStorage.getItem('language');
-  }
-  return cachedLanguage ? cachedLanguage : DEFAULT_LANGUAGE;
-};
+export {
+  cacheLanguage,
+  invalidateLanguageCache,
+  loadInitialLanguage
+} from './languagePreference';

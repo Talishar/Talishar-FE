@@ -949,6 +949,7 @@
       },
       "GAME_DESCRIPTION": "Description de la partie",
       "GAME_DESCRIPTIONS": {
+        "ADVICE_COACHING": "Recherche des conseils/du coaching",
         "AGGRO": "Préfère les decks rapides (aggro)",
         "BEST_DECK": "À la recherche du meilleur deck du format",
         "CASUAL": "Jeu détendu / casual",

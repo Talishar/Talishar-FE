@@ -12,14 +12,16 @@ import { shallowEqual } from 'react-redux';
 export default function useSetting({ settingName }: { settingName: string }) {
   const dispatch = useAppDispatch();
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
-  const settingsLoaded = useAppSelector(getSettingsStatus);
+  const needsInitialLoad = useAppSelector(
+    (state) => getSettingsStatus(state) === QUERY_STATUS.IDLE
+  );
   useEffect(() => {
     if (gameInfo.gameID) {
-      if (settingsLoaded === QUERY_STATUS.IDLE) {
+      if (needsInitialLoad) {
         dispatch(fetchAllSettings({ game: gameInfo }));
       }
     }
-  }, [settingsLoaded, gameInfo.gameID]);
+  }, [needsInitialLoad, gameInfo.gameID]);
 
   const getSetting = useAppSelector((state) =>
     settingsSelectors.selectById(state, settingName)

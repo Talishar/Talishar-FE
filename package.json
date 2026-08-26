@@ -46,6 +46,7 @@
     "dev-vm": "vite --host",
     "start": "vite",
     "build": "vite build",
+    "verify:deployment": "node scripts/verify-deployment.mjs",
     "serve": "vite preview",
     "test": "vitest",
     "test:unit": "vitest --coverage ",

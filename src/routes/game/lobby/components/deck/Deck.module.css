@@ -27,14 +27,15 @@
 
 .sortButton {
   padding: 0.25rem 1.1rem;
-  border: 1px solid var(--theme-border);
-  background-color: var(--theme-card-background);
+  border: 1px solid var(--lobby-control-border, rgba(255, 255, 255, 0.12)) !important;
+  background-color: var(--lobby-control-background, #1e2329) !important;
   border-radius: 6px;
   cursor: pointer;
   font-size: 0.9em;
   font-weight: 500;
   transition: all 0.2s ease;
-  color: var(--theme-text-secondary);
+  color: var(--lobby-control-color, #9aa0a6) !important;
+  font-family: inherit !important;
   white-space: nowrap;
   width: auto;
   min-width: fit-content;
@@ -42,15 +43,27 @@
 }
 
 .sortButton:hover {
-  background-color: var(--theme-section-background);
-  border-color: var(--theme-primary);
-  color: var(--theme-text);
+  background-color: var(--lobby-control-background, #1e2329) !important;
+  border-color: var(
+    --lobby-control-hover-border,
+    rgba(255, 255, 255, 0.2)
+  ) !important;
+  color: var(--lobby-control-hover-color, #d0d3d6) !important;
+  transform: none;
+  box-shadow: none;
 }
 
 .sortButton.active {
-  background-color: var(--theme-primary);
-  color: var(--theme-primary-inverse);
-  border-color: var(--theme-primary);
+  background-color: color-mix(
+    in srgb,
+    var(--theme-text) 10%,
+    var(--lobby-control-background, #1e2329)
+  ) !important;
+  color: var(--theme-text-secondary, #d0d3d6) !important;
+  border-color: var(
+    --lobby-control-border,
+    rgba(255, 255, 255, 0.12)
+  ) !important;
   font-weight: 600;
 }
 
@@ -60,13 +73,14 @@
 
 .expandButton {
   padding: 0.25rem 1.1rem;
-  border: 1px solid var(--theme-border);
-  background-color: var(--theme-card-background);
+  border: 1px solid var(--lobby-control-border, rgba(255, 255, 255, 0.12)) !important;
+  background-color: var(--lobby-control-background, #1e2329) !important;
   border-radius: 6px;
   cursor: pointer;
   font-size: 0.9em;
   font-weight: 500;
-  color: var(--theme-text-secondary);
+  color: var(--lobby-control-color, #9aa0a6) !important;
+  font-family: inherit !important;
   text-align: left;
   transition: all 0.2s ease;
   display: flex;
@@ -77,9 +91,14 @@
 }
 
 .expandButton:hover {
-  background-color: var(--theme-section-background);
-  border-color: var(--theme-primary);
-  color: var(--theme-text);
+  background-color: var(--lobby-control-background, #1e2329) !important;
+  border-color: var(
+    --lobby-control-hover-border,
+    rgba(255, 255, 255, 0.2)
+  ) !important;
+  color: var(--lobby-control-hover-color, #d0d3d6) !important;
+  transform: none;
+  box-shadow: none;
 }
 
 @media (min-width: 1200px) and (max-width: 1400px) {
@@ -194,14 +213,15 @@
 
 .selectionButton {
   padding: 0.5em 1em;
-  border: 1px solid var(--theme-border);
-  background-color: var(--theme-card-background);
+  border: 1px solid var(--lobby-control-border, rgba(255, 255, 255, 0.12)) !important;
+  background-color: var(--lobby-control-background, #1e2329) !important;
   border-radius: 0.25em;
   cursor: pointer;
   font-size: 0.9em;
   font-weight: 500;
   transition: all 0.2s ease;
-  color: var(--theme-text-secondary);
+  color: var(--lobby-control-color, #9aa0a6) !important;
+  font-family: inherit !important;
   white-space: nowrap;
   width: auto;
   min-width: fit-content;
@@ -209,15 +229,27 @@
 }
 
 .selectionButton:hover {
-  background-color: var(--theme-section-background);
-  border-color: var(--theme-primary);
-  color: var(--theme-text);
+  background-color: var(--lobby-control-background, #1e2329) !important;
+  border-color: var(
+    --lobby-control-hover-border,
+    rgba(255, 255, 255, 0.2)
+  ) !important;
+  color: var(--lobby-control-hover-color, #d0d3d6) !important;
+  transform: none;
+  box-shadow: none;
 }
 
 .selectionButton:active {
-  background-color: var(--theme-primary);
-  color: var(--theme-primary-inverse);
-  border-color: var(--theme-primary);
+  background-color: color-mix(
+    in srgb,
+    var(--theme-text) 10%,
+    var(--lobby-control-background, #1e2329)
+  ) !important;
+  color: var(--theme-text-secondary, #d0d3d6) !important;
+  border-color: var(
+    --lobby-control-border,
+    rgba(255, 255, 255, 0.12)
+  ) !important;
   font-weight: 600;
 }
 

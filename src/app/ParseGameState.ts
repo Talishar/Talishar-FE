@@ -10,8 +10,13 @@ import Player from '../features/Player';
 // single poll/SSE push even though the pattern never changes.
 const IMAGE_PATH_RE = /.\/Images\//gm;
 
+const CARD_NAME_CACHE = new Map<string, string>();
+
 function GetCardName(cardNumber: string): string {
   if (!cardNumber || cardNumber === 'blank') return '';
+
+  const cachedName = CARD_NAME_CACHE.get(cardNumber);
+  if (cachedName !== undefined) return cachedName;
 
   let end = cardNumber.length;
   if (cardNumber.endsWith('_red')) end -= 4;
@@ -37,6 +42,7 @@ function GetCardName(cardNumber: string): string {
     wordCount += 1;
   }
 
+  CARD_NAME_CACHE.set(cardNumber, result);
   return result;
 }
 
@@ -172,6 +178,16 @@ function parseCards(input: any, reverse = false): Card[] {
   return result;
 }
 
+function appendParsedCards(result: Card[], input: any, zone?: string): void {
+  if (!Array.isArray(input)) return;
+
+  for (const cardObj of input) {
+    const card = ParseCard(cardObj);
+    if (zone !== undefined) card.zone = zone;
+    result.push(card);
+  }
+}
+
 interface PlayerKeyMap {
   equipment: string;
   hand: string;
@@ -279,18 +295,11 @@ function ParsePlayer(input: any, keys: PlayerKeyMap): Player {
   player.Arsenal = parseCards(input[keys.arsenal]);
 
   // Allies, auras, items and permanents all share one pile on the frontend.
-  player.Permanents = [
-    ...parseCards(input[keys.allies]),
-    ...parseCards(input[keys.auras]).map((card) => ({
-      ...card,
-      zone: ZONE.AURAS
-    })),
-    ...parseCards(input[keys.items]).map((card) => ({
-      ...card,
-      zone: ZONE.ITEMS
-    })),
-    ...parseCards(input[keys.permanents])
-  ];
+  player.Permanents = [];
+  appendParsedCards(player.Permanents, input[keys.allies]);
+  appendParsedCards(player.Permanents, input[keys.auras], ZONE.AURAS);
+  appendParsedCards(player.Permanents, input[keys.items], ZONE.ITEMS);
+  appendParsedCards(player.Permanents, input[keys.permanents]);
 
   player.Effects = parseCards(input[keys.effects]);
   player.ActionPoints = input[keys.actionPoints];
@@ -425,7 +434,9 @@ export default function ParseGameState(input: any) {
   const chatArray = input.chatLog ? input.chatLog.split('<br>') : [];
 
   result.chatLog = chatArray.map((message: string) => {
-    return message.replace(IMAGE_PATH_RE, '/images/');
+    return message.indexOf('/Images/', 1) === -1
+      ? message
+      : message.replace(IMAGE_PATH_RE, '/images/');
   });
 
   // activeplayer

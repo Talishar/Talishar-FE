@@ -10,7 +10,7 @@ import {
   setHeroInfo,
   submitButton
 } from 'features/game/GameSlice';
-import { settingUpdated } from 'features/options/optionsSlice';
+import { settingsUpdated } from 'features/options/optionsSlice';
 import {
   SHORTCUT_ATTACK_THRESHOLD,
   SKIP_AR_WINDOW,
@@ -40,9 +40,15 @@ export const TurnChangeSettingsSync = () => {
     ) {
       prevTurnNoRef.current = turnNo;
       prevTurnPlayerRef.current = turnPlayer;
-      dispatch(settingUpdated({ name: SHORTCUT_ATTACK_THRESHOLD, value: '0' }));
-      dispatch(settingUpdated({ name: SKIP_AR_WINDOW, value: '0' }));
-      dispatch(settingUpdated({ name: SKIP_DR_WINDOW, value: '0' }));
+      // These local shortcuts reset atomically at the same turn boundary.
+      // One adapter update avoids three store notification cycles.
+      dispatch(
+        settingsUpdated([
+          { name: SHORTCUT_ATTACK_THRESHOLD, value: '0' },
+          { name: SKIP_AR_WINDOW, value: '0' },
+          { name: SKIP_DR_WINDOW, value: '0' }
+        ])
+      );
     }
   }, [turnNo, turnPlayer, dispatch]);
 

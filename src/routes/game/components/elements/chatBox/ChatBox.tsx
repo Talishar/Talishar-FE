@@ -11,10 +11,12 @@ import { useTranslation } from 'react-i18next';
 
 export default function ChatBox({
   usePrimary = false,
-  showTabs = true
+  showTabs = true,
+  flushTop = false
 }: {
   usePrimary?: boolean;
   showTabs?: boolean;
+  flushTop?: boolean;
 }) {
   const { t } = useTranslation();
   const amIPlayerOne = useAppSelector((state: RootState) => {
@@ -126,7 +128,11 @@ export default function ChatBox({
   }, [chatLog, chatFilter, displayTyping]);
 
   return (
-    <div className={styles.chatBoxContainer}>
+    <div
+      className={classNames(styles.chatBoxContainer, {
+        [styles.flushTop]: flushTop
+      })}
+    >
       {showTabs && (
         <div
           role="tablist"

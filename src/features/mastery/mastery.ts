@@ -26,6 +26,22 @@ export const masteryTitle = (level: number) =>
 export const progressStart = (level: number, milestones = MASTERY_MILESTONES) =>
   level > 0 ? milestones[level - 1] : 0;
 
+export const masteryLevel = (
+  qualifyingGames: number,
+  milestones = MASTERY_MILESTONES
+) => {
+  let low = 0;
+  let high = milestones.length;
+
+  while (low < high) {
+    const middle = low + Math.floor((high - low) / 2);
+    if (qualifyingGames >= milestones[middle]) low = middle + 1;
+    else high = middle;
+  }
+
+  return low;
+};
+
 export const ornamentTier = (level: number) => {
   if (level >= MASTERY_MILESTONES.length) return 8;
   return level > 0 && level % 2 === 0 ? level / 2 : 0;

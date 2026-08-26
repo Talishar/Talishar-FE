@@ -18,8 +18,8 @@
 
 /* ── Main row ─────────────────────────────────── */
 .mainRow {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
   padding: 0.5rem 0.75rem;
   gap: 0.5rem;
@@ -33,6 +33,7 @@
   gap: 0.4rem;
   justify-content: flex-start;
   min-width: 0;
+  justify-self: start;
 }
 
 .syncActive,
@@ -96,9 +97,10 @@
   width: 34px;
   height: 34px;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--theme-text) 6%, transparent);
-  border: 1px solid var(--theme-border-light);
-  color: var(--theme-text-muted);
+  background: var(--lobby-control-background, #1e2329) !important;
+  border: 1px solid var(--lobby-control-border, rgba(255, 255, 255, 0.12)) !important;
+  color: var(--lobby-control-color, #9aa0a6) !important;
+  font-family: inherit !important;
   padding: 0;
   margin: 0;
   cursor: pointer;
@@ -109,9 +111,12 @@
 }
 
 .iconButton:hover {
-  background: color-mix(in srgb, var(--theme-text) 10%, transparent);
-  color: var(--theme-text-secondary);
-  border-color: var(--theme-border);
+  background: var(--lobby-control-background, #1e2329) !important;
+  color: var(--lobby-control-hover-color, #d0d3d6) !important;
+  border-color: var(
+    --lobby-control-hover-border,
+    rgba(255, 255, 255, 0.2)
+  ) !important;
   transform: none;
   box-shadow: none;
 }
@@ -124,23 +129,32 @@
 }
 
 .iconButtonCopied {
-  color: #4ade80;
-  border-color: #4ade80;
-  background: rgba(74, 222, 128, 0.1);
+  color: #4ade80 !important;
+  border-color: #4ade80 !important;
+  background: rgba(74, 222, 128, 0.1) !important;
 }
 
 .iconButtonCopied:hover {
-  color: #4ade80;
-  border-color: #4ade80;
-  background: rgba(74, 222, 128, 0.15);
+  color: #4ade80 !important;
+  border-color: #4ade80 !important;
+  background: rgba(74, 222, 128, 0.15) !important;
 }
 
 /* ── Center: deck count ───────────────────────── */
 .deckSection {
   display: flex;
-  flex-direction: row;
-  align-items: baseline;
+  align-items: center;
+  justify-self: center;
+  min-width: 0;
+  text-align: center;
+}
+
+.deckCountLine {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 0.35rem;
+  white-space: nowrap;
 }
 
 .deckNumber {
@@ -168,12 +182,27 @@
   color: rgba(76, 175, 128, 0.65);
 }
 
+.deckInvalid .deckNumber {
+  color: #e89a3d;
+}
+
+.deckInvalid .deckMeta {
+  color: rgba(232, 154, 61, 0.82);
+}
+
+.deckStatusIcon {
+  flex: 0 0 auto;
+  color: #e89a3d;
+  font-size: 0.9rem;
+}
+
 /* ── Right: action buttons ────────────────────── */
 .actionSection {
   display: flex;
   align-items: center;
   gap: 0.4rem;
   justify-content: flex-end;
+  justify-self: end;
 }
 
 .confirmButton {
@@ -190,20 +219,30 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  font-family: inherit !important;
+  font-weight: 650;
 }
 
 .confirmReady {
-  background: var(--theme-primary, #d4af37);
-  color: var(--theme-primary-inverse, #000);
+  background: var(--lobby-control-background, #1e2329) !important;
+  border: 1px solid var(--lobby-control-border, rgba(255, 255, 255, 0.12)) !important;
+  color: var(--lobby-control-color, #9aa0a6) !important;
 }
 
 .confirmReady:hover {
-  background: var(--theme-primary-hover, #e5c443);
+  background: var(--lobby-control-background, #1e2329) !important;
+  border-color: var(
+    --lobby-control-hover-border,
+    rgba(255, 255, 255, 0.2)
+  ) !important;
+  color: var(--lobby-control-hover-color, #d0d3d6) !important;
+  transform: none;
+  box-shadow: none !important;
 }
 
 .confirmDisabled {
-  background: color-mix(in srgb, var(--theme-text) 6%, transparent);
-  color: var(--theme-text-muted);
+  background: var(--lobby-control-background, #1e2329) !important;
+  color: var(--theme-text-muted) !important;
   cursor: not-allowed;
   border: 1px solid var(--theme-border-light) !important;
 }
@@ -213,9 +252,9 @@
   font-size: 0.88rem;
   padding: 0.45rem 1.1rem;
   border-radius: 6px;
-  background: color-mix(in srgb, var(--theme-text) 8%, transparent);
-  color: var(--theme-text-secondary);
-  border: 1px solid var(--theme-border-light);
+  background: var(--lobby-control-background, #1e2329) !important;
+  color: var(--lobby-control-color, #9aa0a6) !important;
+  border: 1px solid var(--lobby-control-border, rgba(255, 255, 255, 0.12)) !important;
   margin: 0;
   white-space: nowrap;
   width: auto;
@@ -225,6 +264,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  font-family: inherit !important;
+}
+
+.editButton:hover {
+  background: var(--lobby-control-background, #1e2329) !important;
+  color: var(--lobby-control-hover-color, #d0d3d6) !important;
+  border-color: var(
+    --lobby-control-hover-border,
+    rgba(255, 255, 255, 0.2)
+  ) !important;
+  transform: none;
+  box-shadow: none;
 }
 
 .leaveButton {
@@ -239,49 +290,23 @@
   align-items: center;
   justify-content: center;
   border-radius: 6px;
-  border: 1px solid var(--theme-border);
-  background: transparent;
-  color: var(--theme-text-muted);
+  border: 1px solid var(--lobby-control-border, rgba(255, 255, 255, 0.12)) !important;
+  background: var(--lobby-control-background, #1e2329) !important;
+  color: var(--lobby-control-color, #9aa0a6) !important;
   cursor: pointer;
   transition: border-color 0.15s ease, color 0.15s ease;
+  font-family: inherit !important;
 }
 
 .leaveButton:hover {
-  border-color: rgba(220, 80, 80, 0.55);
-  color: rgba(240, 120, 120, 0.9);
-  background: rgba(200, 50, 50, 0.08);
-}
-
-/* ── Alarm row ────────────────────────────────── */
-.alarmRow {
-  display: flex;
-  align-items: center;
-  align-self: center;
-  gap: 0.45rem;
-  padding: 0.22rem 0.7rem;
-  margin-bottom: 0.45rem;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #e67e22;
-  background: rgba(230, 126, 34, 0.07);
-  border: 1px solid rgba(230, 126, 34, 0.28);
-  border-radius: 6px;
-  animation: alarmSlideIn 0.18s ease;
-}
-
-.alarmIcon {
-  flex-shrink: 0;
-}
-
-@keyframes alarmSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-3px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  border-color: var(
+    --lobby-control-hover-border,
+    rgba(255, 255, 255, 0.2)
+  ) !important;
+  color: var(--lobby-control-hover-color, #d0d3d6) !important;
+  background: var(--lobby-control-background, #1e2329) !important;
+  transform: none;
+  box-shadow: none;
 }
 
 /* ── Widescreen tweaks ────────────────────────── */
@@ -298,6 +323,22 @@
   .confirmButton,
   .leaveButton {
     padding: 0.5rem 1.35rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .mainRow {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .deckCountLine {
+    gap: 0.25rem;
+  }
+
+  .deckMeta {
+    max-width: 38vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 

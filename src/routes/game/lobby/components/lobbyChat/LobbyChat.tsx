@@ -4,7 +4,7 @@ import styles from './LobbyChat.module.css';
 const LobbyChat = () => {
   return (
     <div className={styles.container}>
-      <ChatBox usePrimary showTabs={false} />
+      <ChatBox usePrimary showTabs={false} flushTop />
       <div className={styles.spacer}></div>
     </div>
   );

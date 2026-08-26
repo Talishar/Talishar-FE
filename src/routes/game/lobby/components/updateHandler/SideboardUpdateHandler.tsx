@@ -47,6 +47,10 @@ export const LobbyUpdateHandler = React.memo(() => {
       return;
     }
 
+    if (!gameInfo.gameID) {
+      return;
+    }
+
     if (timeoutRef.current !== undefined) {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = undefined;

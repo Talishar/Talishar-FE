@@ -1,6 +1,7 @@
 import { useAppDispatch } from 'app/Hooks';
-import gemOn from '../../../../../img/elements/hexagonRedGemGlow.png';
-import gemOff from '../../../../../img/elements/hexagonGrayGem.png';
+import gemOn from '../../../../../img/elements/hexagonRedGemGlow.webp';
+import gemOff from '../../../../../img/elements/hexagonGrayGem.webp';
+import React from 'react';
 import styles from './GemSlider.module.css';
 import { submitButton } from 'features/game/GameSlice';
 import { PROCESS_INPUT } from 'appConstants';
