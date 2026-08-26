@@ -124,6 +124,15 @@
   color: #fff !important;
 }
 
+.replayAdvanceButton.replayAdvanceButtonPlaying,
+.replayAdvanceButton.replayAdvanceButtonPlaying:hover,
+.replayAdvanceButton.replayAdvanceButtonPlaying:active,
+.replayAdvanceButton.replayAdvanceButtonPlaying:focus {
+  border-color: #e97a7a !important;
+  background: linear-gradient(to bottom, #b83b3b 0%, #702020 100%) !important;
+  background-color: #702020 !important;
+}
+
 @media (max-width: 1200px) {
   .replayAdvanceButton {
     display: block;

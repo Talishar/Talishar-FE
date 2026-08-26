@@ -1,4 +1,4 @@
-import { useEffect, useId, useMemo, useState } from 'react';
+import React, { useEffect, useId, useMemo, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import {
   submitButton,
@@ -21,6 +21,11 @@ import {
 } from 'features/api/apiSlice';
 import { GameLocationState } from 'interface/GameLocationState';
 import { usePlayerInputInProgress } from 'hooks/usePlayerInputInProgress';
+import {
+  REPLAY_PLAYBACK_SPEEDS,
+  ReplayPlaybackSpeed,
+  useReplayPlayback
+} from '../../../play/ReplayPlaybackContext';
 
 const TURN_MARKER_RE = /^\[\[TURN_START:(\d+):(\d+)\]\]$/;
 const COMBAT_RE =
@@ -125,6 +130,13 @@ function ReplayContent({
   });
   const [turnNumber, setTurnNumber] = useState(String(currentTurnNumber ?? 0));
   const isRequestInProgress = usePlayerInputInProgress();
+  const {
+    pausePlayback,
+    playbackSpeed,
+    setPlaybackSpeed,
+    setUseSpaceToAdvanceOneStep,
+    useSpaceToAdvanceOneStep
+  } = useReplayPlayback();
 
   const chatTurns = useMemo(() => getChatReplayTurns(chatLog), [chatLog]);
   const chatTurnsByKey = useMemo(
@@ -189,6 +201,7 @@ function ReplayContent({
       turn.number < 0
     )
       return;
+    pausePlayback();
     const target =
       turn.player === 1 || turn.player === 2
         ? `${turn.player}-${turn.number}`
@@ -241,6 +254,7 @@ function ReplayContent({
   };
 
   const returnToStart = async () => {
+    pausePlayback();
     if (!gameInfo?.replayNumber) {
       loadTurn({ number: 0 });
       return;
@@ -320,6 +334,42 @@ function ReplayContent({
         </button>
       </div>
       <div className={styles.content}>
+        <section className={styles.playbackSection}>
+          <div className={styles.sectionHeading}>
+            <span>{t('MATCH_REVIEW.PLAYBACK')}</span>
+          </div>
+          <label className={styles.stepModeToggle}>
+            <input
+              type="checkbox"
+              checked={useSpaceToAdvanceOneStep}
+              onChange={(event) =>
+                setUseSpaceToAdvanceOneStep(event.target.checked)
+              }
+            />
+            <span>{t('MATCH_REVIEW.SPACE_ADVANCES_ONE_STEP')}</span>
+          </label>
+          <label className={styles.speedControl}>
+            <span>{t('MATCH_REVIEW.PLAYBACK_SPEED')}</span>
+            <select
+              value={playbackSpeed}
+              onChange={(event) =>
+                setPlaybackSpeed(
+                  Number(event.target.value) as ReplayPlaybackSpeed
+                )
+              }
+              disabled={useSpaceToAdvanceOneStep}
+            >
+              {REPLAY_PLAYBACK_SPEEDS.map((speed) => (
+                <option key={speed} value={speed}>
+                  {speed}×
+                </option>
+              ))}
+            </select>
+          </label>
+          <div className={styles.shortcutHint}>
+            {t('MATCH_REVIEW.PAUSED_ARROW_SHORTCUTS')}
+          </div>
+        </section>
         <section
           className={styles.timelineSection}
           aria-label={t('MATCH_REVIEW.TURN_TIMELINE')}

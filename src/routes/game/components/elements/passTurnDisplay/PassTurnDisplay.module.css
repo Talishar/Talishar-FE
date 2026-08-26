@@ -118,6 +118,28 @@
   transform: scale(0.97);
 }
 
+.replayControl {
+  max-width: 100%;
+  overflow: hidden;
+  padding-inline: 0.1em;
+  font-size: clamp(0.8rem, 1.8dvh, 1.1rem);
+  letter-spacing: 0.015em;
+  white-space: nowrap;
+}
+
+.replayPlaying {
+  background: linear-gradient(to bottom, #b83b3b 0%, #702020 100%);
+}
+
+.replayPlaying::after {
+  box-shadow: 0 0 12px rgba(232, 76, 76, 0.55);
+}
+
+.replayPlaying:hover {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.3), 0 0 12px rgba(232, 76, 76, 0.5);
+}
+
 @keyframes passGlow {
   0%,
   100% {

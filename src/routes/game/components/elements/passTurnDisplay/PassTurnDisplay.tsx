@@ -10,6 +10,7 @@ import useSound from 'use-sound';
 import passTurnSound from 'sounds/prioritySound.wav';
 import { createPortal } from 'react-dom';
 import { getSettingsEntity } from 'features/options/optionsSlice';
+import { useReplayPlayback } from '../../../play/ReplayPlaybackContext';
 
 function passSubtitle(
   turnPhase: string | undefined,
@@ -61,6 +62,13 @@ export default function PassTurnDisplay() {
   const [isPassClickDebounced, setIsPassClickDebounced] =
     useState<boolean>(false);
   const [playPassTurnSound] = useSound(passTurnSound);
+  const {
+    activateReplayControl,
+    isPlaying: isReplayPlaying,
+    stepBackward,
+    stepForward,
+    useSpaceToAdvanceOneStep
+  } = useReplayPlayback();
   // Ref so the priority-sound effect doesn't re-register when useSound creates a new function ref.
   const playPassTurnSoundRef = useRef(playPassTurnSound);
   playPassTurnSoundRef.current = playPassTurnSound;
@@ -101,34 +109,44 @@ export default function PassTurnDisplay() {
     []
   );
 
-  const onPassTurn = useCallback(() => {
-    if (isPassClickDebounced) return;
-
-    setIsPassClickDebounced(true);
-    if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
-    debounceTimerRef.current = setTimeout(() => {
-      setIsPassClickDebounced(false);
-      debounceTimerRef.current = null;
-    }, 500);
-
-    if (!isReplay && preventPassPrompt) {
-      if (showAreYouSureModal) {
-        // Modal is already open, treat SPACE shortcut as clicking Yes
-        setShowAreYouSureModal(false);
-        dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
-      } else {
-        setShowAreYouSureModal(true);
+  const onPassTurn = useCallback(
+    (event?: KeyboardEvent | MouseEvent) => {
+      if (isReplay) {
+        if (event instanceof KeyboardEvent && event.repeat) return;
+        activateReplayControl();
+        return;
       }
-    } else {
-      dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
-    }
-  }, [
-    preventPassPrompt,
-    showAreYouSureModal,
-    dispatch,
-    isPassClickDebounced,
-    isReplay
-  ]);
+
+      if (isPassClickDebounced) return;
+
+      setIsPassClickDebounced(true);
+      if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+      debounceTimerRef.current = setTimeout(() => {
+        setIsPassClickDebounced(false);
+        debounceTimerRef.current = null;
+      }, 500);
+
+      if (preventPassPrompt) {
+        if (showAreYouSureModal) {
+          // Modal is already open, treat SPACE shortcut as clicking Yes
+          setShowAreYouSureModal(false);
+          dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
+        } else {
+          setShowAreYouSureModal(true);
+        }
+      } else {
+        dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
+      }
+    },
+    [
+      preventPassPrompt,
+      showAreYouSureModal,
+      dispatch,
+      isPassClickDebounced,
+      isReplay,
+      activateReplayControl
+    ]
+  );
 
   const onUndoKeyPress = useCallback(() => {
     if (isReplay) return;
@@ -143,6 +161,16 @@ export default function PassTurnDisplay() {
 
   useShortcut(DEFAULT_SHORTCUTS.PASS_TURN, onPassTurn);
   useShortcut(DEFAULT_SHORTCUTS.PASS_MIDDLE_CLICK, onPassTurn);
+  useShortcut(
+    DEFAULT_SHORTCUTS.REPLAY_PREVIOUS_STEP,
+    stepBackward,
+    isReplay && !isReplayPlaying
+  );
+  useShortcut(
+    DEFAULT_SHORTCUTS.REPLAY_NEXT_STEP,
+    stepForward,
+    isReplay && !isReplayPlaying
+  );
   useShortcut(DEFAULT_SHORTCUTS.UNDO, onUndoKeyPress);
 
   const clickYes = (e: React.SyntheticEvent<HTMLButtonElement>) => {
@@ -184,20 +212,31 @@ export default function PassTurnDisplay() {
     const subtitle = isReplay
       ? t('PASS_TURN_DISPLAY.REPLAY')
       : passSubtitle(turnPhaseEnum, t);
+    const replayLabel = useSpaceToAdvanceOneStep
+      ? t('PASS_TURN_DISPLAY.PASS')
+      : isReplayPlaying
+      ? t('PASS_TURN_DISPLAY.PAUSE')
+      : t('PASS_TURN_DISPLAY.PLAY');
     return (
       <>
         <div
-          className={styles.passTurnDisplayActive}
-          onClick={onPassTurn}
+          className={`${styles.passTurnDisplayActive} ${
+            isReplay ? styles.replayControl : ''
+          } ${isReplay && isReplayPlaying ? styles.replayPlaying : ''}`}
+          onClick={() => onPassTurn()}
           role="button"
           aria-label={
             isReplay
-              ? t('PASS_TURN_DISPLAY.ADVANCE_REPLAY')
+              ? useSpaceToAdvanceOneStep
+                ? t('PASS_TURN_DISPLAY.ADVANCE_REPLAY')
+                : isReplayPlaying
+                ? t('PASS_TURN_DISPLAY.PAUSE_REPLAY')
+                : t('PASS_TURN_DISPLAY.PLAY_REPLAY')
               : t('PASS_TURN_DISPLAY.PASS_PRIORITY')
           }
           title={t('PASS_TURN_DISPLAY.TITLE', { subtitle })}
         >
-          <div> {t('PASS_TURN_DISPLAY.PASS')} </div>
+          <div>{isReplay ? replayLabel : t('PASS_TURN_DISPLAY.PASS')}</div>
           <div className={styles.subThing}>{subtitle}</div>
         </div>
         {showAreYouSureModal &&

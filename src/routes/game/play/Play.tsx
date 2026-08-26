@@ -44,6 +44,7 @@ import {
   TurnChangeSettingsSync
 } from './PlaySideEffects';
 import { SHOW_UNDO_REASONS } from 'appConstants';
+import { ReplayPlaybackProvider } from './ReplayPlaybackContext';
 
 const TOAST_STYLE: React.CSSProperties = {
   background: 'var(--theme-tertiary)',
@@ -176,31 +177,33 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
   }
 
   return (
-    <PanelProvider>
-      <div className="centering">
-        <Toaster position="top-left" toastOptions={TOAST_OPTIONS} />
-        <GameSurfaceInline />
-        <HeroIntroGate />
-        <GameOverlays />
-        <CardScaleVariables />
-        <TurnChangeSettingsSync />
-        <HeroInfoSync />
-        <GameStateHandler
-          onInitialStateReceived={handleInitialStateReceived}
-          onLoadingError={setLoadingError}
-        />
-        {isGameStateLoading && (
-          <LoadingScreen
-            message={t('GAME_STATE.LOADING')}
-            detail={loadingError}
+    <ReplayPlaybackProvider>
+      <PanelProvider>
+        <div className="centering">
+          <Toaster position="top-left" toastOptions={TOAST_OPTIONS} />
+          <GameSurfaceInline />
+          <HeroIntroGate />
+          <GameOverlays />
+          <CardScaleVariables />
+          <TurnChangeSettingsSync />
+          <HeroInfoSync />
+          <GameStateHandler
+            onInitialStateReceived={handleInitialStateReceived}
+            onLoadingError={setLoadingError}
           />
-        )}
-        <SpectatorLoginRequired />
-        <EventsHandler />
-        {SHOW_UNDO_REASONS && <UndoReasonPrompt />}
-        <ReplayAdvanceButton />
-      </div>
-    </PanelProvider>
+          {isGameStateLoading && (
+            <LoadingScreen
+              message={t('GAME_STATE.LOADING')}
+              detail={loadingError}
+            />
+          )}
+          <SpectatorLoginRequired />
+          <EventsHandler />
+          {SHOW_UNDO_REASONS && <UndoReasonPrompt />}
+          <ReplayAdvanceButton />
+        </div>
+      </PanelProvider>
+    </ReplayPlaybackProvider>
   );
 }
 
