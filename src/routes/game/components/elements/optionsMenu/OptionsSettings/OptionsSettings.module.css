@@ -6,17 +6,19 @@
 }
 
 .fieldset {
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: none;
   border-radius: 8px;
-  padding: 1.25rem 1.5rem;
+  padding: 1rem;
   margin: 0;
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(36, 36, 41, 0.62);
+  color: #e4e4e7;
 }
 
-.fieldset legend {
-  padding: 0 0.5rem;
-  color: var(--theme-primary);
-  font-size: 1em;
+.fieldsetHeader {
+  width: 100%;
+  padding: 0 0 0.9rem;
+  color: var(--theme-primary, #d97706);
+  font-size: 0.95rem;
   font-weight: 700;
   line-height: 1.2;
   overflow: visible;
@@ -25,8 +27,20 @@
   gap: 0.4rem;
 }
 
-fieldset legend strong {
+.fieldsetHeader strong {
   font-weight: 700;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .optionLabel {
@@ -38,6 +52,7 @@ fieldset legend strong {
   border-radius: 6px;
   transition: background-color 0.2s;
   user-select: none;
+  color: #e4e4e7;
 }
 
 .optionLabel:hover {
@@ -75,11 +90,76 @@ fieldset legend strong {
 
 .optionLabel input[type='checkbox'],
 .optionLabel input[type='radio'] {
+  appearance: none;
+  -webkit-appearance: none;
   cursor: pointer;
   margin: 0;
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   flex-shrink: 0;
+  border: 2px solid #71717a;
+  background: #18181b;
+  background-image: none;
+  accent-color: #eab308;
+  display: grid;
+  place-content: center;
+  transition: border-color 0.15s ease, background-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.optionLabel:hover input[type='checkbox'],
+.optionLabel:hover input[type='radio'] {
+  border-color: var(--theme-primary, #eab308);
+}
+
+.optionLabel input[type='checkbox'] {
+  border-radius: 4px;
+}
+
+.optionLabel input[type='radio'] {
+  border-radius: 50%;
+}
+
+.optionLabel input[type='checkbox']::before {
+  content: '';
+  width: 9px;
+  height: 5px;
+  border: solid #18181b;
+  border-width: 0 0 2px 2px;
+  transform: rotate(-45deg) scale(0);
+  transition: transform 0.12s ease-in-out;
+}
+
+.optionLabel input[type='radio']::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #18181b;
+  transform: scale(0);
+  transition: transform 0.12s ease-in-out;
+}
+
+.optionLabel input[type='checkbox']:checked,
+.optionLabel input[type='radio']:checked {
+  border-color: var(--theme-primary, #d97706);
+  background: var(--theme-primary, #d97706);
+  background-image: none;
+}
+
+.optionLabel input[type='checkbox']:checked::before {
+  transform: rotate(-45deg) scale(1);
+}
+
+.optionLabel input[type='radio']:checked::before {
+  transform: scale(1);
+}
+
+.optionLabel input[type='checkbox']:focus-visible,
+.optionLabel input[type='radio']:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px
+    color-mix(in srgb, var(--theme-primary, #d97706) 28%, transparent);
 }
 
 .cardBackTitle {

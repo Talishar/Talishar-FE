@@ -16,11 +16,12 @@
   bottom: 10vh;
   left: 9vw;
   right: 13vw;
-  background: var(--near-black, #0d0d0f);
+  background: #121214;
+  color: #e4e4e7;
   padding: 0;
   overflow: hidden;
-  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.18));
-  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
   box-shadow: 0 24px 64px rgba(0, 0, 0, 0.75),
     0 2px 0 rgba(255, 255, 255, 0.04) inset;
   isolation: isolate;
@@ -36,6 +37,8 @@
   align-items: center;
   padding: 16px 24px;
   flex-shrink: 0;
+  background: #1a1a1e;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .title {
@@ -44,6 +47,7 @@
   font-size: 1.5em;
   font-weight: 600;
   line-height: 1;
+  color: #f4f4f5;
 }
 
 /* Pico adds margin-bottom to hgroup and every heading - suppress all of it */
@@ -68,12 +72,22 @@
   color: rgba(255, 255, 255, 0.45);
   font-size: 0.8rem;
   flex-shrink: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
   transition: background 0.15s ease, color 0.15s ease;
 }
 
 .optionsMenuCloseIcon:hover {
   background: rgba(255, 255, 255, 0.1);
   color: rgba(255, 255, 255, 0.9);
+}
+
+.optionsMenuCloseIcon:focus-visible {
+  outline: 2px solid var(--theme-primary, #d97706);
+  outline-offset: 2px;
 }
 
 .radioContainer {
@@ -122,16 +136,25 @@
   gap: 1.25rem;
 }
 
-.rightColumn {
-  padding-top: 0.5em;
-}
-
 .buttonColumn {
   display: flex;
   flex-direction: column;
   align-items: stretch;
   gap: 0.6rem;
-  width: 35dvh;
+  width: min(100%, 22rem);
+  box-sizing: border-box;
+}
+
+.buttonGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.reportButtonGroup {
+  margin-top: 0.4rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .alarm {
@@ -146,11 +169,11 @@
   justify-content: center !important;
   width: 100% !important;
   min-height: 2.75rem !important;
-  padding: 0.6rem 1rem !important;
+  padding: 0.625rem 1rem !important;
   margin-bottom: 0 !important;
-  background-color: rgba(0, 0, 0, 0.3) !important;
-  color: rgba(255, 255, 255, 0.8) !important;
-  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  background-color: rgba(45, 45, 53, 0.72) !important;
+  color: #e4e4e7 !important;
+  border: 1px solid rgba(228, 228, 231, 0.12) !important;
   border-radius: 6px !important;
   font-family: inherit !important;
   font-size: 0.875rem !important;
@@ -165,9 +188,9 @@
 }
 
 .buttonDiv:hover {
-  background-color: rgba(255, 255, 255, 0.09) !important;
-  border-color: rgba(255, 255, 255, 0.28) !important;
-  color: white !important;
+  background-color: rgba(55, 55, 65, 0.9) !important;
+  border-color: rgba(228, 228, 231, 0.22) !important;
+  color: #fafafa !important;
   transform: translateY(-1px) !important;
 }
 
@@ -175,34 +198,74 @@
   transform: translateY(0) !important;
 }
 
-/* Section Container */
-.sectionContainer {
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  padding: 1.5rem 1.5rem 1.25rem;
-  background: rgba(0, 0, 0, 0.2);
-  position: relative;
+.buttonDiv:focus-visible {
+  outline: 2px solid var(--theme-primary, #d97706) !important;
+  outline-offset: 2px !important;
 }
 
-/* Section header - center its midpoint on the top border, matching native <legend> behaviour */
+.primaryButton {
+  background-color: var(--theme-primary, #d97706) !important;
+  border-color: var(--theme-primary, #d97706) !important;
+  color: var(--theme-primary-inverse, #18181b) !important;
+  font-weight: 700 !important;
+}
+
+.primaryButton:hover {
+  background-color: var(--theme-primary-hover, #f59e0b) !important;
+  border-color: var(--theme-primary-hover, #f59e0b) !important;
+  color: var(--theme-primary-inverse, #18181b) !important;
+}
+
+.dangerButton {
+  background-color: rgba(69, 32, 36, 0.35) !important;
+  border-color: rgba(248, 113, 113, 0.42) !important;
+  color: #fca5a5 !important;
+}
+
+.dangerButton:hover {
+  background-color: rgba(127, 29, 29, 0.22) !important;
+  border-color: rgba(248, 113, 113, 0.7) !important;
+  color: #fecaca !important;
+}
+
+/* Section Container */
+.sectionContainer {
+  border: none;
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 0;
+  min-width: 0;
+  background: rgba(36, 36, 41, 0.62);
+}
+
 .sectionHeader {
-  color: var(--theme-primary);
-  font-size: 1em;
+  width: 100%;
+  color: var(--theme-primary, #d97706);
+  font-size: 0.95rem;
   font-weight: 700;
-  padding: 0 0.5rem;
-  position: absolute;
-  top: 0;
-  left: 1.25rem;
-  transform: translateY(-50%);
+  padding: 0 0 0.9rem;
+  margin: 0;
   display: flex;
   align-items: center;
   gap: 0.5rem;
   line-height: 1.2;
-  background: var(--near-black, #0d0d0f);
+  background: transparent;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .sectionContent {
-  padding-top: 0.75rem;
+  padding-top: 0.15rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -220,7 +283,7 @@
   margin: 0;
   font-size: 0.875em;
   line-height: 1.5;
-  color: rgba(255, 255, 255, 0.7);
+  color: #a1a1aa;
   text-align: center;
 }
 
