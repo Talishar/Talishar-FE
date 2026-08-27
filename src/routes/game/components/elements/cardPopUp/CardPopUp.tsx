@@ -51,7 +51,8 @@ const SKIP_POPUP_CARDS = new Set<string>([
   'DUMMYDISHONORED',
   'SHARPEN',
   'HEAVE',
-  'INTIMIDATE'
+  'INTIMIDATE',
+  'DECAY'
 ]);
 
 type SurfaceProps = {
