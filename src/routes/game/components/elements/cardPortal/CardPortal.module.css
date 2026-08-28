@@ -34,31 +34,53 @@
 
 .keywordStrip {
   pointer-events: none;
+  position: relative;
+  z-index: 2;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  column-gap: 8px;
+  row-gap: 8px;
   width: min(100%, 360px);
   margin-top: 4px;
-  padding: 7px 9px;
+  padding: 9px 11px;
   border-radius: 7px;
-  background: rgb(15 23 42 / 88%);
+  background: rgb(15 23 42 / 97%);
   color: #f8fafc;
+  box-shadow: 0 4px 14px rgb(0 0 0 / 35%);
   font-size: 0.72rem;
   line-height: 1.25;
 }
 
 .keywordLine {
-  display: flex;
-  align-items: baseline;
-  gap: 5px;
-  margin: 2px 0;
+  display: contents;
 }
+
 .keywordPill {
-  flex: none;
-  padding: 1px 5px;
-  border-radius: 999px;
-  background: rgb(148 163 184 / 35%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 1.6em;
+  padding: 2px 7px;
+  border: 1px solid rgb(148 163 184 / 16%);
+  border-radius: 4px;
+  background: rgb(148 163 184 / 12%);
+  color: #e2e8f0;
   font-weight: 700;
+  line-height: 1.1;
 }
+
+.keywordDescription {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
 .keywordMore {
-  margin-top: 4px;
+  grid-column: 1 / -1;
   color: #cbd5e1;
 }
 

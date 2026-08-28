@@ -193,6 +193,101 @@ export const GLOSSARY: KeywordEntry[] = [
     short: 'Your deck can contain any number of copies of this card.',
     category: 'ability'
   },
+  {
+    id: 'pairs',
+    name: 'Pairs',
+    short: 'This can only be equipped alongside the named object.',
+    category: 'ability'
+  },
+  {
+    id: 'rune-gate',
+    name: 'Rune Gate',
+    short:
+      'If you control enough Runechants, you may play this from banishment without paying its resource cost.',
+    category: 'ability'
+  },
+  {
+    id: 'crank',
+    name: 'Crank',
+    short:
+      'As this enters the arena, you may remove a steam counter from it to gain 1 action point.',
+    category: 'ability'
+  },
+  {
+    id: 'protect',
+    name: 'Protect',
+    short: 'You may defend any hero attacked by an opponent with this.',
+    category: 'ability'
+  },
+  {
+    id: 'scrap',
+    name: 'Scrap',
+    short:
+      'As an additional cost to play this, you may banish an item or equipment from your graveyard.',
+    category: 'ability'
+  },
+  {
+    id: 'beat-chest',
+    name: 'Beat Chest',
+    short:
+      'As an additional cost to play this, you may discard a card with 6 or more power.',
+    category: 'ability'
+  },
+  {
+    id: 'guardwell',
+    name: 'Guardwell',
+    short:
+      'When the combat chain closes, if this defended, put -1 defense counters on it equal to its defense.',
+    category: 'ability'
+  },
+  {
+    id: 'universal',
+    name: 'Universal',
+    short: 'While in any zone, this is the same class as your hero.',
+    category: 'ability'
+  },
+  {
+    id: 'cloaked',
+    name: 'Cloaked',
+    short: 'Equip this face-down.',
+    category: 'ability'
+  },
+  {
+    id: 'arcane-shelter',
+    name: 'Arcane Shelter',
+    short:
+      'If you would be dealt arcane damage, destroy this to prevent X of that damage.',
+    category: 'ability',
+    parameterized: true
+  },
+  {
+    id: 'perched',
+    name: 'Perched',
+    short:
+      'This can be equipped in addition to a two-handed weapon and cannot be attacked while equipped.',
+    category: 'ability'
+  },
+  {
+    id: 'watery-grave',
+    name: 'Watery Grave',
+    short:
+      'When this is put into your graveyard from the arena, turn it face-down.',
+    category: 'ability'
+  },
+  {
+    id: 'suspense',
+    name: 'Suspense',
+    short:
+      'This enters with 2 suspense counters. Remove one at the start of your turn; destroy this when none remain.',
+    category: 'ability'
+  },
+  {
+    id: 'fragment',
+    name: 'Fragment',
+    short:
+      'Whenever a card with 2 or more defense defends this, this gets -2 power.',
+    category: 'ability'
+  },
 
   // --- Label keywords --------------------------------------------------------
   {
@@ -245,7 +340,8 @@ export const GLOSSARY: KeywordEntry[] = [
   {
     id: 'channel',
     name: 'Channel',
-    short: 'Its accompanying ability applies if this has go again.',
+    short:
+      'At the beginning of your end phase, add a flow counter, then destroy this unless you bottom-deck a matching card for each flow counter.',
     category: 'label'
   },
   {
@@ -266,13 +362,82 @@ export const GLOSSARY: KeywordEntry[] = [
     name: 'Wager',
     short:
       'When the attack resolves, its controller wins the stated prize if it hit; otherwise the other player wins it.',
-    category: 'label'
+    category: 'effect'
   },
   {
     id: 'quickstrike',
     name: 'Quickstrike',
+    short: 'Its accompanying ability applies if this has go again.',
+    category: 'label'
+  },
+  {
+    id: 'solflare',
+    name: 'Solflare',
     short:
-      'At the beginning of your end phase, put a flow counter on this, then destroy it unless you bottom-deck the stated elemental cards for each flow counter on it.',
+      "Its accompanying ability applies when this is charged to your hero's soul.",
+    category: 'label'
+  },
+  {
+    id: 'unity',
+    name: 'Unity',
+    short:
+      'Its accompanying ability applies when this defends together with a card from hand.',
+    category: 'label'
+  },
+  {
+    id: 'evo-upgrade',
+    name: 'Evo Upgrade',
+    short:
+      'Its accompanying effect scales with the number of evos you have equipped.',
+    category: 'label'
+  },
+  {
+    id: 'galvanize',
+    name: 'Galvanize',
+    short:
+      'When this defends, you may destroy an item you control for the accompanying effect.',
+    category: 'label'
+  },
+  {
+    id: 'decompose',
+    name: 'Decompose',
+    short:
+      'You may banish 2 Earth cards and an action card from your graveyard for the accompanying effect.',
+    category: 'label'
+  },
+  {
+    id: 'bond',
+    name: 'Bond',
+    short:
+      'Its accompanying ability applies if a card of the named element was pitched to play this.',
+    category: 'label'
+  },
+  {
+    id: 'flow',
+    name: 'Flow',
+    short:
+      'Its accompanying ability applies if you have played a card of the named element this turn.',
+    category: 'label'
+  },
+  {
+    id: 'heavy',
+    name: 'Heavy',
+    short:
+      'Its accompanying ability applies if this is the only card equipped to your weapon zones.',
+    category: 'label'
+  },
+  {
+    id: 'go-fish',
+    name: 'Go Fish',
+    short:
+      'When this hits, the hero reveals a chosen hand card; if it matches the stated quality, they discard it and you create Gold.',
+    category: 'label'
+  },
+  {
+    id: 'starfall',
+    name: 'Starfall',
+    short:
+      'Its accompanying ability applies if an instant entered your graveyard this turn.',
     category: 'label'
   },
 
@@ -429,6 +594,57 @@ export const GLOSSARY: KeywordEntry[] = [
     category: 'effect',
     aliases: ['Marked'],
     noAutoLink: true
+  },
+  {
+    id: 'awaken',
+    name: 'Awaken',
+    short: "Make a double-faced card's back face its active face.",
+    category: 'effect'
+  },
+  {
+    id: 'clash',
+    name: 'Clash',
+    short:
+      'The clashing players reveal their top cards; the player who reveals the greatest power wins.',
+    category: 'effect'
+  },
+  {
+    id: 'negate',
+    name: 'Negate',
+    short: 'Clear the targeted layer from the stack without resolving it.',
+    category: 'effect'
+  },
+  {
+    id: 'retrieve',
+    name: 'Retrieve',
+    short: 'You may pay 1 resource to equip the retrieved card.',
+    category: 'effect'
+  },
+  {
+    id: 'steal',
+    name: 'Steal',
+    short: 'Gain control of the specified card.',
+    category: 'effect'
+  },
+  {
+    id: 'crowd-reaction',
+    name: 'The Crowd Cheers / The Crowd Boos',
+    aliases: ['The Crowd Cheers', 'The Crowd Boos'],
+    short: 'The affected player is considered cheered or booed.',
+    category: 'effect'
+  },
+  {
+    id: 'sharpen',
+    name: 'Sharpen',
+    short:
+      'Put a +1 power counter on the card, then remove all +1 power counters from it at the beginning of the end phase.',
+    category: 'effect'
+  },
+  {
+    id: 'unfreeze',
+    name: 'Unfreeze',
+    short: 'Remove the freeze effect from the object.',
+    category: 'effect'
   },
 
   // Game terms (defined outside CR chapter 8)

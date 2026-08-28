@@ -4,6 +4,15 @@ import { useCardKeywords } from 'utils/cardKeywords';
 import styles from './CardPortal.module.css';
 import { useTranslation } from 'react-i18next';
 
+const CANONICAL_LABEL_IDS = new Set([
+  'specialization',
+  'fusion',
+  'essence',
+  'channel',
+  'bond',
+  'flow'
+]);
+
 export default function CardKeywordStrip({
   cardNumber
 }: {
@@ -14,7 +23,7 @@ export default function CardKeywordStrip({
   const entries = keywordLabels?.flatMap((label) => {
     const id = normalizeKeyword(label);
     const entry = id ? getKeywordEntry(id) : undefined;
-    return entry ? [entry] : [];
+    return entry ? [{ entry, label }] : [];
   });
   if (!entries?.length) return null;
   const visible = entries.slice(0, 4);
@@ -23,10 +32,14 @@ export default function CardKeywordStrip({
       className={styles.keywordStrip}
       aria-label={t('CARD_KEYWORD_STRIP.TITLE')}
     >
-      {visible.map((entry) => (
-        <div className={styles.keywordLine} key={entry.id}>
-          <span className={styles.keywordPill}>{entry.name}</span>
-          <span>{entry.short}</span>
+      {visible.map(({ entry, label }) => (
+        <div className={styles.keywordLine} key={`${entry.id}-${label}`}>
+          <span className={styles.keywordPill}>
+            {entry.parameterized || CANONICAL_LABEL_IDS.has(entry.id)
+              ? entry.name
+              : label}
+          </span>
+          <span className={styles.keywordDescription}>{entry.short}</span>
         </div>
       ))}
       {entries.length > visible.length && (

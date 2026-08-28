@@ -86,7 +86,20 @@ export const matchKeywords = (text: string): KeywordMatch[] => {
 
 export const normalizeKeyword = (raw: string): string | undefined => {
   const { aliasToId } = getState();
-  return aliasToId.get(normalize(raw.replace(/\s+\d+$/, '')));
+  const value = normalize(raw.replace(/\s+(?:\d+|x)$/i, ''));
+  const exact = aliasToId.get(value);
+  if (exact) return exact;
+
+  // Card data preserves the variable part of these templated keywords, while
+  // the glossary stores one canonical definition for each keyword family.
+  if (value.endsWith(' specialization')) return 'specialization';
+  if (value.startsWith('essence of ')) return 'essence';
+  if (value.endsWith(' fusion')) return 'fusion';
+  if (value.startsWith('channel ')) return 'channel';
+  if (/^(?:earth|ice|lightning) bond$/.test(value)) return 'bond';
+  if (/^(?:earth|ice|lightning) flow$/.test(value)) return 'flow';
+
+  return undefined;
 };
 
 export const getKeywordEntry = (id: string): KeywordEntry | undefined =>
