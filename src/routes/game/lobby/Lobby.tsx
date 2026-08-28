@@ -14,7 +14,7 @@ import styles from './Lobby.module.css';
 import Equipment from './components/equipment/Equipment';
 import classNames from 'classnames';
 import { FaExclamationCircle } from 'react-icons/fa';
-import { LuGlobe } from 'react-icons/lu';
+import { LuGlobe, LuUsers } from 'react-icons/lu';
 import { RiSpyLine } from 'react-icons/ri';
 import { GiCapeArmor } from 'react-icons/gi';
 import { SiBookstack } from 'react-icons/si';
@@ -44,6 +44,7 @@ import { DeckResponse, Weapon } from 'interface/API/GetLobbyInfo.php';
 import LobbyUpdateHandler from './components/updateHandler/SideboardUpdateHandler';
 import {
   GAME_FORMAT,
+  GAME_VISIBILITY,
   BREAKPOINT_EXTRA_LARGE,
   QUERY_STATUS
 } from 'appConstants';
@@ -560,21 +561,35 @@ const Lobby = () => {
     rawLobbyDescription && rawLobbyDescription !== 'Game #'
       ? rawLobbyDescription
       : '';
-  const lobbyVisibilityLabel =
-    gameLobby?.isPrivateLobby === undefined
-      ? ''
+  // Fall back to the legacy boolean while frontend/backend deployments overlap.
+  const lobbyVisibility =
+    gameLobby?.visibility ??
+    (gameLobby?.isPrivateLobby === undefined
+      ? undefined
       : gameLobby.isPrivateLobby
+      ? GAME_VISIBILITY.PRIVATE
+      : GAME_VISIBILITY.PUBLIC);
+  const lobbyVisibilityLabel =
+    lobbyVisibility === GAME_VISIBILITY.FRIENDS_ONLY
+      ? t('MENU.CREATE_GAME.VISIBILITIES.FRIENDS')
+      : lobbyVisibility === GAME_VISIBILITY.PRIVATE
       ? t('MENU.CREATE_GAME.VISIBILITIES.PRIVATE')
-      : t('MENU.CREATE_GAME.VISIBILITIES.PUBLIC');
+      : lobbyVisibility === GAME_VISIBILITY.PUBLIC
+      ? t('MENU.CREATE_GAME.VISIBILITIES.PUBLIC')
+      : '';
+  const isRestrictedLobby =
+    lobbyVisibility !== undefined && lobbyVisibility !== GAME_VISIBILITY.PUBLIC;
   const lobbyMetaLine = [lobbyVisibilityLabel, lobbyFormatName]
     .filter(Boolean)
     .join(' - ');
   const lobbyTooltipParts = [
-    gameLobby?.isPrivateLobby === undefined
-      ? ''
-      : gameLobby.isPrivateLobby
+    lobbyVisibility === GAME_VISIBILITY.FRIENDS_ONLY
+      ? t('MENU.CREATE_GAME.VISIBILITIES.FRIENDS')
+      : lobbyVisibility === GAME_VISIBILITY.PRIVATE
       ? t('MENU.CREATE_GAME.VISIBILITIES.PRIVATE_LOBBY')
-      : t('MENU.CREATE_GAME.VISIBILITIES.PUBLIC_LOBBY'),
+      : lobbyVisibility === GAME_VISIBILITY.PUBLIC
+      ? t('MENU.CREATE_GAME.VISIBILITIES.PUBLIC_LOBBY')
+      : '',
     lobbyFormatName,
     lobbyDescription
   ].filter(Boolean);
@@ -596,11 +611,12 @@ const Lobby = () => {
           {lobbyVisibilityLabel !== '' && (
             <span
               className={classNames(styles.lobbySettingsItem, {
-                [styles.lobbySettingsPrivate]:
-                  gameLobby?.isPrivateLobby === true
+                [styles.lobbySettingsPrivate]: isRestrictedLobby
               })}
             >
-              {gameLobby?.isPrivateLobby ? (
+              {lobbyVisibility === GAME_VISIBILITY.FRIENDS_ONLY ? (
+                <LuUsers aria-hidden="true" />
+              ) : isRestrictedLobby ? (
                 <RiSpyLine aria-hidden="true" />
               ) : (
                 <LuGlobe aria-hidden="true" />
