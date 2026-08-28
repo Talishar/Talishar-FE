@@ -15,7 +15,7 @@ import {
   Setting,
   updateOptions
 } from 'features/options/optionsSlice';
-import useWindowDimensions from 'hooks/useWindowDimensions';
+import { useWindowWidth } from 'hooks/useWindowDimensions';
 import { useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import * as optConst from 'features/options/constants';
@@ -31,7 +31,7 @@ const SettingsPage = () => {
   const { setTransparency } = useTheme();
   const settingsData = useAppSelector(getSettingsEntity);
   const dispatch = useAppDispatch();
-  const [windowWidth] = useWindowDimensions();
+  const windowWidth = useWindowWidth();
   const isMobile = windowWidth < 768;
   const { data } = useGetCosmeticsQuery(undefined);
   const [cookies, setCookie] = useCookies([

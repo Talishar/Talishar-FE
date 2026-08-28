@@ -60,7 +60,7 @@ const COMPETITIVE_FORMATS = new Set([
   GAME_FORMAT.COMPETITIVE_SAGE
 ]);
 import ChooseFirstTurn from './components/chooseFirstTurn/ChooseFirstTurn';
-import useWindowDimensions from 'hooks/useWindowDimensions';
+import { useWindowWidth } from 'hooks/useWindowDimensions';
 import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
 import { useNavigate } from 'react-router-dom';
 import CardPortal from '../components/elements/cardPortal/CardPortal';
@@ -118,7 +118,7 @@ const Lobby = () => {
   const [activeTab, setActiveTab] = useState<string>('equipment');
   const [unreadChat, setUnreadChat] = useState<boolean>(false);
   const [filtersExpanded, setFiltersExpanded] = useState(false);
-  const [width] = useWindowDimensions();
+  const width = useWindowWidth();
   const [isWideScreen, setIsWideScreen] = useState<boolean>(false);
   const [isDeckValid, setIsDeckValid] = useState(true);
   const navigate = useNavigate();

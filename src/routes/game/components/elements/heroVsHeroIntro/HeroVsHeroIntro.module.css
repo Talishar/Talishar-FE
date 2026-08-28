@@ -162,15 +162,18 @@
 
 .glowActive {
   opacity: 1;
+  will-change: transform, opacity;
   animation: ambientPulse 3.8s ease-in-out 0.85s infinite alternate;
 }
 
 @keyframes ambientPulse {
   from {
-    filter: blur(34px) brightness(0.9);
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
   }
   to {
-    filter: blur(42px) brightness(1.05);
+    transform: translateX(-50%) scale(1.09);
+    opacity: 0.9;
   }
 }
 

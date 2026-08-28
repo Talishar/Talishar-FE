@@ -15,7 +15,7 @@ import { DEFAULT_SHORTCUTS } from 'appConstants';
 import useShortcut from 'hooks/useShortcut';
 import { CheckboxSetting, RadioGroup, Fieldset } from './FormComponents';
 import { VisualSlider } from './VisualSettings';
-import useWindowDimensions from 'hooks/useWindowDimensions';
+import { useWindowWidth } from 'hooks/useWindowDimensions';
 import ThemeToggle from 'themes/ThemeToggle';
 import LanguageSelector from 'components/LanguageSelector/LanguageSelector';
 import { RootState } from 'app/Store';
@@ -29,7 +29,7 @@ const OptionsSettings = () => {
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const settingsData = useAppSelector(getSettingsEntity);
   const dispatch = useAppDispatch();
-  const [windowWidth] = useWindowDimensions();
+  const windowWidth = useWindowWidth();
   const isMobile = windowWidth < 768;
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
