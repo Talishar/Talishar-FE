@@ -44,6 +44,7 @@ import {
   TurnChangeSettingsSync
 } from './PlaySideEffects';
 import { SHOW_UNDO_REASONS } from 'appConstants';
+import { prefetchCardKeywords } from 'utils/cardKeywords';
 import { ReplayPlaybackProvider } from './ReplayPlaybackContext';
 
 const TOAST_STYLE: React.CSSProperties = {
@@ -156,6 +157,16 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
   useEffect(() => {
     dispatch(setIsRoguelike(isRoguelike));
   }, [isRoguelike]);
+
+  useEffect(() => {
+    const idle = window.requestIdleCallback;
+    if (idle) {
+      const handle = idle(() => prefetchCardKeywords(), { timeout: 4000 });
+      return () => window.cancelIdleCallback?.(handle);
+    }
+    const timer = window.setTimeout(prefetchCardKeywords, 2000);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     setLoadingError(developmentLoadingError);

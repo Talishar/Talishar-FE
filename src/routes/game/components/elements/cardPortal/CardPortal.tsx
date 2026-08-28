@@ -45,6 +45,7 @@ function CardDetails({
           className={classNames(styles.img, { [styles.meldImg]: isMeld })}
           isOpponent={isOpponent}
           preferEnglishArt
+          eager
         />
       </div>
       {showKeywords && <CardKeywordStrip cardNumber={cardNumber} />}
