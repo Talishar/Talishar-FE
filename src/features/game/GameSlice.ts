@@ -648,6 +648,27 @@ export const gameSlice = createSlice({
 
       return state;
     },
+    setRecoveredAuthKey: (
+      state,
+      action: PayloadAction<{
+        authKey: string;
+        playerID?: number;
+        username?: string;
+      }>
+    ) => {
+      const { authKey, playerID, username } = action.payload;
+      if (!authKey) return state;
+      const seat = playerID ?? state.gameInfo.playerID;
+      if (seat !== 1 && seat !== 2) return state;
+      if (state.gameInfo.authKey === authKey && state.gameInfo.playerID === seat)
+        return state;
+      state.gameInfo.playerID = seat;
+      if (state.gameInfo.gameID > 0) {
+        saveGameAuthKey(state.gameInfo.gameID, authKey, seat, username);
+      }
+      state.gameInfo.authKey = authKey;
+      return state;
+    },
     // for main menu, zero out all active game info.
     clearGameInfo: (state) => {
       // Only delete auth key if we have a valid game ID
@@ -957,6 +978,7 @@ const { actions } = gameSlice;
 export const {
   setPopUp,
   setGameStart,
+  setRecoveredAuthKey,
   clearPopUp,
   setCardListFocus,
   setCardListLoadFocus,

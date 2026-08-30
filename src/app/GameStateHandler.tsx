@@ -6,7 +6,8 @@ import {
   receiveGameState,
   setGameStart,
   setOpponentPresence,
-  setOpponentTyping
+  setOpponentTyping,
+  setRecoveredAuthKey
 } from 'features/game/GameSlice';
 import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
 import { GameLocationState } from 'interface/GameLocationState';
@@ -16,14 +17,24 @@ import { selectCurrentUserName } from 'features/auth/authSlice';
 import {
   getCurrentUsername,
   cacheCurrentUsername,
-  loadGameAuthKey
+  loadGameAuthKey,
+  loadGamePlayerID,
+  saveGameAuthKey
 } from 'utils/LocalKeyManagement';
 import ParseGameState from './ParseGameState';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { reportPerformanceMetric } from 'utils/performanceMetrics';
+import useAuth from 'hooks/useAuth';
 
 const MAX_RETRIES = 5;
+
+interface SeatLookup {
+  gameID: number;
+  settled: boolean;
+  playerID?: number;
+  authKey?: string;
+}
 
 interface GameStateHandlerProps {
   onInitialStateReceived?: (gameID: number) => void;
@@ -38,6 +49,7 @@ const GameStateHandler = ({
   const { gameID } = useParams();
   const gameInfo = useAppSelector(getGameInfo);
   const currentUserName = useAppSelector(selectCurrentUserName);
+  const { isLoggedIn, isLoading: isAuthLoading } = useAuth();
   const dispatch = useAppDispatch();
   const [{ gameName = '0', playerID = '3', authKey = '' }] =
     useKnownSearchParams();
@@ -55,6 +67,8 @@ const GameStateHandler = ({
   const retryTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const navigateTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [forceRetry, setForceRetry] = useState(0);
+  const [seatLookup, setSeatLookup] = useState<SeatLookup | null>(null);
+  const seatLookupKeyRef = useRef('');
   const gameOverRef = useRef(false);
   const onInitialStateReceivedRef = useRef(onInitialStateReceived);
   const onLoadingErrorRef = useRef(onLoadingError);
@@ -76,11 +90,102 @@ const GameStateHandler = ({
     };
   }, []);
 
+  // Claim our seat from the account before falling back to spectating.
   useEffect(() => {
     const currentGameID = parseInt(gameID ?? gameName);
-    const currentPlayerID = locationState?.playerID ?? parseInt(playerID);
+    if (currentGameID <= 0) return;
 
-    let currentAuthKey = locationState?.authKey || authKey;
+    // Deciding before the cookie login resolves would lock us into spectating.
+    if (isAuthLoading) {
+      setSeatLookup({ gameID: currentGameID, settled: false });
+      return;
+    }
+
+    const lookupKey = `${currentGameID}:${currentUserName ?? ''}:${isLoggedIn}`;
+    if (seatLookupKeyRef.current === lookupKey) return;
+    seatLookupKeyRef.current = lookupKey;
+
+    const explicitPlayerID = locationState?.playerID ?? parseInt(playerID);
+    const storedAuthKey = loadGameAuthKey(currentGameID);
+    const knownAuthKey =
+      locationState?.authKey || authKey || gameInfo.authKey || storedAuthKey;
+    const knownPlayerID =
+      explicitPlayerID === 1 || explicitPlayerID === 2
+        ? explicitPlayerID
+        : loadGamePlayerID(currentGameID);
+    const alreadySeated =
+      (knownPlayerID === 1 || knownPlayerID === 2) && !!knownAuthKey;
+
+    if (alreadySeated || !isLoggedIn) {
+      setSeatLookup({ gameID: currentGameID, settled: true });
+      return;
+    }
+
+    setSeatLookup({ gameID: currentGameID, settled: false });
+
+    let cancelled = false;
+    (async () => {
+      let claimed: SeatLookup = { gameID: currentGameID, settled: true };
+      try {
+        const response = await fetch(`${BACKEND_URL}APIs/RecoverAuthKey.php`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ gameName: currentGameID })
+        });
+        if (response.ok) {
+          const result = await response.json();
+          if (
+            result?.success &&
+            result.authKey &&
+            (result.playerID === 1 || result.playerID === 2)
+          ) {
+            saveGameAuthKey(
+              currentGameID,
+              result.authKey,
+              result.playerID,
+              currentUserName || undefined
+            );
+            claimed = {
+              gameID: currentGameID,
+              settled: true,
+              playerID: result.playerID,
+              authKey: result.authKey
+            };
+          }
+        }
+      } catch (error) {
+        // Not a player in this game, or the lookup failed - spectate instead.
+      }
+      if (!cancelled) setSeatLookup(claimed);
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    gameID,
+    gameName,
+    playerID,
+    authKey,
+    gameInfo.authKey,
+    locationState?.playerID,
+    locationState?.authKey,
+    currentUserName,
+    isLoggedIn,
+    isAuthLoading
+  ]);
+
+  useEffect(() => {
+    const currentGameID = parseInt(gameID ?? gameName);
+    if (seatLookup?.gameID !== currentGameID || !seatLookup.settled) return;
+
+    const claimedPlayerID = seatLookup.playerID;
+    const currentPlayerID =
+      claimedPlayerID ?? locationState?.playerID ?? parseInt(playerID);
+
+    let currentAuthKey =
+      seatLookup.authKey || locationState?.authKey || authKey;
     if (!currentAuthKey) {
       currentAuthKey = gameInfo.authKey;
     }
@@ -106,6 +211,18 @@ const GameStateHandler = ({
           username: usernameToSave || undefined
         })
       );
+      // setGameStart preserves the existing playerID when reconnecting to the
+      // same game, so a seat we recovered has to be applied explicitly.
+      if (claimedPlayerID && seatLookup.authKey) {
+        dispatch(
+          setRecoveredAuthKey({
+            authKey: seatLookup.authKey,
+            playerID: claimedPlayerID,
+            username: usernameToSave || undefined
+          })
+        );
+      }
+
       gameParamsRef.current = {
         gameID: currentGameID,
         playerID: currentPlayerID,
@@ -120,12 +237,14 @@ const GameStateHandler = ({
     gameInfo.authKey,
     locationState?.playerID,
     currentUserName,
+    seatLookup,
     dispatch
   ]);
 
   // SSE connection to game server
   useEffect(() => {
     const currentGameID = gameInfo.gameID;
+    if (seatLookup?.gameID !== currentGameID || !seatLookup.settled) return;
     const currentPlayerID = gameInfo.playerID;
     const currentAuthKey = gameInfo.authKey;
 
@@ -370,6 +489,7 @@ const GameStateHandler = ({
     gameInfo.playerID,
     gameInfo.authKey,
     currentUserName,
+    seatLookup,
     forceRetry,
     dispatch,
     navigate,

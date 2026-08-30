@@ -72,7 +72,8 @@ import {
   clearGetLobbyRefresh,
   getGameInfo,
   setHeroInfo,
-  setLobbyAltArts
+  setLobbyAltArts,
+  setRecoveredAuthKey
 } from 'features/game/GameSlice';
 import useSound from 'use-sound';
 import playerJoined from 'sounds/playerJoinedSound.mp3';
@@ -481,6 +482,12 @@ const Lobby = () => {
   }
 
   if (!data || !data.deck) return null;
+
+  useEffect(() => {
+    if (playerID === 3) return;
+    if (!gameLobby?.authKey || gameLobby.authKey === authKey) return;
+    dispatch(setRecoveredAuthKey({ authKey: gameLobby.authKey }));
+  }, [gameLobby?.authKey, authKey, playerID, dispatch]);
 
   // Navigate to main game when ready - must be in useEffect to avoid setState during render
   useEffect(() => {
