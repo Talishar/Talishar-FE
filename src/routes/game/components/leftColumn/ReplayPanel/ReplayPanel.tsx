@@ -366,9 +366,6 @@ function ReplayContent({
               ))}
             </select>
           </label>
-          <div className={styles.shortcutHint}>
-            {t('MATCH_REVIEW.PAUSED_ARROW_SHORTCUTS')}
-          </div>
         </section>
         <section
           className={styles.timelineSection}

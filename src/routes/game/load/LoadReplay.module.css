@@ -100,6 +100,63 @@
   font-size: 0.82rem;
 }
 
+.slotMeter {
+  margin: 0 0 1.1rem;
+  padding: 0.75rem 0.9rem 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.slotMeterHeader {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.35rem 1rem;
+  align-items: baseline;
+}
+
+.slotMeterCount {
+  color: var(--theme-text-primary, #fff);
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.slotMeterBreakdown {
+  color: var(--theme-text-secondary, #c6c6c6);
+  font-size: 0.78rem;
+}
+
+.slotTrack {
+  display: flex;
+  gap: 0.22rem;
+  margin-top: 0.55rem;
+}
+
+.slotSegment {
+  flex: 1 1 0;
+  height: 0.38rem;
+  min-width: 0.35rem;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.slotSegmentFavorite {
+  background: #f0c94d;
+}
+
+.slotMeterNote {
+  margin: 0.55rem 0 0;
+  color: var(--theme-text-secondary, #c6c6c6);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.slotUpgradeLink {
+  color: #bed3e6;
+  text-decoration: underline;
+}
+
 .emptyReplays {
   padding: 1rem;
   border-radius: 4px;

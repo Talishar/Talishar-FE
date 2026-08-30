@@ -1,126 +1,178 @@
+.replayTab,
+.replayPanel {
+  --mr-panel: #121214;
+  --mr-surface: #18181b;
+  --mr-surface-raised: #1f1f23;
+  --mr-border: #27272a;
+  --mr-border-strong: #3f3f46;
+  --mr-accent-border: #4a1414;
+  --mr-accent-border-hover: #6f0000;
+  --mr-accent-fill: #320a0a;
+  --mr-accent-fill-hover: #431010;
+  --mr-text: #e4e4e7;
+  --mr-text-muted: #a1a1aa;
+  --mr-text-dim: #71717a;
+  --mr-font: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
 .replayTab {
   position: fixed;
   left: 0;
   top: 47.5%;
   width: 6rem;
   height: 3rem;
-  background: rgba(255, 107, 107, 0.09) !important;
-  border: 1px solid rgba(255, 107, 107, 0.3) !important;
-  color: #ffb0b0 !important;
-  font-weight: bold;
+  background: var(--mr-accent-fill) !important;
+  background-image: none !important;
+  border: 1px solid var(--mr-accent-border) !important;
+  border-left: 0 !important;
+  border-radius: 0 5px 5px 0 !important;
+  box-shadow: none !important;
+  color: var(--mr-text) !important;
+  font-family: var(--mr-font);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   cursor: pointer;
   z-index: 11001;
-  border-radius: 0 8px 8px 0;
-  font-size: 0.85rem;
-  transition: background-color 0.2s ease, border-color 0.2s ease,
-    color 0.2s ease, box-shadow 0.2s ease;
+  transition: background-color 0.12s linear, border-color 0.12s linear,
+    color 0.12s linear;
 }
 .replayTab:hover {
-  background: rgba(255, 107, 107, 0.2) !important;
-  border-color: #ff7777 !important;
+  background: var(--mr-accent-fill-hover) !important;
+  border-color: var(--mr-accent-border-hover) !important;
   color: #fff !important;
-  box-shadow: 0 0 0 1px rgba(255, 107, 107, 0.12) !important;
+  box-shadow: none !important;
   transform: none !important;
 }
 .hidden {
   display: none;
 }
+
 .replayPanel {
   position: fixed;
   left: 0;
   top: 0;
   width: 320px;
   height: 100vh;
-  background: rgba(10, 10, 13, 0.97);
-  border-right: 2px solid rgba(255, 107, 107, 0.25);
-  box-shadow: 2px 0 20px rgba(0, 0, 0, 0.7);
+  background: var(--mr-panel);
+  border-right: 1px solid var(--mr-border);
+  box-shadow: none;
   z-index: 11000;
   display: flex;
   flex-direction: column;
-  animation: slideIn 0.3s ease-out;
+  font-family: var(--mr-font);
+  color: var(--mr-text);
+  animation: slideIn 0.16s ease-out;
   overflow-y: auto;
+  scrollbar-color: var(--mr-border-strong) var(--mr-panel);
+  scrollbar-width: thin;
+}
+.replayPanel::-webkit-scrollbar {
+  width: 8px;
+}
+.replayPanel::-webkit-scrollbar-thumb {
+  background: var(--mr-border-strong);
+}
+.replayPanel::-webkit-scrollbar-track {
+  background: var(--mr-panel);
 }
 @keyframes slideIn {
   from {
     transform: translateX(-100%);
-    opacity: 0;
   }
   to {
     transform: translateX(0);
-    opacity: 1;
   }
 }
+
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
-  border-bottom: 1px solid rgba(255, 107, 107, 0.2);
-  background: rgba(0, 0, 0, 0.4);
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--mr-border);
+  background: var(--mr-surface);
 }
 .header h3 {
   margin: 0;
-  color: #ff8383;
-  font-size: 1.1rem;
+  color: var(--mr-text);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 .subheading {
-  color: rgba(255, 255, 255, 0.52);
-  font-size: 0.72rem;
+  display: block;
+  margin-top: 0.15rem;
+  color: var(--mr-text-dim);
+  font-size: 0.7rem;
 }
+
 .replayPanel .closeButton {
   appearance: none;
   box-sizing: border-box;
-  flex: 0 0 2rem;
-  width: 2rem !important;
-  height: 2rem !important;
-  min-width: 2rem !important;
-  min-height: 2rem !important;
+  flex: 0 0 1.85rem;
+  width: 1.85rem !important;
+  height: 1.85rem !important;
+  min-width: 1.85rem !important;
+  min-height: 1.85rem !important;
   margin: 0 !important;
   padding: 0 !important;
-  background: transparent !important;
+  background: var(--mr-surface-raised) !important;
   background-image: none !important;
-  border: 0 !important;
-  border-radius: 4px;
+  border: 1px solid var(--mr-border) !important;
+  border-radius: 2px;
   box-shadow: none !important;
-  color: rgba(255, 255, 255, 0.7) !important;
+  color: var(--mr-text-muted) !important;
   display: inline-flex !important;
   align-items: center;
   justify-content: center;
   line-height: 0;
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  transition: background-color 0.12s linear, border-color 0.12s linear,
+    color 0.12s linear;
 }
 .replayPanel .closeButton svg {
   display: block;
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1.1rem;
+  height: 1.1rem;
   pointer-events: none;
 }
 .replayPanel .closeButton:hover {
-  background: rgba(255, 107, 107, 0.2) !important;
+  background: var(--mr-accent-fill) !important;
   background-image: none !important;
+  border-color: var(--mr-accent-border-hover) !important;
   color: #fff !important;
-  box-shadow: 0 0 0 1px rgba(255, 107, 107, 0.12) !important;
+  box-shadow: none !important;
   transform: none !important;
 }
+
 .content {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  padding: 1rem;
+  gap: 0.9rem;
+  padding: 0.9rem 1rem 1.25rem;
   flex: 1;
 }
 .sectionHeading {
   display: flex;
   justify-content: space-between;
-  color: rgba(255, 255, 255, 0.84);
-  font-size: 0.8rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
+  align-items: baseline;
+  gap: 0.5rem;
+  color: var(--mr-text);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.45rem;
 }
 .sectionHeading span:last-child {
-  color: rgba(255, 255, 255, 0.45);
-  font-weight: 400;
+  color: var(--mr-text-dim);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
 }
 .playbackSection,
 .timelineSection {
@@ -130,84 +182,133 @@
 .playbackSection {
   display: flex;
   flex-direction: column;
-  gap: 0.55rem;
+  gap: 0.5rem;
 }
 .playbackSection .sectionHeading {
   margin-bottom: 0;
 }
+
 .stepModeToggle {
   display: flex;
   align-items: center;
-  gap: 0.55rem;
-  color: rgba(255, 255, 255, 0.78);
+  gap: 0.5rem;
+  color: var(--mr-text);
   font-size: 0.78rem;
   line-height: 1.3;
   cursor: pointer;
 }
-.replayPanel .stepModeToggle input {
+.replayPanel .stepModeToggle input[type='checkbox'] {
+  appearance: none;
+  -webkit-appearance: none;
+  box-sizing: border-box;
   flex: 0 0 auto;
-  width: 1rem !important;
-  height: 1rem;
+  width: 0.95rem !important;
+  height: 0.95rem;
+  min-width: 0.95rem;
   margin: 0;
-  accent-color: #ff7777;
+  padding: 0;
+  border: 1px solid var(--mr-border-strong);
+  border-radius: 2px;
+  background: var(--mr-surface) !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  accent-color: #6f0000;
+  cursor: pointer;
+  display: grid;
+  place-content: center;
+  transition: background-color 0.12s linear, border-color 0.12s linear;
+}
+.replayPanel .stepModeToggle input[type='checkbox']::before {
+  content: '';
+  width: 0.42rem;
+  height: 0.22rem;
+  border: solid var(--mr-text);
+  border-width: 0 0 2px 2px;
+  transform: rotate(-45deg) scale(0);
+  transition: transform 0.12s ease-in-out;
+}
+.replayPanel .stepModeToggle:hover input[type='checkbox'] {
+  border-color: var(--mr-accent-border-hover);
+}
+.replayPanel .stepModeToggle input[type='checkbox']:checked {
+  border-color: var(--mr-accent-border-hover) !important;
+  background: var(--mr-accent-fill-hover) !important;
+  background-image: none !important;
+}
+.replayPanel .stepModeToggle input[type='checkbox']:checked::before {
+  transform: rotate(-45deg) scale(1);
+}
+.replayPanel .stepModeToggle input[type='checkbox']:focus-visible {
+  outline: none;
+  border-color: var(--mr-accent-border-hover);
 }
 .speedControl {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  color: rgba(255, 255, 255, 0.78);
+  color: var(--mr-text);
   font-size: 0.78rem;
   line-height: 1.3;
 }
 .replayPanel .speedControl select {
   box-sizing: border-box;
   width: 5rem !important;
-  height: 2rem;
+  height: 1.95rem;
   margin: 0;
-  padding: 0.25rem 1.6rem 0.25rem 0.5rem;
-  border: 1px solid rgba(255, 107, 107, 0.3);
-  border-radius: 4px;
-  background-color: rgba(255, 255, 255, 0.04);
-  color: rgba(255, 255, 255, 0.9);
+  padding: 0.2rem 1.5rem 0.2rem 0.5rem;
+  border: 1px solid var(--mr-accent-border);
+  border-radius: 2px;
+  background-color: var(--mr-surface-raised);
+  background-image: none;
+  box-shadow: none;
+  color: var(--mr-text);
+  font-family: var(--mr-font);
   font-size: 0.78rem;
+  font-weight: 600;
+}
+.replayPanel .speedControl select:hover:not(:disabled) {
+  border-color: var(--mr-accent-border-hover);
 }
 .replayPanel .speedControl select:disabled {
   cursor: not-allowed;
-  opacity: 0.42;
+  border-color: var(--mr-border);
+  color: var(--mr-text-dim);
+  opacity: 1;
 }
 .shortcutHint {
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--mr-text-dim);
   font-size: 0.68rem;
-  line-height: 1.3;
+  line-height: 1.35;
 }
+
 .timeline {
   display: flex;
-  gap: 0.4rem;
+  gap: 0.35rem;
   overflow-x: auto;
-  padding: 0.1rem 0 0.65rem;
+  padding: 0.1rem 0 0.6rem;
   scroll-snap-type: x proximity;
-  scrollbar-color: rgba(255, 131, 131, 0.55) rgba(255, 255, 255, 0.06);
+  scrollbar-color: var(--mr-border-strong) var(--mr-surface);
   scrollbar-width: thin;
 }
 .timeline::-webkit-scrollbar {
   height: 6px;
 }
 .timeline::-webkit-scrollbar-thumb {
-  background: rgba(255, 131, 131, 0.55);
-  border-radius: 4px;
+  background: var(--mr-border-strong);
 }
 .timeline::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.06);
-  border-radius: 4px;
+  background: var(--mr-surface);
 }
 .turnMarker {
   min-width: 5.5rem;
-  padding: 0.42rem 0.25rem;
-  border: 1px solid rgba(255, 107, 107, 0.23);
-  border-radius: 5px;
-  background: rgba(255, 255, 255, 0.035);
-  color: rgba(255, 255, 255, 0.78);
+  padding: 0.42rem 0.45rem;
+  border: 1px solid var(--mr-border);
+  border-radius: 2px;
+  background: var(--mr-surface);
+  box-shadow: none;
+  color: var(--mr-text);
+  font-family: var(--mr-font);
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -215,43 +316,52 @@
   gap: 0.08rem;
   text-align: left;
   scroll-snap-align: start;
-  transition: background-color 0.2s ease, border-color 0.2s ease,
-    color 0.2s ease, box-shadow 0.2s ease;
+  transition: background-color 0.12s linear, border-color 0.12s linear,
+    color 0.12s linear;
 }
-.replayPanel .turnMarker:hover:not(:disabled),
-.activeTurn {
-  border-color: #ff7777 !important;
-  background: rgba(255, 107, 107, 0.2) !important;
+.replayPanel .turnMarker:hover:not(:disabled) {
+  border-color: var(--mr-border-strong) !important;
+  background: var(--mr-surface-raised) !important;
   color: #fff !important;
-  box-shadow: 0 0 0 1px rgba(255, 107, 107, 0.12) !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+.replayPanel .activeTurn,
+.replayPanel .activeTurn:hover:not(:disabled) {
+  border-color: var(--mr-accent-border-hover) !important;
+  background: var(--mr-accent-fill) !important;
+  color: #fff !important;
+  box-shadow: none !important;
   transform: none !important;
 }
 .turnMarker:disabled {
-  opacity: 0.45;
+  color: var(--mr-text-dim);
   cursor: wait;
 }
 .turnNumber {
+  font-size: 0.8rem;
   font-weight: 700;
 }
 .turnPlayer {
   font-size: 0.68rem;
-  color: #ffb1b1;
+  color: var(--mr-text-muted);
 }
 .turnEvents {
   display: none;
 }
 .turnEventSummary {
   margin-top: 0.15rem;
-  color: rgba(255, 255, 255, 0.65);
-  font-size: 0.61rem;
+  color: var(--mr-text-dim);
+  font-size: 0.62rem;
   line-height: 1.15;
 }
 .emptyTimeline {
-  color: rgba(255, 255, 255, 0.53);
+  color: var(--mr-text-dim);
   font-size: 0.78rem;
   line-height: 1.35;
   margin: 0;
 }
+
 .navButtons {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -261,60 +371,72 @@
 .eventButton,
 .submitButton,
 .actionButton {
-  border: 1px solid rgba(255, 107, 107, 0.3);
-  border-radius: 4px;
-  background: rgba(255, 107, 107, 0.09);
-  color: #ffb0b0;
+  border: 1px solid var(--mr-accent-border);
+  border-radius: 2px;
+  background: var(--mr-surface-raised);
+  background-image: none;
+  box-shadow: none;
+  color: var(--mr-text);
+  font-family: var(--mr-font);
   font-weight: 600;
+  letter-spacing: 0.02em;
   cursor: pointer;
-  padding: 0.68rem 0.55rem;
+  padding: 0.6rem 0.55rem;
   font-size: 0.78rem;
-  transition: background-color 0.2s ease, border-color 0.2s ease,
-    color 0.2s ease, box-shadow 0.2s ease;
+  transition: background-color 0.12s linear, border-color 0.12s linear,
+    color 0.12s linear;
 }
 .navButton {
   display: grid;
-  grid-template-columns: 1rem 1fr 1rem;
+  grid-template-columns: 0.9rem 1fr 0.9rem;
   justify-items: center;
   align-items: center;
-  min-height: 3.75rem;
+  min-height: 3.25rem;
   text-align: center;
 }
 .navArrow,
 .navArrowPlaceholder {
-  width: 1rem;
+  width: 0.9rem;
   line-height: 1;
 }
+.navArrow {
+  color: var(--mr-text-muted);
+}
 .eventButton {
-  color: rgba(255, 255, 255, 0.72);
-  background: rgba(255, 255, 255, 0.035);
+  border-color: var(--mr-border);
+  color: var(--mr-text-muted);
+  background: var(--mr-surface);
 }
 .replayPanel .navButton:hover:not(:disabled),
 .replayPanel .eventButton:hover:not(:disabled),
 .replayPanel .actionButton:hover:not(:disabled),
 .replayPanel .submitButton:hover:not(:disabled) {
-  border-color: #ff7777 !important;
-  background: rgba(255, 107, 107, 0.2) !important;
+  border-color: var(--mr-accent-border-hover) !important;
+  background: var(--mr-accent-fill-hover) !important;
   color: #fff !important;
-  box-shadow: 0 0 0 1px rgba(255, 107, 107, 0.12) !important;
+  box-shadow: none !important;
   transform: none !important;
+}
+.replayPanel .navButton:active:not(:disabled),
+.replayPanel .actionButton:active:not(:disabled),
+.replayPanel .submitButton:active:not(:disabled) {
+  background: var(--mr-accent-fill) !important;
 }
 .navButton:disabled,
 .eventButton:disabled,
 .actionButton:disabled,
 .submitButton:disabled {
   cursor: not-allowed;
-  opacity: 0.42;
+  border-color: var(--mr-border);
+  background: var(--mr-surface);
+  color: var(--mr-text-dim);
+  opacity: 1;
 }
+
 .divider {
   height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 107, 107, 0.25),
-    transparent
-  );
-  margin: 0.2rem 0;
+  background: var(--mr-border);
+  margin: 0.1rem 0;
 }
 .formGroup {
   display: flex;
@@ -322,8 +444,11 @@
   gap: 0.4rem;
 }
 .formGroup label {
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 0.8rem;
+  color: var(--mr-text);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 .jumpRow {
   display: flex;
@@ -336,12 +461,20 @@
   width: auto !important;
   min-width: 0;
   flex: 1 1 0;
-  padding: 0.58rem;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 107, 107, 0.25);
-  border-radius: 4px;
-  color: white;
+  padding: 0.55rem;
+  background: var(--mr-surface);
+  background-image: none;
+  border: 1px solid var(--mr-border);
+  border-radius: 2px;
+  box-shadow: none;
+  color: var(--mr-text);
+  font-family: var(--mr-font);
+  font-size: 0.82rem;
   margin-bottom: 0;
+}
+.replayPanel .jumpRow input:focus {
+  outline: none;
+  border-color: var(--mr-accent-border-hover);
 }
 .replayPanel .jumpRow .submitButton {
   box-sizing: border-box;
@@ -349,7 +482,7 @@
   width: 4rem !important;
   min-height: 0;
   margin: 0;
-  padding: 0.58rem 0.4rem;
+  padding: 0.55rem 0.4rem;
 }
 .actionButton {
   display: flex;
@@ -358,6 +491,7 @@
   gap: 0.35rem;
   width: 100%;
 }
+
 @media (max-width: 768px) {
   .replayPanel {
     width: 100vw;
@@ -368,7 +502,7 @@
   .replayTab {
     width: 3.25rem;
     height: 2.5rem;
-    font-size: 0.72rem;
+    font-size: 0.7rem;
   }
   .content {
     padding: 0.85rem;
