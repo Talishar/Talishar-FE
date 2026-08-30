@@ -38,15 +38,16 @@
   z-index: 2;
   isolation: isolate;
   display: grid;
-  grid-template-columns: 112px minmax(0, 1fr);
+  grid-template-columns: 100px minmax(0, 1fr);
   column-gap: 8px;
   row-gap: 8px;
   width: min(100%, 360px);
   margin-top: 4px;
   padding: 9px 11px;
   border-radius: 7px;
-  background: rgb(15 23 42 / 97%);
-  color: #f8fafc;
+  border: 1px solid var(--theme-border-light, rgba(255, 255, 255, 0.1));
+  background: var(--theme-near-black, rgba(0, 0, 0, 0.95));
+  color: var(--theme-text, #f4eded);
   box-shadow: 0 4px 14px rgb(0 0 0 / 35%);
   font-size: 0.72rem;
   line-height: 1.25;
@@ -62,13 +63,12 @@
   justify-content: center;
   align-self: center;
   box-sizing: border-box;
-  width: 100%;
-  min-height: 1.6em;
-  padding: 2px 7px;
-  border: 1px solid rgb(148 163 184 / 16%);
+  width: 100px;
+  padding: 6px 12px;
+  border: 1px solid var(--theme-border-light, rgba(255, 255, 255, 0.1));
   border-radius: 4px;
-  background: rgb(148 163 184 / 12%);
-  color: #e2e8f0;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--theme-text-secondary, #e0e0e0);
   font-weight: 700;
   line-height: 1.1;
 }
@@ -81,7 +81,7 @@
 
 .keywordMore {
   grid-column: 1 / -1;
-  color: #cbd5e1;
+  color: var(--theme-text-muted, rgba(255, 255, 255, 0.6));
 }
 
 .doubleFacedCard {

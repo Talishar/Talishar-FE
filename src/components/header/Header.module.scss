@@ -572,8 +572,10 @@
   top: 70px;
   left: 0;
   right: 0;
-  background: var(--theme-card-background, #1e2329);
-  border-top: 2px solid var(--theme-primary, #d4af37);
+  background: rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
   z-index: 9999;
   overflow-y: auto;
   max-height: calc(100dvh - 70px);
@@ -592,7 +594,7 @@
       min-height: 0;
       margin: 0 !important;
       padding: 0 !important;
-      border-bottom: 1px solid var(--muted-border-color, #202632);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 
       > a,
       > button {
@@ -613,14 +615,25 @@
         height: auto;
         border-radius: 0;
         justify-content: flex-start;
+        background: none;
+        background-color: transparent;
+        background-image: none;
+        border: none;
         border-left: 3px solid transparent;
+        outline: none;
+        -webkit-tap-highlight-color: transparent;
         transition: background-color 150ms ease, color 150ms ease,
           border-left-color 150ms ease;
 
-        &:hover {
-          background-color: var(--theme-form-background, #33383d);
+        &:hover,
+        &:focus,
+        &:focus-visible,
+        &:active {
+          background-color: var(--theme-form-background, #2a2f35);
+          background-image: none;
           color: var(--theme-primary, #d4af37);
           border-left-color: var(--theme-primary, #d4af37);
+          box-shadow: none;
         }
 
         &::before,
@@ -631,6 +644,11 @@
         svg {
           font-size: 20px;
           flex-shrink: 0;
+          overflow: visible;
+        }
+
+        svg.fullscreenIcon {
+          transform: scale(0.85);
         }
 
         span {
@@ -655,14 +673,25 @@
           width: 100%;
           font-size: 15px;
           font-weight: 500;
+          background: none;
+          background-color: transparent;
+          background-image: none;
+          border: none;
           border-left: 3px solid transparent;
+          outline: none;
+          -webkit-tap-highlight-color: transparent;
           transition: background-color 150ms ease, color 150ms ease,
             border-left-color 150ms ease;
 
-          &:hover {
-            background-color: var(--theme-form-background, #33383d);
+          &:hover,
+          &:focus,
+          &:focus-visible,
+          &:active {
+            background-color: var(--theme-form-background, #2a2f35);
+            background-image: none;
             color: var(--theme-primary, #d4af37);
             border-left-color: var(--theme-primary, #d4af37);
+            box-shadow: none;
           }
 
           svg {
