@@ -37,7 +37,7 @@
   align-items: center;
   padding: 16px 24px;
   flex-shrink: 0;
-  background: #1a1a1e;
+  background: rgba(36, 36, 41, 0.35);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
@@ -217,15 +217,15 @@
 }
 
 .dangerButton {
-  background-color: rgba(69, 32, 36, 0.35) !important;
-  border-color: rgba(248, 113, 113, 0.42) !important;
-  color: #fca5a5 !important;
+  background-color: rgba(50, 10, 10, 0.78) !important;
+  border-color: rgba(111, 0, 0, 0.55) !important;
+  color: #fdfdfd !important;
 }
 
 .dangerButton:hover {
-  background-color: rgba(127, 29, 29, 0.22) !important;
-  border-color: rgba(248, 113, 113, 0.7) !important;
-  color: #fecaca !important;
+  background-color: rgba(70, 14, 14, 0.9) !important;
+  border-color: rgba(140, 0, 0, 0.8) !important;
+  color: #fdfdfd !important;
 }
 
 /* Section Container */
@@ -235,7 +235,7 @@
   padding: 1rem;
   margin: 0;
   min-width: 0;
-  background: rgba(36, 36, 41, 0.62);
+  background: rgba(36, 36, 41, 0.35);
 }
 
 .sectionHeader {
