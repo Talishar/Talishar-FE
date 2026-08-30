@@ -928,6 +928,7 @@
     "UNLOCKED_SUMMARY_other": "Mastery {{level}} - {{count}} games played"
   },
   "MATCH_REVIEW": {
+    "CAMERA": "Camera",
     "CLOSE_MATCH_REVIEW": "Close match review",
     "COPY_SHAREABLE_LINK": "Copy a shareable link for this replay",
     "GO": "Go",
@@ -946,6 +947,7 @@
     "SHARE_REPLAY": "Share replay",
     "SHARING": "Sharing…",
     "SPACE_ADVANCES_ONE_STEP": "Use Space to advance one step",
+    "SWITCH_CAMERA": "Switch camera view",
     "TIMELINE": "Timeline",
     "TIMELINE_ARIA": "Replay turn timeline. Scroll horizontally for more turns.",
     "TIMELINE_EMPTY": "Turn markers appear here as the replay progresses. You can still jump directly below.",

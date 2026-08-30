@@ -3,7 +3,8 @@ import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import {
   submitButton,
   getGameInfo,
-  setReplayStart
+  setReplayStart,
+  setSpectatorCameraView
 } from 'features/game/GameSlice';
 import { RootState } from 'app/Store';
 import { selectIsPatron } from 'features/auth/authSlice';
@@ -12,7 +13,7 @@ import { createPortal } from 'react-dom';
 import styles from './ReplayPanel.module.css';
 import { toast } from 'react-hot-toast';
 import { PROCESS_INPUT } from 'appConstants';
-import { MdClose, MdShare } from 'react-icons/md';
+import { MdClose, MdShare, MdSwapVert } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import {
   useGetReplayTurnsQuery,
@@ -121,6 +122,9 @@ function ReplayContent({
   const localOpponentName = useAppSelector(
     (state: RootState) => state.game.playerTwo.Name
   );
+  const spectatorCameraView = useAppSelector(
+    (state: RootState) => state.game.spectatorCameraView
+  );
   const isPatron = useAppSelector(selectIsPatron);
   const [shareReplay, { isLoading: isSharing }] = useShareReplayMutation();
   const [reloadReplay, { isLoading: isReloadingReplay }] =
@@ -188,6 +192,12 @@ function ReplayContent({
           2: localPlayerName || 'Player 2'
         };
   const canScrollTimeline = reviewTurns.length > 3;
+  const cameraView: 1 | 2 = spectatorCameraView === 2 ? 2 : 1;
+  const nextCameraView: 1 | 2 = cameraView === 1 ? 2 : 1;
+
+  const toggleCameraView = () => {
+    dispatch(setSpectatorCameraView(nextCameraView));
+  };
 
   useEffect(() => {
     if (currentTurnNumber !== undefined)
@@ -366,6 +376,21 @@ function ReplayContent({
               ))}
             </select>
           </label>
+          <div className={styles.cameraControl}>
+            <span className={styles.cameraCurrent}>
+              {t('MATCH_REVIEW.CAMERA')}: {playerNames[cameraView]}
+            </span>
+            <button
+              type="button"
+              className={styles.cameraButton}
+              onClick={toggleCameraView}
+              title={t('MATCH_REVIEW.SWITCH_CAMERA')}
+              aria-label={t('MATCH_REVIEW.SWITCH_CAMERA')}
+            >
+              <MdSwapVert aria-hidden="true" />
+              <span>P{nextCameraView}</span>
+            </button>
+          </div>
         </section>
         <section
           className={styles.timelineSection}
