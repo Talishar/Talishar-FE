@@ -29,11 +29,15 @@ export default function ChatBox({
   const chatEnabled = useAppSelector(
     (state: RootState) => state.game.chatEnabled
   );
+  const isReplay = useAppSelector(
+    (state: RootState) => state.game.gameInfo.isReplay ?? false
+  );
   const [chatFilter, setChatFilter] = useState<'none' | 'chat' | 'log'>('none');
   const chatLog = useAppSelector((state: RootState) => state.game.chatLog);
 
   const isStreamerMode =
     String(useSetting({ settingName: IS_STREAMER_MODE })?.value) === '1';
+  const hideOpponentName = isStreamerMode && !isReplay;
 
   // Typing state is pushed via SSE named event → stored in Redux.
   // No polling needed - zero extra HTTP connections.
@@ -68,10 +72,10 @@ export default function ChatBox({
 
   const streamerNameRegex = useMemo(
     () =>
-      isStreamerMode && oppName
+      hideOpponentName && oppName
         ? new RegExp(oppName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g')
         : null,
-    [isStreamerMode, oppName]
+    [hideOpponentName, oppName]
   );
 
   const transformMessage = useMemo(() => {
@@ -83,7 +87,7 @@ export default function ChatBox({
       ? myName.substring(0, 15)
       : 'Player 2';
 
-    const oppDisplayName = isStreamerMode
+    const oppDisplayName = hideOpponentName
       ? 'Opponent'
       : amIPlayerOne
       ? oppName && oppName.trim()
@@ -107,7 +111,7 @@ export default function ChatBox({
 
       return processed;
     };
-  }, [isStreamerMode, amIPlayerOne, myName, oppName, streamerNameRegex]);
+  }, [hideOpponentName, amIPlayerOne, myName, oppName, streamerNameRegex]);
 
   const playerNames = useMemo<[string, string]>(
     () => [amIPlayerOne ? myName : oppName, amIPlayerOne ? oppName : myName],
