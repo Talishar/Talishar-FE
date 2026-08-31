@@ -115,8 +115,6 @@
     align-items: center;
     justify-content: center;
     pointer-events: none;
-    background: url('../../../../../img/backgrounds/transparent-card.png')
-      center / contain no-repeat;
   }
 
   .img {
