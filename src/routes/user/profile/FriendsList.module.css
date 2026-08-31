@@ -50,7 +50,7 @@
   flex: 1;
   padding: 0.75rem;
   border: 1px solid var(--theme-form-border, rgba(255, 255, 255, 0.2));
-  border-radius: 4px;
+  border-radius: 5px;
   background: var(--theme-form-background, rgba(255, 255, 255, 0.05));
   color: var(--theme-text, #e0e0e0);
   font-size: 0.95rem;
@@ -74,7 +74,7 @@
   max-height: 300px;
   overflow-y: auto;
   border: 1px solid var(--theme-form-border, rgba(255, 255, 255, 0.2));
-  border-radius: 4px;
+  border-radius: 5px;
   background: var(--theme-form-background, rgba(255, 255, 255, 0.05));
 }
 
@@ -117,7 +117,7 @@
   padding: 0;
   background: var(--theme-primary, #d4af37);
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   color: var(--theme-primary-inverse, #000);
   cursor: pointer;
   font-size: 1rem;
@@ -238,7 +238,7 @@
   margin-left: 0.25rem;
   background: var(--theme-danger, #dc3545);
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   color: white;
   cursor: pointer;
   transition: background-color 0.2s, transform 0.1s;
@@ -266,7 +266,7 @@
   background: var(--theme-success, #28a745);
   margin-left: 0.25rem;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   color: white;
   cursor: pointer;
   transition: background-color 0.2s, transform 0.1s;
@@ -294,7 +294,7 @@
   margin-left: 0.25rem;
   background: var(--theme-danger, #dc3545);
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   color: white;
   cursor: pointer;
   transition: background-color 0.2s, transform 0.1s;
@@ -321,7 +321,7 @@
   padding: 0;
   background: var(--theme-primary, #d4af37);
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   color: #000;
   cursor: pointer;
   transition: background-color 0.2s, transform 0.1s;
@@ -415,7 +415,7 @@
   width: 100%;
   padding: 0.75rem;
   border: 1px solid var(--theme-form-border, rgba(255, 255, 255, 0.2));
-  border-radius: 4px;
+  border-radius: 5px;
   background: var(--theme-form-background, rgba(255, 255, 255, 0.05));
   color: var(--theme-text, #e0e0e0);
   font-size: 0.95rem;
@@ -447,7 +447,7 @@
   padding: 0.6rem 1.2rem;
   background: var(--theme-success, #28a745);
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   color: white;
   cursor: pointer;
   font-weight: 500;
@@ -470,7 +470,7 @@
   padding: 0.6rem 1.2rem;
   background: var(--theme-secondary, #6c757d);
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   color: var(--theme-secondary-inverse, white);
   cursor: pointer;
   font-weight: 500;

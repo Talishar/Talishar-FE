@@ -137,7 +137,7 @@
   flex: 1 1 0;
   height: 0.38rem;
   min-width: 0.35rem;
-  border-radius: 2px;
+  border-radius: 5px;
   background: rgba(255, 255, 255, 0.09);
 }
 
@@ -159,7 +159,7 @@
 
 .emptyReplays {
   padding: 1rem;
-  border-radius: 4px;
+  border-radius: 5px;
   background: rgba(255, 255, 255, 0.035);
 }
 
@@ -280,7 +280,7 @@
   margin: 0;
   padding: 0;
   border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 4px;
+  border-radius: 5px;
   background: rgba(255, 255, 255, 0.06) !important;
   color: rgba(255, 255, 255, 0.72);
   cursor: pointer;
@@ -327,7 +327,7 @@
 .errorContainer {
   margin-top: 1.5rem;
   padding: 1.5rem;
-  border-radius: 4px;
+  border-radius: 5px;
   color: #ffb3b3;
   font-family: system-ui, -apple-system, sans-serif;
 }
@@ -342,7 +342,7 @@
 .errorMessage {
   background-color: #1a1a1a;
   padding: 1rem;
-  border-radius: 4px;
+  border-radius: 5px;
   margin-bottom: 1rem;
   font-size: 0.95em;
   line-height: 1.6;
@@ -364,7 +364,7 @@
   margin-bottom: 0.75rem;
   padding: 0.5rem;
   background-color: #3a2a2a;
-  border-radius: 3px;
+  border-radius: 5px;
   user-select: none;
   color: #ffcc99;
 }
@@ -390,7 +390,7 @@
 .kbd {
   background-color: #3a3a3a;
   padding: 2px 6px;
-  border-radius: 3px;
+  border-radius: 5px;
   font-family: monospace;
   color: #fff;
   border: 1px solid #555;
@@ -399,13 +399,13 @@
 .codeInline {
   background-color: #1a2a3a;
   padding: 2px 6px;
-  border-radius: 3px;
+  border-radius: 5px;
   color: #66ccff;
 }
 
 .pathBox {
   padding: 0.5rem 0.75rem;
-  border-radius: 3px;
+  border-radius: 5px;
   margin-top: 0.3rem;
   font-family: monospace;
   font-size: 0.9em;
@@ -420,7 +420,7 @@
 .fileItem {
   background-color: #1a1a1a;
   padding: 0.3rem 0.6rem;
-  border-radius: 2px;
+  border-radius: 5px;
   margin-bottom: 0.25rem;
   font-family: monospace;
   font-size: 0.9em;
@@ -430,7 +430,7 @@
 .fileItemLast {
   background-color: #1a1a1a;
   padding: 0.3rem 0.6rem;
-  border-radius: 2px;
+  border-radius: 5px;
   font-family: monospace;
   font-size: 0.9em;
   color: #66ff99;
@@ -440,7 +440,7 @@
   margin-top: 1rem;
   padding: 0.5rem;
   color: #66ccff;
-  border-radius: 4px;
+  border-radius: 5px;
 }
 
 /* Beta Disclaimer Styles */

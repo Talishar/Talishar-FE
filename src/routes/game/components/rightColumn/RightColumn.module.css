@@ -151,7 +151,7 @@
   width: 100%;
   max-width: 250px;
   height: auto;
-  border-radius: 4px;
+  border-radius: 5px;
 }
 
 /* Ad overlays the CTA image - when it loads it covers the fallback */

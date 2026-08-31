@@ -459,7 +459,7 @@
   font-weight: bold;
   font-size: 10px;
   padding: 2px 6px;
-  border-radius: 3px;
+  border-radius: 5px;
   letter-spacing: 1px;
   z-index: 10;
 }
@@ -481,7 +481,7 @@
   .positionLabel {
     font-size: 8px;
     padding: 1px 4px;
-    border-radius: 2px;
+    border-radius: 5px;
     letter-spacing: 0.5px;
   }
 }
@@ -490,7 +490,7 @@
   .positionLabel {
     font-size: 8px;
     padding: 1px 4px;
-    border-radius: 2px;
+    border-radius: 5px;
     letter-spacing: 0.5px;
   }
 }
@@ -499,7 +499,7 @@
   .positionLabel {
     font-size: 7px;
     padding: 1px 3px;
-    border-radius: 2px;
+    border-radius: 5px;
     letter-spacing: 0.3px;
   }
 }

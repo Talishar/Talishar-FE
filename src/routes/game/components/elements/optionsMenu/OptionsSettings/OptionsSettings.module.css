@@ -113,7 +113,7 @@
 }
 
 .optionLabel input[type='checkbox'] {
-  border-radius: 4px;
+  border-radius: 5px;
 }
 
 .optionLabel input[type='radio'] {
@@ -182,7 +182,7 @@
 .cardBackTitle select {
   width: 100%;
   padding: 0.5rem;
-  border-radius: 4px;
+  border-radius: 5px;
   background-color: rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: white;
@@ -218,7 +218,7 @@
 
 .playmatListContainer::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.2);
-  border-radius: 3px;
+  border-radius: 5px;
 }
 
 .playmatThumbWrapper {
@@ -401,7 +401,7 @@ hr {
   padding: 0.15rem 0.4rem;
   background: transparent;
   border: 1px solid var(--theme-text-muted, rgba(255, 255, 255, 0.2));
-  border-radius: 4px;
+  border-radius: 5px;
   color: var(--theme-text-secondary, rgba(255, 255, 255, 0.6));
   cursor: pointer;
   transition: all 0.2s;
@@ -424,7 +424,7 @@ hr {
   cursor: pointer;
   accent-color: var(--theme-primary);
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 3px;
+  border-radius: 5px;
   outline: none;
 }
 

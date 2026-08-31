@@ -592,7 +592,7 @@ h3 {
   background: rgba(100, 15, 15, 0.95);
   color: rgba(255, 180, 180, 0.9);
   border: 1px solid rgba(200, 60, 60, 0.45);
-  border-radius: 4px;
+  border-radius: 5px;
   cursor: pointer;
   opacity: 1;
   transition: opacity 0.2s ease, background 0.2s ease, transform 0.15s ease;
@@ -1473,7 +1473,7 @@ button.secondary:hover {
   align-items: center;
   padding: 0.75rem;
   background-color: color-mix(in srgb, var(--theme-text) 10%, transparent);
-  border-radius: 4px;
+  border-radius: 5px;
   gap: 0.5rem;
 }
 

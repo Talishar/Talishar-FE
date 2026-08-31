@@ -122,7 +122,7 @@
   background: var(--mr-surface-raised) !important;
   background-image: none !important;
   border: 1px solid var(--mr-border) !important;
-  border-radius: 2px;
+  border-radius: 5px;
   box-shadow: none !important;
   color: var(--mr-text-muted) !important;
   display: inline-flex !important;
@@ -208,7 +208,7 @@
   margin: 0;
   padding: 0;
   border: 1px solid var(--mr-border-strong);
-  border-radius: 2px;
+  border-radius: 5px;
   background: var(--mr-surface) !important;
   background-image: none !important;
   box-shadow: none !important;
@@ -258,7 +258,7 @@
   margin: 0;
   padding: 0.2rem 1.5rem 0.2rem 0.5rem;
   border: 1px solid var(--mr-accent-border);
-  border-radius: 2px;
+  border-radius: 5px;
   background-color: var(--mr-surface-raised);
   background-image: none;
   box-shadow: none;
@@ -302,7 +302,7 @@
   margin: 0;
   padding: 0 0.5rem;
   border: 1px solid var(--mr-accent-border);
-  border-radius: 2px;
+  border-radius: 5px;
   background: var(--mr-surface-raised) !important;
   background-image: none !important;
   box-shadow: none !important;
@@ -348,7 +348,7 @@
   min-width: 5.5rem;
   padding: 0.42rem 0.45rem;
   border: 1px solid var(--mr-border);
-  border-radius: 2px;
+  border-radius: 5px;
   background: var(--mr-surface);
   box-shadow: none;
   color: var(--mr-text);
@@ -416,7 +416,7 @@
 .submitButton,
 .actionButton {
   border: 1px solid var(--mr-accent-border);
-  border-radius: 2px;
+  border-radius: 5px;
   background: var(--mr-surface-raised);
   background-image: none;
   box-shadow: none;
@@ -509,7 +509,7 @@
   background: var(--mr-surface);
   background-image: none;
   border: 1px solid var(--mr-border);
-  border-radius: 2px;
+  border-radius: 5px;
   box-shadow: none;
   color: var(--mr-text);
   font-family: var(--mr-font);

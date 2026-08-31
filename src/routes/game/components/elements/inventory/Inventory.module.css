@@ -179,7 +179,7 @@
   background-color: var(--theme-danger, rgba(220, 53, 69, 0.9));
   color: white;
   padding: 0.2rem 0.45rem;
-  border-radius: 4px;
+  border-radius: 5px;
   font-size: 0.72rem;
   font-weight: 700;
   min-width: 1.4rem;

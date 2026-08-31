@@ -13,7 +13,7 @@
   margin-bottom: 0 !important;
   background: rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
+  border-radius: 5px;
   color: var(--theme-text, #f4eded);
   font-size: 0.95em;
   cursor: pointer;

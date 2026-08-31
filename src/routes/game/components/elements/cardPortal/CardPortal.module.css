@@ -66,7 +66,7 @@
   width: 100px;
   padding: 6px 12px;
   border: 1px solid var(--theme-border-light, rgba(255, 255, 255, 0.1));
-  border-radius: 4px;
+  border-radius: 5px;
   background: rgba(255, 255, 255, 0.06);
   color: var(--theme-text-secondary, #e0e0e0);
   font-weight: 700;
