@@ -131,7 +131,12 @@ const GameStateHandler = ({
           method: 'POST',
           credentials: 'include',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ gameName: currentGameID })
+          body: JSON.stringify({
+            gameName: currentGameID,
+            ...(knownPlayerID === 1 || knownPlayerID === 2
+              ? { playerID: knownPlayerID }
+              : {})
+          })
         });
         if (response.ok) {
           const result = await response.json();
