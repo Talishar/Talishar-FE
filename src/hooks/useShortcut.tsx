@@ -69,17 +69,21 @@ const registerShortcut = (
   };
 };
 
-const useShortcut = (keyCode: string, callback: ShortcutCallback) => {
+const useShortcut = (
+  keyCode: string,
+  callback: ShortcutCallback,
+  enabled = true
+) => {
   const callbackRef = useRef(callback);
 
   useEffect(() => {
     callbackRef.current = callback;
   }, [callback]);
 
-  useEffect(
-    () => registerShortcut(keyCode, { callback: callbackRef }),
-    [keyCode]
-  );
+  useEffect(() => {
+    if (!enabled) return;
+    return registerShortcut(keyCode, { callback: callbackRef });
+  }, [enabled, keyCode]);
 };
 
 export default useShortcut;

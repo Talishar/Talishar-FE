@@ -1,19 +1,46 @@
 import React from 'react';
-import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
 import { useTranslation } from 'react-i18next';
 import styles from '../Learn.module.scss';
 import { MetafyGuide } from '../../../services/metafyService';
-import { AdUnit } from '../../../components/ads';
 
 interface GuideGridProps {
   guides: MetafyGuide[];
-  showAds?: boolean;
 }
 
-const AD_INTERVAL = 3;
+const GUIDE_AUTHOR_OVERRIDES: Record<string, string[]> = {
+  'Patience and Steel - The Hussar Hala Playbook': [
+    'Winged Hussars FaB',
+    'Xir',
+    'Calebovitsch',
+    'Talishar',
+    'LucidTCG'
+  ]
+};
 
-const GuideGrid: React.FC<GuideGridProps> = ({ guides, showAds = false }) => {
+const GuideGrid: React.FC<GuideGridProps> = ({ guides }) => {
   const { t, i18n } = useTranslation();
+
+  const formatAuthorNames = (guide: MetafyGuide): string => {
+    const creditedAuthors = GUIDE_AUTHOR_OVERRIDES[guide.name];
+    if (creditedAuthors) {
+      return new Intl.ListFormat(i18n.language, {
+        style: 'long',
+        type: 'conjunction'
+      }).format(creditedAuthors);
+    }
+
+    if (guide.account?.name) return guide.account.name;
+
+    if (guide.users && guide.users.length > 0) {
+      return guide.users
+        .map((user) => user.display_name || user.username)
+        .filter((name): name is string => Boolean(name))
+        .join(' & ');
+    }
+
+    return guide.user?.display_name || guide.user?.username || 'Talishar';
+  };
+
   const formatPrice = (
     guide: MetafyGuide
   ): {
@@ -103,16 +130,7 @@ const GuideGrid: React.FC<GuideGridProps> = ({ guides, showAds = false }) => {
 
         <div className={styles.guideFooter}>
           <div className={styles.guideInfo}>
-            <span className={styles.author}>
-              {guide.users && guide.users.length > 0
-                ? guide.users
-                    .map((u) => u.display_name || u.username)
-                    .filter(Boolean)
-                    .join(' & ')
-                : guide.user?.display_name ||
-                  guide.user?.username ||
-                  'Talishar'}
-            </span>
+            <span className={styles.author}>{formatAuthorNames(guide)}</span>
             {guide.rating && (
               <span className={styles.rating}>{guide.rating}</span>
             )}
@@ -143,35 +161,7 @@ const GuideGrid: React.FC<GuideGridProps> = ({ guides, showAds = false }) => {
     </a>
   );
 
-  const gridItems: React.ReactNode[] = [];
-  let adCount = 0;
-  let guidesInCurrentGroup = 1;
-
-  for (let i = 0; i < rest.length; i++) {
-    gridItems.push(renderGuideCard(rest[i]));
-    guidesInCurrentGroup++;
-
-    if (showAds && guidesInCurrentGroup === AD_INTERVAL) {
-      adCount++;
-      gridItems.push(
-        <div key={`ad-${adCount}`} className={styles.adTile}>
-          <a
-            href={TALISHAR_METAFY_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.removeAdsLink}
-          >
-            {t('UNITED_GAME_PANEL.REMOVE_ADS')}
-          </a>
-          <AdUnit
-            placement={`mobile-unit-${adCount + 3}`}
-            className={styles.adTileUnit}
-          />
-        </div>
-      );
-      guidesInCurrentGroup = 0;
-    }
-  }
+  const gridItems = rest.map((guide) => renderGuideCard(guide));
 
   const ROW_SIZE = 3;
   const rows: React.ReactNode[] = [];

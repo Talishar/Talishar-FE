@@ -166,7 +166,8 @@ export const Fieldset: React.FC<FieldsetProps> = ({
 }) => {
   return (
     <fieldset className={styles.fieldset}>
-      <legend>
+      <legend className={styles.visuallyHidden}>{legend}</legend>
+      <div className={styles.fieldsetHeader} aria-hidden="true">
         <strong>{legend}</strong>
         {tooltip && (
           <span
@@ -177,7 +178,7 @@ export const Fieldset: React.FC<FieldsetProps> = ({
             ?
           </span>
         )}
-      </legend>
+      </div>
       {children}
     </fieldset>
   );

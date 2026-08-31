@@ -21,7 +21,8 @@ const customStyles = {
     classNames(styles.listItem, {
       [styles.selected]: state.isSelected
     }),
-  input: (_state: any) => styles.styledInput
+  input: (_state: any) => styles.styledInput,
+  placeholder: (_state: any) => styles.placeholder
 };
 
 export const SearchCardInput = () => {
@@ -31,7 +32,7 @@ export const SearchCardInput = () => {
   const dispatch = useAppDispatch();
   const isFuturesFormat = useAppSelector((state: RootState) => {
     const format = state.game.gameInfo.gameFormat ?? '';
-    return ['futurecc', 'futurell', 'futuresage'].includes(format);
+    return ['futurecc', 'futurell', 'futuresage', 'open'].includes(format);
   });
 
   const options = useMemo(
@@ -75,24 +76,25 @@ export const SearchCardInput = () => {
   };
 
   return (
-    <div>
-      <Select
-        unstyled
-        onKeyDown={handleKeyDown}
-        options={options}
-        classNames={customStyles}
-        onChange={handleChange}
-        isSearchable
-        components={{ DropdownIndicator }}
-      />
-      <hr />
-      <button
-        className={styles.button}
-        onClick={handleOnClick}
-        disabled={!card}
-      >
-        {t('SEARCH_CARD.SUBMIT')}
-      </button>
+    <div className={styles.searchCardInput}>
+      <div className={styles.searchInputRow}>
+        <Select
+          unstyled
+          onKeyDown={handleKeyDown}
+          options={options}
+          classNames={customStyles}
+          onChange={handleChange}
+          isSearchable
+          components={{ DropdownIndicator }}
+        />
+        <button
+          className={styles.button}
+          onClick={handleOnClick}
+          disabled={!card}
+        >
+          {t('SEARCH_CARD.SUBMIT')}
+        </button>
+      </div>
       {isFuturesFormat ? (
         <div className={styles.manualInputSection}>
           <p className={styles.futureQueueNotice}>

@@ -120,6 +120,7 @@ export interface CardImage {
   isShuffling?: boolean;
   isOpponent?: boolean;
   preferEnglishArt?: boolean;
+  eager?: boolean;
 }
 
 export const CardImage = React.memo((props: CardImage) => {
@@ -128,7 +129,7 @@ export const CardImage = React.memo((props: CardImage) => {
   );
 
   let src = props.src;
-  const { isShuffling, isOpponent, preferEnglishArt } = props;
+  const { isShuffling, isOpponent, preferEnglishArt, eager } = props;
   const { directory, baseFilename, cardNumber, isCropped } =
     parseCardImageSource(src);
 
@@ -177,7 +178,8 @@ export const CardImage = React.memo((props: CardImage) => {
         className={imageClassNames}
         onError={handleImageError}
         draggable={props.draggable}
-        loading="lazy"
+        loading={eager ? 'eager' : 'lazy'}
+        {...(eager ? { fetchpriority: 'high' } : null)}
         decoding="async"
       />
     </>

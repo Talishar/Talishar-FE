@@ -24,8 +24,7 @@ function fancyTimeFormat(duration: number | undefined): string {
   return ret;
 }
 
-export default function TurnInfo() {
-  const { t } = useTranslation();
+const GameTimer = () => {
   // Stable for the component's lifetime - URL doesn't change during a game.
   const storageKeyRef = useRef(`${STORAGE_KEY_PREFIX}${getGameIdFromUrl()}`);
 
@@ -61,6 +60,16 @@ export default function TurnInfo() {
       flush();
     };
   }, []); // storageKey is stable for the component's lifetime
+
+  return (
+    <div className={styles.timer}>
+      <FaRegClock /> {fancyTimeFormat(timer)}
+    </div>
+  );
+};
+
+export default function TurnInfo() {
+  const { t } = useTranslation();
 
   // Turn and player info
   let turnNumber = useAppSelector(
@@ -100,9 +109,7 @@ export default function TurnInfo() {
         <div className={styles.turnNumberSmall}>
           {t('TURN_INFO.TURN_NUMBER', { turnNumber })}
         </div>
-        <div className={styles.timer}>
-          <FaRegClock /> {fancyTimeFormat(timer)}
-        </div>
+        <GameTimer />
       </div>
       <div className={styles.playerName}>
         {t('TURN_INFO.PLAYERS_TURN', { playerName: displayName })}

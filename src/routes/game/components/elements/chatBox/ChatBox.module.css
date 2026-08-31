@@ -19,7 +19,7 @@
 
 .chatBox::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.18);
-  border-radius: 4px;
+  border-radius: 5px;
 }
 
 .chatBox::-webkit-scrollbar-thumb:hover {

@@ -14,7 +14,7 @@ import styles from './Lobby.module.css';
 import Equipment from './components/equipment/Equipment';
 import classNames from 'classnames';
 import { FaExclamationCircle } from 'react-icons/fa';
-import { LuGlobe } from 'react-icons/lu';
+import { LuGlobe, LuUsers } from 'react-icons/lu';
 import { RiSpyLine } from 'react-icons/ri';
 import { GiCapeArmor } from 'react-icons/gi';
 import { SiBookstack } from 'react-icons/si';
@@ -44,10 +44,9 @@ import { DeckResponse, Weapon } from 'interface/API/GetLobbyInfo.php';
 import LobbyUpdateHandler from './components/updateHandler/SideboardUpdateHandler';
 import {
   GAME_FORMAT,
+  GAME_VISIBILITY,
   BREAKPOINT_EXTRA_LARGE,
-  QUERY_STATUS,
-  FAB_BAZAAR_DECK_URL_BASE,
-  FABRARY_DECK_URL_BASE
+  QUERY_STATUS
 } from 'appConstants';
 import { JUDGE_HUB_DISCORD_URL } from 'constants/socialLinks';
 import { getReadableFormatName, getShortFormatName } from 'utils/formatUtils';
@@ -61,7 +60,7 @@ const COMPETITIVE_FORMATS = new Set([
   GAME_FORMAT.COMPETITIVE_SAGE
 ]);
 import ChooseFirstTurn from './components/chooseFirstTurn/ChooseFirstTurn';
-import useWindowDimensions from 'hooks/useWindowDimensions';
+import { useWindowWidth } from 'hooks/useWindowDimensions';
 import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
 import { useNavigate } from 'react-router-dom';
 import CardPortal from '../components/elements/cardPortal/CardPortal';
@@ -73,7 +72,8 @@ import {
   clearGetLobbyRefresh,
   getGameInfo,
   setHeroInfo,
-  setLobbyAltArts
+  setLobbyAltArts,
+  setRecoveredAuthKey
 } from 'features/game/GameSlice';
 import useSound from 'use-sound';
 import playerJoined from 'sounds/playerJoinedSound.mp3';
@@ -89,6 +89,10 @@ import { DISABLE_ALT_ARTS } from 'features/options/constants';
 import { useTranslation, Trans } from 'react-i18next';
 import { EquipmentSlotName, getEmptyEquipmentSlots } from './equipmentWarning';
 import { getLobbyPresenceMessage } from 'features/LobbyPresence';
+import {
+  extractBazaarDeckIdFromLink,
+  supportsAutomaticMatchups
+} from './deckLinkProviders';
 
 const OPPONENT_UNREADY_MESSAGE_MS = 3000;
 
@@ -108,27 +112,6 @@ const normalizeMatchupName = (name: string): string =>
     .toLowerCase()
     .replace(/\s+/g, '_');
 
-const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
-  if (!deckLink) return null;
-  // Strip the "{index}<fav>" prefix that appears when a favorite deck link is stored
-  // e.g. "20<fav>https://fabrary.net/decks/..." → "https://fabrary.net/decks/..."
-  const favMarker = deckLink.indexOf('<fav>');
-  const cleanedLink =
-    favMarker !== -1 ? deckLink.slice(favMarker + 5) : deckLink;
-  const bases = [FAB_BAZAAR_DECK_URL_BASE, FABRARY_DECK_URL_BASE];
-  for (const base of bases) {
-    const normalizedBase = base.endsWith('/') ? base : `${base}/`;
-    if (cleanedLink.startsWith(normalizedBase)) {
-      const deckId = cleanedLink
-        .slice(normalizedBase.length)
-        .split('?')[0]
-        .trim();
-      return deckId || null;
-    }
-  }
-  return null;
-};
-
 const Lobby = () => {
   const { t } = useTranslation();
   usePageTitle(t('PAGES.LOBBY'));
@@ -136,7 +119,7 @@ const Lobby = () => {
   const [activeTab, setActiveTab] = useState<string>('equipment');
   const [unreadChat, setUnreadChat] = useState<boolean>(false);
   const [filtersExpanded, setFiltersExpanded] = useState(false);
-  const [width] = useWindowDimensions();
+  const width = useWindowWidth();
   const [isWideScreen, setIsWideScreen] = useState<boolean>(false);
   const [isDeckValid, setIsDeckValid] = useState(true);
   const navigate = useNavigate();
@@ -186,7 +169,7 @@ const Lobby = () => {
     shallowEqual
   );
   const initialGameLobbyRef = useRef(gameLobby);
-  const isBazaarDeckInLobby = !!extractBazaarDeckIdFromLink(
+  const supportsAutomaticMatchupsInLobby = supportsAutomaticMatchups(
     gameLobby?.myDeckLink
   );
   const shouldShowMatchupsUI = (gameLobby?.matchups?.length ?? 0) > 0;
@@ -440,7 +423,7 @@ const Lobby = () => {
   const suggestedMatchupId = useMemo(() => {
     if (!gameLobby?.theirHero || gameLobby.theirHero === 'CardBack')
       return null;
-    if (!isBazaarDeckInLobby) return null;
+    if (!supportsAutomaticMatchupsInLobby) return null;
     const opponentHero = normalizeHeroId(gameLobby.theirHero ?? '');
     const matchingMatchup = (gameLobby?.matchups ?? []).find(
       (matchup: Matchup) => {
@@ -458,7 +441,11 @@ const Lobby = () => {
       }
     );
     return matchingMatchup?.matchupId ?? null;
-  }, [gameLobby?.theirHero, gameLobby?.matchups, isBazaarDeckInLobby]);
+  }, [
+    gameLobby?.theirHero,
+    gameLobby?.matchups,
+    supportsAutomaticMatchupsInLobby
+  ]);
 
   // Note functions
   const getPlayerNoteKey = (username: string) => `player_note_${username}`;
@@ -495,6 +482,12 @@ const Lobby = () => {
   }
 
   if (!data || !data.deck) return null;
+
+  useEffect(() => {
+    if (playerID === 3) return;
+    if (!gameLobby?.authKey || gameLobby.authKey === authKey) return;
+    dispatch(setRecoveredAuthKey({ authKey: gameLobby.authKey }));
+  }, [gameLobby?.authKey, authKey, playerID, dispatch]);
 
   // Navigate to main game when ready - must be in useEffect to avoid setState during render
   useEffect(() => {
@@ -575,21 +568,35 @@ const Lobby = () => {
     rawLobbyDescription && rawLobbyDescription !== 'Game #'
       ? rawLobbyDescription
       : '';
-  const lobbyVisibilityLabel =
-    gameLobby?.isPrivateLobby === undefined
-      ? ''
+  // Fall back to the legacy boolean while frontend/backend deployments overlap.
+  const lobbyVisibility =
+    gameLobby?.visibility ??
+    (gameLobby?.isPrivateLobby === undefined
+      ? undefined
       : gameLobby.isPrivateLobby
+      ? GAME_VISIBILITY.PRIVATE
+      : GAME_VISIBILITY.PUBLIC);
+  const lobbyVisibilityLabel =
+    lobbyVisibility === GAME_VISIBILITY.FRIENDS_ONLY
+      ? t('MENU.CREATE_GAME.VISIBILITIES.FRIENDS')
+      : lobbyVisibility === GAME_VISIBILITY.PRIVATE
       ? t('MENU.CREATE_GAME.VISIBILITIES.PRIVATE')
-      : t('MENU.CREATE_GAME.VISIBILITIES.PUBLIC');
+      : lobbyVisibility === GAME_VISIBILITY.PUBLIC
+      ? t('MENU.CREATE_GAME.VISIBILITIES.PUBLIC')
+      : '';
+  const isRestrictedLobby =
+    lobbyVisibility !== undefined && lobbyVisibility !== GAME_VISIBILITY.PUBLIC;
   const lobbyMetaLine = [lobbyVisibilityLabel, lobbyFormatName]
     .filter(Boolean)
     .join(' - ');
   const lobbyTooltipParts = [
-    gameLobby?.isPrivateLobby === undefined
-      ? ''
-      : gameLobby.isPrivateLobby
+    lobbyVisibility === GAME_VISIBILITY.FRIENDS_ONLY
+      ? t('MENU.CREATE_GAME.VISIBILITIES.FRIENDS')
+      : lobbyVisibility === GAME_VISIBILITY.PRIVATE
       ? t('MENU.CREATE_GAME.VISIBILITIES.PRIVATE_LOBBY')
-      : t('MENU.CREATE_GAME.VISIBILITIES.PUBLIC_LOBBY'),
+      : lobbyVisibility === GAME_VISIBILITY.PUBLIC
+      ? t('MENU.CREATE_GAME.VISIBILITIES.PUBLIC_LOBBY')
+      : '',
     lobbyFormatName,
     lobbyDescription
   ].filter(Boolean);
@@ -611,11 +618,12 @@ const Lobby = () => {
           {lobbyVisibilityLabel !== '' && (
             <span
               className={classNames(styles.lobbySettingsItem, {
-                [styles.lobbySettingsPrivate]:
-                  gameLobby?.isPrivateLobby === true
+                [styles.lobbySettingsPrivate]: isRestrictedLobby
               })}
             >
-              {gameLobby?.isPrivateLobby ? (
+              {lobbyVisibility === GAME_VISIBILITY.FRIENDS_ONLY ? (
+                <LuUsers aria-hidden="true" />
+              ) : isRestrictedLobby ? (
                 <RiSpyLine aria-hidden="true" />
               ) : (
                 <LuGlobe aria-hidden="true" />
@@ -932,9 +940,9 @@ const Lobby = () => {
     // submitting to Talishar, because the Talishar submit may start the game
     // immediately and any lobby refresh that follows could trigger the
     // auto-apply matchup effect with a stale/new key.
-    const bazaarDeckId =
-      gameInfo.bazaarDeckId ??
-      extractBazaarDeckIdFromLink(gameLobby?.myDeckLink);
+    // The deck URL is authoritative. Never send a Fabrary deck ID to Bazaar,
+    // even if stale game state still contains a Bazaar ID from an earlier game.
+    const bazaarDeckId = extractBazaarDeckIdFromLink(gameLobby?.myDeckLink);
     const opponentHeroId = gameLobby?.theirHero;
     let resolvedMetafyId = metafyId;
     let resolvedMetafyHash = metafyHash;

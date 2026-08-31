@@ -137,7 +137,7 @@
 
 .optionsList::-webkit-scrollbar-thumb {
   background: var(--theme-form-border, #797c80);
-  border-radius: 4px;
+  border-radius: 5px;
 }
 
 .optionsList::-webkit-scrollbar-thumb:hover {

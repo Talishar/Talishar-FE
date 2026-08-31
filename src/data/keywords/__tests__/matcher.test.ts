@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { CARD_KEYWORD_MAP, KEYWORD_STRINGS } from '../generated/cardKeywordMap';
 import { matchKeywords, normalizeKeyword, getKeywordEntry } from '../matcher';
 
 describe('matchKeywords', () => {
@@ -83,6 +84,25 @@ describe('normalizeKeyword', () => {
   it('returns undefined for unknown strings', () => {
     expect(normalizeKeyword('Snapdragon Scalers')).toBeUndefined();
   });
+
+  it('normalizes parameterized X values', () => {
+    expect(normalizeKeyword('Ward X')).toBe('ward');
+    expect(normalizeKeyword('Arcane Barrier X')).toBe('arcane-barrier');
+  });
+
+  it('normalizes templated keyword families', () => {
+    expect(normalizeKeyword('Hala Specialization')).toBe('specialization');
+    expect(normalizeKeyword('Earth and Lightning Fusion')).toBe('fusion');
+    expect(normalizeKeyword('Essence of Ice and Lightning')).toBe('essence');
+    expect(normalizeKeyword('Channel Ice')).toBe('channel');
+    expect(normalizeKeyword('Earth Bond')).toBe('bond');
+    expect(normalizeKeyword('Lightning Flow')).toBe('flow');
+  });
+
+  it('recognizes current effect keywords', () => {
+    expect(normalizeKeyword('Sharpen')).toBe('sharpen');
+    expect(normalizeKeyword('The Crowd Cheers')).toBe('crowd-reaction');
+  });
 });
 
 describe('getKeywordEntry', () => {
@@ -92,5 +112,26 @@ describe('getKeywordEntry', () => {
 
   it('returns undefined for an unknown id', () => {
     expect(getKeywordEntry('nope')).toBeUndefined();
+  });
+});
+
+describe('generated card keyword coverage', () => {
+  it('resolves every well-formed keyword emitted by the card data', () => {
+    // These are fragments emitted alongside a complete composite Essence
+    // keyword by the upstream dataset, not standalone card keywords.
+    const upstreamFragments = new Set(['Ice', 'and Lightning']);
+    const unresolved = KEYWORD_STRINGS.filter(
+      (label) => !upstreamFragments.has(label) && !normalizeKeyword(label)
+    );
+
+    expect(unresolved).toEqual([]);
+  });
+
+  it('maps Hala Bladesaint to Sharpen and Go again', () => {
+    const keywords = CARD_KEYWORD_MAP.AHA001.map(
+      (index) => KEYWORD_STRINGS[index]
+    );
+
+    expect(keywords).toEqual(['Sharpen', 'Go again']);
   });
 });

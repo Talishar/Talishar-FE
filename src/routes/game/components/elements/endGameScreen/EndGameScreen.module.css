@@ -27,6 +27,8 @@
 }
 
 .cardListBox.reduced {
+  top: calc(1vh + var(--card-size));
+  top: calc(1dvh + var(--card-size));
   bottom: auto;
   z-index: 10;
 }

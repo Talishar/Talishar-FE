@@ -16,7 +16,7 @@
 .summary {
   padding: 15px;
   margin-bottom: 20px;
-  border-radius: 4px;
+  border-radius: 5px;
 }
 
 .summary p {
@@ -40,7 +40,7 @@
 .whitelistButton {
   padding: 10px 16px;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   font-size: 0.9em;
   cursor: pointer;
   font-weight: 500;
@@ -137,7 +137,7 @@
   width: 100%;
   border-collapse: collapse;
   background: #1a1a1a;
-  border-radius: 4px;
+  border-radius: 5px;
   overflow: hidden;
 }
 
@@ -195,7 +195,7 @@
 .pattern {
   background: #3a2a1a;
   padding: 4px 8px;
-  border-radius: 3px;
+  border-radius: 5px;
   display: inline-block;
 }
 

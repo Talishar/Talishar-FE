@@ -11,6 +11,7 @@ import {
 } from 'utils/LocalKeyManagement';
 import { toast } from 'react-hot-toast';
 import useSetting from 'hooks/useSetting';
+import { BACKEND_URL } from 'appConstants';
 import { IS_STREAMER_MODE } from 'features/options/constants';
 
 const SessionRecovery: React.FC = () => {
@@ -105,20 +106,25 @@ const SessionRecovery: React.FC = () => {
         return idbAuthKey;
       }
 
-      // Second try to recover from backend API (requires user to be logged in)
-      if (isLoggedIn && currentUserName) {
+      // Second, ask the backend to re-issue the seat's key. It is bound to the
+      // account that owns the seat, so this works on a device that has never
+      // seen this game.
+      if (isLoggedIn) {
         try {
-          const response = await fetch(
-            `/APIs/RecoverAuthKey.php?gameName=${gameId}&playerID=${playerID}`
-          );
+          const response = await fetch(`${BACKEND_URL}APIs/RecoverAuthKey.php`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ gameName: gameId, playerID })
+          });
           if (response.ok) {
             const result = await response.json();
             if (result.success && result.authKey) {
               return result.authKey;
             }
-          } else if (response.status === 410) {
+          } else {
             console.warn(
-              'Auth key not available in session, game may need rejoin'
+              `Auth key recovery rejected by server (${response.status})`
             );
           }
         } catch (error) {

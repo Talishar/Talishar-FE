@@ -7,7 +7,7 @@ import { Card } from 'features/Card';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import { useAppDispatch, useAppSelector, useAppStore } from 'app/Hooks';
 import { setCardListFocus, clearCardListFocus } from 'features/game/GameSlice';
-import useWindowDimensions from 'hooks/useWindowDimensions';
+import { useWindowWidth } from 'hooks/useWindowDimensions';
 
 const CARD_GAP = 5; // matches the flex gap in HandZone.module.css
 const ZONE_MAX_WIDTH = 0.6; // matches max-width: 60% in HandZone.module.css
@@ -53,7 +53,7 @@ const HandZone = React.memo(function HandZone(prop: Player) {
   );
   const store = useAppStore();
 
-  const [windowWidth] = useWindowDimensions();
+  const windowWidth = useWindowWidth();
   const zoneRef = useRef<HTMLDivElement>(null);
   const [layout, setLayout] = useState<HandLayout>(EMPTY_HAND_LAYOUT);
   const { isOverflowing, overlap } = layout;

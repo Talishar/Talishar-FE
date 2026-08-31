@@ -1,9 +1,10 @@
-import { useEffect, useId, useMemo, useState } from 'react';
+import React, { useEffect, useId, useMemo, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import {
   submitButton,
   getGameInfo,
-  setReplayStart
+  setReplayStart,
+  setSpectatorCameraView
 } from 'features/game/GameSlice';
 import { RootState } from 'app/Store';
 import { selectIsPatron } from 'features/auth/authSlice';
@@ -12,7 +13,7 @@ import { createPortal } from 'react-dom';
 import styles from './ReplayPanel.module.css';
 import { toast } from 'react-hot-toast';
 import { PROCESS_INPUT } from 'appConstants';
-import { MdClose, MdShare } from 'react-icons/md';
+import { MdClose, MdShare, MdSwapVert } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import {
   useGetReplayTurnsQuery,
@@ -21,6 +22,11 @@ import {
 } from 'features/api/apiSlice';
 import { GameLocationState } from 'interface/GameLocationState';
 import { usePlayerInputInProgress } from 'hooks/usePlayerInputInProgress';
+import {
+  REPLAY_PLAYBACK_SPEEDS,
+  ReplayPlaybackSpeed,
+  useReplayPlayback
+} from '../../../play/ReplayPlaybackContext';
 
 const TURN_MARKER_RE = /^\[\[TURN_START:(\d+):(\d+)\]\]$/;
 const COMBAT_RE =
@@ -116,6 +122,9 @@ function ReplayContent({
   const localOpponentName = useAppSelector(
     (state: RootState) => state.game.playerTwo.Name
   );
+  const spectatorCameraView = useAppSelector(
+    (state: RootState) => state.game.spectatorCameraView
+  );
   const isPatron = useAppSelector(selectIsPatron);
   const [shareReplay, { isLoading: isSharing }] = useShareReplayMutation();
   const [reloadReplay, { isLoading: isReloadingReplay }] =
@@ -124,7 +133,20 @@ function ReplayContent({
     skip: !gameInfo.gameID
   });
   const [turnNumber, setTurnNumber] = useState(String(currentTurnNumber ?? 0));
+  const [selectedTurnKey, setSelectedTurnKey] = useState(
+    currentTurnNumber !== undefined &&
+      (currentTurnPlayer === 1 || currentTurnPlayer === 2)
+      ? `${currentTurnPlayer}-${currentTurnNumber}`
+      : ''
+  );
   const isRequestInProgress = usePlayerInputInProgress();
+  const {
+    pausePlayback,
+    playbackSpeed,
+    setPlaybackSpeed,
+    setUseSpaceToAdvanceOneStep,
+    useSpaceToAdvanceOneStep
+  } = useReplayPlayback();
 
   const chatTurns = useMemo(() => getChatReplayTurns(chatLog), [chatLog]);
   const chatTurnsByKey = useMemo(
@@ -176,11 +198,23 @@ function ReplayContent({
           2: localPlayerName || 'Player 2'
         };
   const canScrollTimeline = reviewTurns.length > 3;
+  const cameraView: 1 | 2 = spectatorCameraView === 2 ? 2 : 1;
+  const nextCameraView: 1 | 2 = cameraView === 1 ? 2 : 1;
+
+  const toggleCameraView = () => {
+    dispatch(setSpectatorCameraView(nextCameraView));
+  };
 
   useEffect(() => {
-    if (currentTurnNumber !== undefined)
+    if (currentTurnNumber !== undefined) {
       setTurnNumber(String(currentTurnNumber));
-  }, [currentTurnNumber]);
+      setSelectedTurnKey(
+        currentTurnPlayer === 1 || currentTurnPlayer === 2
+          ? `${currentTurnPlayer}-${currentTurnNumber}`
+          : ''
+      );
+    }
+  }, [currentTurnNumber, currentTurnPlayer]);
 
   const loadTurn = (turn: ReplayTurn | { number: number; player?: number }) => {
     if (
@@ -189,11 +223,17 @@ function ReplayContent({
       turn.number < 0
     )
       return;
+    pausePlayback();
     const target =
       turn.player === 1 || turn.player === 2
         ? `${turn.player}-${turn.number}`
         : String(turn.number);
     setTurnNumber(String(turn.number));
+    setSelectedTurnKey(
+      turn.player === 1 || turn.player === 2
+        ? `${turn.player}-${turn.number}`
+        : ''
+    );
     const request = dispatch(
       submitButton({
         button: { mode: PROCESS_INPUT.HOP_TO_TURN, cardID: target }
@@ -212,7 +252,7 @@ function ReplayContent({
       : reviewTurns;
     if (!targets.length) return;
     const currentIndex = targets.findIndex(
-      (turn) => turn.number === selectedTurn
+      (turn) => `${turn.player}-${turn.number}` === selectedTurnKey
     );
     const nextIndex =
       currentIndex >= 0
@@ -241,6 +281,7 @@ function ReplayContent({
   };
 
   const returnToStart = async () => {
+    pausePlayback();
     if (!gameInfo?.replayNumber) {
       loadTurn({ number: 0 });
       return;
@@ -320,6 +361,54 @@ function ReplayContent({
         </button>
       </div>
       <div className={styles.content}>
+        <section className={styles.playbackSection}>
+          <div className={styles.sectionHeading}>
+            <span>{t('MATCH_REVIEW.PLAYBACK')}</span>
+          </div>
+          <label className={styles.stepModeToggle}>
+            <input
+              type="checkbox"
+              checked={useSpaceToAdvanceOneStep}
+              onChange={(event) =>
+                setUseSpaceToAdvanceOneStep(event.target.checked)
+              }
+            />
+            <span>{t('MATCH_REVIEW.SPACE_ADVANCES_ONE_STEP')}</span>
+          </label>
+          <label className={styles.speedControl}>
+            <span>{t('MATCH_REVIEW.PLAYBACK_SPEED')}</span>
+            <select
+              value={playbackSpeed}
+              onChange={(event) =>
+                setPlaybackSpeed(
+                  Number(event.target.value) as ReplayPlaybackSpeed
+                )
+              }
+              disabled={useSpaceToAdvanceOneStep}
+            >
+              {REPLAY_PLAYBACK_SPEEDS.map((speed) => (
+                <option key={speed} value={speed}>
+                  {speed}×
+                </option>
+              ))}
+            </select>
+          </label>
+          <div className={styles.cameraControl}>
+            <span className={styles.cameraCurrent}>
+              {t('MATCH_REVIEW.CAMERA')}: {playerNames[cameraView]}
+            </span>
+            <button
+              type="button"
+              className={styles.cameraButton}
+              onClick={toggleCameraView}
+              title={t('MATCH_REVIEW.SWITCH_CAMERA')}
+              aria-label={t('MATCH_REVIEW.SWITCH_CAMERA')}
+            >
+              <MdSwapVert aria-hidden="true" />
+              <span>P{nextCameraView}</span>
+            </button>
+          </div>
+        </section>
         <section
           className={styles.timelineSection}
           aria-label={t('MATCH_REVIEW.TURN_TIMELINE')}
@@ -344,7 +433,9 @@ function ReplayContent({
                 <button
                   key={`${turn.player}-${turn.number}`}
                   className={`${styles.turnMarker} ${
-                    turn.number === selectedTurn ? styles.activeTurn : ''
+                    `${turn.player}-${turn.number}` === selectedTurnKey
+                      ? styles.activeTurn
+                      : ''
                   }`}
                   onClick={() => loadTurn(turn)}
                   disabled={isRequestInProgress}

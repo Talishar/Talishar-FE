@@ -170,16 +170,9 @@ const CommunityContent: React.FC<CommunityContentProps> = ({
           ) : (
             <div className={styles.guideCardFallback} />
           )}
-          <div className={styles.guideCardOverlay} />
-          <div className={styles.guideCardContent}>
-            <span className={styles.guideCardBadge}>
-              {t('COMMUNITY_CONTENT.TYPE_GUIDE')}
-            </span>
-            <h4 className={styles.guideCardTitle}>{cleanTitle(video.title)}</h4>
-            {video.description && (
-              <p className={styles.guideCardDescription}>{video.description}</p>
-            )}
-          </div>
+          <span className={styles.guideCardBadge}>
+            {t('COMMUNITY_CONTENT.TYPE_GUIDE')}
+          </span>
         </button>
       );
     }

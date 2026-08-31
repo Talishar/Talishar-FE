@@ -80,7 +80,7 @@
   background: transparent !important;
   background-image: none !important;
   border: 0 !important;
-  border-radius: 4px;
+  border-radius: 5px;
   color: rgba(255, 255, 255, 0.7) !important;
   cursor: pointer;
   padding: 0 !important;
@@ -189,7 +189,7 @@
   border: 2px solid var(--theme-primary-focus);
   color: var(--theme-primary);
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: 5px;
   transition: all 0.2s ease;
   font-size: 1.3rem;
   flex-shrink: 0;
@@ -227,7 +227,7 @@
   border: 2px solid var(--theme-primary-focus);
   color: var(--theme-primary);
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: 5px;
   transition: all 0.2s ease;
   font-weight: 600;
   font-size: 0.9rem;
@@ -362,7 +362,7 @@
   color: #f0c070;
   background: rgba(240, 192, 112, 0.1);
   padding: 0.1rem 0.35rem;
-  border-radius: 3px;
+  border-radius: 5px;
   width: fit-content;
 }
 
@@ -386,7 +386,7 @@
   background: rgba(0, 0, 0, 0.9);
   border: 1px solid var(--theme-primary-focus);
   color: white;
-  border-radius: 4px;
+  border-radius: 5px;
   font-size: 0.9rem;
   transition: all 0.2s ease;
   margin: 0;
@@ -419,7 +419,7 @@
   background: rgba(0, 0, 0, 0.9);
   border: 1px solid var(--theme-primary-focus);
   color: var(--theme-primary);
-  border-radius: 4px;
+  border-radius: 5px;
   font-size: 1rem;
   font-weight: bold;
   transition: all 0.2s ease;

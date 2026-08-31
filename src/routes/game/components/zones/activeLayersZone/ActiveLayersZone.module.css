@@ -130,12 +130,12 @@
 
 .activeLayersInner::-webkit-scrollbar-track {
   background: rgba(0, 0, 0, 0.3);
-  border-radius: 4px;
+  border-radius: 5px;
 }
 
 .activeLayersInner::-webkit-scrollbar-thumb {
   background: var(--theme-primary-focus, rgba(212, 175, 55, 0.3));
-  border-radius: 4px;
+  border-radius: 5px;
 }
 
 .activeLayersInner::-webkit-scrollbar-thumb:hover {

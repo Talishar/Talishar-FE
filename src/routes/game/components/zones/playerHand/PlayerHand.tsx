@@ -27,6 +27,8 @@ const WHEEL_ROTATION_DEGREES_PER_PIXEL = 0.15;
 const MAX_WHEEL_ROTATION_DEGREES = 15;
 const NUMERIC_RE = /^\d+$/;
 
+const preventContextMenu = (event: React.MouseEvent) => event.preventDefault();
+
 type CardWithStableId = {
   card: Card;
   id: string;
@@ -169,6 +171,11 @@ function PlayerHand() {
   const soundPlayedForDragRef = useRef<boolean>(false);
   const [cardSpacingPx, setCardSpacingPx] = useState<number | null>(null);
   const [maxScrollOffset, setMaxScrollOffset] = useState(0);
+  const maxScrollOffsetRef = useRef(0);
+  const setMaxScroll = useCallback((next: number) => {
+    maxScrollOffsetRef.current = next;
+    setMaxScrollOffset(next);
+  }, []);
   const scrollOffsetRef = useRef(0);
   const scrollAvailabilityRef = useRef({ left: false, right: false });
   const [scrollAvailability, setScrollAvailability] = useState(
@@ -213,7 +220,7 @@ function PlayerHand() {
   const playableGraveyardCards = useAppSelector(selectPlayableGraveyardCards);
 
   const applyScrollOffset = useCallback(
-    (requestedOffset: number, limit = maxScrollOffset) => {
+    (requestedOffset: number, limit = maxScrollOffsetRef.current) => {
       const nextOffset = Math.max(0, Math.min(limit, requestedOffset));
       scrollOffsetRef.current = nextOffset;
 
@@ -237,7 +244,7 @@ function PlayerHand() {
 
       return nextOffset;
     },
-    [maxScrollOffset]
+    []
   );
 
   useEffect(() => {
@@ -435,7 +442,7 @@ function PlayerHand() {
 
     if (N <= 1) {
       setCardSpacingPx(null);
-      setMaxScrollOffset(0);
+      setMaxScroll(0);
       applyScrollOffset(0, 0);
       return;
     }
@@ -459,7 +466,7 @@ function PlayerHand() {
       } else {
         setCardSpacingPx(null);
       }
-      setMaxScrollOffset(0);
+      setMaxScroll(0);
       applyScrollOffset(0, 0);
       return;
     }
@@ -473,7 +480,7 @@ function PlayerHand() {
         // Cards fit if we overlap - find exact spacing needed
         const fittingSpacing = (containerWidth - N * cardWidth) / (N - 1);
         setCardSpacingPx(Math.max(maxOverlapSpacing, fittingSpacing));
-        setMaxScrollOffset(0);
+        setMaxScroll(0);
         applyScrollOffset(0, 0);
         return;
       }
@@ -481,7 +488,7 @@ function PlayerHand() {
       setCardSpacingPx(maxOverlapSpacing);
       const overflowWidth = widthAtMaxOverlap;
       const newMax = Math.max(0, overflowWidth - containerWidth);
-      setMaxScrollOffset(newMax);
+      setMaxScroll(newMax);
       applyScrollOffset(scrollOffsetRef.current, newMax);
       return;
     }
@@ -491,14 +498,14 @@ function PlayerHand() {
     if (widthAtMaxOverlap <= containerWidth) {
       const fittingSpacing = (containerWidth - N * cardWidth) / (N - 1);
       setCardSpacingPx(Math.max(maxOverlapSpacing, fittingSpacing));
-      setMaxScrollOffset(0);
+      setMaxScroll(0);
       applyScrollOffset(0, 0);
       return;
     }
     setCardSpacingPx(maxOverlapSpacing);
     const overflowWidth = widthAtMaxOverlap;
     const newMax = Math.max(0, overflowWidth - containerWidth);
-    setMaxScrollOffset(newMax);
+    setMaxScroll(newMax);
     applyScrollOffset(scrollOffsetRef.current, newMax);
   }, [
     orderedHandCards.length,
@@ -508,7 +515,8 @@ function PlayerHand() {
     playableGraveyardCards?.length,
     width,
     height,
-    applyScrollOffset
+    applyScrollOffset,
+    setMaxScroll
   ]);
 
   const scrollHand = useCallback(
@@ -532,6 +540,9 @@ function PlayerHand() {
     },
     [applyScrollOffset]
   );
+
+  const scrollHandLeft = useCallback(() => scrollHand('left'), [scrollHand]);
+  const scrollHandRight = useCallback(() => scrollHand('right'), [scrollHand]);
 
   useEffect(() => {
     return () => {
@@ -876,7 +887,7 @@ function PlayerHand() {
               className={classNames(styles.scrollButton, {
                 [styles.scrollButtonHidden]: !canScrollLeft
               })}
-              onPointerDown={() => scrollHand('left')}
+              onPointerDown={scrollHandLeft}
               aria-label={t('HAND.SCROLL_LEFT')}
             >
               <svg
@@ -913,7 +924,7 @@ function PlayerHand() {
                         : undefined
                   } as React.CSSProperties
                 }
-                onContextMenu={(e) => e.preventDefault()}
+                onContextMenu={preventContextMenu}
               >
                 <AnimatePresence>
                   {orderedHandCards.length > 0 &&
@@ -1040,7 +1051,7 @@ function PlayerHand() {
               className={classNames(styles.scrollButton, {
                 [styles.scrollButtonHidden]: !canScrollRight
               })}
-              onPointerDown={() => scrollHand('right')}
+              onPointerDown={scrollHandRight}
               aria-label={t('HAND.SCROLL_RIGHT')}
             >
               <svg

@@ -56,7 +56,17 @@ const subscribe = (subscriber: () => void) => {
 
 const getSnapshot = () => dimensions;
 const getServerSnapshot = () => SERVER_DIMENSIONS;
+const getWidthSnapshot = () => dimensions[0];
+const getServerWidthSnapshot = () => SERVER_DIMENSIONS[0];
 
 export default function useWindowDimensions(): [number, number] {
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+}
+
+export function useWindowWidth(): number {
+  return useSyncExternalStore(
+    subscribe,
+    getWidthSnapshot,
+    getServerWidthSnapshot
+  );
 }

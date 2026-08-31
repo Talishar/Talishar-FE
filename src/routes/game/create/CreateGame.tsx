@@ -140,6 +140,7 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
     useState<string>(() => localStorage.getItem('quickJoin_bazaarDeck') ?? '');
   const canFetchBazaarStandalone =
     !isEmbedded &&
+    isBazaarEnabled &&
     standaloneDeckSource === 'bazaar' &&
     !!metafyId &&
     !!metafyHash &&
@@ -178,6 +179,19 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
   const setStandaloneDeckSource = (src: 'talishar' | 'bazaar') => {
     setStandaloneDeckSourceState(src);
     localStorage.setItem('quickJoin_deckSource', src);
+    if (src === 'bazaar') {
+      setValue('favoriteDecks', '');
+      setValue(
+        'fabdb',
+        standaloneSelectedBazaarDeck
+          ? `${FAB_BAZAAR_DECK_URL_BASE}${standaloneSelectedBazaarDeck}`
+          : ''
+      );
+    } else {
+      // Never retain a Bazaar URL after switching back to another provider.
+      setValue('fabdb', '');
+      setValue('favoriteDecks', selectedFavoriteDeck);
+    }
   };
   const handleStandaloneSelectBazaarDeck = (deckId: string) => {
     setStandaloneSelectedBazaarDeck(deckId);
@@ -740,9 +754,12 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
             gameID: response.gameName ?? 0,
             authKey: response.authKey ?? '',
             bazaarDeckId:
-              standaloneDeckSource === 'bazaar' && standaloneSelectedBazaarDeck
+              !isEmbedded &&
+              standaloneDeckSource === 'bazaar' &&
+              standaloneSelectedBazaarDeck
                 ? standaloneSelectedBazaarDeck
-                : quickJoinCtx?.deckSource === 'bazaar' &&
+                : isEmbedded &&
+                  quickJoinCtx?.deckSource === 'bazaar' &&
                   quickJoinCtx?.selectedBazaarDeck
                 ? quickJoinCtx.selectedBazaarDeck
                 : undefined

@@ -242,24 +242,38 @@ export default function PlayerName(player: Player) {
   const updateDropdownPosition = useCallback(() => {
     if (dropdownRef.current) {
       const rect = dropdownRef.current.getBoundingClientRect();
-      setDropdownPosition({
-        top: rect.bottom + window.scrollY,
-        left: rect.right + window.scrollX
-      });
+      const top = rect.bottom + window.scrollY;
+      const left = rect.right + window.scrollX;
+      setDropdownPosition((previous) =>
+        previous.top === top && previous.left === left
+          ? previous
+          : { top, left }
+      );
     }
   }, []);
 
   useEffect(() => {
-    if (isDropdownOpen) {
-      updateDropdownPosition();
-      window.addEventListener('scroll', updateDropdownPosition);
-      window.addEventListener('resize', updateDropdownPosition);
-      return () => {
-        window.removeEventListener('scroll', updateDropdownPosition);
-        window.removeEventListener('resize', updateDropdownPosition);
-      };
-    }
-  }, [isDropdownOpen]);
+    if (!isDropdownOpen) return;
+
+    updateDropdownPosition();
+
+    let frame: number | null = null;
+    const scheduleUpdate = () => {
+      if (frame !== null) return;
+      frame = requestAnimationFrame(() => {
+        frame = null;
+        updateDropdownPosition();
+      });
+    };
+
+    window.addEventListener('scroll', scheduleUpdate, { passive: true });
+    window.addEventListener('resize', scheduleUpdate, { passive: true });
+    return () => {
+      if (frame !== null) cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', scheduleUpdate);
+      window.removeEventListener('resize', scheduleUpdate);
+    };
+  }, [isDropdownOpen, updateDropdownPosition]);
 
   // Close dropdown when clicking outside
   useEffect(() => {

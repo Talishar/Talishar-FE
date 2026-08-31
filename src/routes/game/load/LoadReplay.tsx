@@ -8,7 +8,10 @@ import {
 import { FaRegStar, FaStar } from 'react-icons/fa';
 import { MdShare } from 'react-icons/md';
 import { selectIsPatron } from 'features/auth/authSlice';
-import { SavedReplay } from 'interface/API/GetSavedReplays.php';
+import {
+  GetSavedReplaysResponse,
+  SavedReplay
+} from 'interface/API/GetSavedReplays.php';
 import { toast } from 'react-hot-toast';
 import { LoadReplayAPI } from 'interface/API/LoadReplayAPI.php';
 import { setReplayStart } from 'features/game/GameSlice';
@@ -59,6 +62,60 @@ const LoadReplay = () => {
         </div>
       </article>
     </main>
+  );
+};
+
+const ReplaySlotMeter = ({
+  savedReplayData
+}: {
+  savedReplayData: GetSavedReplaysResponse;
+}) => {
+  const { t } = useTranslation();
+  const maxSlots = savedReplayData.maxSlots ?? 0;
+  if (maxSlots <= 0) return null;
+
+  const favoriteSlots = Math.min(savedReplayData.favoriteSlots ?? 0, maxSlots);
+  const freeSlots = Math.max(maxSlots - favoriteSlots, 0);
+  const canUpgrade = savedReplayData.nextSlotTier !== null;
+
+  return (
+    <div className={styles.slotMeter}>
+      <div className={styles.slotMeterHeader}>
+        <span className={styles.slotMeterCount}>
+          {t('LOAD_REPLAY.SLOTS_USED', { used: favoriteSlots, max: maxSlots })}
+        </span>
+        <span className={styles.slotMeterBreakdown}>
+          {t('LOAD_REPLAY.SLOTS_FREE', { count: freeSlots })}
+        </span>
+      </div>
+      <div
+        className={styles.slotTrack}
+        role="img"
+        aria-label={t('LOAD_REPLAY.SLOTS_USED', {
+          used: favoriteSlots,
+          max: maxSlots
+        })}
+      >
+        {Array.from({ length: maxSlots }, (_, index) => (
+          <span
+            key={index}
+            className={`${styles.slotSegment} ${
+              index < favoriteSlots ? styles.slotSegmentFavorite : ''
+            }`}
+          />
+        ))}
+      </div>
+      <p className={styles.slotMeterNote}>
+        {freeSlots === 0
+          ? t('LOAD_REPLAY.SLOTS_FULL')
+          : t('LOAD_REPLAY.SLOTS_AVAILABLE', { count: freeSlots })}{' '}
+        {canUpgrade && (
+          <Link to="/premium" className={styles.slotUpgradeLink}>
+            {t('LOAD_REPLAY.SLOTS_UPGRADE')}
+          </Link>
+        )}
+      </p>
+    </div>
   );
 };
 
@@ -220,6 +277,9 @@ const ReplayGame = () => {
             </span>
           )}
         </div>
+        {savedReplayData?.loggedIn && (
+          <ReplaySlotMeter savedReplayData={savedReplayData} />
+        )}
         {savedReplayData?.loggedIn === false ? (
           <p className={styles.emptyReplays}>
             {t('LOAD_REPLAY.SIGN_IN_TO_VIEW')}

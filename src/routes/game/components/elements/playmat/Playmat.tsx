@@ -37,14 +37,15 @@ export const Playmat = ({ isPlayer }: { isPlayer: boolean }) => {
     playmat = isPlayer ? playerOnePlaymat : playerTwoPlaymat;
   }
 
-  const styleToApply = useMemo(
-    () => ({
-      backgroundImage: `url(/playmats/${playmat}.webp)`,
-      filter: `brightness(${playmatIntensity ?? 0.65})`,
+  const styleToApply = useMemo(() => {
+    const intensity = Number(playmatIntensity ?? 0.65);
+    const dim =
+      1 - (Number.isFinite(intensity) ? Math.min(intensity, 1) : 0.65);
+    return {
+      backgroundImage: `linear-gradient(rgba(0, 0, 0, ${dim}), rgba(0, 0, 0, ${dim})), url(/playmats/${playmat}.webp)`,
       borderRadius: `10px`
-    }),
-    [playmat, playmatIntensity]
-  );
+    };
+  }, [playmat, playmatIntensity]);
 
   const playmatClass = isPlayer ? styles.playerOne : styles.playerTwo;
 

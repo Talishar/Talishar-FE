@@ -187,28 +187,37 @@ const OptionsContent = () => {
       <div className={styles.column}>
         <OptionsSettings />
       </div>
-      <div className={`${styles.column} ${styles.rightColumn}`}>
-        <div className={styles.sectionContainer}>
-          <div className={styles.sectionHeader}>
+      <div className={styles.column}>
+        <fieldset className={styles.sectionContainer}>
+          <legend className={styles.visuallyHidden}>
+            {t('OPTIONS_MENU.GENERAL')}
+          </legend>
+          <div className={styles.sectionHeader} aria-hidden="true">
             <span>{t('OPTIONS_MENU.GENERAL')}</span>
           </div>
           <div className={styles.sectionContent}>
             <div className={styles.buttonColumn}>
-              <button
-                className={styles.buttonDiv}
-                onClick={handleClickMainMenuButton}
-              >
-                {t('OPTIONS_MENU.HOMEPAGE')}
-              </button>
-              {playerID !== 3 && ( // If not a spectator then can change options
-                <>
+              <div className={styles.buttonGroup}>
+                <button
+                  className={`${styles.buttonDiv} ${styles.primaryButton}`}
+                  onClick={handleClickMainMenuButton}
+                >
+                  {t('OPTIONS_MENU.HOMEPAGE')}
+                </button>
+                {playerID !== 3 && ( // If not a spectator then can change options
                   <button
-                    className={styles.buttonDiv}
+                    className={`${styles.buttonDiv} ${styles.dangerButton}`}
                     onClick={clickConcedeGameHandler}
                   >
                     {t('OPTIONS_MENU.CONCEDE')}
                   </button>
+                )}
+              </div>
 
+              {playerID !== 3 && (
+                <div
+                  className={`${styles.buttonGroup} ${styles.reportButtonGroup}`}
+                >
                   <button
                     className={styles.buttonDiv}
                     onClick={clickReportBugHandler}
@@ -222,21 +231,24 @@ const OptionsContent = () => {
                   >
                     {t('OPTIONS_MENU.REPORT_PLAYER')}
                   </button>
-                </>
+                </div>
               )}
             </div>
           </div>
-        </div>
+        </fieldset>
 
         {playerID !== 3 && (
-          <div className={styles.sectionContainer}>
-            <div className={styles.sectionHeader}>
+          <fieldset className={styles.sectionContainer}>
+            <legend className={styles.visuallyHidden}>
+              {t('OPTIONS_MENU.GAMESTATE_CORRECTION')}
+            </legend>
+            <div className={styles.sectionHeader} aria-hidden="true">
               <span>{t('OPTIONS_MENU.GAMESTATE_CORRECTION')}</span>
             </div>
             <div className={styles.sectionContent}>
               <div className={styles.buttonColumn}>
                 <button
-                  className={styles.buttonDiv}
+                  className={`${styles.buttonDiv} ${styles.primaryButton}`}
                   onClick={clickUndoButtonHandler}
                 >
                   {t('OPTIONS_MENU.UNDO')}
@@ -261,12 +273,15 @@ const OptionsContent = () => {
                 </button>
               </div>
             </div>
-          </div>
+          </fieldset>
         )}
 
         {playerID !== 3 && (
-          <div className={styles.sectionContainer}>
-            <div className={styles.sectionHeader}>
+          <fieldset className={styles.sectionContainer}>
+            <legend className={styles.visuallyHidden}>
+              {t('OPTIONS_MENU.INVITE_SPECTATORS')}
+            </legend>
+            <div className={styles.sectionHeader} aria-hidden="true">
               <span>{t('OPTIONS_MENU.INVITE_SPECTATORS')}</span>
             </div>
             <div className={styles.sectionContent}>
@@ -288,12 +303,15 @@ const OptionsContent = () => {
                 )}
               </div>
             </div>
-          </div>
+          </fieldset>
         )}
-        <div
+        <fieldset
           className={`${styles.sectionContainer} ${styles.cosmeticsSection}`}
         >
-          <div className={styles.sectionHeader}>
+          <legend className={styles.visuallyHidden}>
+            {t('OPTIONS_MENU.COSMETICS')}
+          </legend>
+          <div className={styles.sectionHeader} aria-hidden="true">
             <span>{t('OPTIONS_MENU.COSMETICS')}</span>
           </div>
           <div className={styles.sectionContent}>
@@ -335,7 +353,7 @@ const OptionsContent = () => {
               </p>
             )}
           </div>
-        </div>
+        </fieldset>
       </div>
     </div>
   );
@@ -372,13 +390,15 @@ export default function OptionsMenu() {
                 </h2>
                 <h4></h4>
               </hgroup>
-              <div
+              <button
+                type="button"
+                aria-label={t('OPTIONS_MENU.CLOSE_SETTINGS_MENU')}
                 className={styles.optionsMenuCloseIcon}
                 onClick={closeOptions}
                 data-testid="close-button"
               >
-                <FaTimes title={t('OPTIONS_MENU.CLOSE_SETTINGS_MENU')} />
-              </div>
+                <FaTimes aria-hidden="true" />
+              </button>
             </div>
             <OptionsContent />
           </motion.div>

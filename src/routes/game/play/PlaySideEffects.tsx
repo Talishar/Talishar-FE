@@ -4,18 +4,14 @@ import { useTranslation } from 'react-i18next';
 import { shallowEqual } from 'react-redux';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
-import { PROCESS_INPUT } from 'appConstants';
-import {
-  getGameInfo,
-  setHeroInfo,
-  submitButton
-} from 'features/game/GameSlice';
+import { getGameInfo, setHeroInfo } from 'features/game/GameSlice';
 import { settingsUpdated } from 'features/options/optionsSlice';
 import {
   SHORTCUT_ATTACK_THRESHOLD,
   SKIP_AR_WINDOW,
   SKIP_DR_WINDOW
 } from 'features/options/constants';
+import { useReplayPlayback } from './ReplayPlaybackContext';
 
 export const TurnChangeSettingsSync = () => {
   const dispatch = useAppDispatch();
@@ -118,25 +114,30 @@ export const CardScaleVariables = () => {
 
 export const ReplayAdvanceButton = () => {
   const { t } = useTranslation();
-  const dispatch = useAppDispatch();
   const isReplay = useAppSelector(
     (state: RootState) => state.game.gameInfo.isReplay
   );
   const canPassPhase = useAppSelector(
     (state: RootState) => state.game.canPassPhase
   );
+  const { activateReplayControl, isPlaying, useSpaceToAdvanceOneStep } =
+    useReplayPlayback();
 
   if (!isReplay || canPassPhase !== true) return null;
 
   return (
     <button
       type="button"
-      className="replayAdvanceButton"
-      onClick={() =>
-        dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }))
-      }
+      className={`replayAdvanceButton ${
+        isPlaying ? 'replayAdvanceButtonPlaying' : ''
+      }`}
+      onClick={activateReplayControl}
     >
-      {t('PLAY.ADVANCE_REPLAY')}
+      {useSpaceToAdvanceOneStep
+        ? t('PLAY.ADVANCE_REPLAY')
+        : isPlaying
+        ? t('PASS_TURN_DISPLAY.PAUSE')
+        : t('PASS_TURN_DISPLAY.PLAY')}
     </button>
   );
 };

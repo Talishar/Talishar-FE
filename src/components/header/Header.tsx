@@ -338,7 +338,11 @@ const Header = () => {
             {document.fullscreenEnabled && (
               <li>
                 <button type="button" onClick={handleFullscreenToggle}>
-                  {isFullscreen ? <BsFullscreenExit /> : <BsFullscreen />}
+                  {isFullscreen ? (
+                    <BsFullscreenExit className={styles.fullscreenIcon} />
+                  ) : (
+                    <BsFullscreen className={styles.fullscreenIcon} />
+                  )}
                   <span>
                     {isFullscreen
                       ? t('HEADER.EXIT_FULLSCREEN')

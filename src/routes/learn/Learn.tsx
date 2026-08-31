@@ -3,16 +3,12 @@ import styles from './Learn.module.scss';
 import { usePageTitle } from 'hooks/usePageTitle';
 import GuideGrid from './components/GuideGrid';
 import { fetchMetafyGuides, MetafyGuide } from '../../services/metafyService';
-import useSupporterStatus from 'hooks/useSupporterStatus';
-import useAdScript from 'hooks/useAdScript';
 import PageBanner from 'components/PageBanner/PageBanner';
 import { useTranslation } from 'react-i18next';
 
 const Learn: React.FC = () => {
   const { t } = useTranslation();
   usePageTitle(t('LEARN.PAGE_TITLE'));
-  const { showAds } = useSupporterStatus();
-  useAdScript(showAds);
   const [guides, setGuides] = useState<MetafyGuide[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -78,7 +74,7 @@ const Learn: React.FC = () => {
           </div>
         ) : guides.length > 0 ? (
           <>
-            <GuideGrid guides={guides} showAds={showAds} />
+            <GuideGrid guides={guides} />
 
             {totalPages > 1 && (
               <div className={styles.pagination}>

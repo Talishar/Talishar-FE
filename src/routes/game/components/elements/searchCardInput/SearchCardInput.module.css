@@ -1,11 +1,19 @@
+.searchCardInput {
+  box-sizing: border-box;
+  padding-right: var(--container-padding, 1vh);
+}
+
 .searchBox {
+  display: flex;
+  align-items: center;
+  height: 100%;
   padding-inline-start: var(--form-element-spacing-horizontal);
   padding-inline-end: var(--form-element-spacing-horizontal);
   margin: 0;
   margin-bottom: 0px;
-  --background-color: var(--near-black);
-  --border-color: var(--form-element-border-color);
-  --color: var(--form-element-color);
+  --background-color: var(--theme-form-background, #33383d);
+  --border-color: var(--theme-form-border, #797c80);
+  --color: var(--theme-text, #f4eded);
   --box-shadow: none;
   border: var(--border-width) solid var(--border-color);
   border-radius: var(--border-radius);
@@ -25,6 +33,10 @@
 
 .focused {
   border-color: var(--theme-primary);
+}
+
+.placeholder {
+  color: var(--theme-text-muted, rgba(255, 255, 255, 0.6));
 }
 
 .menuList {
@@ -66,7 +78,20 @@
 }
 
 .container {
+  flex: 1;
+  min-width: 0;
+  height: var(--search-card-control-height);
   width: 100%;
+}
+
+.searchInputRow {
+  --search-card-control-height: calc(
+    (1rem * var(--line-height)) + (var(--form-element-spacing-vertical) * 2) +
+      (var(--border-width) * 2)
+  );
+  display: flex;
+  align-items: stretch;
+  gap: 0.5rem;
 }
 
 .listItem {
@@ -90,15 +115,35 @@
 }
 
 .button {
-  width: min(20rem, 100%);
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
+  width: auto;
+  min-width: 8rem;
+  height: var(--search-card-control-height);
+  margin: 0;
+  white-space: nowrap;
 }
 
-.styledInput > input {
-  box-shadow: none;
+.searchBox .styledInput > input[type='text'],
+.searchBox .styledInput > input[type='text']:active,
+.searchBox .styledInput > input[type='text']:focus,
+.searchBox .styledInput > input[type='text']:autofill,
+.searchBox .styledInput > input[type='text']:-webkit-autofill {
+  --background-color: transparent !important;
+  --border-color: transparent !important;
+  --box-shadow: none !important;
+  width: 100% !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  outline: 0 !important;
+  background: transparent !important;
   background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+  color: var(--theme-text, #f4eded) !important;
+  -webkit-text-fill-color: var(--theme-text, #f4eded) !important;
+  caret-color: var(--theme-text, #f4eded) !important;
 }
 
 .manualInputSection {
@@ -109,8 +154,7 @@
 
 .futureQueueNotice {
   margin: 0 0 0.75rem;
-  padding: 0.65rem 0.75rem;
-  border-radius: 4px;
+  padding: 0;
   color: rgba(224, 224, 224, 0.85);
   font-size: 0.85rem;
   line-height: 1.4;
@@ -124,27 +168,37 @@
 }
 
 .manualInputRow {
+  --search-card-control-height: calc(
+    (1rem * var(--line-height)) + (var(--form-element-spacing-vertical) * 2) +
+      (var(--border-width) * 2)
+  );
   display: flex;
   align-items: stretch;
   gap: 0.5rem;
 }
 
 .manualInputRow input {
+  flex: 1;
   min-width: 0;
+  height: var(--search-card-control-height);
   margin-bottom: 0;
 }
 
 .manualSubmitButton {
   width: auto;
+  min-width: 8rem;
+  height: var(--search-card-control-height);
   margin-bottom: 0;
   white-space: nowrap;
 }
 
 @media (max-width: 600px) {
+  .searchInputRow,
   .manualInputRow {
     flex-direction: column;
   }
 
+  .button,
   .manualSubmitButton {
     width: 100%;
   }

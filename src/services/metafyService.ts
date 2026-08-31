@@ -22,6 +22,15 @@ export interface MetafyGuideUser {
   display_name?: string;
 }
 
+export interface MetafyAccount {
+  id: string;
+  slug: string;
+  name: string;
+  partner: boolean;
+  profile_image_url?: string;
+  cover_image_url?: string | null;
+}
+
 export interface MetafyGuide {
   product_id: string;
   name: string;
@@ -34,6 +43,7 @@ export interface MetafyGuide {
   published_at: string;
   updated_at: string;
   game: MetafyGame;
+  account?: MetafyAccount;
   rating?: number;
   user?: MetafyGuideUser;
   users?: MetafyGuideUser[];

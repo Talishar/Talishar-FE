@@ -32,6 +32,13 @@ import TurnWidget from '../elements/turnWidget/TurnWidget';
 import ManualModePanel from '../leftColumn/ManualModePanel/ManualModePanel';
 import usePlayerPromptOwner from '../elements/playerPrompt/usePlayerPromptOwner';
 
+const BoardPlayerPromptSlot = () => {
+  const promptOwner = usePlayerPromptOwner();
+  return promptOwner === 'board' ? (
+    <CombatChainPlayerPrompt standalone />
+  ) : null;
+};
+
 const GridBoard = () => {
   const experimental = useCookieString('experimental');
   const playerID = useAppSelector(
@@ -43,7 +50,6 @@ const GridBoard = () => {
   const spectatorCameraView = useAppSelector(
     (state: RootState) => state.game.spectatorCameraView
   );
-  const promptOwner = usePlayerPromptOwner();
   const isMirroredOpponent = useAppSelector(
     (state: RootState) =>
       getSettingsEntity(state)?.[optConst.MIRRORED_BOARD_LAYOUT]?.value === '1'
@@ -178,7 +184,7 @@ const GridBoard = () => {
         <AmbientParticles />
         <div className={styles.combatChain}>
           <CombatChain />
-          {promptOwner === 'board' && <CombatChainPlayerPrompt standalone />}
+          <BoardPlayerPromptSlot />
         </div>
       </div>
     </>
