@@ -340,6 +340,7 @@ export const URL_END_POINT = {
   GET_SAVED_REPLAYS: 'APIs/GetSavedReplays.php',
   GET_REPLAY_TURNS: 'APIs/GetReplayTurns.php',
   SET_REPLAY_FAVORITE: 'APIs/SetReplayFavorite.php',
+  DELETE_REPLAY: 'APIs/DeleteReplay.php',
   GET_POPUP: 'GetPopupAPI.php',
   PROCESS_INPUT: 'ProcessInput.php?',
   PROCESS_INPUT_POST: 'ProcessInputAPI.php',

@@ -14,7 +14,12 @@ import {
 import InitialGameState from './InitialGameState';
 import GameStaticInfo, { AltArt } from '../GameStaticInfo';
 import { Card, isAllyCard } from '../Card';
-import { BACKEND_URL, ROGUELIKE_URL, URL_END_POINT } from 'appConstants';
+import {
+  BACKEND_URL,
+  PROCESS_INPUT,
+  ROGUELIKE_URL,
+  URL_END_POINT
+} from 'appConstants';
 import Button from '../Button';
 import GameState from '../GameState';
 import Player from '../Player';
@@ -48,7 +53,7 @@ const sendProcessInput = async (
   gameInfo: GameStaticInfo,
   queryParams: URLSearchParams,
   extraQuery = ''
-): Promise<void> => {
+): Promise<string> => {
   const startedAt = performance.now();
   const baseURL = gameInfo.isRoguelike ? ROGUELIKE_URL : BACKEND_URL;
   const queryURL = `${baseURL}${URL_END_POINT.PROCESS_INPUT}`;
@@ -84,6 +89,7 @@ const sendProcessInput = async (
     );
     throw new Error(`${label} failed (HTTP ${response.status}): ${data}`);
   }
+  return data;
 };
 
 export const gameLobby = createAsyncThunk(
@@ -159,7 +165,14 @@ export const submitButton = createAsyncThunk(
     if (params.button.numMode !== undefined)
       queryParams.set('numMode', String(params.button.numMode));
 
-    await sendProcessInput('submitButton', game.gameInfo, queryParams);
+    const response = await sendProcessInput(
+      'submitButton',
+      game.gameInfo,
+      queryParams
+    );
+    return params.button.mode === PROCESS_INPUT.CREATE_REPLAY
+      ? response
+      : undefined;
   }
 );
 
