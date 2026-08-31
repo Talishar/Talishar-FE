@@ -25,7 +25,7 @@ export const useKnownSearchParams = (): [
   }, {});
 
   const setKnownSearchParams: SetKnownSearchParams = (key, value) => {
-    if (!(key in knownSearchParams)) {
+    if (!knownSearchParams.includes(key)) {
       throw new Error(`${key} is not a known search param and cannot be set.`, {
         cause: `${key} missing in knownSearchParams`
       });
