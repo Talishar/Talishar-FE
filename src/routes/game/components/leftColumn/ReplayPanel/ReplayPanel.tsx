@@ -133,6 +133,12 @@ function ReplayContent({
     skip: !gameInfo.gameID
   });
   const [turnNumber, setTurnNumber] = useState(String(currentTurnNumber ?? 0));
+  const [selectedTurnKey, setSelectedTurnKey] = useState(
+    currentTurnNumber !== undefined &&
+      (currentTurnPlayer === 1 || currentTurnPlayer === 2)
+      ? `${currentTurnPlayer}-${currentTurnNumber}`
+      : ''
+  );
   const isRequestInProgress = usePlayerInputInProgress();
   const {
     pausePlayback,
@@ -200,9 +206,15 @@ function ReplayContent({
   };
 
   useEffect(() => {
-    if (currentTurnNumber !== undefined)
+    if (currentTurnNumber !== undefined) {
       setTurnNumber(String(currentTurnNumber));
-  }, [currentTurnNumber]);
+      setSelectedTurnKey(
+        currentTurnPlayer === 1 || currentTurnPlayer === 2
+          ? `${currentTurnPlayer}-${currentTurnNumber}`
+          : ''
+      );
+    }
+  }, [currentTurnNumber, currentTurnPlayer]);
 
   const loadTurn = (turn: ReplayTurn | { number: number; player?: number }) => {
     if (
@@ -217,6 +229,11 @@ function ReplayContent({
         ? `${turn.player}-${turn.number}`
         : String(turn.number);
     setTurnNumber(String(turn.number));
+    setSelectedTurnKey(
+      turn.player === 1 || turn.player === 2
+        ? `${turn.player}-${turn.number}`
+        : ''
+    );
     const request = dispatch(
       submitButton({
         button: { mode: PROCESS_INPUT.HOP_TO_TURN, cardID: target }
@@ -235,7 +252,7 @@ function ReplayContent({
       : reviewTurns;
     if (!targets.length) return;
     const currentIndex = targets.findIndex(
-      (turn) => turn.number === selectedTurn
+      (turn) => `${turn.player}-${turn.number}` === selectedTurnKey
     );
     const nextIndex =
       currentIndex >= 0
@@ -416,7 +433,9 @@ function ReplayContent({
                 <button
                   key={`${turn.player}-${turn.number}`}
                   className={`${styles.turnMarker} ${
-                    turn.number === selectedTurn ? styles.activeTurn : ''
+                    `${turn.player}-${turn.number}` === selectedTurnKey
+                      ? styles.activeTurn
+                      : ''
                   }`}
                   onClick={() => loadTurn(turn)}
                   disabled={isRequestInProgress}
