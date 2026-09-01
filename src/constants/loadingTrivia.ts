@@ -53,7 +53,7 @@ export const LOADING_TRIVIA: string[] = [
   'Count cards left in deck when fatigue starts to matter.',
   'Your opponent’s pitch can reveal what their turn is capable of.',
   'Talishar automates the rules, not the strategy.',
-  'If something unexpected happens on Talishar, click Report Bug, and share it with us on Discord.',
+  'If something unexpected happens on Talishar, click Report Bug and share the details with us on Discord.',
   'Undo etiquette matters. Communicate before rewinding a meaningful decision.',
   'Losing a Talishar game can still answer the question you queued up to test.',
   'Your opponent is another person. Give them time to think.',
@@ -73,7 +73,7 @@ export const LOADING_TRIVIA: string[] = [
   'Somewhere, someone just arsenaled a block card.',
   'Judge! “It works like that on Talishar.”',
   'Have you tried blaming Talishar?',
-  'Feature or bug? Ask Discord.',
+  'Not sure whether it is a feature or a bug? Ask us on Discord.',
   'Testing a new deck is a great way to discover every bad matchup simultaneously.',
   'Netdecking saves time you can spend misplaying the deck instead.',
   'Brew responsibly.',
@@ -85,5 +85,6 @@ export const LOADING_TRIVIA: string[] = [
   'If both players complain, the format may be balanced.',
   '50% win rate: perfectly balanced, emotionally devastating.',
   'The tech card works best when your opponent draws it against you.',
-  'Did you know you can share replays with your friends?'
+  'Did you know you can share replays with your friends?',
+  'You can adjust the resolution of Talishar by zooming in or out in your browser?',
 ];

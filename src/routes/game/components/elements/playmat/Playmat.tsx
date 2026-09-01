@@ -49,7 +49,7 @@ export const Playmat = ({ isPlayer }: { isPlayer: boolean }) => {
 
   const playmatClass = isPlayer ? styles.playerOne : styles.playerTwo;
 
-  return <div className={playmatClass} style={styleToApply}></div>;
+  return <div className={playmatClass} style={styleToApply} aria-hidden="true" />;
 };
 
 export default Playmat;
