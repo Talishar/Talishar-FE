@@ -91,6 +91,7 @@
 .dropdownButton {
   background: none;
   border: none;
+  box-shadow: none;
   color: var(--secondary-inverse);
   cursor: pointer;
   padding: 0;
