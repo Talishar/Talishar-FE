@@ -43,7 +43,7 @@
 .unlockLabel {
   display: block;
   margin-bottom: 0.35rem;
-  color: #f0c76d;
+  color: var(--theme-primary, #d4af37);
   font-family: inherit;
   font-size: 0.7rem;
   font-weight: 600;
