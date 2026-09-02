@@ -34,7 +34,7 @@
 
   .playerName.playerTwo {
     top: auto;
-    bottom: 0;
+    bottom: env(safe-area-inset-bottom, 0px);
   }
 
   .playerName.spectator:not(.playerTwo) {
@@ -45,12 +45,6 @@
 @media (max-width: 600px) {
   .playerName:not(.playerTwo):not(.spectator) {
     display: none;
-  }
-}
-
-@media (max-width: 480px) {
-  .playerName.spectator.playerTwo {
-    bottom: 4.5rem;
   }
 }
 
