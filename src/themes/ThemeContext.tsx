@@ -194,7 +194,6 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       currentTheme.id === 'light'
         ? "url('./img/backgrounds/dark_bg_texture.webp')"
         : colors.backgroundTexture;
-    const isLightTheme = currentTheme.id === 'radiant';
     document.body.style.background = `${colors.background}, ${bgTexture}`;
     document.body.style.backgroundPosition = 'center';
     document.body.style.backgroundSize = 'cover';
@@ -206,7 +205,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     if (themeColorMeta) {
       themeColorMeta.content = colors.cardBackground;
     }
-    root.style.colorScheme = isLightTheme ? 'light' : 'dark';
+    root.style.colorScheme = 'dark';
 
     // Set data attribute for potential CSS targeting
     root.setAttribute('data-theme', currentTheme.id);

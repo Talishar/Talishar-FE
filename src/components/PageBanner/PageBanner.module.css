@@ -36,12 +36,6 @@
   text-shadow: 0 2px 24px rgba(0, 0, 0, 0.8);
 }
 
-/* The banner art stays dark in every theme, so the title keeps a light value
-   when the surrounding chrome goes light. */
-:global(:root[data-theme='radiant']) .pageTitle {
-  color: #f4f6f9;
-}
-
 .pageSubtitle {
   font-size: clamp(0.85rem, 1.4vw, 1rem);
   color: rgba(244, 237, 237, 0.85);
