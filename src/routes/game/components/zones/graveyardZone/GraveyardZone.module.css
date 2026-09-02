@@ -38,7 +38,7 @@
   position: absolute;
   width: var(--card-size);
   height: var(--card-size);
-  background: var(--theme-contrast);
+  background: #706f6f;
   border: 2px solid var(--theme-contrastHover);
   border-radius: 12px;
   pointer-events: none;
