@@ -3,8 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2vh;
-  width: 2dvh;
+  width: auto;
 }
 
 .actionPointCounter {
@@ -36,10 +35,6 @@
 }
 
 @media (orientation: portrait) {
-  .actionPointDisplay {
-    width: auto;
-  }
-
   .actionPointCounter {
     font-size: clamp(0.65rem, 2.8vw, 0.9rem);
     padding: 0.4em 0.55em;

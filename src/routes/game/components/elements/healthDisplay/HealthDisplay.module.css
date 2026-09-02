@@ -44,3 +44,9 @@
     animation: none;
   }
 }
+
+@media (orientation: landscape) and (max-height: 600px) {
+  .health {
+    font-size: clamp(0.6rem, 3.6dvh, 1.5rem);
+  }
+}

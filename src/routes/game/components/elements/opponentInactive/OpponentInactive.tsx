@@ -9,6 +9,7 @@ import styles from './OpponentInactive.module.css';
 
 const CLAIM_VICTORY_MODE = 100007;
 const QUICK_CHAT_THINKING = 8;
+const QUICK_CHAT_STILL_HERE = 25;
 /** How much of the timeout is shown as a visible countdown. */
 const COUNTDOWN_VISIBLE_MS = 15_000;
 const TICK_MS = 500;
@@ -31,6 +32,9 @@ export default function OpponentInactive() {
   );
   const inactivityDeadline = useAppSelector(
     (state: any) => state.game.inactivityDeadline
+  );
+  const gameDeleteDeadline = useAppSelector(
+    (state: any) => state.game.gameDeleteDeadline
   );
   const serverTimeOffset = useAppSelector(
     (state: any) => state.game.serverTimeOffset ?? 0
@@ -57,6 +61,9 @@ export default function OpponentInactive() {
   const { t } = useTranslation();
   const [submitChat] = useSubmitChatMutation();
   const [remainingMs, setRemainingMs] = useState<number | null>(null);
+  const [deleteRemainingMs, setDeleteRemainingMs] = useState<number | null>(
+    null
+  );
   const [dismissed, setDismissed] = useState(false);
 
   const isSpectator = playerID === 3;
@@ -65,6 +72,40 @@ export default function OpponentInactive() {
   useEffect(() => {
     setDismissed(false);
   }, [inactivityDeadline]);
+
+  useEffect(() => {
+    setDismissed(false);
+  }, [gameDeleteDeadline]);
+
+  useEffect(() => {
+    if (!gameDeleteDeadline || turnPhase === 'OVER') {
+      setDeleteRemainingMs(null);
+      return;
+    }
+
+    const remainingFrom = (now: number) =>
+      gameDeleteDeadline - (now + serverTimeOffset);
+    let interval: ReturnType<typeof setInterval> | null = null;
+    let startTimer: ReturnType<typeof setTimeout> | null = null;
+    const startTicking = () => {
+      if (interval !== null) return;
+      setDeleteRemainingMs(remainingFrom(Date.now()));
+      interval = setInterval(
+        () => setDeleteRemainingMs(remainingFrom(Date.now())),
+        TICK_MS
+      );
+    };
+    const untilVisible = remainingFrom(Date.now()) - COUNTDOWN_VISIBLE_MS;
+    if (untilVisible <= 0) startTicking();
+    else {
+      setDeleteRemainingMs(remainingFrom(Date.now()));
+      startTimer = setTimeout(startTicking, untilVisible);
+    }
+    return () => {
+      if (interval !== null) clearInterval(interval);
+      if (startTimer !== null) clearTimeout(startTimer);
+    };
+  }, [gameDeleteDeadline, serverTimeOffset, turnPhase]);
 
   useEffect(() => {
     if (!inactivityDeadline || turnPhase === 'OVER') {
@@ -105,6 +146,62 @@ export default function OpponentInactive() {
     remainingMs !== null ? remainingMs <= 0 : Boolean(backendInactive);
   const showCountdown =
     !expired && remainingMs !== null && remainingMs <= COUNTDOWN_VISIBLE_MS;
+
+  const showDeleteWarning =
+    !isSpectator &&
+    !dismissed &&
+    turnPhase !== 'OVER' &&
+    !isReplay &&
+    deleteRemainingMs !== null &&
+    deleteRemainingMs <= COUNTDOWN_VISIBLE_MS;
+
+  if (showDeleteWarning) {
+    const seconds = Math.max(0, Math.ceil(deleteRemainingMs / 1000));
+    const remainingFraction = deleteRemainingMs / COUNTDOWN_VISIBLE_MS;
+    const handleStillHere = () => {
+      setDismissed(true);
+      submitChat({
+        playerID,
+        gameID,
+        authKey,
+        quickChat: QUICK_CHAT_STILL_HERE
+      });
+    };
+
+    return (
+      <div className={`${styles.overlay} ${styles.warning}`}>
+        <div className={styles.countdown} role="timer" aria-live="off">
+          {seconds}
+          <span className={styles.countdownUnit}>s</span>
+        </div>
+        <div className={styles.progressTrack}>
+          <div
+            className={styles.progressFill}
+            style={{
+              transform: `scaleX(${Math.max(
+                0,
+                Math.min(1, remainingFraction)
+              )})`
+            }}
+          />
+        </div>
+        <p className={styles.message}>
+          {t(
+            deleteRemainingMs <= 0
+              ? 'OPPONENT_INACTIVE.GAME_CLOSING_NOW'
+              : 'OPPONENT_INACTIVE.GAME_CLOSING'
+          )}
+        </p>
+        <button
+          className={styles.stillHereButton}
+          onClick={handleStillHere}
+          disabled={!!isRequestInProgress}
+        >
+          {t('OPPONENT_INACTIVE.IM_STILL_HERE')}
+        </button>
+      </div>
+    );
+  }
 
   if (
     (!expired && !showCountdown) ||

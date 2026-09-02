@@ -13,10 +13,12 @@ import { RootState } from 'app/Store';
 import { usePanelContext } from '../PanelContext';
 import { useTranslation } from 'react-i18next';
 import { usePlayerInputInProgress } from 'hooks/usePlayerInputInProgress';
+import { useMediaQuery } from 'hooks/useMediaQuery';
 
 export default function ManualModePanel() {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
+  const isMobileOrTablet = useMediaQuery('(max-width: 1199px)');
   const { setIsManualModeOpen, isDevToolOpen, isManualModeOpen } =
     usePanelContext();
   const isManualMode = useSetting({ settingName: MANUAL_MODE })?.value === '1';
@@ -31,10 +33,10 @@ export default function ManualModePanel() {
   );
 
   useEffect(() => {
-    if (isManualMode) {
+    if (isManualMode && !isMobileOrTablet) {
       setIsOpen(true);
     }
-  }, [isManualMode]);
+  }, [isManualMode, isMobileOrTablet]);
 
   useEffect(() => {
     setIsOpen(isManualModeOpen);
@@ -47,18 +49,20 @@ export default function ManualModePanel() {
 
   return (
     <>
-      <button
-        className={`${styles.manualModeTab} ${
-          isOpen || isDevToolOpen ? styles.hidden : ''
-        }`}
-        onClick={() => {
-          setIsOpen(!isOpen);
-          setIsManualModeOpen(!isOpen);
-        }}
-        title={t('MANUAL_MODE_PANEL.TOGGLE_MANUAL_MODE')}
-      >
-        {t('MANUAL_MODE_PANEL.TITLE')}
-      </button>
+      {!isMobileOrTablet && (
+        <button
+          className={`${styles.manualModeTab} ${
+            isOpen || isDevToolOpen ? styles.hidden : ''
+          }`}
+          onClick={() => {
+            setIsOpen(!isOpen);
+            setIsManualModeOpen(!isOpen);
+          }}
+          title={t('MANUAL_MODE_PANEL.TOGGLE_MANUAL_MODE')}
+        >
+          {t('MANUAL_MODE_PANEL.TITLE')}
+        </button>
+      )}
       {isOpen && (
         <ManualModeContent
           onClose={() => {

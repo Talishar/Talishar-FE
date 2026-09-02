@@ -198,6 +198,14 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     document.body.style.backgroundSize = 'cover';
     document.body.style.backgroundColor = colors.cardBackground;
 
+    const themeColorMeta = document.querySelector<HTMLMetaElement>(
+      'meta[name="theme-color"]'
+    );
+    if (themeColorMeta) {
+      themeColorMeta.content = colors.cardBackground;
+    }
+    root.style.colorScheme = currentTheme.id === 'light' ? 'light' : 'dark';
+
     // Set data attribute for potential CSS targeting
     root.setAttribute('data-theme', currentTheme.id);
   }, [currentTheme]);

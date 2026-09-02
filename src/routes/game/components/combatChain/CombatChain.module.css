@@ -74,6 +74,7 @@
   .grabbyHandle {
     font-size: calc(1.5vw + 3px);
     font-size: calc(1.5dvw + 3px);
+    width: max(calc(var(--card-size) * 0.20), 24px);
   }
 }
 
@@ -81,6 +82,7 @@
   .grabbyHandle {
     font-size: calc(1.5vh - 2px);
     font-size: calc(1.5dvh - 2px);
+    width: max(calc(var(--card-size) * 0.20), 24px);
   }
 }
 

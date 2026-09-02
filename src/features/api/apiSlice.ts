@@ -103,7 +103,9 @@ import { BlockedUsersAPIResponse } from 'interface/API/BlockedUsersAPI.php';
 import type GameState from '../GameState';
 import {
   GetSavedReplaysResponse,
-  SetReplayFavoriteRequest
+  SetReplayFavoriteRequest,
+  DeleteReplayRequest,
+  DeleteReplayResponse
 } from 'interface/API/GetSavedReplays.php';
 import {
   HeroMasteryResponse,
@@ -676,6 +678,15 @@ export const apiSlice = createApi({
     >({
       query: (body) => ({
         url: URL_END_POINT.SET_REPLAY_FAVORITE,
+        method: 'POST',
+        body,
+        responseHandler: parseResponse
+      }),
+      invalidatesTags: ['SavedReplays']
+    }),
+    deleteReplay: builder.mutation<DeleteReplayResponse, DeleteReplayRequest>({
+      query: (body) => ({
+        url: URL_END_POINT.DELETE_REPLAY,
         method: 'POST',
         body,
         responseHandler: parseResponse
@@ -1296,6 +1307,7 @@ export const {
   useGetSavedReplaysQuery,
   useGetReplayTurnsQuery,
   useSetReplayFavoriteMutation,
+  useDeleteReplayMutation,
   useShareReplayMutation,
   useLoadSharedReplayMutation,
   useSubmitLobbyInputMutation,

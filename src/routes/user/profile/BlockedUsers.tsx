@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import {
   useBlockUserMutation,
   useGetBlockedUsersQuery,
-  useUnblockUserMutation,
-  useSearchUsersQuery
+  useUnblockUserMutation
 } from 'features/api/apiSlice';
 import { toast } from 'react-hot-toast';
 import { RiDeleteBin5Line } from 'react-icons/ri';
@@ -12,6 +11,8 @@ import { IoMdArrowDropright } from 'react-icons/io';
 import { useTranslation } from 'react-i18next';
 import styles from './BlockedUsers.module.css';
 import { BlockedUser } from 'interface/API/BlockedUsersAPI.php';
+import { useUserSearch } from 'hooks/useUserSearch';
+import { UserSearchResults } from './UserSearchResults';
 
 interface BlockedUsersProps {
   className?: string;
@@ -19,9 +20,14 @@ interface BlockedUsersProps {
 
 export const BlockedUsers: React.FC<BlockedUsersProps> = ({ className }) => {
   const { t } = useTranslation();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [showSearchResults, setShowSearchResults] = useState(false);
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+  const {
+    searchTerm,
+    setSearchTerm,
+    showSearchResults,
+    users: searchResults,
+    isLoading: searchLoading,
+    resetSearch
+  } = useUserSearch();
   const [isExpanded, setIsExpanded] = useState(true);
 
   const {
@@ -34,23 +40,6 @@ export const BlockedUsers: React.FC<BlockedUsersProps> = ({ className }) => {
   const [unblockUser, { isLoading: isUnblockingUser }] =
     useUnblockUserMutation();
 
-  // Search users with debouncing
-  const shouldSearch = debouncedSearchTerm.length >= 2;
-  const { data: searchResults, isLoading: searchLoading } = useSearchUsersQuery(
-    { searchTerm: debouncedSearchTerm, limit: 10 },
-    { skip: !shouldSearch }
-  );
-
-  // Debounce search input
-  React.useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearchTerm(searchTerm);
-      setShowSearchResults(searchTerm.length >= 2);
-    }, 300);
-
-    return () => clearTimeout(timer);
-  }, [searchTerm]);
-
   // Get set of blocked user IDs
   const blockedUserIds = new Set(
     blockedUsersData?.blockedUsers?.map((user: any) => user.blockedUserId) || []
@@ -60,8 +49,7 @@ export const BlockedUsers: React.FC<BlockedUsersProps> = ({ className }) => {
     try {
       await blockUser({ blockedUsername }).unwrap();
       toast.success(t('PROFILE.USER_BLOCKED', { username: blockedUsername }));
-      setSearchTerm('');
-      setShowSearchResults(false);
+      resetSearch();
       refetchBlockedUsers();
     } catch (err: any) {
       toast.error(err.error || t('PROFILE.FAILED_BLOCK'));
@@ -129,69 +117,23 @@ export const BlockedUsers: React.FC<BlockedUsersProps> = ({ className }) => {
               />
             </div>
 
-            {/* Search Results */}
-            {showSearchResults && (
-              <div className={styles.searchResults}>
-                {searchLoading && (
-                  <p className={styles.loadingText}>{t('PROFILE.SEARCHING')}</p>
-                )}
-                {!searchLoading &&
-                searchResults?.users &&
-                searchResults.users.length > 0 ? (
-                  <ul className={styles.resultsList}>
-                    {[...searchResults.users]
-                      .sort((a, b) => {
-                        const term = searchTerm.toLowerCase();
-                        const aExact = a.username.toLowerCase() === term;
-                        const bExact = b.username.toLowerCase() === term;
-
-                        if (aExact && !bExact) return -1;
-                        if (bExact && !aExact) return 1;
-                        return 0;
-                      })
-                      .map((user) => {
-                        const isBlocked = blockedUserIds.has(user.usersId);
-                        return (
-                          <li key={user.usersId} className={styles.resultItem}>
-                            <span>{user.username}</span>
-                            <button
-                              className={`${styles.blockButton} ${
-                                isBlocked ? styles.blockButtonDisabled : ''
-                              }`}
-                              onClick={() =>
-                                !isBlocked && handleBlockUser(user.username)
-                              }
-                              disabled={isBlocked || isBlockingUser}
-                              aria-label={
-                                isBlocked
-                                  ? t('PROFILE.USER_ALREADY_BLOCKED')
-                                  : t('PROFILE.BLOCK_USER')
-                              }
-                              title={
-                                isBlocked
-                                  ? t('PROFILE.USER_ALREADY_BLOCKED')
-                                  : t('PROFILE.BLOCK_USER')
-                              }
-                            >
-                              {isBlocked ? (
-                                t('PROFILE.BLOCKED')
-                              ) : (
-                                <MdPersonAdd />
-                              )}
-                            </button>
-                          </li>
-                        );
-                      })}
-                  </ul>
-                ) : (
-                  !searchLoading && (
-                    <p className={styles.noResults}>
-                      {t('PROFILE.NO_USERS_FOUND')}
-                    </p>
-                  )
-                )}
-              </div>
-            )}
+            <UserSearchResults
+              users={searchResults}
+              isVisible={showSearchResults}
+              isLoading={searchLoading}
+              isMutating={isBlockingUser}
+              unavailableUserIds={blockedUserIds}
+              loadingText={t('PROFILE.SEARCHING')}
+              noResultsText={t('PROFILE.NO_USERS_FOUND')}
+              actionLabel={t('PROFILE.BLOCK_USER')}
+              unavailableActionLabel={t('PROFILE.USER_ALREADY_BLOCKED')}
+              actionIcon={<MdPersonAdd />}
+              unavailableActionIcon={t('PROFILE.BLOCKED')}
+              onSelect={(user) => handleBlockUser(user.username)}
+              styles={styles}
+              actionClassName={styles.blockButton}
+              disabledActionClassName={styles.blockButtonDisabled}
+            />
           </div>
 
           {/* Blocked Users List */}

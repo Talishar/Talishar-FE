@@ -48,7 +48,9 @@
 }
 
 .scrollButton {
-  flex-shrink: 0;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
   pointer-events: auto;
   width: 3dvh;
   min-width: 24px;
@@ -66,7 +68,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
   z-index: 500;
   transition: color 0.15s, background 0.15s, opacity 0.2s, transform 0.1s,
     visibility 0.2s;
@@ -74,6 +75,14 @@
   opacity: 1;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06),
     0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.scrollButtonLeft {
+  left: 0;
+}
+
+.scrollButtonRight {
+  right: 0;
 }
 
 .scrollButton svg {
@@ -88,11 +97,11 @@
     rgba(35, 35, 35, 0.88) 0%,
     rgba(20, 20, 20, 0.96) 100%
   );
-  transform: scale(1.08);
+  transform: translateY(-50%) scale(1.08);
 }
 
 .scrollButton:active {
-  transform: scale(0.96);
+  transform: translateY(-50%) scale(0.96);
 }
 
 .scrollButton.scrollButtonHidden {

@@ -15,6 +15,16 @@ export interface SetReplayFavoriteRequest {
   favorite: boolean;
 }
 
+export interface DeleteReplayRequest {
+  replayNumber: number;
+}
+
+export interface DeleteReplayResponse {
+  success: boolean;
+  replayNumber: number;
+  error?: string;
+}
+
 export interface ReplaySlotTier {
   tierName: string;
   slots: number;

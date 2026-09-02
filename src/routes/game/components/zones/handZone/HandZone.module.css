@@ -28,7 +28,7 @@
 }
 
 .isPlayer {
-  bottom: calc(var(--card-size) * -0.4);
+  bottom: calc(var(--card-size) * -0.4 + env(safe-area-inset-bottom));
   z-index: 60;
 }
 

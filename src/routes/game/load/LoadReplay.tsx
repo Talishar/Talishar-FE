@@ -1,13 +1,14 @@
-import { useAppDispatch, useAppSelector } from 'app/Hooks';
+import { useState } from 'react';
+import { useAppDispatch } from 'app/Hooks';
 import {
+  useDeleteReplayMutation,
   useGetSavedReplaysQuery,
   useLoadReplayMutation,
   useSetReplayFavoriteMutation,
   useShareReplayMutation
 } from 'features/api/apiSlice';
 import { FaRegStar, FaStar } from 'react-icons/fa';
-import { MdShare } from 'react-icons/md';
-import { selectIsPatron } from 'features/auth/authSlice';
+import { MdDeleteOutline, MdShare } from 'react-icons/md';
 import {
   GetSavedReplaysResponse,
   SavedReplay
@@ -120,14 +121,17 @@ const ReplaySlotMeter = ({
 };
 
 const ReplayGame = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [loadReplay, loadReplayResult] = useLoadReplayMutation();
   const [setReplayFavorite, { isLoading: isUpdatingFavorite }] =
     useSetReplayFavoriteMutation();
   const [shareReplay, { isLoading: isSharing }] = useShareReplayMutation();
-  const isPatron = useAppSelector(selectIsPatron);
+  const [deleteReplay] = useDeleteReplayMutation();
+  const [deletingReplayNumber, setDeletingReplayNumber] = useState<
+    number | null
+  >(null);
   const { data: savedReplayData, isLoading: isLoadingSavedReplays } =
     useGetSavedReplaysQuery();
 
@@ -223,6 +227,18 @@ const ReplayGame = () => {
     const heroes = [replay.p1HeroName, replay.p2HeroName].filter(Boolean);
     return heroes.length === 2 ? heroes.join(' vs ') : '';
   };
+  const savedAtLabel = (replay: SavedReplay) => {
+    if (!Number.isFinite(replay.savedAt) || replay.savedAt <= 0) {
+      return t('LOAD_REPLAY.SAVED_AT_UNKNOWN');
+    }
+
+    return t('LOAD_REPLAY.SAVED_AT', {
+      date: new Intl.DateTimeFormat(i18n.resolvedLanguage || i18n.language, {
+        dateStyle: 'medium',
+        timeStyle: 'short'
+      }).format(new Date(replay.savedAt * 1000))
+    });
+  };
   const toggleFavorite = async (replay: SavedReplay) => {
     try {
       await setReplayFavorite({
@@ -252,6 +268,28 @@ const ReplayGame = () => {
           ? error.message
           : apiError.data?.error || 'Failed to create share link.'
       );
+    }
+  };
+  const deleteSavedReplay = async (replay: SavedReplay) => {
+    if (
+      !window.confirm(
+        t('LOAD_REPLAY.DELETE_CONFIRM', { number: replay.replayNumber })
+      )
+    ) {
+      return;
+    }
+
+    setDeletingReplayNumber(replay.replayNumber);
+    try {
+      await deleteReplay({ replayNumber: replay.replayNumber }).unwrap();
+      toast.success(
+        t('LOAD_REPLAY.DELETE_SUCCESS', { number: replay.replayNumber })
+      );
+    } catch (error) {
+      const apiError = error as { data?: { error?: string } };
+      toast.error(apiError.data?.error || t('LOAD_REPLAY.DELETE_ERROR'));
+    } finally {
+      setDeletingReplayNumber(null);
     }
   };
 
@@ -313,6 +351,9 @@ const ReplayGame = () => {
                       {heroLabel(replay)}
                     </span>
                   )}
+                  <span className={styles.replaySavedAt}>
+                    {savedAtLabel(replay)}
+                  </span>
                 </button>
                 <button
                   type="button"
@@ -333,18 +374,28 @@ const ReplayGame = () => {
                 >
                   {replay.favorite ? <FaStar /> : <FaRegStar />}
                 </button>
-                {isPatron && (
-                  <button
-                    type="button"
-                    className={styles.shareButton}
-                    onClick={() => shareSavedReplay(replay)}
-                    disabled={isSharing}
-                    aria-label={`Copy a shareable link for Replay #${replay.replayNumber}`}
-                    title={t('LOAD_REPLAY.COPY_SHAREABLE_LINK')}
-                  >
-                    <MdShare />
-                  </button>
-                )}
+                <button
+                  type="button"
+                  className={styles.shareButton}
+                  onClick={() => shareSavedReplay(replay)}
+                  disabled={isSharing}
+                  aria-label={`Copy a shareable link for Replay #${replay.replayNumber}`}
+                  title={t('LOAD_REPLAY.COPY_SHAREABLE_LINK')}
+                >
+                  <MdShare />
+                </button>
+                <button
+                  type="button"
+                  className={styles.deleteButton}
+                  onClick={() => deleteSavedReplay(replay)}
+                  disabled={deletingReplayNumber !== null}
+                  aria-label={t('LOAD_REPLAY.DELETE_ARIA_LABEL', {
+                    number: replay.replayNumber
+                  })}
+                  title={t('LOAD_REPLAY.DELETE_REPLAY')}
+                >
+                  <MdDeleteOutline />
+                </button>
               </article>
             ))}
           </div>

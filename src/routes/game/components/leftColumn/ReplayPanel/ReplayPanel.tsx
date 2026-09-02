@@ -7,7 +7,6 @@ import {
   setSpectatorCameraView
 } from 'features/game/GameSlice';
 import { RootState } from 'app/Store';
-import { selectIsPatron } from 'features/auth/authSlice';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 import styles from './ReplayPanel.module.css';
@@ -125,7 +124,6 @@ function ReplayContent({
   const spectatorCameraView = useAppSelector(
     (state: RootState) => state.game.spectatorCameraView
   );
-  const isPatron = useAppSelector(selectIsPatron);
   const [shareReplay, { isLoading: isSharing }] = useShareReplayMutation();
   const [reloadReplay, { isLoading: isReloadingReplay }] =
     useLoadReplayMutation();
@@ -537,7 +535,7 @@ function ReplayContent({
             ? t('MATCH_REVIEW.RETURNING_TO_START')
             : t('MATCH_REVIEW.RETURN_TO_START')}
         </button>
-        {isPatron && gameInfo?.replayNumber && (
+        {gameInfo?.replayNumber && (
           <button
             className={styles.actionButton}
             onClick={handleShare}

@@ -186,7 +186,10 @@
   grid-template-columns: 1fr auto;
   gap: 0.32rem 0.75rem;
   width: 100%;
+  height: 100%;
+  min-height: 7rem;
   padding: 0.85rem;
+  padding-right: 3rem;
   text-align: left;
   border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 5px;
@@ -224,6 +227,11 @@
   overflow-wrap: anywhere;
   color: var(--theme-text-secondary, #d3d3d3);
   font-size: 0.76rem;
+}
+.replaySavedAt {
+  grid-column: 1 / -1;
+  color: var(--theme-text-secondary, #aaa);
+  font-size: 0.7rem;
 }
 .replayLoad {
   grid-column: 2;
@@ -273,8 +281,8 @@
   display: grid;
   place-items: center;
   position: absolute;
-  right: 2.6rem;
-  top: 0.35rem;
+  right: 0.45rem;
+  top: 2.5rem;
   width: 1.8rem;
   height: 1.8rem;
   margin: 0;
@@ -293,6 +301,34 @@
 }
 
 .shareButton:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+.deleteButton {
+  display: grid;
+  place-items: center;
+  position: absolute;
+  right: 0.45rem;
+  top: 4.65rem;
+  width: 1.8rem;
+  height: 1.8rem;
+  margin: 0;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: rgba(255, 255, 255, 0.62);
+  cursor: pointer;
+}
+
+.deleteButton:hover:not(:disabled) {
+  background: rgba(50, 10, 10, 0.78) !important;
+  border-color: rgba(111, 0, 0, 0.3);
+  color: #ff9b9b;
+}
+
+.deleteButton:disabled {
   opacity: 0.5;
   cursor: wait;
 }

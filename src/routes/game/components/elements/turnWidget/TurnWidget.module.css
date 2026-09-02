@@ -41,7 +41,8 @@
   position: absolute;
   top: 50%;
   left: 0;
-  transform: translate(-245%, -50%);
+  right: auto;
+  transform: translate(calc(-100% - 0.6dvh), -50%);
   z-index: 3;
 }
 
@@ -61,8 +62,22 @@
   }
 
   .apBadge {
-    left: auto;
-    right: 103%;
-    transform: translateY(-50%);
+    transform: translate(calc(-100% - 1.2vw), -50%);
+  }
+}
+
+@media (orientation: landscape) and (max-height: 600px) {
+  .widgetContainer {
+    height: 30dvh;
+  }
+
+  .widget {
+    width: 100%;
+    gap: 0.5dvh;
+    padding: 0.5dvh;
+  }
+
+  .apBadge {
+    transform: translate(calc(-100% - 0.5dvh), -50%);
   }
 }
