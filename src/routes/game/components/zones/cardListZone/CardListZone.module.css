@@ -97,8 +97,8 @@
   padding: 0 0.75rem;
   border-radius: 5px;
   border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.15));
-  background-color: rgba(0, 0, 0, 0.35);
-  color: rgba(255, 255, 255, 0.85);
+  background-color: rgba(var(--theme-sunken-rgb), calc(0.35 * var(--theme-sunken-alpha)));
+  color: rgba(var(--theme-on-surface-rgb), 0.85);
   font-size: clamp(0.75rem, 1.6vh, 0.9rem);
   height: 30px !important; /* !important overrides Pico CSS height on inputs */
   flex-shrink: 0;
@@ -110,13 +110,13 @@
 }
 
 .searchInput::placeholder {
-  color: rgba(255, 255, 255, 0.35);
+  color: rgba(var(--theme-on-surface-rgb), 0.35);
 }
 
 .searchInput:focus {
   outline: none;
   border-color: var(--theme-primary, color-mix(in srgb, var(--theme-primary) 60%, transparent));
-  background-color: rgba(0, 0, 0, 0.55);
+  background-color: rgba(var(--theme-sunken-rgb), calc(0.55 * var(--theme-sunken-alpha)));
 }
 
 @media (max-width: 812px) {
@@ -140,8 +140,8 @@
   padding: 0 0.85rem;
   border-radius: 5px;
   border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.15));
-  background-color: rgba(0, 0, 0, 0.3);
-  color: rgba(255, 255, 255, 0.75);
+  background-color: rgba(var(--theme-sunken-rgb), calc(0.3 * var(--theme-sunken-alpha)));
+  color: rgba(var(--theme-on-surface-rgb), 0.75);
   font-size: clamp(0.75rem, 1.6vh, 0.9rem);
   font-weight: 500;
   font-family: inherit;
@@ -156,15 +156,15 @@
 }
 
 .button:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.3);
-  color: rgba(255, 255, 255, 0.95);
+  background-color: rgba(var(--theme-on-surface-rgb), 0.1);
+  border-color: rgba(var(--theme-on-surface-rgb), 0.3);
+  color: rgba(var(--theme-on-surface-rgb), 0.95);
 }
 
 .button.active {
-  background: rgba(255, 255, 255, 0.88);
-  border-color: rgba(255, 255, 255, 0.9);
-  color: #0d0d0f;
+  background: rgba(var(--theme-on-surface-rgb), 0.88);
+  border-color: rgba(var(--theme-on-surface-rgb), 0.9);
+  color: var(--theme-form-background);
 }
 
 @media (max-width: 812px) {
@@ -194,13 +194,13 @@
   font-size: 0.85rem;
   flex-shrink: 0;
   cursor: pointer;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(var(--theme-on-surface-rgb), 0.45);
   transition: background 0.15s ease, color 0.15s ease;
 }
 
 .cardListCloseIcon:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.9);
+  background: rgba(var(--theme-on-surface-rgb), 0.1);
+  color: rgba(var(--theme-on-surface-rgb), 0.9);
 }
 
 @media (max-width: 812px) {
@@ -212,7 +212,7 @@
     width: 32px;
     height: 32px;
     font-size: 1rem;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(var(--theme-sunken-rgb), calc(0.5 * var(--theme-sunken-alpha)));
   }
 }
 
@@ -240,7 +240,7 @@
 }
 
 .cardListContents::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(var(--theme-sunken-rgb), calc(0.3 * var(--theme-sunken-alpha)));
   border-radius: 6px;
 }
 
@@ -263,7 +263,7 @@
 /* ── No-results state ─────────────────────────────────── */
 .noResults {
   padding: 2rem 1rem;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(var(--theme-on-surface-rgb), 0.45);
   text-align: center;
   width: 100%;
   font-size: 0.9rem;

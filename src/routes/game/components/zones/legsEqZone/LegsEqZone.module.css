@@ -3,7 +3,7 @@
   left: 0px;
   border-radius: 1vh;
   flex: 0 0 10vh;
-  background: rgba(50, 50, 50, 0.5);
+  background: var(--theme-zone-placeholder);
   color: var(--white);
   display: flex;
   justify-content: center;
@@ -22,7 +22,7 @@
   height: 1.6em;
   min-width: 1.6em;
   width: auto;
-  background-color: black;
+  background-color: var(--near-black);
   border: var(--theme-primary) solid 1px;
   color: var(--white);
   border-radius: 5px;

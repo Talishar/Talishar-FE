@@ -10,9 +10,9 @@
 }
 
 .panelLocked {
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.14);
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(var(--theme-on-surface-rgb), 0.03);
 }
 
 .content {
@@ -128,7 +128,7 @@
   width: auto !important;
   margin-bottom: 0 !important;
   padding: 0.35rem 0.7rem;
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.16);
   border-radius: 5px;
   background: transparent;
   color: rgba(237, 237, 237, 0.7);
@@ -141,9 +141,9 @@
 }
 
 .clearButton:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.28);
-  color: rgba(237, 237, 237, 0.95);
+  background: rgba(var(--theme-on-surface-rgb), 0.06);
+  border-color: rgba(var(--theme-on-surface-rgb), 0.28);
+  color: var(--theme-text);
 }
 
 .clearButtonLocked {

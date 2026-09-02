@@ -16,11 +16,11 @@
   bottom: 10vh;
   left: 9vw;
   right: 13vw;
-  background: #121214;
-  color: #e4e4e7;
+  background: var(--near-black);
+  color: var(--theme-text);
   padding: 0;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.08);
   border-radius: 12px;
   box-shadow: 0 24px 64px rgba(0, 0, 0, 0.75),
     0 2px 0 rgba(255, 255, 255, 0.04) inset;
@@ -37,8 +37,8 @@
   align-items: center;
   padding: 16px 24px;
   flex-shrink: 0;
-  background: rgba(36, 36, 41, 0.35);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: color-mix(in srgb, var(--theme-card-background) 35%, transparent);
+  border-bottom: 1px solid rgba(var(--theme-on-surface-rgb), 0.06);
 }
 
 .title {
@@ -47,7 +47,7 @@
   font-size: 1.5em;
   font-weight: 600;
   line-height: 1;
-  color: #f4f4f5;
+  color: var(--theme-text);
 }
 
 /* Pico adds margin-bottom to hgroup and every heading - suppress all of it */
@@ -69,7 +69,7 @@
   height: 28px;
   border-radius: 5px;
   cursor: pointer;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(var(--theme-on-surface-rgb), 0.45);
   font-size: 0.8rem;
   flex-shrink: 0;
   margin: 0;
@@ -81,8 +81,8 @@
 }
 
 .optionsMenuCloseIcon:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.9);
+  background: rgba(var(--theme-on-surface-rgb), 0.1);
+  color: rgba(var(--theme-on-surface-rgb), 0.9);
 }
 
 .optionsMenuCloseIcon:focus-visible {
@@ -116,7 +116,7 @@
 }
 
 .optionsContentContainer::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(var(--theme-sunken-rgb), calc(0.3 * var(--theme-sunken-alpha)));
   border-radius: 6px;
 }
 
@@ -154,7 +154,7 @@
 .reportButtonGroup {
   margin-top: 0.4rem;
   padding-top: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(var(--theme-on-surface-rgb), 0.08);
 }
 
 .alarm {
@@ -171,8 +171,8 @@
   min-height: 2.75rem !important;
   padding: 0.625rem 1rem !important;
   margin-bottom: 0 !important;
-  background-color: rgba(45, 45, 53, 0.72) !important;
-  color: #e4e4e7 !important;
+  background-color: color-mix(in srgb, var(--theme-tertiary) 72%, transparent);
+  color: var(--theme-text) !important;
   border: 1px solid rgba(228, 228, 231, 0.12) !important;
   border-radius: 6px !important;
   font-family: inherit !important;
@@ -188,9 +188,9 @@
 }
 
 .buttonDiv:hover {
-  background-color: rgba(55, 55, 65, 0.9) !important;
+  background-color: color-mix(in srgb, var(--theme-tertiary) 90%, transparent);
   border-color: rgba(228, 228, 231, 0.22) !important;
-  color: #fafafa !important;
+  color: var(--theme-text) !important;
   transform: translateY(-1px) !important;
 }
 
@@ -235,7 +235,7 @@
   padding: 1rem;
   margin: 0;
   min-width: 0;
-  background: rgba(36, 36, 41, 0.35);
+  background: color-mix(in srgb, var(--theme-card-background) 35%, transparent);
 }
 
 .sectionHeader {
@@ -283,7 +283,7 @@
   margin: 0;
   font-size: 0.875em;
   line-height: 1.5;
-  color: #a1a1aa;
+  color: var(--theme-text-muted);
   text-align: center;
 }
 
@@ -297,7 +297,7 @@
 }
 
 .cosmeticsSection .signpostNote {
-  color: #ffffff;
+  color: var(--theme-text);
 }
 
 .cosmeticsSaveButton {
@@ -333,7 +333,7 @@
     #252525
   ) !important;
   background-image: none !important;
-  color: #ffffff !important;
+  color: var(--theme-text) !important;
   border-color: color-mix(
     in srgb,
     var(--theme-primary, #d4af37) 55%,

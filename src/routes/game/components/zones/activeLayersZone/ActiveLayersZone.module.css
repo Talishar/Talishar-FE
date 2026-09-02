@@ -66,13 +66,13 @@
   translate: -50% 0;
   width: 72%;
   aspect-ratio: 1;
-  background-color: rgba(255, 255, 255, 0.07);
-  color: #e0e0e0;
+  background-color: rgba(var(--theme-on-surface-rgb), 0.07);
+  color: var(--theme-text-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.15);
   padding: 0;
   margin: 0;
   box-shadow: none;
@@ -82,9 +82,9 @@
 }
 
 .dragModeToggle:hover {
-  background-color: rgba(255, 255, 255, 0.15);
-  color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(var(--theme-on-surface-rgb), 0.15);
+  color: var(--theme-text);
+  border-color: rgba(var(--theme-on-surface-rgb), 0.3);
 }
 
 .dragModeIcon {
@@ -131,7 +131,7 @@
 }
 
 .activeLayersInner::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(var(--theme-sunken-rgb), calc(0.3 * var(--theme-sunken-alpha)));
   border-radius: 5px;
 }
 
@@ -234,14 +234,14 @@
   margin-right: 10px;
   z-index: 1;
   user-select: none;
-  background-color: rgba(255, 255, 255, 0.07);
-  color: #e0e0e0;
+  background-color: rgba(var(--theme-on-surface-rgb), 0.07);
+  color: var(--theme-text-secondary);
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.15);
   flex-basis: auto;
   padding: 8px 16px;
   white-space: nowrap;
@@ -250,15 +250,15 @@
 }
 
 .passTurn:hover {
-  background-color: rgba(255, 255, 255, 0.15);
-  color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(var(--theme-on-surface-rgb), 0.15);
+  color: var(--theme-text);
+  border-color: rgba(var(--theme-on-surface-rgb), 0.3);
   cursor: pointer;
 }
 
 .buttonDiv {
-  background-color: rgba(255, 255, 255, 0.07);
-  color: #e0e0e0;
+  background-color: rgba(var(--theme-on-surface-rgb), 0.07);
+  color: var(--theme-text-secondary);
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -266,7 +266,7 @@
   min-width: calc(6dvw * var(--card-scale));
   height: 32px;
   border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.15);
   flex-basis: auto;
   padding: 8px 16px;
   width: auto;
@@ -278,9 +278,9 @@
 }
 
 .buttonDiv:hover {
-  background-color: rgba(255, 255, 255, 0.15);
-  color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(var(--theme-on-surface-rgb), 0.15);
+  color: var(--theme-text);
+  border-color: rgba(var(--theme-on-surface-rgb), 0.3);
   cursor: pointer;
 }
 
@@ -307,8 +307,8 @@
 }
 
 .groupedCardCountBadge {
-  background-color: rgba(0, 0, 0, 0.75);
-  color: white;
+  background-color: var(--near-black);
+  color: var(--theme-text);
   font-weight: bold;
   font-size: 1em;
   line-height: 1;

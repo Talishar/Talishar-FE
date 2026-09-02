@@ -12,8 +12,8 @@
   width: 100%;
   padding: 0.5rem 0.75rem;
   margin-bottom: 0 !important;
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(var(--theme-sunken-rgb), calc(0.3 * var(--theme-sunken-alpha)));
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.1);
   border-radius: 5px;
   color: var(--theme-text, #f4eded);
   font-size: 0.95em;
@@ -60,7 +60,7 @@
   left: 0;
   right: 0;
   background: var(--dropdown-background-color);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.1);
   border-top: none;
   border-radius: 0 0 4px 4px;
   list-style: none;
@@ -89,7 +89,7 @@
 }
 
 .optionSelected {
-  background: rgba(255, 255, 255, 0.07);
+  background: rgba(var(--theme-on-surface-rgb), 0.07);
   font-weight: 600;
 }
 
@@ -118,7 +118,7 @@
 
 /* Upgrade CTA row at the bottom */
 .upgradeRow {
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(var(--theme-on-surface-rgb), 0.08);
   padding: 0.5rem 0.75rem 0.35rem;
   list-style: none;
 }

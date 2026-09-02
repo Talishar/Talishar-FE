@@ -111,7 +111,7 @@
   background: var(--theme-danger, #c41e3a);
   border: none;
   border-radius: 5px;
-  color: #fff;
+  color: var(--theme-text);
   cursor: pointer;
   font-size: 1rem;
   transition: background-color 0.2s, transform 0.1s;

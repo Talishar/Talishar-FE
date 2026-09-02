@@ -49,9 +49,9 @@
 
 .embeddedForm input[type='checkbox'][role='switch']:not(:checked),
 .formContainer input[type='checkbox'][role='switch']:not(:checked) {
-  --switch-background-color: #3c4147 !important;
+  --switch-background-color: var(--theme-tertiary);
   background-color: var(--near-black) !important;
-  border-color: rgba(255, 255, 255, 0.18) !important;
+  border-color: rgba(var(--theme-on-surface-rgb), 0.18) !important;
 }
 
 .toggleLabel {
@@ -101,7 +101,7 @@
 }
 
 .embeddedFormInner::-webkit-scrollbar-track {
-  background: #1a1d21;
+  background: var(--theme-card-background);
 }
 
 .embeddedFormInner::-webkit-scrollbar-thumb {
@@ -345,7 +345,7 @@
   border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.15));
   border-radius: 8px;
   overflow: hidden;
-  background: rgba(0, 0, 0, 0.15);
+  background: rgba(var(--theme-sunken-rgb), calc(0.15 * var(--theme-sunken-alpha)));
 }
 
 .deckTab {

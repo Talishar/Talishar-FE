@@ -38,7 +38,7 @@
 }
 
 .permanentsInner::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(var(--theme-sunken-rgb), calc(0.2 * var(--theme-sunken-alpha)));
   border-radius: 5px;
 }
 
@@ -70,7 +70,7 @@
   left: -0.5em;
   min-width: 2em;
   width: auto;
-  background-color: black;
+  background-color: var(--near-black);
   border: var(--theme-primary) solid 1px;
   color: var(--white);
   border-radius: 5px;
@@ -89,7 +89,7 @@
   left: -0.5em;
   min-width: 2em;
   width: auto;
-  background-color: black;
+  background-color: var(--near-black);
   border: var(--theme-primary) solid 1px;
   color: var(--white);
   border-radius: 5px;

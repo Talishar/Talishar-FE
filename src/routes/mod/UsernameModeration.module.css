@@ -1,9 +1,9 @@
 .container {
   padding: 20px;
-  background: #2a2a2a;
+  background: var(--theme-tertiary);
   border-radius: 8px;
   margin-bottom: 30px;
-  color: #e0e0e0;
+  color: var(--theme-text-secondary);
 }
 
 .container h2 {
@@ -50,7 +50,7 @@
 
 .selectAllButton {
   background: #2196f3;
-  color: white;
+  color: #fff;
 }
 
 .selectAllButton:hover:not(:disabled) {
@@ -61,7 +61,7 @@
 
 .banButton {
   background: #f44336;
-  color: white;
+  color: #fff;
 }
 
 .banButton:hover:not(:disabled) {
@@ -72,7 +72,7 @@
 
 .whitelistSelectedButton {
   background: #4caf50;
-  color: white;
+  color: #fff;
 }
 
 .whitelistSelectedButton:hover:not(:disabled) {
@@ -83,7 +83,7 @@
 
 .refreshButton {
   background: #9c27b0;
-  color: white;
+  color: #fff;
 }
 
 .refreshButton:hover:not(:disabled) {
@@ -94,7 +94,7 @@
 
 .banSingleButton {
   background: #ff9800;
-  color: white;
+  color: #fff;
   padding: 6px 12px;
   font-size: 0.85em;
 }
@@ -107,7 +107,7 @@
 
 .whitelistButton {
   background: #4caf50;
-  color: white;
+  color: #fff;
   padding: 6px 12px;
   font-size: 0.85em;
   margin-left: 6px;
@@ -136,13 +136,13 @@
 .usersTable {
   width: 100%;
   border-collapse: collapse;
-  background: #1a1a1a;
+  background: var(--theme-card-background);
   border-radius: 5px;
   overflow: hidden;
 }
 
 .usersTable thead {
-  background: #1a1a1a;
+  background: var(--theme-card-background);
   border-bottom: 2px solid #444;
 }
 
@@ -150,7 +150,7 @@
   padding: 12px;
   text-align: left;
   font-weight: 600;
-  color: #b0b0b0;
+  color: var(--theme-text-muted);
   font-size: 0.9em;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -159,11 +159,11 @@
 .usersTable td {
   padding: 12px;
   border-bottom: 1px solid #333;
-  color: #e0e0e0;
+  color: var(--theme-text-secondary);
 }
 
 .usersTable tbody tr:hover {
-  background: #252525;
+  background: var(--theme-card-background);
 }
 
 .usersTable input[type='checkbox'] {
@@ -182,14 +182,14 @@
   margin-top: 8px;
   padding-top: 8px;
   border-top: 1px solid #444;
-  color: #999;
+  color: var(--theme-text-muted);
   font-size: 0.85em;
 }
 
 .patternCell {
   font-family: 'Courier New', monospace;
   font-size: 0.9em;
-  color: #ffa726;
+  color: var(--theme-warning);
 }
 
 .pattern {

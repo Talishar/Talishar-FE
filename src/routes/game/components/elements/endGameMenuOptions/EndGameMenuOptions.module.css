@@ -15,12 +15,12 @@
   align-items: center;
   justify-content: center;
   gap: 0.45rem;
-  background-color: rgba(0, 0, 0, 0.3);
-  color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(var(--theme-sunken-rgb), calc(0.3 * var(--theme-sunken-alpha)));
+  color: rgba(var(--theme-on-surface-rgb), 0.8);
   min-height: 2.25rem;
   padding: 0.4rem 0.85rem;
   border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.18);
   white-space: nowrap;
   font-size: 1em;
   font-weight: 500;
@@ -33,9 +33,9 @@
 }
 
 .buttonDiv:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.35);
-  color: white;
+  background-color: rgba(var(--theme-on-surface-rgb), 0.1);
+  border-color: rgba(var(--theme-on-surface-rgb), 0.35);
+  color: var(--theme-text);
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }

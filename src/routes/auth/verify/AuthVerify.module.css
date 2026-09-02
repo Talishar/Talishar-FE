@@ -32,7 +32,7 @@
   text-align: center;
   margin-bottom: 1.5rem;
   padding: 1rem;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(var(--theme-on-surface-rgb), 0.05);
   border-radius: 8px;
 }
 
@@ -40,7 +40,7 @@
   text-align: center;
   margin-bottom: 1.5rem;
   padding: 1rem;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(var(--theme-on-surface-rgb), 0.05);
   border-radius: 8px;
 }
 
@@ -57,9 +57,9 @@
 .permissions {
   margin-bottom: 1.5rem;
   padding: 1rem;
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(var(--theme-on-surface-rgb), 0.03);
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.1);
 }
 
 .permissions h4 {
@@ -101,7 +101,7 @@
 
 .allowButton {
   background: var(--primary, #ffb84d);
-  color: #000;
+  color: var(--theme-primary-inverse);
 }
 
 .allowButton:hover:not(:disabled) {
@@ -114,14 +114,14 @@
 }
 
 .denyButton {
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(var(--theme-on-surface-rgb), 0.1);
+  color: rgba(var(--theme-on-surface-rgb), 0.9);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.3);
 }
 
 .denyButton:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(var(--theme-on-surface-rgb), 0.15);
+  border-color: rgba(var(--theme-on-surface-rgb), 0.5);
 }
 
 .denyButton:active:not(:disabled) {
@@ -151,7 +151,7 @@
 }
 
 .error code {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(var(--theme-on-surface-rgb), 0.1);
   padding: 0.125rem 0.375rem;
   border-radius: 5px;
   font-size: 0.9em;
@@ -185,7 +185,7 @@
   padding: 0.75rem;
   border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(var(--theme-on-surface-rgb), 0.05);
   color: inherit;
   font-size: 1rem;
 }
@@ -221,7 +221,7 @@
 .submitButton {
   padding: 0.75rem 1rem;
   background: var(--theme-primary, #4a9eff);
-  color: white;
+  color: var(--theme-primary-inverse);
   border: none;
   border-radius: 6px;
   font-size: 1rem;

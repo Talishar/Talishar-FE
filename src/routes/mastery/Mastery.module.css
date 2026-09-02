@@ -152,7 +152,7 @@
 }
 
 .groupHeading:hover {
-  background: rgba(255, 255, 255, 0.025) !important;
+  background: rgba(var(--theme-on-surface-rgb), 0.025) !important;
 }
 
 .collapseIcon {
@@ -228,7 +228,7 @@
 .heroCard:hover,
 .heroCard:focus-visible {
   z-index: 3;
-  background: rgba(255, 255, 255, 0.045) !important;
+  background: rgba(var(--theme-on-surface-rgb), 0.045) !important;
   transform: translateY(-2px);
 }
 
@@ -323,7 +323,7 @@
   margin: 0.4rem 0;
   overflow: hidden;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(var(--theme-on-surface-rgb), 0.12);
 }
 
 .detailProgress i {

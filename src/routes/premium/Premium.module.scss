@@ -19,7 +19,11 @@
   font-size: 2.4rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
-  background: linear-gradient(135deg, var(--theme-primary), #f0d060);
+  background: linear-gradient(
+    135deg,
+    var(--theme-primary),
+    var(--theme-primary-hover)
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -56,7 +60,7 @@
   width: 48px;
   height: 26px;
   border-radius: 13px;
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(var(--theme-on-surface-rgb), 0.15);
   cursor: pointer;
   transition: background 0.2s;
   border: none;
@@ -65,7 +69,7 @@
 }
 
 .toggleTrack:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(var(--theme-on-surface-rgb), 0.25);
 }
 
 .toggleKnob {
@@ -123,7 +127,7 @@
   left: 50%;
   transform: translateX(-50%);
   background: var(--theme-primary);
-  color: #000;
+  color: var(--theme-primary-inverse);
   font-size: 0.7rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -191,7 +195,7 @@
   display: inline-block;
   font-size: 0.7rem;
   background: rgba(76, 175, 80, 0.15);
-  color: #66bb6a;
+  color: color-mix(in srgb, #66bb6a 55%, var(--theme-text));
   padding: 0.15rem 0.5rem;
   border-radius: 8px;
   margin-left: 0.35rem;
@@ -216,14 +220,14 @@
 }
 
 .upgradeBtn:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(var(--theme-on-surface-rgb), 0.08);
+  border-color: rgba(var(--theme-on-surface-rgb), 0.4);
 }
 
 .tierCard.recommended .upgradeBtn {
   background: var(--theme-primary);
   border-color: var(--theme-primary);
-  color: #000;
+  color: var(--theme-primary-inverse);
 }
 
 .tierCard.recommended .upgradeBtn:hover {
@@ -289,7 +293,7 @@
 .comparisonTable td {
   padding: 0.75rem 1rem;
   text-align: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(var(--theme-on-surface-rgb), 0.06);
 }
 
 .comparisonTable th:first-child,
@@ -300,7 +304,7 @@
 }
 
 .comparisonTable thead th {
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(var(--theme-on-surface-rgb), 0.04);
   font-weight: 700;
   font-size: 0.8rem;
   color: var(--theme-text);
@@ -312,7 +316,7 @@
 }
 
 .comparisonTable tbody tr:hover {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(var(--theme-on-surface-rgb), 0.03);
 }
 
 .check {
@@ -350,7 +354,7 @@
   display: inline-block;
   padding: 0.85rem 2.5rem;
   background: var(--theme-primary);
-  color: #000;
+  color: var(--theme-primary-inverse);
   font-weight: 700;
   font-size: 1rem;
   border: none;

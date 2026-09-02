@@ -1,4 +1,5 @@
 .pageBannerSection {
+  --landing-surface: var(--theme-contrast-inverse, #000000);
   position: relative;
   width: 100%;
   overflow: hidden;
@@ -13,7 +14,7 @@
       rgba(0, 0, 0, 0.45) 0%,
       rgba(0, 0, 0, 0.6) 50%,
       rgba(0, 0, 0, 0.85) 80%,
-      #0a0a0a 100%
+      var(--landing-surface) 100%
     ),
     url('/images/talishar-lost-prince.webp') center 40% / cover no-repeat;
 }
@@ -33,6 +34,12 @@
   color: var(--theme-primary, #d4af37);
   margin: 0 0 0.4rem;
   text-shadow: 0 2px 24px rgba(0, 0, 0, 0.8);
+}
+
+/* The banner art stays dark in every theme, so the title keeps a light value
+   when the surrounding chrome goes light. */
+:global(:root[data-theme='radiant']) .pageTitle {
+  color: #f4f6f9;
 }
 
 .pageSubtitle {

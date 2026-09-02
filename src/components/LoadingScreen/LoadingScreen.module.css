@@ -8,7 +8,7 @@
   justify-content: center;
   gap: 0.75rem;
   padding: 2rem;
-  background: #000;
+  background: var(--near-black);
   color: var(--theme-text, #f4eded);
   text-align: center;
 }
@@ -40,8 +40,8 @@
   max-width: 34rem;
   margin: 0.25rem 0 0;
   padding-top: 0.9rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  color: rgba(244, 237, 237, 0.55);
+  border-top: 1px solid rgba(var(--theme-on-surface-rgb), 0.08);
+  color: var(--theme-text-muted);
   font-size: 0.85rem;
   font-style: italic;
   line-height: 1.5;

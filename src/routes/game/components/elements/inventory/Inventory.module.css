@@ -76,15 +76,15 @@
   cursor: pointer;
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(var(--theme-on-surface-rgb), 0.45);
   padding: 0;
   margin-bottom: 0;
   transition: background 0.15s ease, color 0.15s ease;
 }
 
 .closeButton:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(var(--theme-on-surface-rgb), 0.1);
+  color: rgba(var(--theme-on-surface-rgb), 0.9);
 }
 
 /* ── Scrollable card grid ─────────────────────────────── */
@@ -113,7 +113,7 @@
 }
 
 .modalContent::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(var(--theme-sunken-rgb), calc(0.3 * var(--theme-sunken-alpha)));
   border-radius: 6px;
 }
 
@@ -177,7 +177,7 @@
   top: 0.35rem;
   right: 0.35rem;
   background-color: var(--theme-danger, rgba(220, 53, 69, 0.9));
-  color: white;
+  color: var(--theme-text);
   padding: 0.2rem 0.45rem;
   border-radius: 5px;
   font-size: 0.72rem;
@@ -191,7 +191,7 @@
 .emptyState {
   width: 100%;
   text-align: center;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(var(--theme-on-surface-rgb), 0.4);
   padding: 3rem 1rem;
   font-style: italic;
   font-size: 0.9rem;

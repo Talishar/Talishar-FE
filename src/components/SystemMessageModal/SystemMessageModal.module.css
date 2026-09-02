@@ -33,7 +33,7 @@
 }
 
 .message {
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(var(--theme-on-surface-rgb), 0.85);
   margin-bottom: 1.5rem;
   line-height: 1.6;
   white-space: pre-wrap;
@@ -49,9 +49,9 @@
   align-items: center;
   justify-content: center;
   padding: 0.55rem 2rem;
-  background-color: rgba(0, 0, 0, 0.3);
-  color: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background-color: rgba(var(--theme-sunken-rgb), calc(0.3 * var(--theme-sunken-alpha)));
+  color: rgba(var(--theme-on-surface-rgb), 0.8);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.15);
   border-radius: 6px;
   cursor: pointer;
   font-weight: 500;
@@ -63,17 +63,17 @@
 }
 
 .acknowledgeBtn:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.3);
-  color: white;
+  background-color: rgba(var(--theme-on-surface-rgb), 0.1);
+  border-color: rgba(var(--theme-on-surface-rgb), 0.3);
+  color: var(--theme-text);
 }
 
 .acknowledgeBtn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
-  background-color: rgba(0, 0, 0, 0.2);
-  border-color: rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.4);
+  background-color: rgba(var(--theme-sunken-rgb), calc(0.2 * var(--theme-sunken-alpha)));
+  border-color: rgba(var(--theme-on-surface-rgb), 0.08);
+  color: rgba(var(--theme-on-surface-rgb), 0.4);
 }
 
 .countdownWrapper {
@@ -90,13 +90,13 @@
 
 .countdownTrack {
   fill: none;
-  stroke: rgba(255, 255, 255, 0.15);
+  stroke: rgba(var(--theme-on-surface-rgb), 0.15);
   stroke-width: 2.5;
 }
 
 .countdownCircle {
   fill: none;
-  stroke: rgba(255, 255, 255, 0.65);
+  stroke: rgba(var(--theme-on-surface-rgb), 0.65);
   stroke-width: 2.5;
   stroke-linecap: round;
   transform-origin: 12px 12px;
@@ -105,7 +105,7 @@
 }
 
 .countdownText {
-  fill: rgba(255, 255, 255, 0.7);
+  fill: rgba(var(--theme-on-surface-rgb), 0.7);
   font-size: 10px;
   font-weight: bold;
   text-anchor: middle;

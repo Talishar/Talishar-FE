@@ -111,7 +111,7 @@
   top: 0;
   right: 0;
   z-index: 1;
-  color: rgba(255, 255, 255, 0.38);
+  color: rgba(var(--theme-on-surface-rgb), 0.38);
   text-decoration: none;
   font-size: 0.58rem;
   font-weight: 500;
@@ -121,7 +121,7 @@
 }
 
 .removeAdsLink:hover {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(var(--theme-on-surface-rgb), 0.6);
   text-decoration: underline;
 }
 

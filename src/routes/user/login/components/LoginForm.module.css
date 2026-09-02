@@ -93,7 +93,7 @@
   position: absolute;
   inset: 0;
   border-radius: 10px;
-  background: rgba(10, 10, 14, 0.82);
+  background: color-mix(in srgb, var(--near-black) 82%, transparent);
   display: flex;
   flex-direction: column;
   align-items: center;

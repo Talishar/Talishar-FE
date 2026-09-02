@@ -16,6 +16,10 @@ export interface Theme {
     text: string;
     textSecondary: string;
     textMuted: string;
+    onSurfaceRgb: string;
+    sunkenRgb: string;
+    sunkenAlpha: string;
+    zonePlaceholder: string; // empty board slot, sits over the playmat art
     color: string; // Base color for Pico
 
     // Heading colors
@@ -90,6 +94,10 @@ export const themes: Theme[] = [
       text: '#f4eded',
       textSecondary: '#e0e0e0',
       textMuted: 'rgba(255, 255, 255, 0.6)',
+      onSurfaceRgb: '255, 255, 255',
+      sunkenRgb: '0, 0, 0',
+      sunkenAlpha: '1',
+      zonePlaceholder: 'rgba(50, 50, 50, 0.5)',
       color: '#f4eded',
 
       h1Color: '#f4eded',
@@ -145,64 +153,68 @@ export const themes: Theme[] = [
     id: 'radiant',
     premium: true,
     colors: {
-      background: 'radial-gradient(#e8edf2, #cdd5de)',
+      background: 'radial-gradient(#f4f6f9, #dfe4ea)',
       backgroundTexture: "url('./img/backgrounds/everfest-bg.webp')",
       cardBackground: '#ffffff',
       sectionBackground:
-        'linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(240, 244, 248, 0.95) 100%)',
-      sectionBackgroundTransparent: 'rgba(255, 255, 255, 0.88)',
+        'linear-gradient(135deg, rgba(255, 255, 255, 0.94) 0%, rgba(244, 246, 249, 0.96) 100%)',
+      sectionBackgroundTransparent: 'rgba(255, 255, 255, 0.9)',
 
-      text: '#1a1a2e',
-      textSecondary: '#2d3748',
-      textMuted: 'rgba(45, 55, 72, 0.65)',
-      color: '#1a1a2e',
+      text: '#1a202c',
+      textSecondary: '#39414f',
+      textMuted: 'rgba(26, 32, 44, 0.6)',
+      onSurfaceRgb: '26, 32, 44',
+      sunkenRgb: '26, 32, 44',
+      sunkenAlpha: '0.22',
+      zonePlaceholder: 'rgba(240, 243, 247, 0.62)',
+      color: '#1a202c',
 
-      h1Color: '#0f0f1a',
-      h2Color: '#1a1a2e',
-      h3Color: '#2d3748',
-      h4Color: '#4a5568',
-      h5Color: '#606a7a',
-      h6Color: '#718096',
+      h1Color: '#11151c',
+      h2Color: '#1a202c',
+      h3Color: '#28303c',
+      h4Color: '#39414f',
+      h5Color: '#4c5563',
+      h6Color: '#5d6675',
 
-      primary: '#a0762e',
+      primary: '#2f3b52',
       primaryInverse: '#ffffff',
-      primaryHover: '#7d5a22',
-      primaryFocus: '#f2ece2',
+      primaryHover: '#1f2939',
+      primaryFocus: 'rgba(47, 59, 82, 0.12)',
 
-      secondary: '#e2e8f0',
-      secondaryHover: '#cbd5e0',
-      secondaryInverse: '#1a1a2e',
-      secondaryFocus: 'rgba(226, 232, 240, 0.5)',
+      secondary: '#dfe4ea',
+      secondaryHover: '#cfd6de',
+      secondaryInverse: '#1a202c',
+      secondaryFocus: 'rgba(223, 228, 234, 0.6)',
 
-      tertiary: '#f0f4f8',
-      tertiaryHover: '#e2e8f0',
+      tertiary: '#eef1f5',
+      tertiaryHover: '#dfe4ea',
 
-      contrast: '#1a1a2e',
-      contrastHover: '#0f0f1a',
+      contrast: '#1a202c',
+      contrastHover: '#11151c',
       contrastInverse: '#ffffff',
-      contrastFocus: 'rgba(26, 26, 46, 0.15)',
+      contrastFocus: 'rgba(26, 32, 44, 0.12)',
 
-      border: 'rgba(0, 0, 0, 0.15)',
-      borderLight: 'rgba(0, 0, 0, 0.08)',
-      mutedBorderColor: '#cbd5e0',
-      mutedColor: '#718096',
+      border: 'rgba(26, 32, 44, 0.16)',
+      borderLight: 'rgba(26, 32, 44, 0.09)',
+      mutedBorderColor: '#d3d9e0',
+      mutedColor: '#5d6675',
       formBackground: '#ffffff',
-      formBorder: '#a0aec0',
-      formActive: '#f7fafc',
+      formBorder: '#c2cad4',
+      formActive: '#f4f6f9',
 
       // Dropdown colors
       dropdownBackground: '#ffffff',
-      dropdownBorder: '#cbd5e0',
-      dropdownColor: '#1a1a2e',
-      dropdownHoverBackground: 'rgba(160, 118, 46, 0.1)',
+      dropdownBorder: '#d3d9e0',
+      dropdownColor: '#1a202c',
+      dropdownHoverBackground: 'rgba(26, 32, 44, 0.07)',
 
       alarm: '#b10202',
-      success: '#276749',
-      warning: '#b7791f',
-      danger: '#c53030',
+      success: '#1d7a4c',
+      warning: '#a56a09',
+      danger: '#c02626',
 
-      nearBlack: 'rgba(240, 244, 248, var(--transparency-intensity, 0.98))',
-      overlay: 'rgba(0, 0, 0, 0.4)'
+      nearBlack: 'rgba(247, 249, 251, var(--transparency-intensity, 0.98))',
+      overlay: 'rgba(15, 20, 28, 0.45)'
     }
   },
   {
@@ -220,6 +232,10 @@ export const themes: Theme[] = [
       text: '#f0f0f0',
       textSecondary: '#e0e0e0',
       textMuted: 'rgba(240, 240, 240, 0.65)',
+      onSurfaceRgb: '255, 255, 255',
+      sunkenRgb: '0, 0, 0',
+      sunkenAlpha: '1',
+      zonePlaceholder: 'rgba(50, 50, 50, 0.5)',
       color: '#f0f0f0',
 
       h1Color: '#ffffff',
@@ -229,10 +245,10 @@ export const themes: Theme[] = [
       h5Color: '#d0d0d0',
       h6Color: '#c8c8c8',
 
-      primary: '#d4af37',
+      primary: '#c8ccd2',
       primaryInverse: '#1a1a1a',
-      primaryHover: '#e0bb47',
-      primaryFocus: '#564f39',
+      primaryHover: '#dde1e6',
+      primaryFocus: 'rgba(200, 204, 210, 0.25)',
 
       secondary: '#5a5a5a',
       secondaryHover: '#6a6a6a',
@@ -247,8 +263,8 @@ export const themes: Theme[] = [
       contrastInverse: '#1a1a1a',
       contrastFocus: 'rgba(240, 240, 240, 0.125)',
 
-      border: 'rgba(212, 175, 55, 0.3)',
-      borderLight: 'rgba(212, 175, 55, 0.15)',
+      border: 'rgba(200, 204, 210, 0.3)',
+      borderLight: 'rgba(200, 204, 210, 0.15)',
       mutedBorderColor: '#4f4f4f',
       mutedColor: '#b0b0b0',
       formBackground: '#454545',
@@ -259,7 +275,7 @@ export const themes: Theme[] = [
       dropdownBackground: '#454545',
       dropdownBorder: '#5a5a5a',
       dropdownColor: '#f0f0f0',
-      dropdownHoverBackground: 'rgba(212, 175, 55, 0.15)',
+      dropdownHoverBackground: 'rgba(200, 204, 210, 0.15)',
 
       alarm: '#b10202',
       success: '#22c55e',
@@ -285,6 +301,10 @@ export const themes: Theme[] = [
       text: '#e0e7ff',
       textSecondary: '#c7d2fe',
       textMuted: 'rgba(224, 231, 255, 0.6)',
+      onSurfaceRgb: '255, 255, 255',
+      sunkenRgb: '0, 0, 0',
+      sunkenAlpha: '1',
+      zonePlaceholder: 'rgba(50, 50, 50, 0.5)',
       color: '#e0e7ff',
 
       h1Color: '#f0f4ff',
@@ -350,6 +370,10 @@ export const themes: Theme[] = [
       text: '#e6dff5',
       textSecondary: '#d4cae8',
       textMuted: 'rgba(230, 223, 245, 0.6)',
+      onSurfaceRgb: '255, 255, 255',
+      sunkenRgb: '0, 0, 0',
+      sunkenAlpha: '1',
+      zonePlaceholder: 'rgba(50, 50, 50, 0.5)',
       color: '#e6dff5',
 
       h1Color: '#f5f1ff',
@@ -415,6 +439,10 @@ export const themes: Theme[] = [
       text: '#e8e0e0',
       textSecondary: '#d8d0d0',
       textMuted: 'rgba(232, 224, 224, 0.6)',
+      onSurfaceRgb: '255, 255, 255',
+      sunkenRgb: '0, 0, 0',
+      sunkenAlpha: '1',
+      zonePlaceholder: 'rgba(50, 50, 50, 0.5)',
       color: '#e8e0e0',
 
       h1Color: '#f8f0f0',
@@ -480,6 +508,10 @@ export const themes: Theme[] = [
       text: '#d8e5df',
       textSecondary: '#c8d5cf',
       textMuted: 'rgba(216, 229, 223, 0.6)',
+      onSurfaceRgb: '255, 255, 255',
+      sunkenRgb: '0, 0, 0',
+      sunkenAlpha: '1',
+      zonePlaceholder: 'rgba(50, 50, 50, 0.5)',
       color: '#d8e5df',
 
       h1Color: '#eef5f0',
@@ -545,6 +577,10 @@ export const themes: Theme[] = [
       text: '#e8d8eb',
       textSecondary: '#d8cad8',
       textMuted: 'rgba(232, 216, 235, 0.6)',
+      onSurfaceRgb: '255, 255, 255',
+      sunkenRgb: '0, 0, 0',
+      sunkenAlpha: '1',
+      zonePlaceholder: 'rgba(50, 50, 50, 0.5)',
       color: '#e8d8eb',
 
       h1Color: '#f5edf8',
@@ -610,6 +646,10 @@ export const themes: Theme[] = [
       text: '#e8dfc0',
       textSecondary: '#d8d0b0',
       textMuted: 'rgba(232, 223, 192, 0.6)',
+      onSurfaceRgb: '255, 255, 255',
+      sunkenRgb: '0, 0, 0',
+      sunkenAlpha: '1',
+      zonePlaceholder: 'rgba(50, 50, 50, 0.5)',
       color: '#e8dfc0',
 
       h1Color: '#f5efd5',
@@ -675,6 +715,10 @@ export const themes: Theme[] = [
       text: '#e8dfc0',
       textSecondary: '#d8d0b0',
       textMuted: 'rgba(232, 223, 192, 0.6)',
+      onSurfaceRgb: '255, 255, 255',
+      sunkenRgb: '0, 0, 0',
+      sunkenAlpha: '1',
+      zonePlaceholder: 'rgba(50, 50, 50, 0.5)',
       color: '#e8dfc0',
 
       h1Color: '#f5efd5',
@@ -740,6 +784,10 @@ export const themes: Theme[] = [
       text: '#e5d8d0',
       textSecondary: '#d4cac0',
       textMuted: 'rgba(229, 216, 208, 0.6)',
+      onSurfaceRgb: '255, 255, 255',
+      sunkenRgb: '0, 0, 0',
+      sunkenAlpha: '1',
+      zonePlaceholder: 'rgba(50, 50, 50, 0.5)',
       color: '#e5d8d0',
 
       h1Color: '#f2ede8',
@@ -805,6 +853,10 @@ export const themes: Theme[] = [
       text: '#d9e2ed',
       textSecondary: '#c9d2dd',
       textMuted: 'rgba(217, 226, 237, 0.6)',
+      onSurfaceRgb: '255, 255, 255',
+      sunkenRgb: '0, 0, 0',
+      sunkenAlpha: '1',
+      zonePlaceholder: 'rgba(50, 50, 50, 0.5)',
       color: '#d9e2ed',
 
       h1Color: '#eff5ff',
@@ -870,6 +922,10 @@ export const themes: Theme[] = [
       text: '#e8dcc8',
       textSecondary: '#d8ccb8',
       textMuted: 'rgba(232, 220, 200, 0.6)',
+      onSurfaceRgb: '255, 255, 255',
+      sunkenRgb: '0, 0, 0',
+      sunkenAlpha: '1',
+      zonePlaceholder: 'rgba(50, 50, 50, 0.5)',
       color: '#e8dcc8',
 
       h1Color: '#f5ede0',

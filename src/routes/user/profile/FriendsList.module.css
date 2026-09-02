@@ -456,7 +456,7 @@
   background: var(--theme-success, #28a745);
   border: none;
   border-radius: 5px;
-  color: white;
+  color: var(--theme-text);
   cursor: pointer;
   font-weight: 500;
   transition: background-color 0.2s, transform 0.1s;

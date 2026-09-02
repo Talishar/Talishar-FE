@@ -36,20 +36,20 @@
 
 .header {
   padding: 1.1rem 1.25rem 0.85rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(var(--theme-on-surface-rgb), 0.08);
 }
 
 .title {
   font-size: 0.95rem;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(var(--theme-on-surface-rgb), 0.9);
   line-height: 1.4;
 }
 
 .subtitle {
   margin-top: 0.35rem;
   font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(var(--theme-on-surface-rgb), 0.5);
   line-height: 1.4;
 }
 
@@ -66,9 +66,9 @@
   gap: 0.65rem;
   width: 100%;
   padding: 0.55rem 0.75rem;
-  background-color: rgba(0, 0, 0, 0.3);
-  color: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background-color: rgba(var(--theme-sunken-rgb), calc(0.3 * var(--theme-sunken-alpha)));
+  color: rgba(var(--theme-on-surface-rgb), 0.8);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.15);
   border-radius: 6px;
   font-family: inherit;
   font-size: 0.875rem;
@@ -82,9 +82,9 @@
 
 .reasonButton:hover,
 .reasonButton:focus {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.3);
-  color: white;
+  background-color: rgba(var(--theme-on-surface-rgb), 0.1);
+  border-color: rgba(var(--theme-on-surface-rgb), 0.3);
+  color: var(--theme-text);
 }
 
 .reasonKey {
@@ -94,10 +94,10 @@
   flex: none;
   width: 1.3rem;
   height: 1.3rem;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.15);
   border-radius: 5px;
   font-size: 0.7rem;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(var(--theme-on-surface-rgb), 0.45);
 }
 
 .footer {
@@ -107,5 +107,5 @@
 }
 
 .skipButton {
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(var(--theme-on-surface-rgb), 0.5);
 }

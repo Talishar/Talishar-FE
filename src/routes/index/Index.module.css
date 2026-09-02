@@ -103,6 +103,12 @@
   text-shadow: 0 2px 24px rgba(0, 0, 0, 0.8);
 }
 
+/* The hero art stays dark in every theme, so the title keeps a light value
+   when the surrounding chrome goes light. */
+:global(:root[data-theme='radiant']) .heroTitle {
+  color: #f4f6f9;
+}
+
 .heroSubtitle {
   font-size: clamp(0.85rem, 1.4vw, 1rem);
   color: rgba(244, 237, 237, 0.85);
@@ -124,7 +130,7 @@
   display: inline-block;
   padding: 0.6rem 1.4rem;
   background: var(--theme-primary, #d4af37);
-  color: #000 !important;
+  color: var(--theme-primary-inverse) !important;
   font-weight: 700;
   font-size: 0.95rem;
   border-radius: 5px;
@@ -142,7 +148,7 @@
   display: inline-block;
   padding: 0.6rem 1.4rem;
   background: var(--theme-secondary, #606569);
-  color: #fff !important;
+  color: var(--theme-text) !important;
   font-weight: 600;
   font-size: 0.95rem;
   border-radius: 5px;
@@ -223,8 +229,8 @@
 .grid {
   display: grid;
   grid-template-columns: 1fr;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(var(--theme-on-surface-rgb), 0.03);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.08);
   border-radius: 10px;
 }
 
@@ -238,7 +244,7 @@
 }
 
 .gameListContainer::-webkit-scrollbar-track {
-  background: #1a1d21;
+  background: var(--theme-card-background);
 }
 
 .gameListContainer::-webkit-scrollbar-thumb {
@@ -345,7 +351,7 @@ h3 {
 .messageContent {
   margin: 0 !important;
   padding: 0;
-  color: #aaa;
+  color: var(--theme-text-muted);
   line-height: 1.6;
   font-size: 0.9rem;
 }
@@ -367,7 +373,7 @@ h3 {
   width: 100%;
   max-height: 500px !important;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.1);
   transition: transform 0.2s, filter 0.2s;
   object-fit: cover;
 }
@@ -408,7 +414,7 @@ h3 {
 
 .messageEmbed p {
   margin: 0 0 0.5em 0;
-  color: #aaa;
+  color: var(--theme-text-muted);
   font-size: 0.9rem;
 }
 
@@ -435,7 +441,7 @@ h3 {
   background: rgba(100, 181, 246, 0.1);
   border: 1px solid rgba(100, 181, 246, 0.3);
   border-radius: 12px;
-  color: #aaa;
+  color: var(--theme-text-muted);
   font-size: 0.85rem;
   cursor: default;
   pointer-events: none;
@@ -464,7 +470,7 @@ h3 {
 }
 
 .newsContent::-webkit-scrollbar-track {
-  background: #1a1d21;
+  background: var(--theme-card-background);
 }
 
 .newsContent::-webkit-scrollbar-thumb {
@@ -522,18 +528,18 @@ h3 {
 
   .newsTab {
     padding: 0.75em 1.5em;
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(var(--theme-on-surface-rgb), 0.08);
     border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.15));
     border-radius: 6px;
-    color: #aaa;
+    color: var(--theme-text-muted);
     cursor: pointer;
     font-size: 0.9rem;
     transition: all 0.3s ease;
   }
 
   .newsTab:hover {
-    background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(255, 255, 255, 0.25);
+    background: rgba(var(--theme-on-surface-rgb), 0.12);
+    border-color: rgba(var(--theme-on-surface-rgb), 0.25);
   }
 
   .newsTab.active {
@@ -561,8 +567,8 @@ h3 {
   }
 
   .videoItem {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(var(--theme-on-surface-rgb), 0.05);
+    border: 1px solid rgba(var(--theme-on-surface-rgb), 0.1);
     border-radius: 8px;
     overflow: hidden;
     transition: all 0.3s ease;
@@ -571,8 +577,8 @@ h3 {
   }
 
   .videoItem:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(var(--theme-on-surface-rgb), 0.08);
+    border-color: rgba(var(--theme-on-surface-rgb), 0.2);
     transform: translateY(-4px);
   }
 
@@ -591,7 +597,7 @@ h3 {
   .videoItem h5 {
     margin: 0.75em 0.75em 0.5em 0.75em;
     font-size: 0.95rem;
-    color: #fff;
+    color: var(--theme-text);
     line-height: 1.3;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -624,7 +630,7 @@ h3 {
 }
 
 .removeAdsLink {
-  color: rgba(255, 255, 255, 0.38);
+  color: rgba(var(--theme-on-surface-rgb), 0.38);
   text-decoration: none;
   font-size: 0.58rem;
   font-weight: 500;
@@ -633,7 +639,7 @@ h3 {
 }
 
 .removeAdsLink:hover {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(var(--theme-on-surface-rgb), 0.6);
   text-decoration: underline;
 }
 
@@ -674,7 +680,7 @@ h3 {
 .newsSectionTitle {
   font-size: 1.1rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--theme-text);
   margin: 0;
 }
 
@@ -700,7 +706,7 @@ h3 {
 .newsCard {
   background: transparent;
   border: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  border-bottom: 1px solid rgba(var(--theme-on-surface-rgb), 0.07);
   border-radius: 0;
   padding: 1em 0.25em;
   display: flex;
@@ -711,7 +717,7 @@ h3 {
 }
 
 .newsCardSkeleton {
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(var(--theme-on-surface-rgb), 0.02);
   border-radius: 5px;
   animation: newsCardPulse 1.5s ease-in-out infinite;
   min-height: 120px;
@@ -746,7 +752,7 @@ h3 {
 }
 
 .newsCardContent {
-  color: #aaa;
+  color: var(--theme-text-muted);
   font-size: 0.875rem;
   line-height: 1.5;
   margin: 0;
@@ -769,12 +775,12 @@ h3 {
   display: inline-flex;
   align-items: center;
   gap: 0.3em;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(var(--theme-on-surface-rgb), 0.06);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.1);
   border-radius: 5px;
   padding: 0.1em 0.45em;
   font-size: 0.78rem;
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(var(--theme-on-surface-rgb), 0.65);
   line-height: 1.6;
 }
 

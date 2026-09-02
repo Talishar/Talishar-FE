@@ -350,7 +350,7 @@
 .metafyCommunitiesList {
   margin-top: 1rem;
   padding-top: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(var(--theme-on-surface-rgb), 0.1);
 }
 
 .metafyCommunitiesHeader {
@@ -399,8 +399,8 @@
   margin-bottom: 0.5rem;
   border-radius: 5px;
   font-weight: bold;
-  background: rgba(255, 255, 255, 0.1);
-  color: #e0aaff;
+  background: rgba(var(--theme-on-surface-rgb), 0.1);
+  color: color-mix(in srgb, #e0aaff 55%, var(--theme-text));
 }
 
 .metafyCommunityOwned .metafyCommunityBadge {
@@ -410,7 +410,7 @@
 
 .metafyCommunitySupported .metafyCommunityBadge {
   background: rgba(231, 84, 128, 0.2);
-  color: #ff6b9d;
+  color: color-mix(in srgb, #ff6b9d 55%, var(--theme-text));
 }
 
 .metafyCommunityLogo {
@@ -486,8 +486,8 @@
   min-width: 150px;
   padding: 0.5rem 1rem;
   background-color: #4a5568;
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.2);
   border-radius: 5px;
   cursor: pointer;
   font-size: 0.9rem;
@@ -503,7 +503,7 @@
   min-width: 150px;
   padding: 0.5rem 1rem;
   background-color: #dc3545;
-  color: white;
+  color: #fff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -673,7 +673,7 @@
 
 .confirmDeleteButton {
   background-color: var(--theme-danger, #d32f2f);
-  color: white;
+  color: #fff;
   border: none;
   padding: 0.75em 1.5em;
   border-radius: 5px;

@@ -33,8 +33,8 @@
 }
 
 .experimental {
-  background: rgba(50, 50, 50, 0.5);
-  border: 2px solid rgba(255, 255, 255, 0.5);
+  background: var(--theme-zone-placeholder);
+  border: 2px solid rgba(var(--theme-on-surface-rgb), 0.5);
   outline: 1px solid black;
 }
 
@@ -166,7 +166,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(var(--theme-sunken-rgb), calc(0.5 * var(--theme-sunken-alpha)));
   border: var(--theme-border, rgba(255, 255, 255, 0.2)) solid 1px;
   color: var(--white);
   border-radius: 5px;
@@ -221,7 +221,7 @@
 }
 
 .standalonePlayerPrompt .buttonDiv {
-  background-color: rgba(255, 255, 255, 0.12);
+  background-color: rgba(var(--theme-on-surface-rgb), 0.12);
 }
 
 @media (min-width: 1201px) {
@@ -233,8 +233,8 @@
 }
 
 .buttonDiv {
-  background-color: rgba(0, 0, 0, 0.3);
-  color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(var(--theme-sunken-rgb), calc(0.3 * var(--theme-sunken-alpha)));
+  color: rgba(var(--theme-on-surface-rgb), 0.8);
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -258,9 +258,9 @@
 }
 
 .buttonDiv:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(var(--theme-on-surface-rgb), 0.1);
+  color: var(--theme-text);
+  border-color: rgba(var(--theme-on-surface-rgb), 0.3);
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   transform: translateY(-1px);

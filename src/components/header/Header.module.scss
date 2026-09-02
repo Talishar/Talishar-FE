@@ -1,12 +1,12 @@
 .navBar {
   top: 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(var(--theme-on-surface-rgb), 0.06);
   min-height: 70px;
   z-index: 10000;
   position: fixed;
   width: 100%;
   left: 0;
-  background: rgba(10, 10, 14, 0.92);
+  background: color-mix(in srgb, var(--near-black) 92%, transparent);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   -webkit-transform: translateZ(0);
@@ -100,7 +100,7 @@
           border-radius: 6px;
           background-color: var(--theme-primary);
           border: 1px solid var(--theme-primary);
-          color: #000;
+          color: var(--theme-primary-inverse);
           font-weight: 600;
           line-height: 1;
 
@@ -108,7 +108,7 @@
           &:hover {
             background-color: var(--theme-primary-hover);
             border-color: var(--theme-primary-hover);
-            color: #000;
+            color: var(--theme-primary-inverse);
           }
 
           &::before,
@@ -134,7 +134,7 @@
         &:focus,
         &:hover {
           color: var(--theme-primary);
-          background-color: rgba(0, 0, 0, 0.1);
+          background-color: color-mix(in srgb, var(--near-black) 10%, transparent);
 
           &::before {
             rotate: 225deg;
@@ -228,7 +228,7 @@
       &:hover,
       &:focus {
         color: var(--theme-primary);
-        background-color: rgba(0, 0, 0, 0.1);
+        background-color: color-mix(in srgb, var(--near-black) 10%, transparent);
 
         &::before {
           rotate: 225deg;
@@ -337,7 +337,7 @@
   &:hover,
   &[aria-expanded='true'] {
     color: var(--theme-primary);
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: color-mix(in srgb, var(--near-black) 10%, transparent);
 
     &::before {
       rotate: 225deg;
@@ -391,10 +391,10 @@
   top: 100%;
   right: 0;
   min-width: 190px;
-  background: rgba(0, 0, 0, 0.92);
+  background: color-mix(in srgb, var(--near-black) 92%, transparent);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.06);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
   z-index: 10001;
   list-style: none;
@@ -484,7 +484,7 @@
     width: 100%;
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
-    background: rgba(13, 14, 16, 0.97);
+    background: var(--near-black);
 
     .leftGroup li a {
       padding: 0 5px;
@@ -572,10 +572,10 @@
   top: 70px;
   left: 0;
   right: 0;
-  background: rgba(0, 0, 0, 0.92);
+  background: color-mix(in srgb, var(--near-black) 92%, transparent);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid rgba(var(--theme-on-surface-rgb), 0.06);
   z-index: 9999;
   overflow-y: auto;
   max-height: calc(100dvh - 70px);
@@ -594,7 +594,7 @@
       min-height: 0;
       margin: 0 !important;
       padding: 0 !important;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      border-bottom: 1px solid rgba(var(--theme-on-surface-rgb), 0.06);
 
       > a,
       > button {
@@ -772,7 +772,7 @@
   height: 20px;
   padding: 0 6px;
   background-color: var(--theme-primary, #d4af37);
-  color: #000;
+  color: var(--theme-primary-inverse);
   border-radius: 10px;
   font-size: 11px;
   font-weight: 700;

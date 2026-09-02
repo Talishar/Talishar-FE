@@ -92,6 +92,10 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     root.style.setProperty('--theme-text', colors.text);
     root.style.setProperty('--theme-text-secondary', colors.textSecondary);
     root.style.setProperty('--theme-text-muted', colors.textMuted);
+    root.style.setProperty('--theme-on-surface-rgb', colors.onSurfaceRgb);
+    root.style.setProperty('--theme-sunken-rgb', colors.sunkenRgb);
+    root.style.setProperty('--theme-sunken-alpha', colors.sunkenAlpha);
+    root.style.setProperty('--theme-zone-placeholder', colors.zonePlaceholder);
     root.style.setProperty('--color', colors.color);
 
     // Heading colors
@@ -178,10 +182,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     root.style.setProperty('--near-black', colors.nearBlack); // Keep for backward compatibility
     root.style.setProperty('--theme-overlay', colors.overlay);
     root.style.setProperty('--transparency-intensity', transparency.toString()); // Set transparency for CSS calc
-    root.style.setProperty(
-      '--modal-overlay-background-color',
-      'rgba(0, 0, 0, 0.4)'
-    ); // Very transparent for dialog backdrop
+    root.style.setProperty('--modal-overlay-background-color', colors.overlay); // Very transparent for dialog backdrop
 
     // Modal backdrop styling - ensures no blur effect on modals
     root.style.setProperty('--theme-modal-backdrop-background', 'transparent');
@@ -193,6 +194,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       currentTheme.id === 'light'
         ? "url('./img/backgrounds/dark_bg_texture.webp')"
         : colors.backgroundTexture;
+    const isLightTheme = currentTheme.id === 'radiant';
     document.body.style.background = `${colors.background}, ${bgTexture}`;
     document.body.style.backgroundPosition = 'center';
     document.body.style.backgroundSize = 'cover';
@@ -204,7 +206,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     if (themeColorMeta) {
       themeColorMeta.content = colors.cardBackground;
     }
-    root.style.colorScheme = currentTheme.id === 'light' ? 'light' : 'dark';
+    root.style.colorScheme = isLightTheme ? 'light' : 'dark';
 
     // Set data attribute for potential CSS targeting
     root.setAttribute('data-theme', currentTheme.id);

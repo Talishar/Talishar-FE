@@ -7,8 +7,8 @@
   -webkit-tap-highlight-color: transparent;
   padding: 0.2em;
   font-size: 0.9em;
-  background-color: var(--theme-secondary);
-  color: var(--secondary-inverse);
+  background-color: var(--theme-primary);
+  color: var(--theme-primary-inverse);
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -106,8 +106,8 @@
 
 @media (hover: hover) and (pointer: fine) {
   .btn:hover {
-    background-color: black;
-    color: var(--theme-secondary);
+    background-color: var(--near-black);
+    color: var(--theme-primary);
     border: 2px solid var(--theme-secondary);
     cursor: pointer;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3),
@@ -247,7 +247,7 @@
 }
 
 .overflowItem:active {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(var(--theme-on-surface-rgb), 0.15);
 }
 
 /* Overflow items have text labels - never show tooltips */

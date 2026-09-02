@@ -31,7 +31,7 @@
 }
 
 .filterInput:focus {
-  border-color: rgba(255, 255, 255, 0.25);
+  border-color: rgba(var(--theme-on-surface-rgb), 0.25);
   color: var(--theme-text, #f4eded);
 }
 
@@ -85,11 +85,11 @@
   background: transparent;
 }
 .dropdown::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(var(--theme-on-surface-rgb), 0.12);
   border-radius: 5px;
 }
 .dropdown::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.22);
+  background: rgba(var(--theme-on-surface-rgb), 0.22);
 }
 
 .dropdownItem {
@@ -103,7 +103,7 @@
 }
 
 .dropdownItem:hover {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(var(--theme-on-surface-rgb), 0.05);
 }
 
 .heroLabel {

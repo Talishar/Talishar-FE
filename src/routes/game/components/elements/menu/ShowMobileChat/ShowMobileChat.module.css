@@ -41,5 +41,5 @@
   justify-content: space-between;
   align-items: stretch;
   align-content: stretch;
-  background-color: rgba(50, 50, 50, 0.5);
+  background-color: var(--theme-zone-placeholder);
 }

@@ -76,7 +76,7 @@
 
 .savedReplaysHeader h2 {
   margin: 0;
-  color: var(--theme-text-primary, #fff);
+  color: var(--theme-text);
   font-size: 1.15rem;
 }
 
@@ -103,9 +103,9 @@
 .slotMeter {
   margin: 0 0 1.1rem;
   padding: 0.75rem 0.9rem 0.8rem;
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.16);
   border-radius: 5px;
-  background: rgba(255, 255, 255, 0.025);
+  background: rgba(var(--theme-on-surface-rgb), 0.025);
 }
 
 .slotMeterHeader {
@@ -117,7 +117,7 @@
 }
 
 .slotMeterCount {
-  color: var(--theme-text-primary, #fff);
+  color: var(--theme-text);
   font-size: 0.88rem;
   font-weight: 600;
 }
@@ -138,7 +138,7 @@
   height: 0.38rem;
   min-width: 0.35rem;
   border-radius: 5px;
-  background: rgba(255, 255, 255, 0.09);
+  background: rgba(var(--theme-on-surface-rgb), 0.09);
 }
 
 .slotSegmentFavorite {
@@ -153,14 +153,14 @@
 }
 
 .slotUpgradeLink {
-  color: #bed3e6;
+  color: color-mix(in srgb, #bed3e6 55%, var(--theme-text));
   text-decoration: underline;
 }
 
 .emptyReplays {
   padding: 1rem;
   border-radius: 5px;
-  background: rgba(255, 255, 255, 0.035);
+  background: rgba(var(--theme-on-surface-rgb), 0.035);
 }
 
 .replayList {
@@ -191,10 +191,10 @@
   padding: 0.85rem;
   padding-right: 3rem;
   text-align: left;
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.18);
   border-radius: 5px;
-  background: rgba(255, 255, 255, 0.035);
-  color: var(--theme-text-primary, #fff);
+  background: rgba(var(--theme-on-surface-rgb), 0.035);
+  color: var(--theme-text);
   cursor: pointer;
   margin-bottom: 0;
 }
@@ -238,7 +238,7 @@
   grid-row: 1;
   align-self: center;
   margin-right: 1.85rem;
-  color: #bed3e6;
+  color: color-mix(in srgb, #bed3e6 55%, var(--theme-text));
   font-size: 0.76rem;
   font-weight: 600;
 }
@@ -254,9 +254,9 @@
   margin: 0;
   padding: 0;
   border: 0;
-  background: rgba(255, 255, 255, 0.06) !important;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  color: rgba(255, 255, 255, 0.5);
+  background: rgba(var(--theme-on-surface-rgb), 0.06) !important;
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.25);
+  color: rgba(var(--theme-on-surface-rgb), 0.5);
   cursor: pointer;
 }
 
@@ -287,17 +287,17 @@
   height: 1.8rem;
   margin: 0;
   padding: 0;
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.25);
   border-radius: 5px;
-  background: rgba(255, 255, 255, 0.06) !important;
-  color: rgba(255, 255, 255, 0.72);
+  background: rgba(var(--theme-on-surface-rgb), 0.06) !important;
+  color: rgba(var(--theme-on-surface-rgb), 0.72);
   cursor: pointer;
 }
 
 .shareButton:hover:not(:disabled) {
   border-color: #bed3e6;
   background: rgba(190, 211, 230, 0.16) !important;
-  color: #bed3e6;
+  color: color-mix(in srgb, #bed3e6 55%, var(--theme-text));
 }
 
 .shareButton:disabled {
@@ -315,10 +315,10 @@
   height: 1.8rem;
   margin: 0;
   padding: 0;
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.25);
   border-radius: 5px;
-  background: rgba(255, 255, 255, 0.06) !important;
-  color: rgba(255, 255, 255, 0.62);
+  background: rgba(var(--theme-on-surface-rgb), 0.06) !important;
+  color: rgba(var(--theme-on-surface-rgb), 0.62);
   cursor: pointer;
 }
 
@@ -343,7 +343,7 @@
 
 .manualReplay summary {
   cursor: pointer;
-  color: var(--theme-text-primary, #fff);
+  color: var(--theme-text);
   font-weight: 600;
 }
 
@@ -364,7 +364,7 @@
   margin-top: 1.5rem;
   padding: 1.5rem;
   border-radius: 5px;
-  color: #ffb3b3;
+  color: var(--theme-danger);
   font-family: system-ui, -apple-system, sans-serif;
 }
 
@@ -372,11 +372,11 @@
   font-size: 1.2em;
   display: block;
   margin-bottom: 1rem;
-  color: #ff9999;
+  color: var(--theme-danger);
 }
 
 .errorMessage {
-  background-color: #1a1a1a;
+  background-color: var(--theme-card-background);
   padding: 1rem;
   border-radius: 5px;
   margin-bottom: 1rem;
@@ -386,7 +386,7 @@
   word-wrap: break-word;
   font-family: Consolas, Monaco, monospace;
   border: 1px solid #444;
-  color: #ddd;
+  color: var(--theme-text-secondary);
   overflow-x: auto;
 }
 
@@ -399,10 +399,10 @@
   font-weight: 600;
   margin-bottom: 0.75rem;
   padding: 0.5rem;
-  background-color: #3a2a2a;
+  background-color: color-mix(in srgb, var(--theme-warning) 14%, transparent);
   border-radius: 5px;
   user-select: none;
-  color: #ffcc99;
+  color: var(--theme-warning);
 }
 
 .troubleshootingContent {
@@ -410,7 +410,7 @@
   font-size: 0.95em;
   line-height: 1.8;
   padding-left: 0.5rem;
-  color: #ccc;
+  color: var(--theme-text-muted);
 }
 
 .troubleshootingList {
@@ -424,19 +424,19 @@
 }
 
 .kbd {
-  background-color: #3a3a3a;
+  background-color: var(--theme-tertiary);
   padding: 2px 6px;
   border-radius: 5px;
   font-family: monospace;
-  color: #fff;
-  border: 1px solid #555;
+  color: var(--theme-text);
+  border: 1px solid var(--theme-border);
 }
 
 .codeInline {
-  background-color: #1a2a3a;
+  background-color: var(--theme-tertiary);
   padding: 2px 6px;
   border-radius: 5px;
-  color: #66ccff;
+  color: var(--theme-primary);
 }
 
 .pathBox {
@@ -445,7 +445,7 @@
   margin-top: 0.3rem;
   font-family: monospace;
   font-size: 0.9em;
-  color: #66ccff;
+  color: var(--theme-primary);
 }
 
 .filesList {
@@ -454,28 +454,28 @@
 }
 
 .fileItem {
-  background-color: #1a1a1a;
+  background-color: var(--theme-card-background);
   padding: 0.3rem 0.6rem;
   border-radius: 5px;
   margin-bottom: 0.25rem;
   font-family: monospace;
   font-size: 0.9em;
-  color: #66ff99;
+  color: color-mix(in srgb, #66ff99 55%, var(--theme-text));
 }
 
 .fileItemLast {
-  background-color: #1a1a1a;
+  background-color: var(--theme-card-background);
   padding: 0.3rem 0.6rem;
   border-radius: 5px;
   font-family: monospace;
   font-size: 0.9em;
-  color: #66ff99;
+  color: color-mix(in srgb, #66ff99 55%, var(--theme-text));
 }
 
 .loadingState {
   margin-top: 1rem;
   padding: 0.5rem;
-  color: #66ccff;
+  color: var(--theme-primary);
   border-radius: 5px;
 }
 
@@ -501,12 +501,12 @@
   margin: 0.5rem 0;
   font-size: 0.95em;
   line-height: 1.6;
-  color: var(--theme-text-primary, #fff);
+  color: var(--theme-text);
   display: block;
 }
 
 .betaDisclaimerHighlight {
-  color: var(--theme-text-primary, #fff);
+  color: var(--theme-text);
   font-weight: 650;
   display: inline;
 }

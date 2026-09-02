@@ -16,7 +16,7 @@
 }
 
 .subtitle {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(var(--theme-on-surface-rgb), 0.6);
   margin-bottom: 2.5rem;
 }
 

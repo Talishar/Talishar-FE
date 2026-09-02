@@ -39,7 +39,7 @@
   margin: 0 !important;
   padding: 0;
   place-items: center;
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.35);
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.72);
   color: #fff;
@@ -101,7 +101,7 @@
 .header p {
   max-width: 620px;
   margin: 0 auto;
-  color: rgba(255, 255, 255, 0.72);
+  color: rgba(var(--theme-on-surface-rgb), 0.72);
   font-size: 0.95rem;
 }
 
@@ -112,7 +112,7 @@
   gap: 0.45rem 1.25rem;
   margin: 1rem 0;
   padding: 0;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(var(--theme-on-surface-rgb), 0.9);
   font-size: 0.87rem;
   list-style: none;
 }
@@ -145,10 +145,10 @@
   align-items: center;
   min-width: 0;
   padding: 0.85rem 0.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.14);
   border-radius: 9px;
-  background: rgba(255, 255, 255, 0.035);
-  color: #fff !important;
+  background: rgba(var(--theme-on-surface-rgb), 0.035);
+  color: var(--theme-text) !important;
   text-align: center;
   text-decoration: none !important;
   transition: border-color 0.15s ease, transform 0.15s ease;
@@ -157,7 +157,7 @@
 .tier:hover,
 .tier:focus-visible {
   border-color: #dfbb38;
-  color: #fff !important;
+  color: var(--theme-text) !important;
   transform: translateY(-2px);
 }
 
@@ -187,14 +187,14 @@
 }
 
 .monthlyPrice small {
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(var(--theme-on-surface-rgb), 0.65);
   font-size: 0.68rem;
   font-weight: 500;
 }
 
 .annualPrice {
   margin-top: 0.15rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(var(--theme-on-surface-rgb), 0.7);
   font-size: 0.72rem;
 }
 
@@ -231,9 +231,9 @@
 }
 
 .rewardButton {
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.035);
-  color: rgba(255, 255, 255, 0.72) !important;
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.14);
+  background: rgba(var(--theme-on-surface-rgb), 0.035);
+  color: rgba(var(--theme-on-surface-rgb), 0.72) !important;
   font-weight: 600;
 }
 
@@ -243,25 +243,25 @@
 }
 
 .rewardButton:not(:disabled) {
-  border-color: rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.055);
+  border-color: rgba(var(--theme-on-surface-rgb), 0.2);
+  background: rgba(var(--theme-on-surface-rgb), 0.055);
   cursor: pointer;
 }
 
 .rewardButton:hover,
 .rewardButton:focus-visible {
-  color: rgba(255, 255, 255, 0.86) !important;
+  color: rgba(var(--theme-on-surface-rgb), 0.86) !important;
 }
 
 .rewardButton:not(:disabled):hover,
 .rewardButton:not(:disabled):focus-visible {
-  border-color: rgba(255, 255, 255, 0.3);
-  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(var(--theme-on-surface-rgb), 0.3);
+  background: rgba(var(--theme-on-surface-rgb), 0.09);
 }
 
 .timerNote {
   margin: 0.4rem 0 0;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(var(--theme-on-surface-rgb), 0.5);
   font-size: 0.72rem;
   text-align: center;
 }

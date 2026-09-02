@@ -195,7 +195,7 @@
   padding: 1.1rem 1.25rem;
   font-size: 0.95rem;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--theme-text);
   line-height: 1.5;
 }
 
@@ -212,9 +212,9 @@
   justify-content: center;
   min-width: 100px;
   padding: 0.55rem 1.5rem;
-  background-color: rgba(0, 0, 0, 0.3);
-  color: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background-color: rgba(var(--theme-sunken-rgb), calc(0.3 * var(--theme-sunken-alpha)));
+  color: var(--theme-text-secondary);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.15);
   border-radius: 6px;
   font-family: inherit;
   font-size: 0.875rem;
@@ -226,9 +226,9 @@
 }
 
 .dialogFooter button:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.3);
-  color: white;
+  background-color: rgba(var(--theme-on-surface-rgb), 0.1);
+  border-color: rgba(var(--theme-on-surface-rgb), 0.3);
+  color: var(--theme-text);
 }
 
 @media (prefers-reduced-motion: reduce) {

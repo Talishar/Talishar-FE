@@ -41,7 +41,7 @@
   &:hover,
   &:focus-visible {
     background-color: var(--theme-form-active, #121219) !important;
-    border-color: rgba(255, 255, 255, 0.25) !important;
+    border-color: rgba(var(--theme-on-surface-rgb), 0.25) !important;
     color: var(--theme-text, #f4eded) !important;
   }
 
@@ -75,7 +75,7 @@
   min-width: 16px;
   height: 16px;
   background-color: var(--theme-danger, #dc3545);
-  color: white;
+  color: var(--theme-text);
   border-radius: 50%;
   font-size: 0.6em;
   font-weight: bold;
@@ -95,7 +95,7 @@
 .backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+  background: color-mix(in srgb, var(--near-black) 45%, transparent);
   z-index: 9998;
   animation: fadeIn 0.15s ease;
 
@@ -152,7 +152,7 @@
   flex-direction: column;
   gap: 0.5em;
   padding: 0.7em 0.85em;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(var(--theme-on-surface-rgb), 0.06);
 }
 
 .dropdownTitle {
@@ -177,8 +177,8 @@
   font-size: 0.7em;
   font-weight: 500;
   line-height: 1.4;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(var(--theme-on-surface-rgb), 0.05);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.1);
   border-radius: 5px;
   color: var(--theme-text-muted, rgba(255, 255, 255, 0.55));
   cursor: pointer;
@@ -187,8 +187,8 @@
   white-space: nowrap;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(var(--theme-on-surface-rgb), 0.08);
+    border-color: rgba(var(--theme-on-surface-rgb), 0.2);
     color: var(--theme-text, #f4eded);
   }
 
@@ -210,11 +210,11 @@
     background: transparent;
   }
   &::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(var(--theme-on-surface-rgb), 0.12);
     border-radius: 5px;
   }
   &::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.22);
+    background: rgba(var(--theme-on-surface-rgb), 0.22);
   }
 }
 
@@ -230,7 +230,7 @@
   border-radius: 0;
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.04);
+    background-color: rgba(var(--theme-on-surface-rgb), 0.04);
   }
 
   input[type='checkbox'] {
@@ -238,7 +238,7 @@
     -webkit-appearance: none;
     width: 16px;
     height: 16px;
-    border: 1.5px solid rgba(255, 255, 255, 0.2);
+    border: 1.5px solid rgba(var(--theme-on-surface-rgb), 0.2);
     border-radius: 5px;
     background: transparent;
     cursor: pointer;
@@ -265,7 +265,7 @@
     }
 
     &:hover {
-      border-color: rgba(255, 255, 255, 0.35);
+      border-color: rgba(var(--theme-on-surface-rgb), 0.35);
     }
   }
 

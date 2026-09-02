@@ -6,7 +6,7 @@
   --game-log-critical: #fca52c;
   contain: paint;
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
+  scrollbar-color: rgba(var(--theme-on-surface-rgb), 0.22) transparent;
 }
 
 .chatBox::-webkit-scrollbar {
@@ -18,12 +18,12 @@
 }
 
 .chatBox::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(var(--theme-on-surface-rgb), 0.18);
   border-radius: 5px;
 }
 
 .chatBox::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(var(--theme-on-surface-rgb), 0.3);
 }
 
 .chatMessage,
@@ -167,14 +167,14 @@
 
 .tabs > button:hover {
   background-color: var(--theme-form-background);
-  color: var(--theme-secondary);
+  color: var(--theme-primary);
   border: 1px solid var(--theme-secondary);
   cursor: pointer;
 }
 
 .primaryTabs > button:hover {
   background-color: var(--theme-form-background);
-  color: var(--theme-secondary);
+  color: var(--theme-primary);
   border: 1px solid var(--theme-secondary);
   cursor: pointer;
 }

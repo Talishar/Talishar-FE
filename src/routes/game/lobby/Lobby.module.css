@@ -33,7 +33,7 @@ h3 {
   width: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  background-color: black;
+  background-color: var(--near-black);
   z-index: 10;
 }
 
@@ -118,7 +118,7 @@ h3 {
 
 .leftCol {
   --mastery-frame: #513328;
-  --mastery-frame-inner: rgba(255, 255, 255, 0.35);
+  --mastery-frame-inner: rgba(var(--theme-on-surface-rgb), 0.35);
   --mastery-frame-spread: 55%;
   background-size: cover;
   background-position: center;
@@ -192,7 +192,7 @@ h3 {
 .leftCol[data-mastery-level='15'],
 .rightCol[data-mastery-level='15'] {
   --mastery-frame: #df5b55;
-  --mastery-frame-inner: rgba(255, 255, 255, 0.55);
+  --mastery-frame-inner: rgba(var(--theme-on-surface-rgb), 0.55);
   --mastery-frame-spread: 75%;
 }
 
@@ -211,7 +211,7 @@ h3 {
 
 .rightCol {
   --mastery-frame: #513328;
-  --mastery-frame-inner: rgba(255, 255, 255, 0.35);
+  --mastery-frame-inner: rgba(var(--theme-on-surface-rgb), 0.35);
   --mastery-frame-spread: 55%;
   text-align: right;
   background-size: cover;
@@ -367,7 +367,7 @@ h3 {
   font-size: 0.95em;
   font-weight: 600;
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.9), 0 0 4px rgba(0, 0, 0, 0.8);
-  color: white;
+  color: var(--theme-text);
   transition: all 0.3s ease;
   letter-spacing: 0;
   min-width: 0;
@@ -400,7 +400,7 @@ h3 {
   font-size: var(--lobby-name-size);
   font-weight: 600;
   letter-spacing: 0;
-  color: rgba(255, 255, 255, 0.95);
+  color: rgba(var(--theme-on-surface-rgb), 0.95);
   text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.9), 0 0 4px rgba(0, 0, 0, 0.8);
 }
 
@@ -410,7 +410,7 @@ h3 {
 }
 
 .heroName {
-  color: rgba(255, 255, 255, 0.95);
+  color: rgba(var(--theme-on-surface-rgb), 0.95);
   text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.9), 0 0 4px rgba(0, 0, 0, 0.8);
   margin-bottom: 0px;
   font-weight: 600;
@@ -431,8 +431,8 @@ h3 {
   width: 100%;
   min-height: 26px;
   padding: 5px 9px;
-  background: rgba(0, 0, 0, 0.72);
-  color: rgba(255, 255, 255, 0.7);
+  background: rgba(var(--theme-sunken-rgb), calc(0.72 * var(--theme-sunken-alpha)));
+  color: rgba(var(--theme-on-surface-rgb), 0.7);
   font-size: 12px;
   font-weight: 500;
   letter-spacing: 0.01em;
@@ -456,7 +456,7 @@ h3 {
 }
 
 .lobbySettingsBar {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(var(--theme-on-surface-rgb), 0.08);
 }
 
 .desktopLobbySettingsBar {
@@ -508,7 +508,7 @@ h3 {
 }
 
 .lobbySettingsPrivate {
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(var(--theme-on-surface-rgb), 0.85);
 }
 
 .lobbyPresence {
@@ -517,7 +517,7 @@ h3 {
   flex: 0 1 auto;
   gap: 6px;
   min-width: 0;
-  color: rgba(255, 255, 255, 0.78);
+  color: rgba(var(--theme-on-surface-rgb), 0.78);
   font-size: inherit;
   font-weight: 500;
   line-height: 1.4;
@@ -530,12 +530,12 @@ h3 {
   height: 5px;
   translate: 0 1px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(var(--theme-on-surface-rgb), 0.4);
   animation: lobbyPresencePulse 2.4s ease-in-out infinite;
 }
 
 .lobbyPresenceReady {
-  color: rgba(255, 255, 255, 0.92);
+  color: rgba(var(--theme-on-surface-rgb), 0.92);
 }
 
 .lobbyPresenceReady .lobbyPresenceDot {
@@ -544,7 +544,7 @@ h3 {
 }
 
 .lobbyPresenceUnready {
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(var(--theme-on-surface-rgb), 0.9);
 }
 
 .lobbyPresenceUnready .lobbyPresenceDot {
@@ -571,7 +571,7 @@ h3 {
 
 .lobbySettingsDescription {
   width: 100%;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(var(--theme-on-surface-rgb), 0.5);
   font-weight: 400;
   text-align: center;
   white-space: normal;
@@ -606,14 +606,14 @@ h3 {
 
 .kickButton:hover {
   background: rgba(200, 30, 30);
-  color: white;
+  color: var(--theme-text);
   border-color: rgba(240, 80, 80, 0.8);
   transform: scale(1.15);
 }
 
 .leftCol:hover .heroName,
 .rightCol:hover .heroName {
-  color: white;
+  color: var(--theme-text);
   opacity: 1;
   text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.9), 0 0 6px rgba(255, 255, 255, 0.2);
   transform: none;
@@ -628,9 +628,9 @@ h3 {
   font-weight: 700;
   letter-spacing: 0.03em;
   border-radius: 0.35rem;
-  background: rgba(0, 0, 0, 0.58);
+  background: rgba(var(--theme-sunken-rgb), calc(0.58 * var(--theme-sunken-alpha)));
   color: var(--theme-primary, #d4af37);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.18);
   text-shadow: none;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -749,7 +749,7 @@ h3 {
   align-items: center;
   padding: 0.7rem 0.9rem;
   border-radius: 0.55rem;
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.18);
 }
 
 .syncBannerActive {
@@ -776,7 +776,7 @@ h3 {
   font-size: 0.86rem;
   font-weight: 800;
   letter-spacing: 0.04em;
-  color: #fff;
+  color: var(--theme-text);
 }
 
 .syncBannerBody {
@@ -784,7 +784,7 @@ h3 {
   grid-row: 2;
   font-size: 0.77rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.94);
+  color: rgba(var(--theme-on-surface-rgb), 0.94);
 }
 
 .syncBannerLink {
@@ -796,17 +796,17 @@ h3 {
   font-size: 0.74rem;
   font-weight: 800;
   letter-spacing: 0.04em;
-  color: #fff;
+  color: var(--theme-text);
   text-decoration: none;
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.35);
   border-radius: 999px;
   padding: 0.3rem 0.6rem;
-  background: rgba(0, 0, 0, 0.24);
+  background: rgba(var(--theme-sunken-rgb), calc(0.24 * var(--theme-sunken-alpha)));
 }
 
 .syncBannerLink:hover {
-  background: rgba(255, 255, 255, 0.18);
-  border-color: rgba(255, 255, 255, 0.7);
+  background: rgba(var(--theme-on-surface-rgb), 0.18);
+  border-color: rgba(var(--theme-on-surface-rgb), 0.7);
 }
 
 .deckSelectorContainer {

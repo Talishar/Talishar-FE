@@ -37,7 +37,7 @@
   top: 0;
   width: 300px;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.95);
+  background: var(--near-black);
   border-right: 2px solid color-mix(in srgb, var(--theme-primary) 20%, transparent);
   box-shadow: 2px 0 20px rgba(0, 0, 0, 0.7);
   z-index: 99;
@@ -64,7 +64,7 @@
   align-items: center;
   padding: 1rem;
   border-bottom: 1px solid color-mix(in srgb, var(--theme-primary) 20%, transparent);
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(var(--theme-sunken-rgb), calc(0.5 * var(--theme-sunken-alpha)));
 }
 
 .header h3 {
@@ -80,7 +80,7 @@
   background-image: none !important;
   border: 0 !important;
   border-radius: 5px;
-  color: rgba(255, 255, 255, 0.7) !important;
+  color: rgba(var(--theme-on-surface-rgb), 0.7) !important;
   cursor: pointer;
   padding: 0 !important;
   margin: 0 !important;
@@ -106,7 +106,7 @@
   &:hover {
     background: color-mix(in srgb, var(--theme-primary) 12%, transparent) !important;
     background-image: none !important;
-    color: #fff !important;
+    color: var(--theme-text) !important;
     box-shadow: 0 0 0 1px color-mix(in srgb, var(--theme-primary) 12%, transparent) !important;
     transform: none !important;
   }
@@ -127,35 +127,35 @@
 }
 
 .formGroup label {
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(var(--theme-on-surface-rgb), 0.8);
   font-size: 0.85rem;
   font-weight: 500;
 }
 
 .formGroup input {
   padding: 0.6rem;
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(var(--theme-on-surface-rgb), 0.03);
   border: 1px solid color-mix(in srgb, var(--theme-primary) 20%, transparent);
   border-radius: 5px;
-  color: white;
+  color: var(--theme-text);
   font-size: 0.9rem;
   transition: all 0.2s ease;
 
   &:focus {
     outline: none;
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(var(--theme-on-surface-rgb), 0.06);
     border-color: var(--theme-primary, #ffd700);
     box-shadow: 0 0 8px color-mix(in srgb, var(--theme-primary) 15%, transparent);
   }
 
   &::placeholder {
-    color: rgba(255, 255, 255, 0.3);
+    color: rgba(var(--theme-on-surface-rgb), 0.3);
   }
 }
 
 .submitButton {
   padding: 0.8rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.1);
   border-radius: 5px;
   font-weight: 600;
   cursor: pointer;

@@ -100,7 +100,7 @@
   letter-spacing: 0.06em;
   border-radius: 0.35rem;
   padding: 0.16rem 0.34rem;
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(var(--theme-sunken-rgb), calc(0.35 * var(--theme-sunken-alpha)));
   color: var(--theme-secondary-inverse, #fff);
   border: 1px solid var(--theme-border-light);
 }
@@ -121,7 +121,7 @@
   letter-spacing: 0.06em;
   border-radius: 0.35rem;
   padding: 0.16rem 0.34rem;
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(var(--theme-sunken-rgb), calc(0.35 * var(--theme-sunken-alpha)));
   color: var(--theme-secondary-inverse, #fff);
   border: 1px solid var(--theme-border-light);
 }

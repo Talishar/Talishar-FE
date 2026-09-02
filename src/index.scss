@@ -21,6 +21,11 @@ $primary-700: #f9a91e;
   --theme-text-muted: rgba(255, 255, 255, 0.6);
   --color: #f4eded;
 
+  --theme-on-surface-rgb: 255, 255, 255;
+  --theme-sunken-rgb: 0, 0, 0;
+  --theme-sunken-alpha: 1;
+  --theme-zone-placeholder: rgba(50, 50, 50, 0.5);
+
   // Heading colors
   --h1-color: #f4eded;
   --h2-color: #e0e0e0;

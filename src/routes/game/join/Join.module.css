@@ -5,7 +5,7 @@
 }
 
 .button {
-  color: black;
+  color: var(--theme-primary-inverse);
 }
 
 .LoginPageContainer {

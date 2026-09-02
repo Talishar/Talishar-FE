@@ -6,7 +6,6 @@
   height: 3rem;
   background: var(--theme-primary);
   border: 2px solid var(--theme-primary-focus);
-  color: white;
   font-weight: bold;
   cursor: pointer;
   z-index: 100;
@@ -37,7 +36,7 @@
   top: 0;
   width: 300px;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.95);
+  background: var(--near-black);
   border-right: 2px solid var(--theme-primary-focus);
   box-shadow: 2px 0 20px rgba(0, 0, 0, 0.8);
   z-index: 99;
@@ -64,7 +63,7 @@
   align-items: center;
   padding: 1rem;
   border-bottom: 1px solid var(--theme-primary-focus);
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(var(--theme-sunken-rgb), calc(0.6 * var(--theme-sunken-alpha)));
 }
 
 .header h3 {
@@ -81,7 +80,7 @@
   background-image: none !important;
   border: 0 !important;
   border-radius: 5px;
-  color: rgba(255, 255, 255, 0.7) !important;
+  color: rgba(var(--theme-on-surface-rgb), 0.7) !important;
   cursor: pointer;
   padding: 0 !important;
   margin: 0 !important;
@@ -107,7 +106,7 @@
   &:hover {
     background: var(--theme-primary-focus) !important;
     background-image: none !important;
-    color: #fff !important;
+    color: var(--theme-text) !important;
     box-shadow: 0 0 0 1px var(--theme-primary-focus) !important;
     transform: none !important;
   }
@@ -126,13 +125,13 @@
   flex-direction: column;
   gap: 0.5rem;
   padding: 0.75rem;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(var(--theme-sunken-rgb), calc(0.3 * var(--theme-sunken-alpha)));
   border: 1px solid var(--theme-primary-focus);
   border-radius: 6px;
 }
 
 .label {
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(var(--theme-on-surface-rgb), 0.8);
   font-size: 0.85rem;
   font-weight: 500;
   text-transform: uppercase;
@@ -258,7 +257,7 @@
   flex-direction: column;
   gap: 0.5rem;
   padding: 0.75rem;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(var(--theme-sunken-rgb), calc(0.3 * var(--theme-sunken-alpha)));
   border: 1px solid var(--theme-primary-focus);
   border-radius: 6px;
   position: relative;
@@ -266,7 +265,7 @@
 }
 
 .formGroup label {
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(var(--theme-on-surface-rgb), 0.8);
   font-size: 0.85rem;
   font-weight: 500;
   text-transform: uppercase;
@@ -368,24 +367,24 @@
 
 .tooltipList span:not(.tooltipCode) {
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(var(--theme-on-surface-rgb), 0.65);
   padding-left: 0.1rem;
 }
 
 .tooltipNote {
   font-size: 0.72rem;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(var(--theme-on-surface-rgb), 0.45);
   margin: 0;
   line-height: 1.4;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(var(--theme-on-surface-rgb), 0.1);
   padding-top: 0.4rem;
 }
 
 .formGroup input {
   padding: 0.5rem;
-  background: rgba(0, 0, 0, 0.9);
+  background: color-mix(in srgb, var(--near-black) 90%, transparent);
   border: 1px solid var(--theme-primary-focus);
-  color: white;
+  color: var(--theme-text);
   border-radius: 5px;
   font-size: 0.9rem;
   transition: all 0.2s ease;
@@ -394,7 +393,7 @@
   &:focus {
     outline: none;
     border-color: var(--theme-primary);
-    background: rgba(0, 0, 0, 1);
+    background: var(--near-black);
     box-shadow: 0 0 8px var(--theme-primary-focus);
   }
 
@@ -404,7 +403,7 @@
   }
 
   &::placeholder {
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(var(--theme-on-surface-rgb), 0.6);
   }
 }
 
@@ -416,7 +415,7 @@
 .healthInput {
   width: 100%;
   padding: 0.5rem;
-  background: rgba(0, 0, 0, 0.9);
+  background: color-mix(in srgb, var(--near-black) 90%, transparent);
   border: 1px solid var(--theme-primary-focus);
   color: var(--theme-primary);
   border-radius: 5px;
@@ -429,7 +428,7 @@
   &:focus {
     outline: none;
     border-color: var(--theme-primary);
-    background: rgba(0, 0, 0, 1);
+    background: var(--near-black);
     box-shadow: 0 0 8px var(--theme-primary-focus);
   }
 
@@ -443,7 +442,7 @@
   display: flex;
   align-items: center;
   padding: 0.75rem;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(var(--theme-sunken-rgb), calc(0.3 * var(--theme-sunken-alpha)));
   border: 1px solid var(--theme-primary-focus);
   border-radius: 6px;
   gap: 0.5rem;
@@ -453,7 +452,7 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(var(--theme-on-surface-rgb), 0.9);
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
