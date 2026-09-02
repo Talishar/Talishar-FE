@@ -29,6 +29,7 @@ import SessionRecovery from 'components/SessionRecovery';
 import { AmbientParticles } from 'routes/game/components/elements/ambientParticles/AmbientParticles';
 import { Toaster } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import { useMediaQuery } from 'hooks/useMediaQuery';
 
 const Header = () => {
   const { isLoggedIn, isMod, currentUserName, currentDisplayName, logOut } =
@@ -43,6 +44,10 @@ const Header = () => {
     !!document.fullscreenElement
   );
   const userDropdownRef = useRef<HTMLDivElement>(null);
+  const isTouchMobile = useMediaQuery(
+    '(pointer: coarse) and (max-width: 1024px)'
+  );
+  const showFullscreen = !isTouchMobile && !!document.fullscreenEnabled;
 
   const { t } = useTranslation();
 
@@ -210,7 +215,7 @@ const Header = () => {
                       </Link>
                     </li>
                     <LanguageSelector inDropdown />
-                    {document.fullscreenEnabled && (
+                    {showFullscreen && (
                       <li>
                         <button type="button" onClick={handleFullscreenToggle}>
                           {isFullscreen ? (
@@ -335,7 +340,7 @@ const Header = () => {
                 </Link>
               </li>
             )}
-            {document.fullscreenEnabled && (
+            {showFullscreen && (
               <li>
                 <button type="button" onClick={handleFullscreenToggle}>
                   {isFullscreen ? (
