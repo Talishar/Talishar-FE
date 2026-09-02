@@ -31,3 +31,11 @@ body {
     --card-size: calc(13dvh * var(--card-scale));
   }
 }
+
+@media (orientation: landscape) {
+  body {
+    box-sizing: border-box;
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+}

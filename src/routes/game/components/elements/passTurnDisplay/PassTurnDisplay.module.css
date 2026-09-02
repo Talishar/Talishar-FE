@@ -270,3 +270,26 @@
     display: none;
   }
 }
+
+@media (orientation: landscape) and (max-height: 600px) {
+  .passTurnDisplayActive {
+    font-size: clamp(0.6rem, 3.4dvh, 1.45rem);
+    letter-spacing: 0.03em;
+    padding: 0.3em 0.1em;
+  }
+
+  .passTurnDisplay {
+    font-size: clamp(0.55rem, 2.8dvh, 1.05rem);
+    letter-spacing: 0.06em;
+  }
+
+  .spectatorDisplay {
+    font-size: clamp(0.6rem, 3.4dvh, 1.45rem);
+    padding: 0.3em 0;
+  }
+
+  .subThing,
+  .spectatorPlayerName {
+    display: none;
+  }
+}
