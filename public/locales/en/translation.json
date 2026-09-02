@@ -1185,6 +1185,8 @@
     "COUNTDOWN_OPPONENT": "Waiting on your opponent",
     "COUNTDOWN_PLAYER": "Waiting on {{player}}",
     "COUNTDOWN_YOU": "It's your move",
+    "GAME_CLOSING": "This game will close unless a player acts",
+    "GAME_CLOSING_NOW": "This game is about to close due to inactivity",
     "HOURGLASS": "⏳",
     "IM_STILL_HERE": "I'm Still Here",
     "OPPONENT_INACTIVE": "Your opponent appears to be inactive",

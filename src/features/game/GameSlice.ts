@@ -355,6 +355,8 @@ function mergeReceivedGameState(
   state.opponentInactive = payload.opponentInactive ?? false;
   state.inactivityDeadline =
     payload.inactivityDeadline ?? state.inactivityDeadline;
+  state.gameDeleteDeadline =
+    payload.gameDeleteDeadline ?? state.gameDeleteDeadline;
   state.serverTimeOffset = payload.serverTimeOffset ?? state.serverTimeOffset;
   state.preventPassPrompt = payload.preventPassPrompt;
 }
@@ -673,7 +675,10 @@ export const gameSlice = createSlice({
       if (!authKey) return state;
       const seat = playerID ?? state.gameInfo.playerID;
       if (seat !== 1 && seat !== 2) return state;
-      if (state.gameInfo.authKey === authKey && state.gameInfo.playerID === seat)
+      if (
+        state.gameInfo.authKey === authKey &&
+        state.gameInfo.playerID === seat
+      )
         return state;
       state.gameInfo.playerID = seat;
       if (state.gameInfo.gameID > 0) {
