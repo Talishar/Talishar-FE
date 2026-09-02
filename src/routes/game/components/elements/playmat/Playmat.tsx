@@ -1,7 +1,6 @@
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import { useCookieString } from 'utils/cookieStore';
-import { DEFAULT_PLAYMAT } from 'appConstants';
 import { useMemo } from 'react';
 
 import styles from './Playmat.module.css';
@@ -43,12 +42,8 @@ export const Playmat = ({ isPlayer }: { isPlayer: boolean }) => {
     const dim =
       1 - (Number.isFinite(intensity) ? Math.min(intensity, 1) : 0.65);
     const dimLayer = `linear-gradient(rgba(0, 0, 0, ${dim}), rgba(0, 0, 0, ${dim}))`;
-    const themeLayer =
-      playmat === DEFAULT_PLAYMAT
-        ? `linear-gradient(135deg, color-mix(in srgb, var(--theme-primary) 16%, transparent), color-mix(in srgb, var(--theme-card-background, #1e2329) 55%, transparent)), `
-        : '';
     return {
-      backgroundImage: `${themeLayer}${dimLayer}, url(/playmats/${playmat}.webp)`,
+      backgroundImage: `${dimLayer}, url(/playmats/${playmat}.webp)`,
       borderRadius: `10px`
     };
   }, [playmat, playmatIntensity]);
