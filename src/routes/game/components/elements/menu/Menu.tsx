@@ -34,6 +34,8 @@ function FullScreenButton() {
     screenfull.toggle();
   }
 
+  if (!screenfull.isEnabled) return null;
+
   return (
     <div>
       <button
@@ -173,12 +175,14 @@ function MobileOverflowMenu({ isSpectator }: { isSpectator: boolean }) {
                   <FaWrench aria-hidden="true" /> {t('MENU.MANUAL_MODE')}
                 </button>
               )}
-              <button
-                className={styles.overflowItem}
-                onClick={toggleFullScreen}
-              >
-                <GiExpand aria-hidden="true" /> {t('MENU.FULLSCREEN')}
-              </button>
+              {screenfull.isEnabled && (
+                <button
+                  className={styles.overflowItem}
+                  onClick={toggleFullScreen}
+                >
+                  <GiExpand aria-hidden="true" /> {t('MENU.FULLSCREEN')}
+                </button>
+              )}
             </div>
           </>,
           document.body
