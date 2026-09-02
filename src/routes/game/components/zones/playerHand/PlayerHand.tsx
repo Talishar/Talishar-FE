@@ -13,6 +13,7 @@ import styles from './PlayerHand.module.css';
 import PlayerHandCard from '../../elements/playerHandCard/PlayerHandCard';
 import { useAppSelector } from 'app/Hooks';
 import useWindowDimensions from 'hooks/useWindowDimensions';
+import { useMediaQuery } from 'hooks/useMediaQuery';
 import { AnimatePresence, PanInfo } from 'framer-motion';
 import { createPortal } from 'react-dom';
 import useSound from 'use-sound';
@@ -55,6 +56,7 @@ const selectPlayableGraveyardCards = createSelector(
 function PlayerHand() {
   const { t } = useTranslation();
   const [width, height] = useWindowDimensions();
+  const isMobile = useMediaQuery('(max-width: 1199px)');
 
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
@@ -191,6 +193,11 @@ function PlayerHand() {
   } | null>(null);
 
   useEffect(() => {
+    if (isMobile) {
+      setGameZoneBounds(null);
+      return;
+    }
+
     const gameZone = document.querySelector('.gameZone') as HTMLElement | null;
     if (!gameZone) return;
 
@@ -209,7 +216,7 @@ function PlayerHand() {
     const ro = new ResizeObserver(update);
     ro.observe(gameZone);
     return () => ro.disconnect();
-  }, []);
+  }, [isMobile]);
   const arsenalCards = useAppSelector(
     (state: RootState) => state.game.playerOne.Arsenal
   );
@@ -884,9 +891,13 @@ function PlayerHand() {
             }
           >
             <button
-              className={classNames(styles.scrollButton, {
-                [styles.scrollButtonHidden]: !canScrollLeft
-              })}
+              className={classNames(
+                styles.scrollButton,
+                styles.scrollButtonLeft,
+                {
+                  [styles.scrollButtonHidden]: !canScrollLeft
+                }
+              )}
               onPointerDown={scrollHandLeft}
               aria-label={t('HAND.SCROLL_LEFT')}
             >
@@ -1048,9 +1059,13 @@ function PlayerHand() {
               </div>
             </div>
             <button
-              className={classNames(styles.scrollButton, {
-                [styles.scrollButtonHidden]: !canScrollRight
-              })}
+              className={classNames(
+                styles.scrollButton,
+                styles.scrollButtonRight,
+                {
+                  [styles.scrollButtonHidden]: !canScrollRight
+                }
+              )}
               onPointerDown={scrollHandRight}
               aria-label={t('HAND.SCROLL_RIGHT')}
             >
