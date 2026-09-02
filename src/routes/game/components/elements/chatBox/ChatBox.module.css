@@ -50,10 +50,6 @@
   opacity: 0.7;
 }
 
-.logAction {
-  font-weight: 600;
-}
-
 .logTrigger {
   border-left: 2px solid var(--game-log-accent);
   padding-left: 6px;
@@ -61,7 +57,6 @@
 
 .logCritical {
   color: var(--game-log-critical);
-  font-weight: 700;
 }
 
 .logIrreversible {
