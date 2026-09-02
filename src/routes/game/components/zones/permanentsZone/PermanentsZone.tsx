@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import Displayrow from 'interface/Displayrow';
@@ -8,6 +8,7 @@ import { Card } from 'features/Card';
 import classNames from 'classnames';
 import { motion, AnimatePresence } from 'framer-motion';
 import { selectPermanentsAsStack } from '../../../../../features/game/GameSlice';
+import { HiChevronLeft, HiChevronRight } from 'react-icons/hi';
 
 const PERMANENT_INITIAL = { opacity: 0, x: -100 };
 const PERMANENT_ANIMATE = { opacity: 1, x: 0 };
@@ -30,10 +31,48 @@ function PermanentsZone(prop: Displayrow) {
   const dragScrollLeft = useRef(0);
   const dragOffsetLeft = useRef(0);
   const moveListener = useRef<((e: MouseEvent) => void) | null>(null);
+  const [isOverflowing, setIsOverflowing] = useState(false);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
 
   const permanents = useAppSelector((state: RootState) =>
     selectPermanentsAsStack(state, isPlayer)
   );
+
+  const updateScrollButtons = useCallback(() => {
+    const element = scrollRef.current;
+    if (!element) return;
+
+    const overflowing = element.scrollWidth > element.clientWidth + 1;
+    setIsOverflowing(overflowing);
+    setCanScrollLeft(overflowing && element.scrollLeft > 1);
+    setCanScrollRight(
+      overflowing &&
+        element.scrollLeft < element.scrollWidth - element.clientWidth - 1
+    );
+  }, []);
+
+  useEffect(() => {
+    const element = scrollRef.current;
+    if (!element) return;
+
+    updateScrollButtons();
+    const resizeObserver = new ResizeObserver(updateScrollButtons);
+    resizeObserver.observe(element);
+    const zone = element.firstElementChild;
+    if (zone) resizeObserver.observe(zone);
+
+    return () => resizeObserver.disconnect();
+  }, [permanents.length, updateScrollButtons]);
+
+  const scrollByCard = useCallback((direction: -1 | 1) => {
+    const element = scrollRef.current;
+    if (!element) return;
+
+    const card = element.querySelector<HTMLElement>('[data-permanent-card]');
+    const distance = card ? card.offsetWidth + 4 : element.clientWidth * 0.75;
+    element.scrollBy({ left: direction * distance, behavior: 'smooth' });
+  }, []);
 
   const detachMoveListener = useCallback(() => {
     if (moveListener.current && scrollRef.current) {
@@ -86,12 +125,24 @@ function PermanentsZone(prop: Displayrow) {
 
   return (
     <div className={styles.permanentsWrapper}>
+      {isOverflowing && (
+        <button
+          type="button"
+          className={classNames(styles.scrollButton, styles.scrollBack)}
+          aria-label="Scroll permanents left"
+          disabled={!canScrollLeft}
+          onClick={() => scrollByCard(-1)}
+        >
+          <HiChevronLeft aria-hidden="true" />
+        </button>
+      )}
       <div
         ref={scrollRef}
         className={styles.permanentsInner}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
+        onScroll={updateScrollButtons}
       >
         <motion.div className={styles.permanentsZone} layout>
           <AnimatePresence>
@@ -106,6 +157,7 @@ function PermanentsZone(prop: Displayrow) {
                 <motion.div
                   key={cardStack.id}
                   className={cardContainerStyles}
+                  data-permanent-card
                   initial={PERMANENT_INITIAL}
                   animate={PERMANENT_ANIMATE}
                   exit={PERMANENT_EXIT}
@@ -128,6 +180,17 @@ function PermanentsZone(prop: Displayrow) {
           </AnimatePresence>
         </motion.div>
       </div>
+      {isOverflowing && (
+        <button
+          type="button"
+          className={classNames(styles.scrollButton, styles.scrollForward)}
+          aria-label="Scroll permanents right"
+          disabled={!canScrollRight}
+          onClick={() => scrollByCard(1)}
+        >
+          <HiChevronRight aria-hidden="true" />
+        </button>
+      )}
     </div>
   );
 }
