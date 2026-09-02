@@ -15,8 +15,8 @@ body {
 @media (orientation: portrait) {
   html,
   body {
-    --card-size: calc(12vw * var(--card-scale));
-    --card-size: calc(12dvw * var(--card-scale));
+    --card-size: calc(13.5vw * var(--card-scale));
+    --card-size: calc(13.5dvw * var(--card-scale));
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;

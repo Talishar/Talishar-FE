@@ -25,9 +25,18 @@
 
 @media (orientation: portrait) {
   .app {
-    aspect-ratio: 16/9;
+    width: 100vw;
+    width: 100dvw;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    aspect-ratio: auto;
     font-size: calc(1.5vw + 3px);
     font-size: calc(1.5dvw + 3px);
+  }
+
+  .gameZone {
+    min-width: 0;
   }
 }
 
