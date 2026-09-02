@@ -43,7 +43,7 @@
 .playerName {
   font-size: 1.5em;
   font-weight: bold;
-  color: #d4af37;
+  color: var(--theme-primary, #d4af37);
   text-align: center;
   width: 100%;
   overflow: hidden;
