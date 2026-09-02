@@ -99,6 +99,10 @@ export const ErrorPage = () => {
               <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>R</kbd>{' '}
               <span>{t('ERROR_PAGE.MAC')}</span>
             </p>
+            <p>
+              <kbd>Ctrl</kbd> + <kbd>F5</kbd>{' '}
+              <span>{t('ERROR_PAGE.OPERA')}</span>
+            </p>
             <p>{t('ERROR_PAGE.STALE_CACHE_MOBILE')}</p>
           </div>
         ) : (

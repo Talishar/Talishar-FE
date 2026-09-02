@@ -355,6 +355,7 @@
     "HOME": "Home",
     "MAC": "Mac",
     "MESSAGE": "Sorry, an error has occurred.",
+    "OPERA": "Opera",
     "STALE_CACHE_INSTRUCTION": "Hard refresh the page to load the latest version:",
     "STALE_CACHE_MESSAGE": "This error is usually just stale browser cache. Your game should be fine.",
     "STALE_CACHE_MOBILE": "On mobile, close this tab and open Talishar again.",
