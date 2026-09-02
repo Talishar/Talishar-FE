@@ -3,7 +3,6 @@ import {
   useAddFriendMutation,
   useGetFriendsListQuery,
   useRemoveFriendMutation,
-  useSearchUsersQuery,
   useGetPendingRequestsQuery,
   useAcceptRequestMutation,
   useRejectRequestMutation,
@@ -25,6 +24,8 @@ import { useTranslation } from 'react-i18next';
 import styles from './FriendsList.module.css';
 import { Friend } from 'interface/API/FriendListAPI.php';
 import { createPatreonIconMap } from 'utils/patronIcons';
+import { useUserSearch } from 'hooks/useUserSearch';
+import { UserSearchResults } from './UserSearchResults';
 
 interface FriendsListProps {
   className?: string;
@@ -37,9 +38,14 @@ interface NicknameEditState {
 
 export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
   const { t } = useTranslation();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [showSearchResults, setShowSearchResults] = useState(false);
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+  const {
+    searchTerm,
+    setSearchTerm,
+    showSearchResults,
+    users: searchResults,
+    isLoading: searchLoading,
+    resetSearch
+  } = useUserSearch();
   const [isExpanded, setIsExpanded] = useState(true);
   const [nicknameEdit, setNicknameEdit] = useState<NicknameEditState>({
     friendUserId: null,
@@ -76,23 +82,6 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
     refetch: refetchSent
   } = useGetSentRequestsQuery(undefined);
 
-  // Search users with debouncing
-  const shouldSearch = debouncedSearchTerm.length >= 2;
-  const { data: searchResults, isLoading: searchLoading } = useSearchUsersQuery(
-    { searchTerm: debouncedSearchTerm, limit: 10 },
-    { skip: !shouldSearch }
-  );
-
-  // Debounce search input
-  React.useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearchTerm(searchTerm);
-      setShowSearchResults(searchTerm.length >= 2);
-    }, 300);
-
-    return () => clearTimeout(timer);
-  }, [searchTerm]);
-
   // Get set of user IDs that have pending sent requests
   const sentRequestUserIds = new Set(
     sentData?.sentRequests?.map((req: any) => req.recipientUserId) || []
@@ -104,8 +93,7 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
       toast.success(
         t('PROFILE.FRIEND_REQUEST_SENT', { username: friendUsername })
       );
-      setSearchTerm('');
-      setShowSearchResults(false);
+      resetSearch();
       refetchSent();
       refetchPending();
     } catch (err: any) {
@@ -251,65 +239,23 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
               />
             </div>
 
-            {/* Search Results */}
-            {!searchLoading &&
-            searchResults?.users &&
-            searchResults.users.length > 0
-              ? (() => {
-                  const sortedResults = [...searchResults.users].sort(
-                    (a, b) => {
-                      const aExact = a.username === searchTerm;
-                      const bExact = b.username === searchTerm;
-
-                      if (aExact && !bExact) return -1;
-                      if (bExact && !aExact) return 1;
-                      return 0;
-                    }
-                  );
-
-                  return (
-                    <ul className={styles.resultsList}>
-                      {sortedResults.map((user) => {
-                        const hasRequestSent = sentRequestUserIds.has(
-                          user.usersId
-                        );
-                        return (
-                          <li key={user.usersId} className={styles.resultItem}>
-                            <span>{user.username}</span>
-                            <button
-                              className={`${styles.addButton} ${
-                                hasRequestSent ? styles.addButtonDisabled : ''
-                              }`}
-                              onClick={() =>
-                                !hasRequestSent &&
-                                handleAddFriend(user.username)
-                              }
-                              disabled={hasRequestSent || isAddingFriend}
-                              aria-label={
-                                hasRequestSent
-                                  ? t('PROFILE.FRIEND_REQUEST_ALREADY_SENT')
-                                  : t('PROFILE.ADD_FRIEND')
-                              }
-                              title={
-                                hasRequestSent
-                                  ? t('PROFILE.FRIEND_REQUEST_ALREADY_SENT')
-                                  : t('PROFILE.ADD_FRIEND')
-                              }
-                            >
-                              {hasRequestSent ? <MdBlock /> : <MdPersonAdd />}
-                            </button>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  );
-                })()
-              : showSearchResults &&
-                !searchLoading && (
-                  <p className={styles.noResults}>
-                    {t('PROFILE.NO_USERS_FOUND')}
-                  </p>
-                )}
+            <UserSearchResults
+              users={searchResults}
+              isVisible={showSearchResults}
+              isLoading={searchLoading}
+              isMutating={isAddingFriend}
+              unavailableUserIds={sentRequestUserIds}
+              loadingText={t('PROFILE.SEARCHING')}
+              noResultsText={t('PROFILE.NO_USERS_FOUND')}
+              actionLabel={t('PROFILE.ADD_FRIEND')}
+              unavailableActionLabel={t('PROFILE.FRIEND_REQUEST_ALREADY_SENT')}
+              actionIcon={<MdPersonAdd />}
+              unavailableActionIcon={<MdBlock />}
+              onSelect={(user) => handleAddFriend(user.username)}
+              styles={styles}
+              actionClassName={styles.addButton}
+              disabledActionClassName={styles.addButtonDisabled}
+            />
           </div>
 
           {/* Sent Friend Requests Section */}
