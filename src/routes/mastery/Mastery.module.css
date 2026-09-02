@@ -254,7 +254,7 @@
   display: block;
   margin: 0.38rem auto 0 !important;
   overflow: hidden;
-  color: var(--theme-text-secondary, #c6c6c6);
+  color: var(--theme-primary, #d4af37);
   font-size: 0.68rem;
   font-weight: 400;
   line-height: 1.25;
@@ -269,11 +269,6 @@
   font-size: 0.61rem;
   font-weight: 700;
   line-height: 1.2;
-}
-
-.heroCard[data-played='true'] strong,
-.heroCard[data-mastered='true'] strong {
-  color: var(--theme-primary, #d4af37);
 }
 
 .detail {

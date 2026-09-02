@@ -39,7 +39,7 @@
   border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
   border-radius: 999px;
   padding: 2px 7px;
-  background: var(--theme-primary-focus, rgba(212, 175, 55, 0.125));
+  background: var(--theme-primary-focus, color-mix(in srgb, var(--theme-primary) 12.5%, transparent));
   color: var(--theme-primary, #d4af37);
   font-size: 0.72rem;
   text-transform: capitalize;
@@ -84,7 +84,7 @@
   border: 1px solid var(--theme-primary, #d4af37);
   border-radius: 999px;
   padding: 2px 8px;
-  background: var(--theme-primary-focus, rgba(212, 175, 55, 0.125));
+  background: var(--theme-primary-focus, color-mix(in srgb, var(--theme-primary) 12.5%, transparent));
   color: var(--theme-primary, #d4af37);
   font: inherit;
   cursor: help;

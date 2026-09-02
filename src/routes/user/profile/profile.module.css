@@ -257,9 +257,9 @@
 }
 
 .infoButton:hover {
-  background: rgba(212, 175, 55, 0.15);
-  border-color: rgba(212, 175, 55, 0.6);
-  color: #d4af37;
+  background: color-mix(in srgb, var(--theme-primary) 15%, transparent);
+  border-color: color-mix(in srgb, var(--theme-primary) 60%, transparent);
+  color: var(--theme-primary, #d4af37);
 }
 
 .displayNameHint {
@@ -342,7 +342,7 @@
 }
 
 .secondaryButton:hover {
-  background: var(--theme-primary-focus, rgba(212, 175, 55, 0.1));
+  background: var(--theme-primary-focus, color-mix(in srgb, var(--theme-primary) 10%, transparent));
   color: var(--theme-text, #f4eded);
   border-color: var(--theme-primary, #d4af37);
 }
@@ -404,8 +404,8 @@
 }
 
 .metafyCommunityOwned .metafyCommunityBadge {
-  background: rgba(212, 175, 55, 0.2);
-  color: #d4af37;
+  background: color-mix(in srgb, var(--theme-primary) 20%, transparent);
+  color: var(--theme-primary, #d4af37);
 }
 
 .metafyCommunitySupported .metafyCommunityBadge {
@@ -455,7 +455,7 @@
 .metafyCommunityTier {
   padding: 0.25rem 0;
   margin-left: 0.5rem;
-  color: #d4af37;
+  color: var(--theme-primary, #d4af37);
 }
 
 .metafyCommunityId {

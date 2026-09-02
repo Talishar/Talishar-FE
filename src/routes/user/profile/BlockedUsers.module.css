@@ -93,7 +93,7 @@
 }
 
 .resultItem:hover {
-  background-color: var(--theme-primary-focus, rgba(212, 175, 55, 0.1));
+  background-color: var(--theme-primary-focus, color-mix(in srgb, var(--theme-primary) 10%, transparent));
 }
 
 .resultItem span {
@@ -214,7 +214,7 @@
 }
 
 .blockedUsersTable tbody tr:hover {
-  background-color: var(--theme-primary-focus, rgba(212, 175, 55, 0.08));
+  background-color: var(--theme-primary-focus, color-mix(in srgb, var(--theme-primary) 8%, transparent));
 }
 
 .deleteColumn {
@@ -228,10 +228,10 @@
   width: 2rem;
   height: 2rem;
   padding: 0;
-  background: var(--theme-danger);
-  border: none;
+  background: color-mix(in srgb, var(--theme-text, #fff) 6%, transparent);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.18));
   border-radius: 5px;
-  color: white;
+  color: var(--theme-text-secondary, rgba(255, 255, 255, 0.72));
   cursor: pointer;
   transition: background-color 0.2s, transform 0.1s;
   flex-shrink: 0;
@@ -240,7 +240,10 @@
 }
 
 .unblockButton:hover {
-  background-color: #a01830;
+  background-color: color-mix(in srgb, var(--theme-danger, #dc3545) 18%, transparent);
+  border-color: color-mix(in srgb, var(--theme-danger, #dc3545) 60%, transparent);
+  color: var(--theme-danger, #dc3545);
+  transform: scale(1.05);
 }
 
 .unblockButton:active {

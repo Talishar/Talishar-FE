@@ -19,13 +19,13 @@
   margin-bottom: 1.5em;
   padding: 1em 1.25em;
   border-radius: 10px;
-  border: 1px solid rgba(201, 169, 97, 0.35);
-  background: rgba(201, 169, 97, 0.06);
+  border: 1px solid color-mix(in srgb, var(--theme-primary) 35%, transparent);
+  background: color-mix(in srgb, var(--theme-primary) 6%, transparent);
   color: rgba(255, 255, 255, 0.85);
 }
 
 .upsellBanner a {
-  color: #d4af37;
+  color: var(--theme-primary, #d4af37);
   font-weight: 600;
   text-decoration: none;
 }
@@ -207,9 +207,9 @@
 }
 
 .altArtToggleButton:hover {
-  background: rgba(212, 175, 55, 0.12);
-  border-color: rgba(212, 175, 55, 0.6);
-  color: #d4af37;
+  background: color-mix(in srgb, var(--theme-primary) 12%, transparent);
+  border-color: color-mix(in srgb, var(--theme-primary) 60%, transparent);
+  color: var(--theme-primary, #d4af37);
   transform: none;
   box-shadow: none;
 }
@@ -297,9 +297,9 @@
 }
 
 .deckActionButton:hover {
-  background: rgba(212, 175, 55, 0.12);
-  border-color: rgba(212, 175, 55, 0.6);
-  color: #d4af37;
+  background: color-mix(in srgb, var(--theme-primary) 12%, transparent);
+  border-color: color-mix(in srgb, var(--theme-primary) 60%, transparent);
+  color: var(--theme-primary, #d4af37);
   transform: none;
   box-shadow: none;
 }
@@ -373,7 +373,7 @@
 }
 
 .thumbSelected {
-  border-color: #d4af37;
+  border-color: var(--theme-primary, #d4af37);
 }
 
 .frameThumbWrapper {
@@ -410,7 +410,7 @@
 .frameSelected,
 .frameSelected:hover,
 .frameSelected:focus-visible {
-  border-color: #d4af37;
+  border-color: var(--theme-primary, #d4af37);
   background: #1d2022;
 }
 

@@ -243,7 +243,7 @@
 :global(#quickJoinFavoriteDeck ~ [role='listbox'] [role='option']:focus) {
   background-color: var(
     --dropdown-hover-background-color,
-    rgba(212, 175, 55, 0.15)
+    color-mix(in srgb, var(--theme-primary) 15%, transparent)
   );
 }
 

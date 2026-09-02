@@ -261,7 +261,7 @@
 }
 
 .tabBadgeActive {
-  background: rgba(212, 175, 55, 0.25);
+  background: color-mix(in srgb, var(--theme-primary) 25%, transparent);
   color: var(--theme-primary, #d4af37);
 }
 
@@ -371,7 +371,7 @@
   width: 2rem;
   height: 2rem;
   border-radius: 50%;
-  background: rgba(212, 175, 55, 0.14);
+  background: color-mix(in srgb, var(--theme-primary) 14%, transparent);
   color: var(--theme-primary, #d4af37);
   font-size: 1.05rem;
   flex-shrink: 0;

@@ -104,7 +104,7 @@
 }
 
 .loadingText {
-  color: #e8d5a3;
+  color: var(--theme-primary, #e8d5a3);
   font-size: 0.95rem;
   margin: 0;
   letter-spacing: 0.03em;

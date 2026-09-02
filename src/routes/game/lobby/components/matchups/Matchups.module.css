@@ -207,7 +207,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  background: rgba(212, 175, 55, 0.15);
+  background: color-mix(in srgb, var(--theme-primary) 15%, transparent);
   color: var(--theme-primary, #d4af37);
   border: 1px solid var(--theme-border-light);
   box-shadow: none;

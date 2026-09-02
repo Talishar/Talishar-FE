@@ -66,7 +66,7 @@ $primary-700: #f9a91e;
   --dropdown-background-color: #33383d;
   --dropdown-border-color: #797c80;
   --dropdown-color: #f4eded;
-  --dropdown-hover-background-color: rgba(212, 175, 55, 0.15);
+  --dropdown-hover-background-color: color-mix(in srgb, var(--theme-primary) 15%, transparent);
 
   // Status colors
   --theme-alarm: #c62828;
@@ -150,7 +150,7 @@ select option:hover,
 select option:focus {
   background-color: var(
     --dropdown-hover-background-color,
-    rgba(212, 175, 55, 0.15)
+    color-mix(in srgb, var(--theme-primary) 15%, transparent)
   ) !important;
   color: var(--dropdown-color, var(--theme-text, #f4eded)) !important;
 }
@@ -185,7 +185,7 @@ input[type='url']:focus,
 textarea:focus {
   background-color: var(--theme-form-active, #33383d) !important;
   border-color: var(--theme-primary, #d4af37) !important;
-  box-shadow: 0 0 0 3px var(--theme-primary-focus, rgba(212, 175, 55, 0.1)) !important;
+  box-shadow: 0 0 0 3px var(--theme-primary-focus, color-mix(in srgb, var(--theme-primary) 10%, transparent)) !important;
 }
 
 input[type='text']:autofill,
@@ -218,9 +218,9 @@ input[type='password']:autofill:focus,
 input[type='number']:autofill:focus,
 input[type='url']:autofill:focus {
   -webkit-box-shadow: 0 0 0 100px var(--theme-form-active, #33383d) inset,
-    0 0 0 3px var(--theme-primary-focus, rgba(212, 175, 55, 0.1)) !important;
+    0 0 0 3px var(--theme-primary-focus, color-mix(in srgb, var(--theme-primary) 10%, transparent)) !important;
   box-shadow: 0 0 0 100px var(--theme-form-active, #33383d) inset,
-    0 0 0 3px var(--theme-primary-focus, rgba(212, 175, 55, 0.1)) !important;
+    0 0 0 3px var(--theme-primary-focus, color-mix(in srgb, var(--theme-primary) 10%, transparent)) !important;
 }
 
 input[type='text']:-webkit-autofill:focus,
@@ -229,9 +229,9 @@ input[type='password']:-webkit-autofill:focus,
 input[type='number']:-webkit-autofill:focus,
 input[type='url']:-webkit-autofill:focus {
   -webkit-box-shadow: 0 0 0 100px var(--theme-form-active, #33383d) inset,
-    0 0 0 3px var(--theme-primary-focus, rgba(212, 175, 55, 0.1)) !important;
+    0 0 0 3px var(--theme-primary-focus, color-mix(in srgb, var(--theme-primary) 10%, transparent)) !important;
   box-shadow: 0 0 0 100px var(--theme-form-active, #33383d) inset,
-    0 0 0 3px var(--theme-primary-focus, rgba(212, 175, 55, 0.1)) !important;
+    0 0 0 3px var(--theme-primary-focus, color-mix(in srgb, var(--theme-primary) 10%, transparent)) !important;
 }
 
 html,

@@ -25,7 +25,7 @@ const SwordLoader = ({ size = 60 }: SwordLoaderProps) => {
           y1="6"
           x2="30"
           y2="43"
-          stroke="rgba(255,255,220,0.5)"
+          stroke="color-mix(in srgb, var(--sword-light) 50%, transparent)"
           strokeWidth="0.8"
         />
         <rect
@@ -36,9 +36,9 @@ const SwordLoader = ({ size = 60 }: SwordLoaderProps) => {
           rx="2"
           fill="url(#guardGrad)"
         />
-        <rect x="27" y="46" width="6" height="8" rx="1.5" fill="#8a6a30" />
+        <rect x="27" y="46" width="6" height="8" rx="1.5" fill="var(--sword-dark)" />
         <ellipse cx="30" cy="56" rx="4" ry="3" fill="url(#pommelGrad)" />
-        <ellipse cx="30" cy="7" rx="1.2" ry="2" fill="rgba(255,255,200,0.7)" />
+        <ellipse cx="30" cy="7" rx="1.2" ry="2" fill="color-mix(in srgb, var(--sword-light) 70%, transparent)" />
         <defs>
           <linearGradient
             id="bladeGrad"
@@ -48,9 +48,9 @@ const SwordLoader = ({ size = 60 }: SwordLoaderProps) => {
             y2="46"
             gradientUnits="userSpaceOnUse"
           >
-            <stop offset="0%" stopColor="#f0e6c0" />
-            <stop offset="50%" stopColor="#c9a84c" />
-            <stop offset="100%" stopColor="#8a6a30" />
+            <stop offset="0%" stopColor="var(--sword-light)" />
+            <stop offset="50%" stopColor="var(--sword-base)" />
+            <stop offset="100%" stopColor="var(--sword-dark)" />
           </linearGradient>
           <linearGradient
             id="guardGrad"
@@ -60,9 +60,9 @@ const SwordLoader = ({ size = 60 }: SwordLoaderProps) => {
             y2="44"
             gradientUnits="userSpaceOnUse"
           >
-            <stop offset="0%" stopColor="#8a6a30" />
-            <stop offset="50%" stopColor="#e8d5a3" />
-            <stop offset="100%" stopColor="#8a6a30" />
+            <stop offset="0%" stopColor="var(--sword-dark)" />
+            <stop offset="50%" stopColor="var(--sword-light)" />
+            <stop offset="100%" stopColor="var(--sword-dark)" />
           </linearGradient>
           <linearGradient
             id="pommelGrad"
@@ -72,9 +72,9 @@ const SwordLoader = ({ size = 60 }: SwordLoaderProps) => {
             y2="56"
             gradientUnits="userSpaceOnUse"
           >
-            <stop offset="0%" stopColor="#8a6a30" />
-            <stop offset="50%" stopColor="#e8d5a3" />
-            <stop offset="100%" stopColor="#8a6a30" />
+            <stop offset="0%" stopColor="var(--sword-dark)" />
+            <stop offset="50%" stopColor="var(--sword-light)" />
+            <stop offset="100%" stopColor="var(--sword-dark)" />
           </linearGradient>
         </defs>
       </svg>

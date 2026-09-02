@@ -100,7 +100,7 @@
 }
 
 .resultItem:hover {
-  background-color: var(--theme-primary-focus, rgba(212, 175, 55, 0.1));
+  background-color: var(--theme-primary-focus, color-mix(in srgb, var(--theme-primary) 10%, transparent));
 }
 
 .resultItem span {
@@ -221,7 +221,7 @@
 }
 
 .friendsTable tbody tr:hover {
-  background-color: var(--theme-primary-focus, rgba(212, 175, 55, 0.08));
+  background-color: var(--theme-primary-focus, color-mix(in srgb, var(--theme-primary) 8%, transparent));
 }
 
 .deleteColumn {
@@ -236,10 +236,10 @@
   height: 2rem;
   padding: 0;
   margin-left: 0.25rem;
-  background: var(--theme-danger, #dc3545);
-  border: none;
+  background: color-mix(in srgb, var(--theme-text, #fff) 6%, transparent);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.18));
   border-radius: 5px;
-  color: white;
+  color: var(--theme-text-secondary, rgba(255, 255, 255, 0.72));
   cursor: pointer;
   transition: background-color 0.2s, transform 0.1s;
   flex-shrink: 0;
@@ -248,7 +248,9 @@
 }
 
 .deleteButton:hover {
-  background-color: var(--theme-danger, #c82333);
+  background-color: color-mix(in srgb, var(--theme-danger, #dc3545) 18%, transparent);
+  border-color: color-mix(in srgb, var(--theme-danger, #dc3545) 60%, transparent);
+  color: var(--theme-danger, #dc3545);
   transform: scale(1.05);
 }
 
@@ -263,11 +265,11 @@
   width: 2rem;
   height: 2rem;
   padding: 0;
-  background: var(--theme-success, #28a745);
   margin-left: 0.25rem;
-  border: none;
+  background: color-mix(in srgb, var(--theme-text, #fff) 6%, transparent);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.18));
   border-radius: 5px;
-  color: white;
+  color: var(--theme-text-secondary, rgba(255, 255, 255, 0.72));
   cursor: pointer;
   transition: background-color 0.2s, transform 0.1s;
   flex-shrink: 0;
@@ -276,7 +278,9 @@
 }
 
 .acceptButton:hover {
-  background-color: var(--theme-success, #218838);
+  background-color: color-mix(in srgb, var(--theme-success, #28a745) 18%, transparent);
+  border-color: color-mix(in srgb, var(--theme-success, #28a745) 60%, transparent);
+  color: var(--theme-success, #28a745);
   transform: scale(1.05);
 }
 
@@ -292,10 +296,10 @@
   height: 2rem;
   padding: 0;
   margin-left: 0.25rem;
-  background: var(--theme-danger, #dc3545);
-  border: none;
+  background: color-mix(in srgb, var(--theme-text, #fff) 6%, transparent);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.18));
   border-radius: 5px;
-  color: white;
+  color: var(--theme-text-secondary, rgba(255, 255, 255, 0.72));
   cursor: pointer;
   transition: background-color 0.2s, transform 0.1s;
   flex-shrink: 0;
@@ -304,7 +308,9 @@
 }
 
 .rejectButton:hover {
-  background-color: var(--theme-danger, #c82333);
+  background-color: color-mix(in srgb, var(--theme-danger, #dc3545) 18%, transparent);
+  border-color: color-mix(in srgb, var(--theme-danger, #dc3545) 60%, transparent);
+  color: var(--theme-danger, #dc3545);
   transform: scale(1.05);
 }
 
@@ -319,10 +325,10 @@
   width: 2rem;
   height: 2rem;
   padding: 0;
-  background: var(--theme-primary, #d4af37);
-  border: none;
+  background: color-mix(in srgb, var(--theme-text, #fff) 6%, transparent);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.18));
   border-radius: 5px;
-  color: #000;
+  color: var(--theme-text-secondary, rgba(255, 255, 255, 0.72));
   cursor: pointer;
   transition: background-color 0.2s, transform 0.1s;
   flex-shrink: 0;
@@ -331,7 +337,9 @@
 }
 
 .editButton:hover {
-  background-color: var(--theme-primary-hover, #e8c547);
+  background-color: color-mix(in srgb, var(--theme-primary, #d4af37) 18%, transparent);
+  border-color: color-mix(in srgb, var(--theme-primary, #d4af37) 60%, transparent);
+  color: var(--theme-primary, #d4af37);
   transform: scale(1.05);
 }
 

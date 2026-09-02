@@ -115,7 +115,7 @@
 
 .searchInput:focus {
   outline: none;
-  border-color: var(--theme-primary, rgba(212, 175, 55, 0.6));
+  border-color: var(--theme-primary, color-mix(in srgb, var(--theme-primary) 60%, transparent));
   background-color: rgba(0, 0, 0, 0.55);
 }
 
@@ -231,7 +231,7 @@
   overflow-x: hidden;
   height: auto;
   scrollbar-width: thin;
-  scrollbar-color: var(--theme-primary-focus, rgba(212, 175, 55, 0.3))
+  scrollbar-color: var(--theme-primary-focus, color-mix(in srgb, var(--theme-primary) 30%, transparent))
     rgba(0, 0, 0, 0.3);
 }
 
@@ -245,7 +245,7 @@
 }
 
 .cardListContents::-webkit-scrollbar-thumb {
-  background: var(--theme-primary-focus, rgba(212, 175, 55, 0.3));
+  background: var(--theme-primary-focus, color-mix(in srgb, var(--theme-primary) 30%, transparent));
   border-radius: 6px;
 }
 

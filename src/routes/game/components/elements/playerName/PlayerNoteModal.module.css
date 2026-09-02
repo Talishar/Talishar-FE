@@ -132,6 +132,6 @@
 }
 
 .buttonSave:hover {
-  background-color: var(--theme-primary-focus, rgba(212, 175, 55, 0.12));
+  background-color: var(--theme-primary-focus, color-mix(in srgb, var(--theme-primary) 12%, transparent));
   color: var(--theme-primary, #d4af37);
 }

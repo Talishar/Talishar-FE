@@ -167,10 +167,10 @@
 @keyframes rustPulse {
   0%,
   100% {
-    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0);
+    box-shadow: 0 0 0 0 transparent;
   }
   50% {
-    box-shadow: 0 0 0 6px rgba(212, 175, 55, 0.35);
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--theme-primary) 35%, transparent);
   }
 }
 

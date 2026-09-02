@@ -14,16 +14,16 @@
   width: min(920px, 100%);
   max-height: calc(100vh - 2rem);
   overflow-y: auto;
-  border: 1px solid rgba(212, 175, 55, 0.2);
+  border: 1px solid color-mix(in srgb, var(--theme-primary) 20%, transparent);
   border-radius: 14px;
   background: radial-gradient(
       circle at 50% 0%,
-      rgba(212, 175, 55, 0.12),
+      color-mix(in srgb, var(--theme-primary) 12%, transparent),
       transparent 42%
     ),
     #111318;
   color: #f3f3f3;
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.72), 0 0 32px rgba(212, 175, 55, 0.05);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.72), 0 0 32px color-mix(in srgb, var(--theme-primary) 5%, transparent);
   user-select: none;
   -webkit-user-select: none;
 }

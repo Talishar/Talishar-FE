@@ -12,7 +12,7 @@
   font-size: 1.5rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
-  color: #e8d5a3;
+  color: var(--theme-primary, #e8d5a3);
 }
 
 .subtitle {
@@ -29,7 +29,7 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #c9a84c;
+  background: var(--theme-primary, #c9a84c);
   animation: dotBounce 1.2s ease-in-out infinite;
 }
 

@@ -1251,7 +1251,7 @@ button.secondary:hover {
 .disclaimerAcceptButtons button:hover {
   background-color: var(--primary-hover);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--theme-primary) 30%, transparent);
 }
 
 .disclaimerButtons button {

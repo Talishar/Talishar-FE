@@ -122,7 +122,7 @@
   min-height: 0;
   /* Custom scrollbar */
   scrollbar-width: thin;
-  scrollbar-color: var(--theme-primary-focus, rgba(212, 175, 55, 0.3))
+  scrollbar-color: var(--theme-primary-focus, color-mix(in srgb, var(--theme-primary) 30%, transparent))
     rgba(0, 0, 0, 0.3);
 }
 
@@ -136,7 +136,7 @@
 }
 
 .activeLayersInner::-webkit-scrollbar-thumb {
-  background: var(--theme-primary-focus, rgba(212, 175, 55, 0.3));
+  background: var(--theme-primary-focus, color-mix(in srgb, var(--theme-primary) 30%, transparent));
   border-radius: 5px;
 }
 

@@ -185,8 +185,8 @@
   justify-content: center;
   width: 2rem;
   height: 2rem;
-  background: rgba(212, 105, 31, 0.15);
-  border: 2px solid var(--theme-primary-focus);
+  background: var(--theme-form-background, #2a2a2a);
+  border: 2px solid var(--theme-border, rgba(255, 255, 255, 0.18));
   color: var(--theme-primary);
   cursor: pointer;
   border-radius: 5px;
@@ -198,7 +198,7 @@
   line-height: 0;
 
   &:hover:not(:disabled) {
-    background: rgba(212, 105, 31, 0.3);
+    background: var(--theme-form-active, #3a3a3a);
     border-color: var(--theme-primary);
     transform: scale(1.05);
     box-shadow: 0 0 10px var(--theme-primary-focus);
@@ -223,8 +223,8 @@
 .buttonFull {
   width: 100%;
   padding: 0.75rem;
-  background: rgba(212, 105, 31, 0.15);
-  border: 2px solid var(--theme-primary-focus);
+  background: var(--theme-form-background, #2a2a2a);
+  border: 2px solid var(--theme-border, rgba(255, 255, 255, 0.18));
   color: var(--theme-primary);
   cursor: pointer;
   border-radius: 5px;
@@ -236,7 +236,7 @@
   z-index: 20;
 
   &:hover:not(:disabled) {
-    background: rgba(212, 105, 31, 0.3);
+    background: var(--theme-form-active, #3a3a3a);
     border-color: var(--theme-primary);
     box-shadow: 0 4px 12px var(--theme-primary-focus);
     transform: translateY(-2px);
@@ -285,8 +285,8 @@
   width: 1.25rem;
   height: 1.25rem;
   border-radius: 50%;
-  background: rgba(212, 105, 31, 0.2);
-  border: 1px solid var(--theme-primary-focus);
+  background: var(--theme-form-background, #2a2a2a);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.18));
   color: var(--theme-primary);
   font-size: 0.75rem;
   font-weight: bold;
@@ -301,7 +301,7 @@
   margin-bottom: 0 !important;
 
   &:hover {
-    background: rgba(212, 105, 31, 0.4);
+    background: var(--theme-form-active, #3a3a3a);
     border-color: var(--theme-primary);
     box-shadow: 0 0 6px var(--theme-primary-focus);
   }
@@ -359,8 +359,8 @@
 .tooltipCode {
   font-family: monospace;
   font-size: 0.8rem;
-  color: #f0c070;
-  background: rgba(240, 192, 112, 0.1);
+  color: var(--theme-warning, #f0c070);
+  background: color-mix(in srgb, var(--theme-warning, #f0c070) 10%, transparent);
   padding: 0.1rem 0.35rem;
   border-radius: 5px;
   width: fit-content;

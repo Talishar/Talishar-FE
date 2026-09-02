@@ -96,7 +96,7 @@
 }
 
 .replaysStatus {
-  color: var(--theme-warning-accent, #ffcf4f);
+  color: var(--theme-primary, #f0c94d);
   font-size: 0.82rem;
 }
 
@@ -142,7 +142,7 @@
 }
 
 .slotSegmentFavorite {
-  background: #f0c94d;
+  background: var(--theme-primary, #f0c94d);
 }
 
 .slotMeterNote {
@@ -210,7 +210,7 @@
 }
 .replayNumber {
   font-weight: 700;
-  color: var(--theme-warning-accent, #ffcf4f);
+  color: var(--theme-primary, #f0c94d);
 }
 .replayPlayers {
   grid-column: 1 / -1;
@@ -262,9 +262,9 @@
 
 .favoriteButton:hover:not(:disabled),
 .favoriteActive {
-  background: rgba(240, 201, 77, 0.16) !important;
-  border-color: #f0c94d;
-  color: #f0c94d;
+  background: color-mix(in srgb, var(--theme-primary, #f0c94d) 16%, transparent) !important;
+  border-color: var(--theme-primary, #f0c94d);
+  color: var(--theme-primary, #f0c94d);
 }
 
 .favoriteButton:hover:not(:disabled) svg,
@@ -485,8 +485,8 @@
   margin: 1rem auto;
   padding: 1.5rem;
   border-radius: 6px;
-  color: var(--theme-warning-text, #ffc107);
-  border: 1px solid var(--theme-warning-border-light, rgba(255, 152, 0, 0.3));
+  color: var(--theme-warning, #f59e0b);
+  border: 1px solid color-mix(in srgb, var(--theme-warning, #f59e0b) 30%, transparent);
   line-height: 1.8;
 }
 
@@ -494,7 +494,7 @@
   display: block;
   margin-bottom: 1rem;
   font-size: 1.1em;
-  color: var(--theme-warning-accent, #ffb74d);
+  color: var(--theme-warning, #f59e0b);
 }
 
 .betaDisclaimer p {
@@ -512,13 +512,13 @@
 }
 
 .betaDisclaimer a {
-  color: var(--theme-warning-accent, #ffb74d);
+  color: var(--theme-warning, #f59e0b);
   text-decoration: none;
   font-weight: 600;
   transition: color 0.2s ease;
 }
 
 .betaDisclaimer a:hover {
-  color: var(--theme-warning-accent-light, #ffd54f);
+  color: var(--theme-warning, #f59e0b);
   text-decoration: underline;
 }

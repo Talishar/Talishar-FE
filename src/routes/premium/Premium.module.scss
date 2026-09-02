@@ -114,7 +114,7 @@
 
 .tierCard.recommended {
   border-color: var(--theme-primary);
-  box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--theme-primary) 15%, transparent);
 }
 
 .recommendedBadge {
@@ -329,7 +329,7 @@
   padding: 1rem;
   background: var(--theme-section-background-transparent);
   border-radius: 16px;
-  border: 1px solid rgba(212, 175, 55, 0.1);
+  border: 1px solid color-mix(in srgb, var(--theme-primary) 10%, transparent);
 }
 
 .ctaSection h2 {

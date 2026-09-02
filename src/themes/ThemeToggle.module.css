@@ -85,7 +85,7 @@
 }
 
 .option:hover:not(.optionLocked) {
-  background: var(--dropdown-hover-background-color, rgba(212, 175, 55, 0.15));
+  background: var(--dropdown-hover-background-color, color-mix(in srgb, var(--theme-primary) 15%, transparent));
 }
 
 .optionSelected {
