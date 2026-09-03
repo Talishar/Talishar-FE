@@ -83,6 +83,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.15s ease;
+  margin-bottom: 0 !important;
 }
 
 .rejoinButton:hover:not(:disabled) {
@@ -105,6 +106,7 @@
   font-size: 0.82rem;
   cursor: pointer;
   transition: all 0.15s ease;
+  margin-bottom: 0 !important;
 }
 
 .dismissButton:hover:not(:disabled) {
