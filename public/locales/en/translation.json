@@ -1259,6 +1259,8 @@
   },
   "PASS_TURN_DISPLAY": {
     "ADVANCE_REPLAY": "Advance replay",
+    "AUTO": "AUTO",
+    "AUTO_PASS_CANCEL": "Auto-passing until end of turn - click to stop",
     "BLOCK": "Block",
     "END_TURN": "end turn",
     "PASS": "PASS",
@@ -1271,6 +1273,7 @@
     "REACTION": "Reaction",
     "REPLAY": "Replay",
     "TITLE": "{{subtitle}} - Pass Priority - Space",
+    "TITLE_HOLD": "{{subtitle}} - Pass Priority - Space - Hold to auto-pass until end of turn",
     "WAIT": "WAIT"
   },
   "PLAY": {

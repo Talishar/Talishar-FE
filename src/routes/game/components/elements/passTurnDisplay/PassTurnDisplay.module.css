@@ -87,6 +87,8 @@
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),
     inset 0 -2px 4px rgba(0, 0, 0, 0.3);
   user-select: none;
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
   transition: filter 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
 }
 
@@ -212,7 +214,10 @@
   justify-content: center;
   min-width: 100px;
   padding: 0.55rem 1.5rem;
-  background-color: rgba(var(--theme-sunken-rgb), calc(0.3 * var(--theme-sunken-alpha)));
+  background-color: rgba(
+    var(--theme-sunken-rgb),
+    calc(0.3 * var(--theme-sunken-alpha))
+  );
   color: var(--theme-text-secondary);
   border: 1px solid rgba(var(--theme-on-surface-rgb), 0.15);
   border-radius: 6px;
@@ -291,5 +296,60 @@
   .subThing,
   .spectatorPlayerName {
     display: none;
+  }
+}
+
+.passTurnDisplayActive::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background: rgba(255, 255, 255, 0.3);
+  transform: scaleX(0);
+  transform-origin: left center;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.passTurnDisplayActive.charging::before {
+  opacity: 1;
+  animation: passHoldCharge var(--pass-hold-charge-duration, 320ms) linear
+    forwards;
+}
+
+.passTurnDisplay.armedIdle {
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  color: #e05252;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.07) 0%,
+    rgba(255, 255, 255, 0.03) 100%
+  );
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition: color 0.15s ease;
+}
+
+.passTurnDisplay.armedIdle:hover,
+.passTurnDisplay.armedIdle:focus,
+.passTurnDisplay.armedIdle:active {
+  border: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.07) 0%,
+    rgba(255, 255, 255, 0.03) 100%
+  );
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  color: #f06a6a;
+}
+
+@keyframes passHoldCharge {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
   }
 }
