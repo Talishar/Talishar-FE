@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  useMemo,
+  useRef
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { submitButton, getGameInfo } from 'features/game/GameSlice';
 import { useAppSelector, useAppDispatch } from 'app/Hooks';
@@ -20,11 +26,22 @@ import {
 import { AUTO_PASS_TURN } from 'features/options/constants';
 import { useReplayPlayback } from '../../../play/ReplayPlaybackContext';
 
-const LONG_PRESS_MS = 500;
+const MOUSE_LONG_PRESS_MS = 500;
+const TOUCH_LONG_PRESS_MS = 800;
 const HOLD_HINT_DELAY_MS = 180;
-const HOLD_CHARGE_STYLE = {
-  '--pass-hold-charge-duration': `${LONG_PRESS_MS - HOLD_HINT_DELAY_MS}ms`
-} as React.CSSProperties;
+const HOLD_MOVE_TOLERANCE_PX = 12;
+const TOUCH_HOLD_MOVE_TOLERANCE_PX = 18;
+
+type HoldSession = {
+  pointerId: number | null;
+  origin: { x: number; y: number } | null;
+  tolerance: number;
+  thresholdMs: number;
+  startedAt: number;
+  hintShown: boolean;
+  frame: number | null;
+  onComplete: () => void;
+};
 
 function passSubtitle(
   turnPhase: string | undefined,
@@ -83,6 +100,9 @@ export default function PassTurnDisplay() {
   const [isPassClickDebounced, setIsPassClickDebounced] =
     useState<boolean>(false);
   const [isChargingHold, setIsChargingHold] = useState<boolean>(false);
+  const [holdChargeMs, setHoldChargeMs] = useState<number>(
+    MOUSE_LONG_PRESS_MS - HOLD_HINT_DELAY_MS
+  );
   const [playPassTurnSound] = useSound(passTurnSound);
   const {
     activateReplayControl,
@@ -97,10 +117,10 @@ export default function PassTurnDisplay() {
 
   // Holds the debounce timer so it can be cleared on unmount (prevents setState after unmount).
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  // Long-press timer, plus a flag so the click that follows a completed hold is swallowed.
-  const holdTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  // Separate timer for showing the charge bar, so a quick click never sees it.
-  const holdHintTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // The in-flight long press, plus the teardown for the listeners watching it.
+  const holdSessionRef = useRef<HoldSession | null>(null);
+  const holdDetachRef = useRef<(() => void) | null>(null);
+  // Flag so the click that follows a completed hold is swallowed.
   const holdCompletedRef = useRef<boolean>(false);
 
   const preventPassPrompt = useAppSelector(
@@ -138,8 +158,11 @@ export default function PassTurnDisplay() {
   useEffect(
     () => () => {
       if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
-      if (holdTimerRef.current) clearTimeout(holdTimerRef.current);
-      if (holdHintTimerRef.current) clearTimeout(holdHintTimerRef.current);
+      const session = holdSessionRef.current;
+      if (session?.frame != null) cancelAnimationFrame(session.frame);
+      holdSessionRef.current = null;
+      holdDetachRef.current?.();
+      holdDetachRef.current = null;
     },
     []
   );
@@ -203,32 +226,101 @@ export default function PassTurnDisplay() {
     !preventPassPrompt &&
     !showAreYouSureModal;
 
-  const cancelHold = useCallback(() => {
-    if (holdTimerRef.current) {
-      clearTimeout(holdTimerRef.current);
-      holdTimerRef.current = null;
-    }
-    if (holdHintTimerRef.current) {
-      clearTimeout(holdHintTimerRef.current);
-      holdHintTimerRef.current = null;
-    }
-    setIsChargingHold((charging) => (charging ? false : charging));
+  const endHoldSession = useCallback(() => {
+    const session = holdSessionRef.current;
+    if (session?.frame != null) cancelAnimationFrame(session.frame);
+    holdSessionRef.current = null;
+    holdDetachRef.current?.();
+    holdDetachRef.current = null;
   }, []);
 
+  const cancelHold = useCallback(() => {
+    endHoldSession();
+    setIsChargingHold((charging) => (charging ? false : charging));
+  }, [endHoldSession]);
+
   const startHold = useCallback(
-    (onComplete: () => void) => {
+    (
+      onComplete: () => void,
+      options?: {
+        pointerId?: number;
+        pointerType?: string;
+        origin?: { x: number; y: number };
+      }
+    ) => {
       cancelHold();
-      holdHintTimerRef.current = setTimeout(() => {
-        holdHintTimerRef.current = null;
-        setIsChargingHold(true);
-      }, HOLD_HINT_DELAY_MS);
-      holdTimerRef.current = setTimeout(() => {
-        holdTimerRef.current = null;
-        setIsChargingHold(false);
-        onComplete();
-      }, LONG_PRESS_MS);
+      const isTouch =
+        options?.pointerType !== undefined && options.pointerType !== 'mouse';
+      const thresholdMs = isTouch ? TOUCH_LONG_PRESS_MS : MOUSE_LONG_PRESS_MS;
+      const session: HoldSession = {
+        pointerId: options?.pointerId ?? null,
+        origin: options?.origin ?? null,
+        tolerance: isTouch
+          ? TOUCH_HOLD_MOVE_TOLERANCE_PX
+          : HOLD_MOVE_TOLERANCE_PX,
+        thresholdMs,
+        startedAt: performance.now(),
+        hintShown: false,
+        frame: null,
+        onComplete
+      };
+      holdSessionRef.current = session;
+      setHoldChargeMs(thresholdMs - HOLD_HINT_DELAY_MS);
+
+      const isOtherPointer = (event: Event) => {
+        const pointerId = (event as PointerEvent).pointerId;
+        return (
+          session.pointerId !== null &&
+          pointerId !== undefined &&
+          pointerId !== session.pointerId
+        );
+      };
+      const stop = (event: Event) => {
+        if (isOtherPointer(event)) return;
+        cancelHold();
+      };
+      const onPointerMove = (event: PointerEvent) => {
+        if (isOtherPointer(event)) return;
+        const origin = session.origin;
+        if (!origin) return;
+        const distance = Math.hypot(
+          event.clientX - origin.x,
+          event.clientY - origin.y
+        );
+        if (distance > session.tolerance) cancelHold();
+      };
+      window.addEventListener('pointerup', stop);
+      window.addEventListener('pointercancel', stop);
+      window.addEventListener('pointermove', onPointerMove, { passive: true });
+      window.addEventListener('scroll', stop, true);
+      document.addEventListener('visibilitychange', stop);
+      holdDetachRef.current = () => {
+        window.removeEventListener('pointerup', stop);
+        window.removeEventListener('pointercancel', stop);
+        window.removeEventListener('pointermove', onPointerMove);
+        window.removeEventListener('scroll', stop, true);
+        document.removeEventListener('visibilitychange', stop);
+      };
+
+      const tick = () => {
+        if (holdSessionRef.current !== session) return;
+        const elapsed = performance.now() - session.startedAt;
+        if (!session.hintShown && elapsed >= HOLD_HINT_DELAY_MS) {
+          session.hintShown = true;
+          setIsChargingHold(true);
+        }
+        if (elapsed >= session.thresholdMs) {
+          session.frame = null;
+          endHoldSession();
+          setIsChargingHold(false);
+          session.onComplete();
+          return;
+        }
+        session.frame = requestAnimationFrame(tick);
+      };
+      session.frame = requestAnimationFrame(tick);
     },
-    [cancelHold]
+    [cancelHold, endHoldSession]
   );
 
   const disarmHold = useCallback(
@@ -236,6 +328,14 @@ export default function PassTurnDisplay() {
     [setAutoPassTurn]
   );
   const armHold = useCallback(() => setAutoPassTurn(true), [setAutoPassTurn]);
+
+  const holdChargeStyle = useMemo(
+    () =>
+      ({
+        '--pass-hold-charge-duration': `${holdChargeMs}ms`
+      } as React.CSSProperties),
+    [holdChargeMs]
+  );
 
   // The server clears the flag in StartTurnAbilities, so the hold expires with
   // the turn on its own. This only mirrors that locally, so the box drops out of
@@ -321,10 +421,14 @@ export default function PassTurnDisplay() {
   }, [cancelHold]);
 
   const onPassPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (event.button !== 0) return;
+    if (event.button !== 0 || !event.isPrimary) return;
     holdCompletedRef.current = false;
     if (!canHoldToAlwaysPass) return;
-    startHold(onHoldComplete);
+    startHold(onHoldComplete, {
+      pointerId: event.pointerId,
+      pointerType: event.pointerType,
+      origin: { x: event.clientX, y: event.clientY }
+    });
   };
 
   const onPassClick = () => {
@@ -398,7 +502,7 @@ export default function PassTurnDisplay() {
             [styles.replayPlaying]: isReplay && isReplayPlaying,
             [styles.charging]: isChargingHold
           })}
-          style={HOLD_CHARGE_STYLE}
+          style={holdChargeStyle}
           onPointerDown={onPassPointerDown}
           onPointerUp={cancelHold}
           onPointerLeave={cancelHold}
