@@ -18,6 +18,7 @@ import useSetting from 'hooks/useSetting';
 import { IS_STREAMER_MODE } from 'features/options/constants';
 import { Card } from 'features/Card';
 import { isMeldCard } from 'constants/meldCards';
+import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 
 const emptyCardArray: Card[] = [];
 
@@ -132,7 +133,7 @@ export default function LastPlayed() {
             onClick={() => setIndex((i) => i - 1)}
             aria-label={t('LAST_PLAYED.PREVIOUS_CARD')}
           >
-            &#8592;
+            <FaArrowLeft />
           </button>
           <button
             className={styles.arrowBtn}
@@ -140,7 +141,7 @@ export default function LastPlayed() {
             onClick={() => setIndex((i) => i + 1)}
             aria-label={t('LAST_PLAYED.NEXT_CARD')}
           >
-            &#8594;
+            <FaArrowRight />
           </button>
         </div>
       </div>

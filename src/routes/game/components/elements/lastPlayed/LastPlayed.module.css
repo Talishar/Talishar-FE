@@ -24,13 +24,19 @@
 }
 
 .arrowBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.6em;
+  height: 1.6em;
+  flex: 0 0 auto;
   background: none;
   border: none;
   color: inherit;
   cursor: pointer;
-  font-size: 1.3em;
+  font-size: 1.1em;
   opacity: 0.5;
-  padding: 0 0.25em;
+  padding: 0;
   line-height: 1;
   transition: opacity 0.15s;
   margin-bottom: 0;
