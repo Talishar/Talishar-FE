@@ -27,6 +27,7 @@ export const HIDE_HAND_FROM_FRIENDS = 'HideHandFromFriends';
 export const HIDE_GAMES_FROM_FRIENDS = 'HideGamesFromFriends';
 export const GEMS_OFF_BY_DEFAULT = 'GemsOffByDefault';
 export const AUTO_PASS_TURN = 'AutoPassTurn';
+export const DISABLE_HOLD_TO_AUTO_PASS = 'DisableHoldToAutoPass';
 
 export enum HOLD_PRIORITY_ENUM {
   AUTO = 0,

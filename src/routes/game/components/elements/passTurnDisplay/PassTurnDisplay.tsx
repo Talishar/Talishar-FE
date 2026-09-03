@@ -23,7 +23,10 @@ import {
   settingsUpdated,
   updateOptions
 } from 'features/options/optionsSlice';
-import { AUTO_PASS_TURN } from 'features/options/constants';
+import {
+  AUTO_PASS_TURN,
+  DISABLE_HOLD_TO_AUTO_PASS
+} from 'features/options/constants';
 import { useReplayPlayback } from '../../../play/ReplayPlaybackContext';
 
 const MOUSE_LONG_PRESS_MS = 500;
@@ -135,6 +138,10 @@ export default function PassTurnDisplay() {
   // persisted it to the account and leaked auto-passing into later games.
   const autoPassTurnSetting = useSetting({ settingName: AUTO_PASS_TURN });
   const isHoldArmed = autoPassTurnSetting?.value === '1';
+  const holdToAutoPassDisabledSetting = useSetting({
+    settingName: DISABLE_HOLD_TO_AUTO_PASS
+  });
+  const isHoldToAutoPassDisabled = holdToAutoPassDisabledSetting?.value === '1';
 
   const dispatch = useAppDispatch();
 
@@ -221,6 +228,7 @@ export default function PassTurnDisplay() {
 
   const canHoldToAlwaysPass =
     canPassPhase === true &&
+    !isHoldToAutoPassDisabled &&
     !isReplay &&
     playerID !== 3 &&
     !preventPassPrompt &&
@@ -327,6 +335,10 @@ export default function PassTurnDisplay() {
     () => setAutoPassTurn(false),
     [setAutoPassTurn]
   );
+
+  useEffect(() => {
+    if (isHoldToAutoPassDisabled && isHoldArmed) disarmHold();
+  }, [isHoldToAutoPassDisabled, isHoldArmed, disarmHold]);
   const armHold = useCallback(() => setAutoPassTurn(true), [setAutoPassTurn]);
 
   const holdChargeStyle = useMemo(

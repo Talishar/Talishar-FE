@@ -1606,6 +1606,8 @@
     "DISABLE_GLOBAL_STATS": "Disable Global Stats",
     "DISABLE_GLOBAL_STATS_TOOLTIP": "Disables sending game statistics to FaB Insights and FaBlazing for stats tracking.",
     "DISABLE_HERO_INTRO_ANIMATION": "Disable Hero Intro Animation",
+    "DISABLE_HOLD_TO_AUTO_PASS": "Disable Hold to Auto-Pass",
+    "DISABLE_HOLD_TO_AUTO_PASS_TOOLTIP": "Turns off the gesture that activates auto-pass when you hold Space or hold the PASS button. Holding then just passes priority once, like a normal press.",
     "DISABLE_PARTICLE_EFFECTS": "Disable Particle Effects",
     "GAME_SETTINGS": "Game Settings",
     "GEMS_OFF_BY_DEFAULT": "Start Gems Switched Off",
