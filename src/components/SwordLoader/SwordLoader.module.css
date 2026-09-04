@@ -1,4 +1,7 @@
 .wrapper {
+  --sword-base: var(--theme-primary, #c9a84c);
+  --sword-light: color-mix(in srgb, var(--sword-base) 40%, #ffffff);
+  --sword-dark: color-mix(in srgb, var(--sword-base) 60%, #000000);
   position: relative;
   width: 120px;
   height: 120px;
@@ -14,8 +17,8 @@
   inset: 0;
   border-radius: 50%;
   border: 2px solid transparent;
-  border-top-color: #c9a84c;
-  border-right-color: rgba(201, 168, 76, 0.3);
+  border-top-color: var(--sword-base);
+  border-right-color: color-mix(in srgb, var(--sword-base) 30%, transparent);
   animation: spinRing 1.4s linear infinite;
 }
 
@@ -25,14 +28,16 @@
   inset: 10px;
   border-radius: 50%;
   border: 1px solid transparent;
-  border-bottom-color: rgba(201, 168, 76, 0.5);
-  border-left-color: rgba(201, 168, 76, 0.2);
+  border-bottom-color: color-mix(in srgb, var(--sword-base) 50%, transparent);
+  border-left-color: color-mix(in srgb, var(--sword-base) 20%, transparent);
   animation: spinRing 2s linear infinite reverse;
 }
 
 .sword {
   animation: swordPulse 1.8s ease-in-out infinite;
-  filter: drop-shadow(0 0 8px rgba(201, 168, 76, 0.6));
+  filter: drop-shadow(
+    0 0 8px color-mix(in srgb, var(--sword-base) 60%, transparent)
+  );
 }
 
 @keyframes spinRing {

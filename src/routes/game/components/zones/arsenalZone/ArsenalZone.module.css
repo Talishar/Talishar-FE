@@ -19,7 +19,7 @@
   align-items: center;
   position: relative;
   border-radius: 0.5em;
-  background: rgba(50, 50, 50, 0.5);
+  background: var(--theme-zone-placeholder);
   color: var(--white);
 }
 
@@ -66,8 +66,8 @@
 }
 
 .buttonDiv {
-  background-color: rgba(255, 255, 255, 0.07);
-  color: #e0e0e0;
+  background-color: rgba(var(--theme-on-surface-rgb), 0.07);
+  color: var(--theme-text-secondary);
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -75,7 +75,7 @@
   min-width: 4vh;
   height: 32px;
   border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.15);
   flex-basis: auto;
   padding: 8px 16px;
   width: auto;
@@ -86,9 +86,9 @@
 }
 
 .buttonDiv:hover {
-  background-color: rgba(255, 255, 255, 0.15);
-  color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(var(--theme-on-surface-rgb), 0.15);
+  color: var(--theme-text);
+  border-color: rgba(var(--theme-on-surface-rgb), 0.3);
   cursor: pointer;
 }
 

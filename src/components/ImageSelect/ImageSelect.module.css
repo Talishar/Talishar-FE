@@ -26,12 +26,12 @@
 .selectTrigger:focus {
   outline: none;
   border-color: var(--theme-primary, #d4af37);
-  box-shadow: 0 0 0 3px var(--theme-primary-focus, rgba(212, 175, 55, 0.1));
+  box-shadow: 0 0 0 3px var(--theme-primary-focus, color-mix(in srgb, var(--theme-primary) 10%, transparent));
 }
 
 .selectTrigger.open {
   border-color: var(--theme-primary, #d4af37);
-  background: var(--theme-form-active, rgba(212, 175, 55, 0.1));
+  background: var(--theme-form-active, color-mix(in srgb, var(--theme-primary) 10%, transparent));
 }
 
 .selectTrigger.invalid {
@@ -108,22 +108,22 @@
 }
 
 .option:hover {
-  background-color: var(--theme-form-active, rgba(212, 175, 55, 0.1));
+  background-color: var(--theme-form-active, color-mix(in srgb, var(--theme-primary) 10%, transparent));
 }
 
 .option:focus {
   outline: none;
-  background-color: var(--theme-form-active, rgba(212, 175, 55, 0.1));
+  background-color: var(--theme-form-active, color-mix(in srgb, var(--theme-primary) 10%, transparent));
 }
 
 .option.selected {
-  background-color: var(--theme-primary-focus, rgba(212, 175, 55, 0.2));
+  background-color: var(--theme-primary-focus, color-mix(in srgb, var(--theme-primary) 20%, transparent));
   color: var(--theme-primary, #d4af37);
   font-weight: 500;
 }
 
 .option.selected:hover {
-  background-color: var(--theme-primary-focus, rgba(212, 175, 55, 0.3));
+  background-color: var(--theme-primary-focus, color-mix(in srgb, var(--theme-primary) 30%, transparent));
 }
 
 /* Scrollbar styling */

@@ -4,7 +4,7 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  background: rgba(50, 50, 50, 0.5);
+  background: var(--theme-zone-placeholder);
   color: var(--white);
   border-radius: 0.25em;
   grid-area: zonecounts;

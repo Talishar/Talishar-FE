@@ -71,7 +71,7 @@
 .breakChain {
   position: relative;
   right: 0px;
-  background-color: black;
+  background-color: var(--near-black);
   width: 3.8vh;
   width: 3.8dvh;
   height: 3.8vh;
@@ -87,7 +87,7 @@
 
 .breakChain:hover {
   background-color: var(--theme-primary, #d4af37);
-  color: black;
+  color: var(--theme-primary-inverse);
 }
 
 .breakChainDisabled {

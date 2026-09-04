@@ -6,7 +6,7 @@
   bottom: 10vh;
   left: 8vw;
   right: 12vw;
-  background-color: black;
+  background-color: var(--near-black);
   padding: 1.5rem;
   border: 2px solid var(--theme-border);
   border-radius: 10px;
@@ -45,7 +45,7 @@
   align-items: center;
   padding: 1rem 1.5rem 0.5em 1.5rem;
   margin: -1.5rem -1.5rem 0.5em -1.5rem;
-  background-color: black;
+  background-color: var(--near-black);
   z-index: 1000;
 }
 
@@ -83,7 +83,7 @@
 
 .cardListCloseIcon:hover {
   background-color: var(--theme-primary);
-  color: black;
+  color: var(--theme-primary-inverse);
 }
 
 .menuOptionsWrapper {
@@ -100,8 +100,8 @@
 }
 
 .buttonDiv {
-  background-color: rgba(0, 0, 0, 0.3);
-  color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(var(--theme-sunken-rgb), calc(0.3 * var(--theme-sunken-alpha)));
+  color: rgba(var(--theme-on-surface-rgb), 0.8);
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -123,9 +123,9 @@
 }
 
 .buttonDiv:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.3);
-  color: white;
+  background-color: rgba(var(--theme-on-surface-rgb), 0.1);
+  border-color: rgba(var(--theme-on-surface-rgb), 0.3);
+  color: var(--theme-text);
   transform: translateY(-2px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
@@ -153,8 +153,8 @@
 .dropdownMenu {
   z-index: 1100;
   min-width: 210px;
-  background: #1c1c20;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: var(--theme-card-background);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.14);
   border-radius: 9px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.65);
   padding: 0.35rem;
@@ -168,7 +168,7 @@
   gap: 0.65rem;
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(var(--theme-on-surface-rgb), 0.85);
   padding: 0.65rem 1rem;
   font-size: 0.75em;
   font-family: inherit;
@@ -182,8 +182,8 @@
 }
 
 .dropdownItem:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
+  background: rgba(var(--theme-on-surface-rgb), 0.1);
+  color: var(--theme-text);
 }
 
 .dropdownIcon {
@@ -198,7 +198,7 @@
 
 .dropdownDivider {
   height: 1px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(var(--theme-on-surface-rgb), 0.1);
   margin: 0.3rem 0.5rem;
 }
 
@@ -209,14 +209,14 @@
   gap: 0.6rem;
   width: calc(100% + 3rem);
   margin: 0 -1.5rem 1rem -1.5rem;
-  background: black;
+  background: var(--near-black);
   text-decoration: none;
   flex-shrink: 0;
   transition: background 0.2s;
 }
 
 .supportCta:hover {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(var(--theme-on-surface-rgb), 0.03);
 }
 
 .supportCtaLogo {
@@ -227,7 +227,7 @@
 }
 
 .supportCtaText {
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(var(--theme-on-surface-rgb), 0.45);
   font-size: 1em;
   letter-spacing: 0.01em;
 }

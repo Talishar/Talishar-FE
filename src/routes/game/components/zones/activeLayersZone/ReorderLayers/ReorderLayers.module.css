@@ -47,7 +47,7 @@
 .number {
   border-radius: 100%;
   border-style: solid;
-  border-color: black;
+  border-color: var(--theme-contrast-inverse);
   border-width: 2px;
   display: flex;
   justify-content: center;
@@ -61,7 +61,7 @@
 }
 
 .text {
-  color: black;
+  color: var(--theme-contrast-inverse);
 }
 
 .subtitle {

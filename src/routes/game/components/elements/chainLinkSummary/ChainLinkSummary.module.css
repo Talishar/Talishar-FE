@@ -102,7 +102,7 @@
   padding: 13px 15px;
   flex-shrink: 0;
   gap: 10px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  border-bottom: 1px solid rgba(var(--theme-on-surface-rgb), 0.07);
 }
 
 .titleRow {
@@ -139,15 +139,15 @@
 }
 
 .hit {
-  color: #fca5a5;
+  color: color-mix(in srgb, #fca5a5 55%, var(--theme-text));
   background: rgba(220, 55, 55, 0.16);
   border-color: rgba(220, 55, 55, 0.5);
 }
 
 .noHit {
-  color: rgba(255, 255, 255, 0.55);
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.16);
+  color: rgba(var(--theme-on-surface-rgb), 0.55);
+  background: rgba(var(--theme-on-surface-rgb), 0.05);
+  border-color: rgba(var(--theme-on-surface-rgb), 0.16);
 }
 
 .cardListCloseIcon {
@@ -162,15 +162,15 @@
   height: 28px;
   border-radius: 5px;
   cursor: pointer;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(var(--theme-on-surface-rgb), 0.4);
   transition: background 0.15s ease, color 0.15s ease;
   font-size: 0.8rem;
   flex-shrink: 0;
 }
 
 .cardListCloseIcon:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.9);
+  background: rgba(var(--theme-on-surface-rgb), 0.1);
+  color: rgba(var(--theme-on-surface-rgb), 0.9);
 }
 
 /* ── Stat ledger (hero) ───────────────────────────────── */
@@ -178,9 +178,9 @@
   display: flex;
   align-items: stretch;
   margin: 14px 15px 2px;
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.09);
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.025);
+  background: rgba(var(--theme-on-surface-rgb), 0.025);
   overflow: hidden;
   flex-shrink: 0;
 }
@@ -199,7 +199,7 @@
   font-weight: 800;
   line-height: 1;
   font-variant-numeric: tabular-nums;
-  color: rgba(255, 255, 255, 0.94);
+  color: rgba(var(--theme-on-surface-rgb), 0.94);
 }
 
 .statLabel {
@@ -207,7 +207,7 @@
   font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(var(--theme-on-surface-rgb), 0.4);
 }
 
 /* Damage is the result - the only tinted number, in the theme gold. */
@@ -222,7 +222,7 @@
   padding: 0 2px;
   font-size: 1.05rem;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(var(--theme-on-surface-rgb), 0.3);
 }
 
 /* ── Card sections ────────────────────────────────────── */
@@ -240,7 +240,7 @@
   font-weight: 800;
   letter-spacing: 0.11em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.34);
+  color: rgba(var(--theme-on-surface-rgb), 0.34);
   padding: 10px 2px 4px;
 }
 
@@ -248,7 +248,7 @@
   padding: 24px;
   text-align: center;
   font-size: 0.82rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(var(--theme-on-surface-rgb), 0.6);
 }
 
 /* ── Rows ─────────────────────────────────────────────── */
@@ -262,7 +262,7 @@
 }
 
 .row:hover {
-  background: rgba(255, 255, 255, 0.045);
+  background: rgba(var(--theme-on-surface-rgb), 0.045);
 }
 
 .rowIcon {
@@ -277,7 +277,7 @@
   flex: 1;
   min-width: 0;
   font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.86);
+  color: rgba(var(--theme-on-surface-rgb), 0.86);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -286,7 +286,7 @@
 .rowVal {
   font-size: 0.92rem;
   font-weight: 800;
-  color: rgba(255, 255, 255, 0.92);
+  color: rgba(var(--theme-on-surface-rgb), 0.92);
   font-variant-numeric: tabular-nums;
   padding-right: 4px;
 }
@@ -294,7 +294,7 @@
 .rowValPos {
   font-size: 0.92rem;
   font-weight: 800;
-  color: #4ade80;
+  color: color-mix(in srgb, #4ade80 55%, var(--theme-text));
   font-variant-numeric: tabular-nums;
   padding-right: 4px;
 }
@@ -310,7 +310,7 @@
 .rowValNeutral {
   font-size: 0.92rem;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.35);
+  color: rgba(var(--theme-on-surface-rgb), 0.35);
   font-variant-numeric: tabular-nums;
   padding-right: 4px;
 }
@@ -319,7 +319,7 @@
   padding: 6px 8px;
   font-size: 0.8rem;
   font-style: italic;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(var(--theme-on-surface-rgb), 0.4);
 }
 
 /* ── Card art, bordered by pitch colour (red / yellow / blue) ── */

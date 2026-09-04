@@ -106,7 +106,9 @@ const SettingsPage = () => {
     hideGamesFromFriends:
       String(settingsData[optConst.HIDE_GAMES_FROM_FRIENDS]?.value) === '1',
     gemsOffByDefault:
-      String(settingsData[optConst.GEMS_OFF_BY_DEFAULT]?.value) === '1'
+      String(settingsData[optConst.GEMS_OFF_BY_DEFAULT]?.value) === '1',
+    disableHoldToAutoPass:
+      String(settingsData[optConst.DISABLE_HOLD_TO_AUTO_PASS]?.value) === '1'
   };
 
   const priorityOptions = [
@@ -321,6 +323,18 @@ const SettingsPage = () => {
                 })
               }
               ariaDisabled={true}
+            />
+            <CheckboxSetting
+              name="disableHoldToAutoPass"
+              label={t('SETTINGS.DISABLE_HOLD_TO_AUTO_PASS')}
+              tooltip={t('SETTINGS.DISABLE_HOLD_TO_AUTO_PASS_TOOLTIP')}
+              checked={initialValues.disableHoldToAutoPass}
+              onChange={() =>
+                handleSettingsChange({
+                  name: optConst.DISABLE_HOLD_TO_AUTO_PASS,
+                  value: initialValues.disableHoldToAutoPass ? '0' : '1'
+                })
+              }
             />
             <CheckboxSetting
               name="mute"

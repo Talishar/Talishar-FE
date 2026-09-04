@@ -12,7 +12,7 @@
   background-color: var(--near-black);
   --container-padding: 1vh;
   padding: var(--container-padding);
-  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
+  border: 1px solid var(--theme-border, rgba(var(--theme-on-surface-rgb), 0.2));
   border-radius: 10px;
   z-index: 900;
 }
@@ -56,8 +56,8 @@
 }
 
 .buttonDiv {
-  background-color: rgba(255, 255, 255, 0.07);
-  color: #e0e0e0;
+  background-color: rgba(var(--theme-on-surface-rgb), 0.07);
+  color: var(--theme-text-secondary);
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -65,7 +65,7 @@
   min-width: calc(6dvw * var(--card-scale));
   height: 32px;
   border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.15);
   flex-basis: auto;
   padding: 8px 16px;
   width: auto;
@@ -76,9 +76,9 @@
 }
 
 .buttonDiv:hover {
-  background-color: rgba(255, 255, 255, 0.15);
-  color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(var(--theme-on-surface-rgb), 0.15);
+  color: var(--theme-text);
+  border-color: rgba(var(--theme-on-surface-rgb), 0.3);
   cursor: pointer;
 }
 
@@ -92,13 +92,13 @@
 
 .numberInputField {
   box-sizing: border-box;
-  background-color: rgba(255, 255, 255, 0.07);
-  color: #e0e0e0;
+  background-color: rgba(var(--theme-on-surface-rgb), 0.07);
+  color: var(--theme-text-secondary);
   height: 40px;
   flex: 1;
   min-width: 0;
   border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.15);
   padding: 8px 12px;
   font-size: 1em;
   transition: border-color 0.2s ease;
@@ -106,7 +106,7 @@
 
 .numberInputField:focus {
   outline: none;
-  border-color: rgba(255, 255, 255, 0.4);
+  border-color: rgba(var(--theme-on-surface-rgb), 0.4);
 }
 
 /* Match the Submit button to the input field's box model and height */
@@ -133,7 +133,7 @@
   margin-bottom: 0;
   background: var(--theme-primary, #d4af37);
   border-color: var(--theme-primary, #d4af37);
-  color: #111;
+  color: var(--theme-primary-inverse);
   font-weight: 600;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
@@ -141,14 +141,14 @@
 .multiChooseSubmit.buttonDiv:hover:not(:disabled) {
   background: var(--theme-primary-hover, #e2c45c);
   border-color: var(--theme-primary-hover, #e2c45c);
-  color: #000;
+  color: var(--theme-primary-inverse);
 }
 
 .multiChooseSubmit.buttonDiv:disabled {
   opacity: 1;
-  background: rgba(255, 255, 255, 0.09);
-  border-color: rgba(255, 255, 255, 0.28);
-  color: rgba(255, 255, 255, 0.55);
+  background: rgba(var(--theme-on-surface-rgb), 0.09);
+  border-color: rgba(var(--theme-on-surface-rgb), 0.28);
+  color: rgba(var(--theme-on-surface-rgb), 0.55);
   box-shadow: none;
 }
 
@@ -156,7 +156,7 @@
   padding-left: 0.45em;
   margin-top: 0.4em;
   font-size: 0.85em;
-  color: rgba(224, 224, 224, 0.6);
+  color: rgba(var(--theme-on-surface-rgb), 0.6);
 }
 
 .inputPopUpCloseIcon {
@@ -175,7 +175,7 @@
 
 .inputPopUpCloseIcon:hover {
   background-color: var(--theme-primary);
-  color: black;
+  color: var(--theme-primary-inverse);
 }
 
 .contentContainer {
@@ -220,21 +220,21 @@
   height: 38px;
   margin-bottom: 0;
   padding: 7px 11px;
-  color: #e0e0e0;
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: var(--theme-text-secondary);
+  background: rgba(var(--theme-on-surface-rgb), 0.07);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.25);
   border-radius: 6px;
   font-size: 0.95rem;
 }
 
 .cardSearchInput.cardSearchInput:focus {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(236, 236, 236, 0.28);
+  box-shadow: 0 0 0 2px rgba(var(--theme-on-surface-rgb), 0.28);
 }
 
 .cardSearchCount,
 .noSearchResults {
-  color: rgba(224, 224, 224, 0.7);
+  color: rgba(var(--theme-on-surface-rgb), 0.7);
   font-size: 0.85rem;
 }
 
@@ -417,7 +417,7 @@
   background-color: var(--near-black);
   --container-padding: 1.5vh;
   padding: var(--container-padding);
-  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
+  border: 1px solid var(--theme-border, rgba(var(--theme-on-surface-rgb), 0.2));
   border-radius: 10px;
   z-index: 900;
 }
@@ -466,12 +466,12 @@
 
 .firstLabel {
   background-color: var(--theme-primary);
-  color: black;
+  color: var(--theme-primary-inverse);
   border: 1px solid var(--near-black);
 }
 
 .lastLabel {
-  background-color: black;
+  background-color: var(--near-black);
   color: var(--theme-primary);
   border: 1px solid var(--theme-primary);
 }
@@ -641,7 +641,7 @@
 }
 
 .gripIcon {
-  color: var(--white);
+  color: var(--theme-text);
   opacity: 0.8;
   transition: opacity 0.2s ease;
   width: 100%;

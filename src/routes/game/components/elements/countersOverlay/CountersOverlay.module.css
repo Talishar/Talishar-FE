@@ -543,7 +543,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0);
+  background-color: var(--near-black);
   border: var(--theme-primary) solid 1px;
   color: var(--white);
   border-radius: 5px;

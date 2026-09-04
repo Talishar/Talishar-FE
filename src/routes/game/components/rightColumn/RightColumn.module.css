@@ -134,7 +134,7 @@
   width: 100%;
   padding: 0 4px 2px;
   font-size: 0.6em;
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(var(--theme-on-surface-rgb), 0.55);
 }
 
 /* CTA - always visible, reserves space before ad network injects content */
@@ -168,7 +168,7 @@
 }
 
 .removeAdsLink {
-  color: rgba(255, 255, 255, 0.38);
+  color: rgba(var(--theme-on-surface-rgb), 0.38);
   text-decoration: none;
   font-weight: 500;
   line-height: 1;
@@ -176,6 +176,6 @@
 }
 
 .removeAdsLink:hover {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(var(--theme-on-surface-rgb), 0.6);
   text-decoration: underline;
 }

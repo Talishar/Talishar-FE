@@ -6,9 +6,9 @@
   background: linear-gradient(
     110deg,
     rgba(119, 66, 37, 0.18),
-    rgba(255, 255, 255, 0.025)
+    rgba(var(--theme-on-surface-rgb), 0.025)
   );
-  color: #eee8df;
+  color: var(--theme-text);
 }
 .card strong,
 .card b,
@@ -20,18 +20,18 @@
 }
 .card b {
   margin-top: 0.25rem;
-  color: #e8c47c;
+  color: var(--theme-primary);
   font-size: 0.85rem;
 }
 .card small {
-  color: #b9b0a5;
+  color: var(--theme-text-muted);
 }
 .track {
   height: 7px;
   margin: 0.55rem 0 0.4rem;
   overflow: hidden;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(var(--theme-on-surface-rgb), 0.1);
 }
 .track i {
   display: block;

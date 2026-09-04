@@ -32,7 +32,7 @@
 
   &:hover {
     border-color: var(--theme-primary);
-    box-shadow: 0 12px 24px rgba(212, 175, 55, 0.2);
+    box-shadow: 0 12px 24px color-mix(in srgb, var(--theme-primary) 20%, transparent);
 
     .guideImage {
       transform: scale(1.05);
@@ -50,8 +50,8 @@
   overflow: hidden;
   background: linear-gradient(
     135deg,
-    rgba(212, 175, 55, 0.05),
-    rgba(212, 175, 55, 0.1)
+    color-mix(in srgb, var(--theme-primary) 5%, transparent),
+    color-mix(in srgb, var(--theme-primary) 10%, transparent)
   );
   flex-shrink: 0;
 
@@ -128,7 +128,7 @@
   &:hover {
     border-color: var(--theme-primary);
     transform: translateY(-8px);
-    box-shadow: 0 12px 24px rgba(212, 175, 55, 0.2);
+    box-shadow: 0 12px 24px color-mix(in srgb, var(--theme-primary) 20%, transparent);
 
     .guideImage {
       transform: scale(1.05);
@@ -146,8 +146,8 @@
   overflow: hidden;
   background: linear-gradient(
     135deg,
-    rgba(212, 175, 55, 0.05),
-    rgba(212, 175, 55, 0.1)
+    color-mix(in srgb, var(--theme-primary) 5%, transparent),
+    color-mix(in srgb, var(--theme-primary) 10%, transparent)
   );
   position: relative;
   flex-shrink: 0;
@@ -275,12 +275,12 @@
 
   &.freeForSupporters {
     font-size: 0.8rem;
-    background: rgba(212, 175, 55, 0.15);
+    background: color-mix(in srgb, var(--theme-primary) 15%, transparent);
     padding: 0.2rem 0.55rem;
     border-radius: 20px;
     color: var(--theme-primary);
     white-space: nowrap;
-    border: 1px solid rgba(212, 175, 55, 0.3);
+    border: 1px solid color-mix(in srgb, var(--theme-primary) 30%, transparent);
   }
 }
 
@@ -296,7 +296,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--theme-primary) 30%, transparent);
 }
 
 .loadingContainer {

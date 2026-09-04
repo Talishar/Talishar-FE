@@ -41,7 +41,7 @@
 .replayTab:hover {
   background: var(--mr-accent-fill-hover) !important;
   border-color: var(--mr-accent-border-hover) !important;
-  color: #fff !important;
+  color: var(--theme-text) !important;
   box-shadow: none !important;
   transform: none !important;
 }
@@ -143,7 +143,7 @@
   background: var(--mr-accent-fill) !important;
   background-image: none !important;
   border-color: var(--mr-accent-border-hover) !important;
-  color: #fff !important;
+  color: var(--theme-text) !important;
   box-shadow: none !important;
   transform: none !important;
 }
@@ -317,7 +317,7 @@
 .replayPanel .cameraButton:hover {
   border-color: var(--mr-accent-border-hover) !important;
   background: var(--mr-accent-fill-hover) !important;
-  color: #fff;
+  color: var(--theme-text);
   transform: none !important;
 }
 .shortcutHint {
@@ -366,7 +366,7 @@
 .replayPanel .turnMarker:hover:not(:disabled) {
   border-color: var(--mr-border-strong) !important;
   background: var(--mr-surface-raised) !important;
-  color: #fff !important;
+  color: var(--theme-text) !important;
   box-shadow: none !important;
   transform: none !important;
 }
@@ -374,7 +374,7 @@
 .replayPanel .activeTurn:hover:not(:disabled) {
   border-color: var(--mr-accent-border-hover) !important;
   background: var(--mr-accent-fill) !important;
-  color: #fff !important;
+  color: var(--theme-text) !important;
   box-shadow: none !important;
   transform: none !important;
 }
@@ -457,7 +457,7 @@
 .replayPanel .submitButton:hover:not(:disabled) {
   border-color: var(--mr-accent-border-hover) !important;
   background: var(--mr-accent-fill-hover) !important;
-  color: #fff !important;
+  color: var(--theme-text) !important;
   box-shadow: none !important;
   transform: none !important;
 }

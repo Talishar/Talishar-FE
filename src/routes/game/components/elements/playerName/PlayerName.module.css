@@ -5,8 +5,12 @@
   width: 20em;
   border-radius: 0.3em;
   font-weight: 550;
-  background-color: rgba(50, 10, 10, 0.78);
-  border: 2px solid rgba(111, 0, 0, 0.3);
+  background-color: color-mix(
+    in srgb,
+    var(--theme-card-background, #1e2329) 82%,
+    transparent
+  );
+  border: 1px solid color-mix(in srgb, var(--theme-primary) 25%, transparent);
   color: var(--secondary-inverse);
   z-index: 1;
   display: flex;
@@ -100,7 +104,7 @@
 }
 
 .dropdownButton:hover {
-  color: rgba(255, 215, 0, 0.8);
+  color: color-mix(in srgb, var(--theme-primary) 80%, transparent);
 }
 
 .dropdownArrow {
@@ -123,8 +127,12 @@
 
 .dropdown {
   position: fixed;
-  background-color: rgba(30, 10, 10, 0.95);
-  border: 2px solid rgba(111, 0, 0, 0.5);
+  background-color: color-mix(
+    in srgb,
+    var(--theme-card-background, #1e2329) 95%,
+    transparent
+  );
+  border: 2px solid color-mix(in srgb, var(--theme-primary) 55%, transparent);
   border-radius: 0.3em;
   backdrop-filter: blur(4px);
   display: flex;
@@ -144,11 +152,18 @@
 .dropdown.contributor,
 .dropdown.metafy {
   border: 2px solid var(--theme-primary-focus);
-  background: linear-gradient(rgba(30, 10, 10, 0.95), rgba(30, 10, 10, 0.95)),
+  background: linear-gradient(
+      color-mix(
+        in srgb,
+        var(--theme-card-background, #1e2329) 95%,
+        transparent
+      ),
+      color-mix(in srgb, var(--theme-card-background, #1e2329) 95%, transparent)
+    ),
     linear-gradient(
       135deg,
       var(--theme-primary-focus),
-      rgba(255, 237, 78, 0.05)
+      color-mix(in srgb, var(--theme-primary) 5%, transparent)
     );
   box-shadow: 0 0 12px var(--theme-primary-focus),
     inset 0 0 8px var(--theme-primary-focus), 0 4px 12px rgba(0, 0, 0, 0.5);
@@ -172,19 +187,19 @@
 }
 
 .dropdownOption:hover:not(.disabled) {
-  background-color: rgba(111, 0, 0, 0.3);
+  background-color: color-mix(in srgb, var(--theme-primary) 22%, transparent);
   color: var(--theme-primary);
 }
 
 .dropdownOption.disabled {
-  color: rgba(150, 150, 150, 0.7);
+  color: var(--theme-text-muted);
   cursor: pointer;
-  background-color: rgba(80, 80, 80, 0.2);
+  background-color: rgba(var(--theme-on-surface-rgb), 0.08);
 }
 
 .dropdownOption.disabled:hover {
-  color: rgba(150, 150, 150, 0.8);
-  background-color: rgba(80, 80, 80, 0.3);
+  color: var(--theme-text-secondary);
+  background-color: rgba(var(--theme-on-surface-rgb), 0.14);
 }
 
 .optionIcon {
@@ -215,7 +230,7 @@
 .playerName.pvtVoidPatron,
 .playerName.contributor,
 .playerName.metafy {
-  border: 1px solid #6e5c23;
+  border: 1px solid color-mix(in srgb, var(--theme-primary) 25%, transparent);
   box-shadow: none;
 }
 

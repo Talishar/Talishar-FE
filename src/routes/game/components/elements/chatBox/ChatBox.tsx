@@ -63,12 +63,39 @@ export default function ChatBox({
   const chatBoxRef = useRef<HTMLDivElement>(null);
   const prevChatLengthRef = useRef<number>(0);
   const prevChatFilterRef = useRef<string>('none');
+  const chatContentRef = useRef<HTMLDivElement>(null);
+  const isPinnedToBottomRef = useRef<boolean>(true);
+
+  const SCROLL_PIN_THRESHOLD = 40;
+
+  const isNearBottom = () => {
+    const el = chatBoxRef.current;
+    if (!el) return true;
+    return (
+      el.scrollHeight - el.scrollTop - el.clientHeight <= SCROLL_PIN_THRESHOLD
+    );
+  };
 
   const scrollToBottom = () => {
-    if (chatBoxRef.current) {
-      chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
-    }
+    const el = chatBoxRef.current;
+    if (!el) return;
+    el.scrollTop = el.scrollHeight;
+    isPinnedToBottomRef.current = true;
   };
+
+  const handleScroll = () => {
+    isPinnedToBottomRef.current = isNearBottom();
+  };
+
+  useEffect(() => {
+    const content = chatContentRef.current;
+    if (!content || typeof ResizeObserver === 'undefined') return;
+    const observer = new ResizeObserver(() => {
+      if (isPinnedToBottomRef.current) scrollToBottom();
+    });
+    observer.observe(content);
+    return () => observer.disconnect();
+  }, []);
 
   const streamerNameRegex = useMemo(
     () =>
@@ -126,9 +153,12 @@ export default function ChatBox({
     prevChatLengthRef.current = currentLength;
     prevChatFilterRef.current = chatFilter;
 
-    if (hasNewMessages || filterChanged || displayTyping) {
-      scrollToBottom();
-    }
+    if (!hasNewMessages && !filterChanged && !displayTyping) return;
+    if (!filterChanged && !isPinnedToBottomRef.current) return;
+
+    scrollToBottom();
+    const raf = requestAnimationFrame(scrollToBottom);
+    return () => cancelAnimationFrame(raf);
   }, [chatLog, chatFilter, displayTyping]);
 
   return (
@@ -184,19 +214,25 @@ export default function ChatBox({
         </div>
       )}
       <div className={styles.chatBoxInner}>
-        <div className={styles.chatBox} ref={chatBoxRef}>
-          <GameLogMessages
-            chatLog={chatLog}
-            chatFilter={chatFilter}
-            transformMessage={transformMessage}
-            playerNames={playerNames}
-          />
-          {displayTyping && (
-            <div className={styles.typingIndicator} ref={messagesEndRef}>
-              <em>{t('CHAT.TYPING')}</em>
-            </div>
-          )}
-          {!displayTyping && <div ref={messagesEndRef} />}
+        <div
+          className={styles.chatBox}
+          ref={chatBoxRef}
+          onScroll={handleScroll}
+        >
+          <div ref={chatContentRef}>
+            <GameLogMessages
+              chatLog={chatLog}
+              chatFilter={chatFilter}
+              transformMessage={transformMessage}
+              playerNames={playerNames}
+            />
+            {displayTyping && (
+              <div className={styles.typingIndicator} ref={messagesEndRef}>
+                <em>{t('CHAT.TYPING')}</em>
+              </div>
+            )}
+            {!displayTyping && <div ref={messagesEndRef} />}
+          </div>
         </div>
       </div>
       <ChatInput usePrimary={usePrimary} />

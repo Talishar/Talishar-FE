@@ -29,7 +29,7 @@
 }
 
 .statsSection {
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.1);
   border-radius: 8px;
   padding: 0.75rem;
   background: var(--near-black);
@@ -55,7 +55,7 @@
 }
 
 .removeAdsLink {
-  color: rgba(255, 255, 255, 0.38);
+  color: rgba(var(--theme-on-surface-rgb), 0.38);
   text-decoration: none;
   font-size: 0.58rem;
   font-weight: 500;
@@ -64,7 +64,7 @@
 }
 
 .removeAdsLink:hover {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(var(--theme-on-surface-rgb), 0.6);
   text-decoration: underline;
 }
 
@@ -91,7 +91,7 @@
 }
 
 .turnBreakdownSection {
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.1);
   border-radius: 8px;
   padding: 0.75rem;
   background: var(--near-black);
@@ -110,7 +110,7 @@
 }
 
 .subSectionHeader {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(var(--theme-on-surface-rgb), 0.6);
   font-size: 0.9em;
   font-weight: 600;
   margin: 1rem 0 0.25rem 0;
@@ -119,7 +119,7 @@
 }
 
 .infoBox {
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(var(--theme-sunken-rgb), calc(0.2 * var(--theme-sunken-alpha)));
   border-radius: 6px;
   padding: 0.5rem 0.5rem 0 0.5rem;
   display: flex;
@@ -146,7 +146,7 @@
 }
 
 .infoRow:nth-child(even) {
-  background-color: rgba(255, 255, 255, 0.03);
+  background-color: rgba(var(--theme-on-surface-rgb), 0.03);
 }
 
 .infoRow:hover {
@@ -157,7 +157,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(var(--theme-on-surface-rgb), 0.7);
   font-weight: 500;
   font-size: 1.1em;
 }
@@ -177,8 +177,8 @@
   width: 1.2em;
   height: 1.2em;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.15);
-  color: rgba(255, 255, 255, 0.6);
+  background-color: rgba(var(--theme-on-surface-rgb), 0.15);
+  color: rgba(var(--theme-on-surface-rgb), 0.6);
   font-size: 0.7em;
   font-weight: 600;
   cursor: help;
@@ -201,8 +201,8 @@
   width: 1.2em;
   height: 1.2em;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.15);
-  color: rgba(255, 255, 255, 0.6);
+  background-color: rgba(var(--theme-on-surface-rgb), 0.15);
+  color: rgba(var(--theme-on-surface-rgb), 0.6);
   font-size: 0.7em;
   font-weight: 600;
   cursor: help;
@@ -264,7 +264,7 @@
 }
 
 .heroPortraitsContainer {
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(var(--theme-sunken-rgb), calc(0.2 * var(--theme-sunken-alpha)));
   border-radius: 6px;
   padding: 1rem;
   margin-top: 1rem;
@@ -297,7 +297,7 @@
 }
 
 .heroLabel {
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(var(--theme-on-surface-rgb), 0.7);
   font-size: 0.95em;
   font-weight: 500;
   margin: 0;
@@ -360,7 +360,7 @@
   justify-content: space-between;
   gap: 1rem;
   font-size: 0.9em;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(var(--theme-on-surface-rgb), 0.5);
   font-style: italic;
   margin-top: 0.5rem;
   padding: 0.4rem 0.6rem;
@@ -395,7 +395,7 @@
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(var(--theme-on-surface-rgb), 0.9);
   font-size: 1em;
 }
 
@@ -441,12 +441,12 @@
 }
 
 .cardTable thead th {
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(var(--theme-sunken-rgb), calc(0.5 * var(--theme-sunken-alpha)));
   padding: 0.6rem 0.4rem;
   text-align: center;
   font-weight: 600;
   color: var(--theme-primary);
-  border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+  border-bottom: 2px solid rgba(var(--theme-on-surface-rgb), 0.15);
   font-size: 1.1em;
   white-space: nowrap;
 }
@@ -469,7 +469,7 @@
 }
 
 .cardTable tbody tr:nth-child(even) {
-  background-color: rgba(255, 255, 255, 0.03);
+  background-color: rgba(var(--theme-on-surface-rgb), 0.03);
 }
 
 .cardTable tbody tr:nth-child(even):hover {
@@ -479,7 +479,7 @@
 .cardTable tbody td {
   padding: 0.1rem;
   text-align: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0);
+  border-bottom: 1px solid rgba(var(--theme-on-surface-rgb), 0);
   font-size: 1.1em;
 }
 
@@ -513,7 +513,7 @@
 }
 
 .zeroPitch {
-  color: #ece7da;
+  color: var(--theme-text);
   font-weight: 600;
   font-size: 1em !important;
   max-width: 200px;
@@ -537,7 +537,7 @@
 }
 
 .twoPitch {
-  color: #daa520;
+  color: var(--theme-primary);
   font-weight: 600;
   font-size: 1em !important;
   max-width: 200px;
@@ -578,7 +578,7 @@
 }
 
 .headerGroupSeparator {
-  border-right: 2px solid rgba(255, 255, 255, 0.1);
+  border-right: 2px solid rgba(var(--theme-on-surface-rgb), 0.1);
   border-radius: 0 5px 1px 0;
 }
 
@@ -587,7 +587,7 @@
   overflow-y: auto;
   max-height: none;
   border-radius: 6px;
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(var(--theme-sunken-rgb), calc(0.2 * var(--theme-sunken-alpha)));
   flex: 1;
   -webkit-overflow-scrolling: touch;
   position: relative;
@@ -599,7 +599,7 @@
 }
 
 .tableContainer::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(var(--theme-sunken-rgb), calc(0.3 * var(--theme-sunken-alpha)));
   border-radius: 6px;
 }
 
@@ -909,7 +909,7 @@
 
 .statsDivider {
   border: none;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 1px solid rgba(var(--theme-on-surface-rgb), 0.12);
   margin: 0;
 }
 
@@ -926,9 +926,9 @@
   align-items: center;
   padding: 0.3rem 0.85rem;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.05);
-  color: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.2);
+  background: rgba(var(--theme-on-surface-rgb), 0.05);
+  color: rgba(var(--theme-on-surface-rgb), 0.65);
   font-size: 0.82em;
   font-weight: 500;
   cursor: pointer;
@@ -937,9 +937,9 @@
 }
 
 .togglePill:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.35);
-  color: rgba(255, 255, 255, 0.9);
+  background: rgba(var(--theme-on-surface-rgb), 0.1);
+  border-color: rgba(var(--theme-on-surface-rgb), 0.35);
+  color: rgba(var(--theme-on-surface-rgb), 0.9);
 }
 
 .togglePillActive {
@@ -965,7 +965,7 @@
 .statsTabs {
   display: flex;
   gap: 0.25rem;
-  background: rgba(0, 0, 0, 0.25);
+  background: rgba(var(--theme-sunken-rgb), calc(0.25 * var(--theme-sunken-alpha)));
   border-radius: 8px;
   padding: 3px;
 }
@@ -977,7 +977,7 @@
   border: none;
   border-radius: 6px;
   box-shadow: none;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(var(--theme-on-surface-rgb), 0.45);
   cursor: pointer;
   font-size: 0.82em;
   font-weight: 600;
@@ -989,8 +989,8 @@
 }
 
 .statsTab:hover {
-  background: rgba(255, 255, 255, 0.06);
-  color: rgba(255, 255, 255, 0.7);
+  background: rgba(var(--theme-on-surface-rgb), 0.06);
+  color: rgba(var(--theme-on-surface-rgb), 0.7);
 }
 
 .statsTab:focus,
@@ -1000,14 +1000,14 @@
 }
 
 .statsTabActive {
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.92);
+  background: rgba(var(--theme-on-surface-rgb), 0.1);
+  color: rgba(var(--theme-on-surface-rgb), 0.92);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 
 .statsTabActive:hover {
-  background: rgba(255, 255, 255, 0.12);
-  color: rgba(255, 255, 255, 0.95);
+  background: rgba(var(--theme-on-surface-rgb), 0.12);
+  color: rgba(var(--theme-on-surface-rgb), 0.95);
 }
 
 .excludeLastTurnLabel {
@@ -1056,7 +1056,7 @@
 }
 
 .outcomeDefeat {
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(var(--theme-on-surface-rgb), 0.45);
 }
 
 .masteryProgress {
@@ -1390,7 +1390,7 @@
   display: flex;
   gap: 1.5rem;
   justify-content: space-around;
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(var(--theme-sunken-rgb), calc(0.2 * var(--theme-sunken-alpha)));
   border-radius: 6px;
   padding: 0.5rem 0.25rem;
 }
@@ -1404,7 +1404,7 @@
 }
 
 .keyStat + .keyStat {
-  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  border-left: 1px solid rgba(var(--theme-on-surface-rgb), 0.1);
   padding-left: 1.5rem;
 }
 
@@ -1416,7 +1416,7 @@
 }
 
 .keyStatLabel {
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(var(--theme-on-surface-rgb), 0.55);
   font-size: 0.72em;
   font-weight: 500;
   text-align: center;

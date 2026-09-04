@@ -6,7 +6,7 @@
 
 .ads-test-header {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  color: var(--theme-text);
   padding: 40px 20px;
   text-align: center;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
@@ -124,7 +124,7 @@
 .ads-test-footer {
   text-align: center;
   padding: 20px;
-  color: #999;
+  color: #555;
   font-size: 12px;
   border-top: 1px solid #ddd;
   background: #fafafa;

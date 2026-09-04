@@ -10,8 +10,8 @@
   border-radius: 8px;
   padding: 1rem;
   margin: 0;
-  background: rgba(36, 36, 41, 0.35);
-  color: #e4e4e7;
+  background: color-mix(in srgb, var(--theme-card-background) 35%, transparent);
+  color: var(--theme-text);
 }
 
 .fieldsetHeader {
@@ -52,11 +52,11 @@
   border-radius: 6px;
   transition: background-color 0.2s;
   user-select: none;
-  color: #e4e4e7;
+  color: var(--theme-text);
 }
 
 .optionLabel:hover {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(var(--theme-on-surface-rgb), 0.05);
 }
 
 .labelWithTooltip {
@@ -74,10 +74,10 @@
   height: 16px;
   min-width: 16px;
   border-radius: 50%;
-  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  border: 1.5px solid rgba(var(--theme-on-surface-rgb), 0.5);
   font-size: 0.65em;
   font-weight: bold;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(var(--theme-on-surface-rgb), 0.7);
   cursor: help;
   transition: all 0.2s;
 }
@@ -85,7 +85,7 @@
 .tooltipIcon:hover {
   border-color: var(--theme-primary);
   color: var(--theme-primary);
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(var(--theme-on-surface-rgb), 0.05);
 }
 
 .optionLabel input[type='checkbox'],
@@ -98,7 +98,7 @@
   height: 18px;
   flex-shrink: 0;
   border: 2px solid #71717a;
-  background: #18181b;
+  background: var(--theme-card-background);
   background-image: none;
   accent-color: #eab308;
   display: grid;
@@ -135,7 +135,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #18181b;
+  background: var(--theme-card-background);
   transform: scale(0);
   transition: transform 0.12s ease-in-out;
 }
@@ -175,7 +175,7 @@
 
 .cardBackTitle p {
   font-size: 0.9em;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(var(--theme-on-surface-rgb), 0.7);
   margin: 0.5rem 0;
 }
 
@@ -183,9 +183,9 @@
   width: 100%;
   padding: 0.5rem;
   border-radius: 5px;
-  background-color: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: white;
+  background-color: rgba(var(--theme-sunken-rgb), calc(0.3 * var(--theme-sunken-alpha)));
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.1);
+  color: var(--theme-text);
   cursor: pointer;
   font-size: 0.95em;
 }
@@ -205,7 +205,7 @@
   padding: 0.5rem 0.25rem 0.5rem 0;
   overscroll-behavior: contain;
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+  scrollbar-color: rgba(var(--theme-on-surface-rgb), 0.2) transparent;
 }
 
 .playmatListContainer::-webkit-scrollbar {
@@ -217,7 +217,7 @@
 }
 
 .playmatListContainer::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(var(--theme-on-surface-rgb), 0.2);
   border-radius: 5px;
 }
 
@@ -262,7 +262,7 @@
 
 .playmatLabel {
   font-size: 0.75em;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(var(--theme-on-surface-rgb), 0.7);
   text-align: center;
   max-width: 160px;
   white-space: nowrap;
@@ -271,7 +271,7 @@
 }
 
 .lockedPlaymatLabel {
-  color: rgba(255, 255, 255, 0.35);
+  color: rgba(var(--theme-on-surface-rgb), 0.35);
 }
 
 .cardBackListContainer {
@@ -349,7 +349,7 @@
 
 hr {
   border: none;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(var(--theme-on-surface-rgb), 0.1);
   margin: 1.5rem 0;
 }
 
@@ -359,15 +359,15 @@ hr {
   gap: 0.75rem;
   padding: 0.75rem;
   margin: 0.5rem 0;
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(var(--theme-sunken-rgb), calc(0.2 * var(--theme-sunken-alpha)));
   border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.05);
   transition: all 0.2s;
 }
 
 .visualSettingItem:hover {
-  background: rgba(0, 0, 0, 0.3);
-  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(var(--theme-sunken-rgb), calc(0.3 * var(--theme-sunken-alpha)));
+  border-color: rgba(var(--theme-on-surface-rgb), 0.1);
 }
 
 .visualSettingHeader {
@@ -423,7 +423,7 @@ hr {
   height: 6px;
   cursor: pointer;
   accent-color: var(--theme-primary);
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(var(--theme-on-surface-rgb), 0.1);
   border-radius: 5px;
   outline: none;
 }
@@ -472,8 +472,8 @@ hr {
   min-height: 2.25rem;
   cursor: pointer;
   border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.15));
-  background-color: rgba(0, 0, 0, 0.3);
-  color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(var(--theme-sunken-rgb), calc(0.3 * var(--theme-sunken-alpha)));
+  color: rgba(var(--theme-on-surface-rgb), 0.8);
   border-radius: 6px;
   font-size: 0.85em;
   transition: all 0.2s;
@@ -482,9 +482,9 @@ hr {
 }
 
 .presetButton:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.3);
-  color: white;
+  background-color: rgba(var(--theme-on-surface-rgb), 0.1);
+  border-color: rgba(var(--theme-on-surface-rgb), 0.3);
+  color: var(--theme-text);
   transform: translateY(-2px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
@@ -496,14 +496,14 @@ hr {
 .presetButtonActive {
   background-color: var(--theme-primary);
   border-color: var(--theme-primary);
-  color: #000000;
+  color: var(--theme-primary-inverse);
   font-weight: 600;
 }
 
 .presetButtonActive:hover {
   background-color: var(--theme-primary);
   border-color: var(--theme-primary);
-  color: #000000;
+  color: var(--theme-primary-inverse);
   transform: translateY(-2px);
 }
 
@@ -513,7 +513,7 @@ hr {
 
 .disclaimer {
   font-size: 0.75em;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(var(--theme-on-surface-rgb), 0.5);
   line-height: 1.4;
 }
 

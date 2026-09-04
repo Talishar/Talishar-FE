@@ -23,12 +23,13 @@ const ChooseFirstTurn = () => {
     e.preventDefault();
     if (isLoading) return;
     try {
-      await chooseFirstPlayer({
+      const result = await chooseFirstPlayer({
         gameName: gameID,
         playerID: playerID,
         authKey: authKey,
         action: 'Go First'
-      });
+      }).unwrap();
+      if (result?.error) throw new Error(result.error);
     } catch (err) {
       console.warn(err);
       toast.error(t('BASE.ERROR_ALERT'));
@@ -39,12 +40,13 @@ const ChooseFirstTurn = () => {
     e.preventDefault();
     if (isLoading) return;
     try {
-      await chooseFirstPlayer({
+      const result = await chooseFirstPlayer({
         gameName: gameID,
         playerID: playerID,
         authKey: authKey,
         action: 'Go Second'
-      });
+      }).unwrap();
+      if (result?.error) throw new Error(result.error);
     } catch (err) {
       console.warn(err);
       toast.error(t('BASE.ERROR_ALERT'));

@@ -8,7 +8,7 @@
   align-items: center;
   gap: 0.75rem;
   padding: 1rem 1.5rem;
-  background-color: rgba(0, 0, 0, 0.98);
+  background-color: var(--near-black);
   border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
   border-radius: 10px;
   animation: slideIn 0.3s ease-out;
@@ -42,7 +42,7 @@
   font-size: 2rem;
   font-weight: 600;
   line-height: 1;
-  color: var(--white, #f4eded);
+  color: #fff;
   transition: color 0.3s ease;
 }
 
@@ -56,7 +56,7 @@
 .progressTrack {
   width: 100%;
   height: 2px;
-  background-color: rgba(255, 255, 255, 0.12);
+  background-color: rgba(var(--theme-on-surface-rgb), 0.12);
   border-radius: 1px;
   overflow: hidden;
 }
@@ -64,7 +64,7 @@
 .progressFill {
   width: 100%;
   height: 100%;
-  background-color: rgba(255, 255, 255, 0.45);
+  background-color: rgba(var(--theme-on-surface-rgb), 0.45);
   transform-origin: left center;
   transition: transform 0.5s linear, background-color 0.3s ease;
 }
@@ -76,7 +76,7 @@
 }
 
 .message {
-  color: var(--white, #f4eded);
+  color: #fff;
   font-size: 0.9rem;
   text-align: center;
   margin: 0;
@@ -87,7 +87,7 @@
   width: 100%;
   padding: 0.5rem 1rem;
   background-color: var(--theme-alarm, #c62828);
-  color: var(--white, #f4eded);
+  color: #fff;
   border: 1px solid var(--theme-alarm, #c62828);
   border-radius: 5px;
   font-size: 0.85rem;
@@ -112,9 +112,9 @@
 .stillHereButton {
   width: 100%;
   padding: 0.5rem 1rem;
-  background-color: rgba(255, 255, 255, 0.07);
-  color: #e0e0e0;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background-color: rgba(var(--theme-on-surface-rgb), 0.07);
+  color: var(--theme-text-secondary);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.15);
   border-radius: 5px;
   font-size: 0.85rem;
   font-weight: 600;
@@ -127,9 +127,9 @@
 }
 
 .stillHereButton:hover {
-  background-color: rgba(255, 255, 255, 0.15);
-  color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(var(--theme-on-surface-rgb), 0.15);
+  color: var(--theme-text);
+  border-color: rgba(var(--theme-on-surface-rgb), 0.3);
   cursor: pointer;
 }
 

@@ -14,8 +14,8 @@
   align-items: center;
   gap: 0.75em;
   padding: 0.75em 1em;
-  background: rgba(30, 35, 41, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: color-mix(in srgb, var(--theme-card-background) 50%, transparent);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.12);
   border-radius: 8px;
   text-decoration: none;
   color: inherit;
@@ -25,7 +25,7 @@
 }
 
 .card:hover {
-  background: rgba(40, 48, 60, 0.8);
+  background: color-mix(in srgb, var(--theme-tertiary) 80%, transparent);
   border-color: rgba(100, 150, 220, 0.4);
   transform: translateY(-2px);
 }
@@ -52,7 +52,7 @@
   height: 40px;
   border-radius: 50%;
   flex-shrink: 0;
-  border: 2px solid rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(var(--theme-on-surface-rgb), 0.1);
   object-fit: cover;
 }
 
@@ -78,7 +78,7 @@
 .username {
   font-size: 0.9rem;
   font-weight: 600;
-  color: #e0e0e0;
+  color: var(--theme-text-secondary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -86,7 +86,7 @@
 
 .contributions {
   font-size: 0.75rem;
-  color: #aaa;
+  color: var(--theme-text-muted);
 }
 
 .breakdown {
@@ -101,7 +101,7 @@
   background: rgba(80, 120, 200, 0.15);
   border: 1px solid rgba(100, 150, 220, 0.3);
   border-radius: 6px;
-  color: #88aaee;
+  color: color-mix(in srgb, #88aaee 55%, var(--theme-text));
   font-size: 0.85rem;
   cursor: pointer;
   transition: background 0.2s ease, border-color 0.2s ease;
@@ -110,7 +110,7 @@
 .showMoreButton:hover {
   background: rgba(80, 120, 200, 0.3);
   border-color: rgba(100, 150, 220, 0.5);
-  color: #aac4ff;
+  color: color-mix(in srgb, #aac4ff 55%, var(--theme-text));
 }
 
 .footnote {
@@ -122,7 +122,7 @@
 }
 
 .footnote a {
-  color: #66b3ff;
+  color: var(--theme-primary);
   text-decoration: none;
 }
 
@@ -144,7 +144,7 @@
   display: inline-block;
   width: 18px;
   height: 18px;
-  border: 2px solid rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(var(--theme-on-surface-rgb), 0.15);
   border-top-color: #88aaee;
   border-radius: 50%;
   animation: spin 0.7s linear infinite;

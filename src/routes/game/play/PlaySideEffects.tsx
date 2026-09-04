@@ -7,6 +7,7 @@ import { RootState } from 'app/Store';
 import { getGameInfo, setHeroInfo } from 'features/game/GameSlice';
 import { settingsUpdated } from 'features/options/optionsSlice';
 import {
+  AUTO_PASS_TURN,
   SHORTCUT_ATTACK_THRESHOLD,
   SKIP_AR_WINDOW,
   SKIP_DR_WINDOW
@@ -37,12 +38,14 @@ export const TurnChangeSettingsSync = () => {
       prevTurnNoRef.current = turnNo;
       prevTurnPlayerRef.current = turnPlayer;
       // These local shortcuts reset atomically at the same turn boundary.
-      // One adapter update avoids three store notification cycles.
+      // Keep this centralized instead of relying on an individual control to
+      // be mounted, otherwise the UI can display stale auto-pass state.
       dispatch(
         settingsUpdated([
           { name: SHORTCUT_ATTACK_THRESHOLD, value: '0' },
           { name: SKIP_AR_WINDOW, value: '0' },
-          { name: SKIP_DR_WINDOW, value: '0' }
+          { name: SKIP_DR_WINDOW, value: '0' },
+          { name: AUTO_PASS_TURN, value: '0' }
         ])
       );
     }

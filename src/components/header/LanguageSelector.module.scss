@@ -34,7 +34,7 @@
     &:focus,
     &:hover {
       color: var(--theme-primary);
-      background-color: rgba(0, 0, 0, 0.1);
+      background-color: color-mix(in srgb, var(--near-black) 10%, transparent);
 
       &::before {
         rotate: 225deg;
@@ -188,8 +188,8 @@
     box-sizing: border-box;
     min-width: 190px;
     padding: 6px;
-    background: #0d0e10;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: var(--near-black);
+    border: 1px solid rgba(var(--theme-on-surface-rgb), 0.06);
     border-radius: 6px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
     z-index: 10002;
@@ -286,7 +286,7 @@
       border: none;
       border-radius: 0;
       box-shadow: none;
-      background: rgba(0, 0, 0, 0.45);
+      background: color-mix(in srgb, var(--near-black) 45%, transparent);
       min-width: unset;
 
       .socialLink {
@@ -295,7 +295,7 @@
         background-color: transparent;
         background-image: none;
         border: none;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        border-bottom: 1px solid rgba(var(--theme-on-surface-rgb), 0.06);
         outline: none;
         -webkit-tap-highlight-color: transparent;
         font-size: 14px;

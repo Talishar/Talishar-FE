@@ -133,7 +133,7 @@
 
 .label {
   background-color: var(--near-black);
-  color: white;
+  color: var(--theme-text);
   position: absolute;
   bottom: 3dvh;
   left: 3dvh;

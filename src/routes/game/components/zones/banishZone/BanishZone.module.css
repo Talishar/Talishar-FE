@@ -4,7 +4,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: rgba(50, 50, 50, 0.5);
+  background: var(--theme-zone-placeholder);
   color: var(--white);
   border-radius: 0.5em;
   flex: 0 0 10vh;

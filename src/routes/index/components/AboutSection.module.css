@@ -18,13 +18,13 @@
 
 .pageHeader {
   padding: 1.5em 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(var(--theme-on-surface-rgb), 0.08);
 }
 
 .content h2 {
   font-size: 2.2rem;
   margin: 0 0 0.35rem 0;
-  color: #fff;
+  color: var(--theme-text);
   font-weight: 700;
 }
 
@@ -36,7 +36,7 @@
 
 .section {
   padding: 1.5em 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(var(--theme-on-surface-rgb), 0.08);
 }
 
 .section:last-of-type {
@@ -45,7 +45,7 @@
 
 .sectionTitle {
   font-size: 1.35rem;
-  color: #fff;
+  color: var(--theme-text);
   margin: 0 0 1em 0;
   font-weight: 600;
 }
@@ -53,7 +53,7 @@
 .bodyText {
   font-size: 0.975rem;
   line-height: 1.75;
-  color: #bbb;
+  color: var(--theme-text-secondary);
   margin: 0 0 0.9em 0;
 }
 
@@ -62,7 +62,7 @@
 }
 
 .bodyText a {
-  color: #64b5f6;
+  color: var(--theme-primary);
   text-decoration: none;
 }
 
@@ -104,7 +104,7 @@
 
 .featureText strong {
   display: block;
-  color: #e0e0e0;
+  color: var(--theme-text-secondary);
   font-size: 0.9rem;
   margin-bottom: 0.2em;
   font-weight: 600;
@@ -132,7 +132,7 @@
 .statNumber {
   font-size: 2.4rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--theme-text);
   line-height: 1;
 }
 
@@ -146,14 +146,14 @@
 .contributorInfo {
   margin-top: 1.25em;
   padding-top: 1em;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(var(--theme-on-surface-rgb), 0.08);
   font-size: 0.9rem;
   color: #888;
   line-height: 1.6;
 }
 
 .contributorInfo a {
-  color: #64b5f6;
+  color: var(--theme-primary);
   text-decoration: none;
 }
 
@@ -183,26 +183,26 @@
 
 .githubButton {
   display: inline-block;
-  background: #24292e;
-  color: #fff;
+  background: var(--theme-tertiary);
+  color: var(--theme-text);
   font-weight: 700;
   padding: 0.6em 1.6em;
   border-radius: 6px;
   text-decoration: none;
   font-size: 0.9rem;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.15);
   transition: background 0.2s ease;
 }
 
 .githubButton:hover {
-  background: #3a3f45;
-  color: #fff;
+  background: var(--theme-tertiary);
+  color: var(--theme-text);
 }
 
 .discordButton {
   display: inline-block;
   background: #5865f2;
-  color: #fff;
+  color: var(--theme-text);
   font-weight: 700;
   padding: 0.6em 1.6em;
   border-radius: 6px;
@@ -226,7 +226,7 @@
 .metafyButton {
   display: inline-block;
   background: var(--theme-primary, #d4af37);
-  color: var(--theme-primaryText, #111);
+  color: var(--theme-primary-inverse);
   font-weight: 700;
   padding: 0.875em 2.25em;
   border-radius: 6px;
@@ -238,7 +238,7 @@
 
 .metafyButton:hover {
   background: var(--theme-primary-hover, #dfa50e);
-  color: var(--theme-primary-text, #000);
+  color: var(--theme-primary-inverse);
 }
 
 .resourcesGrid {
@@ -252,8 +252,8 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(var(--theme-on-surface-rgb), 0.03);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.08);
   border-radius: 8px;
   padding: 1.25em;
   text-decoration: none;
@@ -262,8 +262,8 @@
 }
 
 .resourceCard:hover {
-  border-color: rgba(255, 255, 255, 0.18);
-  background: rgba(255, 255, 255, 0.055);
+  border-color: rgba(var(--theme-on-surface-rgb), 0.18);
+  background: rgba(var(--theme-on-surface-rgb), 0.055);
 }
 
 .resourceCardHeader {
@@ -276,7 +276,7 @@
 .resourceCardHeader h4 {
   margin: 0;
   font-size: 0.975rem;
-  color: #fff;
+  color: var(--theme-text);
   font-weight: 600;
 }
 
@@ -305,7 +305,7 @@
 }
 
 .resourceCard:hover .linkIcon {
-  color: #999;
+  color: var(--theme-text-muted);
 }
 
 .faqList {
@@ -314,11 +314,11 @@
 }
 
 .faqItem {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  border-bottom: 1px solid rgba(var(--theme-on-surface-rgb), 0.07);
 }
 
 .faqItem:first-child {
-  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  border-top: 1px solid rgba(var(--theme-on-surface-rgb), 0.07);
 }
 
 .faqQuestion {
@@ -326,7 +326,7 @@
   background: transparent;
   border: none;
   padding: 1.1em 0.75em;
-  color: #ccc;
+  color: var(--theme-text-secondary);
   font-size: 0.95rem;
   font-weight: 500;
   cursor: pointer;
@@ -339,8 +339,8 @@
 }
 
 .faqQuestion:hover {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.055);
+  color: var(--theme-text);
+  background: rgba(var(--theme-on-surface-rgb), 0.055);
   border-color: transparent;
   transform: none;
   box-shadow: none;
@@ -355,7 +355,7 @@
 }
 
 .faqQuestion:hover .faqToggle {
-  color: #aaa;
+  color: var(--theme-text-muted);
 }
 
 .faqAnswer {
@@ -371,7 +371,7 @@
 }
 
 .faqAnswer a {
-  color: #64b5f6;
+  color: var(--theme-primary);
   text-decoration: none;
 }
 
@@ -422,7 +422,7 @@
 }
 
 .disclaimer a {
-  color: #64b5f6;
+  color: var(--theme-primary);
   text-decoration: none;
 }
 
