@@ -12,6 +12,10 @@ import { shallowEqual } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { GameLocationState } from 'interface/GameLocationState';
 import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
+import {
+  loadGameAuthKey,
+  loadGamePlayerID
+} from 'utils/LocalKeyManagement';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
@@ -87,11 +91,26 @@ export const LobbyUpdateHandler = React.memo(() => {
   }, []);
 
   useEffect(() => {
+    const currentGameID = parseInt(gameID ?? '');
+    const explicitPlayerID = locationState?.playerID ?? parseInt(playerID);
+    const currentPlayerID =
+      explicitPlayerID === 1 || explicitPlayerID === 2
+        ? explicitPlayerID
+        : loadGamePlayerID(currentGameID) || explicitPlayerID;
+    let currentAuthKey = locationState?.authKey || authKey;
+    if (
+      !currentAuthKey &&
+      (currentPlayerID === 1 || currentPlayerID === 2) &&
+      currentGameID > 0
+    ) {
+      currentAuthKey = loadGameAuthKey(currentGameID);
+    }
+
     dispatch(
       setGameStart({
-        gameID: parseInt(gameID ?? ''),
-        playerID: locationState?.playerID ?? parseInt(playerID),
-        authKey: locationState?.authKey ?? authKey
+        gameID: currentGameID,
+        playerID: currentPlayerID,
+        authKey: currentAuthKey
       })
     );
   }, []);
