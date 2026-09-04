@@ -368,3 +368,8 @@
     opacity: 0.6;
   }
 }
+
+.scrollAnchor {
+  height: 1px;
+  flex: 0 0 auto;
+}

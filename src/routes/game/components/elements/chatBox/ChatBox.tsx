@@ -65,6 +65,8 @@ export default function ChatBox({
   const prevChatFilterRef = useRef<string>('none');
   const chatContentRef = useRef<HTMLDivElement>(null);
   const isPinnedToBottomRef = useRef<boolean>(true);
+  const suppressScrollHandlerRef = useRef<boolean>(false);
+  const pendingScrollRef = useRef<number | null>(null);
 
   const SCROLL_PIN_THRESHOLD = 40;
 
@@ -79,11 +81,24 @@ export default function ChatBox({
   const scrollToBottom = () => {
     const el = chatBoxRef.current;
     if (!el) return;
-    el.scrollTop = el.scrollHeight;
     isPinnedToBottomRef.current = true;
+    el.scrollTop = el.scrollHeight;
+    messagesEndRef.current?.scrollIntoView({ block: 'end' });
+
+  const scrollToBottomSoon = () => {
+    scrollToBottom();
+    if (pendingScrollRef.current !== null)
+      cancelAnimationFrame(pendingScrollRef.current);
+    pendingScrollRef.current = requestAnimationFrame(() => {
+      pendingScrollRef.current = requestAnimationFrame(() => {
+        pendingScrollRef.current = null;
+        scrollToBottom();
+      });
+    });
   };
 
   const handleScroll = () => {
+    if (suppressScrollHandlerRef.current) return;
     isPinnedToBottomRef.current = isNearBottom();
   };
 
@@ -91,10 +106,19 @@ export default function ChatBox({
     const content = chatContentRef.current;
     if (!content || typeof ResizeObserver === 'undefined') return;
     const observer = new ResizeObserver(() => {
-      if (isPinnedToBottomRef.current) scrollToBottom();
+      if (!isPinnedToBottomRef.current) return;
+      suppressScrollHandlerRef.current = true;
+      scrollToBottom();
+      requestAnimationFrame(() => {
+        suppressScrollHandlerRef.current = false;
+      });
     });
     observer.observe(content);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      if (pendingScrollRef.current !== null)
+        cancelAnimationFrame(pendingScrollRef.current);
+    };
   }, []);
 
   const streamerNameRegex = useMemo(
@@ -156,9 +180,7 @@ export default function ChatBox({
     if (!hasNewMessages && !filterChanged && !displayTyping) return;
     if (!filterChanged && !isPinnedToBottomRef.current) return;
 
-    scrollToBottom();
-    const raf = requestAnimationFrame(scrollToBottom);
-    return () => cancelAnimationFrame(raf);
+    scrollToBottomSoon();
   }, [chatLog, chatFilter, displayTyping]);
 
   return (
@@ -227,11 +249,11 @@ export default function ChatBox({
               playerNames={playerNames}
             />
             {displayTyping && (
-              <div className={styles.typingIndicator} ref={messagesEndRef}>
+              <div className={styles.typingIndicator}>
                 <em>{t('CHAT.TYPING')}</em>
               </div>
             )}
-            {!displayTyping && <div ref={messagesEndRef} />}
+            <div ref={messagesEndRef} className={styles.scrollAnchor} />
           </div>
         </div>
       </div>
