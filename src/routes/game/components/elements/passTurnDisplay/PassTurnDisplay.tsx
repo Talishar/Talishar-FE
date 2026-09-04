@@ -20,7 +20,6 @@ import passTurnSound from 'sounds/prioritySound.wav';
 import { createPortal } from 'react-dom';
 import {
   getSettingsEntity,
-  settingsUpdated,
   updateOptions
 } from 'features/options/optionsSlice';
 import {
@@ -29,8 +28,10 @@ import {
 } from 'features/options/constants';
 import { useReplayPlayback } from '../../../play/ReplayPlaybackContext';
 
-const MOUSE_LONG_PRESS_MS = 500;
-const TOUCH_LONG_PRESS_MS = 800;
+// Arming AUTO affects every remaining priority window this turn, so require a
+// clearly deliberate hold rather than treating an ordinary slow click as one.
+const MOUSE_LONG_PRESS_MS = 900;
+const TOUCH_LONG_PRESS_MS = 1200;
 const HOLD_HINT_DELAY_MS = 180;
 const HOLD_MOVE_TOLERANCE_PX = 12;
 const TOUCH_HOLD_MOVE_TOLERANCE_PX = 18;
@@ -90,12 +91,6 @@ export default function PassTurnDisplay() {
   );
   const spectatorCameraView = useAppSelector(
     (state: RootState) => state.game.spectatorCameraView
-  );
-  const turnNo = useAppSelector(
-    (state: RootState) => state.game.gameDynamicInfo?.turnNo
-  );
-  const turnPlayer = useAppSelector(
-    (state: RootState) => state.game.turnPlayer
   );
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const [showAreYouSureModal, setShowAreYouSureModal] =
@@ -349,23 +344,8 @@ export default function PassTurnDisplay() {
     [holdChargeMs]
   );
 
-  // The server clears the flag in StartTurnAbilities, so the hold expires with
-  // the turn on its own. This only mirrors that locally, so the box drops out of
-  // the red state on the turn boundary rather than at the next settings fetch.
-  const previousTurnRef = useRef<{ no?: number; player?: number } | null>(null);
-  useEffect(() => {
-    if (turnNo === undefined || turnPlayer === undefined) return;
-    const previous = previousTurnRef.current;
-    previousTurnRef.current = { no: turnNo, player: turnPlayer };
-    if (previous === null) return;
-    if (previous.no === turnNo && previous.player === turnPlayer) return;
-    if (isHoldArmed) {
-      dispatch(settingsUpdated([{ name: AUTO_PASS_TURN, value: '0' }]));
-    }
-  }, [turnNo, turnPlayer, isHoldArmed, dispatch]);
-
-  // The active box looks like a plain pass button whether or not the hold is
-  // armed, so it has to behave like one. Cancelling is the idle box's job.
+  // Passing normally remains available while AUTO is armed; clicking the AUTO
+  // control itself cancels it.
   const onPrimaryPassAction = useCallback(
     (event?: KeyboardEvent | MouseEvent) => {
       onPassTurn(event);
@@ -490,10 +470,20 @@ export default function PassTurnDisplay() {
   const showArmed = isHoldArmed && !isReplay;
 
   if (canPassPhase === true || isReplay) {
-    // The armed state never shows on the active box. If you have been handed a
-    // decision, auto-pass is by definition not covering this window, so the box
-    // is a plain pass button here - red is only for the idle box, where the hold
-    // is actually doing something and needs a way out.
+    if (showArmed) {
+      return (
+        <div
+          className={classNames(styles.passTurnDisplay, styles.armedIdle)}
+          onClick={disarmHold}
+          role="button"
+          aria-pressed={true}
+          aria-label={t('PASS_TURN_DISPLAY.AUTO_PASS_CANCEL')}
+          title={t('PASS_TURN_DISPLAY.AUTO_PASS_CANCEL')}
+        >
+          {t('PASS_TURN_DISPLAY.AUTO')}
+        </div>
+      );
+    }
     const subtitle = isReplay
       ? t('PASS_TURN_DISPLAY.REPLAY')
       : passSubtitle(turnPhaseEnum, t);
