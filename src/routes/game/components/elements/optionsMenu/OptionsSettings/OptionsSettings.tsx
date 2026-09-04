@@ -120,7 +120,7 @@ const OptionsSettings = () => {
     gemsOffByDefault:
       String(settingsData[optConst.GEMS_OFF_BY_DEFAULT]?.value) === '1',
     disableHoldToAutoPass:
-      String(settingsData[optConst.DISABLE_HOLD_TO_AUTO_PASS]?.value) === '1'
+      String(settingsData[optConst.DISABLE_HOLD_TO_AUTO_PASS]?.value) !== '0'
   };
 
   useShortcut(DEFAULT_SHORTCUTS.TOGGLE_MANUAL_MODE, () => {

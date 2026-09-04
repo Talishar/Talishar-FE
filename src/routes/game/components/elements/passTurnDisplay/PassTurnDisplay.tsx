@@ -136,7 +136,7 @@ export default function PassTurnDisplay() {
   const holdToAutoPassDisabledSetting = useSetting({
     settingName: DISABLE_HOLD_TO_AUTO_PASS
   });
-  const isHoldToAutoPassDisabled = holdToAutoPassDisabledSetting?.value === '1';
+  const isHoldToAutoPassDisabled = holdToAutoPassDisabledSetting?.value !== '0';
 
   const dispatch = useAppDispatch();
 
