@@ -84,6 +84,7 @@ export default function ChatBox({
     isPinnedToBottomRef.current = true;
     el.scrollTop = el.scrollHeight;
     messagesEndRef.current?.scrollIntoView({ block: 'end' });
+  };
 
   const scrollToBottomSoon = () => {
     scrollToBottom();
