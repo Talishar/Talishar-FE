@@ -110,10 +110,13 @@ export const LoginForm = () => {
         )}
         <button
           onClick={() => {
+            const redirectUri =
+              (import.meta as any).env?.VITE_METAFY_LOGIN_REDIRECT_URI ||
+              `${window.location.origin}/auth/metafy-signup`;
             window.location.href = `https://metafy.gg/auth/authorize?client_id=${
               (import.meta as any).env?.VITE_METAFY_LOGIN_CLIENT_ID || ''
             }&redirect_uri=${encodeURIComponent(
-              'https://talishar.net/auth/metafy-signup'
+              redirectUri
             )}&response_type=code&scope=profile`;
           }}
           className="outline"
