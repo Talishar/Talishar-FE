@@ -30,7 +30,7 @@
   justify-content: space-between;
   align-items: center;
   padding-left: 1vh;
-  padding-bottom: 1vh;
+  padding-bottom: max(0px, calc(1vh - var(--subcard-overflow, 0px)));
 }
 
 .title {
@@ -192,6 +192,7 @@
   min-height: 0;
   max-height: 100%;
   padding: 0.5em;
+  padding-top: max(0.5em, var(--subcard-overflow, 0px));
   -webkit-overflow-scrolling: touch;
 }
 
@@ -327,6 +328,7 @@
   flex-wrap: wrap;
   align-items: flex-start;
   gap: 1vh;
+  row-gap: calc(1vh + var(--subcard-overflow, 0px));
 }
 
 .checkBoxRow:last-child {
