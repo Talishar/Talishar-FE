@@ -358,12 +358,6 @@ h6 {
 
 button.primary,
 [role='button'].primary {
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--theme-primary) 85%, white 15%) 0%,
-    var(--theme-primary) 55%,
-    color-mix(in srgb, var(--theme-primary) 82%, black 18%) 100%
-  ) !important;
   border-color: color-mix(
     in srgb,
     var(--theme-primary) 68%,
@@ -376,17 +370,6 @@ button.primary,
   transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
 
   &:hover:not(:disabled):not([aria-busy='true']) {
-    background: linear-gradient(
-      180deg,
-      color-mix(
-          in srgb,
-          var(--theme-primary-hover, var(--theme-primary)) 88%,
-          white 12%
-        )
-        0%,
-      var(--theme-primary-hover, var(--theme-primary)) 55%,
-      var(--theme-primary) 100%
-    ) !important;
     border-color: color-mix(
       in srgb,
       var(--theme-primary) 80%,
@@ -399,11 +382,6 @@ button.primary,
   }
 
   &:active:not(:disabled):not([aria-busy='true']) {
-    background: linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--theme-primary) 80%, black 20%) 0%,
-      color-mix(in srgb, var(--theme-primary) 68%, black 32%) 100%
-    ) !important;
     border-color: color-mix(
       in srgb,
       var(--theme-primary) 60%,
