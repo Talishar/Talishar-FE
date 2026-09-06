@@ -36,6 +36,7 @@
 
 .img {
   position: absolute;
+  z-index: 1;
   left: 0px;
   top: 0px;
   right: 0px;
@@ -86,6 +87,66 @@
   background-image: url('../../../../../img/elements/frozenOverlay.webp');
   background-repeat: no-repeat;
   background-size: 100% 100%;
+}
+
+.hasBoundAura {
+  inset: 2px;
+  overflow: hidden;
+  border: 0;
+  pointer-events: none;
+  filter: drop-shadow(0 1px 1px rgba(10, 0, 18, 0.95));
+}
+
+.hasBoundAura::before,
+.hasBoundAura::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.hasBoundAura::before {
+  background:
+    radial-gradient(
+        ellipse 12px 4.5px at center,
+        transparent 32%,
+        rgba(184, 116, 224, 0.9) 35% 41%,
+        rgb(67, 19, 101) 44% 64%,
+        rgba(20, 4, 31, 0.95) 67% 71%,
+        transparent 74%
+      )
+      top left / 18px 9px repeat-x,
+    radial-gradient(
+        ellipse 12px 4.5px at center,
+        transparent 32%,
+        rgba(184, 116, 224, 0.9) 35% 41%,
+        rgb(67, 19, 101) 44% 64%,
+        rgba(20, 4, 31, 0.95) 67% 71%,
+        transparent 74%
+      )
+      bottom left / 18px 9px repeat-x;
+}
+
+.hasBoundAura::after {
+  background:
+    radial-gradient(
+        ellipse 4.5px 12px at center,
+        transparent 32%,
+        rgba(184, 116, 224, 0.9) 35% 41%,
+        rgb(67, 19, 101) 44% 64%,
+        rgba(20, 4, 31, 0.95) 67% 71%,
+        transparent 74%
+      )
+      top left / 9px 18px repeat-y,
+    radial-gradient(
+        ellipse 4.5px 12px at center,
+        transparent 32%,
+        rgba(184, 116, 224, 0.9) 35% 41%,
+        rgb(67, 19, 101) 44% 64%,
+        rgba(20, 4, 31, 0.95) 67% 71%,
+        transparent 74%
+      )
+      top right / 9px 18px repeat-y;
 }
 
 .holoCounters {

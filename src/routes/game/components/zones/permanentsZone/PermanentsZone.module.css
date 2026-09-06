@@ -24,8 +24,10 @@
 .permanentsInner {
   position: relative;
   width: 100%;
-  height: 100%;
+  height: calc(100% + var(--subcard-overflow, 18%) + 8px);
+  margin-top: calc(-1 * var(--subcard-overflow, 18%) - 4px);
   min-width: 0;
+  box-sizing: border-box;
   overflow-x: auto;
   overflow-y: clip;
   display: flex;
