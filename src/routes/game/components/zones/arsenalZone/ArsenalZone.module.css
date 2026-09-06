@@ -147,7 +147,7 @@
   top: 0;
   left: 0;
   clip-path: polygon(0% 0%, 100% 0%, 100% 43%, 0% 57%);
-  animation: slashTopPiece 0.9s ease-in forwards;
+  animation: slashTopPiece 1.5s ease-in forwards;
   overflow: hidden;
 }
 
@@ -158,7 +158,7 @@
   top: 0;
   left: 0;
   clip-path: polygon(0% 57%, 100% 43%, 100% 100%, 0% 100%);
-  animation: slashBottomPiece 0.9s ease-in forwards;
+  animation: slashBottomPiece 1.5s ease-in forwards;
   overflow: hidden;
 }
 

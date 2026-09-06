@@ -307,7 +307,7 @@ export const EventsHandler = React.memo(() => {
             requestAnimationFrame(() => {
               setTimeout(() => {
                 dispatch(setArsenalDestroy({ playerId: null, cardNumber: '' }));
-              }, 1000);
+              }, 1600);
             });
             continue;
           }
