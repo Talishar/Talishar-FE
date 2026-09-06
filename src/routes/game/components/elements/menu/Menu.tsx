@@ -28,16 +28,13 @@ import useSetting from 'hooks/useSetting';
 import { MANUAL_MODE } from 'features/options/constants';
 import { useMediaQuery } from 'hooks/useMediaQuery';
 
-const TOUCH_MOBILE_QUERY = '(pointer: coarse) and (max-width: 1024px)';
-
 function FullScreenButton() {
   const { t } = useTranslation();
-  const isTouchMobile = useMediaQuery(TOUCH_MOBILE_QUERY);
   function toggleFullScreen() {
     screenfull.toggle();
   }
 
-  if (isTouchMobile || !screenfull.isEnabled) return null;
+  if (!screenfull.isEnabled) return null;
 
   return (
     <div>
@@ -124,9 +121,6 @@ function MobileOverflowMenu({ isSpectator }: { isSpectator: boolean }) {
   const showManualMode =
     !isSpectator && (isLocalEnvironment || isManualMode || isPracticeDummy);
 
-  const isTouchMobile = useMediaQuery(TOUCH_MOBILE_QUERY);
-  const showFullscreen = !isTouchMobile && screenfull.isEnabled;
-
   const toggleFullScreen = () => {
     screenfull.toggle();
     setOpen(false);
@@ -181,7 +175,7 @@ function MobileOverflowMenu({ isSpectator }: { isSpectator: boolean }) {
                   <FaWrench aria-hidden="true" /> {t('MENU.MANUAL_MODE')}
                 </button>
               )}
-              {showFullscreen && (
+              {screenfull.isEnabled && (
                 <button
                   className={styles.overflowItem}
                   onClick={toggleFullScreen}

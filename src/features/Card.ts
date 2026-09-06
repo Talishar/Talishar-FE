@@ -17,6 +17,7 @@ export interface Card {
   isBroken?: boolean; // isBroken = 1 if card is destroyed
   onChain?: boolean; // onChain = 1 if card is on combat chain (mostly for equipment)
   isFrozen?: boolean; // isFrozen = 1 if frozen
+  hasBoundAura?: boolean; // whether one or more auras are bound to this card
   gem?: 'none' | 'inactive' | 'active'; // gem = (0, 1, 2?)
   cardIndex?: number;
   countersMap?: { [key: string]: number }; // string = name of counter, number = number of counters

@@ -56,8 +56,8 @@ const subCardStyle = (ix: number): React.CSSProperties => {
   const cached = SUB_CARD_STYLES[ix];
   if (cached !== undefined) return cached;
   const created: React.CSSProperties = {
-    top: `calc(-0.15 * ${ix + 1} * var(--card-size))`,
-    zIndex: `-${ix + 1}`,
+    top: `calc(-0.18 * ${ix + 1} * var(--card-size))`,
+    zIndex: 0,
     animationDelay: `${ix * 40}ms`
   };
   SUB_CARD_STYLES[ix] = created;
@@ -82,6 +82,7 @@ export interface CardProp {
   showCountersOnHover?: boolean;
   disableTilt?: boolean;
   highlightSubtype?: boolean; // draws a subtype outline (used to pick Allies out of a graveyard list)
+  previewYOffset?: number;
   children?: React.ReactNode;
 }
 
@@ -96,6 +97,7 @@ export const CardDisplay = (prop: CardProp) => {
     showCountersOnHover,
     disableTilt,
     highlightSubtype,
+    previewYOffset,
     containerClassName,
     children
   } = prop;
@@ -193,14 +195,16 @@ export const CardDisplay = (prop: CardProp) => {
       onHoverEnd={handleHoverEnd}
       isOpponent={isOpponentCard}
       disableTilt={disableTilt}
+      previewYOffset={previewYOffset}
     >
-      {subCardsToShow.map((subCardNumber, ix) => {
+      {[...subCardsToShow].reverse().map((subCardNumber, reverseIx) => {
         if (
           !subCardNumber ||
           typeof subCardNumber !== 'string' ||
           subCardNumber.trim() === ''
         )
           return null;
+        const ix = subCardsToShow.length - reverseIx - 1;
         const subCardKey = `subcard-${card.cardNumber}-${subCardNumber}-${ix}`;
 
         return (
@@ -213,6 +217,7 @@ export const CardDisplay = (prop: CardProp) => {
               card={getSubCardProp(subCardNumber)}
               preventUseOnClick
               isPlayer={!isOpponentCard}
+              previewYOffset={12}
             />
           </div>
         );
@@ -230,6 +235,9 @@ export const CardDisplay = (prop: CardProp) => {
       />
       {isDisabled && (
         <div className={classNames(styles.floatTint, styles.disabled)} />
+      )}
+      {card.hasBoundAura && (
+        <div className={classNames(styles.floatTint, styles.hasBoundAura)} />
       )}
       {hasEquipStatus && (
         <div

@@ -38,6 +38,14 @@ function PermanentsZone(prop: Displayrow) {
   const permanents = useAppSelector((state: RootState) =>
     selectPermanentsAsStack(state, isPlayer)
   );
+  const maxSubcardCount = permanents.reduce(
+    (maximum, permanent) =>
+      Math.max(maximum, permanent.card.subcards?.filter(Boolean).length ?? 0),
+    1
+  );
+  const subcardOverflowStyle = {
+    '--subcard-overflow': `calc(${maxSubcardCount * 0.18} * var(--card-size))`
+  } as React.CSSProperties;
 
   const updateScrollButtons = useCallback(() => {
     const element = scrollRef.current;
@@ -139,6 +147,7 @@ function PermanentsZone(prop: Displayrow) {
       <div
         ref={scrollRef}
         className={styles.permanentsInner}
+        style={subcardOverflowStyle}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}

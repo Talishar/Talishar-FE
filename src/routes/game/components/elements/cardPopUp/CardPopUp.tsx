@@ -127,6 +127,7 @@ type CardPopUpProps = {
   onHoverEnd?: () => void;
   isOpponent?: boolean;
   disableTilt?: boolean;
+  previewYOffset?: number;
   /** Override sticky-selection key (hand cards pass a unique id-based key). */
   tapPreviewKey?: string;
 };
@@ -141,6 +142,7 @@ export default function CardPopUp({
   onHoverEnd,
   isOpponent,
   disableTilt,
+  previewYOffset = 0,
   tapPreviewKey
 }: CardPopUpProps) {
   const ref = useRef<HTMLDivElement>(null);
@@ -212,7 +214,8 @@ export default function CardPopUp({
       return;
     }
     const xCoord = rect.left < window.innerWidth / 2 ? rect.right : rect.left;
-    const yCoord = rect.top < window.innerHeight / 2 ? rect.bottom : rect.top;
+    const anchorY = rect.top < window.innerHeight / 2 ? rect.bottom : rect.top;
+    const yCoord = Math.min(window.innerHeight, anchorY + previewYOffset);
     setCardPreview({ cardNumber, xCoord, yCoord, isOpponent });
   };
 

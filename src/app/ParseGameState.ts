@@ -72,6 +72,9 @@ function ParseCard(input: any) {
   card.isBroken = input.isBroken ? Boolean(input.isBroken) : false;
   card.onChain = input.onChain ? Boolean(input.onChain) : false;
   card.isFrozen = input.isFrozen ? Boolean(input.isFrozen) : false;
+  card.hasBoundAura = input.hasBoundAura
+    ? Boolean(input.hasBoundAura)
+    : false;
   card.gem = input.gem ? (input.gem == 1 ? 'active' : 'inactive') : 'none';
   card.countersMap = input.countersMap ? input.countersMap : undefined;
   card.label = input.label ? String(input.label) : undefined;
