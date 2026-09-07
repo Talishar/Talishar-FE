@@ -90,6 +90,13 @@
   outline-offset: 2px;
 }
 
+@media (pointer: coarse) {
+  .optionsMenuCloseIcon {
+    width: 44px;
+    height: 44px;
+  }
+}
+
 .radioContainer {
   display: flex;
   flex-direction: column;

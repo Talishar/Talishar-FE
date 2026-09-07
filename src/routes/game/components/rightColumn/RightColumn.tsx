@@ -10,6 +10,7 @@ import { IS_STREAMER_MODE } from 'features/options/constants';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import PlayerName from '../elements/playerName/PlayerName';
+import { useMediaQuery } from 'hooks/useMediaQuery';
 
 function RightColumn() {
   const isStreamerMode =
@@ -18,10 +19,13 @@ function RightColumn() {
     (state: RootState) => state.game.gameInfo.playerID
   );
   const isSpectator = playerID === 3;
+  // Matches the `max-width: 1200px` swap in RightColumn.module.css. Only the
+  // branch the CSS would show is mounted; the other used to render in full
+  // under `display: none`, duplicating the menu and the whole chat log.
+  const isNarrow = useMediaQuery('(max-width: 1200px)');
 
-  return (
-    <>
-      {/* Mobile */}
+  if (isNarrow) {
+    return (
       <div className={styles.mobileTopBar}>
         {!isSpectator && (
           <div className={styles.mobileTopBarName}>
@@ -32,20 +36,22 @@ function RightColumn() {
           <Menu />
         </div>
       </div>
-      {/* Desktop */}
-      <div className={styles.rightColumn}>
-        <div className={styles.topGroup}>
-          <Menu />
-          <TurnInfo />
-          <LastPlayed />
-          {!isSpectator && <PriorityControl />}
-        </div>
-        <div className={styles.bottomGroup}>
-          {isStreamerMode ? <StreamerBox /> : ''}
-          <ChatBox />
-        </div>
+    );
+  }
+
+  return (
+    <div className={styles.rightColumn}>
+      <div className={styles.topGroup}>
+        <Menu />
+        <TurnInfo />
+        <LastPlayed />
+        {!isSpectator && <PriorityControl />}
       </div>
-    </>
+      <div className={styles.bottomGroup}>
+        {isStreamerMode ? <StreamerBox /> : ''}
+        <ChatBox />
+      </div>
+    </div>
   );
 }
 

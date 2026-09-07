@@ -191,9 +191,9 @@
 
 @media (max-width: 600px) {
   .btn {
-    width: 34px;
-    height: 34px;
-    min-width: 34px;
+    width: clamp(34px, 10.5vw, 42px);
+    height: clamp(34px, 10.5vw, 42px);
+    min-width: clamp(34px, 10.5vw, 42px);
   }
 
   .menuList {

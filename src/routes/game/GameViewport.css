@@ -39,3 +39,21 @@ body {
     padding-right: env(safe-area-inset-right);
   }
 }
+
+/* Phone landscape: the top bar is fixed over the board, so the board has to be
+   sized against the height that is actually left under it. Previously the bar
+   covered the top ~23px of the opponent's arsenal/banish row. */
+@media (orientation: landscape) and (max-height: 500px) {
+  html,
+  body {
+    --mobile-top-bar-height: 42px;
+    --card-size: calc(
+      min((100vh - var(--mobile-top-bar-height)) * 0.135, 7.8vw) *
+        var(--card-scale)
+    );
+    --card-size: calc(
+      min((100dvh - var(--mobile-top-bar-height)) * 0.135, 7.8dvw) *
+        var(--card-scale)
+    );
+  }
+}

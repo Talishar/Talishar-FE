@@ -193,7 +193,7 @@ function MobileOverflowMenu({ isSpectator }: { isSpectator: boolean }) {
 
 function MenuContent() {
   const isMobile = useMediaQuery('(max-width: 599px)');
-  const isNarrow = useMediaQuery('(max-width: 1199px)');
+  const isNarrow = useMediaQuery('(max-width: 1200px)');
   const isTablet = !isMobile && isNarrow;
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
