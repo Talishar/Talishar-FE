@@ -653,8 +653,18 @@ export const apiSlice = createApi({
         };
       },
       // Pick out errors and prevent nested properties in a hook or selector
-      transformErrorResponse: (response: { status: string | number }) =>
-        response.status
+      transformErrorResponse: (response) => {
+        const data = 'data' in response ? response.data : undefined;
+        if (
+          typeof data === 'object' &&
+          data !== null &&
+          'error' in data &&
+          typeof data.error === 'string'
+        ) {
+          return data.error;
+        }
+        return `Replay request failed (${response.status})`;
+      }
     }),
     getSavedReplays: builder.query<GetSavedReplaysResponse, void>({
       query: () => ({

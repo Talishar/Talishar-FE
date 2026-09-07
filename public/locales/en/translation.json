@@ -808,7 +808,7 @@
   },
   "LOAD_REPLAY": {
     "BETA_BODY": "The Replay Tool is currently in beta. If you encounter any issues, please report them in our Discord <2>#bug-reports</2> channel with your <6>Talishar username</6> and <10>replay number</10>.",
-    "BETA_NOTE": "Please note: Replays you save might randomly stop working as engine changes get made during development.",
+    "BETA_NOTE": "New replays store the exact game state after every action. Older command-only replays remain available, but may desync when engine behavior has changed.",
     "BETA_TITLE": "⚠️ The Replay Tool is currently in Beta",
     "COPY_SHAREABLE_LINK": "Copy shareable link",
     "DELETE_ARIA_LABEL": "Delete Replay #{{number}}",
