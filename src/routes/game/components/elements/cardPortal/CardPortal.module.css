@@ -103,6 +103,107 @@
   max-height: none;
 }
 
+.mobileBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 11000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: max(12px, env(safe-area-inset-top))
+    max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom))
+    max(12px, env(safe-area-inset-left));
+  background: rgb(0 0 0 / 72%);
+  backdrop-filter: blur(3px);
+}
+
+.mobileDialog {
+  position: relative;
+  box-sizing: border-box;
+  max-width: 100%;
+  max-height: 100%;
+  padding: 18px;
+  overflow: auto;
+  border: 1px solid var(--theme-border-light, rgb(255 255 255 / 18%));
+  border-radius: 14px;
+  background: var(--theme-near-black, #111);
+  box-shadow: 0 16px 48px rgb(0 0 0 / 65%);
+  overscroll-behavior: contain;
+}
+
+.mobileCardGroup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.mobileDialog .popUp {
+  min-width: 0;
+  padding: 0;
+}
+
+.mobileDialog .img {
+  width: auto;
+  height: auto;
+  max-width: calc(100vw - 60px);
+  max-height: calc(78dvh - 48px);
+}
+
+.mobileDialogDoubleFaced .img {
+  max-width: calc(50vw - 42px);
+  max-height: calc(70dvh - 48px);
+}
+
+.mobileDialog .doubleFacedCard {
+  position: static;
+  left: auto;
+}
+
+.mobileDialog .meldWrap {
+  --meld-h: min(calc(70dvh - 48px), calc((100vw - 60px) * 0.7166));
+}
+
+.mobileCloseButton {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 200;
+  display: grid;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  place-items: center;
+  border: 1px solid rgb(255 255 255 / 35%);
+  border-radius: 50%;
+  background: rgb(15 15 15 / 88%);
+  color: #fff;
+  box-shadow: 0 2px 10px rgb(0 0 0 / 55%);
+  font: 400 2rem/1 sans-serif;
+}
+
+.mobileCloseButton:focus-visible {
+  outline: 3px solid var(--theme-focus, #fff);
+  outline-offset: 2px;
+}
+
+@media (orientation: landscape) and (max-height: 600px) {
+  .mobileDialog {
+    padding: 12px;
+  }
+
+  .mobileDialog .img {
+    max-width: calc(100vw - 56px);
+    max-height: calc(100dvh - 48px);
+  }
+
+  .mobileDialogDoubleFaced .img {
+    max-width: calc(50vw - 36px);
+  }
+}
+
 @media (orientation: portrait) {
   .popUpContainer {
     top: 50% !important;

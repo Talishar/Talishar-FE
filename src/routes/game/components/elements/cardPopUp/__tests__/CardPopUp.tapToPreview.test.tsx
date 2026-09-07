@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, screen, waitFor } from '@testing-library/react';
 import { CookiesProvider } from 'react-cookie';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { renderWithProviders } from 'utils/TestUtils';
@@ -58,6 +58,26 @@ describe('CardPopUp board tap to preview', () => {
     tapCard(screen.getByTestId('board-card'));
     expect(onClick).toHaveBeenCalledTimes(1);
     expect(getCardPreview().popupOn).not.toBe(true);
+  });
+
+  it('keeps a touch long-press preview open after the finger is lifted', () => {
+    vi.useFakeTimers();
+    const onClick = vi.fn();
+    renderBoardCard({ cookieEnabled: false, onClick });
+    const card = screen.getByTestId('board-card');
+
+    fireEvent.touchStart(card);
+    act(() => vi.advanceTimersByTime(400));
+    fireEvent.touchEnd(card);
+    fireEvent.click(card);
+
+    expect(getCardPreview()).toMatchObject({
+      popupOn: true,
+      popupCard: { cardNumber: 'WTR076' },
+      presentation: 'mobile-modal'
+    });
+    expect(onClick).not.toHaveBeenCalled();
+    vi.useRealTimers();
   });
 
   it('tap board card → sticky preview; second tap runs onClick', async () => {

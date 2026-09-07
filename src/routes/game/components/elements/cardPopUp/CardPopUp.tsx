@@ -1,5 +1,6 @@
 import {
   clearCardPreview,
+  getCardPreview,
   setCardPreview
 } from '../cardPortal/cardPreviewStore';
 import React, { ReactNode, useEffect, useId, useRef } from 'react';
@@ -149,7 +150,7 @@ export default function CardPopUp({
   const disableCardTilt = useCookieString('disableCardTilt');
   const tapToPreviewCookie = useCookieString(TAP_TO_PREVIEW_PLAY_COOKIE);
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const touchPopupShown = useRef(false);
+  const suppressNextClick = useRef(false);
   const lastPointerTypeRef = useRef<string | null>(null);
   const instanceId = useId();
 
@@ -205,7 +206,9 @@ export default function CardPopUp({
     return () => document.removeEventListener('pointerdown', onPointerDown);
   }, [stickyActive]);
 
-  const showPreview = () => {
+  const showPreview = (
+    presentation: 'floating' | 'mobile-modal' = 'floating'
+  ) => {
     if (ref.current === null) {
       return;
     }
@@ -216,7 +219,13 @@ export default function CardPopUp({
     const xCoord = rect.left < window.innerWidth / 2 ? rect.right : rect.left;
     const anchorY = rect.top < window.innerHeight / 2 ? rect.bottom : rect.top;
     const yCoord = Math.min(window.innerHeight, anchorY + previewYOffset);
-    setCardPreview({ cardNumber, xCoord, yCoord, isOpponent });
+    setCardPreview({
+      cardNumber,
+      xCoord,
+      yCoord,
+      isOpponent,
+      presentation
+    });
   };
 
   const handleMouseEnter = () => {
@@ -224,6 +233,9 @@ export default function CardPopUp({
   };
 
   const clearPopUpUnlessSticky = () => {
+    if (getCardPreview().presentation === 'mobile-modal') {
+      return;
+    }
     if (getTapToPreviewSelectedCardKey() === selectionKey) {
       return;
     }
@@ -236,13 +248,12 @@ export default function CardPopUp({
 
   const handleTouchStart = () => {
     if (longPressTimer.current) clearTimeout(longPressTimer.current);
-    touchPopupShown.current = false;
+    suppressNextClick.current = false;
     lastPointerTypeRef.current = 'touch';
-    if (cookieEnabled) return;
     longPressTimer.current = setTimeout(() => {
       longPressTimer.current = null;
-      handleMouseEnter();
-      touchPopupShown.current = true;
+      showPreview('mobile-modal');
+      suppressNextClick.current = true;
     }, LONG_PRESS_DELAY);
   };
 
@@ -250,10 +261,6 @@ export default function CardPopUp({
     if (longPressTimer.current) {
       clearTimeout(longPressTimer.current);
       longPressTimer.current = null;
-    }
-    if (touchPopupShown.current) {
-      handleMouseLeave();
-      touchPopupShown.current = false;
     }
   };
 
@@ -265,6 +272,11 @@ export default function CardPopUp({
   };
 
   const handleOnClick = () => {
+    if (suppressNextClick.current) {
+      suppressNextClick.current = false;
+      return;
+    }
+
     if (isTapToPreviewContext()) {
       // Do not stopPropagation: zone wrappers (pitch/graveyard/banish/deck)
       // and modal parents (e.g. OtherInput) must still receive the click.

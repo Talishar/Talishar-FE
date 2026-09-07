@@ -7,6 +7,7 @@ export type CardPreviewState = {
   xCoord?: number;
   yCoord?: number;
   isOpponent?: boolean;
+  presentation?: 'floating' | 'mobile-modal';
 };
 
 const CLOSED: CardPreviewState = { popupOn: false, popupCard: undefined };
@@ -32,14 +33,17 @@ export function setCardPreview(next: {
   xCoord?: number;
   yCoord?: number;
   isOpponent?: boolean;
+  presentation?: 'floating' | 'mobile-modal';
 }): void {
   const previous = snapshot;
+  const presentation = next.presentation ?? 'floating';
   if (
     previous.popupOn &&
     previous.popupCard?.cardNumber === next.cardNumber &&
     previous.xCoord === next.xCoord &&
     previous.yCoord === next.yCoord &&
-    previous.isOpponent === next.isOpponent
+    previous.isOpponent === next.isOpponent &&
+    previous.presentation === presentation
   ) {
     return;
   }
@@ -49,7 +53,8 @@ export function setCardPreview(next: {
     popupCard: { cardNumber: next.cardNumber },
     xCoord: next.xCoord,
     yCoord: next.yCoord,
-    isOpponent: next.isOpponent
+    isOpponent: next.isOpponent,
+    presentation
   };
   emit();
 }
