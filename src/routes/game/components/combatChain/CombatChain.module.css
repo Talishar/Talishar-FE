@@ -1,10 +1,18 @@
 .combatChain {
   position: relative;
-  height: 20dvh;
+  --chain-subcard-count: 0;
+  --chain-subcard-space: calc(
+    var(--chain-subcard-count) * 0.18 * var(--card-size)
+  );
+  height: calc(20dvh + var(--chain-subcard-space));
+  translate: 0 calc(0.5 * var(--chain-subcard-space));
+  transition: height 0.18s ease-out, padding-bottom 0.18s ease-out,
+    translate 0.18s ease-out;
   margin: auto;
   width: 95%;
   --chain-padding: 1vh;
   padding: var(--chain-padding);
+  padding-bottom: calc(var(--chain-padding) + var(--chain-subcard-space));
   background: none;
   border: none;
   outline: none;
@@ -59,7 +67,7 @@
   align-self: stretch;
   margin-top: calc(-1 * var(--chain-padding));
   margin-right: calc(-1 * var(--chain-padding));
-  margin-bottom: calc(-1 * var(--chain-padding));
+  margin-bottom: calc(-1 * (var(--chain-padding) + var(--chain-subcard-space)));
   font-size: min(calc(1.5vh - 2px), calc(0.9vw - 1px));
   font-size: min(calc(1.5dvh - 2px), calc(0.9dvw - 1px));
   border: 0;

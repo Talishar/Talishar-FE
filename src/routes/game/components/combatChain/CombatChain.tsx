@@ -33,6 +33,9 @@ export default function CombatChain() {
   const activeCombatChain = useAppSelector(
     (state: RootState) => state.game.activeChainLink
   );
+  const attackSubcards = useAppSelector(
+    (state: RootState) => state.game.activeChainLink?.attackingCard?.subcards
+  );
   const showModals = useShowModal();
   const storedOffsetRef = React.useRef<number | null>(null);
   if (storedOffsetRef.current === null) {
@@ -50,6 +53,7 @@ export default function CombatChain() {
   const [isDragging, setIsDragging] = React.useState(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
   const promptOwner = usePlayerPromptOwner();
+  const visibleSubCards = attackSubcards?.some(Boolean) ? 1 : 0;
 
   const setOffsetFromClientY = (clientY: number) => {
     const delta = clientY - dragStartYRef.current;
@@ -131,7 +135,12 @@ export default function CombatChain() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          style={{ y: yOffsetDvh }}
+          style={{
+            y: yOffsetDvh,
+            ...({
+              '--chain-subcard-count': visibleSubCards
+            } as React.CSSProperties)
+          }}
           className={`${styles.combatChain} ${''}`}
         >
           <CurrentAttack />
