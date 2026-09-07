@@ -91,6 +91,82 @@ describe('lobby refresh isolation', () => {
   });
 });
 
+describe('lobby refresh request handling', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('treats spectator authentication failures as terminal', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+      new Response(
+        JSON.stringify({ error: 'Authentication required to spectate.' }),
+        { status: 401, headers: { 'Content-Type': 'application/json' } }
+      )
+    );
+
+    const result = await gameLobby({
+      game: game(101, 3, ''),
+      signal: undefined,
+      lastUpdate: 0
+    })(vi.fn(), vi.fn(), undefined);
+
+    expect(gameLobby.rejected.match(result)).toBe(true);
+    expect(result.payload).toEqual({
+      status: 401,
+      message: 'Authentication required to spectate.',
+      terminal: true,
+      retryAfterMs: undefined
+    });
+  });
+
+  it('honors Retry-After for rate limited polls', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+      new Response(JSON.stringify({ error: 'Too many requests' }), {
+        status: 429,
+        headers: { 'Retry-After': '10' }
+      })
+    );
+
+    const result = await gameLobby({
+      game: game(101, 1, 'key'),
+      signal: undefined,
+      lastUpdate: 5
+    })(vi.fn(), vi.fn(), undefined);
+
+    expect(gameLobby.rejected.match(result)).toBe(true);
+    expect(result.payload).toEqual({
+      status: 429,
+      message: 'Too many requests',
+      terminal: false,
+      retryAfterMs: 10000
+    });
+  });
+
+  it('sends lobby refreshes as JSON POST requests', async () => {
+    const fetchMock = vi
+      .spyOn(globalThis, 'fetch')
+      .mockResolvedValue(
+        new Response(JSON.stringify({ lastUpdate: 6 }), { status: 200 })
+      );
+
+    const result = await gameLobby({
+      game: game(101, 1, 'key'),
+      signal: undefined,
+      lastUpdate: 5
+    })(vi.fn(), vi.fn(), undefined);
+
+    expect(gameLobby.fulfilled.match(result)).toBe(true);
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include'
+      })
+    );
+  });
+});
+
 describe('player input guard', () => {
   const button = { button: { mode: 1 } };
 
