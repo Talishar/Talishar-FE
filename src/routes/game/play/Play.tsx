@@ -36,6 +36,7 @@ import { Toaster } from 'react-hot-toast';
 import { shallowEqual } from 'react-redux';
 import { PanelProvider } from '../components/leftColumn/PanelContext';
 import usePlayerPresenceReporter from 'hooks/usePlayerPresenceReporter';
+import useSuppressTouchImageMenu from 'hooks/useSuppressTouchImageMenu';
 import useAdScript, { wasAdProviderLoadedInDocument } from 'hooks/useAdScript';
 import {
   CardScaleVariables,
@@ -139,6 +140,7 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
   const { t } = useTranslation();
   usePageTitle(t('PAGES.GAME_PLAY'));
   usePlayerPresenceReporter();
+  useSuppressTouchImageMenu();
 
   const dispatch = useAppDispatch();
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);

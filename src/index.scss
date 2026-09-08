@@ -293,7 +293,7 @@ body {
     transparent
   );
   --tooltip-border-width: 1px;
-  --tooltip-border-radius: 6px;
+  --tooltip-border-radius: 5px;
   --tooltip-padding: 0.5rem 0.75rem;
   --tooltip-font-size: 0.875rem;
   --tooltip-font-weight: 500;
@@ -399,4 +399,10 @@ button.primary,
     transform: none !important;
     background: var(--theme-primary) !important;
   }
+}
+
+body.noImageCallout img,
+body.noImageCallout picture,
+body.noImageCallout a[href] {
+  -webkit-touch-callout: none;
 }

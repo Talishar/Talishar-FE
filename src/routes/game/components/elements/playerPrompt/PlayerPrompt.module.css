@@ -60,7 +60,7 @@
   justify-content: center;
   min-width: 4.5em;
   min-height: 0;
-  border-radius: 6px;
+  border-radius: 5px;
   border: 1px solid rgba(var(--theme-on-surface-rgb), 0.15);
   flex: 0 0 auto;
   align-self: stretch;
@@ -119,20 +119,26 @@
 /* Mobile: single row, shrink to fit */
 @media (max-width: 600px) {
   .playerPrompt {
-    font-size: 1.2em;
-    max-height: 100%;
+    font-size: clamp(13px, 3.5dvw, 17px);
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: env(safe-area-inset-bottom, 4px);
+    height: auto;
+    min-height: 100%;
+    max-height: 22dvh;
     flex-direction: row;
     flex-wrap: nowrap;
     gap: 4px;
     padding: 4px 6px;
-    margin-bottom: env(safe-area-inset-bottom, 4px);
+    margin-bottom: 0;
   }
 
   .buttonDiv {
     min-width: 0;
     min-height: 0;
-    font-size: 0.95em;
-    padding: 0.4em 0.5em;
+    font-size: 0.9em;
+    padding: 0.35em 0.7em;
     margin-left: 0;
     white-space: nowrap;
   }
@@ -141,7 +147,7 @@
 /* Very small phones (320px and under) */
 @media (max-width: 360px) {
   .playerPrompt {
-    font-size: 1.1em;
-    padding: 4px 4px;
+    padding: 3px 4px;
+    gap: 3px;
   }
 }

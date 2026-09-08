@@ -6,6 +6,7 @@ import React, {
   useRef
 } from 'react';
 import { usePageTitle } from 'hooks/usePageTitle';
+import useSuppressTouchImageMenu from 'hooks/useSuppressTouchImageMenu';
 import Deck from './components/deck/Deck';
 import LobbyChat from './components/lobbyChat/LobbyChat';
 import testData from './mockdata.json';
@@ -115,6 +116,7 @@ const normalizeMatchupName = (name: string): string =>
 const Lobby = () => {
   const { t } = useTranslation();
   usePageTitle(t('PAGES.LOBBY'));
+  useSuppressTouchImageMenu();
   useAdScript(false);
   const [activeTab, setActiveTab] = useState<string>('equipment');
   const [unreadChat, setUnreadChat] = useState<boolean>(false);

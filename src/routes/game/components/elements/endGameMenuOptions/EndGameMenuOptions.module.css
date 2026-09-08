@@ -19,7 +19,7 @@
   color: rgba(var(--theme-on-surface-rgb), 0.8);
   min-height: 2.25rem;
   padding: 0.4rem 0.85rem;
-  border-radius: 6px;
+  border-radius: 5px;
   border: 1px solid rgba(var(--theme-on-surface-rgb), 0.18);
   white-space: nowrap;
   font-size: 1em;

@@ -29,7 +29,7 @@
   padding: 0.25rem 1.1rem;
   border: 1px solid var(--lobby-control-border, rgba(255, 255, 255, 0.12)) !important;
   background-color: var(--lobby-control-background, #1e2329) !important;
-  border-radius: 6px;
+  border-radius: 5px;
   cursor: pointer;
   font-size: 0.9em;
   font-weight: 500;
@@ -75,7 +75,7 @@
   padding: 0.25rem 1.1rem;
   border: 1px solid var(--lobby-control-border, rgba(255, 255, 255, 0.12)) !important;
   background-color: var(--lobby-control-background, #1e2329) !important;
-  border-radius: 6px;
+  border-radius: 5px;
   cursor: pointer;
   font-size: 0.9em;
   font-weight: 500;

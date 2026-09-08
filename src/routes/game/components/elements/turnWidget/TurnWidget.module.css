@@ -21,7 +21,7 @@
   grid-template-rows: 1fr 1.35fr 1fr;
   gap: 0.8dvh;
   padding: 0.9dvh;
-  border-radius: 6px;
+  border-radius: 5px;
   background: linear-gradient(to bottom, #1a1c23 0%, #0f1015 100%);
   border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);

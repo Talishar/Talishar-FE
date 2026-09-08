@@ -187,7 +187,7 @@
   color: var(--theme-text);
   font-weight: 700;
   padding: 0.6em 1.6em;
-  border-radius: 6px;
+  border-radius: 5px;
   text-decoration: none;
   font-size: 0.9rem;
   border: 1px solid rgba(var(--theme-on-surface-rgb), 0.15);
@@ -205,7 +205,7 @@
   color: var(--theme-text);
   font-weight: 700;
   padding: 0.6em 1.6em;
-  border-radius: 6px;
+  border-radius: 5px;
   text-decoration: none;
   font-size: 0.9rem;
   transition: background 0.2s ease;
@@ -229,7 +229,7 @@
   color: var(--theme-primary-inverse);
   font-weight: 700;
   padding: 0.875em 2.25em;
-  border-radius: 6px;
+  border-radius: 5px;
   text-decoration: none;
   font-size: 0.9rem;
   transition: background 0.2s ease;
@@ -335,7 +335,7 @@
   align-items: center;
   transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
   text-align: left;
-  border-radius: 6px;
+  border-radius: 5px;
 }
 
 .faqQuestion:hover {

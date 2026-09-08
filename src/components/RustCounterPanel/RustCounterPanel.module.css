@@ -11,7 +11,7 @@
 
 .panelLocked {
   border: 1px solid rgba(var(--theme-on-surface-rgb), 0.14);
-  border-radius: 6px;
+  border-radius: 5px;
   background: rgba(var(--theme-on-surface-rgb), 0.03);
 }
 

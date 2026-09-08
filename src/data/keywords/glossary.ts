@@ -67,6 +67,19 @@ export const GLOSSARY: KeywordEntry[] = [
     category: 'ability'
   },
   {
+    id: 'decay',
+    name: 'Decay',
+    short: 'At the beginning of your end phase, put a -1 life counter on this.',
+    category: 'ability'
+  },
+  {
+    id: 'incarnate',
+    name: 'Incarnate',
+    short:
+      "This can't start in your deck. If this would die, instead it ceases to exist.",
+    category: 'ability'
+  },
+  {
     id: 'boost',
     name: 'Boost',
     short:

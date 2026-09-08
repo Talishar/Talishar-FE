@@ -93,15 +93,27 @@
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s, color 0.2s;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .leaveButton:hover {
-  background-color: transparent;
-  color: var(--theme-alarm, #c62828);
-  border: 1px solid var(--theme-alarm, #c62828);
+  background-color: color-mix(in srgb, var(--theme-alarm, #c62828) 82%, #000);
+  border-color: color-mix(in srgb, var(--theme-alarm, #c62828) 60%, #000);
+  color: #fff;
+}
+
+.leaveButton:active {
+  background-color: color-mix(in srgb, var(--theme-alarm, #c62828) 88%, #000);
+  border-color: color-mix(in srgb, var(--theme-alarm, #c62828) 88%, #000);
+}
+
+.leaveButton:focus-visible {
+  outline: 2px solid rgba(var(--theme-on-surface-rgb), 0.5);
+  outline-offset: 2px;
 }
 
 .leaveButton:disabled {

@@ -243,7 +243,7 @@
 
 .gameListContainer::-webkit-scrollbar-thumb {
   background: #5a5f66;
-  border-radius: 6px;
+  border-radius: 5px;
 }
 
 .gameListContainer::-webkit-scrollbar-thumb:hover {
@@ -469,7 +469,7 @@ h3 {
 
 .newsContent::-webkit-scrollbar-thumb {
   background: #5a5f66;
-  border-radius: 6px;
+  border-radius: 5px;
 }
 
 .newsContent::-webkit-scrollbar-thumb:hover {
@@ -524,7 +524,7 @@ h3 {
     padding: 0.75em 1.5em;
     background: rgba(var(--theme-on-surface-rgb), 0.08);
     border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.15));
-    border-radius: 6px;
+    border-radius: 5px;
     color: var(--theme-text-muted);
     cursor: pointer;
     font-size: 0.9rem;

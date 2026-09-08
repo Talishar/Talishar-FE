@@ -51,7 +51,7 @@
   display: block;
   margin-top: 0.2rem;
   font-size: 0.78rem;
-  color: #f87171;
+  color: #ce1313;
   font-weight: 500;
 }
 
@@ -78,7 +78,7 @@
   background: rgba(var(--theme-on-surface-rgb), 0.1);
   border: 1px solid rgba(var(--theme-on-surface-rgb), 0.25);
   color: var(--theme-text);
-  border-radius: 6px;
+  border-radius: 5px;
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
@@ -102,7 +102,7 @@
   background: transparent;
   border: 1px solid rgba(var(--theme-on-surface-rgb), 0.1);
   color: rgba(var(--theme-on-surface-rgb), 0.45);
-  border-radius: 6px;
+  border-radius: 5px;
   font-size: 0.82rem;
   cursor: pointer;
   transition: all 0.15s ease;

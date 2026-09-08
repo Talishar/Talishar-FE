@@ -3,16 +3,24 @@ import { useSyncExternalStore } from 'react';
 type CardKeywordModule =
   typeof import('data/keywords/generated/cardKeywordMap');
 
-let loaded: CardKeywordModule | null = null;
+type KeywordMaps = {
+  community: CardKeywordModule;
+  backend: CardKeywordModule;
+};
+
+let loaded: KeywordMaps | null = null;
 let inFlight: Promise<void> | null = null;
 let reportedFailure = false;
 const listeners = new Set<() => void>();
 
 export function prefetchCardKeywords(): void {
   if (loaded !== null || inFlight !== null) return;
-  inFlight = import('data/keywords/generated/cardKeywordMap')
-    .then((module) => {
-      loaded = module;
+  inFlight = Promise.all([
+    import('data/keywords/generated/cardKeywordMap'),
+    import('data/keywords/generated/backendCardKeywordMap')
+  ])
+    .then(([community, backend]) => {
+      loaded = { community, backend };
       for (const listener of listeners) listener();
     })
     .catch((error) => {
@@ -35,14 +43,23 @@ const subscribe = (onStoreChange: () => void) => {
 
 const getSnapshot = () => loaded;
 
+const lookup = (
+  module: CardKeywordModule,
+  cardNumber: string
+): string[] | undefined => {
+  const indexes = module.CARD_KEYWORD_MAP[cardNumber];
+  if (!indexes || indexes.length === 0) return undefined;
+  return indexes.map((i) => module.KEYWORD_STRINGS[i]);
+};
+
 export const useCardKeywords = (cardNumber?: string): string[] | undefined => {
-  const module = useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
-  if (module === null) {
+  const maps = useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
+  if (maps === null) {
     prefetchCardKeywords();
     return undefined;
   }
   if (!cardNumber) return undefined;
-  const indexes = module.CARD_KEYWORD_MAP[cardNumber];
-  if (!indexes || indexes.length === 0) return undefined;
-  return indexes.map((i) => module.KEYWORD_STRINGS[i]);
+  // The community dataset trails new sets by a release or two, so cards it has
+  // not caught up with fall back to the map built from the Talishar backend.
+  return lookup(maps.community, cardNumber) ?? lookup(maps.backend, cardNumber);
 };

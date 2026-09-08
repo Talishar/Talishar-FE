@@ -19,6 +19,7 @@ import { wrapKeywordsInNodes } from '../elements/keywordPopover';
 import { MdDragHandle } from 'react-icons/md';
 import useShowModal from '../../../../hooks/useShowModals';
 import useOpponentPresencePrompt from '../../../../hooks/useOpponentPresencePrompt';
+import { useMediaQuery } from '../../../../hooks/useMediaQuery';
 import usePlayerPromptOwner from '../elements/playerPrompt/usePlayerPromptOwner';
 
 const STORAGE_KEY = 'combatChainPosition';
@@ -53,6 +54,9 @@ export default function CombatChain() {
   const [isDragging, setIsDragging] = React.useState(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
   const promptOwner = usePlayerPromptOwner();
+  const isMobileLayout = useMediaQuery(
+    '(max-width: 700px), (orientation: landscape) and (max-height: 500px)'
+  );
   const visibleSubCards = attackSubcards?.some(Boolean) ? 1 : 0;
 
   const setOffsetFromClientY = (clientY: number) => {
@@ -136,7 +140,7 @@ export default function CombatChain() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           style={{
-            y: yOffsetDvh,
+            y: isMobileLayout ? 0 : yOffsetDvh,
             ...({
               '--chain-subcard-count': visibleSubCards
             } as React.CSSProperties)
@@ -148,24 +152,26 @@ export default function CombatChain() {
             <ChainLinks />
             <Reactions />
           </div>
-          <button
-            type="button"
-            className={`${styles.grabbyHandle} ${
-              isDragging ? styles.grabbyHandleDragging : ''
-            }`}
-            aria-label={t('COMBAT_CHAIN.DRAG_TOOLTIP')}
-            onPointerDown={handlePointerDown}
-            onPointerMove={handlePointerMove}
-            onPointerUp={finishPointerDrag}
-            onPointerCancel={cancelPointerDrag}
-            onKeyDown={handleHandleKeyDown}
-          >
-            <MdDragHandle
-              size={32}
-              className={styles.gripIcon}
-              aria-hidden="true"
-            />
-          </button>
+          {!isMobileLayout && (
+            <button
+              type="button"
+              className={`${styles.grabbyHandle} ${
+                isDragging ? styles.grabbyHandleDragging : ''
+              }`}
+              aria-label={t('COMBAT_CHAIN.DRAG_TOOLTIP')}
+              onPointerDown={handlePointerDown}
+              onPointerMove={handlePointerMove}
+              onPointerUp={finishPointerDrag}
+              onPointerCancel={cancelPointerDrag}
+              onKeyDown={handleHandleKeyDown}
+            >
+              <MdDragHandle
+                size={32}
+                className={styles.gripIcon}
+                aria-hidden="true"
+              />
+            </button>
+          )}
           {promptOwner === 'combatChain' && <CombatChainPlayerPrompt />}
           <div />
           <div />

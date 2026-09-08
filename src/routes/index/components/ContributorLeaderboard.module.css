@@ -100,7 +100,7 @@
   padding: 0.5em 1.5em;
   background: rgba(80, 120, 200, 0.15);
   border: 1px solid rgba(100, 150, 220, 0.3);
-  border-radius: 6px;
+  border-radius: 5px;
   color: color-mix(in srgb, #88aaee 55%, var(--theme-text));
   font-size: 0.85rem;
   cursor: pointer;

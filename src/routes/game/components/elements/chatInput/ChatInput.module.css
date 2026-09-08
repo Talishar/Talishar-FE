@@ -230,7 +230,7 @@
   background: transparent;
   border: none;
   justify-content: left !important;
-  border-radius: 6px;
+  border-radius: 5px;
   color: var(--theme-text-secondary);
   font-size: 0.88em;
   cursor: pointer;

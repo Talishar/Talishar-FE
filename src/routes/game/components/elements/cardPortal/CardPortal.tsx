@@ -12,6 +12,7 @@ import { createPortal } from 'react-dom';
 import { isMeldCard } from 'constants/meldCards';
 import CardKeywordStrip from './CardKeywordStrip';
 import { useTranslation } from 'react-i18next';
+import { MdClose } from 'react-icons/md';
 
 const popUpGap = 130;
 
@@ -125,7 +126,7 @@ export default function CardPortal() {
             aria-label={t('PLAYER_INPUT.CLOSE_POPUP')}
             onClick={clearCardPreview}
           >
-            &times;
+            <MdClose aria-hidden="true" />
           </button>
           <div className={styles.mobileCardGroup}>
             {isDFC && (

@@ -8,7 +8,6 @@ import {
   getGameInfo
 } from 'features/game/GameSlice';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
-import { FaTimes } from 'react-icons/fa';
 import styles from './CardListZone.module.css';
 import { useGetPopUpContentQuery } from 'features/api/apiSlice';
 import useShortcut from 'hooks/useShortcut';
@@ -18,6 +17,7 @@ import useShowModal from 'hooks/useShowModals';
 import { shallowEqual } from 'react-redux';
 import { Card, isAllyCard } from 'features/Card';
 import { useTranslation } from 'react-i18next';
+import { MdClose } from 'react-icons/md';
 
 const SORT_PREFERENCE_KEY = 'cardListZone_sortPreference';
 
@@ -149,7 +149,7 @@ export const CardListZone = () => {
                 onClick={closeCardList}
                 aria-label={t('PLAYER_INPUT.CLOSE_POPUP')}
               >
-                <FaTimes aria-hidden="true" />
+                <MdClose aria-hidden="true" />
               </button>
               <div className={styles.cardListTitle}>
                 <h3 className={styles.title}>{cardList?.name}</h3>

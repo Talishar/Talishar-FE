@@ -58,12 +58,15 @@
 
   .allLinksGrid {
     display: block;
-    padding: 8px;
+    padding: 6px;
   }
 
   .allLinksGrid .cardListBox {
     max-height: none;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
+    border-radius: 8px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55),
+      0 1px 0 rgba(255, 255, 255, 0.04) inset;
   }
 
   .allLinksGrid .body {
@@ -72,6 +75,93 @@
 
   .allLinksGrid .cardListBox:last-child {
     margin-bottom: 0;
+  }
+
+  .allLinksGrid .cardListTitleContainer {
+    min-height: 34px;
+    padding: 8px 10px;
+    box-sizing: border-box;
+  }
+
+  .allLinksGrid .titleRow {
+    gap: 7px;
+  }
+
+  .allLinksGrid .title {
+    font-size: 0.78rem;
+  }
+
+  .allLinksGrid .badge {
+    font-size: 0.52rem;
+  }
+
+  .allLinksGrid .ledger {
+    margin: 7px 9px 0;
+    border-radius: 5px;
+  }
+
+  .allLinksGrid .stat {
+    gap: 2px;
+    padding: 6px 4px;
+  }
+
+  .allLinksGrid .statNum {
+    font-size: 1.15rem;
+  }
+
+  .allLinksGrid .statLabel {
+    font-size: 0.5rem;
+  }
+
+  .allLinksGrid .op {
+    font-size: 0.9rem;
+  }
+
+  .allLinksGrid .body {
+    gap: 1px;
+    padding: 2px 9px 8px;
+  }
+
+  .allLinksGrid .sectionLabel {
+    padding: 6px 2px 2px;
+    font-size: 0.52rem;
+  }
+
+  .allLinksGrid .row {
+    gap: 8px;
+    padding: 2px 3px;
+  }
+
+  .allLinksGrid .rowIcon {
+    width: 34px;
+  }
+
+  .allLinksGrid .pitchImg {
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 3px !important;
+  }
+
+  .allLinksGrid .attackSymbol {
+    width: 22px;
+    height: 22px;
+  }
+
+  .allLinksGrid .rowName {
+    font-size: 0.78rem;
+  }
+
+  .allLinksGrid .rowVal,
+  .allLinksGrid .rowValPos,
+  .allLinksGrid .rowValNeg,
+  .allLinksGrid .rowValNeutral {
+    padding-right: 2px;
+    font-size: 0.82rem;
+  }
+
+  .allLinksGrid .emptyRow {
+    padding: 3px 5px;
+    font-size: 0.72rem;
   }
 
   .previewOutside {
@@ -99,10 +189,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 13px 15px;
+  padding: 5px 10px 0 10px;
   flex-shrink: 0;
   gap: 10px;
-  border-bottom: 1px solid rgba(var(--theme-on-surface-rgb), 0.07);
 }
 
 .titleRow {
@@ -128,26 +217,20 @@
 /* ── Hit / no-hit badge ───────────────────────────────── */
 .badge {
   font-size: 0.6rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  padding: 3px 8px;
-  border-radius: 999px;
+  padding: 0;
   line-height: 1;
-  border: 1px solid transparent;
   flex-shrink: 0;
 }
 
 .hit {
-  color: color-mix(in srgb, #fca5a5 55%, var(--theme-text));
-  background: rgba(220, 55, 55, 0.16);
-  border-color: rgba(220, 55, 55, 0.5);
+  color: #ce1313;
 }
 
 .noHit {
   color: rgba(var(--theme-on-surface-rgb), 0.55);
-  background: rgba(var(--theme-on-surface-rgb), 0.05);
-  border-color: rgba(var(--theme-on-surface-rgb), 0.16);
 }
 
 .cardListCloseIcon {
@@ -257,7 +340,7 @@
   align-items: center;
   gap: 11px;
   padding: 5px 6px;
-  border-radius: 6px;
+  border-radius: 5px;
   transition: background 0.15s ease;
 }
 
@@ -294,7 +377,7 @@
 .rowValPos {
   font-size: 0.92rem;
   font-weight: 800;
-  color: color-mix(in srgb, #4ade80 55%, var(--theme-text));
+  color: #7fae87;
   font-variant-numeric: tabular-nums;
   padding-right: 4px;
 }
@@ -302,7 +385,7 @@
 .rowValNeg {
   font-size: 0.92rem;
   font-weight: 800;
-  color: #f87171;
+  color: #ce1313;
   font-variant-numeric: tabular-nums;
   padding-right: 4px;
 }
@@ -353,7 +436,7 @@
 
 /* ── Error ────────────────────────────────────────────── */
 .error {
-  color: #f87171;
+  color: #ce1313;
   padding: 16px;
   text-align: center;
   font-size: 0.78rem;
