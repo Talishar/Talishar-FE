@@ -10,7 +10,6 @@ import type { MiddlewareAPI, Middleware } from '@reduxjs/toolkit';
 import {
   BACKEND_URL,
   FAB_BAZAAR_DECKS_API_URL,
-  ROGUELIKE_URL,
   URL_END_POINT
 } from 'appConstants';
 import { detectVpnBlock, logVpnBlock } from 'utils/VpnDetection';
@@ -100,7 +99,6 @@ import {
   BanOffensiveUsernameRequest
 } from 'interface/API/UsernameModerationAPI';
 import { BlockedUsersAPIResponse } from 'interface/API/BlockedUsersAPI.php';
-import type GameState from '../GameState';
 import {
   GetSavedReplaysResponse,
   SetReplayFavoriteRequest,
@@ -123,10 +121,6 @@ export interface GetLastActiveGameResponse {
   opponentDisconnected?: boolean;
   authKeyMismatch?: boolean;
 }
-
-type ApiState = {
-  game: Pick<GameState, 'gameInfo' | 'gameDynamicInfo'>;
-};
 
 // catch warnings and show a toast if we get one.
 export const rtkQueryErrorToaster: Middleware =
@@ -153,10 +147,8 @@ const dynamicBaseQuery: BaseQueryFn<
   unknown,
   FetchBaseQueryError
 > = async (args, webApi, extraOptions) => {
-  const { isRoguelike } = (webApi.getState() as ApiState).game.gameInfo;
-  const baseUrl = isRoguelike ? ROGUELIKE_URL : BACKEND_URL;
   const rawBaseQuery = fetchBaseQuery({
-    baseUrl,
+    baseUrl: BACKEND_URL,
     credentials: 'include'
   });
 

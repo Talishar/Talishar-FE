@@ -164,10 +164,9 @@ export const router = createBrowserRouter(
       <Route element={<Outlet />}>
         <Route
           path="game/play/:gameID"
-          element={<Play isRoguelike={false} />}
+          element={<Play />}
         />
-        <Route path="roguelike/play/" element={<Play isRoguelike={true} />} />
-        <Route path="game/play" element={<Play isRoguelike={false} />} />
+        <Route path="game/play" element={<Play />} />
         <Route path="game/lobby/:gameID" element={<Lobby />} />
         <Route
           path="game/MainMenu.php"

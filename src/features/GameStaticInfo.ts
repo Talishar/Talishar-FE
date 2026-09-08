@@ -7,10 +7,8 @@ export default interface GameStaticInfo {
   isPrivate?: boolean;
   isReplay?: boolean;
   replayNumber?: number;
-  roguelikeGameID?: number;
   altArts?: AltArt[];
   opponentAltArts?: AltArt[];
-  isRoguelike?: boolean;
   isOpponentAI?: boolean;
   gameFormat?: string;
   heroName?: string;

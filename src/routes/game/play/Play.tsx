@@ -30,7 +30,7 @@ import React, {
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '../../../app/Hooks';
-import { setIsRoguelike, getGameInfo } from '../../../features/game/GameSlice';
+import { getGameInfo } from '../../../features/game/GameSlice';
 import { fetchAllSettings } from 'features/options/optionsSlice';
 import { Toaster } from 'react-hot-toast';
 import { shallowEqual } from 'react-redux';
@@ -128,7 +128,7 @@ const HeroIntroGate = () => {
   return heroIntroShown ? null : <HeroVsHeroIntro />;
 };
 
-function Play({ isRoguelike }: { isRoguelike: boolean }) {
+function Play() {
   const needsCleanDocument = useRef(wasAdProviderLoadedInDocument());
   useLayoutEffect(() => {
     if (needsCleanDocument.current) {
@@ -155,10 +155,6 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
   );
   const isGameStateLoading =
     gameInfo.gameID <= 0 || loadedGameID !== gameInfo.gameID;
-
-  useEffect(() => {
-    dispatch(setIsRoguelike(isRoguelike));
-  }, [isRoguelike]);
 
   useEffect(() => {
     const idle = window.requestIdleCallback;

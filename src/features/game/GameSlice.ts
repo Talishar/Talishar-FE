@@ -17,7 +17,6 @@ import { Card, isAllyCard } from '../Card';
 import {
   BACKEND_URL,
   PROCESS_INPUT,
-  ROGUELIKE_URL,
   URL_END_POINT
 } from 'appConstants';
 import Button from '../Button';
@@ -55,8 +54,7 @@ const sendProcessInput = async (
   extraQuery = ''
 ): Promise<string> => {
   const startedAt = performance.now();
-  const baseURL = gameInfo.isRoguelike ? ROGUELIKE_URL : BACKEND_URL;
-  const queryURL = `${baseURL}${URL_END_POINT.PROCESS_INPUT}`;
+  const queryURL = `${BACKEND_URL}${URL_END_POINT.PROCESS_INPUT}`;
 
   let response: Response;
   try {
@@ -286,7 +284,6 @@ const STICKY_PLAYER_FIELDS = [
 
 const FALLBACK_GAME_INFO_FIELDS = [
   'gameGUID',
-  'roguelikeGameID',
   'isPrivate',
   'isReplay',
   'isOpponentAI',
@@ -831,9 +828,6 @@ export const gameSlice = createSlice({
     enableModals: (state) => {
       state.showModals = true;
     },
-    setIsRoguelike: (state, action: PayloadAction<boolean>) => {
-      state.gameInfo.isRoguelike = action.payload;
-    },
     setHeroInfo: (
       state,
       action: PayloadAction<{
@@ -1103,7 +1097,6 @@ export const {
   toggleChatModal,
   enableModals,
   disableModals,
-  setIsRoguelike,
   setHeroInfo,
   markHeroIntroAsShown,
   setLobbyAltArts,
