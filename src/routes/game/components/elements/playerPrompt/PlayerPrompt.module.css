@@ -119,26 +119,30 @@
 /* Mobile: single row, shrink to fit */
 @media (max-width: 600px) {
   .playerPrompt {
-    font-size: clamp(13px, 3.5dvw, 17px);
+    font-size: clamp(11px, 3dvw, 15px);
     position: absolute;
     left: 0;
     right: 0;
-    bottom: env(safe-area-inset-bottom, 4px);
+    top: 0;
+    bottom: auto;
     height: auto;
     min-height: 100%;
     max-height: 22dvh;
     flex-direction: row;
     flex-wrap: nowrap;
-    gap: 4px;
-    padding: 4px 6px;
+    align-items: center;
+    gap: 3px;
+    padding: 3px 5px;
     margin-bottom: 0;
   }
 
   .buttonDiv {
     min-width: 0;
-    min-height: 0;
-    font-size: 0.9em;
-    padding: 0.35em 0.7em;
+    min-height: 26px;
+    align-self: center;
+    font-size: 0.85em;
+    line-height: 1.1;
+    padding: 0.4em 0.6em;
     margin-left: 0;
     white-space: nowrap;
   }
@@ -149,5 +153,11 @@
   .playerPrompt {
     padding: 3px 4px;
     gap: 3px;
+  }
+
+  .buttonDiv {
+    flex: 0 1 auto;
+    padding: 0.4em 0.45em;
+    white-space: normal;
   }
 }
