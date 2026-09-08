@@ -6,6 +6,8 @@ import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import { Card } from 'features/Card';
 import styles from './ArsenalZone.module.css';
 import { useTranslation } from 'react-i18next';
+import DestroyAnimation from '../../elements/destroyAnimation/DestroyAnimation';
+import { useZonePlayerID } from '../../elements/destroyAnimation/useEquipDestroy';
 
 function ArsenalZone(prop: Displayrow) {
   const { isPlayer } = prop;
@@ -17,12 +19,6 @@ function ArsenalZone(prop: Displayrow) {
       : state.game.playerTwo.Arsenal;
   });
 
-  const playerID = useAppSelector(
-    (state: RootState) => state.game.gameInfo.playerID
-  );
-  const otherPlayerID = useAppSelector((state: RootState) =>
-    state.game.gameInfo.playerID === 1 ? 2 : 1
-  );
   const arsenalFlipP1Card = useAppSelector(
     (state: RootState) => state.game.arsenalFlipP1Card
   );
@@ -42,7 +38,7 @@ function ArsenalZone(prop: Displayrow) {
     (state: RootState) => state.game.arsenalDestroyTrigger
   );
 
-  const currentPlayerID = isPlayer ? playerID : otherPlayerID;
+  const currentPlayerID = useZonePlayerID(isPlayer);
   const flipCard =
     currentPlayerID === 1 ? arsenalFlipP1Card : arsenalFlipP2Card;
   const showFlip = !!flipCard;
@@ -59,22 +55,12 @@ function ArsenalZone(prop: Displayrow) {
         <div className={styles.arsenalZone}>
           {t('ZONES.ARSENAL')}
           {destroyCard && (
-            <div
-              key={`arsenalDestroyAnim-${arsenalDestroyTrigger}`}
-              className={styles.arsenalDestroyContainer}
-            >
-              <div className={styles.arsenalDestroyTopPiece}>
-                <CardDisplay
-                  card={{ cardNumber: destroyCard }}
-                  isPlayer={isPlayer}
-                />
-              </div>
-              <div className={styles.arsenalDestroyBottomPiece}>
-                <CardDisplay
-                  card={{ cardNumber: destroyCard }}
-                  isPlayer={isPlayer}
-                />
-              </div>
+            <div className={styles.arsenalDestroySlot}>
+              <DestroyAnimation
+                key={`arsenalDestroyAnim-${arsenalDestroyTrigger}`}
+                cardNumber={destroyCard}
+                isPlayer={isPlayer}
+              />
             </div>
           )}
         </div>
@@ -111,22 +97,12 @@ function ArsenalZone(prop: Displayrow) {
           );
         })}
         {destroyCard && (
-          <div
-            key={`arsenalDestroyAnim-${arsenalDestroyTrigger}`}
-            className={styles.arsenalDestroyContainer}
-          >
-            <div className={styles.arsenalDestroyTopPiece}>
-              <CardDisplay
-                card={{ cardNumber: destroyCard }}
-                isPlayer={isPlayer}
-              />
-            </div>
-            <div className={styles.arsenalDestroyBottomPiece}>
-              <CardDisplay
-                card={{ cardNumber: destroyCard }}
-                isPlayer={isPlayer}
-              />
-            </div>
+          <div className={styles.arsenalDestroySlot}>
+            <DestroyAnimation
+              key={`arsenalDestroyAnim-${arsenalDestroyTrigger}`}
+              cardNumber={destroyCard}
+              isPlayer={isPlayer}
+            />
           </div>
         )}
       </div>

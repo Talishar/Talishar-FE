@@ -336,6 +336,7 @@ export default function ParseGameState(input: any) {
     arsenalDestroyP1Card: '',
     arsenalDestroyP2Card: '',
     arsenalDestroyTrigger: 0,
+    equipDestroy: {},
     heroTransformP1Card: '',
     heroTransformP2Card: '',
     heroTransformTrigger: 0

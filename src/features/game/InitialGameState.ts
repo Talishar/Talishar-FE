@@ -34,6 +34,7 @@ const InitialGameState: GameState = {
   arsenalDestroyP1Card: '',
   arsenalDestroyP2Card: '',
   arsenalDestroyTrigger: 0,
+  equipDestroy: {},
   damagePopups: {
     playerOne: [],
     playerTwo: []
@@ -356,7 +357,8 @@ export const OfflineTestingGameState: GameState = {
   arsenalFlipTrigger: 0,
   arsenalDestroyP1Card: '',
   arsenalDestroyP2Card: '',
-  arsenalDestroyTrigger: 0
+  arsenalDestroyTrigger: 0,
+  equipDestroy: {}
 };
 
 export default InitialGameState as GameState;

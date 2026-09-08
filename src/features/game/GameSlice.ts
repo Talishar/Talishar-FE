@@ -896,6 +896,31 @@ export const gameSlice = createSlice({
     setHeroTransform: createRevealReducer('heroTransform'),
     setArsenalFlip: createRevealReducer('arsenalFlip'),
     setArsenalDestroy: createRevealReducer('arsenalDestroy'),
+    setEquipDestroy: (
+      state,
+      action: PayloadAction<{
+        playerId: number;
+        cardNumber: string;
+        slot: string;
+        id: number;
+      }>
+    ) => {
+      const slots = (state.equipDestroy ??= {});
+      slots[`${action.payload.playerId}:${action.payload.slot}`] = {
+        cardNumber: action.payload.cardNumber,
+        id: action.payload.id
+      };
+    },
+    clearEquipDestroy: (
+      state,
+      action: PayloadAction<{ playerId: number; slot: string; id: number }>
+    ) => {
+      const slots = state.equipDestroy;
+      if (!slots) return;
+      const key = `${action.payload.playerId}:${action.payload.slot}`;
+      // A newer destroy in the same slot owns the animation now, leave it alone.
+      if (slots[key]?.id === action.payload.id) delete slots[key];
+    },
     setReplayStart: (
       state,
       action: PayloadAction<{
@@ -1107,6 +1132,8 @@ export const {
   setHeroTransform,
   setArsenalFlip,
   setArsenalDestroy,
+  setEquipDestroy,
+  clearEquipDestroy,
   setReplayStart,
   setOpponentTyping,
   setOpponentPresence,

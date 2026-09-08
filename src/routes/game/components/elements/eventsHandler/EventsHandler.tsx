@@ -54,8 +54,16 @@ import {
   setClashReveal,
   setHeroTransform,
   setArsenalFlip,
-  setArsenalDestroy
+  setArsenalDestroy,
+  setEquipDestroy,
+  clearEquipDestroy
 } from 'features/game/GameSlice';
+import { DESTROY_ANIMATION_DURATION } from '../destroyAnimation/DestroyAnimation';
+import { normalizeEquipSlot } from '../destroyAnimation/useEquipDestroy';
+
+// Each destroyed slot animates independently, so every event gets its own
+// handle to clear once its animation is done.
+let nextEquipDestroyId = 0;
 
 enum ModalType {
   RequestChat = 0,
@@ -294,7 +302,8 @@ export const EventsHandler = React.memo(() => {
             });
             continue;
           }
-          case 'ARSENALDESTROY': {
+          case 'ARSENALDESTROY':
+          case 'ARSENALBANISH': {
             const destroyValue = event.eventValue ?? '';
             const [destroyPlayerID, destroyCardNumber] =
               destroyValue.split(':');
@@ -304,11 +313,30 @@ export const EventsHandler = React.memo(() => {
                 cardNumber: destroyCardNumber
               })
             );
-            requestAnimationFrame(() => {
-              setTimeout(() => {
-                dispatch(setArsenalDestroy({ playerId: null, cardNumber: '' }));
-              }, 1600);
-            });
+            setTimeout(() => {
+              dispatch(setArsenalDestroy({ playerId: null, cardNumber: '' }));
+            }, DESTROY_ANIMATION_DURATION);
+            continue;
+          }
+          case 'EQUIPDESTROY': {
+            const equipValue = event.eventValue ?? '';
+            const [equipPlayerID, equipCardNumber, equipSlot] =
+              equipValue.split(':');
+            const slot = normalizeEquipSlot(equipSlot ?? '');
+            const equipPlayerId = parseInt(equipPlayerID);
+            if (!slot || Number.isNaN(equipPlayerId)) continue;
+            const id = ++nextEquipDestroyId;
+            dispatch(
+              setEquipDestroy({
+                playerId: equipPlayerId,
+                cardNumber: equipCardNumber,
+                slot,
+                id
+              })
+            );
+            setTimeout(() => {
+              dispatch(clearEquipDestroy({ playerId: equipPlayerId, slot, id }));
+            }, DESTROY_ANIMATION_DURATION);
             continue;
           }
           case 'DISCARD': {

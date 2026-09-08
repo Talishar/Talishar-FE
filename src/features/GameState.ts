@@ -149,6 +149,7 @@ export default interface GameState {
   arsenalDestroyP1Card: string;
   arsenalDestroyP2Card: string;
   arsenalDestroyTrigger: number;
+  equipDestroy: Record<string, { cardNumber: string; id: number }>;
   damagePopups?: {
     playerOne: Array<{ id: string; amount: number }>;
     playerTwo: Array<{ id: string; amount: number }>;
