@@ -5,7 +5,6 @@ const LobbyChat = () => {
   return (
     <div className={styles.container}>
       <ChatBox usePrimary showTabs={false} flushTop />
-      <div className={styles.spacer}></div>
     </div>
   );
 };

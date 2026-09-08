@@ -1,6 +1,6 @@
 .chatInputContainer {
-  height: 3vh;
-  height: 3dvh;
+  flex: 0 0 auto;
+  min-height: 0;
 }
 
 .chatInput.chatInput {
