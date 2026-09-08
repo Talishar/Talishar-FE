@@ -26,7 +26,7 @@
 .selectTrigger:focus {
   outline: none;
   border-color: var(--theme-primary, #d4af37);
-  box-shadow: 0 0 0 3px var(--theme-primary-focus, color-mix(in srgb, var(--theme-primary) 10%, transparent));
+  box-shadow: none;
 }
 
 .selectTrigger.open {

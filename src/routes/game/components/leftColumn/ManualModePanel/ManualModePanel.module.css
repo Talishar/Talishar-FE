@@ -394,7 +394,7 @@
     outline: none;
     border-color: var(--theme-primary);
     background: var(--near-black);
-    box-shadow: 0 0 8px var(--theme-primary-focus);
+    box-shadow: none;
   }
 
   &:disabled {
@@ -429,7 +429,7 @@
     outline: none;
     border-color: var(--theme-primary);
     background: var(--near-black);
-    box-shadow: 0 0 8px var(--theme-primary-focus);
+    box-shadow: none;
   }
 
   &:disabled {
