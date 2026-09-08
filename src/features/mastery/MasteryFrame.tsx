@@ -48,7 +48,7 @@ const MasteryFrame = ({ level, children, className, title }: Props) => {
       {tier > 0 && (
         <span className={styles.ornaments} aria-hidden="true">
           {tier >= 6 && <span className={styles.ring} />}
-          {tier >= 8 && <span className={styles.crest} />}
+          {tier >= 6 && <span className={styles.crest} />}
           {ORNAMENTS.filter((ornament) => tier >= ornament.from).map(
             (ornament) => (
               <span

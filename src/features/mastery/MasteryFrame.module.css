@@ -141,10 +141,10 @@
 
 .crest {
   position: absolute;
-  top: calc(var(--mastery-gem) * -1.25);
+  top: calc(var(--mastery-gem) * var(--mastery-crest-top, -1.25));
   left: 50%;
-  width: calc(var(--mastery-gem) * 2.1);
-  height: calc(var(--mastery-gem) * 1.2);
+  width: calc(var(--mastery-gem) * var(--mastery-crest-width, 2.1));
+  height: calc(var(--mastery-gem) * var(--mastery-crest-height, 1.2));
   translate: -50% 0;
   background: linear-gradient(
     180deg,
@@ -251,6 +251,74 @@
   --mastery-gem: 11px;
 }
 
+.mastery_12 {
+  --mastery-gem: 10px;
+  --mastery-crest-top: -1.05;
+  --mastery-crest-width: 1.75;
+  --mastery-crest-height: 0.92;
+}
+
+.mastery_14 {
+  --mastery-gem: 10px;
+  --mastery-crest-top: -1.05;
+  --mastery-crest-width: 1.75;
+  --mastery-crest-height: 0.92;
+}
+
+.mastery_12 .crest {
+  opacity: 0.88;
+  clip-path: polygon(
+    50% 0,
+    65% 48%,
+    100% 62%,
+    80% 100%,
+    20% 100%,
+    0 62%,
+    35% 48%
+  );
+}
+
+.mastery_14 .crest {
+  opacity: 0.94;
+  clip-path: polygon(
+    50% 0,
+    65% 48%,
+    100% 30%,
+    86% 100%,
+    14% 100%,
+    0 30%,
+    35% 48%
+  );
+}
+
+.mastery_12::before,
+.mastery_14::before {
+  opacity: 0.46;
+  background: conic-gradient(
+    from 22deg,
+    transparent 0 9%,
+    var(--mastery-highlight) 11%,
+    var(--mastery-color) 15%,
+    transparent 18% 32%,
+    var(--mastery-color) 35%,
+    transparent 39% 59%,
+    var(--mastery-highlight) 62%,
+    var(--mastery-color) 66%,
+    transparent 70% 84%,
+    var(--mastery-color) 87%,
+    transparent 91%
+  );
+  box-shadow: 0 0 0 1px
+      color-mix(in srgb, var(--mastery-highlight) 35%, transparent),
+    0 0 10px var(--mastery-glow);
+}
+
+.mastery_12::before,
+.mastery_14::before {
+  inset: -4px;
+  opacity: 0.62;
+}
+
 .mastery_2,
 .mastery_4,
 .mastery_6,
@@ -307,6 +375,8 @@
     animation: masteryGemGlow 2.8s ease-in-out infinite;
   }
 
+  .mastery_12 .crest::after,
+  .mastery_14 .crest::after,
   .mastery_15 .crest::after {
     content: '';
     position: absolute;
