@@ -998,6 +998,10 @@ nav {
       0px,
       calc(100dvh - var(--sticky-footer-height, 60px) - 168px)
     );
+    padding-bottom: calc(
+      var(--sticky-footer-height, 60px) + env(safe-area-inset-bottom, 0px) +
+        0.5rem
+    );
   }
 }
 
@@ -1107,6 +1111,10 @@ nav {
     min-height: max(
       0px,
       calc(100dvh - var(--sticky-footer-height, 60px) - 224px)
+    );
+    padding-bottom: calc(
+      var(--sticky-footer-height, 60px) + env(safe-area-inset-bottom, 0px) +
+        0.5rem
     );
   }
 }
