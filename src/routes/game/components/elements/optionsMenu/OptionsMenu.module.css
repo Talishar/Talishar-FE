@@ -90,6 +90,13 @@
   outline-offset: 2px;
 }
 
+@media (pointer: coarse) {
+  .optionsMenuCloseIcon {
+    width: 44px;
+    height: 44px;
+  }
+}
+
 .radioContainer {
   display: flex;
   flex-direction: column;
@@ -117,12 +124,12 @@
 
 .optionsContentContainer::-webkit-scrollbar-track {
   background: rgba(var(--theme-sunken-rgb), calc(0.3 * var(--theme-sunken-alpha)));
-  border-radius: 6px;
+  border-radius: 5px;
 }
 
 .optionsContentContainer::-webkit-scrollbar-thumb {
   background: var(--theme-primary-focus, color-mix(in srgb, var(--theme-primary) 30%, transparent));
-  border-radius: 6px;
+  border-radius: 5px;
 }
 
 .optionsContentContainer::-webkit-scrollbar-thumb:hover {

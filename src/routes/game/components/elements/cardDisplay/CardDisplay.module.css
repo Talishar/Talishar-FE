@@ -229,6 +229,7 @@
 
 .numUses {
   position: absolute;
+  z-index: 2;
   top: 8px;
   right: 8px;
   margin-top: 1px;

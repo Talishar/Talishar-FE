@@ -40,7 +40,7 @@
   word-break: break-word;
   text-align: left;
   padding: 1rem;
-  border-radius: 6px;
+  border-radius: 5px;
   font-size: 0.9rem;
 }
 
@@ -52,7 +52,7 @@
   background-color: rgba(var(--theme-sunken-rgb), calc(0.3 * var(--theme-sunken-alpha)));
   color: rgba(var(--theme-on-surface-rgb), 0.8);
   border: 1px solid rgba(var(--theme-on-surface-rgb), 0.15);
-  border-radius: 6px;
+  border-radius: 5px;
   cursor: pointer;
   font-weight: 500;
   font-size: 0.875rem;

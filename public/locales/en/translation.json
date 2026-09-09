@@ -264,7 +264,6 @@
     "CARD_NAME": "Card Name",
     "CARD_PLAYED_STATS": "Card Played Stats",
     "CLICK_TO_SORT": "Click to sort",
-    "CONTINUE_ADVENTURE": "Continue adventure",
     "CSV_FILE": "CSV File",
     "DAMAGE": "Damage",
     "DAMAGE_BLOCKED": "Damage Blocked",
@@ -808,7 +807,7 @@
   },
   "LOAD_REPLAY": {
     "BETA_BODY": "The Replay Tool is currently in beta. If you encounter any issues, please report them in our Discord <2>#bug-reports</2> channel with your <6>Talishar username</6> and <10>replay number</10>.",
-    "BETA_NOTE": "Please note: Replays you save might randomly stop working as engine changes get made during development.",
+    "BETA_NOTE": "New replays store the exact game state after every action. Older command-only replays remain available, but may desync when engine behavior has changed.",
     "BETA_TITLE": "⚠️ The Replay Tool is currently in Beta",
     "COPY_SHAREABLE_LINK": "Copy shareable link",
     "DELETE_ARIA_LABEL": "Delete Replay #{{number}}",
@@ -858,12 +857,16 @@
     "AI_INFINITE_HP": "AI Infinite HP",
     "CARD_INPUT_PLACEHOLDER": "e.g. Snatch or Vigor|5",
     "CARD_IRONROT_GAUNTLET": "Ironrot Gauntlet",
-    "CARD_PIPE_DESCRIPTION": "Card Name + Pipe + Number also works for non-token cards",
+    "CARD_PIPE_DESCRIPTION": "Card Name + Pipe + Number adds that many copies to your hand",
     "CARD_RUNECHANT": "Runechant",
     "CARD_RUNECHANT_PIPE": "Runechant|5",
     "CARD_SNATCH_BLUE": "Snatch blue",
+    "CARD_SNATCH_DECK": "Snatch|deck",
     "CARD_SNATCH_PIPE": "Snatch|2",
+    "CARD_SNATCH_PIPE_DECK": "Snatch|2|deck",
     "COLOR_DESCRIPTION": "Card Name + color will put the specific color version in your hand. By default it adds the first version found. (Red normally)",
+    "COUNT_DESTINATION_DESCRIPTION": "Number and destination can be combined - this puts 2 copies on top of your deck",
+    "DECK_DESCRIPTION": "Card Name + Pipe + Destination sends the card somewhere other than your hand. Use deck for the top of your deck, or grave, banish, or inv",
     "DESTINATION_NOTE": "The destination (hand, play, equipment zone) is determined automatically by the card type.",
     "DRAW_CARD": "Draw a card",
     "DRAW_CARD_OPPONENT": "Draw Card (Opp.)",
@@ -1172,6 +1175,7 @@
     "USERS_WITH_TALISHAR_IN_DB": "Users with Talishar in DB:"
   },
   "NEWS": {
+    "CODED_CARDS": "New Sets: Coded Cards",
     "NO_NEWS": "No recent announcements. Join our Discord for updates!",
     "TITLE": "Talishar Release Notes",
     "VIEW_ALL": "View all"

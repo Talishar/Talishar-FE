@@ -6,9 +6,7 @@ describe('ad-free routes', () => {
     '/play/12345',
     '/game/play',
     '/game/play/',
-    '/game/play/12345',
-    '/roguelike/play',
-    '/roguelike/play/'
+    '/game/play/12345'
   ])('blocks the ad provider on %s', (pathname) => {
     expect(isAdFreeRoute(pathname)).toBe(true);
   });

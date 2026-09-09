@@ -336,6 +336,7 @@ export default function ParseGameState(input: any) {
     arsenalDestroyP1Card: '',
     arsenalDestroyP2Card: '',
     arsenalDestroyTrigger: 0,
+    equipDestroy: {},
     heroTransformP1Card: '',
     heroTransformP2Card: '',
     heroTransformTrigger: 0
@@ -490,7 +491,6 @@ export default function ParseGameState(input: any) {
     result.playerTwo.isPvtVoidPatron =
       input.initialLoad.opponentIsPvtVoidPatron;
     result.playerTwo.metafyTiers = input.initialLoad.opponentMetafyTiers || [];
-    result.gameInfo.roguelikeGameID = input.initialLoad.roguelikeGameID;
     result.gameInfo.gameGUID = input.initialLoad.gameGUID;
     result.gameInfo.altArts = input.initialLoad.altArts;
     result.gameInfo.opponentAltArts = input.initialLoad.opponentAltArts;

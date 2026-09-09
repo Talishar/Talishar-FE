@@ -56,7 +56,7 @@ const EndGameScreen = () => {
   const masteryGameIdentifier = gameInfo.gameGUID || gameInfo.gameID;
   const { data: masteryData } = useGetHeroMasteryQuery(
     { gameKey: `talishar:${masteryGameIdentifier}`, scope: 'award' },
-    { skip: !isLoggedIn || !!gameInfo.roguelikeGameID }
+    { skip: !isLoggedIn }
   );
 
   // Cache both players' data as they're loaded
@@ -199,18 +199,16 @@ const EndGameScreen = () => {
                         onClick={() => setMoreOpen(false)}
                       />
                       <div className={styles.dropdownMenu} style={menuStyle}>
-                        {!gameInfo.roguelikeGameID && (
-                          <button
-                            className={styles.dropdownItem}
-                            onClick={handleSwapHeroesRematch}
-                          >
-                            <FaExchangeAlt
-                              aria-hidden="true"
-                              className={styles.dropdownIcon}
-                            />{' '}
-                            {t('END_GAME.SWAP_AND_REMATCH')}
-                          </button>
-                        )}
+                        <button
+                          className={styles.dropdownItem}
+                          onClick={handleSwapHeroesRematch}
+                        >
+                          <FaExchangeAlt
+                            aria-hidden="true"
+                            className={styles.dropdownIcon}
+                          />{' '}
+                          {t('END_GAME.SWAP_AND_REMATCH')}
+                        </button>
                         <button
                           className={styles.dropdownItem}
                           onClick={handleExportStats}

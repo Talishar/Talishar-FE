@@ -699,15 +699,22 @@
 }
 
 @media (orientation: portrait) and (max-width: 600px) {
+  .countersCover.countersCover {
+    --counter-text: clamp(12px, calc(var(--card-size, 13.5dvw) * 0.155), 30px);
+    --counter-glyph: calc(var(--counter-text) * 0.9);
+    flex-wrap: wrap;
+    gap: 1px;
+  }
+
   .number.number {
-    height: 4.5dvw;
-    max-height: 4.5dvw;
-    min-height: 3dvw;
-    width: 4.5dvw;
-    max-width: 4.5dvw;
-    min-width: 3dvw;
-    font-size: 2.5dvw;
-    border-width: 1.5px;
+    font-size: var(--counter-text);
+    height: 1.6em;
+    max-height: 1.6em;
+    min-height: 1.6em;
+    width: 1.6em;
+    max-width: 1.6em;
+    min-width: 1.6em;
+    border-width: 1px;
     flex-shrink: 0;
   }
 
@@ -731,27 +738,20 @@
   .powerCounter.powerCounter,
   .lifeCounter.lifeCounter,
   .enduranceCounter.enduranceCounter {
-    height: 4.5dvw;
-    width: 4.5dvw;
-    font-size: 2.5dvw;
+    height: 1.6em;
+    width: 1.6em;
+    font-size: var(--counter-text);
     flex-shrink: 0;
   }
 
-  .wateryGraveIcon.wateryGraveIcon {
-    min-width: 4dvw;
-    height: 4dvw;
-    font-size: 2.5dvw;
-    padding: 1px;
-    margin: 0.05em;
-    flex-shrink: 0;
-  }
-
+  .wateryGraveIcon.wateryGraveIcon,
   .icon.icon {
-    min-width: 4dvw;
-    height: 4dvw;
-    font-size: 2.5dvw;
+    font-size: var(--counter-glyph);
+    min-width: 1.78em;
+    height: 1.78em;
     padding: 1px;
     margin: 0.05em;
+    flex-shrink: 0;
   }
 
   .label.label {

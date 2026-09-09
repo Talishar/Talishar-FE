@@ -190,7 +190,7 @@ input[type='url']:focus,
 textarea:focus {
   background-color: var(--theme-form-active, #33383d) !important;
   border-color: var(--theme-primary, #d4af37) !important;
-  box-shadow: 0 0 0 3px var(--theme-primary-focus, color-mix(in srgb, var(--theme-primary) 10%, transparent)) !important;
+  box-shadow: none !important;
 }
 
 input[type='text']:autofill,
@@ -222,10 +222,8 @@ input[type='email']:autofill:focus,
 input[type='password']:autofill:focus,
 input[type='number']:autofill:focus,
 input[type='url']:autofill:focus {
-  -webkit-box-shadow: 0 0 0 100px var(--theme-form-active, #33383d) inset,
-    0 0 0 3px var(--theme-primary-focus, color-mix(in srgb, var(--theme-primary) 10%, transparent)) !important;
-  box-shadow: 0 0 0 100px var(--theme-form-active, #33383d) inset,
-    0 0 0 3px var(--theme-primary-focus, color-mix(in srgb, var(--theme-primary) 10%, transparent)) !important;
+  -webkit-box-shadow: 0 0 0 100px var(--theme-form-active, #33383d) inset !important;
+  box-shadow: 0 0 0 100px var(--theme-form-active, #33383d) inset !important;
 }
 
 input[type='text']:-webkit-autofill:focus,
@@ -233,10 +231,8 @@ input[type='email']:-webkit-autofill:focus,
 input[type='password']:-webkit-autofill:focus,
 input[type='number']:-webkit-autofill:focus,
 input[type='url']:-webkit-autofill:focus {
-  -webkit-box-shadow: 0 0 0 100px var(--theme-form-active, #33383d) inset,
-    0 0 0 3px var(--theme-primary-focus, color-mix(in srgb, var(--theme-primary) 10%, transparent)) !important;
-  box-shadow: 0 0 0 100px var(--theme-form-active, #33383d) inset,
-    0 0 0 3px var(--theme-primary-focus, color-mix(in srgb, var(--theme-primary) 10%, transparent)) !important;
+  -webkit-box-shadow: 0 0 0 100px var(--theme-form-active, #33383d) inset !important;
+  box-shadow: 0 0 0 100px var(--theme-form-active, #33383d) inset !important;
 }
 
 html,
@@ -285,6 +281,7 @@ body {
 
 :root,
 :root[data-theme] {
+  --form-element-focus-color: transparent;
   --tooltip-background-color: var(--theme-card-background, #1e2329);
   --tooltip-color: var(--theme-text, #f4eded);
   --tooltip-border-color: color-mix(
@@ -293,7 +290,7 @@ body {
     transparent
   );
   --tooltip-border-width: 1px;
-  --tooltip-border-radius: 6px;
+  --tooltip-border-radius: 5px;
   --tooltip-padding: 0.5rem 0.75rem;
   --tooltip-font-size: 0.875rem;
   --tooltip-font-weight: 500;
@@ -399,4 +396,10 @@ button.primary,
     transform: none !important;
     background: var(--theme-primary) !important;
   }
+}
+
+body.noImageCallout img,
+body.noImageCallout picture,
+body.noImageCallout a[href] {
+  -webkit-touch-callout: none;
 }

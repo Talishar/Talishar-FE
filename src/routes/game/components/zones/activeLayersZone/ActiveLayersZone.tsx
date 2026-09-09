@@ -283,6 +283,7 @@ export default function ActiveLayersZone() {
                       <CardDisplay
                         card={group.cards[0]}
                         isPlayer={group.isPlayer}
+                        disableTilt
                       >
                         <div className={styles.groupedCardCount}>
                           <span className={styles.groupedCardCountBadge}>
@@ -298,6 +299,7 @@ export default function ActiveLayersZone() {
                     card={card}
                     key={`${groupIx}-${cardIx}`}
                     isPlayer={group.isPlayer}
+                    disableTilt
                   />
                 ));
               })}

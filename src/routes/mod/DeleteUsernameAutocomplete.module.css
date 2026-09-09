@@ -24,7 +24,7 @@
 .input:focus {
   outline: none;
   border-color: var(--theme-primary);
-  box-shadow: 0 0 0 2px var(--theme-primary-focus);
+  box-shadow: none;
 }
 
 .input::placeholder {

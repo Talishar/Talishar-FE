@@ -120,7 +120,7 @@
 
 .infoBox {
   background: rgba(var(--theme-sunken-rgb), calc(0.2 * var(--theme-sunken-alpha)));
-  border-radius: 6px;
+  border-radius: 5px;
   padding: 0.5rem 0.5rem 0 0.5rem;
   display: flex;
   flex-direction: column;
@@ -265,7 +265,7 @@
 
 .heroPortraitsContainer {
   background: rgba(var(--theme-sunken-rgb), calc(0.2 * var(--theme-sunken-alpha)));
-  border-radius: 6px;
+  border-radius: 5px;
   padding: 1rem;
   margin-top: 1rem;
   display: flex;
@@ -313,7 +313,7 @@
   max-height: 200px;
   width: auto;
   height: auto;
-  border-radius: 6px;
+  border-radius: 5px;
   border: 2px solid var(--theme-primary);
   box-shadow: 0 4px 12px var(--theme-primary-focus);
   object-fit: cover;
@@ -325,7 +325,7 @@
   justify-content: center;
   width: 150px;
   height: 200px;
-  border-radius: 6px;
+  border-radius: 5px;
   border: 2px solid var(--theme-primary);
   background: var(--theme-primary-focus);
   color: var(--theme-primary);
@@ -586,7 +586,7 @@
   overflow-x: auto;
   overflow-y: auto;
   max-height: none;
-  border-radius: 6px;
+  border-radius: 5px;
   background: rgba(var(--theme-sunken-rgb), calc(0.2 * var(--theme-sunken-alpha)));
   flex: 1;
   -webkit-overflow-scrolling: touch;
@@ -600,12 +600,12 @@
 
 .tableContainer::-webkit-scrollbar-track {
   background: rgba(var(--theme-sunken-rgb), calc(0.3 * var(--theme-sunken-alpha)));
-  border-radius: 6px;
+  border-radius: 5px;
 }
 
 .tableContainer::-webkit-scrollbar-thumb {
   background: var(--theme-primary-focus);
-  border-radius: 6px;
+  border-radius: 5px;
   border: 2px solid rgba(0, 0, 0, 0.3);
 }
 
@@ -975,7 +975,7 @@
   -webkit-appearance: none;
   background: none;
   border: none;
-  border-radius: 6px;
+  border-radius: 5px;
   box-shadow: none;
   color: rgba(var(--theme-on-surface-rgb), 0.45);
   cursor: pointer;
@@ -1044,7 +1044,7 @@
   font-weight: 800;
   letter-spacing: 0.05em;
   padding: 0.1em 0;
-  border-radius: 6px;
+  border-radius: 5px;
   align-self: stretch;
   width: 100%;
   display: block;
@@ -1391,7 +1391,7 @@
   gap: 1.5rem;
   justify-content: space-around;
   background: rgba(var(--theme-sunken-rgb), calc(0.2 * var(--theme-sunken-alpha)));
-  border-radius: 6px;
+  border-radius: 5px;
   padding: 0.5rem 0.25rem;
 }
 

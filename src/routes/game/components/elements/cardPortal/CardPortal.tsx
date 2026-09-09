@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import CardImage from '../cardImage/CardImage';
 import styles from './CardPortal.module.css';
-import { useCardPreview } from './cardPreviewStore';
+import { clearCardPreview, useCardPreview } from './cardPreviewStore';
 import { doubleFacedCardsMappings } from './constants';
 import classNames from 'classnames';
 import useWindowDimensions from 'hooks/useWindowDimensions';
@@ -11,6 +11,8 @@ import { useCookieString } from 'utils/cookieStore';
 import { createPortal } from 'react-dom';
 import { isMeldCard } from 'constants/meldCards';
 import CardKeywordStrip from './CardKeywordStrip';
+import { useTranslation } from 'react-i18next';
+import { MdClose } from 'react-icons/md';
 
 const popUpGap = 130;
 
@@ -75,6 +77,7 @@ function getSrcs({
 
 export default function CardPortal() {
   const popup = useCardPreview();
+  const { t } = useTranslation();
   const hoverImageSize = Number(useCookieString('hoverImageSize')) || 1;
   const { getLanguage } = useLanguageSelector();
   const [windowWidth, windowHeight] = useWindowDimensions();
@@ -99,6 +102,58 @@ export default function CardPortal() {
     return null;
   }
 
+  const isDFC = dfcSrc != null;
+
+  if (popup.presentation === 'mobile-modal') {
+    return createPortal(
+      <div
+        className={styles.mobileBackdrop}
+        onClick={(event) => {
+          if (event.target === event.currentTarget) clearCardPreview();
+        }}
+      >
+        <div
+          className={classNames(styles.mobileDialog, {
+            [styles.mobileDialogDoubleFaced]: isDFC
+          })}
+          role="dialog"
+          aria-modal="true"
+          aria-label={t('PLAYER_INPUT.CLOSE_POPUP')}
+        >
+          <button
+            type="button"
+            className={styles.mobileCloseButton}
+            aria-label={t('PLAYER_INPUT.CLOSE_POPUP')}
+            onClick={clearCardPreview}
+          >
+            <MdClose aria-hidden="true" />
+          </button>
+          <div className={styles.mobileCardGroup}>
+            {isDFC && (
+              <CardDetails
+                src={dfcSrc}
+                containerClass={classNames(
+                  styles.popUp,
+                  styles.doubleFacedCard
+                )}
+                isOpponent={popup.isOpponent}
+                showKeywords={false}
+              />
+            )}
+            <CardDetails
+              src={src}
+              containerClass={styles.popUp}
+              isOpponent={popup.isOpponent}
+              isMeld={isMeld}
+              cardNumber={cardNumber}
+            />
+          </div>
+        </div>
+      </div>,
+      document.body
+    );
+  }
+
   if (popup.xCoord === undefined || popup.yCoord === undefined) {
     return createPortal(
       <CardDetails src={src} isMeld={isMeld} cardNumber={cardNumber} />,
@@ -106,7 +161,6 @@ export default function CardPortal() {
     );
   }
 
-  const isDFC = dfcSrc != null;
   const popUpStyle: Record<string, string> = {};
 
   if (isDFC) {

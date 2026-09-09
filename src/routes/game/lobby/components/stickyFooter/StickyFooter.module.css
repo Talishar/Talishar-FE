@@ -208,7 +208,7 @@
 .confirmButton {
   font-size: 0.88rem;
   padding: 0.45rem 1.1rem;
-  border-radius: 6px;
+  border-radius: 5px;
   border: none;
   margin: 0;
   white-space: nowrap;
@@ -251,7 +251,7 @@
   font-weight: 600;
   font-size: 0.88rem;
   padding: 0.45rem 1.1rem;
-  border-radius: 6px;
+  border-radius: 5px;
   background: var(--lobby-control-background, #1e2329) !important;
   color: var(--lobby-control-color, #9aa0a6) !important;
   border: 1px solid var(--lobby-control-border, rgba(255, 255, 255, 0.12)) !important;
@@ -289,7 +289,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 6px;
+  border-radius: 5px;
   border: 1px solid var(--lobby-control-border, rgba(255, 255, 255, 0.12)) !important;
   background: var(--lobby-control-background, #1e2329) !important;
   color: var(--lobby-control-color, #9aa0a6) !important;

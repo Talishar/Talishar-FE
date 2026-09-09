@@ -19,7 +19,6 @@ export default function KeywordDefinitionBody({
     <>
       <div className={styles.heading}>
         <strong>{entry.name}</strong>
-        <span className={styles.badge}>{entry.category}</span>
       </div>
       <p className={styles.short}>{entry.short}</p>
       <br />

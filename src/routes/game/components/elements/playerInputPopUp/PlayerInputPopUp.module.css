@@ -30,7 +30,7 @@
   justify-content: space-between;
   align-items: center;
   padding-left: 1vh;
-  padding-bottom: 1vh;
+  padding-bottom: max(0px, calc(1vh - var(--subcard-overflow, 0px)));
 }
 
 .title {
@@ -64,7 +64,7 @@
   justify-content: center;
   min-width: calc(6dvw * var(--card-scale));
   height: 32px;
-  border-radius: 6px;
+  border-radius: 5px;
   border: 1px solid rgba(var(--theme-on-surface-rgb), 0.15);
   flex-basis: auto;
   padding: 8px 16px;
@@ -97,7 +97,7 @@
   height: 40px;
   flex: 1;
   min-width: 0;
-  border-radius: 6px;
+  border-radius: 5px;
   border: 1px solid rgba(var(--theme-on-surface-rgb), 0.15);
   padding: 8px 12px;
   font-size: 1em;
@@ -192,6 +192,7 @@
   min-height: 0;
   max-height: 100%;
   padding: 0.5em;
+  padding-top: max(0.5em, var(--subcard-overflow, 0px));
   -webkit-overflow-scrolling: touch;
 }
 
@@ -223,7 +224,7 @@
   color: var(--theme-text-secondary);
   background: rgba(var(--theme-on-surface-rgb), 0.07);
   border: 1px solid rgba(var(--theme-on-surface-rgb), 0.25);
-  border-radius: 6px;
+  border-radius: 5px;
   font-size: 0.95rem;
 }
 
@@ -327,6 +328,7 @@
   flex-wrap: wrap;
   align-items: flex-start;
   gap: 1vh;
+  row-gap: calc(1vh + var(--subcard-overflow, 0px));
 }
 
 .checkBoxRow:last-child {

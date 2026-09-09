@@ -108,7 +108,7 @@
 .filters button:hover,
 .filters .activeFilter {
   background: var(--theme-primary, #d4af37) !important;
-  color: var(--near-black, #0d0d0f);
+  color: var(--theme-primary-inverse, #000) !important;
 }
 
 .filters button:focus-visible,

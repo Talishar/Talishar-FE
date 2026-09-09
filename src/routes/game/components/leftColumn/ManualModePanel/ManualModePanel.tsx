@@ -489,6 +489,20 @@ function ManualModeContent({
                   </span>
                   <span>{t('MANUAL_MODE_PANEL.COLOR_DESCRIPTION')}</span>
                 </li>
+                <li>
+                  <span className={styles.tooltipCode}>
+                    {t('MANUAL_MODE_PANEL.CARD_SNATCH_DECK')}
+                  </span>
+                  <span>{t('MANUAL_MODE_PANEL.DECK_DESCRIPTION')}</span>
+                </li>
+                <li>
+                  <span className={styles.tooltipCode}>
+                    {t('MANUAL_MODE_PANEL.CARD_SNATCH_PIPE_DECK')}
+                  </span>
+                  <span>
+                    {t('MANUAL_MODE_PANEL.COUNT_DESTINATION_DESCRIPTION')}
+                  </span>
+                </li>
               </ul>
               <p className={styles.tooltipNote}>
                 {t('MANUAL_MODE_PANEL.DESTINATION_NOTE')}

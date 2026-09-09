@@ -5,7 +5,10 @@ import {
   DiscordMessage,
   DiscordReaction
 } from '../../services/contentService';
-import { TALISHAR_DISCORD_URL } from 'constants/socialLinks';
+import {
+  TALISHAR_CODED_CARDS_URL,
+  TALISHAR_DISCORD_URL
+} from 'constants/socialLinks';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 import { useTranslation } from 'react-i18next';
 
@@ -61,14 +64,24 @@ const News = () => {
     <div className={styles.newsInner}>
       <div className={styles.newsSectionHeader}>
         <h2 className={styles.newsSectionTitle}>{t('NEWS.TITLE')}</h2>
-        <a
-          href={TALISHAR_DISCORD_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={styles.viewAllLink}
-        >
-          {t('NEWS.VIEW_ALL')} →
-        </a>
+        <div className={styles.newsSectionLinks}>
+          <a
+            href={TALISHAR_CODED_CARDS_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.codedCardsBadge}
+          >
+            {t('NEWS.CODED_CARDS')} →
+          </a>
+          <a
+            href={TALISHAR_DISCORD_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.viewAllLink}
+          >
+            {t('NEWS.VIEW_ALL')} →
+          </a>
+        </div>
       </div>
       <div className={styles.newsHorizontalList}>
         {loading ? (

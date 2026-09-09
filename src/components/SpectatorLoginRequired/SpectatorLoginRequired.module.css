@@ -60,7 +60,7 @@
   background: rgba(var(--theme-on-surface-rgb), 0.1);
   border: 1px solid rgba(var(--theme-on-surface-rgb), 0.25);
   color: var(--theme-text);
-  border-radius: 6px;
+  border-radius: 5px;
   font-size: 0.85rem;
   font-weight: 600;
   text-decoration: none;
@@ -79,7 +79,7 @@
   background: transparent;
   border: 1px solid rgba(var(--theme-on-surface-rgb), 0.1);
   color: rgba(var(--theme-on-surface-rgb), 0.45);
-  border-radius: 6px;
+  border-radius: 5px;
   font-size: 0.85rem;
   text-decoration: none;
   cursor: pointer;

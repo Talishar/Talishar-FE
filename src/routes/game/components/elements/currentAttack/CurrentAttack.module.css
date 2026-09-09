@@ -49,6 +49,8 @@
 
 .attack {
   position: relative;
+  translate: 0 var(--chain-subcard-space, 0px);
+  transition: translate 0.18s ease-out;
   height: 100%;
   width: 100%;
   display: flex;

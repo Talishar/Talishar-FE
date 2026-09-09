@@ -28,6 +28,20 @@ export const selectVisibleChainSummaryLastUpdate = (state: RootState) =>
     ? state.game.gameDynamicInfo.lastUpdate
     : undefined;
 
+export const selectChainSummarySourceMissing = (state: RootState) => {
+  const summary = state.game.chainLinkSummary;
+  if (!summary?.show) return false;
+  const index = summary.index ?? -1;
+  if (index >= 0) {
+    return index >= (state.game.oldCombatChain?.length ?? 0);
+  }
+  const activeChainLink = state.game.activeChainLink;
+  return (
+    activeChainLink?.attackingCard === undefined ||
+    activeChainLink.attackingCard.cardNumber === 'blank'
+  );
+};
+
 export const selectVisibleOldCombatChain = (state: RootState) =>
   state.game.chainLinkSummary?.show &&
   state.game.chainLinkSummary.view === 'all'
@@ -50,8 +64,24 @@ export const ChainLinkSummaryContainer = React.memo(
     );
     const lastUpdate = useAppSelector(selectVisibleChainSummaryLastUpdate);
     const oldCombatChain = useAppSelector(selectVisibleOldCombatChain);
+    const sourceMissing = useAppSelector(selectChainSummarySourceMissing);
 
     const dispatch = useAppDispatch();
+
+    useEffect(() => {
+      if (chainLinkSummary?.show && sourceMissing) {
+        dispatch(hideChainLinkSummary());
+      }
+    }, [chainLinkSummary?.show, sourceMissing, dispatch]);
+
+    useEffect(() => {
+      if (!chainLinkSummary?.show || chainLinkSummary.view !== 'preview') {
+        return;
+      }
+      const closePreview = () => dispatch(hideChainLinkSummary());
+      window.addEventListener('pointerdown', closePreview);
+      return () => window.removeEventListener('pointerdown', closePreview);
+    }, [chainLinkSummary?.show, chainLinkSummary?.view, dispatch]);
 
     // if the game is over display the end game stats screen
     useEffect(() => {

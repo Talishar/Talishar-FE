@@ -71,7 +71,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 6px;
+  border-radius: 5px;
   border: 1px solid rgba(var(--theme-on-surface-rgb), 0.15);
   padding: 0;
   margin: 0;
@@ -240,7 +240,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  border-radius: 6px;
+  border-radius: 5px;
   border: 1px solid rgba(var(--theme-on-surface-rgb), 0.15);
   flex-basis: auto;
   padding: 8px 16px;
@@ -265,7 +265,7 @@
   justify-content: center;
   min-width: calc(6dvw * var(--card-scale));
   height: 32px;
-  border-radius: 6px;
+  border-radius: 5px;
   border: 1px solid rgba(var(--theme-on-surface-rgb), 0.15);
   flex-basis: auto;
   padding: 8px 16px;

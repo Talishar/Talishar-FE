@@ -243,7 +243,7 @@
 
 .gameListContainer::-webkit-scrollbar-thumb {
   background: #5a5f66;
-  border-radius: 6px;
+  border-radius: 5px;
 }
 
 .gameListContainer::-webkit-scrollbar-thumb:hover {
@@ -469,7 +469,7 @@ h3 {
 
 .newsContent::-webkit-scrollbar-thumb {
   background: #5a5f66;
-  border-radius: 6px;
+  border-radius: 5px;
 }
 
 .newsContent::-webkit-scrollbar-thumb:hover {
@@ -524,7 +524,7 @@ h3 {
     padding: 0.75em 1.5em;
     background: rgba(var(--theme-on-surface-rgb), 0.08);
     border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.15));
-    border-radius: 6px;
+    border-radius: 5px;
     color: var(--theme-text-muted);
     cursor: pointer;
     font-size: 0.9rem;
@@ -668,6 +668,8 @@ h3 {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
   margin-bottom: 1em;
 }
 
@@ -678,17 +680,49 @@ h3 {
   margin: 0;
 }
 
-.viewAllLink {
-  color: var(--theme-primary, #d4af37);
-  text-decoration: none;
-  font-size: 0.95rem;
+.newsSectionLinks {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.codedCardsBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.65rem;
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
+  border-radius: 5px;
+  background: var(--theme-card-background, #1e2329);
+  color: var(--theme-text);
+  font-size: 0.82rem;
   font-weight: 500;
+  line-height: 1.2;
+  text-decoration: none;
   white-space: nowrap;
-  transition: opacity 0.2s;
+  transition: border-color 0.2s ease;
+}
+
+.codedCardsBadge:hover {
+  border-color: var(--theme-text-muted);
+}
+
+.codedCardsBadge:focus-visible,
+.viewAllLink:focus-visible {
+  outline: 1px solid var(--theme-text-muted);
+  outline-offset: 2px;
+}
+
+.viewAllLink {
+  color: var(--theme-text-muted);
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 400;
+  white-space: nowrap;
+  transition: color 0.2s ease;
 }
 
 .viewAllLink:hover {
-  opacity: 0.75;
+  color: var(--theme-text);
 }
 
 .newsHorizontalList {

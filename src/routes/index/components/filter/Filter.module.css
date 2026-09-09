@@ -17,7 +17,7 @@
   padding: 0.45em 2em 0.45em 0.65em;
   background-color: var(--theme-form-background, #0e0e11);
   border: 1px solid var(--theme-form-border, #1b1b28);
-  border-radius: 6px;
+  border-radius: 5px;
   color: var(--theme-text-secondary, #e0e0e0);
   font-size: 0.85em;
   outline: none;

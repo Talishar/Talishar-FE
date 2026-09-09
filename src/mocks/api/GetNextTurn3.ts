@@ -6,8 +6,7 @@ export const mockGetNextTurn = {
     playerIsPatron: '',
     playerIsContributor: false,
     opponentIsPatron: '',
-    opponentIsContributor: false,
-    roguelikeGameID: ''
+    opponentIsContributor: false
   },
   MyPlaymat: '0',
   TheirPlaymat: '0',

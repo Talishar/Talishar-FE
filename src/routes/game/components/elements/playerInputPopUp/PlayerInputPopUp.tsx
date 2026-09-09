@@ -27,6 +27,7 @@ import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 import classNames from 'classnames';
 import GameState from 'features/GameState';
 import { Card } from 'features/Card';
+import { subcardOverflowStyle } from './subcardOverflow';
 
 type MultiChooseOption = NonNullable<
   NonNullable<GameState['playerInputPopUp']>['multiChooseText']
@@ -353,7 +354,10 @@ export default function PlayerInputPopUp() {
         { [styles.aboveEndGameScreen]: hasGameEnded }
       )}
     >
-      <div className={styles.popupContent}>
+      <div
+        className={styles.popupContent}
+        style={subcardOverflowStyle(filteredCardEntries.cards)}
+      >
         <div className={styles.optionsTitleContainer}>
           <div className={styles.optionsTitle}>
             <h3 className={styles.title}>{titleElements}</h3>

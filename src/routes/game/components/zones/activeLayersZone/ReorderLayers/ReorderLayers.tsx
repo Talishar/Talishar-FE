@@ -68,7 +68,7 @@ const ReorderLayers = ({ cards }: { cards: Card[] }) => {
             className={styles.reorderItem}
             onDragEnd={handleDragEnd}
           >
-            <CardDisplay card={card} key={ix} />
+            <CardDisplay card={card} key={ix} disableTilt />
           </Reorder.Item>
         );
       })}

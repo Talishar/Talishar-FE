@@ -92,6 +92,8 @@
 
 .reactionWrapper {
   position: relative;
+  translate: 0 var(--chain-subcard-space, 0px);
+  transition: translate 0.18s ease-out;
   height: 15vh;
   width: 100%;
 }

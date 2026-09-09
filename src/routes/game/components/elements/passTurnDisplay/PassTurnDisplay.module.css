@@ -220,7 +220,7 @@
   );
   color: var(--theme-text-secondary);
   border: 1px solid rgba(var(--theme-on-surface-rgb), 0.15);
-  border-radius: 6px;
+  border-radius: 5px;
   font-family: inherit;
   font-size: 0.875rem;
   font-weight: 500;

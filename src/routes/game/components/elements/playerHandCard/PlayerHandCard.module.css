@@ -140,7 +140,7 @@
   right: 3dvh;
   text-align: center;
   border: 2px solid goldenrod;
-  border-radius: 6px;
+  border-radius: 5px;
   z-index: 999;
   text-overflow: ellipsis;
   overflow: hidden;

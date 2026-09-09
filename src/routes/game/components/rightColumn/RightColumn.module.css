@@ -85,6 +85,14 @@
   }
 }
 
+/* Landscape: vertical space is the scarce axis and the bar is fixed over the
+   board, so drop its padding. Buttons keep their 42px touch target. */
+@media (orientation: landscape) and (max-width: 1200px) {
+  .mobileTopBar {
+    padding: 0;
+  }
+}
+
 .topGroup {
   display: flex;
   flex-direction: column;

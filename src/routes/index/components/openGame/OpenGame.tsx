@@ -49,6 +49,14 @@ const BROKEN_KEY_MAP: Record<string, string> = {
 
 const CLASS_NAMES = new Set(CLASS_OF_RATHE.map((c) => c.label));
 
+// Descriptions saved with the preference option picked but no hero/class chosen
+const PLACEHOLDER_PREFERENCE_NAMES = new Set([
+  'specific hero',
+  'a specific hero',
+  'specific class',
+  'a specific class'
+]);
+
 const FORMAT_DISPLAY_NAMES: Record<string, string> = {
   [GAME_FORMAT.DRAFT]: 'Limited',
   [GAME_FORMAT.SEALED]: 'Limited'
@@ -120,26 +128,34 @@ const OpenGame = ({
       return translated !== fixedKey ? translated : decoded;
     }
 
+    const directKey = DESCRIPTION_KEY_MAP[decoded];
+    if (directKey) return t(directKey);
+
     const reverseKey = reverseDescriptionMap[decoded];
     if (reverseKey) return t(reverseKey);
 
     const heroPrefix = 'Looking to play against ';
     if (decoded.startsWith(heroPrefix)) {
-      const names = decoded.slice(heroPrefix.length);
+      const names = decoded.slice(heroPrefix.length).trim();
       const nameList = names.split(',').map((n) => n.trim());
       const isClassDescription = nameList.some((name) => CLASS_NAMES.has(name));
       const descKey = isClassDescription
         ? 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPECIFIC_CLASS'
         : 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPECIFIC_HERO';
+      if (!names || PLACEHOLDER_PREFERENCE_NAMES.has(names.toLowerCase())) {
+        return t(descKey);
+      }
       return `${t(descKey)}: ${names}`;
     }
 
     const notHeroPrefix = 'No interest in playing against ';
     if (decoded.startsWith(notHeroPrefix)) {
-      const names = decoded.slice(notHeroPrefix.length);
-      return `${t(
-        'MENU.CREATE_GAME.GAME_DESCRIPTIONS.NOT_SPECIFIC_HERO'
-      )}: ${names}`;
+      const names = decoded.slice(notHeroPrefix.length).trim();
+      const descKey = 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.NOT_SPECIFIC_HERO';
+      if (!names || PLACEHOLDER_PREFERENCE_NAMES.has(names.toLowerCase())) {
+        return t(descKey);
+      }
+      return `${t(descKey)}: ${names}`;
     }
 
     return decoded;

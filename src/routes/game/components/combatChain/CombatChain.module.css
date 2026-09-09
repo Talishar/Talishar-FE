@@ -1,10 +1,18 @@
 .combatChain {
   position: relative;
-  height: 20dvh;
+  --chain-subcard-count: 0;
+  --chain-subcard-space: calc(
+    var(--chain-subcard-count) * 0.18 * var(--card-size)
+  );
+  height: calc(20dvh + var(--chain-subcard-space));
+  translate: 0 calc(0.5 * var(--chain-subcard-space));
+  transition: height 0.18s ease-out, padding-bottom 0.18s ease-out,
+    translate 0.18s ease-out;
   margin: auto;
   width: 95%;
   --chain-padding: 1vh;
   padding: var(--chain-padding);
+  padding-bottom: calc(var(--chain-padding) + var(--chain-subcard-space));
   background: none;
   border: none;
   outline: none;
@@ -59,7 +67,7 @@
   align-self: stretch;
   margin-top: calc(-1 * var(--chain-padding));
   margin-right: calc(-1 * var(--chain-padding));
-  margin-bottom: calc(-1 * var(--chain-padding));
+  margin-bottom: calc(-1 * (var(--chain-padding) + var(--chain-subcard-space)));
   font-size: min(calc(1.5vh - 2px), calc(0.9vw - 1px));
   font-size: min(calc(1.5dvh - 2px), calc(0.9dvw - 1px));
   border: 0;
@@ -155,10 +163,51 @@
 @media (orientation: portrait) {
   .combatChain {
     height: 13em;
+    width: calc(100% - 8px);
+    --chain-padding: 4px;
+    border-radius: 8px;
   }
 
   .chainCentre {
     padding-left: 0;
+    gap: 2px;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+  .combatChain {
+    width: min(calc(100% - 8px), 720px);
+    height: max(
+      20dvh,
+      calc(
+        var(--card-size) + 3dvh + var(--chain-padding) +
+          var(--chain-padding) + var(--chain-subcard-space)
+      )
+    );
+    --chain-padding: clamp(3px, 1dvh, 6px);
+    border-radius: 8px;
+  }
+
+  .chainCentre {
+    min-width: 0;
+    padding-left: 4px;
+    gap: 2px;
+  }
+
+  .playerPrompt {
+    top: calc(100% + 4px);
+    max-width: calc(100dvw - 8px);
+    border-width: 1px;
+    border-radius: 8px;
+    padding: 3px 4px;
+    gap: 2px;
+    z-index: 20;
+  }
+
+  .buttonDiv {
+    min-height: 1.8em;
+    padding: 5px 10px;
+    margin: 0;
   }
 }
 
@@ -243,7 +292,7 @@
   min-width: 2em;
   min-height: 2em;
   justify-content: center;
-  border-radius: 6px;
+  border-radius: 5px;
   border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.15));
   flex-basis: auto;
   padding: 8px 16px;

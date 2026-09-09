@@ -349,7 +349,7 @@
   width: 128px;
   height: 85px;
   object-fit: cover;
-  border-radius: 6px;
+  border-radius: 5px;
   border: 2px solid transparent;
   transition: border-color 0.15s ease, transform 0.1s ease;
 }
@@ -358,7 +358,7 @@
   width: 100px;
   height: 100px;
   object-fit: cover;
-  border-radius: 6px;
+  border-radius: 5px;
   border: 2px solid transparent;
   transition: border-color 0.15s ease, transform 0.1s ease;
 }
@@ -367,7 +367,7 @@
   width: 100px;
   height: 100px;
   object-fit: cover;
-  border-radius: 6px;
+  border-radius: 5px;
   border: 2px solid transparent;
   transition: border-color 0.15s ease, transform 0.1s ease;
 }

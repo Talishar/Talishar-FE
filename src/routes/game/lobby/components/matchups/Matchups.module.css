@@ -30,7 +30,7 @@
   padding: 0.5rem 0.75rem;
   background: transparent;
   border: 1px solid var(--theme-border-light);
-  border-radius: 6px;
+  border-radius: 5px;
   color: var(--theme-text);
   font-size: 0.875rem;
   font-family: inherit;
@@ -143,7 +143,7 @@
   padding: 0.5rem 0.75rem;
   background: transparent !important;
   border: 1px solid var(--lobby-control-border, rgba(255, 255, 255, 0.12)) !important;
-  border-radius: 6px;
+  border-radius: 5px;
   color: var(--theme-text) !important;
   font-family: inherit !important;
   font-weight: 400;

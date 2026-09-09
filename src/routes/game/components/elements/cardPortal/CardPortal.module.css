@@ -44,7 +44,7 @@
   width: min(100%, 360px);
   margin-top: 4px;
   padding: 9px 11px;
-  border-radius: 7px;
+  border-radius: 5px;
   border: 1px solid var(--theme-border-light, rgba(255, 255, 255, 0.1));
   background: var(--theme-near-black, rgba(0, 0, 0, 0.95));
   color: var(--theme-text, #f4eded);
@@ -101,6 +101,127 @@
   width: calc(var(--meld-h) / 0.7166);
   max-width: none;
   max-height: none;
+}
+
+.mobileBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 11000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: max(12px, env(safe-area-inset-top))
+    max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom))
+    max(12px, env(safe-area-inset-left));
+  background: rgb(0 0 0 / 72%);
+  backdrop-filter: blur(3px);
+}
+
+.mobileDialog {
+  position: relative;
+  box-sizing: border-box;
+  max-width: 100%;
+  max-height: 100%;
+  padding: 18px;
+  overflow: auto;
+  border: 1px solid var(--theme-border-light, rgb(255 255 255 / 18%));
+  border-radius: 14px;
+  background: var(--theme-near-black, #111);
+  box-shadow: 0 16px 48px rgb(0 0 0 / 65%);
+  overscroll-behavior: contain;
+}
+
+.mobileCardGroup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.mobileDialog .popUp {
+  min-width: 0;
+  padding: 0;
+}
+
+.mobileDialog .img {
+  width: auto;
+  height: auto;
+  max-width: calc(100vw - 60px);
+  max-height: calc(78dvh - 48px);
+}
+
+.mobileDialogDoubleFaced .img {
+  max-width: calc(50vw - 42px);
+  max-height: calc(70dvh - 48px);
+}
+
+.mobileDialog .doubleFacedCard {
+  position: static;
+  left: auto;
+}
+
+.mobileDialog .meldWrap {
+  --meld-h: min(calc(70dvh - 48px), calc((100vw - 60px) * 0.7166));
+}
+
+.mobileCloseButton {
+  appearance: none;
+  -webkit-appearance: none;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  z-index: 200;
+  display: grid;
+  width: 36px;
+  height: 36px;
+  margin: 0;
+  padding: 0;
+  place-items: center;
+  border: 0;
+  border-radius: 0;
+  background: transparent !important;
+  color: #fff;
+  box-shadow: none !important;
+  cursor: pointer;
+  opacity: 0.85;
+  transition: color 0.15s ease, opacity 0.15s ease;
+}
+
+.mobileCloseButton svg {
+  display: block;
+  width: 22px;
+  height: 22px;
+}
+
+.mobileCloseButton:hover,
+.mobileCloseButton:active,
+.mobileCloseButton:focus {
+  border: 0;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--theme-primary, #fff);
+  opacity: 1;
+}
+
+.mobileCloseButton:focus-visible {
+  outline: 2px solid var(--theme-focus, #fff);
+  outline-offset: 2px;
+}
+
+@media (orientation: landscape) and (max-height: 600px) {
+  .mobileDialog {
+    padding: 12px;
+  }
+
+  .mobileDialog .img {
+    max-width: calc(100vw - 56px);
+    max-height: calc(100dvh - 48px);
+  }
+
+  .mobileDialogDoubleFaced .img {
+    max-width: calc(50vw - 36px);
+  }
 }
 
 @media (orientation: portrait) {

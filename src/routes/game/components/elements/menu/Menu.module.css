@@ -96,11 +96,11 @@
 }
 
 .buttonActive {
-  background-color: rgba(59, 130, 246, 0.85);
-  border-color: rgba(59, 130, 246, 0.9);
-  color: var(--snow);
-  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  background-color: var(--alarm);
+  border-color: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  box-shadow: 0 2px 4px rgba(220, 20, 60, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 8px rgba(220, 20, 60, 0.3);
   z-index: 1;
 }
 
@@ -117,8 +117,11 @@
   }
 
   .buttonActive:hover {
-    background-color: rgba(29, 100, 216, 0.95);
-    border-color: rgba(59, 130, 246, 1);
+    background-color: #fff;
+    color: var(--alarm);
+    border-color: var(--alarm);
+    box-shadow: 0 3px 6px rgba(220, 20, 60, 0.5), 0 2px 4px rgba(0, 0, 0, 0.3),
+      0 0 10px rgba(220, 20, 60, 0.4);
     cursor: pointer;
     transform: translateY(-1px);
     z-index: 10;
@@ -191,9 +194,9 @@
 
 @media (max-width: 600px) {
   .btn {
-    width: 34px;
-    height: 34px;
-    min-width: 34px;
+    width: clamp(34px, 10.5vw, 42px);
+    height: clamp(34px, 10.5vw, 42px);
+    min-width: clamp(34px, 10.5vw, 42px);
   }
 
   .menuList {
@@ -233,7 +236,7 @@
   padding: 10px 12px;
   margin-bottom: 0;
   border: none;
-  border-radius: 6px;
+  border-radius: 5px;
   background: transparent;
   color: var(--secondary-inverse, #e0e0e0);
   font-size: 14px;

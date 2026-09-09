@@ -30,12 +30,13 @@ import React, {
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '../../../app/Hooks';
-import { setIsRoguelike, getGameInfo } from '../../../features/game/GameSlice';
+import { getGameInfo } from '../../../features/game/GameSlice';
 import { fetchAllSettings } from 'features/options/optionsSlice';
 import { Toaster } from 'react-hot-toast';
 import { shallowEqual } from 'react-redux';
 import { PanelProvider } from '../components/leftColumn/PanelContext';
 import usePlayerPresenceReporter from 'hooks/usePlayerPresenceReporter';
+import useSuppressTouchImageMenu from 'hooks/useSuppressTouchImageMenu';
 import useAdScript, { wasAdProviderLoadedInDocument } from 'hooks/useAdScript';
 import {
   CardScaleVariables,
@@ -127,7 +128,7 @@ const HeroIntroGate = () => {
   return heroIntroShown ? null : <HeroVsHeroIntro />;
 };
 
-function Play({ isRoguelike }: { isRoguelike: boolean }) {
+function Play() {
   const needsCleanDocument = useRef(wasAdProviderLoadedInDocument());
   useLayoutEffect(() => {
     if (needsCleanDocument.current) {
@@ -139,6 +140,7 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
   const { t } = useTranslation();
   usePageTitle(t('PAGES.GAME_PLAY'));
   usePlayerPresenceReporter();
+  useSuppressTouchImageMenu();
 
   const dispatch = useAppDispatch();
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
@@ -153,10 +155,6 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
   );
   const isGameStateLoading =
     gameInfo.gameID <= 0 || loadedGameID !== gameInfo.gameID;
-
-  useEffect(() => {
-    dispatch(setIsRoguelike(isRoguelike));
-  }, [isRoguelike]);
 
   useEffect(() => {
     const idle = window.requestIdleCallback;

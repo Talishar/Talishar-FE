@@ -1,6 +1,6 @@
 .chatInputContainer {
-  height: 3vh;
-  height: 3dvh;
+  flex: 0 0 auto;
+  min-height: 0;
 }
 
 .chatInput.chatInput {
@@ -230,7 +230,7 @@
   background: transparent;
   border: none;
   justify-content: left !important;
-  border-radius: 6px;
+  border-radius: 5px;
   color: var(--theme-text-secondary);
   font-size: 0.88em;
   cursor: pointer;

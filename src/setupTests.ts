@@ -12,6 +12,17 @@ import { setupStore } from './app/Store';
 import { vi } from 'vitest';
 import mockOptionsMenuResponse from 'mocks/optionsmenu/mockOptionsMenuResponse';
 import i18n from './i18n';
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
+
+// The http backend cannot fetch /locales in jsdom, so tests would only ever see
+// raw translation keys. Load the English bundle straight off disk instead.
+const enTranslation = JSON.parse(
+  readFileSync(
+    resolve(process.cwd(), 'public/locales/en/translation.json'),
+    'utf-8'
+  )
+);
 
 const store = setupStore();
 
@@ -136,6 +147,8 @@ const server = setupServer(...restHandlers);
 // Establish API mocking before all tests.
 beforeAll(async () => {
   if (!i18n.isInitialized) await i18n.init();
+  i18n.addResourceBundle('en', 'translation', enTranslation, true, true);
+  await i18n.changeLanguage('en');
   server.listen({
     onUnhandledRequest: 'error'
   });
