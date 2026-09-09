@@ -310,6 +310,11 @@ const PRECON_DECK_DATA = [
     name: 'Olympia, Prized Fighter',
     link: 'https://fabrary.net/decks/01KP7ZJNFZZD8YNGP438FT8SFG',
     hero: 'HVY092'
+  },
+  {
+    name: 'Malice, Domina of the Dead',
+    link: 'https://fabrary.net/decks/01KXQF1YZHCHP2KAMDBS5WC5Q9',
+    hero: 'IAR053'
   }
 ];
 
