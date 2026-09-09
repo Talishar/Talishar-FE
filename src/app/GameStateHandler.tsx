@@ -116,7 +116,17 @@ const GameStateHandler = ({
     const alreadySeated =
       (knownPlayerID === 1 || knownPlayerID === 2) && !!knownAuthKey;
 
-    if (alreadySeated || !isLoggedIn) {
+    if (alreadySeated) {
+      setSeatLookup({
+        gameID: currentGameID,
+        settled: true,
+        playerID: knownPlayerID,
+        authKey: knownAuthKey
+      });
+      return;
+    }
+
+    if (!isLoggedIn) {
       setSeatLookup({ gameID: currentGameID, settled: true });
       return;
     }
