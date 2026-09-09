@@ -56,4 +56,19 @@ describe('player presence', () => {
       )
     ).toBe('Choose a card to block');
   });
+
+  it('does not decorate the concealed arsenal waiting prompt', () => {
+    const arsenalPrompt =
+      'Waiting for other player to choose a card to add to arsenal';
+
+    expect(
+      decorateWaitingPrompt(
+        arsenalPrompt,
+        'Opponent is considering their choice'
+      )
+    ).toBe(arsenalPrompt);
+    expect(decorateWaitingPrompt(arsenalPrompt, 'Opponent is typing')).toBe(
+      arsenalPrompt
+    );
+  });
 });

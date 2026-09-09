@@ -72,6 +72,16 @@ export function decorateWaitingPrompt(
   helpText: string,
   presenceMessage: string | null
 ): string {
+  // The concealed Heave choice is intentionally presented as the ordinary
+  // arsenal step. Presence decoration would make those two states observable.
+  if (
+    /^Waiting for (?:other player|your opponent|opponent) to choose a card to add to arsenal$/i.test(
+      helpText
+    )
+  ) {
+    return helpText;
+  }
+
   if (!presenceMessage || !/^Waiting for\b/i.test(helpText)) return helpText;
 
   const waitingContext = helpText.replace(
