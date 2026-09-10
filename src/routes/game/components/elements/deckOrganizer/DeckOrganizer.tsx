@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { shallowEqual } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -189,7 +190,7 @@ export const DeckOrganizer = ({ onClose }: { onClose: () => void }) => {
     return positions;
   }, [entries]);
 
-  return (
+  return createPortal(
     <AnimatePresence>
       <div className={styles.emptyOutside} onClick={onClose} />
       <motion.div
@@ -314,7 +315,8 @@ export const DeckOrganizer = ({ onClose }: { onClose: () => void }) => {
           </button>
         </div>
       </motion.div>
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 };
 
