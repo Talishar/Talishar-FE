@@ -25,12 +25,16 @@ const DECK_REORDER_MODE = 111;
 
 interface DeckEntry {
   uid: string;
+  // position this card held in the deck the server sent us; the save submits
+  // these indices, so no card ID round trip has to survive the trip back
+  sourceIndex: number;
   card: Card;
 }
 
 const toEntries = (cards: Card[]): DeckEntry[] =>
   cards.map((card, index) => ({
     uid: `${card.cardNumber}-${index}`,
+    sourceIndex: index,
     card
   }));
 
@@ -70,17 +74,21 @@ export const DeckOrganizer = ({ onClose }: { onClose: () => void }) => {
   const { lastUpdate } = useAppSelector(
     (state: RootState) => state.game.gameDynamicInfo
   );
-  const { data, isLoading, isError } = useGetPopUpContentQuery({
-    ...gameInfo,
-    lastUpdate,
-    popupType: 'myDeckPopup'
-  });
+  const { data, isLoading, isError } = useGetPopUpContentQuery(
+    {
+      ...gameInfo,
+      lastUpdate,
+      popupType: 'myDeckPopup'
+    },
+    { refetchOnMountOrArgChange: true }
+  );
   const [processInputAPI, { isLoading: isSaving }] =
     useProcessInputAPIMutation();
 
   const [entries, setEntries] = useState<DeckEntry[]>([]);
   const [isDirty, setIsDirty] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [saveError, setSaveError] = useState<string | null>(null);
   const [draggedUid, setDraggedUid] = useState<string | null>(null);
   const [dropTarget, setDropTarget] = useState<{
     uid: string;
@@ -157,13 +165,20 @@ export const DeckOrganizer = ({ onClose }: { onClose: () => void }) => {
   };
 
   const handleSave = async () => {
-    await processInputAPI({
+    setSaveError(null);
+    const result = await processInputAPI({
       gameName: gameInfo.gameID,
       playerID: gameInfo.playerID,
       authKey: gameInfo.authKey,
       mode: DECK_REORDER_MODE,
-      submission: { cardListTop: entries.map((entry) => entry.card.cardNumber) }
+      submission: { deckOrder: entries.map((entry) => entry.sourceIndex) }
     });
+    const serverError =
+      'data' in result ? (result.data as { error?: string })?.error : undefined;
+    if (serverError || 'error' in result) {
+      setSaveError(serverError ?? t('DECK_ORGANIZER.SAVE_FAILED'));
+      return;
+    }
     setIsDirty(false);
     onClose();
   };
@@ -280,6 +295,7 @@ export const DeckOrganizer = ({ onClose }: { onClose: () => void }) => {
           )}
         </div>
         <div className={styles.footer}>
+          {saveError && <span className={styles.saveError}>{saveError}</span>}
           <button
             type="button"
             className={styles.footerButton}

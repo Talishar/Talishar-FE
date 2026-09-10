@@ -245,6 +245,7 @@
     "MOVE_TO_TOP": "Move to top of deck",
     "RESET": "Reset",
     "SAVE": "Save Order",
+    "SAVE_FAILED": "Could not save the deck order. Please try again.",
     "SAVING": "Saving...",
     "SEARCH": "Search cards",
     "TITLE": "Organize Deck"
