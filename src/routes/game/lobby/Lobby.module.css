@@ -571,7 +571,6 @@ h3 {
 
 .lobbySettingsDescription {
   width: 100%;
-  color: rgba(var(--theme-on-surface-rgb), 0.5);
   font-weight: 400;
   text-align: center;
   white-space: normal;
