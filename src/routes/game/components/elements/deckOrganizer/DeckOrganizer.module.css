@@ -186,7 +186,7 @@
   margin: 0;
   padding: 0 16px;
   font-size: clamp(0.7rem, 1.5vh, 0.8rem);
-  color: rgba(var(--theme-on-surface-rgb), 0.45);
+  color: rgba(var(--theme-on-surface-rgb), 0.85);
   flex-shrink: 0;
 }
 
@@ -357,7 +357,7 @@
 /* ── Empty / loading state ────────────────────────────── */
 .message {
   padding: 2rem 1rem;
-  color: rgba(var(--theme-on-surface-rgb), 0.45);
+  color: rgba(var(--theme-on-surface-rgb), 0.85);
   text-align: center;
   width: 100%;
   font-size: 0.9rem;
