@@ -248,6 +248,7 @@
 
 @media (max-width: 812px) {
   .cardList {
+    --organizer-card-size: 100%;
     padding: 8px 10px;
     gap: 8px;
   }
@@ -263,6 +264,11 @@
 .cardTile img {
   -webkit-user-drag: none;
   user-select: none;
+}
+
+.cardSlot > div {
+  max-width: 100%;
+  max-height: none;
 }
 
 .dragging {
@@ -352,6 +358,26 @@
 .moveButton:focus-visible {
   outline: 2px solid color-mix(in srgb, var(--theme-primary) 55%, transparent);
   outline-offset: 2px;
+}
+
+@media (max-width: 812px) {
+  .cardTile {
+    width: calc((100% - 3 * 8px) / 4);
+  }
+
+  .moveButton {
+    height: 34px;
+  }
+
+  .moveButton svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .position {
+    font-size: 0.8rem;
+    padding: 0.15rem 0.4rem;
+  }
 }
 
 /* ── Empty / loading state ────────────────────────────── */

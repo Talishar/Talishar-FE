@@ -266,7 +266,9 @@ export const DeckOrganizer = ({ onClose }: { onClose: () => void }) => {
                 <span className={styles.position}>
                   {positionOf.get(entry.uid)}
                 </span>
-                <CardDisplay card={entry.card} isPlayer preventUseOnClick />
+                <div className={styles.cardSlot}>
+                  <CardDisplay card={entry.card} isPlayer preventUseOnClick />
+                </div>
                 <div className={styles.cardActions}>
                   <button
                     type="button"
