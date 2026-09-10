@@ -8,6 +8,8 @@ import { setCardListFocus, clearCardListFocus } from 'features/game/GameSlice';
 import { useMediaQuery } from 'hooks/useMediaQuery';
 import * as optConst from 'features/options/constants';
 import { useTranslation } from 'react-i18next';
+import useSetting from 'hooks/useSetting';
+import { usePanelContextOptional } from '../../leftColumn/PanelContext';
 
 const MAX_STACK_LAYERS = 12;
 
@@ -77,6 +79,10 @@ export const DeckZone = React.memo((prop: Displayrow) => {
     currentDeckPlayerID === 1 ? clashRevealP1Card : clashRevealP2Card;
   const showClash = !!clashCard;
 
+  const panelContext = usePanelContextOptional();
+  const isManualMode =
+    useSetting({ settingName: optConst.MANUAL_MODE })?.value === '1';
+
   const isMobileOrTablet = useMediaQuery('(max-width: 1024px)');
   const safeCount = deckCards ?? 0;
   const baseOffsetY = safeCount * -0.24;
@@ -133,6 +139,10 @@ export const DeckZone = React.memo((prop: Displayrow) => {
   }
 
   const deckZoneDisplay = () => {
+    if (isPlayer && isManualMode && panelContext) {
+      panelContext.setIsDeckOrganizerOpen(true);
+      return;
+    }
     if (deckZone?.length === 0) return;
     const isPlayerPronoun = isPlayer ? 'Your' : "Opponent's";
     const zoneTitle = `${isPlayerPronoun} Deck`;

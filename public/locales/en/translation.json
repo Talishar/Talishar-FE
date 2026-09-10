@@ -238,6 +238,17 @@
     "UNSAVED_CHANGES": "Unsaved changes",
     "UPSELL_BANNER": "Card backs, playmats, and alternate art beyond the defaults are supporter perks. <2>Support Talishar on Metafy</2> to unlock more."
   },
+  "DECK_ORGANIZER": {
+    "CLOSE": "Close deck organizer",
+    "HINT": "Cards are listed from the top of your deck down. Drag a card to reorder it, or send it straight to the top or the bottom, then save.",
+    "MOVE_TO_BOTTOM": "Move to bottom of deck",
+    "MOVE_TO_TOP": "Move to top of deck",
+    "RESET": "Reset",
+    "SAVE": "Save Order",
+    "SAVING": "Saving...",
+    "SEARCH": "Search cards",
+    "TITLE": "Organize Deck"
+  },
   "DEV_TOOL": {
     "BUG_REPORT_VARIANT": "Bug report variant",
     "DEBUG_GAME_ID": "Debug game ID",
@@ -855,6 +866,7 @@
     "ADD_1_RESOURCE_PLAYER": "Add 1 resource to player pool",
     "ADD_CARD": "Add Card",
     "AI_INFINITE_HP": "AI Infinite HP",
+    "CARDS_TO_DRAW": "Cards to Draw",
     "CARD_INPUT_PLACEHOLDER": "e.g. Snatch or Vigor|5",
     "CARD_IRONROT_GAUNTLET": "Ironrot Gauntlet",
     "CARD_PIPE_DESCRIPTION": "Card Name + Pipe + Number adds that many copies to your hand",
@@ -877,6 +889,7 @@
     "INPUT_EXAMPLES_GUIDE": "Input Examples Guide",
     "OPPONENT_LIFE": "Opponent Life",
     "OPPONENT_RESOURCES": "Opponent Resources",
+    "ORGANIZE_DECK": "Organize Deck",
     "PLAYER_LIFE": "Player Life",
     "PLAYER_RESOURCES": "Player Resources",
     "REDUCE_WRENCH_POWER": "Reduce Wrench-tastic power by 1",
@@ -894,6 +907,7 @@
     "TOGGLE_MANUAL_MODE": "Toggle Manual Mode",
     "TOKEN_DESCRIPTION": "Tokens - places them directly into the arena",
     "TOKEN_PIPE_DESCRIPTION": "Token + Pipe + Number - Creates that many copies in the arena",
+    "TYPE_A_VALUE": "Type a value to set it, or +5 / -5 to adjust",
     "WRENCH_POWER": "Wrench-tastic! Power",
     "WRENCH_POWER_ARIA": "Wrench-tastic power"
   },
