@@ -915,7 +915,11 @@
       "BAZAAR_TAB": "",
       "CLEAR_SELECTION": "",
       "COMING_SOON": "",
-      "FAI_CC": "",
+      "BRAVO_SAGE": "Bravo Sage",
+      "BRIAR_SAGE": "Brair Sage",
+      "FAI_CC": "Fai (Classic Constructed)",
+      "IRA_CC": "Ira (Classic Constructed)",
+      "IRA_SAGE": "Ira (Silver Age)",
       "FORMAT": "フォーマット",
       "FORMATS": {
         "BLITZ": "ブリッツ（Blitz）",

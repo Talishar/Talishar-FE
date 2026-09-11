@@ -72,17 +72,13 @@
 }
 
 .optionsList {
-  position: absolute;
-  top: calc(100% + 0.25rem);
-  left: 0;
-  right: 0;
+  position: fixed;
   background: var(--theme-form-background, #33383d);
   border: 1px solid var(--theme-form-border, #797c80);
   border-radius: 0.5rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  max-height: 400px;
   overflow-y: auto;
-  z-index: 1000;
+  z-index: 10001;
   animation: slideDown 0.2s ease;
 }
 

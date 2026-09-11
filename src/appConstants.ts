@@ -218,10 +218,78 @@ export const isPreconFormat = (
 };
 
 export const AI_DECK = {
-  COMBAT_DUMMY: 'Dummy',
-  IRABLITZ: 'Ira',
-  FAICC: 'FaiCC'
+  DUMMY: 'Dummy',
+  IRACC: 'IraCC',
+  FAICC: 'FaiCC',
+  BRIARSAGE: 'BriarSAGE',
+  BRAVOSAGE: 'BravoSAGE',
+  IRASAGE: 'IraSAGE'
 };
+
+export interface AiDeckOption {
+  value: string;
+  labelKey: string;
+  hero: string;
+}
+
+const AI_DECK_DUMMY: AiDeckOption = {
+  value: AI_DECK.DUMMY,
+  labelKey: 'MENU.CREATE_GAME.PRACTICE_DUMMY',
+  hero: 'DUMMY'
+};
+
+const AI_DECKS_SMALL: AiDeckOption[] = [
+  {
+    value: AI_DECK.BRIARSAGE,
+    labelKey: 'MENU.CREATE_GAME.BRIAR_SAGE',
+    hero: 'ELE063'
+  },
+  {
+    value: AI_DECK.BRAVOSAGE,
+    labelKey: 'MENU.CREATE_GAME.BRAVO_SAGE',
+    hero: 'BDD001'
+  },
+  {
+    value: AI_DECK.IRASAGE,
+    labelKey: 'MENU.CREATE_GAME.IRA_SAGE',
+    hero: 'CRU046'
+  }
+];
+
+const AI_DECKS_LARGE: AiDeckOption[] = [
+  { value: AI_DECK.IRACC, labelKey: 'MENU.CREATE_GAME.IRA_CC', hero: 'HER123' },
+  { value: AI_DECK.FAICC, labelKey: 'MENU.CREATE_GAME.FAI_CC', hero: 'UPR044' }
+];
+
+// 40-card formats need a 40-card, 20-life bot deck; everything else gets a
+// 60-card Classic Constructed one.
+export const isSmallDeckFormat = (
+  format: string | number | undefined
+): boolean => {
+  const normalized = String(format ?? '').toLowerCase();
+  return (
+    normalized.includes('sage') ||
+    normalized.includes('blitz') ||
+    normalized === 'commoner'
+  );
+};
+
+export const isOpenFormat = (
+  format: string | number | null | undefined
+): boolean => normalizeFormat(format) === GAME_FORMAT.OPEN;
+
+// The practice dummy has no deck size requirements, so it is offered
+// everywhere. Open format is unrestricted, so it offers every bot deck.
+export const AI_DECKS_FOR_FORMAT = (
+  format: string | number | undefined
+): AiDeckOption[] => [
+  AI_DECK_DUMMY,
+  ...(isOpenFormat(format)
+    ? [...AI_DECKS_LARGE, ...AI_DECKS_SMALL]
+    : isSmallDeckFormat(format)
+    ? AI_DECKS_SMALL
+    : AI_DECKS_LARGE)
+];
 
 // Preconstructed deck data
 const PRECON_DECK_DATA = [

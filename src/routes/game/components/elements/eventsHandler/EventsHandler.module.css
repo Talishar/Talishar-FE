@@ -208,7 +208,6 @@
 
 .discardEvent .movementEventCard {
   filter: sepia(0.08) saturate(0.92);
-  transform: translateY(2px);
 }
 
 .banishEvent {

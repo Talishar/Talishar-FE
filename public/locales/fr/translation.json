@@ -931,7 +931,11 @@
       "BAZAAR_TAB": "Bazar FaB",
       "CLEAR_SELECTION": "Effacer la sélection",
       "COMING_SOON": "À venir!",
-      "FAI_CC": "Faï (CC)",
+      "BRAVO_SAGE": "Bravo (Silver Age)",
+      "BRIAR_SAGE": "Briar (Silver Age)",
+      "FAI_CC": "Faï (Classic Constructed)",
+      "IRA_CC": "Ira (Classic Constructed)",
+      "IRA_SAGE": "Ira (Silver Age)",
       "FORMAT": "Format",
       "FORMATS": {
         "BLITZ": "Blitz",

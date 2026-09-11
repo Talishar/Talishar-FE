@@ -174,11 +174,10 @@ export default function PlayerName(player: Player) {
       : state.game.playerTwo.isPvtVoidPatron
   );
 
-  const isPracticeDummy = useAppSelector((state: RootState) =>
-    displayedPlayerNumber === 1
-      ? state.game.playerOne.Name === 'Practice Dummy'
-      : state.game.playerTwo.Name === 'Practice Dummy'
+  const isOpponentAI = useAppSelector(
+    (state: RootState) => state.game.gameInfo.isOpponentAI ?? false
   );
+  const isBotOpponent = isOpponentAI && !player.isPlayer;
 
   const metafyTiers = useAppSelector((state: RootState) =>
     displayedPlayerNumber === 1
@@ -193,7 +192,7 @@ export default function PlayerName(player: Player) {
   const [unblockUser] = useUnblockUserMutation();
 
   const shouldLoadRelationships =
-    isDropdownOpen && !player.isPlayer && playerID !== 3 && !isPracticeDummy;
+    isDropdownOpen && !player.isPlayer && playerID !== 3 && !isBotOpponent;
   const {
     data: sentData,
     refetch: refetchSent,
@@ -346,10 +345,10 @@ export default function PlayerName(player: Player) {
         isContributor,
         isPvtVoidPatron,
         isPatron,
-        isPracticeDummy,
+        isBotOpponent,
         metafyTiers
       ),
-    [isContributor, isPvtVoidPatron, isPatron, isPracticeDummy, metafyTiers]
+    [isContributor, isPvtVoidPatron, isPatron, isBotOpponent, metafyTiers]
   );
 
   const statusClass = useMemo(() => {
@@ -393,8 +392,8 @@ export default function PlayerName(player: Player) {
           </span>
         </div>
 
-        {/* Dropdown arrow for opponent - hidden for Practice Dummy and spectators */}
-        {!player.isPlayer && !isPracticeDummy && playerID !== 3 && (
+        {/* Relationship actions do not apply to a server-controlled bot. */}
+        {!player.isPlayer && !isBotOpponent && playerID !== 3 && (
           <div className={styles.dropdownContainer}>
             <button
               className={styles.dropdownButton}
@@ -411,9 +410,9 @@ export default function PlayerName(player: Player) {
         )}
       </div>
 
-      {/* Dropdown menu rendered as portal for opponent - hidden for Practice Dummy and spectators */}
+      {/* Dropdown menu rendered as a portal for human opponents. */}
       {!player.isPlayer &&
-        !isPracticeDummy &&
+        !isBotOpponent &&
         playerID !== 3 &&
         isDropdownOpen &&
         createPortal(
@@ -473,7 +472,7 @@ export default function PlayerName(player: Player) {
         )}
 
       {/* Note modal for editing player notes */}
-      {!player.isPlayer && !isPracticeDummy && playerID !== 3 && (
+      {!player.isPlayer && !isBotOpponent && playerID !== 3 && (
         <PlayerNoteModal
           isOpen={isNoteModalOpen}
           onClose={handleNoteModalClose}

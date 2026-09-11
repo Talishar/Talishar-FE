@@ -115,11 +115,11 @@ function MobileOverflowMenu({ isSpectator }: { isSpectator: boolean }) {
   const isLocalEnvironment =
     import.meta.env.MODE === 'development' ||
     window.location.hostname === 'localhost';
-  const isPracticeDummy = useAppSelector(
-    (state: RootState) => state.game.playerTwo.Name === 'Practice Dummy'
+  const isOpponentAI = useAppSelector(
+    (state: RootState) => state.game.gameInfo.isOpponentAI ?? false
   );
   const showManualMode =
-    !isSpectator && (isLocalEnvironment || isManualMode || isPracticeDummy);
+    !isSpectator && (isLocalEnvironment || isManualMode || isOpponentAI);
 
   const toggleFullScreen = () => {
     screenfull.toggle();

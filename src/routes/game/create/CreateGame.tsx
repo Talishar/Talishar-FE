@@ -5,6 +5,8 @@ import {
   GAME_FORMAT,
   GAME_VISIBILITY,
   AI_DECK,
+  AI_DECKS_FOR_FORMAT,
+  isSmallDeckFormat,
   isPreconFormat,
   PRECON_DECKS,
   FAB_BAZAAR_DECK_URL_BASE
@@ -252,7 +254,7 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
             )?.key
           : '',
       gameDescription,
-      deckTestDeck: AI_DECK.COMBAT_DUMMY
+      deckTestDeck: AI_DECK.DUMMY
     };
   }, [isSuccess, isLoggedIn]);
 
@@ -307,6 +309,24 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
 
   const formFormat = watch('format');
   const deckTestMode = watch('deckTestMode');
+  const deckTestDeck = watch('deckTestDeck');
+
+  const aiDeckOptions: ImageSelectOption[] = React.useMemo(
+    () =>
+      AI_DECKS_FOR_FORMAT(formFormat).map((aiDeck) => ({
+        value: aiDeck.value,
+        label: t(aiDeck.labelKey),
+        imageUrl: generateCroppedImageUrl(aiDeck.hero)
+      })),
+    [formFormat, t]
+  );
+
+  React.useEffect(() => {
+    const allowed = AI_DECKS_FOR_FORMAT(formFormat);
+    if (!allowed.some((aiDeck) => aiDeck.value === deckTestDeck)) {
+      setValue('deckTestDeck', allowed[0].value);
+    }
+  }, [formFormat, deckTestDeck, setValue]);
 
   // When inside QuickJoinProvider (main menu), sync deck values from the shared context
   React.useEffect(() => {
@@ -1498,19 +1518,15 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                 {isLoggedIn && deckTestMode && (
                   <label>
                     {t('MENU.CREATE_GAME.AI_DECK')}
-                    <select
+                    <ImageSelect
                       id="deckTestDeck"
+                      options={aiDeckOptions}
+                      value={deckTestDeck}
+                      onChange={(value) => setValue('deckTestDeck', value)}
+                      placeholder={t('MENU.CREATE_GAME.AI_DECK')}
                       aria-label={t('MENU.CREATE_GAME.AI_DECK')}
-                      {...register('deckTestDeck')}
-                      aria-invalid={errors.format?.message ? 'true' : undefined}
-                    >
-                      <option value={AI_DECK.COMBAT_DUMMY}>
-                        {t('MENU.CREATE_GAME.PRACTICE_DUMMY')}
-                      </option>
-                      <option value={AI_DECK.FAICC}>
-                        {t('MENU.CREATE_GAME.FAI_CC')}
-                      </option>
-                    </select>
+                    />
+                    <input type="hidden" {...register('deckTestDeck')} />
                   </label>
                 )}
               </fieldset>

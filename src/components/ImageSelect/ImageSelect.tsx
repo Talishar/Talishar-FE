@@ -1,5 +1,24 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState
+} from 'react';
+import { createPortal } from 'react-dom';
 import styles from './ImageSelect.module.css';
+
+interface DropdownPosition {
+  top: number;
+  left: number;
+  width: number;
+  maxHeight: number;
+}
+
+const DROPDOWN_GAP = 4;
+const DROPDOWN_MARGIN = 8;
+const DROPDOWN_MIN_HEIGHT = 120;
 
 export interface ImageSelectOption {
   value: string;
@@ -36,12 +55,58 @@ export const ImageSelect: React.FC<ImageSelectProps> = ({
     [options, value]
   );
   const containerRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
+  const [position, setPosition] = useState<DropdownPosition | null>(null);
+
+  // The list is portalled to the body so a scrolling panel around the select
+  // cannot clip it; that means its position has to follow the trigger.
+  const updatePosition = useCallback(() => {
+    const trigger = triggerRef.current;
+    if (!trigger) return;
+    const rect = trigger.getBoundingClientRect();
+    const spaceBelow = window.innerHeight - rect.bottom - DROPDOWN_MARGIN;
+    const spaceAbove = rect.top - DROPDOWN_MARGIN;
+    const contentHeight = listRef.current?.scrollHeight ?? 0;
+    const openUpwards = contentHeight > spaceBelow && spaceAbove > spaceBelow;
+    const maxHeight = Math.max(
+      openUpwards ? spaceAbove : spaceBelow,
+      DROPDOWN_MIN_HEIGHT
+    );
+    const height = contentHeight
+      ? Math.min(contentHeight, maxHeight)
+      : maxHeight;
+    setPosition({
+      top: openUpwards
+        ? rect.top - DROPDOWN_GAP - height
+        : rect.bottom + DROPDOWN_GAP,
+      left: rect.left,
+      width: rect.width,
+      maxHeight
+    });
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!isOpen) {
+      setPosition(null);
+      return;
+    }
+    updatePosition();
+    window.addEventListener('scroll', updatePosition, true);
+    window.addEventListener('resize', updatePosition);
+    return () => {
+      window.removeEventListener('scroll', updatePosition, true);
+      window.removeEventListener('resize', updatePosition);
+    };
+  }, [isOpen, options, updatePosition]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
       if (
         containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
+        !containerRef.current.contains(target) &&
+        !listRef.current?.contains(target)
       ) {
         setIsOpen(false);
       }
@@ -90,6 +155,7 @@ export const ImageSelect: React.FC<ImageSelectProps> = ({
     >
       <div
         id={id}
+        ref={triggerRef}
         className={`${styles.selectTrigger} ${isOpen ? styles.open : ''} ${
           ariaInvalid ? styles.invalid : ''
         }`}
@@ -133,32 +199,46 @@ export const ImageSelect: React.FC<ImageSelectProps> = ({
         </svg>
       </div>
 
-      {isOpen && (
-        <div className={styles.optionsList} role="listbox">
-          {options.map((option) => (
-            <div
-              key={option.value}
-              className={`${styles.option} ${
-                selectedOption?.value === option.value ? styles.selected : ''
-              }`}
-              onClick={() => handleSelect(option)}
-              onKeyDown={(e) => handleKeyDown(e, option)}
-              tabIndex={0}
-              role="option"
-              aria-selected={selectedOption?.value === option.value}
-            >
-              {option.imageUrl && (
-                <img
-                  src={option.imageUrl}
-                  alt=""
-                  className={styles.optionImage}
-                />
-              )}
-              <span>{option.label}</span>
-            </div>
-          ))}
-        </div>
-      )}
+      {isOpen &&
+        createPortal(
+          <div
+            ref={listRef}
+            className={styles.optionsList}
+            role="listbox"
+            data-select-id={id}
+            style={{
+              top: position?.top ?? -9999,
+              left: position?.left ?? -9999,
+              width: position?.width,
+              maxHeight: position?.maxHeight,
+              visibility: position ? 'visible' : 'hidden'
+            }}
+          >
+            {options.map((option) => (
+              <div
+                key={option.value}
+                className={`${styles.option} ${
+                  selectedOption?.value === option.value ? styles.selected : ''
+                }`}
+                onClick={() => handleSelect(option)}
+                onKeyDown={(e) => handleKeyDown(e, option)}
+                tabIndex={0}
+                role="option"
+                aria-selected={selectedOption?.value === option.value}
+              >
+                {option.imageUrl && (
+                  <img
+                    src={option.imageUrl}
+                    alt=""
+                    className={styles.optionImage}
+                  />
+                )}
+                <span>{option.label}</span>
+              </div>
+            ))}
+          </div>,
+          document.body
+        )}
     </div>
   );
 };

@@ -989,12 +989,16 @@
     "ALWAYS_PASS": "Always Pass Priority",
     "ALWAYS_PASS_LABEL": "Always Pass",
     "CREATE_GAME": {
-      "AI_DECK": "AI Deck",
+      "AI_DECK": "Bot Deck",
       "BAZAAR_LINK_MESSAGE": "Link your FaB Bazaar account in your <1>profile</1> to see your decks here.",
       "BAZAAR_TAB": "FaB Bazaar",
       "CLEAR_SELECTION": "Clear Selection",
       "COMING_SOON": "Coming soon!",
-      "FAI_CC": "Fai (CC)",
+      "BRAVO_SAGE": "Bravo (Silver Age)",
+      "BRIAR_SAGE": "Briar (Silver Age)",
+      "FAI_CC": "Fai (Classic Constructed)",
+      "IRA_CC": "Ira (Classic Constructed)",
+      "IRA_SAGE": "Ira (Silver Age)",
       "FORMAT": "Gameplay Format",
       "FORMATS": {
         "BLITZ": "Blitz",

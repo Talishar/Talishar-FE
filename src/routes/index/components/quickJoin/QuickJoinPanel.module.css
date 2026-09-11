@@ -239,8 +239,8 @@
   box-shadow: none;
 }
 
-:global(#quickJoinFavoriteDeck ~ [role='listbox'] [role='option']:hover),
-:global(#quickJoinFavoriteDeck ~ [role='listbox'] [role='option']:focus) {
+:global([role='listbox'][data-select-id='quickJoinFavoriteDeck'] [role='option']:hover),
+:global([role='listbox'][data-select-id='quickJoinFavoriteDeck'] [role='option']:focus) {
   background-color: var(
     --dropdown-hover-background-color,
     color-mix(in srgb, var(--theme-primary) 15%, transparent)
