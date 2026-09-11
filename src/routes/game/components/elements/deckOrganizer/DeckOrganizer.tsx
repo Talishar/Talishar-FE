@@ -23,6 +23,8 @@ import CardDisplay from '../cardDisplay/CardDisplay';
 import styles from './DeckOrganizer.module.css';
 
 const DECK_REORDER_MODE = 111;
+const DECK_ORGANIZER_ACTIVITY_MODE = 112;
+const ACTIVITY_HEARTBEAT_INTERVAL_MS = 120_000;
 
 interface DeckEntry {
   uid: string;
@@ -85,6 +87,7 @@ export const DeckOrganizer = ({ onClose }: { onClose: () => void }) => {
   );
   const [processInputAPI, { isLoading: isSaving }] =
     useProcessInputAPIMutation();
+  const [reportDeckOrganizerActivity] = useProcessInputAPIMutation();
 
   const [entries, setEntries] = useState<DeckEntry[]>([]);
   const [isDirty, setIsDirty] = useState(false);
@@ -102,6 +105,30 @@ export const DeckOrganizer = ({ onClose }: { onClose: () => void }) => {
     if (!data?.cards || isDirty) return;
     setEntries(toEntries(data.cards));
   }, [data?.cards, isDirty]);
+
+  useEffect(() => {
+    const reportActivity = () => {
+      void reportDeckOrganizerActivity({
+        gameName: gameInfo.gameID,
+        playerID: gameInfo.playerID,
+        authKey: gameInfo.authKey,
+        mode: DECK_ORGANIZER_ACTIVITY_MODE,
+        submission: {}
+      });
+    };
+
+    reportActivity();
+    const interval = window.setInterval(
+      reportActivity,
+      ACTIVITY_HEARTBEAT_INTERVAL_MS
+    );
+    return () => window.clearInterval(interval);
+  }, [
+    gameInfo.authKey,
+    gameInfo.gameID,
+    gameInfo.playerID,
+    reportDeckOrganizerActivity
+  ]);
 
   const filteredEntries = useMemo(() => {
     const normalizedQuery = searchQuery.trim().toLowerCase();
