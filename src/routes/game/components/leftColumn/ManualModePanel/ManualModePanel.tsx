@@ -14,13 +14,19 @@ import { usePanelContext } from '../PanelContext';
 import { useTranslation } from 'react-i18next';
 import { usePlayerInputInProgress } from 'hooks/usePlayerInputInProgress';
 import { useMediaQuery } from 'hooks/useMediaQuery';
+import DeckOrganizer from '../../elements/deckOrganizer/DeckOrganizer';
 
 export default function ManualModePanel() {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const isMobileOrTablet = useMediaQuery('(max-width: 1199px)');
-  const { setIsManualModeOpen, isDevToolOpen, isManualModeOpen } =
-    usePanelContext();
+  const {
+    setIsManualModeOpen,
+    isDevToolOpen,
+    isManualModeOpen,
+    isDeckOrganizerOpen,
+    setIsDeckOrganizerOpen
+  } = usePanelContext();
   const isManualMode = useSetting({ settingName: MANUAL_MODE })?.value === '1';
   const isLocalEnvironment =
     import.meta.env.MODE === 'development' ||
@@ -70,20 +76,112 @@ export default function ManualModePanel() {
             setIsManualModeOpen(false);
           }}
           isPracticeDummy={isPracticeDummy}
+          onOpenDeckOrganizer={() => setIsDeckOrganizerOpen(true)}
         />
+      )}
+      {isDeckOrganizerOpen && (
+        <DeckOrganizer onClose={() => setIsDeckOrganizerOpen(false)} />
       )}
     </>
   );
 }
 
+function ManualCounter({
+  label,
+  value,
+  addMode,
+  subtractMode,
+  addTitle,
+  subtractTitle,
+  inputTitle,
+  disabled,
+  onCommit
+}: {
+  label: string;
+  value: number;
+  addMode: number;
+  subtractMode: number;
+  addTitle: string;
+  subtractTitle: string;
+  inputTitle: string;
+  disabled: boolean;
+  onCommit: (mode: number, amount: number) => void;
+}) {
+  const [draft, setDraft] = useState(String(value));
+
+  useEffect(() => {
+    setDraft(String(value));
+  }, [value]);
+
+  const commit = () => {
+    const trimmed = draft.trim();
+    const isRelative = trimmed.startsWith('+') || trimmed.startsWith('-');
+    const parsed = Number.parseInt(trimmed, 10);
+    if (Number.isNaN(parsed)) {
+      setDraft(String(value));
+      return;
+    }
+    const delta = isRelative ? parsed : parsed - value;
+    setDraft(String(value));
+    if (delta === 0) return;
+    onCommit(delta > 0 ? addMode : subtractMode, Math.abs(delta));
+  };
+
+  return (
+    <div className={styles.controlGroup}>
+      <span className={styles.label}>{label}</span>
+      <div className={styles.controlRow}>
+        <button
+          className={styles.buttonSmall}
+          onClick={() => onCommit(subtractMode, 1)}
+          title={subtractTitle}
+          disabled={disabled}
+        >
+          <AiOutlineMinus />
+        </button>
+        <input
+          className={styles.numberInput}
+          type="text"
+          inputMode="numeric"
+          pattern="[+-]?[0-9]*"
+          value={draft}
+          onChange={(event) => setDraft(event.target.value)}
+          onBlur={commit}
+          onKeyDown={(event) => {
+            event.stopPropagation();
+            if (event.key === 'Enter') {
+              event.currentTarget.blur();
+            }
+          }}
+          onKeyDownCapture={(event) => event.stopPropagation()}
+          title={inputTitle}
+          aria-label={label}
+          disabled={disabled}
+        />
+        <button
+          className={styles.buttonSmall}
+          onClick={() => onCommit(addMode, 1)}
+          title={addTitle}
+          disabled={disabled}
+        >
+          <AiOutlinePlus />
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function ManualModeContent({
   onClose,
-  isPracticeDummy
+  isPracticeDummy,
+  onOpenDeckOrganizer
 }: {
   onClose: () => void;
   isPracticeDummy: boolean;
+  onOpenDeckOrganizer: () => void;
 }) {
   const [cardInput, setCardInput] = useState('');
+  const [drawCount, setDrawCount] = useState('1');
   const [weaponPowerInput, setWeaponPowerInput] = useState('4');
   const [isCardLoading, setIsCardLoading] = useState(false);
   const isRequestInProgress = usePlayerInputInProgress();
@@ -117,6 +215,11 @@ function ManualModeContent({
     setWeaponPowerInput(String(practiceDummyWeaponPower));
   }, [practiceDummyWeaponPower]);
 
+  const parsedDrawCount = Math.max(
+    1,
+    Math.min(999, Number.parseInt(drawCount, 10) || 1)
+  );
+
   const handleClose = () => {
     dispatch(
       updateOptions({
@@ -137,6 +240,18 @@ function ManualModeContent({
     dispatch(
       submitButton({
         button: { mode }
+      })
+    );
+  };
+
+  const handleDispatchAmount = (mode: number, amount: number) => {
+    if (isRequestInProgress) return;
+    dispatch(
+      submitButton({
+        button: {
+          mode,
+          buttonInput: String(Math.max(1, Math.min(999, amount)))
+        }
       })
     );
   };
@@ -279,165 +394,123 @@ function ManualModeContent({
         )}
 
         {/* Player Life */}
-        <div className={styles.controlGroup}>
-          <span className={styles.label}>
-            {t('MANUAL_MODE_PANEL.PLAYER_LIFE')}
-          </span>
-          <div className={styles.controlRow}>
-            <button
-              className={styles.buttonSmall}
-              onClick={() => handleDispatch(PROCESS_INPUT.SUBTRACT_1_HP_SELF)}
-              title={t('MANUAL_MODE_PANEL.REMOVE_1_HP_PLAYER')}
-              disabled={isRequestInProgress}
-            >
-              <AiOutlineMinus />
-            </button>
-            <span className={styles.value}>{playerHealth}</span>
-            <button
-              className={styles.buttonSmall}
-              onClick={() => handleDispatch(PROCESS_INPUT.ADD_1_HP_SELF)}
-              title={t('MANUAL_MODE_PANEL.ADD_1_HP_PLAYER')}
-              disabled={isRequestInProgress}
-            >
-              <AiOutlinePlus />
-            </button>
-          </div>
-        </div>
+        <ManualCounter
+          label={t('MANUAL_MODE_PANEL.PLAYER_LIFE')}
+          value={playerHealth ?? 0}
+          addMode={PROCESS_INPUT.ADD_1_HP_SELF}
+          subtractMode={PROCESS_INPUT.SUBTRACT_1_HP_SELF}
+          addTitle={t('MANUAL_MODE_PANEL.ADD_1_HP_PLAYER')}
+          subtractTitle={t('MANUAL_MODE_PANEL.REMOVE_1_HP_PLAYER')}
+          inputTitle={t('MANUAL_MODE_PANEL.TYPE_A_VALUE')}
+          disabled={isRequestInProgress}
+          onCommit={handleDispatchAmount}
+        />
 
         {/* Opponent Life */}
-        <div className={styles.controlGroup}>
-          <span className={styles.label}>
-            {t('MANUAL_MODE_PANEL.OPPONENT_LIFE')}
-          </span>
-          <div className={styles.controlRow}>
-            <button
-              className={styles.buttonSmall}
-              onClick={() =>
-                handleDispatch(PROCESS_INPUT.SUBTRACT_1_HP_OPPONENT)
-              }
-              title={t('MANUAL_MODE_PANEL.REMOVE_1_HP_OPPONENT')}
-              disabled={isRequestInProgress}
-            >
-              <AiOutlineMinus />
-            </button>
-            <span className={styles.value}>{opponentHealth}</span>
-            <button
-              className={styles.buttonSmall}
-              onClick={() => handleDispatch(PROCESS_INPUT.ADD_1_HP_OPPONENT)}
-              title={t('MANUAL_MODE_PANEL.ADD_1_HP_OPPONENT')}
-              disabled={isRequestInProgress}
-            >
-              <AiOutlinePlus />
-            </button>
-          </div>
-        </div>
+        <ManualCounter
+          label={t('MANUAL_MODE_PANEL.OPPONENT_LIFE')}
+          value={opponentHealth ?? 0}
+          addMode={PROCESS_INPUT.ADD_1_HP_OPPONENT}
+          subtractMode={PROCESS_INPUT.SUBTRACT_1_HP_OPPONENT}
+          addTitle={t('MANUAL_MODE_PANEL.ADD_1_HP_OPPONENT')}
+          subtractTitle={t('MANUAL_MODE_PANEL.REMOVE_1_HP_OPPONENT')}
+          inputTitle={t('MANUAL_MODE_PANEL.TYPE_A_VALUE')}
+          disabled={isRequestInProgress}
+          onCommit={handleDispatchAmount}
+        />
 
         {/* Player Action Points */}
-        <div className={styles.controlGroup}>
-          <span className={styles.label}>
-            {t('MANUAL_MODE_PANEL.ACTION_POINTS')}
-          </span>
-          <div className={styles.controlRow}>
-            <button
-              className={styles.buttonSmall}
-              onClick={() =>
-                handleDispatch(PROCESS_INPUT.SUBTRACT_ACTION_POINT)
-              }
-              title={t('MANUAL_MODE_PANEL.REMOVE_1_ACTION_POINT')}
-              disabled={isRequestInProgress}
-            >
-              <AiOutlineMinus />
-            </button>
-            <span className={styles.value}>{playerActionPoints}</span>
-            <button
-              className={styles.buttonSmall}
-              onClick={() => handleDispatch(PROCESS_INPUT.ADD_ACTION_POINT)}
-              title={t('MANUAL_MODE_PANEL.ADD_1_ACTION_POINT')}
-              disabled={isRequestInProgress}
-            >
-              <AiOutlinePlus />
-            </button>
-          </div>
-        </div>
+        <ManualCounter
+          label={t('MANUAL_MODE_PANEL.ACTION_POINTS')}
+          value={playerActionPoints}
+          addMode={PROCESS_INPUT.ADD_ACTION_POINT}
+          subtractMode={PROCESS_INPUT.SUBTRACT_ACTION_POINT}
+          addTitle={t('MANUAL_MODE_PANEL.ADD_1_ACTION_POINT')}
+          subtractTitle={t('MANUAL_MODE_PANEL.REMOVE_1_ACTION_POINT')}
+          inputTitle={t('MANUAL_MODE_PANEL.TYPE_A_VALUE')}
+          disabled={isRequestInProgress}
+          onCommit={handleDispatchAmount}
+        />
 
         {/* Player Resources */}
-        <div className={styles.controlGroup}>
-          <span className={styles.label}>
-            {t('MANUAL_MODE_PANEL.PLAYER_RESOURCES')}
-          </span>
-          <div className={styles.controlRow}>
-            <button
-              className={styles.buttonSmall}
-              onClick={() =>
-                handleDispatch(PROCESS_INPUT.REMOVE_RESOURCE_FROM_POOL_SELF)
-              }
-              title={t('MANUAL_MODE_PANEL.REMOVE_1_RESOURCE_PLAYER')}
-              disabled={isRequestInProgress}
-            >
-              <AiOutlineMinus />
-            </button>
-            <span className={styles.value}>{playerResources}</span>
-            <button
-              className={styles.buttonSmall}
-              onClick={() =>
-                handleDispatch(PROCESS_INPUT.ADD_RESOURCE_TO_POOL_SELF)
-              }
-              title={t('MANUAL_MODE_PANEL.ADD_1_RESOURCE_PLAYER')}
-              disabled={isRequestInProgress}
-            >
-              <AiOutlinePlus />
-            </button>
-          </div>
-        </div>
+        <ManualCounter
+          label={t('MANUAL_MODE_PANEL.PLAYER_RESOURCES')}
+          value={playerResources}
+          addMode={PROCESS_INPUT.ADD_RESOURCE_TO_POOL_SELF}
+          subtractMode={PROCESS_INPUT.REMOVE_RESOURCE_FROM_POOL_SELF}
+          addTitle={t('MANUAL_MODE_PANEL.ADD_1_RESOURCE_PLAYER')}
+          subtractTitle={t('MANUAL_MODE_PANEL.REMOVE_1_RESOURCE_PLAYER')}
+          inputTitle={t('MANUAL_MODE_PANEL.TYPE_A_VALUE')}
+          disabled={isRequestInProgress}
+          onCommit={handleDispatchAmount}
+        />
 
         {/* Opponent Resources */}
-        <div className={styles.controlGroup}>
-          <span className={styles.label}>
-            {t('MANUAL_MODE_PANEL.OPPONENT_RESOURCES')}
-          </span>
-          <div className={styles.controlRow}>
-            <button
-              className={styles.buttonSmall}
-              onClick={() =>
-                handleDispatch(PROCESS_INPUT.REMOVE_RESOURCE_FROM_POOL_OPPONENT)
-              }
-              title={t('MANUAL_MODE_PANEL.REMOVE_1_RESOURCE_OPPONENT')}
-              disabled={isRequestInProgress}
-            >
-              <AiOutlineMinus />
-            </button>
-            <span className={styles.value}>{opponentResources}</span>
-            <button
-              className={styles.buttonSmall}
-              onClick={() =>
-                handleDispatch(PROCESS_INPUT.ADD_RESOURCE_TO_POOL_OPPONENT)
-              }
-              title={t('MANUAL_MODE_PANEL.ADD_1_RESOURCE_OPPONENT')}
-              disabled={isRequestInProgress}
-            >
-              <AiOutlinePlus />
-            </button>
-          </div>
-        </div>
+        <ManualCounter
+          label={t('MANUAL_MODE_PANEL.OPPONENT_RESOURCES')}
+          value={opponentResources}
+          addMode={PROCESS_INPUT.ADD_RESOURCE_TO_POOL_OPPONENT}
+          subtractMode={PROCESS_INPUT.REMOVE_RESOURCE_FROM_POOL_OPPONENT}
+          addTitle={t('MANUAL_MODE_PANEL.ADD_1_RESOURCE_OPPONENT')}
+          subtractTitle={t('MANUAL_MODE_PANEL.REMOVE_1_RESOURCE_OPPONENT')}
+          inputTitle={t('MANUAL_MODE_PANEL.TYPE_A_VALUE')}
+          disabled={isRequestInProgress}
+          onCommit={handleDispatchAmount}
+        />
 
         {/* Draw Card */}
-        <div className={styles.buttonGroup}>
-          <button
-            className={styles.buttonFull}
-            onClick={() => handleDispatch(PROCESS_INPUT.DRAW_CARD_SELF)}
-            title={t('MANUAL_MODE_PANEL.DRAW_CARD')}
-            disabled={isRequestInProgress}
-          >
-            {t('MANUAL_MODE_PANEL.DRAW_CARD_PLAYER')}
-          </button>
-          <button
-            className={styles.buttonFull}
-            onClick={() => handleDispatch(PROCESS_INPUT.DRAW_CARD_OPPONENT)}
-            title={t('MANUAL_MODE_PANEL.DRAW_CARD_OPPONENT_TITLE')}
-            disabled={isRequestInProgress}
-          >
-            {t('MANUAL_MODE_PANEL.DRAW_CARD_OPPONENT')}
-          </button>
+        <div className={styles.controlGroup}>
+          <span className={styles.label}>
+            {t('MANUAL_MODE_PANEL.CARDS_TO_DRAW')}
+          </span>
+          <div className={styles.controlRow}>
+            <input
+              className={styles.numberInput}
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              value={drawCount}
+              onChange={(event) => setDrawCount(event.target.value)}
+              onBlur={() => setDrawCount(String(parsedDrawCount))}
+              onKeyDown={(event) => {
+                event.stopPropagation();
+                if (event.key === 'Enter') {
+                  event.currentTarget.blur();
+                }
+              }}
+              onKeyDownCapture={(event) => event.stopPropagation()}
+              aria-label={t('MANUAL_MODE_PANEL.CARDS_TO_DRAW')}
+              disabled={isRequestInProgress}
+            />
+          </div>
+          <div className={styles.buttonGroup}>
+            <button
+              className={styles.buttonFull}
+              onClick={() =>
+                handleDispatchAmount(
+                  PROCESS_INPUT.DRAW_CARD_SELF,
+                  parsedDrawCount
+                )
+              }
+              title={t('MANUAL_MODE_PANEL.DRAW_CARD')}
+              disabled={isRequestInProgress}
+            >
+              {t('MANUAL_MODE_PANEL.DRAW_CARD_PLAYER')}
+            </button>
+            <button
+              className={styles.buttonFull}
+              onClick={() =>
+                handleDispatchAmount(
+                  PROCESS_INPUT.DRAW_CARD_OPPONENT,
+                  parsedDrawCount
+                )
+              }
+              title={t('MANUAL_MODE_PANEL.DRAW_CARD_OPPONENT_TITLE')}
+              disabled={isRequestInProgress}
+            >
+              {t('MANUAL_MODE_PANEL.DRAW_CARD_OPPONENT')}
+            </button>
+          </div>
         </div>
 
         {/* Add Card */}
@@ -529,6 +602,17 @@ function ManualModeContent({
             {isCardLoading
               ? t('MANUAL_MODE_PANEL.ADDING')
               : t('MANUAL_MODE_PANEL.ADD')}
+          </button>
+        </div>
+
+        {/* Organize Deck */}
+        <div className={styles.buttonGroup}>
+          <button
+            className={styles.buttonFull}
+            onClick={onOpenDeckOrganizer}
+            title={t('MANUAL_MODE_PANEL.ORGANIZE_DECK')}
+          >
+            {t('MANUAL_MODE_PANEL.ORGANIZE_DECK')}
           </button>
         </div>
 

@@ -5,6 +5,8 @@ interface PanelContextType {
   setIsDevToolOpen: (open: boolean) => void;
   isManualModeOpen: boolean;
   setIsManualModeOpen: (open: boolean) => void;
+  isDeckOrganizerOpen: boolean;
+  setIsDeckOrganizerOpen: (open: boolean) => void;
 }
 
 const PanelContext = createContext<PanelContextType | undefined>(undefined);
@@ -12,20 +14,27 @@ const PanelContext = createContext<PanelContextType | undefined>(undefined);
 export function PanelProvider({ children }: { children: React.ReactNode }) {
   const [isDevToolOpen, setIsDevToolOpen] = useState(false);
   const [isManualModeOpen, setIsManualModeOpen] = useState(false);
+  const [isDeckOrganizerOpen, setIsDeckOrganizerOpen] = useState(false);
 
   const value = useMemo(
     () => ({
       isDevToolOpen,
       setIsDevToolOpen,
       isManualModeOpen,
-      setIsManualModeOpen
+      setIsManualModeOpen,
+      isDeckOrganizerOpen,
+      setIsDeckOrganizerOpen
     }),
-    [isDevToolOpen, isManualModeOpen]
+    [isDevToolOpen, isManualModeOpen, isDeckOrganizerOpen]
   );
 
   return (
     <PanelContext.Provider value={value}>{children}</PanelContext.Provider>
   );
+}
+
+export function usePanelContextOptional() {
+  return useContext(PanelContext);
 }
 
 export function usePanelContext() {

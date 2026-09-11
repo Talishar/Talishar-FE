@@ -107,10 +107,10 @@ export interface EndGameData {
   winner?: number;
   authKey?: string;
   bothPlayersData?: { [key: number]: any };
-  cardResults: CardResult[];
+  cardResults?: CardResult[];
   tokenResults?: CardResult[];
   arenaCardResults?: CardResult[];
-  turnResults: { [key: string]: TurnResult };
+  turnResults?: { [key: string]: TurnResult };
   totalDamageThreatened?: number;
   totalDamageDealt?: number;
   averageDamageThreatenedPerTurn?: number;
@@ -1007,8 +1007,9 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
             playerData.turnResults &&
             Object.keys(playerData.turnResults).length > 0
           ) {
-            Object.keys(playerData.turnResults).forEach((key, ix) => {
-              const turn = playerData.turnResults[key];
+            const playerTurnResults = playerData.turnResults;
+            Object.keys(playerTurnResults).forEach((key, ix) => {
+              const turn = playerTurnResults[key];
               const totalValue =
                 +turn.damageThreatened +
                 +turn.damageBlocked +
@@ -1122,7 +1123,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
           r.hits > 0 ||
           r.blocked > 0
       );
-      const fromDeck = data.cardResults.filter(
+      const fromDeck = (data.cardResults ?? []).filter(
         (r) => (r.activated ?? 0) > 0 || (r.passiveTriggered ?? 0) > 0
       );
       return mergeCompanionPairs([...fromArena, ...fromDeck]).sort((a, b) =>
@@ -1163,12 +1164,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
         return null;
       }
 
-      const turnArray = Object.entries(data.turnResults).map(
-        ([key, value]) => ({
-          key,
-          ...value
-        })
-      );
+      const turnResults = data.turnResults;
+      const turnArray = Object.entries(turnResults).map(([key, value]) => ({
+        key,
+        ...value
+      }));
 
       const sorted = turnArray.sort((a, b) => {
         let aValue: number;
@@ -1179,11 +1179,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
           aValue =
             a.turnNo !== undefined
               ? a.turnNo
-              : Object.keys(data.turnResults).indexOf(a.key);
+              : Object.keys(turnResults).indexOf(a.key);
           bValue =
             b.turnNo !== undefined
               ? b.turnNo
-              : Object.keys(data.turnResults).indexOf(b.key);
+              : Object.keys(turnResults).indexOf(b.key);
         } else if (turnSortField === 'totalValue') {
           aValue =
             (+a.damageThreatened || 0) +
@@ -1320,17 +1320,17 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
 
     let numCharged = 0;
     for (let i = 0; i < (data.cardResults?.length ?? 0); i++) {
-      numCharged += data.cardResults[i].charged;
+      numCharged += data.cardResults![i].charged;
     }
 
     let numKatsuDiscard = 0;
     for (let i = 0; i < (data.cardResults?.length ?? 0); i++) {
-      numKatsuDiscard += data.cardResults[i].katsuDiscard;
+      numKatsuDiscard += data.cardResults![i].katsuDiscard;
     }
 
     let numDiscarded = 0;
     for (let i = 0; i < (data.cardResults?.length ?? 0); i++) {
-      numDiscarded += data.cardResults[i].discarded;
+      numDiscarded += data.cardResults![i].discarded;
     }
 
     return (
@@ -2364,7 +2364,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
                         const rowTurnNo =
                           turnData.turnNo !== undefined
                             ? turnData.turnNo
-                            : Object.keys(data.turnResults).indexOf(
+                            : Object.keys(data.turnResults ?? {}).indexOf(
                                 turnData.key
                               );
                         return (
@@ -2379,7 +2379,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
                             <td className={styles.turnNo}>
                               {turnData.turnNo !== undefined
                                 ? turnData.turnNo
-                                : Object.keys(data.turnResults).indexOf(
+                                : Object.keys(data.turnResults ?? {}).indexOf(
                                     turnData.key
                                   )}
                             </td>
@@ -2449,8 +2449,9 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
                         );
                       })
                     : !!data.turnResults &&
-                      Object.keys(data.turnResults).map((key, ix) => {
-                        const turnNo = data.turnResults[key]?.turnNo;
+                      Object.keys(data.turnResults ?? {}).map((key, ix) => {
+                        const turnRow = data.turnResults?.[key];
+                        const turnNo = turnRow?.turnNo;
                         const rowTurnNo = turnNo !== undefined ? turnNo : ix;
                         // Hide turn #0 for the non-first player
                         return (
@@ -2467,82 +2468,79 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
                             </td>
                             <td className={styles.played}>
                               {/* @ts-ignore */}
-                              {data.turnResults[key]?.cardsUsed}
+                              {turnRow?.cardsUsed}
                             </td>
                             <td className={styles.blocked}>
                               {/* @ts-ignore */}
-                              {data.turnResults[key]?.cardsBlocked}
+                              {turnRow?.cardsBlocked}
                             </td>
                             <td className={styles.pitched}>
                               {/* @ts-ignore */}
-                              {data.turnResults[key]?.cardsPitched}
+                              {turnRow?.cardsPitched}
                             </td>
                             {!shouldHideCardsDiscarded && (
                               <td className={styles.pitched}>
                                 {/* @ts-ignore */}
-                                {data.turnResults[key]?.cardsDiscarded}
+                                {turnRow?.cardsDiscarded}
                               </td>
                             )}
                             <td className={styles.pitched}>
                               {/* @ts-ignore */}
-                              {data.turnResults[key]?.cardsLeft}
+                              {turnRow?.cardsLeft}
                             </td>
                             <td className={styles.pitched}>
                               {/* @ts-ignore */}
-                              {data.turnResults[key]?.resourcesUsed}
+                              {turnRow?.resourcesUsed}
                             </td>
                             <td className={styles.pitched}>
                               {/* @ts-ignore */}
-                              {data.turnResults[key]?.resourcesLeft}
+                              {turnRow?.resourcesLeft}
                             </td>
                             <td className={styles.pitched}>
                               {/* @ts-ignore */}
                               {parseInt(
-                                String(data.turnResults[key]?.damageThreatened),
+                                String(turnRow?.damageThreatened),
                                 10
                               ) || 0}
                             </td>
                             <td className={styles.pitched}>
                               {/* @ts-ignore */}
-                              {parseInt(
-                                String(data.turnResults[key]?.damageDealt),
-                                10
-                              ) || 0}
+                              {parseInt(String(turnRow?.damageDealt), 10) || 0}
                             </td>
                             <td className={styles.pitched}>
                               {/* @ts-ignore */}
-                              {data.turnResults[key]?.damageBlocked}
+                              {turnRow?.damageBlocked}
                             </td>
                             {!shouldHideDamagePrevented && (
                               <td className={styles.pitched}>
                                 {/* @ts-ignore */}
-                                {data.turnResults[key]?.damagePrevented}
+                                {turnRow?.damagePrevented}
                               </td>
                             )}
                             <td className={styles.pitched}>
                               {/* @ts-ignore */}
-                              {data.turnResults[key]?.damageTaken}
+                              {turnRow?.damageTaken}
                             </td>
                             {!shouldHideLifeGained && (
                               <td className={styles.pitched}>
                                 {/* @ts-ignore */}
-                                {data.turnResults[key]?.lifeGained}
+                                {turnRow?.lifeGained}
                               </td>
                             )}
                             {!shouldHideLifeLost && (
                               <td className={styles.pitched}>
                                 {/* @ts-ignore */}
-                                {data.turnResults[key]?.lifeLost}
+                                {turnRow?.lifeLost}
                               </td>
                             )}
                             <td className={styles.pitched}>
                               {/* @ts-ignore */}
                               {(
-                                +data.turnResults[key]?.damageThreatened +
-                                +data.turnResults[key]?.damageBlocked +
-                                +data.turnResults[key]?.damagePrevented +
-                                +data.turnResults[key]?.lifeGained +
-                                +data.turnResults[key]?.lifeLost
+                                +(turnRow?.damageThreatened ?? 0) +
+                                +(turnRow?.damageBlocked ?? 0) +
+                                +(turnRow?.damagePrevented ?? 0) +
+                                +(turnRow?.lifeGained ?? 0) +
+                                +(turnRow?.lifeLost ?? 0)
                               ).toString()}
                             </td>
                           </tr>

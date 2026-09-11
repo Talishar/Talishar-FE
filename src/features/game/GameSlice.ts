@@ -611,21 +611,6 @@ export const gameSlice = createSlice({
     removeHealingPopup: healingPopupReducers.remove,
     addActionPointPopup: actionPointPopupReducers.add,
     removeActionPointPopup: actionPointPopupReducers.remove,
-    openUndoReasonPrompt: (state) => {
-      if (state.undoReasonPrompt?.dismissed) return;
-      if (state.undoReasonPrompt?.active) return;
-      state.undoReasonPrompt = { active: true, dismissed: false };
-    },
-    dismissUndoReasonPrompt: (state) => {
-      if (state.undoReasonPrompt?.dismissed && !state.undoReasonPrompt?.active)
-        return;
-      state.undoReasonPrompt = { active: false, dismissed: true };
-    },
-    clearUndoReasonPrompt: (state) => {
-      if (!state.undoReasonPrompt?.active && !state.undoReasonPrompt?.dismissed)
-        return;
-      state.undoReasonPrompt = { active: false, dismissed: false };
-    },
     openOptionsMenu: (state) => {
       state.optionsMenu = { active: true };
     },
@@ -1106,9 +1091,6 @@ export const {
   removeCardFromHand,
   openOptionsMenu,
   closeOptionsMenu,
-  openUndoReasonPrompt,
-  dismissUndoReasonPrompt,
-  clearUndoReasonPrompt,
   openInventory,
   closeInventory,
   showChainLinkSummary,

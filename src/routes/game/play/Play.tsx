@@ -8,7 +8,6 @@ import PlayerHand from '../components/zones/playerHand/PlayerHand';
 import OptionsMenu from '../components/elements/optionsMenu/OptionsMenu';
 import InventoryModal from '../components/elements/inventory/InventoryModal';
 import EventsHandler from '../components/elements/eventsHandler/EventsHandler';
-import UndoReasonPrompt from '../components/elements/undoReasonPrompt/UndoReasonPrompt';
 import PlayerInputPopUp from '../components/elements/playerInputPopUp/PlayerInputPopUp';
 import CardPortal from '../components/elements/cardPortal/CardPortal';
 import ChatCardDetail from '../components/elements/chatCardDetail/ChatCardDetail';
@@ -44,7 +43,6 @@ import {
   ReplayAdvanceButton,
   TurnChangeSettingsSync
 } from './PlaySideEffects';
-import { SHOW_UNDO_REASONS } from 'appConstants';
 import { prefetchCardKeywords } from 'utils/cardKeywords';
 import { ReplayPlaybackProvider } from './ReplayPlaybackContext';
 
@@ -208,7 +206,6 @@ function Play() {
           )}
           <SpectatorLoginRequired />
           <EventsHandler />
-          {SHOW_UNDO_REASONS && <UndoReasonPrompt />}
           <ReplayAdvanceButton />
         </div>
       </PanelProvider>

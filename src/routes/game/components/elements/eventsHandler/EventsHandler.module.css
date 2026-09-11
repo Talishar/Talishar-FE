@@ -343,10 +343,3 @@
   border-color: rgba(var(--theme-on-surface-rgb), 0.3);
   color: var(--theme-text);
 }
-
-.dialogDetail {
-  margin-top: 0.5rem;
-  font-size: 0.8rem;
-  font-weight: 400;
-  color: rgba(var(--theme-on-surface-rgb), 0.55);
-}

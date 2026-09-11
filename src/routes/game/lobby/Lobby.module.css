@@ -571,7 +571,6 @@ h3 {
 
 .lobbySettingsDescription {
   width: 100%;
-  color: rgba(var(--theme-on-surface-rgb), 0.5);
   font-weight: 400;
   text-align: center;
   white-space: normal;
@@ -998,6 +997,10 @@ nav {
       0px,
       calc(100dvh - var(--sticky-footer-height, 60px) - 168px)
     );
+    padding-bottom: calc(
+      var(--sticky-footer-height, 60px) + env(safe-area-inset-bottom, 0px) +
+        0.5rem
+    );
   }
 }
 
@@ -1107,6 +1110,10 @@ nav {
     min-height: max(
       0px,
       calc(100dvh - var(--sticky-footer-height, 60px) - 224px)
+    );
+    padding-bottom: calc(
+      var(--sticky-footer-height, 60px) + env(safe-area-inset-bottom, 0px) +
+        0.5rem
     );
   }
 }
