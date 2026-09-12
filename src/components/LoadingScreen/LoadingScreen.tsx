@@ -27,6 +27,12 @@ export const pickTrivia = (
   ];
 };
 
+// Break a multi-sentence line after its sentence-ending dot so each clause gets its own row.
+const SENTENCE_BREAK = /(?<=\.["'”’]?)\s+(?=["'“‘]?[A-Z0-9])/;
+
+export const splitTriviaLines = (trivia: string): string[] =>
+  trivia.split(SENTENCE_BREAK);
+
 const useLoadingTrivia = (enabled: boolean) => {
   const [trivia, setTrivia] = useState<string | null>(null);
 
@@ -75,7 +81,11 @@ const LoadingScreen = ({
       {detail && <p className={styles.detail}>{detail}</p>}
       {trivia && (
         <p className={styles.trivia} aria-hidden="true" key={trivia}>
-          {trivia}
+          {splitTriviaLines(trivia).map((line) => (
+            <span className={styles.triviaLine} key={line}>
+              {line}
+            </span>
+          ))}
         </p>
       )}
     </div>

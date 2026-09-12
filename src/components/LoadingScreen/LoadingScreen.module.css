@@ -56,3 +56,7 @@
     opacity: 1;
   }
 }
+
+.triviaLine {
+  display: block;
+}
