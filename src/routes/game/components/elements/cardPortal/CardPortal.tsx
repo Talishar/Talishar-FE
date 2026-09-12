@@ -164,15 +164,18 @@ export default function CardPortal() {
   const popUpStyle: Record<string, string> = {};
 
   if (isDFC) {
-    // For DFC cards, position at cursor position and let absolute positioning handle left/right
-    if (popup.xCoord > windowWidth / 2) {
-      popUpStyle.right =
-        (windowWidth - (popup.xCoord - popUpGap * hoverImageSize)).toString() +
-        'px';
-    } else {
-      popUpStyle.left =
-        (popup.xCoord + popUpGap * hoverImageSize * 3.5).toString() + 'px';
-    }
+    const cardWidth = windowHeight * 0.5 * hoverImageSize * 0.7166;
+    const reverseFaceOffset = windowHeight * 0.38 * hoverImageSize;
+    const viewportPadding = 12;
+    const preferredLeft =
+      popup.xCoord > windowWidth / 2
+        ? popup.xCoord - popUpGap * hoverImageSize - cardWidth
+        : popup.xCoord + popUpGap * hoverImageSize * 3.5;
+    const minLeft = reverseFaceOffset + viewportPadding;
+    const maxLeft = Math.max(minLeft, windowWidth - cardWidth - viewportPadding);
+    const clampedLeft = Math.min(Math.max(preferredLeft, minLeft), maxLeft);
+
+    popUpStyle.left = clampedLeft.toString() + 'px';
   } else {
     // For single cards, use the existing logic to position left or right of cursor
     if (popup.xCoord > windowWidth / 2) {
