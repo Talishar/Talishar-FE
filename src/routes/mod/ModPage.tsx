@@ -749,6 +749,45 @@ const ModPage: React.FC = () => {
 
           <div className={styles.middleColumn}>
             <div className={styles.dataSection}>
+              <h2>{t('MOD_PAGE.TOP_SPECTATORS', 'Top 20 spectators')}</h2>
+              <p>
+                {t(
+                  'MOD_PAGE.TOP_SPECTATORS_DESCRIPTION',
+                  'Ranked by total games spectated.'
+                )}
+              </p>
+              {isLoading ? (
+                <p>{t('MOD_PAGE.LOADING')}</p>
+              ) : modPageData?.topSpectators == null ? (
+                <p>
+                  {t(
+                    'MOD_PAGE.SPECTATOR_HISTORY_UNAVAILABLE',
+                    'Spectator totals are currently unavailable.'
+                  )}
+                </p>
+              ) : modPageData.topSpectators.length ? (
+                <ol className={styles.dataList}>
+                  {modPageData.topSpectators.map((spectator) => (
+                    <li key={spectator.username}>
+                      <strong>{spectator.username}</strong>{' '}
+                      {t('MOD_PAGE.SPECTATOR_GAME_COUNT', {
+                        defaultValue: '— {{count}} games spectated',
+                        count: spectator.gameCount
+                      })}
+                    </li>
+                  ))}
+                </ol>
+              ) : (
+                <p>
+                  {t(
+                    'MOD_PAGE.NO_SPECTATOR_HISTORY',
+                    'No games spectated have been recorded yet.'
+                  )}
+                </p>
+              )}
+            </div>
+
+            <div className={styles.dataSection}>
               <h2>{t('MOD_PAGE.MOST_RECENTLY_CREATED_ACCOUNTS')}</h2>
               {isLoading ? (
                 <p>{t('MOD_PAGE.LOADING')}</p>
