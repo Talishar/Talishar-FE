@@ -27,18 +27,24 @@ const tapCard = (el: HTMLElement) => {
 const renderBoardCard = ({
   cookieEnabled,
   cardNumber = 'WTR076',
-  onClick
+  onClick,
+  disableTapToPreview = false
 }: {
   cookieEnabled: boolean;
   cardNumber?: string;
   onClick?: () => void;
+  disableTapToPreview?: boolean;
 }) => {
   document.cookie = `${TAP_TO_PREVIEW_PLAY_COOKIE}=${
     cookieEnabled ? 'true' : 'false'
   }; path=/`;
   return renderWithProviders(
     <CookiesProvider>
-      <CardPopUp cardNumber={cardNumber} onClick={onClick}>
+      <CardPopUp
+        cardNumber={cardNumber}
+        onClick={onClick}
+        disableTapToPreview={disableTapToPreview}
+      >
         <button type="button" data-testid="board-card" />
       </CardPopUp>
     </CookiesProvider>
@@ -58,6 +64,21 @@ describe('CardPopUp board tap to preview', () => {
     tapCard(screen.getByTestId('board-card'));
     expect(onClick).toHaveBeenCalledTimes(1);
     expect(getCardPreview().popupOn).not.toBe(true);
+  });
+
+  it('fires immediately when short-tap preview is disabled for a surface', () => {
+    const onClick = vi.fn();
+    renderBoardCard({
+      cookieEnabled: true,
+      onClick,
+      disableTapToPreview: true
+    });
+
+    tapCard(screen.getByTestId('board-card'));
+
+    expect(onClick).toHaveBeenCalledTimes(1);
+    expect(getCardPreview().popupOn).not.toBe(true);
+    expect(getTapToPreviewSelectedCardKey()).toBeNull();
   });
 
   it('keeps a touch long-press preview open after the finger is lifted', () => {

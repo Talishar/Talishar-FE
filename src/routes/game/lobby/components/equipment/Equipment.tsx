@@ -264,7 +264,11 @@ const Equipment = ({
                       }
                     }}
                   />
-                  <CardPopUp cardNumber={card} disableTilt={isAssigned}>
+                  <CardPopUp
+                    cardNumber={card}
+                    disableTilt={isAssigned}
+                    disableTapToPreview
+                  >
                     <CardImage
                       src={getCardSrc(card)}
                       draggable={false}
@@ -376,7 +380,7 @@ const Equipment = ({
                         }
                       }}
                     />
-                    <CardPopUp cardNumber={id}>
+                    <CardPopUp cardNumber={id} disableTapToPreview>
                       <CardImage
                         src={getCardSrc(id)}
                         draggable={false}

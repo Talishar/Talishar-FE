@@ -544,7 +544,9 @@ export default function ParseGameState(input: any) {
   result.gameInfo.isReplay = input.isReplay ?? false;
 
   // opponent AI status (from initialLoad)
-  result.gameInfo.isOpponentAI = input.initialLoad?.isOpponentAI ?? false;
+  if (input.initialLoad?.isOpponentAI !== undefined) {
+    result.gameInfo.isOpponentAI = input.initialLoad.isOpponentAI;
+  }
 
   // game format (from initialLoad)
   if (input.initialLoad?.gameFormat) {

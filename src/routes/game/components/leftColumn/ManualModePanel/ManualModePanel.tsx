@@ -37,6 +37,9 @@ export default function ManualModePanel() {
   const isReplay = useAppSelector(
     (state: RootState) => state.game.gameInfo.isReplay
   );
+  const isOpponentAI = useAppSelector(
+    (state: RootState) => state.game.gameInfo.isOpponentAI ?? false
+  );
 
   useEffect(() => {
     if (isManualMode && !isMobileOrTablet) {
@@ -48,8 +51,10 @@ export default function ManualModePanel() {
     setIsOpen(isManualModeOpen);
   }, [isManualModeOpen]);
 
-  // In local environment, always show the tab. In production, hide if manual mode is off (unless against Practice Dummy)
-  if (isReplay || (!isLocalEnvironment && !isManualMode && !isPracticeDummy)) {
+  if (
+    isReplay ||
+    (!isLocalEnvironment && !isManualMode && !isPracticeDummy && !isOpponentAI)
+  ) {
     return null;
   }
 

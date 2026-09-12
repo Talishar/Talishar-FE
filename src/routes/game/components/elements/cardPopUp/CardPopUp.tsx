@@ -128,6 +128,7 @@ type CardPopUpProps = {
   onHoverEnd?: () => void;
   isOpponent?: boolean;
   disableTilt?: boolean;
+  disableTapToPreview?: boolean;
   previewYOffset?: number;
   /** Override sticky-selection key (hand cards pass a unique id-based key). */
   tapPreviewKey?: string;
@@ -143,6 +144,7 @@ export default function CardPopUp({
   onHoverEnd,
   isOpponent,
   disableTilt,
+  disableTapToPreview,
   previewYOffset = 0,
   tapPreviewKey
 }: CardPopUpProps) {
@@ -165,7 +167,9 @@ export default function CardPopUp({
   const cookieEnabled = isTapToPreviewPlayEnabled(tapToPreviewCookie);
 
   const isTapToPreviewContext = () =>
-    cookieEnabled && (lastPointerTypeRef.current === 'touch' || !supportsHover);
+    !disableTapToPreview &&
+    cookieEnabled &&
+    (lastPointerTypeRef.current === 'touch' || !supportsHover);
 
   const isSelected = useIsTapToPreviewSelected(selectionKey);
   const stickyActive = cookieEnabled && isSelected;
@@ -229,6 +233,7 @@ export default function CardPopUp({
   };
 
   const handleMouseEnter = () => {
+    if (!supportsHover) return;
     showPreview();
   };
 
