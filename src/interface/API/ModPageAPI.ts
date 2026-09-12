@@ -45,7 +45,13 @@ export interface LinkedAccount {
   linkedTo: string;
 }
 
+export interface TopSpectator {
+  username: string;
+  gameCount: number;
+}
+
 export interface ModPageDataResponse {
+  topSpectators?: TopSpectator[] | null;
   bannedPlayers: string[];
   bannedIPs: string[];
   recentAccounts: string[];
