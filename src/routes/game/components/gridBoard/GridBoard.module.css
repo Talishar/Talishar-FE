@@ -333,6 +333,10 @@
   aspect-ratio: 1;
 }
 
+.pTwoHero:hover {
+  z-index: 15;
+}
+
 .pTwoWeaponRZone {
   grid-area: pTwoWeaponRZone;
   aspect-ratio: 1;
@@ -417,6 +421,10 @@
 .pOneHero {
   grid-area: pOneHero;
   aspect-ratio: 1;
+}
+
+.pOneHero:hover {
+  z-index: 15;
 }
 
 .pOneWeaponRZone {
