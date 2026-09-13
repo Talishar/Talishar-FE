@@ -259,6 +259,7 @@ export const CardDisplay = (prop: CardProp) => {
       <CountersOverlay
         countersMap={card.countersMap}
         gem={card.gem}
+        cardNumber={card.cardNumber}
         actionDataOverride={card.actionDataOverride}
         zone={card.zone}
         controller={card.controller}

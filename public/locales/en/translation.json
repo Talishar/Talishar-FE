@@ -541,7 +541,9 @@
   },
   "GEM_SLIDER": {
     "ACTIVE_LABEL": "Card ability active. Click to deactivate.",
-    "INACTIVE_LABEL": "Card ability inactive. Click to activate."
+    "INACTIVE_LABEL": "Card ability inactive. Click to activate.",
+    "ALWAYS_WAGER_ACTIVE_LABEL": "Always wager is on. You wager automatically without being asked. Click to turn it off.",
+    "ALWAYS_WAGER_INACTIVE_LABEL": "Always wager is off. You are asked each time. Click to always wager automatically."
   },
   "HAND": {
     "SCROLL_LEFT": "Scroll hand left",

@@ -48,6 +48,7 @@ export const CountersOverlay = React.memo(
     countersMap,
     label,
     gem,
+    cardNumber,
     actionDataOverride,
     num,
     zone,
@@ -95,6 +96,7 @@ export const CountersOverlay = React.memo(
         {gem !== 'none' && (
           <GemSlider
             gem={gem}
+            cardNumber={cardNumber}
             cardID={actionDataOverride}
             zone={zone}
             controller={controller}
