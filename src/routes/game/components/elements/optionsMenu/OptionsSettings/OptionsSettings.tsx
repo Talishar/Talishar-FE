@@ -105,6 +105,7 @@ const OptionsSettings = () => {
     streamerMode: settingsData['IsStreamerMode']?.value === '1',
     alwaysAllowUndo: settingsData['AlwaysAllowUndo']?.value === '1',
     manualTunic: settingsData['ManualTunic']?.value === '1',
+    manualDynamo: settingsData['ManualDynamo']?.value === '1',
     disableFabInsights: settingsData['DisableFabInsights']?.value === '1',
     disableHeroIntro: settingsData['DisableHeroIntro']?.value === '1',
     mirroredBoardLayout:
@@ -325,6 +326,17 @@ const OptionsSettings = () => {
               handleSettingsChange({
                 name: optConst.MANUAL_TUNIC,
                 value: initialValues.manualTunic ? '0' : '1'
+              })
+            }
+          />
+          <CheckboxSetting
+            name="manualDynamo"
+            label={t('SETTINGS.MANUAL_DYNAMO_MODE')}
+            checked={initialValues.manualDynamo}
+            onChange={() =>
+              handleSettingsChange({
+                name: optConst.MANUAL_DYNAMO,
+                value: initialValues.manualDynamo ? '0' : '1'
               })
             }
           />

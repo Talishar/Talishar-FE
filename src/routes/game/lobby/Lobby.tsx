@@ -671,6 +671,8 @@ const Lobby = () => {
     rightHero ?? 'UNKNOWNHERO'
   )})`;
 
+  const isOpponentLoading = !rightHero || rightHero === 'UNKNOWNHERO';
+
   const eqClasses = classNames(styles.tabButton, {
     [styles.tabActive]: activeTab === 'equipment'
   });
@@ -1222,6 +1224,18 @@ const Lobby = () => {
                   data-mastery-level={rightMasteryLevel}
                 >
                   <MasteryBorder level={rightMasteryLevel} />
+                  {isOpponentLoading && (
+                    <div
+                      className={styles.opponentLoading}
+                      role="status"
+                      aria-label={t('GAME_LOBBY.WAITING')}
+                    >
+                      <span
+                        className={styles.opponentSpinner}
+                        aria-hidden="true"
+                      />
+                    </div>
+                  )}
                   {playerID === 1 &&
                     gameLobby?.theirHero &&
                     gameLobby.theirHero !== 'CardBack' &&

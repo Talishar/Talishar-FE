@@ -18,6 +18,7 @@ export const IS_STREAMER_MODE = 'IsStreamerMode';
 export const MY_PLAYMAT = 'Playmat';
 export const ALWAYS_ALLOW_UNDO = 'AlwaysAllowUndo';
 export const MANUAL_TUNIC = 'ManualTunic';
+export const MANUAL_DYNAMO = 'ManualDynamo';
 export const DISABLE_FABINSIGHTS = 'DisableFabInsights';
 export const DISABLE_HERO_INTRO = 'DisableHeroIntro';
 export const MIRRORED_BOARD_LAYOUT = 'MirroredBoardLayout';

@@ -90,6 +90,7 @@ const SettingsPage = () => {
     streamerMode: String(settingsData['IsStreamerMode']?.value) === '1',
     alwaysAllowUndo: String(settingsData['AlwaysAllowUndo']?.value) === '1',
     manualTunic: String(settingsData['ManualTunic']?.value) === '1',
+    manualDynamo: String(settingsData['ManualDynamo']?.value) === '1',
     cardBack: String(settingsData['CardBack']?.value ?? '0'),
     playMat: String(settingsData['Playmat']?.value ?? '0'),
     disableFabInsights:
@@ -294,6 +295,17 @@ const SettingsPage = () => {
                 handleSettingsChange({
                   name: optConst.MANUAL_TUNIC,
                   value: initialValues.manualTunic ? '0' : '1'
+                })
+              }
+            />
+            <CheckboxSetting
+              name="manualDynamo"
+              label={t('SETTINGS.MANUAL_DYNAMO_MODE')}
+              checked={initialValues.manualDynamo}
+              onChange={() =>
+                handleSettingsChange({
+                  name: optConst.MANUAL_DYNAMO,
+                  value: initialValues.manualDynamo ? '0' : '1'
                 })
               }
             />

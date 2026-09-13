@@ -224,6 +224,40 @@ h3 {
   border-radius: 8px;
 }
 
+.opponentLoading {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.45);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.opponentSpinner {
+  width: 34px;
+  height: 34px;
+  border: 3px solid rgba(var(--theme-on-surface-rgb), 0.25);
+  border-top-color: rgba(var(--theme-on-surface-rgb), 0.95);
+  border-radius: 50%;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.7));
+  animation: opponentSpin 0.8s linear infinite;
+}
+
+@keyframes opponentSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .opponentSpinner {
+    animation-duration: 2.4s;
+  }
+}
+
 .rightCol::before {
   display: none;
 }
