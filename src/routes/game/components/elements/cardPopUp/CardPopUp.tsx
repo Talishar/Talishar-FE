@@ -26,7 +26,8 @@ const prefersReducedMotion =
   typeof window !== 'undefined' &&
   window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-const LONG_PRESS_DELAY = 400;
+const LONG_PRESS_DELAY = 500;
+const LONG_PRESS_MOVE_TOLERANCE = 12;
 
 const SKIP_POPUP_CARDS = new Set<string>([
   ...Object.values(CARD_BACK),
@@ -61,13 +62,14 @@ type SurfaceProps = {
   className?: string;
   containerRef: React.RefObject<HTMLDivElement>;
   tiltEnabled: boolean;
-  onClick: () => void;
+  onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
   onPointerDown: (event: React.PointerEvent<HTMLDivElement>) => void;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
-  onTouchStart: () => void;
-  onTouchEnd: () => void;
-  onTouchMove: () => void;
+  onTouchStart: (event: React.TouchEvent<HTMLDivElement>) => void;
+  onTouchEnd: (event: React.TouchEvent<HTMLDivElement>) => void;
+  onTouchMove: (event: React.TouchEvent<HTMLDivElement>) => void;
+  onTouchCancel: () => void;
   onHoverStart?: () => void;
   onHoverEnd?: () => void;
 };
@@ -90,7 +92,11 @@ const CardSurface = ({
   );
 
   const handlePointerEnter = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (event.pointerType !== 'touch') onHoverStart?.();
+    if (event.pointerType === 'touch') return;
+    onHoverStart?.();
+    // Hover previews are driven from pointerenter so the synthetic mouse
+    // events a touch emits after touchend cannot open one.
+    onMouseEnter();
   };
   const handlePointerLeave = (event: React.PointerEvent<HTMLDivElement>) => {
     if (event.pointerType !== 'touch') onHoverEnd?.();
@@ -105,7 +111,6 @@ const CardSurface = ({
     <div
       className={className}
       ref={containerRef}
-      onMouseEnter={onMouseEnter}
       onMouseMove={tiltEnabled ? handleMouseMove : undefined}
       onMouseLeave={onSurfaceMouseLeave}
       onPointerDown={onPointerDown}
@@ -154,6 +159,7 @@ export default function CardPopUp({
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const suppressNextClick = useRef(false);
   const lastPointerTypeRef = useRef<string | null>(null);
+  const touchOrigin = useRef<{ x: number; y: number } | null>(null);
   const instanceId = useId();
 
   const selectionKey =
@@ -251,10 +257,19 @@ export default function CardPopUp({
     clearPopUpUnlessSticky();
   };
 
-  const handleTouchStart = () => {
-    if (longPressTimer.current) clearTimeout(longPressTimer.current);
+  const cancelLongPress = () => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
+  };
+
+  const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
+    cancelLongPress();
     suppressNextClick.current = false;
     lastPointerTypeRef.current = 'touch';
+    const touch = event.touches[0];
+    touchOrigin.current = touch ? { x: touch.clientX, y: touch.clientY } : null;
     longPressTimer.current = setTimeout(() => {
       longPressTimer.current = null;
       showPreview('mobile-modal');
@@ -262,23 +277,44 @@ export default function CardPopUp({
     }, LONG_PRESS_DELAY);
   };
 
-  const handleTouchEnd = () => {
-    if (longPressTimer.current) {
-      clearTimeout(longPressTimer.current);
-      longPressTimer.current = null;
+  const handleTouchEnd = (event: React.TouchEvent<HTMLDivElement>) => {
+    cancelLongPress();
+    touchOrigin.current = null;
+    if (suppressNextClick.current) {
+      // The hold already opened the preview, so stop the browser from
+      // replaying this touch as a tap on whatever is under the finger.
+      event.preventDefault();
     }
   };
 
-  const handleTouchMove = () => {
-    if (longPressTimer.current) {
-      clearTimeout(longPressTimer.current);
-      longPressTimer.current = null;
+  const handleTouchMove = (event: React.TouchEvent<HTMLDivElement>) => {
+    if (!longPressTimer.current) return;
+    const origin = touchOrigin.current;
+    const touch = event.touches[0];
+    if (!origin || !touch) {
+      cancelLongPress();
+      return;
     }
+    // Only a real drag cancels the hold; finger jitter during a press does not.
+    const distance = Math.hypot(
+      touch.clientX - origin.x,
+      touch.clientY - origin.y
+    );
+    if (distance > LONG_PRESS_MOVE_TOLERANCE) cancelLongPress();
   };
 
-  const handleOnClick = () => {
+  const handleTouchCancel = () => {
+    cancelLongPress();
+    touchOrigin.current = null;
+  };
+
+  const handleOnClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (suppressNextClick.current) {
       suppressNextClick.current = false;
+      // A hold must not also activate the card: the surrounding label or zone
+      // would otherwise still toggle on the click that follows the press.
+      event.preventDefault();
+      event.stopPropagation();
       return;
     }
 
@@ -315,12 +351,14 @@ export default function CardPopUp({
       onClick={handleOnClick}
       onPointerDown={(event) => {
         lastPointerTypeRef.current = event.pointerType;
+        if (event.pointerType !== 'touch') suppressNextClick.current = false;
       }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
       onTouchMove={handleTouchMove}
+      onTouchCancel={handleTouchCancel}
       onHoverStart={onHoverStart}
       onHoverEnd={onHoverEnd}
     >

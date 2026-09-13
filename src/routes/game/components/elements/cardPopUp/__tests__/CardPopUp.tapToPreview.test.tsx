@@ -87,8 +87,8 @@ describe('CardPopUp board tap to preview', () => {
     renderBoardCard({ cookieEnabled: false, onClick });
     const card = screen.getByTestId('board-card');
 
-    fireEvent.touchStart(card);
-    act(() => vi.advanceTimersByTime(400));
+    fireEvent.touchStart(card, { touches: [{ clientX: 10, clientY: 10 }] });
+    act(() => vi.advanceTimersByTime(500));
     fireEvent.touchEnd(card);
     fireEvent.click(card);
 

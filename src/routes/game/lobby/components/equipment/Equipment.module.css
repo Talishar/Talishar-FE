@@ -22,6 +22,9 @@
   height: 100px;
   width: 100px;
   -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .cardContainer > label,
