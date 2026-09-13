@@ -96,12 +96,7 @@
   transition: opacity 0.25s, box-shadow 0.25s;
 }
 
-.eqCategory input[type='radio']:checked + div > img {
-  box-shadow: 0 0 0 2px var(--theme-primary);
-  opacity: 1;
-}
-
-.eqCategory input[type='checkbox']:checked + div > img {
+.eqCategory .cardSelected input + div > img {
   box-shadow: 0 0 0 2px var(--theme-primary);
   opacity: 1;
 }

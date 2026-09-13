@@ -242,7 +242,9 @@ const Equipment = ({
             return (
               <div
                 key={`${field}-${i}`}
-                className={styles.cardContainer}
+                className={`${styles.cardContainer} ${
+                  isEquipped ? styles.cardSelected : ''
+                }`}
                 draggable={isAssigned}
                 onDragStart={
                   isAssigned
@@ -251,18 +253,17 @@ const Equipment = ({
                 }
                 onDragEnd={isAssigned ? finishDrag : undefined}
               >
-                <label>
+                <label
+                  onClick={(event: React.MouseEvent<HTMLLabelElement>) => {
+                    event.preventDefault();
+                    setFieldValue(field, isEquipped ? 'NONE00' : card);
+                  }}
+                >
                   <Field
                     type="radio"
                     name={field}
                     value={card}
                     aria-label={`${label}: ${card}`}
-                    onClick={(event: React.MouseEvent<HTMLInputElement>) => {
-                      if (isEquipped) {
-                        event.preventDefault();
-                        setFieldValue(field, 'NONE00');
-                      }
-                    }}
                   />
                   <CardPopUp
                     cardNumber={card}
@@ -303,7 +304,12 @@ const Equipment = ({
               const checked = values.weapons.some((w) => w.id === weapon.id);
 
               return (
-                <div key={`weapon-${ix}`} className={styles.cardContainer}>
+                <div
+                  key={`weapon-${ix}`}
+                  className={`${styles.cardContainer} ${
+                    checked ? styles.cardSelected : ''
+                  }`}
+                >
                   <label>
                     <input
                       type="checkbox"

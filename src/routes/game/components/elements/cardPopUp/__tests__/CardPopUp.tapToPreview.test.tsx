@@ -1,4 +1,10 @@
-import { act, fireEvent, screen, waitFor } from '@testing-library/react';
+import {
+  act,
+  createEvent,
+  fireEvent,
+  screen,
+  waitFor
+} from '@testing-library/react';
 import { CookiesProvider } from 'react-cookie';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { renderWithProviders } from 'utils/TestUtils';
@@ -22,6 +28,12 @@ vi.mock('hooks/useLanguageSelector', () => ({
 const tapCard = (el: HTMLElement) => {
   fireEvent.pointerDown(el, { pointerType: 'touch' });
   fireEvent.click(el);
+};
+
+const hoverCardWithPointer = (el: HTMLElement, pointerType: string) => {
+  const event = createEvent.pointerOver(el);
+  Object.defineProperty(event, 'pointerType', { value: pointerType });
+  fireEvent(el, event);
 };
 
 const renderBoardCard = ({
@@ -63,6 +75,26 @@ describe('CardPopUp board tap to preview', () => {
     renderBoardCard({ cookieEnabled: false, onClick });
     tapCard(screen.getByTestId('board-card'));
     expect(onClick).toHaveBeenCalledTimes(1);
+    expect(getCardPreview().popupOn).not.toBe(true);
+  });
+
+  it('shows a board-card preview for a hovering stylus', () => {
+    renderBoardCard({ cookieEnabled: false });
+
+    hoverCardWithPointer(screen.getByTestId('board-card'), 'pen');
+
+    expect(getCardPreview()).toMatchObject({
+      popupOn: true,
+      popupCard: { cardNumber: 'WTR076' },
+      presentation: 'floating'
+    });
+  });
+
+  it('does not show a hover preview for a touch pointer', () => {
+    renderBoardCard({ cookieEnabled: false });
+
+    hoverCardWithPointer(screen.getByTestId('board-card'), 'touch');
+
     expect(getCardPreview().popupOn).not.toBe(true);
   });
 

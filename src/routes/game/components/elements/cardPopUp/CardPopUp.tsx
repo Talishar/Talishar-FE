@@ -239,7 +239,6 @@ export default function CardPopUp({
   };
 
   const handleMouseEnter = () => {
-    if (!supportsHover) return;
     showPreview();
   };
 
