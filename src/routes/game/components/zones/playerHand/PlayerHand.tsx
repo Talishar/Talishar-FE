@@ -57,6 +57,9 @@ function PlayerHand() {
   const { t } = useTranslation();
   const [width, height] = useWindowDimensions();
   const isMobile = useMediaQuery('(max-width: 1199px)');
+  const isPortrait = useMediaQuery('(orientation: portrait)');
+  const canCollapseHand = isMobile || isPortrait;
+  const [isHandCollapsed, setIsHandCollapsed] = useState(false);
 
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
@@ -551,6 +554,17 @@ function PlayerHand() {
   const scrollHandLeft = useCallback(() => scrollHand('left'), [scrollHand]);
   const scrollHandRight = useCallback(() => scrollHand('right'), [scrollHand]);
 
+  // The hand's card art overflows far above its own box, so on narrow/portrait
+  // layouts it covers the player's own board row and swallows taps meant for
+  // the zones underneath it (the arsenal in particular).
+  const toggleHandCollapsed = useCallback(() => {
+    setIsHandCollapsed((collapsed) => !collapsed);
+  }, []);
+
+  useEffect(() => {
+    if (!canCollapseHand) setIsHandCollapsed(false);
+  }, [canCollapseHand]);
+
   useEffect(() => {
     return () => {
       if (scrollBlockTimerRef.current !== null) {
@@ -875,6 +889,12 @@ function PlayerHand() {
     return count;
   };
 
+  const hasRowCards =
+    hasHandCards ||
+    hasBanishedCards ||
+    hasTheirBanishedCards ||
+    hasGraveyardCards;
+
   const canScrollLeft = scrollAvailability.left;
   const canScrollRight = scrollAvailability.right;
 
@@ -895,7 +915,7 @@ function PlayerHand() {
                 styles.scrollButton,
                 styles.scrollButtonLeft,
                 {
-                  [styles.scrollButtonHidden]: !canScrollLeft
+                  [styles.scrollButtonHidden]: !canScrollLeft || isHandCollapsed
                 }
               )}
               onPointerDown={scrollHandLeft}
@@ -918,12 +938,16 @@ function PlayerHand() {
             <div
               ref={scrollInnerRef}
               className={classNames(styles.handScrollInner, {
-                [styles.handScrollInnerScrollable]: maxScrollOffset > 0
+                [styles.handScrollInnerScrollable]: maxScrollOffset > 0,
+                [styles.handScrollInnerCollapsed]: isHandCollapsed
               })}
+              aria-hidden={isHandCollapsed}
             >
               <div
                 ref={handRowRef}
-                className={styles.handRow}
+                className={classNames(styles.handRow, {
+                  [styles.handRowCollapsed]: isHandCollapsed
+                })}
                 style={
                   {
                     ...(cardSpacingPx !== null
@@ -937,125 +961,131 @@ function PlayerHand() {
                 }
                 onContextMenu={preventContextMenu}
               >
-                <AnimatePresence>
-                  {orderedHandCards.length > 0 &&
-                    orderedHandCards.map(({ card, id }, ix) => {
-                      nextCardOccurrence(card.cardNumber);
-                      return (
-                        <PlayerHandCard
-                          card={card}
-                          cardId={id}
-                          key={`hand-${id}`}
-                          rotation={handCardRotations[id]}
-                          addCardToPlayedCards={addCardToPlayedCards}
-                          zIndex={ix + 200}
-                          enableLayoutAnimation
-                          shuffleRevision={handShuffleRevision}
-                          scrollBlockedRef={scrollBlockedRef}
-                          onHandReorderDragStart={stableDragStart}
-                          onHandReorderDragMove={stableDragMove}
-                          onHandReorderDragEnd={stableDragEnd}
-                          onHandReorderDragCancel={stableDragCancel}
-                          onRotate={rotateHandCard}
-                          onRotationHoldStart={startHoldingHandCardForRotation}
-                          onRotationHoldEnd={stopHoldingHandCardForRotation}
-                        />
-                      );
-                    })}
-                  {hasArsenal &&
-                    showArsenal &&
-                    arsenalCards !== undefined &&
-                    arsenalCards.map((card: Card, ix: number) => {
-                      const cardCount = nextCardOccurrence(card.cardNumber);
-                      return (
-                        <PlayerHandCard
-                          card={card}
-                          isArsenal
-                          key={`arsenal-${card.cardNumber}-${cardCount}`}
-                          addCardToPlayedCards={addCardToPlayedCards}
-                          zIndex={ix}
-                        />
-                      );
-                    })}
-                  {hasHandCards && hasBanishedCards && (
-                    <div
-                      className={styles.zoneSeparator}
-                      data-zone-separator="true"
-                      style={zoneSeparatorStyle}
-                    />
-                  )}
-                  {playableBanishedCards !== undefined &&
-                    playableBanishedCards.map((card: Card, ix: number) => {
-                      const cardCount = nextCardOccurrence(card.cardNumber);
-                      return (
-                        <PlayerHandCard
-                          card={card}
-                          isBanished
-                          key={`banished-${card.cardNumber}-${cardCount}`}
-                          addCardToPlayedCards={addCardToPlayedCards}
-                          zIndex={orderedHandCards.length + ix + 200}
-                          scrollBlockedRef={scrollBlockedRef}
-                        />
-                      );
-                    })}
-                  {(hasHandCards || hasBanishedCards) &&
-                    hasTheirBanishedCards && (
+                {!isHandCollapsed && (
+                  <AnimatePresence>
+                    {orderedHandCards.length > 0 &&
+                      orderedHandCards.map(({ card, id }, ix) => {
+                        nextCardOccurrence(card.cardNumber);
+                        return (
+                          <PlayerHandCard
+                            card={card}
+                            cardId={id}
+                            key={`hand-${id}`}
+                            rotation={handCardRotations[id]}
+                            addCardToPlayedCards={addCardToPlayedCards}
+                            zIndex={ix + 200}
+                            enableLayoutAnimation
+                            shuffleRevision={handShuffleRevision}
+                            scrollBlockedRef={scrollBlockedRef}
+                            onHandReorderDragStart={stableDragStart}
+                            onHandReorderDragMove={stableDragMove}
+                            onHandReorderDragEnd={stableDragEnd}
+                            onHandReorderDragCancel={stableDragCancel}
+                            onRotate={rotateHandCard}
+                            onRotationHoldStart={
+                              startHoldingHandCardForRotation
+                            }
+                            onRotationHoldEnd={stopHoldingHandCardForRotation}
+                          />
+                        );
+                      })}
+                    {hasArsenal &&
+                      showArsenal &&
+                      arsenalCards !== undefined &&
+                      arsenalCards.map((card: Card, ix: number) => {
+                        const cardCount = nextCardOccurrence(card.cardNumber);
+                        return (
+                          <PlayerHandCard
+                            card={card}
+                            isArsenal
+                            key={`arsenal-${card.cardNumber}-${cardCount}`}
+                            addCardToPlayedCards={addCardToPlayedCards}
+                            zIndex={ix}
+                          />
+                        );
+                      })}
+                    {hasHandCards && hasBanishedCards && (
                       <div
                         className={styles.zoneSeparator}
                         data-zone-separator="true"
                         style={zoneSeparatorStyle}
                       />
                     )}
-                  {playableTheirBanishedCards !== undefined &&
-                    playableTheirBanishedCards.map((card: Card, ix: number) => {
-                      const cardCount = nextCardOccurrence(card.cardNumber);
-                      return (
-                        <PlayerHandCard
-                          card={card}
-                          isBanished
-                          key={`banished-${card.cardNumber}-${cardCount}`}
-                          addCardToPlayedCards={addCardToPlayedCards}
-                          zIndex={
-                            orderedHandCards.length +
-                            (playableBanishedCards?.length ?? 0) +
-                            ix +
-                            200
-                          }
-                          scrollBlockedRef={scrollBlockedRef}
+                    {playableBanishedCards !== undefined &&
+                      playableBanishedCards.map((card: Card, ix: number) => {
+                        const cardCount = nextCardOccurrence(card.cardNumber);
+                        return (
+                          <PlayerHandCard
+                            card={card}
+                            isBanished
+                            key={`banished-${card.cardNumber}-${cardCount}`}
+                            addCardToPlayedCards={addCardToPlayedCards}
+                            zIndex={orderedHandCards.length + ix + 200}
+                            scrollBlockedRef={scrollBlockedRef}
+                          />
+                        );
+                      })}
+                    {(hasHandCards || hasBanishedCards) &&
+                      hasTheirBanishedCards && (
+                        <div
+                          className={styles.zoneSeparator}
+                          data-zone-separator="true"
+                          style={zoneSeparatorStyle}
                         />
-                      );
-                    })}
-                  {(hasHandCards ||
-                    hasBanishedCards ||
-                    hasTheirBanishedCards) &&
-                    hasGraveyardCards && (
-                      <div
-                        className={styles.zoneSeparator}
-                        data-zone-separator="true"
-                        style={zoneSeparatorStyle}
-                      />
-                    )}
-                  {playableGraveyardCards !== undefined &&
-                    playableGraveyardCards.map((card: Card, ix: number) => {
-                      const cardCount = nextCardOccurrence(card.cardNumber);
-                      return (
-                        <PlayerHandCard
-                          card={card}
-                          isGraveyard
-                          key={`graveyard-${card.cardNumber}-${cardCount}`}
-                          addCardToPlayedCards={addCardToPlayedCards}
-                          zIndex={
-                            orderedHandCards.length +
-                            (playableBanishedCards?.length ?? 0) +
-                            (playableTheirBanishedCards?.length ?? 0) +
-                            ix +
-                            200
-                          }
-                          scrollBlockedRef={scrollBlockedRef}
+                      )}
+                    {playableTheirBanishedCards !== undefined &&
+                      playableTheirBanishedCards.map(
+                        (card: Card, ix: number) => {
+                          const cardCount = nextCardOccurrence(card.cardNumber);
+                          return (
+                            <PlayerHandCard
+                              card={card}
+                              isBanished
+                              key={`banished-${card.cardNumber}-${cardCount}`}
+                              addCardToPlayedCards={addCardToPlayedCards}
+                              zIndex={
+                                orderedHandCards.length +
+                                (playableBanishedCards?.length ?? 0) +
+                                ix +
+                                200
+                              }
+                              scrollBlockedRef={scrollBlockedRef}
+                            />
+                          );
+                        }
+                      )}
+                    {(hasHandCards ||
+                      hasBanishedCards ||
+                      hasTheirBanishedCards) &&
+                      hasGraveyardCards && (
+                        <div
+                          className={styles.zoneSeparator}
+                          data-zone-separator="true"
+                          style={zoneSeparatorStyle}
                         />
-                      );
-                    })}
-                </AnimatePresence>
+                      )}
+                    {playableGraveyardCards !== undefined &&
+                      playableGraveyardCards.map((card: Card, ix: number) => {
+                        const cardCount = nextCardOccurrence(card.cardNumber);
+                        return (
+                          <PlayerHandCard
+                            card={card}
+                            isGraveyard
+                            key={`graveyard-${card.cardNumber}-${cardCount}`}
+                            addCardToPlayedCards={addCardToPlayedCards}
+                            zIndex={
+                              orderedHandCards.length +
+                              (playableBanishedCards?.length ?? 0) +
+                              (playableTheirBanishedCards?.length ?? 0) +
+                              ix +
+                              200
+                            }
+                            scrollBlockedRef={scrollBlockedRef}
+                          />
+                        );
+                      })}
+                  </AnimatePresence>
+                )}
               </div>
             </div>
             <button
@@ -1063,7 +1093,8 @@ function PlayerHand() {
                 styles.scrollButton,
                 styles.scrollButtonRight,
                 {
-                  [styles.scrollButtonHidden]: !canScrollRight
+                  [styles.scrollButtonHidden]:
+                    !canScrollRight || isHandCollapsed
                 }
               )}
               onPointerDown={scrollHandRight}
@@ -1083,6 +1114,44 @@ function PlayerHand() {
                 <polyline points="9 18 15 12 9 6" />
               </svg>
             </button>
+            {canCollapseHand && hasRowCards && (
+              <button
+                className={classNames(styles.handCollapseButton, {
+                  [styles.handCollapseButtonCollapsed]: isHandCollapsed
+                })}
+                onPointerDown={toggleHandCollapsed}
+                aria-expanded={!isHandCollapsed}
+                aria-label={
+                  isHandCollapsed ? t('HAND.SHOW_HAND') : t('HAND.HIDE_HAND')
+                }
+                title={
+                  isHandCollapsed ? t('HAND.SHOW_HAND') : t('HAND.HIDE_HAND')
+                }
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <polyline
+                    points={
+                      isHandCollapsed ? '6 15 12 9 18 15' : '6 9 12 15 18 9'
+                    }
+                  />
+                </svg>
+                {isHandCollapsed && (
+                  <span className={styles.handCollapseCount}>
+                    {orderedHandCards.length}
+                  </span>
+                )}
+              </button>
+            )}
           </div>
         </>,
         document.body

@@ -116,8 +116,10 @@ const HandZone = React.memo(function HandZone(prop: Player) {
     { [styles.clickable]: canOpenHandList }
   );
 
+  // Empty, but still a fixed card-sized box pinned to the bottom of the
+  // viewport, so it must not swallow taps aimed at the board zones under it.
   if (handCards === undefined || (playerID !== 3 && !isReplay && isPlayer)) {
-    return <div className={displayRow}></div>;
+    return <div className={classNames(displayRow, styles.emptyZone)}></div>;
   }
 
   const zoneTitle = isPlayer ? 'Your Hand' : "Opponent's Hand";

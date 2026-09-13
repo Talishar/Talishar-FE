@@ -26,6 +26,53 @@
   justify-content: flex-start;
 }
 
+.handScrollInnerCollapsed {
+  pointer-events: none;
+}
+
+.handCollapseButton {
+  position: absolute;
+  top: 0;
+  right: 0;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: auto;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 6px;
+  margin: 0;
+  border: none;
+  border-radius: 5px;
+  background: linear-gradient(
+    180deg,
+    rgba(20, 20, 20, 0.75) 0%,
+    rgba(10, 10, 10, 0.9) 100%
+  );
+  color: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+  z-index: 501;
+  transition: color 0.15s, background 0.15s, transform 0.1s;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.handCollapseButton:active {
+  transform: scale(0.96);
+}
+
+.handCollapseButtonCollapsed {
+  color: rgba(255, 255, 255, 1);
+}
+
+.handCollapseCount {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+}
+
 .handRow {
   display: flex;
   flex-direction: row;
@@ -33,6 +80,13 @@
   align-items: center;
   gap: 0;
   pointer-events: none;
+}
+
+/* display:none rather than a transform or visibility: framer-motion writes its
+   own transform/visibility onto every card, and only removing the boxes keeps
+   the board underneath hit-testable. */
+.handRowCollapsed {
+  display: none;
 }
 
 .zoneSeparator {

@@ -516,7 +516,9 @@
   },
   "HAND": {
     "SCROLL_LEFT": "Faire défiler la main vers la gauche",
-    "SCROLL_RIGHT": "Faites défiler la main vers la droite"
+    "SCROLL_RIGHT": "Faites défiler la main vers la droite",
+    "HIDE_HAND": "Masquer la main",
+    "SHOW_HAND": "Afficher la main"
   },
   "HEADER": {
     "ABOUT": "À propos",

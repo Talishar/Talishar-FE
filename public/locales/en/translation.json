@@ -545,7 +545,9 @@
   },
   "HAND": {
     "SCROLL_LEFT": "Scroll hand left",
-    "SCROLL_RIGHT": "Scroll hand right"
+    "SCROLL_RIGHT": "Scroll hand right",
+    "HIDE_HAND": "Hide hand",
+    "SHOW_HAND": "Show hand"
   },
   "HEADER": {
     "ABOUT": "About",

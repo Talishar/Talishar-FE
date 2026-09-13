@@ -65,6 +65,7 @@ type SurfaceProps = {
   onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
   onPointerDown: (event: React.PointerEvent<HTMLDivElement>) => void;
   onMouseEnter: () => void;
+  onPenHover: () => void;
   onMouseLeave: () => void;
   onTouchStart: (event: React.TouchEvent<HTMLDivElement>) => void;
   onTouchEnd: (event: React.TouchEvent<HTMLDivElement>) => void;
@@ -82,6 +83,7 @@ const CardSurface = ({
   onHoverStart,
   onHoverEnd,
   onMouseEnter,
+  onPenHover,
   onMouseLeave,
   onPointerDown,
   ...handlers
@@ -94,9 +96,7 @@ const CardSurface = ({
   const handlePointerEnter = (event: React.PointerEvent<HTMLDivElement>) => {
     if (event.pointerType === 'touch') return;
     onHoverStart?.();
-    // Hover previews are driven from pointerenter so the synthetic mouse
-    // events a touch emits after touchend cannot open one.
-    onMouseEnter();
+    if (event.pointerType === 'pen') onPenHover();
   };
   const handlePointerLeave = (event: React.PointerEvent<HTMLDivElement>) => {
     if (event.pointerType !== 'touch') onHoverEnd?.();
@@ -111,6 +111,7 @@ const CardSurface = ({
     <div
       className={className}
       ref={containerRef}
+      onMouseEnter={onMouseEnter}
       onMouseMove={tiltEnabled ? handleMouseMove : undefined}
       onMouseLeave={onSurfaceMouseLeave}
       onPointerDown={onPointerDown}
@@ -238,9 +239,18 @@ export default function CardPopUp({
     });
   };
 
-  const handleMouseEnter = () => {
+  const showHoverPreview = (pointerKind: 'mouse' | 'pen') => {
+    // A stylus hovers on devices whose primary input reports no hover at all,
+    // so trust the pen event over the media query.
+    if (pointerKind !== 'pen' && !supportsHover) return;
+    // A touch emits synthetic mouse events after touchend. Surfaces that opted
+    // out of tap-to-preview must not get a preview from that replayed hover.
+    if (disableTapToPreview && lastPointerTypeRef.current === 'touch') return;
     showPreview();
   };
+
+  const handleMouseEnter = () => showHoverPreview('mouse');
+  const handlePenHover = () => showHoverPreview('pen');
 
   const clearPopUpUnlessSticky = () => {
     if (getCardPreview().presentation === 'mobile-modal') {
@@ -353,6 +363,7 @@ export default function CardPopUp({
         if (event.pointerType !== 'touch') suppressNextClick.current = false;
       }}
       onMouseEnter={handleMouseEnter}
+      onPenHover={handlePenHover}
       onMouseLeave={handleMouseLeave}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}

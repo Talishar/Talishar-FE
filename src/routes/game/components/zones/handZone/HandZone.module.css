@@ -23,6 +23,10 @@
   cursor: pointer;
 }
 
+.emptyZone {
+  pointer-events: none;
+}
+
 .compact > div + div {
   margin-left: var(--hand-overlap, 0px);
 }

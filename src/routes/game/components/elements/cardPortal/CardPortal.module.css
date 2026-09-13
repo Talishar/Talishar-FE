@@ -1,6 +1,9 @@
 .popUpContainer {
   position: fixed;
   z-index: 10002;
+  /* The preview is informational and sits above the board: let clicks through
+     so a card it overlaps stays playable. */
+  pointer-events: none;
   min-height: calc(53vh - (1.5 - var(--hover-img-scale)) * 20vh);
   height: calc(55vh * var(--hover-img-scale));
 }
@@ -16,6 +19,7 @@
 .defaultPos {
   right: 200px;
   top: 10vh;
+  pointer-events: none;
 }
 
 .img {
