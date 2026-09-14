@@ -432,11 +432,9 @@ function mergeReceivedGameState(
   state.aiHasInfiniteHP = payload.aiHasInfiniteHP ?? false;
   state.practiceDummyWeaponPower = payload.practiceDummyWeaponPower ?? 4;
   state.opponentInactive = payload.opponentInactive ?? false;
-  state.inactivityDeadline =
-    payload.inactivityDeadline ?? state.inactivityDeadline;
-  state.gameDeleteDeadline =
-    payload.gameDeleteDeadline ?? state.gameDeleteDeadline;
-  state.serverTimeOffset = payload.serverTimeOffset ?? state.serverTimeOffset;
+  state.inactivityDeadline = payload.inactivityDeadline;
+  state.gameDeleteDeadline = payload.gameDeleteDeadline;
+  state.serverTimeOffset = payload.serverTimeOffset;
   state.preventPassPrompt = payload.preventPassPrompt;
 }
 
@@ -644,6 +642,13 @@ export const gameSlice = createSlice({
 
       // Check if this is a NEW game or a RECONNECTION to the same game
       const isNewGame = previousGameID !== newGameID;
+
+      if (isNewGame) {
+        state.opponentInactive = false;
+        state.inactivityDeadline = undefined;
+        state.gameDeleteDeadline = undefined;
+        state.serverTimeOffset = undefined;
+      }
 
       // Always update gameID
       state.gameInfo.gameID = newGameID;
