@@ -119,7 +119,9 @@ export const ProfilePage = () => {
   PatreonOAuthParam.append('redirect_uri', REDIRECT_URI);
   PatreonOAuthParam.append('scope', SCOPE);
 
-  const isMetafySupporter: boolean = profileData?.isMetafySupporter ?? false;
+  const isSupporter = Boolean(
+    profileData?.isMetafySupporter || profileData?.isPatreonSupporter
+  );
 
   return (
     <div>
@@ -148,7 +150,7 @@ export const ProfilePage = () => {
                 {profileIsLoading && <p>{t('PROFILE.LOADING')}</p>}
 
                 {/* Show Upgrade/Supporter Status */}
-                <UpgradeSection isSupporter={isMetafySupporter} />
+                <UpgradeSection isSupporter={isSupporter} />
 
                 {/* Metafy Section */}
                 {profileData?.metafyInfo && (
