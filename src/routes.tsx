@@ -22,6 +22,7 @@ const CreateGame = lazy(() => import('routes/game/create/CreateGame'));
 const LoadReplay = lazy(() => import('routes/game/load/LoadReplay'));
 const SharedReplay = lazy(() => import('routes/game/shared/SharedReplay'));
 const SettingsPage = lazy(() => import('routes/user/settings'));
+import SyncedSettings from 'features/settings/SyncedSettings';
 const Privacy = lazy(() => import('routes/privacy'));
 const LinkPatreon = lazy(() => import('routes/user/profile/linkpatreon'));
 const LinkMetafy = lazy(
@@ -157,15 +158,13 @@ export const router = createBrowserRouter(
       errorElement={<ErrorPage />}
       element={
         <Suspense fallback={<RouteFallback />}>
+          <SyncedSettings />
           <Outlet />
         </Suspense>
       }
     >
       <Route element={<Outlet />}>
-        <Route
-          path="game/play/:gameID"
-          element={<Play />}
-        />
+        <Route path="game/play/:gameID" element={<Play />} />
         <Route path="game/play" element={<Play />} />
         <Route path="game/lobby/:gameID" element={<Lobby />} />
         <Route

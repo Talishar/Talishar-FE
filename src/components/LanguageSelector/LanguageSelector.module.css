@@ -2,6 +2,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
+  min-width: 13rem;
 }
 
 .trigger {
@@ -19,6 +20,12 @@
   cursor: pointer;
   text-align: left;
   transition: border-color 0.2s ease;
+}
+
+.trigger > span:first-child {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .trigger:hover {
@@ -54,8 +61,11 @@
 .dropdown {
   position: absolute;
   top: 100%;
-  left: 0;
+  left: auto;
   right: 0;
+  min-width: 100%;
+  width: max-content;
+  max-width: min(20rem, 80vw);
   background: var(--dropdown-background-color);
   border: 1px solid rgba(var(--theme-on-surface-rgb), 0.1);
   border-top: none;
@@ -64,7 +74,6 @@
   margin: 0;
   padding: 0.25rem 0;
   z-index: 1000;
-  max-height: 200px;
   overflow-y: auto;
   backdrop-filter: blur(4px);
   scrollbar-width: thin;
@@ -74,6 +83,7 @@
 .option {
   display: flex;
   align-items: center;
+  white-space: nowrap;
   padding: 0.45rem 0.75rem;
   cursor: pointer;
   font-size: 0.95em;
@@ -86,12 +96,39 @@
   background: var(--dropdown-hover-background-color, color-mix(in srgb, var(--theme-primary) 15%, transparent));
 }
 
+.triggerLabel {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.optionIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1.4rem;
+  margin-right: 0.35rem;
+  line-height: 1;
+}
+
+.optionName {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .optionSelected {
   background: rgba(var(--theme-on-surface-rgb), 0.07);
   font-weight: 600;
 }
 
 @media (max-width: 768px) {
+  .languageSelectorContainer {
+    min-width: 0;
+  }
+
   .trigger {
     font-size: 0.875rem;
     padding: 0.4rem 0.6rem;

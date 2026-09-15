@@ -28,7 +28,7 @@ import type { Setting } from 'features/options/optionsSlice';
 import * as optConst from 'features/options/constants';
 import { CARD_BACK, PLAYMATS } from 'features/options/cardBacks';
 
-const OptionsContent = () => {
+const OptionsContent = ({ searchQuery }: { searchQuery: string }) => {
   const {
     gameID,
     playerID,
@@ -182,179 +182,174 @@ const OptionsContent = () => {
     }
   };
 
-  return (
-    <div className={styles.optionsContentContainer}>
-      <div className={styles.column}>
-        <OptionsSettings />
-      </div>
-      <div className={styles.column}>
+  const cosmeticsSlot =
+    playerID !== 3 && canCustomizeDeck && deckLink ? (
+      <>
+        <p className={styles.signpostNote}>
+          {t('OPTIONS_MENU.COSMETICS_DECK_NOTE')}
+        </p>
+        {cosmeticsChanged && !isSavingCosmetics && (
+          <button
+            className={styles.cosmeticsSaveButton}
+            onClick={handleSaveDeckCosmetics}
+          >
+            {t('OPTIONS_MENU.SAVE_COSMETICS_TO_DECK')}
+          </button>
+        )}
+        <CosmeticsSection
+          data={cosmeticsData}
+          selectedCardBack={selectedCardBack}
+          selectedPlaymat={selectedPlaymat}
+          onSettingsChange={handleDeckCosmeticChange}
+        />
+      </>
+    ) : (
+      <p className={styles.signpostNote}>
+        <Trans
+          i18nKey="OPTIONS_MENU.COSMETICS_SIGNPOST"
+          components={{
+            1: (
+              <a
+                href="/user/settings?tab=cosmetics"
+                target="_blank"
+                rel="noreferrer"
+              />
+            ),
+            2: <a href="/user/decks" target="_blank" rel="noreferrer" />
+          }}
+        />
+      </p>
+    );
+
+  const actionsSlot = (
+    <>
+      <fieldset className={styles.sectionContainer}>
+        <legend className={styles.visuallyHidden}>
+          {t('OPTIONS_MENU.GENERAL')}
+        </legend>
+        <div className={styles.sectionHeader} aria-hidden="true">
+          <span>{t('OPTIONS_MENU.GENERAL')}</span>
+        </div>
+        <div className={styles.sectionContent}>
+          <div className={styles.buttonColumn}>
+            <div className={styles.buttonGroup}>
+              <button
+                className={`${styles.buttonDiv} ${styles.primaryButton}`}
+                onClick={handleClickMainMenuButton}
+              >
+                {t('OPTIONS_MENU.HOMEPAGE')}
+              </button>
+              {playerID !== 3 && ( // If not a spectator then can change options
+                <button
+                  className={`${styles.buttonDiv} ${styles.dangerButton}`}
+                  onClick={clickConcedeGameHandler}
+                >
+                  {t('OPTIONS_MENU.CONCEDE')}
+                </button>
+              )}
+            </div>
+
+            {playerID !== 3 && (
+              <div
+                className={`${styles.buttonGroup} ${styles.reportButtonGroup}`}
+              >
+                <button
+                  className={styles.buttonDiv}
+                  onClick={clickReportBugHandler}
+                >
+                  {t('OPTIONS_MENU.REPORT_BUG')}
+                </button>
+
+                <button
+                  className={styles.buttonDiv}
+                  onClick={clickReportPlayerHandler}
+                >
+                  {t('OPTIONS_MENU.REPORT_PLAYER')}
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </fieldset>
+
+      {playerID !== 3 && (
         <fieldset className={styles.sectionContainer}>
           <legend className={styles.visuallyHidden}>
-            {t('OPTIONS_MENU.GENERAL')}
+            {t('OPTIONS_MENU.GAMESTATE_CORRECTION')}
           </legend>
           <div className={styles.sectionHeader} aria-hidden="true">
-            <span>{t('OPTIONS_MENU.GENERAL')}</span>
+            <span>{t('OPTIONS_MENU.GAMESTATE_CORRECTION')}</span>
           </div>
           <div className={styles.sectionContent}>
             <div className={styles.buttonColumn}>
-              <div className={styles.buttonGroup}>
+              <button
+                className={`${styles.buttonDiv} ${styles.primaryButton}`}
+                onClick={clickUndoButtonHandler}
+              >
+                {t('OPTIONS_MENU.UNDO')}
+              </button>
+              <button
+                className={styles.buttonDiv}
+                onClick={clickRevertToStartOfThisTurnHandler}
+              >
+                {t('OPTIONS_MENU.REVERT_TO_START_OF_THIS_TURN')}
+              </button>
+              <button
+                className={styles.buttonDiv}
+                onClick={clickRevertToStartOfChainLinkHandler}
+              >
+                {t('OPTIONS_MENU.REVERT_TO_START_OF_THIS_CHAIN_LINK')}
+              </button>
+              <button
+                className={styles.buttonDiv}
+                onClick={clickRevertToStartOfPreviousTurnHandler}
+              >
+                {t('OPTIONS_MENU.REVERT_TO_START_OF_PREVIOUS_TURN')}
+              </button>
+            </div>
+          </div>
+        </fieldset>
+      )}
+
+      {playerID !== 3 && (
+        <fieldset className={styles.sectionContainer}>
+          <legend className={styles.visuallyHidden}>
+            {t('OPTIONS_MENU.INVITE_SPECTATORS')}
+          </legend>
+          <div className={styles.sectionHeader} aria-hidden="true">
+            <span>{t('OPTIONS_MENU.INVITE_SPECTATORS')}</span>
+          </div>
+          <div className={styles.sectionContent}>
+            <div className={styles.buttonColumn}>
+              {!allowSpectator ? (
                 <button
-                  className={`${styles.buttonDiv} ${styles.primaryButton}`}
-                  onClick={handleClickMainMenuButton}
+                  className={styles.buttonDiv}
+                  onClick={handleAllowSpectators}
                 >
-                  {t('OPTIONS_MENU.HOMEPAGE')}
+                  {t('OPTIONS_MENU.ALLOW_SPECTATORS_PRIVATE_MATCH')}
                 </button>
-                {playerID !== 3 && ( // If not a spectator then can change options
-                  <button
-                    className={`${styles.buttonDiv} ${styles.dangerButton}`}
-                    onClick={clickConcedeGameHandler}
-                  >
-                    {t('OPTIONS_MENU.CONCEDE')}
-                  </button>
-                )}
-              </div>
-
-              {playerID !== 3 && (
-                <div
-                  className={`${styles.buttonGroup} ${styles.reportButtonGroup}`}
+              ) : (
+                <button
+                  className={styles.buttonDiv}
+                  onClick={clickCopySpectateToClipboardHandler}
                 >
-                  <button
-                    className={styles.buttonDiv}
-                    onClick={clickReportBugHandler}
-                  >
-                    {t('OPTIONS_MENU.REPORT_BUG')}
-                  </button>
-
-                  <button
-                    className={styles.buttonDiv}
-                    onClick={clickReportPlayerHandler}
-                  >
-                    {t('OPTIONS_MENU.REPORT_PLAYER')}
-                  </button>
-                </div>
+                  {t('OPTIONS_MENU.COPY_SPECTATE_LINK')}
+                </button>
               )}
             </div>
           </div>
         </fieldset>
+      )}
+    </>
+  );
 
-        {playerID !== 3 && (
-          <fieldset className={styles.sectionContainer}>
-            <legend className={styles.visuallyHidden}>
-              {t('OPTIONS_MENU.GAMESTATE_CORRECTION')}
-            </legend>
-            <div className={styles.sectionHeader} aria-hidden="true">
-              <span>{t('OPTIONS_MENU.GAMESTATE_CORRECTION')}</span>
-            </div>
-            <div className={styles.sectionContent}>
-              <div className={styles.buttonColumn}>
-                <button
-                  className={`${styles.buttonDiv} ${styles.primaryButton}`}
-                  onClick={clickUndoButtonHandler}
-                >
-                  {t('OPTIONS_MENU.UNDO')}
-                </button>
-                <button
-                  className={styles.buttonDiv}
-                  onClick={clickRevertToStartOfThisTurnHandler}
-                >
-                  {t('OPTIONS_MENU.REVERT_TO_START_OF_THIS_TURN')}
-                </button>
-                <button
-                  className={styles.buttonDiv}
-                  onClick={clickRevertToStartOfChainLinkHandler}
-                >
-                  {t('OPTIONS_MENU.REVERT_TO_START_OF_THIS_CHAIN_LINK')}
-                </button>
-                <button
-                  className={styles.buttonDiv}
-                  onClick={clickRevertToStartOfPreviousTurnHandler}
-                >
-                  {t('OPTIONS_MENU.REVERT_TO_START_OF_PREVIOUS_TURN')}
-                </button>
-              </div>
-            </div>
-          </fieldset>
-        )}
-
-        {playerID !== 3 && (
-          <fieldset className={styles.sectionContainer}>
-            <legend className={styles.visuallyHidden}>
-              {t('OPTIONS_MENU.INVITE_SPECTATORS')}
-            </legend>
-            <div className={styles.sectionHeader} aria-hidden="true">
-              <span>{t('OPTIONS_MENU.INVITE_SPECTATORS')}</span>
-            </div>
-            <div className={styles.sectionContent}>
-              <div className={styles.buttonColumn}>
-                {!allowSpectator ? (
-                  <button
-                    className={styles.buttonDiv}
-                    onClick={handleAllowSpectators}
-                  >
-                    {t('OPTIONS_MENU.ALLOW_SPECTATORS_PRIVATE_MATCH')}
-                  </button>
-                ) : (
-                  <button
-                    className={styles.buttonDiv}
-                    onClick={clickCopySpectateToClipboardHandler}
-                  >
-                    {t('OPTIONS_MENU.COPY_SPECTATE_LINK')}
-                  </button>
-                )}
-              </div>
-            </div>
-          </fieldset>
-        )}
-        <fieldset
-          className={`${styles.sectionContainer} ${styles.cosmeticsSection}`}
-        >
-          <legend className={styles.visuallyHidden}>
-            {t('OPTIONS_MENU.COSMETICS')}
-          </legend>
-          <div className={styles.sectionHeader} aria-hidden="true">
-            <span>{t('OPTIONS_MENU.COSMETICS')}</span>
-          </div>
-          <div className={styles.sectionContent}>
-            {playerID !== 3 && canCustomizeDeck && deckLink ? (
-              <>
-                <p className={styles.signpostNote}>
-                  {t('OPTIONS_MENU.COSMETICS_DECK_NOTE')}
-                </p>
-                {cosmeticsChanged && !isSavingCosmetics && (
-                  <button
-                    className={styles.cosmeticsSaveButton}
-                    onClick={handleSaveDeckCosmetics}
-                  >
-                    {t('OPTIONS_MENU.SAVE_COSMETICS_TO_DECK')}
-                  </button>
-                )}
-                <CosmeticsSection
-                  data={cosmeticsData}
-                  selectedCardBack={selectedCardBack}
-                  selectedPlaymat={selectedPlaymat}
-                  onSettingsChange={handleDeckCosmeticChange}
-                />
-              </>
-            ) : (
-              <p className={styles.signpostNote}>
-                <Trans
-                  i18nKey="OPTIONS_MENU.COSMETICS_SIGNPOST"
-                  components={{
-                    1: (
-                      <a
-                        href="/user/settings"
-                        target="_blank"
-                        rel="noreferrer"
-                      />
-                    ),
-                    2: <a href="/user/decks" target="_blank" rel="noreferrer" />
-                  }}
-                />
-              </p>
-            )}
-          </div>
-        </fieldset>
-      </div>
+  return (
+    <div className={styles.optionsContentContainer}>
+      <OptionsSettings
+        cosmeticsSlot={cosmeticsSlot}
+        actionsSlot={actionsSlot}
+        searchQuery={searchQuery}
+      />
     </div>
   );
 };
@@ -366,6 +361,7 @@ export default function OptionsMenu() {
   );
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
+  const [searchQuery, setSearchQuery] = useState('');
 
   const closeOptions = () => {
     dispatch(closeOptionsMenu());
@@ -390,6 +386,14 @@ export default function OptionsMenu() {
                 </h2>
                 <h4></h4>
               </hgroup>
+              <input
+                type="search"
+                className={styles.titleSearch}
+                value={searchQuery}
+                placeholder={t('SETTINGS.SEARCH_PLACEHOLDER')}
+                aria-label={t('SETTINGS.SEARCH_PLACEHOLDER')}
+                onChange={(event) => setSearchQuery(event.target.value)}
+              />
               <button
                 type="button"
                 aria-label={t('OPTIONS_MENU.CLOSE_SETTINGS_MENU')}
@@ -400,7 +404,7 @@ export default function OptionsMenu() {
                 <FaTimes aria-hidden="true" />
               </button>
             </div>
-            <OptionsContent />
+            <OptionsContent searchQuery={searchQuery} />
           </motion.div>
         </>
       )}

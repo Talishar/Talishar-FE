@@ -163,13 +163,11 @@ export const TALISHAR_PLAYMAT_IDS = [
   '19',
   '20',
   '21',
-  '37',
-  '38',
-  '39',
-  '40',
-  '41',
   '45'
 ];
+
+/* Retired playmats - no longer offered in the picker */
+export const RETIRED_PLAYMAT_IDS = ['37', '38', '39', '40', '41'];
 
 /* All available playmats - CSS class names (must match image files) */
 export const PLAYMATS = {

@@ -33,7 +33,8 @@ const settingsAdapter = createEntityAdapter<Setting>({
 
 export const settingsInitialState = settingsAdapter.getInitialState({
   status: QUERY_STATUS.IDLE,
-  language: loadInitialLanguage()
+  language: loadInitialLanguage(),
+  pendingRollbacks: {} as Record<string, Setting[]>
 });
 
 const SPECTATOR_PLAYER_ID = 3;
@@ -113,36 +114,27 @@ export const updateOptions = createAsyncThunk(
       userID: userID
     };
 
+    const response = await fetch(queryURL, {
+      method: 'POST',
+      headers: {},
+      credentials: 'include',
+      body: JSON.stringify(payload as ProcessInputAPI)
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    // Get response text first to debug
+    const text = await response.text();
+
+    // Try to parse as JSON
     try {
-      const response = await fetch(queryURL, {
-        method: 'POST',
-        headers: {},
-        credentials: 'include',
-        body: JSON.stringify(payload as ProcessInputAPI)
-      });
-
-      // Get response text first to debug
-      const text = await response.text();
-
-      // Try to parse as JSON
-      try {
-        const data = JSON.parse(text);
-        return data;
-      } catch (parseErr) {
-        console.error('Failed to parse response:', text);
-        // Return a valid response object even on parse error
-        return { message: 'Settings updated', parsed: false };
-      }
-    } catch (err) {
-      console.warn('Fetch error:', err);
-      toast.error(
-        `There has been a network error. Please try again. Error:\n${JSON.stringify(
-          err
-        )}`,
-        { position: 'top-center' }
-      );
-      // Return a valid response on fetch error
-      return { error: 'Network error', success: false };
+      return JSON.parse(text);
+    } catch (parseErr) {
+      console.error('Failed to parse response:', text);
+      // The write succeeded, the body just was not JSON.
+      return { message: 'Settings updated', parsed: false };
     }
   }
 );
@@ -178,13 +170,34 @@ const optionsSlice = createSlice({
     builder.addCase(fetchAllSettings.pending, (state) => {
       state.status = QUERY_STATUS.LOADING;
     });
-    builder.addCase(updateOptions.fulfilled, (state) => {
+    builder.addCase(updateOptions.fulfilled, (state, action) => {
+      delete state.pendingRollbacks[action.meta.requestId];
       state.status = QUERY_STATUS.SUCCESS;
     });
-    builder.addCase(updateOptions.rejected, (state) => {
+    builder.addCase(updateOptions.rejected, (state, action) => {
+      const rollback = state.pendingRollbacks[action.meta.requestId];
+      if (rollback) {
+        rollback.forEach((setting) => {
+          if (setting.value === undefined) {
+            settingsAdapter.removeOne(state, setting.name);
+          } else {
+            settingsAdapter.upsertOne(state, setting);
+          }
+        });
+        delete state.pendingRollbacks[action.meta.requestId];
+      }
+      toast.error(
+        'Your setting could not be saved. Please check your connection and try again.',
+        { position: 'top-center' }
+      );
       state.status = QUERY_STATUS.FAILED;
     });
     builder.addCase(updateOptions.pending, (state, action) => {
+      state.pendingRollbacks[action.meta.requestId] =
+        action.meta.arg.settings.map((setting) => ({
+          name: setting.name,
+          value: state.entities[setting.name]?.value
+        }));
       settingsAdapter.upsertMany(state, action.meta.arg.settings);
       state.status = QUERY_STATUS.LOADING;
     });

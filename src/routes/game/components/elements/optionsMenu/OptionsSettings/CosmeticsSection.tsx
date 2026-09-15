@@ -6,6 +6,7 @@ import {
   CARD_BACK,
   PLAYMATS,
   PLAYMAT_DISPLAY_NAMES,
+  RETIRED_PLAYMAT_IDS,
   TALISHAR_CARD_BACK_IDS,
   TALISHAR_PLAYMAT_IDS
 } from 'features/options/cardBacks';
@@ -48,10 +49,12 @@ export const CosmeticsSection: React.FC<CosmeticsSectionProps> = ({
     ...cb,
     id: String(cb.id)
   }));
-  const normalizedPlaymats = (data?.playmats ?? []).map((pm) => ({
-    ...pm,
-    id: String(pm.id)
-  }));
+  const normalizedPlaymats = (data?.playmats ?? [])
+    .map((pm) => ({
+      ...pm,
+      id: String(pm.id)
+    }))
+    .filter((pm) => !RETIRED_PLAYMAT_IDS.includes(pm.id));
 
   const unlockedCardBackIds = new Set(normalizedCardBacks.map((cb) => cb.id));
   const lockedTalisharCardBackIds = TALISHAR_CARD_BACK_IDS.filter(
@@ -124,6 +127,8 @@ export const CosmeticsSection: React.FC<CosmeticsSectionProps> = ({
         )}
         <div className={styles.playmatListContainer}>
           {renderPlaymatThumb('0')}
+          {unlockedTalisharPlaymats.map((pm) => renderPlaymatThumb(pm.id))}
+          {otherUnlockedPlaymats.map((pm) => renderPlaymatThumb(pm.id))}
           {lockedTalisharPlaymatIds.map((id) => (
             <div
               key={`lockedPlaymat${id}`}
@@ -158,8 +163,6 @@ export const CosmeticsSection: React.FC<CosmeticsSectionProps> = ({
               </div>
             </div>
           ))}
-          {unlockedTalisharPlaymats.map((pm) => renderPlaymatThumb(pm.id))}
-          {otherUnlockedPlaymats.map((pm) => renderPlaymatThumb(pm.id))}
         </div>
       </label>
       <label className={styles.cardBackTitle}>

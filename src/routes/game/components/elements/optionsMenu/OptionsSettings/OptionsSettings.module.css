@@ -257,6 +257,7 @@
 .playmatThumbSelected {
   border-color: var(--theme-primary);
   opacity: 1;
+  border-width: 3px;
 }
 
 .playmatLabel {
@@ -307,6 +308,7 @@
 .selected {
   border-color: var(--theme-primary);
   opacity: 1;
+  border-width: 3px;
 }
 
 .lockedCardBackWrapper {
@@ -511,6 +513,9 @@ hr {
 }
 
 .disclaimer {
+  margin: 0;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(var(--theme-on-surface-rgb), 0.08);
   font-size: 0.75em;
   color: rgba(var(--theme-on-surface-rgb), 0.5);
   line-height: 1.4;

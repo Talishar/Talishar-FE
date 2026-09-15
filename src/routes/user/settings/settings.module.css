@@ -1,91 +1,60 @@
 .wideContainer {
   width: 100%;
-  max-width: 90vw;
+  max-width: 50rem;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 1rem 3rem;
+}
+
+.header {
+  display: flex;
+  margin: 0.5em 0 0.75em;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .title {
-  margin-top: 0.5em;
-  margin-bottom: 0.5em;
+  margin: 0;
+  font-size: 1.6rem;
 }
 
-.twoColumnLayout {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin-top: 1rem;
-  align-items: start;
-}
-
-.settingsColumn {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  border: none;
-  border-radius: 0;
-  background: transparent;
-  padding: 0 1.5rem 1.5rem 1.5rem;
-  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.32), 0 2px 10px rgba(0, 0, 0, 0.22);
-}
-
-.flatSettingsPage fieldset {
-  border: none;
-  border-radius: 0;
-  background: transparent;
-  padding: 0;
-}
-
-.flatSettingsPage legend {
-  padding: 0 0 0.75rem 0;
-}
-
-.flatSettingsPage :global([class*='visualSettingItem']) {
-  background: transparent;
-  border: none;
-  border-radius: 0;
-  padding: 0;
-}
-
-.flatSettingsPage :global([class*='playmatPreview']) {
-  border: none;
+/* Pico gives search inputs a fixed height, a pill radius and a bottom margin,
+   all of which have to be out-ranked here. */
+.search {
+  flex: 0 1 16rem;
+  width: auto !important;
+  min-width: 9rem;
+  height: auto !important;
+  margin: 0 !important;
+  padding-block: 0.35rem !important;
+  font-size: 0.85rem;
+  line-height: 1.2;
+  color: var(--theme-text);
+  background: rgba(
+    var(--theme-sunken-rgb),
+    calc(0.3 * var(--theme-sunken-alpha))
+  );
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.12);
   box-shadow: none;
 }
 
-@media (max-width: 1024px) {
-  .twoColumnLayout {
-    grid-template-columns: 1fr;
-  }
+.search:focus {
+  border-color: var(--theme-primary);
+  box-shadow: none;
 }
 
 @media (max-width: 575px) {
   .wideContainer {
-    padding: 0 0.5rem;
-  }
-
-  .twoColumnLayout {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+    padding: 0 0.5rem 2rem;
   }
 
   .title {
     font-size: 1.2em;
   }
-}
 
-.disclaimer {
-  font-size: 0.85em;
-  color: var(--theme-text-muted, rgba(255, 255, 255, 0.6));
-  margin-top: 2rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--theme-border-light, rgba(255, 255, 255, 0.1));
-}
-
-.disclaimer a {
-  color: var(--theme-primary);
-  text-decoration: none;
-}
-
-.disclaimer a:hover {
-  text-decoration: underline;
+  .search {
+    flex: 1 1 100%;
+  }
 }

@@ -51,11 +51,10 @@ const LanguageSelector = () => {
     }
   };
 
-  const currentLabel = `${
-    !isChromium ? (LOCALE_FLAGS[selectedLanguage] ?? '') + ' ' : ''
-  }${capitalizeFirstLetter(
+  const currentIcon = !isChromium ? (LOCALE_FLAGS[selectedLanguage] ?? '') : '';
+  const currentLabel = capitalizeFirstLetter(
     LOCALE_DICTIONARY[selectedLanguage] ?? selectedLanguage
-  )}`;
+  );
 
   return (
     <div className={styles.languageSelectorContainer} ref={containerRef}>
@@ -66,7 +65,12 @@ const LanguageSelector = () => {
         aria-haspopup="listbox"
         aria-expanded={isOpen}
       >
-        <span>{currentLabel}</span>
+        <span className={styles.triggerLabel}>
+          <span className={styles.optionIcon} aria-hidden="true">
+            {currentIcon}
+          </span>
+          <span className={styles.optionName}>{currentLabel}</span>
+        </span>
         <span
           className={`${styles.chevron}${
             isOpen ? ` ${styles.chevronOpen}` : ''
@@ -78,9 +82,8 @@ const LanguageSelector = () => {
         <ul className={styles.dropdown} role="listbox">
           {Object.keys(LOCALE_DICTIONARY).map((language, index) => {
             const isSelected = language === selectedLanguage;
-            const label = `${
-              !isChromium ? (LOCALE_FLAGS[language] ?? '') + ' ' : ''
-            }${capitalizeFirstLetter(LOCALE_DICTIONARY[language])}`;
+            const icon = !isChromium ? (LOCALE_FLAGS[language] ?? '') : '';
+            const label = capitalizeFirstLetter(LOCALE_DICTIONARY[language]);
             return (
               <li
                 key={`${language}-${index}`}
@@ -101,7 +104,10 @@ const LanguageSelector = () => {
                   }
                 }}
               >
-                {label}
+                <span className={styles.optionIcon} aria-hidden="true">
+                  {icon}
+                </span>
+                <span className={styles.optionName}>{label}</span>
               </li>
             );
           })}

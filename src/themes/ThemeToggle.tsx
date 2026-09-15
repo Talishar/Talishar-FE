@@ -5,6 +5,14 @@ import { useTheme } from './ThemeContext';
 import { useTranslation } from 'react-i18next';
 import styles from './ThemeToggle.module.css';
 
+const splitIcon = (label: string): { icon: string; name: string } => {
+  const spaceIndex = label.indexOf(' ');
+  if (spaceIndex <= 0) return { icon: '', name: label };
+  const icon = label.slice(0, spaceIndex);
+  if (!/[^\x00-\x7F]/.test(icon)) return { icon: '', name: label };
+  return { icon, name: label.slice(spaceIndex + 1) };
+};
+
 const ThemeToggle: React.FC = () => {
   const { currentTheme, setTheme, availableThemes } = useTheme();
   const { isSupporter } = useSupporterStatus();
@@ -48,7 +56,14 @@ const ThemeToggle: React.FC = () => {
         aria-haspopup="listbox"
         aria-expanded={isOpen}
       >
-        <span>{currentTheme.name}</span>
+        <span className={styles.triggerLabel}>
+          <span className={styles.optionIcon} aria-hidden="true">
+            {splitIcon(currentTheme.name).icon}
+          </span>
+          <span className={styles.optionName}>
+            {splitIcon(currentTheme.name).name}
+          </span>
+        </span>
         <span
           className={`${styles.chevron}${
             isOpen ? ` ${styles.chevronOpen}` : ''
@@ -83,7 +98,12 @@ const ThemeToggle: React.FC = () => {
                   }
                 }}
               >
-                <span className={styles.optionName}>{theme.name}</span>
+                <span className={styles.optionIcon} aria-hidden="true">
+                  {splitIcon(theme.name).icon}
+                </span>
+                <span className={styles.optionName}>
+                  {splitIcon(theme.name).name}
+                </span>
                 {locked && (
                   <span
                     className={styles.lockBadge}

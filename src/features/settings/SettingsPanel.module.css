@@ -1,0 +1,514 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  min-width: 0;
+  color: var(--theme-text);
+}
+
+.toolbar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  flex-wrap: wrap;
+  border-bottom: 1px solid rgba(var(--theme-on-surface-rgb), 0.12);
+}
+
+.tabList {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  width: auto !important;
+  min-height: 2.5rem;
+  padding: 0 0.9rem;
+  margin: 0;
+  border: 0;
+  border-radius: 6px 6px 0 0;
+  background: transparent;
+  box-shadow: none;
+  color: rgba(var(--theme-on-surface-rgb), 0.62);
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.tab:hover {
+  color: var(--theme-text);
+  background: rgba(var(--theme-on-surface-rgb), 0.05);
+}
+
+.tab:focus-visible {
+  outline: 2px solid var(--theme-primary);
+  outline-offset: -2px;
+}
+
+.tabActive {
+  color: var(--theme-text);
+}
+
+.tabActive::after {
+  content: '';
+  position: absolute;
+  left: 0.6rem;
+  right: 0.6rem;
+  bottom: -1px;
+  height: 2px;
+  background: var(--theme-primary);
+  border-radius: 2px;
+}
+
+.search {
+  flex: 1 1 12rem;
+  width: auto !important;
+  min-width: 9rem;
+  max-width: 22rem;
+  align-self: center;
+  margin: 0 !important;
+  padding-block: 0 !important;
+  height: 2.5rem !important;
+  font-size: 0.85rem;
+  line-height: 1.2;
+  color: var(--theme-text);
+  background: rgba(
+    var(--theme-sunken-rgb),
+    calc(0.3 * var(--theme-sunken-alpha))
+  );
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.12);
+  border-radius: 6px;
+  box-shadow: none;
+}
+
+.search:focus {
+  border-color: var(--theme-primary);
+  box-shadow: none;
+}
+
+.tabPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  max-width: 48rem;
+  min-width: 0;
+}
+
+.tabPanel:focus {
+  outline: none;
+}
+
+.wideTabPanel {
+  max-width: none;
+}
+
+.splitTab {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 25.5rem;
+  gap: 1.75rem;
+  align-items: start;
+}
+
+.splitMain,
+.splitAside {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  min-width: 0;
+}
+
+@media (max-width: 1100px) {
+  .splitTab {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.15rem;
+  }
+
+  .splitAside {
+    order: -1;
+  }
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0;
+}
+
+.groupTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0 0 0.25rem;
+  padding: 0;
+  line-height: 1.2;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(var(--theme-on-surface-rgb), 0.55);
+}
+
+.searchGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0 0 0.75rem;
+}
+
+.searchGroupLabel {
+  font-size: 0.78rem;
+  color: rgba(var(--theme-on-surface-rgb), 0.45);
+  padding: 0 0.1rem 0.2rem;
+}
+
+.emptyState {
+  margin: 0;
+  font-size: 0.9rem;
+  color: rgba(var(--theme-on-surface-rgb), 0.55);
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.5rem 0.65rem;
+  margin: 0;
+  border-bottom: 1px solid rgba(var(--theme-on-surface-rgb), 0.07);
+  border-radius: 4px;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.15s ease;
+}
+
+.row:hover {
+  background: rgba(var(--theme-on-surface-rgb), 0.04);
+}
+
+.rowLabel {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  font-size: 0.92rem;
+  line-height: 1.35;
+  color: var(--theme-text);
+}
+
+.tooltipIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(var(--theme-on-surface-rgb), 0.4);
+  font-size: 0.65em;
+  font-weight: 700;
+  color: rgba(var(--theme-on-surface-rgb), 0.65);
+  cursor: help;
+}
+
+.tooltipIcon:hover {
+  border-color: var(--theme-primary);
+  color: var(--theme-primary);
+}
+
+.deviceBadge {
+  padding: 0.1rem 0.4rem;
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.18);
+  border-radius: 999px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: rgba(var(--theme-on-surface-rgb), 0.5);
+  cursor: help;
+  white-space: nowrap;
+}
+
+/* Pico ships its own [role="switch"] skin, so these selectors have to
+   out-specify it or its thumb sizing and offset win. */
+input.switch[role='switch'] {
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  flex: 0 0 auto;
+  box-sizing: border-box;
+  width: 42px;
+  height: 24px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.18);
+  border-radius: 999px;
+  background: rgba(var(--theme-on-surface-rgb), 0.12);
+  background-image: none;
+  box-shadow: none;
+  cursor: pointer;
+  transition: background-color 0.18s ease, border-color 0.18s ease;
+}
+
+input.switch[role='switch']:hover {
+  border-color: rgba(var(--theme-on-surface-rgb), 0.32);
+}
+
+input.switch[role='switch']::before {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  border-radius: 50%;
+  background: rgba(var(--theme-on-surface-rgb), 0.5);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+  transform: translateY(-50%);
+  transition: left 0.18s ease, background-color 0.18s ease;
+}
+
+input.switch[role='switch']:checked {
+  background: var(--theme-primary);
+  border-color: var(--theme-primary);
+}
+
+input.switch[role='switch']:checked::before {
+  left: calc(100% - 19px);
+  margin: 0;
+  background: #fff;
+}
+
+input.switch[role='switch']:focus-visible {
+  outline: 2px solid var(--theme-primary);
+  outline-offset: 2px;
+}
+
+.segmented {
+  display: flex;
+  flex-direction: row;
+  gap: 0.35rem;
+  width: 100%;
+  padding: 0.35rem 0.1rem 0.6rem;
+  flex-wrap: wrap;
+}
+
+.segment {
+  flex: 1 1 0;
+  width: auto !important;
+  min-width: 7rem;
+  min-height: 2.4rem;
+  margin: 0;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.14);
+  border-radius: 6px;
+  background: rgba(
+    var(--theme-sunken-rgb),
+    calc(0.3 * var(--theme-sunken-alpha))
+  );
+  box-shadow: none;
+  color: rgba(var(--theme-on-surface-rgb), 0.75);
+  font-size: 0.85rem;
+  font-weight: 500;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.segment:hover {
+  color: var(--theme-text);
+  border-color: rgba(var(--theme-on-surface-rgb), 0.3);
+}
+
+.segment:focus-visible {
+  outline: 2px solid var(--theme-primary);
+  outline-offset: 2px;
+}
+
+.segmentActive {
+  background: var(--theme-primary);
+  border-color: var(--theme-primary);
+  color: var(--theme-primary-inverse);
+  font-weight: 600;
+}
+
+.segmentActive:hover {
+  color: var(--theme-primary-inverse);
+  border-color: var(--theme-primary);
+}
+
+.sliderRow {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.5rem;
+  cursor: default;
+}
+
+.sliderRow:hover {
+  background: transparent;
+}
+
+.sliderHeader {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.sliderValueGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sliderValue {
+  font-size: 0.85rem;
+  font-weight: 600;
+  min-width: 3rem;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.slider {
+  width: 100%;
+  height: 6px;
+  margin: 0;
+  cursor: pointer;
+  accent-color: var(--theme-primary);
+  background: rgba(var(--theme-on-surface-rgb), 0.12);
+  border-radius: 999px;
+  outline: none;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--near-black);
+  background: var(--theme-primary);
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--near-black);
+  background: var(--theme-primary);
+  cursor: pointer;
+}
+
+.customRow {
+  cursor: default;
+  align-items: center;
+}
+
+.customRow:hover {
+  background: transparent;
+}
+
+.customControl {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 0;
+  flex: 0 0 auto;
+}
+
+.inlineReset,
+.resetTab {
+  width: auto !important;
+  margin: 0;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.18);
+  border-radius: 6px;
+  background: transparent;
+  box-shadow: none;
+  color: rgba(var(--theme-on-surface-rgb), 0.6);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.inlineResetHidden {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.inlineReset:hover,
+.resetTab:hover {
+  color: var(--theme-text);
+  border-color: rgba(var(--theme-on-surface-rgb), 0.35);
+  background: transparent;
+}
+
+.resetTab {
+  align-self: flex-start;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.8rem;
+}
+
+@media (max-width: 768px) {
+  .toolbar {
+    align-items: stretch;
+  }
+
+  .search {
+    flex: 1 1 100%;
+  }
+
+  /* One swipeable row beats a stack of wrapped rows on a phone. */
+  .tabList {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+
+  .tabList::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tab {
+    flex: 0 0 auto;
+    padding: 0.55rem 0.7rem;
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+
+  /* The scroll container clips anything below its edge. */
+  .tabActive::after {
+    bottom: 0;
+  }
+
+  .row {
+    padding: 0.5rem 0.35rem;
+  }
+
+  .segment {
+    min-width: 5.5rem;
+  }
+}
