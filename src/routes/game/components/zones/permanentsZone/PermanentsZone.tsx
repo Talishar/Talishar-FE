@@ -21,6 +21,7 @@ export interface CardStack {
   card: Card;
   count: number;
   id: string;
+  gemStackIDs?: string[];
 }
 
 function PermanentsZone(prop: Displayrow) {
@@ -172,7 +173,11 @@ function PermanentsZone(prop: Displayrow) {
                   exit={PERMANENT_EXIT}
                   layout
                 >
-                  <CardDisplay card={cardStack.card} isPlayer={isPlayer} />
+                  <CardDisplay
+                    card={cardStack.card}
+                    isPlayer={isPlayer}
+                    gemStackIDs={cardStack.gemStackIDs}
+                  />
                   {cardStack.count > 1 && (
                     <div
                       title={`Stack of ${cardStack.count}`}

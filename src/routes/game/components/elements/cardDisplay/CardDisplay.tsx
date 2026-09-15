@@ -83,6 +83,7 @@ export interface CardProp {
   disableTilt?: boolean;
   highlightSubtype?: boolean; // draws a subtype outline (used to pick Allies out of a graveyard list)
   previewYOffset?: number;
+  gemStackIDs?: string[]; // every identical permanent in this stack, so the gem toggles all of them
   children?: React.ReactNode;
 }
 
@@ -99,6 +100,7 @@ export const CardDisplay = (prop: CardProp) => {
     highlightSubtype,
     previewYOffset,
     containerClassName,
+    gemStackIDs,
     children
   } = prop;
   const dispatch = useAppDispatch();
@@ -261,6 +263,7 @@ export const CardDisplay = (prop: CardProp) => {
         gem={card.gem}
         cardNumber={card.cardNumber}
         actionDataOverride={card.actionDataOverride}
+        gemStackIDs={gemStackIDs}
         zone={card.zone}
         controller={card.controller}
         restriction={card.restriction}

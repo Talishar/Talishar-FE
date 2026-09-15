@@ -41,6 +41,7 @@ export interface CountersProp extends Partial<Card> {
   numDescription?: string;
   activeCombatChain?: CombatChainLink;
   excludeFancyCounters?: boolean;
+  gemStackIDs?: string[];
 }
 
 export const CountersOverlay = React.memo(
@@ -55,7 +56,8 @@ export const CountersOverlay = React.memo(
     activeCombatChain,
     controller,
     restriction,
-    excludeFancyCounters
+    excludeFancyCounters,
+    gemStackIDs
   }: CountersProp) => {
     let numTotal = num ?? 0;
     if (countersMap && !excludeFancyCounters) {
@@ -98,6 +100,7 @@ export const CountersOverlay = React.memo(
             gem={gem}
             cardNumber={cardNumber}
             cardID={actionDataOverride}
+            cardIDs={gemStackIDs}
             zone={zone}
             controller={controller}
           />

@@ -19,6 +19,7 @@ import {
 interface GemSlider {
   gem?: 'none' | 'inactive' | 'active';
   cardID?: string;
+  cardIDs?: string[];
   cardNumber?: string;
   zone?: string;
   controller?: number;
@@ -58,7 +59,13 @@ const GemSlider = (props: GemSlider) => {
     dispatch(
       submitButton({
         button: {
-          buttonInput: (props.zone ? props.zone + '-' : '') + props.cardID,
+          buttonInput: props.zone
+            ? props.zone +
+              '-' +
+              (props.cardIDs && props.cardIDs.length > 1
+                ? props.cardIDs.join(',')
+                : props.cardID)
+            : props.cardID,
           mode: props.zone
             ? props.controller == playerID
               ? PROCESS_INPUT.TOGGLE_PERMANENT_ACTIVE

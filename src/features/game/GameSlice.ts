@@ -1161,6 +1161,11 @@ const stacksTogether = (a: Card, b: Card): boolean => {
   return aCount === bCount;
 };
 
+const gemStackIDsFor = (card: Card): string[] | undefined =>
+  card.gem && card.gem !== 'none' && card.actionDataOverride !== undefined
+    ? [card.actionDataOverride]
+    : undefined;
+
 const buildPermanentsAsStack = (
   permanents: Card[] | undefined
 ): CardStack[] => {
@@ -1179,7 +1184,8 @@ const buildPermanentsAsStack = (
       result.push({
         card: currentCard,
         count: 1,
-        id: `${currentCard.cardNumber}-${idIndex++}`
+        id: `${currentCard.cardNumber}-${idIndex++}`,
+        gemStackIDs: gemStackIDsFor(currentCard)
       });
       continue;
     }
@@ -1191,6 +1197,10 @@ const buildPermanentsAsStack = (
       for (const idx of candidates) {
         if (stacksTogether(result[idx].card, currentCard)) {
           result[idx].count++;
+          const stackIDs = result[idx].gemStackIDs;
+          if (stackIDs && currentCard.actionDataOverride !== undefined) {
+            stackIDs.push(currentCard.actionDataOverride);
+          }
           matched = true;
           break;
         }
@@ -1207,7 +1217,8 @@ const buildPermanentsAsStack = (
       result.push({
         card: currentCard,
         count: 1,
-        id: `${currentCard.cardNumber}-${idIndex++}`
+        id: `${currentCard.cardNumber}-${idIndex++}`,
+        gemStackIDs: gemStackIDsFor(currentCard)
       });
     }
   }
