@@ -126,8 +126,14 @@ export interface GetLastActiveGameResponse {
 export const rtkQueryErrorToaster: Middleware =
   (_api: MiddlewareAPI) => (next) => (action) => {
     if (isRejectedWithValue(action)) {
-      const errorMessage = action.error?.message ?? 'an error happened';
-      const errorStatus = (action.payload as any)?.status ?? 0;
+      const payload = action.payload as
+        | { status?: number | string; message?: string; aborted?: boolean }
+        | undefined;
+      const errorStatus = payload?.status ?? 0;
+      const errorMessage =
+        payload?.message ?? action.error?.message ?? 'an error happened';
+
+      if (payload?.aborted) return next(action);
 
       // Suppress 401 Unauthorized errors - these are often benign (e.g., logging out/in quickly)
       // and not user-facing errors that need a toast notification
