@@ -117,7 +117,7 @@
 
 .splitTab {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 25.5rem;
+  grid-template-columns: 1.25fr 1fr;
   gap: 1.75rem;
   align-items: start;
 }
