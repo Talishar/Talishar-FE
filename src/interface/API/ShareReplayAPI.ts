@@ -5,7 +5,6 @@ export interface ShareReplayAPI {
 export interface ShareReplayResponse {
   success?: boolean;
   token?: string;
-  url?: string;
   error?: string;
 }
 

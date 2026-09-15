@@ -20,7 +20,6 @@ import {
   useShareReplayMutation
 } from 'features/api/apiSlice';
 import { GameLocationState } from 'interface/GameLocationState';
-import { sharedReplayLink } from 'utils/sharedReplayLink';
 import { usePlayerInputInProgress } from 'hooks/usePlayerInputInProgress';
 import {
   REPLAY_PLAYBACK_SPEEDS,
@@ -328,7 +327,7 @@ function ReplayContent({
       }).unwrap();
       if (result.error) throw new Error(result.error);
       await navigator.clipboard.writeText(
-        sharedReplayLink(result)
+        `${window.location.origin}/replay/shared?token=${result.token}`
       );
       toast.success('Share link copied to clipboard!');
     } catch (err: any) {

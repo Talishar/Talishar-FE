@@ -21,7 +21,6 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { TALISHAR_DISCORD_URL } from 'constants/socialLinks';
 import styles from './LoadReplay.module.css';
 import { GameLocationState } from 'interface/GameLocationState';
-import { sharedReplayLink } from 'utils/sharedReplayLink';
 import PageBanner from 'components/PageBanner/PageBanner';
 import { Link } from 'react-router-dom';
 import { Trans, useTranslation } from 'react-i18next';
@@ -259,7 +258,7 @@ const ReplayGame = () => {
         throw new Error(result.error || 'No share link created.');
 
       await navigator.clipboard.writeText(
-        sharedReplayLink(result)
+        `${window.location.origin}/replay/shared?token=${result.token}`
       );
       toast.success('Share link copied to clipboard!');
     } catch (error) {
