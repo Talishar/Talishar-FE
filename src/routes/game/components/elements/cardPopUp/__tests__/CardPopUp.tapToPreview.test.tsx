@@ -93,7 +93,10 @@ describe('CardPopUp board tap to preview', () => {
   it('does not show a hover preview for a touch pointer', () => {
     renderBoardCard({ cookieEnabled: false });
 
-    hoverCardWithPointer(screen.getByTestId('board-card'), 'touch');
+    const card = screen.getByTestId('board-card');
+    hoverCardWithPointer(card, 'touch');
+    // Touch browsers may replay a compatibility mouse event after the tap.
+    fireEvent.mouseEnter(card);
 
     expect(getCardPreview().popupOn).not.toBe(true);
   });

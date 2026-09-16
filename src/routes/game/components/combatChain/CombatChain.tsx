@@ -23,9 +23,14 @@ import { useMediaQuery } from '../../../../hooks/useMediaQuery';
 import usePlayerPromptOwner from '../elements/playerPrompt/usePlayerPromptOwner';
 
 const STORAGE_KEY = 'combatChainPosition';
+const PORTRAIT_STORAGE_KEY = 'combatChainPositionPortrait';
 const MAX_Y_OFFSET = 30;
 const MIN_Y_OFFSET = -35;
 const KEYBOARD_Y_STEP = 2;
+const EDGE_MARGIN_PX = 4;
+
+const readStoredOffset = (key: string) =>
+  parseFloat(localStorage.getItem(key) ?? '') || 0;
 
 export default function CombatChain() {
   const { t } = useTranslation();
@@ -38,10 +43,13 @@ export default function CombatChain() {
     (state: RootState) => state.game.activeChainLink?.attackingCard?.subcards
   );
   const showModals = useShowModal();
+  const isPortrait = useMediaQuery('(orientation: portrait)');
+  const storageKey = isPortrait ? PORTRAIT_STORAGE_KEY : STORAGE_KEY;
+  const storageKeyRef = React.useRef(storageKey);
+  storageKeyRef.current = storageKey;
   const storedOffsetRef = React.useRef<number | null>(null);
   if (storedOffsetRef.current === null) {
-    storedOffsetRef.current =
-      parseFloat(localStorage.getItem(STORAGE_KEY) ?? '') || 0;
+    storedOffsetRef.current = readStoredOffset(storageKey);
   }
   const storedOffset = storedOffsetRef.current;
   const yOffsetMV = useMotionValue(storedOffset);
@@ -51,20 +59,58 @@ export default function CombatChain() {
   const currentDragOffsetRef = React.useRef(storedOffset);
   const pendingPointerYRef = React.useRef(0);
   const rafRef = React.useRef(0);
+  const reclampRafRef = React.useRef(0);
+  const dragBoundsRef = React.useRef({ min: MIN_Y_OFFSET, max: MAX_Y_OFFSET });
   const [isDragging, setIsDragging] = React.useState(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
   const promptOwner = usePlayerPromptOwner();
-  const isMobileLayout = useMediaQuery(
-    '(max-width: 700px), (orientation: landscape) and (max-height: 500px)'
-  );
   const visibleSubCards = attackSubcards?.some(Boolean) ? 1 : 0;
+
+  const persistOffset = (offset: number) => {
+    localStorage.setItem(storageKeyRef.current, offset.toString());
+  };
+
+  const getOffsetBounds = () => {
+    const fallback = { min: MIN_Y_OFFSET, max: MAX_Y_OFFSET };
+    const element = containerRef.current;
+    const viewportHeight = window.innerHeight;
+    if (element === null || viewportHeight === 0) return fallback;
+    const rect = element.getBoundingClientRect();
+    const appliedPx = (currentDragOffsetRef.current / 100) * viewportHeight;
+    const minPx = EDGE_MARGIN_PX - (rect.top - appliedPx);
+    const maxPx = viewportHeight - EDGE_MARGIN_PX - (rect.bottom - appliedPx);
+    if (minPx > maxPx) return fallback;
+    return {
+      min: Math.max(MIN_Y_OFFSET, (minPx / viewportHeight) * 100),
+      max: Math.min(MAX_Y_OFFSET, (maxPx / viewportHeight) * 100)
+    };
+  };
+
+  const clampOffset = (offset: number, bounds: { min: number; max: number }) =>
+    Math.max(bounds.min, Math.min(bounds.max, offset));
+
+  const reclampOffset = () => {
+    const clamped = clampOffset(
+      currentDragOffsetRef.current,
+      getOffsetBounds()
+    );
+    if (clamped === currentDragOffsetRef.current) return;
+    currentDragOffsetRef.current = clamped;
+    yOffsetMV.set(clamped);
+    persistOffset(clamped);
+  };
+
+  const scheduleReclamp = () => {
+    cancelAnimationFrame(reclampRafRef.current);
+    reclampRafRef.current = requestAnimationFrame(reclampOffset);
+  };
 
   const setOffsetFromClientY = (clientY: number) => {
     const delta = clientY - dragStartYRef.current;
     const deltaDvh = (delta / window.innerHeight) * 100;
-    const newOffset = Math.max(
-      MIN_Y_OFFSET,
-      Math.min(MAX_Y_OFFSET, dragStartOffsetRef.current + deltaDvh)
+    const newOffset = clampOffset(
+      dragStartOffsetRef.current + deltaDvh,
+      dragBoundsRef.current
     );
     currentDragOffsetRef.current = newOffset;
     yOffsetMV.set(newOffset);
@@ -74,6 +120,7 @@ export default function CombatChain() {
     event.currentTarget.setPointerCapture(event.pointerId);
     dragStartYRef.current = event.clientY;
     dragStartOffsetRef.current = currentDragOffsetRef.current;
+    dragBoundsRef.current = getOffsetBounds();
     setIsDragging(true);
   };
 
@@ -93,7 +140,7 @@ export default function CombatChain() {
     cancelAnimationFrame(rafRef.current);
     setOffsetFromClientY(event.clientY);
     setIsDragging(false);
-    localStorage.setItem(STORAGE_KEY, currentDragOffsetRef.current.toString());
+    persistOffset(currentDragOffsetRef.current);
   };
 
   const cancelPointerDrag = (event: React.PointerEvent<HTMLButtonElement>) => {
@@ -102,7 +149,7 @@ export default function CombatChain() {
     }
     cancelAnimationFrame(rafRef.current);
     setIsDragging(false);
-    localStorage.setItem(STORAGE_KEY, currentDragOffsetRef.current.toString());
+    persistOffset(currentDragOffsetRef.current);
   };
 
   const handleHandleKeyDown = (
@@ -111,19 +158,39 @@ export default function CombatChain() {
     if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown') return;
     event.preventDefault();
     const direction = event.key === 'ArrowUp' ? -1 : 1;
-    const nextOffset = Math.max(
-      MIN_Y_OFFSET,
-      Math.min(
-        MAX_Y_OFFSET,
-        currentDragOffsetRef.current + direction * KEYBOARD_Y_STEP
-      )
+    const nextOffset = clampOffset(
+      currentDragOffsetRef.current + direction * KEYBOARD_Y_STEP,
+      getOffsetBounds()
     );
     currentDragOffsetRef.current = nextOffset;
     yOffsetMV.set(nextOffset);
-    localStorage.setItem(STORAGE_KEY, nextOffset.toString());
+    persistOffset(nextOffset);
   };
 
-  React.useEffect(() => () => cancelAnimationFrame(rafRef.current), []);
+  React.useEffect(
+    () => () => {
+      cancelAnimationFrame(rafRef.current);
+      cancelAnimationFrame(reclampRafRef.current);
+    },
+    []
+  );
+
+  React.useEffect(() => {
+    const stored = readStoredOffset(storageKey);
+    currentDragOffsetRef.current = stored;
+    yOffsetMV.set(stored);
+    scheduleReclamp();
+  }, [storageKey, yOffsetMV]);
+
+  React.useEffect(() => {
+    const handleViewportChange = () => scheduleReclamp();
+    window.addEventListener('resize', handleViewportChange);
+    window.addEventListener('orientationchange', handleViewportChange);
+    return () => {
+      window.removeEventListener('resize', handleViewportChange);
+      window.removeEventListener('orientationchange', handleViewportChange);
+    };
+  }, []);
 
   const showCombatChain =
     showModals &&
@@ -140,7 +207,7 @@ export default function CombatChain() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           style={{
-            y: isMobileLayout ? 0 : yOffsetDvh,
+            y: yOffsetDvh,
             ...({
               '--chain-subcard-count': visibleSubCards
             } as React.CSSProperties)
@@ -152,26 +219,24 @@ export default function CombatChain() {
             <ChainLinks />
             <Reactions />
           </div>
-          {!isMobileLayout && (
-            <button
-              type="button"
-              className={`${styles.grabbyHandle} ${
-                isDragging ? styles.grabbyHandleDragging : ''
-              }`}
-              aria-label={t('COMBAT_CHAIN.DRAG_TOOLTIP')}
-              onPointerDown={handlePointerDown}
-              onPointerMove={handlePointerMove}
-              onPointerUp={finishPointerDrag}
-              onPointerCancel={cancelPointerDrag}
-              onKeyDown={handleHandleKeyDown}
-            >
-              <MdDragHandle
-                size={32}
-                className={styles.gripIcon}
-                aria-hidden="true"
-              />
-            </button>
-          )}
+          <button
+            type="button"
+            className={`${styles.grabbyHandle} ${
+              isDragging ? styles.grabbyHandleDragging : ''
+            }`}
+            aria-label={t('COMBAT_CHAIN.DRAG_TOOLTIP')}
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={finishPointerDrag}
+            onPointerCancel={cancelPointerDrag}
+            onKeyDown={handleHandleKeyDown}
+          >
+            <MdDragHandle
+              size={32}
+              className={styles.gripIcon}
+              aria-hidden="true"
+            />
+          </button>
           {promptOwner === 'combatChain' && <CombatChainPlayerPrompt />}
           <div />
           <div />

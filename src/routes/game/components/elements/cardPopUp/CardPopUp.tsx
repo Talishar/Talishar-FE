@@ -96,7 +96,11 @@ const CardSurface = ({
   const handlePointerEnter = (event: React.PointerEvent<HTMLDivElement>) => {
     if (event.pointerType === 'touch') return;
     onHoverStart?.();
-    if (event.pointerType === 'pen') onPenHover();
+    if (event.pointerType === 'pen') {
+      onPenHover();
+    } else {
+      onMouseEnter();
+    }
   };
   const handlePointerLeave = (event: React.PointerEvent<HTMLDivElement>) => {
     if (event.pointerType !== 'touch') onHoverEnd?.();
@@ -111,7 +115,6 @@ const CardSurface = ({
     <div
       className={className}
       ref={containerRef}
-      onMouseEnter={onMouseEnter}
       onMouseMove={tiltEnabled ? handleMouseMove : undefined}
       onMouseLeave={onSurfaceMouseLeave}
       onPointerDown={onPointerDown}
