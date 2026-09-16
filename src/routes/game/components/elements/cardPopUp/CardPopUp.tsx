@@ -193,8 +193,9 @@ export default function CardPopUp({
   useEffect(() => {
     return () => {
       if (longPressTimer.current) clearTimeout(longPressTimer.current);
+      clearCardPreview(instanceId);
     };
-  }, []);
+  }, [instanceId]);
 
   useEffect(() => {
     if (!stickyActive) return;
@@ -238,7 +239,8 @@ export default function CardPopUp({
       xCoord,
       yCoord,
       isOpponent,
-      presentation
+      presentation,
+      owner: instanceId
     });
   };
 
@@ -262,7 +264,7 @@ export default function CardPopUp({
     if (getTapToPreviewSelectedCardKey() === selectionKey) {
       return;
     }
-    clearCardPreview();
+    clearCardPreview(instanceId);
   };
 
   const handleMouseLeave = () => {

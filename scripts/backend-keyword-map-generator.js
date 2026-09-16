@@ -169,7 +169,7 @@ function readUpstreamKeys() {
   const upstream = fs.readFileSync(upstreamMapFile, 'utf8');
   const body = upstream.slice(upstream.indexOf('CARD_KEYWORD_MAP'));
   const keys = new Set();
-  const keyPattern = /(?:^|[{,])\s*'?([A-Za-z0-9_]+)'?:/g;
+  const keyPattern = /(?:^|[{,])\s*["']?([A-Za-z0-9_]+)["']?:/g;
   let match;
   while ((match = keyPattern.exec(body)) !== null) keys.add(match[1]);
   return keys;

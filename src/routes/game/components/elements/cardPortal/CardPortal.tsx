@@ -124,7 +124,7 @@ export default function CardPortal() {
             type="button"
             className={styles.mobileCloseButton}
             aria-label={t('PLAYER_INPUT.CLOSE_POPUP')}
-            onClick={clearCardPreview}
+            onClick={() => clearCardPreview()}
           >
             <MdClose aria-hidden="true" />
           </button>

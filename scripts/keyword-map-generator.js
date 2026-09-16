@@ -101,6 +101,16 @@ axios
     };
 
     let mappedCards = 0;
+    const printingOwners = new Map();
+    for (const card of cards) {
+      for (const printing of card.printings || []) {
+        if (!printing.id) continue;
+        const owners = printingOwners.get(printing.id) ?? new Map();
+        owners.set(card.name, collectKeywords(card).join('|'));
+        printingOwners.set(printing.id, owners);
+      }
+    }
+
     for (const card of cards) {
       const keywords = collectKeywords(card);
       keywords.forEach((kw) => distinctKeywords.add(kw));
@@ -133,7 +143,16 @@ axios
       }
     }
 
+    let contested = 0;
+    for (const [printingId, owners] of printingOwners) {
+      if (owners.size < 2) continue;
+      if (new Set(owners.values()).size < 2) continue;
+      delete map[printingId];
+      contested++;
+    }
+
     console.log(`Cards with keywords: ${mappedCards}`);
+    console.log(`Set ids dropped as contested by two faces: ${contested}`);
     console.log(`Distinct keyword strings (${distinctKeywords.size}):`);
     console.log([...distinctKeywords].sort().join('\n'));
 

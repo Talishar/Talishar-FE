@@ -73,6 +73,13 @@ export const GLOSSARY: KeywordEntry[] = [
     category: 'ability'
   },
   {
+    id: 'usurp',
+    name: 'Usurp',
+    short:
+      'As an additional cost to play this, destroy a Runechant if able. If you do, this gets +2 power.',
+    category: 'ability'
+  },
+  {
     id: 'incarnate',
     name: 'Incarnate',
     short:
