@@ -20,6 +20,7 @@ import {
 import { COOKIE_OPTIONS } from './useSettingsController';
 import {
   isUnset,
+  sliderFromAccount,
   sliderFromCookie,
   sliderToAccount,
   toggleFromCookie,
@@ -42,7 +43,7 @@ const accountValueFor = (def: ToggleDef | SliderDef, cookie: unknown) =>
 const cookieValueFor = (def: ToggleDef | SliderDef, account: unknown) =>
   def.kind === 'toggle'
     ? toggleToCookie(String(account) === (def.invert ? '0' : '1'), def)
-    : String(Number(account) / 100);
+    : String(sliderFromAccount(account, def));
 
 const SyncedSettings = () => {
   const dispatch = useAppDispatch();

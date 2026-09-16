@@ -25,12 +25,16 @@ export const toggleToAccount = (on: boolean, def: ToggleDef) => {
 
 export const sliderFromCookie = (raw: unknown, def: SliderDef) => {
   const parsed = Number(raw);
-  return isUnset(raw) || Number.isNaN(parsed) ? def.defaultValue : parsed;
+  if (isUnset(raw) || !Number.isFinite(parsed) || parsed <= 0)
+    return def.defaultValue;
+  return parsed;
 };
 
 export const sliderFromAccount = (raw: unknown, def: SliderDef) => {
   const parsed = Number(raw);
-  return isUnset(raw) || Number.isNaN(parsed) ? def.defaultValue : parsed / 100;
+  if (isUnset(raw) || !Number.isFinite(parsed) || parsed <= 0)
+    return def.defaultValue;
+  return parsed / 100;
 };
 
 export const sliderToAccount = (value: number) =>

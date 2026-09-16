@@ -38,9 +38,10 @@ export const Playmat = ({ isPlayer }: { isPlayer: boolean }) => {
   }
 
   const styleToApply = useMemo(() => {
-    const intensity = Number(playmatIntensity ?? 0.65);
-    const dim =
-      1 - (Number.isFinite(intensity) ? Math.min(intensity, 1) : 0.65);
+    const parsed = Number(playmatIntensity);
+    const intensity =
+      Number.isFinite(parsed) && parsed > 0 ? Math.min(parsed, 1) : 0.65;
+    const dim = 1 - intensity;
     const dimLayer = `linear-gradient(rgba(0, 0, 0, ${dim}), rgba(0, 0, 0, ${dim}))`;
     return {
       backgroundImage: `${dimLayer}, url(/playmats/${playmat}.webp)`,
