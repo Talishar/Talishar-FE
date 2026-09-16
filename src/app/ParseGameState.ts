@@ -87,6 +87,7 @@ function ParseCard(input: any) {
   card.tapped = input.tapped ? Boolean(input.tapped) : false;
   card.uniqueId = input.uniqueID ? String(input.uniqueID) : '-';
   card.holoCounters = input.holoCounters ? Boolean(input.holoCounters) : false;
+  if (input.goAgain) card.goAgain = true;
   return card;
 }
 

@@ -147,6 +147,22 @@
 .activeLayersContents > div {
   width: var(--card-size);
   margin-right: -3.5vh;
+  font-size: max(9px, min(calc(1.5vh - 2px), calc(0.9vw - 1px)));
+  font-size: max(9px, min(calc(1.5dvh - 2px), calc(0.9dvw - 1px)));
+}
+
+@media (orientation: portrait) {
+  .activeLayersContents > div {
+    font-size: max(9px, calc(1.5vw + 3px));
+    font-size: max(9px, calc(1.5dvw + 3px));
+  }
+}
+
+@media (orientation: landscape) and (max-aspect-ratio: 3/2) {
+  .activeLayersContents > div {
+    font-size: max(9px, calc(1.5vh - 2px));
+    font-size: max(9px, calc(1.5dvh - 2px));
+  }
 }
 
 .activeLayersContents > div:last-child {
@@ -310,7 +326,8 @@
   background-color: var(--near-black);
   color: var(--theme-text);
   font-weight: bold;
-  font-size: 1em;
+  font-size: max(12px, 1.8vh);
+  font-size: max(12px, 1.8dvh);
   line-height: 1;
   padding: 4px 9px;
   border-radius: 10px;

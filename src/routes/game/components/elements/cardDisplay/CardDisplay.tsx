@@ -270,6 +270,7 @@ export const CardDisplay = (prop: CardProp) => {
         label={countersLabel}
         num={num}
         activeCombatChain={activeCombatChain}
+        goAgain={card.goAgain}
       />
       {children}
     </CardPopUp>

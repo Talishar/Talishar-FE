@@ -6,8 +6,9 @@ import { ActiveCardCounterOverlay } from './components/ActiveChainCounters';
 import CombatChainLink from 'features/CombatChainLink';
 import { ContinuousCounters } from './components/ContinuousCounters';
 import { TooltipWrapper } from 'components/Tooltip/TooltipWrapper';
-import { GiDialPadlock } from 'react-icons/gi';
+import { GiCycle, GiDialPadlock } from 'react-icons/gi';
 import { formatRestriction } from 'data/keywords';
+import { KeywordPopover } from '../keywordPopover';
 
 const INCLUDED_COUNTERS = new Set([
   'defense',
@@ -54,6 +55,7 @@ export const CountersOverlay = React.memo(
     num,
     zone,
     activeCombatChain,
+    goAgain,
     controller,
     restriction,
     excludeFancyCounters,
@@ -78,6 +80,13 @@ export const CountersOverlay = React.memo(
         )}
         {activeCombatChain && (
           <ActiveCardCounterOverlay activeCombatChain={activeCombatChain} />
+        )}
+        {goAgain && (
+          <KeywordPopover id="go-again">
+            <span className={styles.icon}>
+              <GiCycle />
+            </span>
+          </KeywordPopover>
         )}
         {!!restriction && (
           <TooltipWrapper

@@ -34,6 +34,7 @@ export interface Card {
   uniqueId?: string;
   isOpponent?: boolean; // isOpponent = whether the card belongs to the opponent
   holoCounters?: boolean; // holoCounters = 1 if the card has holographic counters
+  goAgain?: boolean; // goAgain = 1 if the card on the layer has go again
 }
 
 const COMMA = 44;
