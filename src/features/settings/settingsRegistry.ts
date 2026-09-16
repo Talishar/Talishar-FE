@@ -326,6 +326,17 @@ export const SETTINGS_DEFS: SettingDef[] = [
   },
   {
     kind: 'toggle',
+    key: 'layerGoAgainIcon',
+    group: 'cardVisuals',
+    labelKey: 'SETTINGS.LAYER_GO_AGAIN_ICON',
+    tooltipKey: 'SETTINGS.LAYER_GO_AGAIN_ICON_TOOLTIP',
+    storage: 'account',
+    name: optConst.HIDE_LAYER_GO_AGAIN,
+    invert: true,
+    defaultOn: true
+  },
+  {
+    kind: 'toggle',
     key: 'heroIntroAnimation',
     group: 'cardVisuals',
     labelKey: 'SETTINGS.HERO_INTRO_ANIMATION',

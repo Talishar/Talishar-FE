@@ -1650,6 +1650,8 @@
       "STATS_SHARING": "Stats Sharing",
       "STATS_SHARING_TOOLTIP": "Choose which community sites receive the results of your games."
     },
+    "LAYER_GO_AGAIN_ICON": "Go Again Icon on Layers",
+    "LAYER_GO_AGAIN_ICON_TOOLTIP": "Show a go again icon on attacks while they are in the active layers window.",
     "HERO_INTRO_ANIMATION": "Hero Intro Animation",
     "HIDE_GAMES_FROM_FRIENDS": "Hide games from friends",
     "HIDE_GAMES_FROM_FRIENDS_TOOLTIP": "Keep your games out of your friends' open game and spectate lists. Everyone else still sees them as usual.",
