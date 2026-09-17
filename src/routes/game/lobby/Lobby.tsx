@@ -193,11 +193,8 @@ const Lobby = () => {
     }
   }, [gameID]);
 
-  const lobbyHasPhaseInfo =
-    gameLobby?.isEquipmentPhase !== undefined &&
-    gameLobby?.isSideboarding === true;
-  const isEquipmentPhase =
-    lobbyHasPhaseInfo && gameLobby?.isEquipmentPhase === true;
+  const lobbyHasPhaseInfo = gameLobby?.isEquipmentPhase !== undefined;
+  const isEquipmentPhase = gameLobby?.isEquipmentPhase === true;
   const lobbyPhase: LobbyPhase = !lobbyHasPhaseInfo
     ? 'legacy'
     : isEquipmentPhase
