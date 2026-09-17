@@ -645,6 +645,14 @@ const Lobby = () => {
   const lobbyTooltip = lobbyTooltipParts.length
     ? lobbyTooltipParts.join('\n')
     : undefined;
+  const lobbyFirstPlayer = gameLobby?.firstPlayer;
+  const iGoFirst = lobbyFirstPlayer === playerID;
+  const showTurnOrder =
+    lobbyFirstPlayer !== undefined && (playerID === 1 || playerID === 2);
+  const turnOrderLabel = iGoFirst ? 'You go 1st' : 'You go 2nd';
+  const turnOrderTitle = iGoFirst
+    ? t('GAME_LOBBY.FIRST')
+    : t('GAME_LOBBY.SECOND');
   const showLobbySettings =
     lobbyMetaLine !== '' ||
     lobbyDescription !== '' ||
@@ -679,6 +687,13 @@ const Lobby = () => {
             <span className={styles.lobbySettingsItem} title={lobbyFormatName}>
               <span className={styles.lobbySettingsLabel}>
                 {lobbyFormatShortName}
+              </span>
+            </span>
+          )}
+          {showTurnOrder && (
+            <span className={styles.lobbySettingsItem} title={turnOrderTitle}>
+              <span className={styles.lobbySettingsLabel}>
+                {turnOrderLabel}
               </span>
             </span>
           )}
