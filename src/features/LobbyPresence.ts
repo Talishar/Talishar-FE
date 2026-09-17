@@ -27,3 +27,24 @@ export function getLobbyPresenceMessage({
   if (isEquipmentPhase) return 'Opponent is choosing arena cards';
   return 'Opponent is sideboarding';
 }
+
+export interface SelfPresenceOptions {
+  isSideboarding: boolean;
+  isEquipmentPhase: boolean;
+  mySubmitted: boolean;
+  bothReady: boolean;
+  choosingFirstPlayer: boolean;
+}
+
+export function getSelfUnconfirmedPhase({
+  isSideboarding,
+  isEquipmentPhase,
+  mySubmitted,
+  bothReady,
+  choosingFirstPlayer
+}: SelfPresenceOptions): 'equipment' | 'deck' | null {
+  if (!isSideboarding) return null;
+  if (bothReady || choosingFirstPlayer) return null;
+  if (mySubmitted) return null;
+  return isEquipmentPhase ? 'equipment' : 'deck';
+}

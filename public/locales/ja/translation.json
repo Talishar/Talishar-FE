@@ -488,6 +488,8 @@
       "TOO_MANY_OFFHANDS": "",
       "TOO_MANY_WEAPONS_FOR_HANDS": ""
     },
+    "UNCONFIRMED_ARENA": "アリーナカードがまだ確定されていません。",
+    "UNCONFIRMED_DECK": "デッキがまだ確定されていません。アリーナカードとデッキは別々に確定します。",
     "WAITING": "",
     "WEAPONS": "",
     "YES": "",

@@ -92,7 +92,10 @@ import {
 import { DISABLE_ALT_ARTS } from 'features/options/constants';
 import { useTranslation, Trans } from 'react-i18next';
 import { EquipmentSlotName, getEmptyEquipmentSlots } from './equipmentWarning';
-import { getLobbyPresenceMessage } from 'features/LobbyPresence';
+import {
+  getLobbyPresenceMessage,
+  getSelfUnconfirmedPhase
+} from 'features/LobbyPresence';
 import {
   extractBazaarDeckIdFromLink,
   supportsAutomaticMatchups
@@ -259,6 +262,21 @@ const Lobby = () => {
     // so false means that phase is live and the opponent is the one choosing.
     opponentChoosingFirstPlayer: gameLobby?.amIChoosingFirstPlayer === false
   });
+  const selfUnconfirmedPhase = getSelfUnconfirmedPhase({
+    isSideboarding: gameLobby?.isSideboarding === true,
+    isEquipmentPhase,
+    mySubmitted: isEquipmentPhase
+      ? gameLobby?.myEquipmentSubmitted === true
+      : gameLobby?.mySideboardSubmitted === true,
+    bothReady: isStartingGame || gameLobby?.isMainGameReady === true,
+    choosingFirstPlayer: gameLobby?.amIChoosingFirstPlayer !== undefined
+  });
+  const selfUnconfirmedMessage =
+    selfUnconfirmedPhase === 'equipment'
+      ? t('GAME_LOBBY.UNCONFIRMED_ARENA')
+      : selfUnconfirmedPhase === 'deck'
+      ? t('GAME_LOBBY.UNCONFIRMED_DECK')
+      : null;
   const lobbyPresenceState: 'ready' | 'unready' | 'waiting' =
     isStartingGame ||
     gameLobby?.isMainGameReady === true ||
@@ -653,7 +671,8 @@ const Lobby = () => {
   const showLobbySettings =
     lobbyMetaLine !== '' ||
     lobbyDescription !== '' ||
-    lobbyPresenceMessage !== null;
+    lobbyPresenceMessage !== null ||
+    selfUnconfirmedMessage !== null;
   const lobbySettingsContent = (
     <>
       <div className={styles.lobbySettingsRow}>
@@ -712,6 +731,15 @@ const Lobby = () => {
           </span>
         )}
       </div>
+      {selfUnconfirmedMessage && (
+        <div className={styles.lobbySelfAlert} role="status" aria-live="polite">
+          <FaExclamationCircle
+            className={styles.lobbySelfAlertIcon}
+            aria-hidden="true"
+          />
+          <span>{selfUnconfirmedMessage}</span>
+        </div>
+      )}
       {lobbyDescription !== '' && (
         <span className={styles.lobbySettingsDescription}>
           {lobbyDescription}

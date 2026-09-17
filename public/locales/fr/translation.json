@@ -498,6 +498,8 @@
       "TOO_MANY_OFFHANDS": "Trop de personnes équipées",
       "TOO_MANY_WEAPONS_FOR_HANDS": "Trop d'armes pour tes mains"
     },
+    "UNCONFIRMED_ARENA": "Vous n'avez pas encore confirmé vos cartes d'arène.",
+    "UNCONFIRMED_DECK": "Vous n'avez pas encore confirmé votre deck. Les cartes d'arène et le deck se confirment séparément.",
     "WAITING": "En attente de l’adversaire",
     "WAITING_FOR_ARENA": "en attente de l’adversaire",
     "WEAPONS": "Armes / main secondaire",

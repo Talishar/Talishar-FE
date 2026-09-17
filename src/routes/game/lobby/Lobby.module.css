@@ -603,6 +603,31 @@ h3 {
   }
 }
 
+.lobbySelfAlert {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  margin-top: 3px;
+  padding: 4px 7px;
+  border: 1px solid rgba(240, 179, 46, 0.35);
+  border-radius: 4px;
+  background: rgba(240, 179, 46, 0.08);
+  color: rgba(var(--theme-on-surface-rgb), 0.92);
+  font-weight: 600;
+  line-height: 1.35;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.lobbySelfAlertIcon {
+  flex: 0 0 auto;
+  width: 13px;
+  height: 13px;
+  translate: 0 1px;
+  color: #f0b32e;
+}
+
 .lobbySettingsDescription {
   width: 100%;
   font-weight: 400;

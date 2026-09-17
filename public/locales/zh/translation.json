@@ -488,6 +488,8 @@
       "TOO_MANY_OFFHANDS": "",
       "TOO_MANY_WEAPONS_FOR_HANDS": ""
     },
+    "UNCONFIRMED_ARENA": "你还没有确认竞技场卡牌。",
+    "UNCONFIRMED_DECK": "你还没有确认套牌。竞技场卡牌和套牌需要分别确认。",
     "WAITING": "等待对手",
     "WEAPONS": "武器 / 副手",
     "YES": "",
