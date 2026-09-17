@@ -51,12 +51,12 @@ export default function ChatBox({
   const myName = String(
     useAppSelector((state: RootState) => {
       return state.game.playerOne.Name;
-    }) ?? 'you'
+    }) ?? 'You'
   );
   const oppName = String(
     useAppSelector((state: RootState) => {
       return state.game.playerTwo.Name;
-    }) ?? 'your opponent'
+    }) ?? 'Your opponent'
   );
 
   const messagesEndRef = useRef<HTMLDivElement>(null);

@@ -5,6 +5,7 @@ export interface LobbyPresenceOptions {
   opponentUnready: boolean;
   bothReady: boolean;
   opponentChoosingFirstPlayer?: boolean;
+  isEquipmentPhase?: boolean;
 }
 
 export function getLobbyPresenceMessage({
@@ -13,7 +14,8 @@ export function getLobbyPresenceMessage({
   opponentReady,
   opponentUnready,
   bothReady,
-  opponentChoosingFirstPlayer
+  opponentChoosingFirstPlayer,
+  isEquipmentPhase
 }: LobbyPresenceOptions): string | null {
   if (!hasOpponent) return null;
   if (bothReady) return 'Both players are ready - starting game';
@@ -22,5 +24,6 @@ export function getLobbyPresenceMessage({
   if (!isSideboarding) return null;
   if (opponentUnready) return 'Opponent unready';
   if (opponentReady) return 'Opponent is ready';
+  if (isEquipmentPhase) return 'Opponent is choosing arena cards';
   return 'Opponent is sideboarding';
 }

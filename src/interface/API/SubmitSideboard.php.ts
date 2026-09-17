@@ -3,4 +3,5 @@ export interface SubmitSideboardAPI {
   playerID?: number;
   authKey?: string;
   submission?: string;
+  phase?: 'equipment' | 'deck';
 }

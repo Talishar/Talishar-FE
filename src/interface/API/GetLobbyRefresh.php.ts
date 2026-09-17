@@ -33,6 +33,11 @@ export interface GetLobbyRefreshResponse {
   opponentSideboardSubmitted?: boolean;
   canSubmitSideboard?: boolean;
   canUnreadySideboard?: boolean;
+  isEquipmentPhase?: boolean;
+  myEquipmentSubmitted?: boolean;
+  opponentEquipmentSubmitted?: boolean;
+  canSubmitEquipment?: boolean;
+  canUnreadyEquipment?: boolean;
   myDeckLink?: string;
   matchups?: Matchup[];
   legalHeroes?: LegalHero[];

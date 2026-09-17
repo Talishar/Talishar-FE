@@ -410,6 +410,7 @@
   "GAME_LOBBY": {
     "1ST": "1er",
     "2ND": "2ème",
+    "ARENA": "Cartes d’arène",
     "ARMS": "Bras",
     "BLOCK": "Valeur de blocage",
     "BLOCK_SORT": "Trier les cartes par valeur de blocage (la plus élevée d’abord)",
@@ -420,6 +421,7 @@
     "COLLAPSE_FILTERS": "Réduire les filtres",
     "CONFIRM": "Confirmer",
     "CONFIRM_DECK": "Confirmer le deck",
+    "CONFIRM_EQUIPMENT": "Confirmer l’arène",
     "COPIED": "Copié!",
     "COPY_INVITE": "Copier le lien d’invitation",
     "COST": "Coût",
@@ -430,10 +432,12 @@
     "DISPLAY_ORDER": "Afficher les cartes dans leur ordre original",
     "DRAG": "(glisser dans la zone)",
     "EDIT_DECK": "Modifier le deck",
-    "ENABLE_CHAT_QUERY": "Voulez-vous activer le clavardage?",
-    "EQUIPMENT": "Équipement",
+    "EDIT_EQUIPMENT": "Modifier l’arène",
     "EMPTY_EQUIPMENT_WARNING_one": "⚠️ Il semble que l’emplacement d’équipement suivant soit vide : {{slots}}. Est-ce correct ?",
     "EMPTY_EQUIPMENT_WARNING_other": "⚠️ Il semble que les emplacements d’équipement suivants soient vides : {{slots}}. Est-ce correct ?",
+    "ENABLE_CHAT_QUERY": "Voulez-vous activer le clavardage?",
+    "EQUIPMENT": "Équipement",
+    "EQUIPMENT_UNREADY_FAILURE": "Impossible d’annuler la validation de l’arène.",
     "EXPAND_FILTERS": "Développer les filtres",
     "FILTERS": "Filtres",
     "FIRST": "Premier",
@@ -495,6 +499,7 @@
       "TOO_MANY_WEAPONS_FOR_HANDS": "Trop d'armes pour tes mains"
     },
     "WAITING": "En attente de l’adversaire",
+    "WAITING_FOR_ARENA": "en attente de l’adversaire",
     "WEAPONS": "Armes / main secondaire",
     "YES": "Oui",
     "YOU_WON_DIE": "Vous avez gagné le lancer de dé!"
