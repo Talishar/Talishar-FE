@@ -1672,6 +1672,8 @@
     "MANUAL_TARGETING": "Manual Targeting",
     "MANUAL_TUNIC_MODE": "Manual Tunic Mode",
     "MANUAL_TUNIC_MODE_TOOLTIP": "Spend Fyendal's Spring Tunic counters yourself instead of Talishar charging and spending them automatically.",
+    "MANUAL_VALDA_MODE": "Manual Valda Mode",
+    "MANUAL_VALDA_MODE_TOOLTIP": "Create Valda's Seismic Surge tokens by clicking your hero instead of Talishar stopping your opponent's turn for each draw trigger.",
     "MIRROR_OPPONENT_BOARD": "Mirror Opponent Board",
     "MIRROR_PLAYER_BOARD": "Mirror Player Board",
     "NO_SEARCH_RESULTS": "No settings match \"{{query}}\".",

@@ -274,6 +274,17 @@ export const SETTINGS_DEFS: SettingDef[] = [
     visible: inAMatch
   },
   {
+    kind: 'toggle',
+    key: 'manualValda',
+    group: 'cardModes',
+    labelKey: 'SETTINGS.MANUAL_VALDA_MODE',
+    tooltipKey: 'SETTINGS.MANUAL_VALDA_MODE_TOOLTIP',
+    storage: 'account',
+    name: optConst.MANUAL_VALDA,
+    defaultOn: false,
+    visible: inAMatch
+  },
+  {
     kind: 'custom',
     key: 'theme',
     group: 'appearance',
