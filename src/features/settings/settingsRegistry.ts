@@ -112,7 +112,6 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
     id: 'cardModes',
     tab: 'cardSpecific',
     labelKey: 'SETTINGS.GROUPS.CARD_MODES',
-    tooltipKey: 'SETTINGS.GROUPS.CARD_MODES_TOOLTIP'
   },
   {
     id: 'appearance',
