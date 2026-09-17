@@ -1245,6 +1245,7 @@ const Lobby = () => {
       >
         <Form className={styles.form}>
           <FormikDebugLogger />
+          <PhaseRevalidator phase={lobbyPhase} />
           <div className={styles.gridLayout}>
             <div className={styles.titleContainer}>
               <CardPopUp
@@ -1646,6 +1647,16 @@ const Lobby = () => {
         )}
     </main>
   );
+};
+
+const PhaseRevalidator = ({ phase }: { phase: LobbyPhase }) => {
+  const { validateForm } = useFormikContext<DeckResponse>();
+
+  useEffect(() => {
+    void validateForm();
+  }, [phase, validateForm]);
+
+  return null;
 };
 
 const FormikDebugLogger = () => {
