@@ -28,8 +28,6 @@ export type DeckSize = {
   onUnreadyEquipment?: () => void;
 };
 
-const EQUIPMENT_FIELDS = ['weapons', 'head', 'chest', 'arms', 'legs'] as const;
-
 const StickyFooter = ({
   deckSize,
   submitSideboard,
@@ -60,9 +58,6 @@ const StickyFooter = ({
   }
 
   const isEquipmentPhase = phase === 'equipment';
-  const equipmentErrors = EQUIPMENT_FIELDS.map((field) => errors[field])
-    .filter(Boolean)
-    .map(String);
   const arenaCards = [
     ...values.weapons.map((weapon) => weapon.img),
     values.head,
@@ -72,9 +67,10 @@ const StickyFooter = ({
   ].filter((card) => !!card && card !== 'NONE00');
 
   const needed = deckSize - values.deck.length;
-  const isConfirmEnabled = isEquipmentPhase
-    ? equipmentErrors.length === 0 && canSubmitEquipment && !needToDoDisclaimer
-    : isValid && submitSideboard && !needToDoDisclaimer;
+  const isConfirmEnabled =
+    isValid &&
+    !needToDoDisclaimer &&
+    (isEquipmentPhase ? canSubmitEquipment : submitSideboard);
   const showEditButton = isEquipmentPhase
     ? canUnreadyEquipment
     : canUnreadySideboard;
@@ -161,20 +157,20 @@ const StickyFooter = ({
     ? `\u00a0\u00b7\u00a0${t('GAME_LOBBY.WAITING_FOR_ARENA')}`
     : isConfirmEnabled
     ? `\u00a0\u00b7\u00a0\u2713\u00a0ready`
-    : equipmentErrors[0]
-    ? `\u00a0\u00b7\u00a0${equipmentErrors[0]}`
+    : errorArray[0]
+    ? `\u00a0\u00b7\u00a0${errorArray[0]}`
     : `\u00a0\u00b7\u00a0${t('GAME_LOBBY.ARENA')}`;
 
   const statusSection = isEquipmentPhase ? (
     <div
       className={`${styles.deckSection} ${
         isConfirmEnabled ? styles.deckReady : ''
-      } ${equipmentErrors.length > 0 ? styles.deckInvalid : ''}`}
+      } ${!isValid ? styles.deckInvalid : ''}`}
       role="status"
       aria-live="polite"
     >
       <div className={styles.deckCountLine}>
-        {equipmentErrors[0] && (
+        {!isValid && errorArray[0] && (
           <FaExclamationCircle className={styles.deckStatusIcon} />
         )}
         <span className={styles.deckNumber}>{arenaCards.length}</span>

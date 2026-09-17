@@ -1076,6 +1076,12 @@ const Lobby = () => {
         requestBody
       ).unwrap();
 
+      const submitError = submitResponse?.deckError ?? submitResponse?.error;
+      if (submitError) {
+        toast.error(String(submitError));
+        return;
+      }
+
       // If game started, capture and store the auth key for future use
       if (submitResponse?.gameStarted && submitResponse?.authKey && gameID) {
         setIsStartingGame(true);
@@ -1226,7 +1232,12 @@ const Lobby = () => {
             lobbyPhase === 'equipment' ? 'equipment' : 'deck'
           )
         }
-        validationSchema={deckValidation(deckSize, maxDeckSize, handsTotal)}
+        validationSchema={deckValidation(
+          deckSize,
+          maxDeckSize,
+          handsTotal,
+          lobbyPhase !== 'equipment'
+        )}
         validateOnChange={true}
         validateOnBlur={true}
         validateOnMount={true}

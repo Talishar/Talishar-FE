@@ -4,7 +4,8 @@ import { useTranslation } from 'react-i18next';
 export const deckValidation = (
   minDeckSize: number,
   maxDeckSize: number,
-  heroNumHands: number
+  heroNumHands: number,
+  enforceDeckSize = true
 ) => {
   const { t } = useTranslation();
   return object({
@@ -44,17 +45,19 @@ export const deckValidation = (
     chest: string().required(t('GAME_LOBBY.VALIDATION.CHEST_REQUIRED')),
     arms: string().required(t('GAME_LOBBY.VALIDATION.ARMS_REQUIRED')),
     legs: string().required(t('GAME_LOBBY.VALIDATION.LEGS_REQUIRED')),
-    deck: array()
-      .required()
-      .of(string().required())
-      .min(
-        minDeckSize,
-        t('GAME_LOBBY.VALIDATION.MIN_DECK_SIZE', { size: minDeckSize })
-      )
-      .max(
-        maxDeckSize,
-        t('GAME_LOBBY.VALIDATION.MAX_DECK_SIZE', { size: maxDeckSize })
-      )
+    deck: enforceDeckSize
+      ? array()
+          .required()
+          .of(string().required())
+          .min(
+            minDeckSize,
+            t('GAME_LOBBY.VALIDATION.MIN_DECK_SIZE', { size: minDeckSize })
+          )
+          .max(
+            maxDeckSize,
+            t('GAME_LOBBY.VALIDATION.MAX_DECK_SIZE', { size: maxDeckSize })
+          )
+      : array().required().of(string().required())
   });
 };
 
