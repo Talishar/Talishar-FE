@@ -85,6 +85,11 @@ export function measureDuration<T>(name: string, operation: () => T): T {
 
 export function observeLongTasks(): () => void {
   if (!('PerformanceObserver' in window)) return () => undefined;
+  // Firefox has no longtask support and warns to the console rather than
+  // throwing, so feature-detect instead of relying on the catch below.
+  if (!PerformanceObserver.supportedEntryTypes?.includes('longtask')) {
+    return () => undefined;
+  }
 
   try {
     const observer = new PerformanceObserver((list) => {
