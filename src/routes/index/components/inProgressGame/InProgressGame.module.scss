@@ -114,6 +114,10 @@
   border: 1px solid rgba(var(--theme-on-surface-rgb), 0.14);
   padding: 0.55rem 0.5rem;
 
+  & + & {
+    margin-top: 0.35rem;
+  }
+
   &:hover {
     transform: none;
     background-color: rgba(var(--theme-on-surface-rgb), 0.06);
