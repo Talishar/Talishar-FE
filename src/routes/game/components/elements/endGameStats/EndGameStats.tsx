@@ -22,6 +22,7 @@ import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
 import { useTheme } from 'themes/ThemeContext';
 import useSetting from 'hooks/useSetting';
 import { COLORBLIND_MODE } from 'features/options/constants';
+import RemoveAdsLink from 'components/RemoveAdsLink/RemoveAdsLink';
 import {
   ResponsiveContainer,
   AreaChart,
@@ -2264,14 +2265,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
             <div className={`${styles.adBlock} ${styles.hideOnExport}`}>
               {!isSupporter && (
                 <div className={styles.adHeader}>
-                  <a
-                    href={TALISHAR_METAFY_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.removeAdsLink}
-                  >
-                    {t('UNITED_GAME_PANEL.REMOVE_ADS')}
-                  </a>
+                  <RemoveAdsLink />
                 </div>
               )}
               <AdUnit placement="billboard-1" className={styles.desktopAd} />
@@ -2799,14 +2793,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
           <div className={`${styles.adBlock} ${styles.hideOnExport}`}>
             {!isSupporter && (
               <div className={styles.adHeader}>
-                <a
-                  href="https://metafy.gg/@talishar/members"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.removeAdsLink}
-                >
-                  {t('UNITED_GAME_PANEL.REMOVE_ADS')}
-                </a>
+                <RemoveAdsLink />
               </div>
             )}
             <AdUnit placement="billboard-2" className={styles.desktopAd} />

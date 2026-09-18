@@ -202,19 +202,6 @@
   background: transparent;
 }
 
-.removeAdsLink {
-  color: rgba(var(--theme-on-surface-rgb), 0.38);
-  text-decoration: none;
-  font-size: 0.58rem;
-  font-weight: 500;
-  line-height: 1;
-  padding: 2px 4px;
-}
-
-.removeAdsLink:hover {
-  color: rgba(var(--theme-on-surface-rgb), 0.6);
-  text-decoration: underline;
-}
 
 .videoList {
   list-style: none;

@@ -20,6 +20,7 @@ import TalisharLogo from '../../img/TalisharLogo.webp';
 import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
 import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
 import { Link } from 'react-router-dom';
+import RemoveAdsLink from 'components/RemoveAdsLink/RemoveAdsLink';
 
 const Index = () => {
   const { t } = useTranslation();
@@ -233,14 +234,7 @@ const Index = () => {
           <div className={styles.adFooter}>
             {!isSupporter && (
               <div className={styles.adHeader}>
-                <a
-                  href={TALISHAR_METAFY_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.removeAdsLink}
-                >
-                  {t('UNITED_GAME_PANEL.REMOVE_ADS')}
-                </a>
+                <RemoveAdsLink />
               </div>
             )}
             <AdUnit placement="billboard-1" className={styles.desktopAd} />

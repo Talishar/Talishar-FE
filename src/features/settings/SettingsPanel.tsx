@@ -339,6 +339,36 @@ const SettingsPanel = ({
         .filter((entry) => entry.groups.length > 0)
     : [];
 
+  const tabBody = (
+    <>
+      {groupsFor(currentTab, visibleDefs).map(({ group, defs }) => (
+        <section key={group.id} className={styles.group}>
+          <h4 className={styles.groupTitle}>
+            {t(group.labelKey)}
+            {group.tooltipKey && <Tooltip text={t(group.tooltipKey)} />}
+          </h4>
+          {defs.map((def) => (
+            <SettingRow
+              key={def.key}
+              def={def}
+              controller={controller}
+              context={context}
+            />
+          ))}
+        </section>
+      ))}
+      {canResetTab && (
+        <button
+          type="button"
+          className={styles.resetTab}
+          onClick={() => controller.resetDefs(resettableDefs)}
+        >
+          {t('SETTINGS.RESET_TAB')}
+        </button>
+      )}
+    </>
+  );
+
   return (
     <div className={styles.panel}>
       <div className={styles.toolbar}>
@@ -428,65 +458,13 @@ const SettingsPanel = ({
           ) : showSplit ? (
             <div className={styles.splitTab}>
               <div className={styles.splitMain}>
-                {groupsFor(currentTab, visibleDefs).map(({ group, defs }) => (
-                  <section key={group.id} className={styles.group}>
-                    <h4 className={styles.groupTitle}>
-                      {t(group.labelKey)}
-                      {group.tooltipKey && (
-                        <Tooltip text={t(group.tooltipKey)} />
-                      )}
-                    </h4>
-                    {defs.map((def) => (
-                      <SettingRow
-                        key={def.key}
-                        def={def}
-                        controller={controller}
-                        context={context}
-                      />
-                    ))}
-                  </section>
-                ))}
-                {canResetTab && (
-                  <button
-                    type="button"
-                    className={styles.resetTab}
-                    onClick={() => controller.resetDefs(resettableDefs)}
-                  >
-                    {t('SETTINGS.RESET_TAB')}
-                  </button>
-                )}
+                {tabBody}
                 {footerSlot}
               </div>
               <aside className={styles.splitAside}>{actionsSlot}</aside>
             </div>
           ) : (
-            <>
-              {groupsFor(currentTab, visibleDefs).map(({ group, defs }) => (
-                <section key={group.id} className={styles.group}>
-                  <h4 className={styles.groupTitle}>
-                    {t(group.labelKey)}
-                    {group.tooltipKey && <Tooltip text={t(group.tooltipKey)} />}
-                  </h4>
-                  {defs.map((def) => (
-                    <SettingRow
-                      key={def.key}
-                      def={def}
-                      controller={controller}
-                      context={context}
-                    />
-                  ))}
-                </section>
-              ))}
-              {canResetTab && (
-                <button
-                  type="button"
-                  className={styles.resetTab}
-                  onClick={() => controller.resetDefs(resettableDefs)}
-                >
-                  {t('SETTINGS.RESET_TAB')}
-                </button>
-              )}
-            </>
+            tabBody
           )}
         </div>
       )}

@@ -6,10 +6,8 @@ import {
 } from '../../../services/contentService';
 import { Trans, useTranslation } from 'react-i18next';
 import { AdUnit } from 'components/ads';
-import {
-  TALISHAR_DISCORD_URL,
-  TALISHAR_METAFY_URL
-} from 'constants/socialLinks';
+import RemoveAdsLink from 'components/RemoveAdsLink/RemoveAdsLink';
+import { TALISHAR_DISCORD_URL } from 'constants/socialLinks';
 
 interface CommunityContentProps {
   showAds?: boolean;
@@ -244,14 +242,7 @@ const CommunityContent: React.FC<CommunityContentProps> = ({
             {showAds && (
               <div className={styles.communityAdSection}>
                 <div className={styles.adHeader}>
-                  <a
-                    href={TALISHAR_METAFY_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.removeAdsLink}
-                  >
-                    {t('UNITED_GAME_PANEL.REMOVE_ADS')}
-                  </a>
+                  <RemoveAdsLink />
                 </div>
                 <AdUnit placement="mobile-unit-3" />
               </div>
@@ -321,14 +312,7 @@ const CommunityContent: React.FC<CommunityContentProps> = ({
         {showAds && (
           <div className={styles.adFooter}>
             <div className={styles.adHeader}>
-              <a
-                href={TALISHAR_METAFY_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.removeAdsLink}
-              >
-                {t('UNITED_GAME_PANEL.REMOVE_ADS')}
-              </a>
+              <RemoveAdsLink />
             </div>
             <AdUnit placement="billboard-1" className={styles.desktopAd} />
             <AdUnit placement="mobile-unit-2" className={styles.mobileAd} />
