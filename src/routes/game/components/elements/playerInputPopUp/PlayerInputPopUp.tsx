@@ -18,8 +18,10 @@ import { motion, useMotionValue, useTransform } from 'framer-motion';
 import useShowModal from 'hooks/useShowModals';
 import { OptInput } from './components/OptInput';
 import { NewOptInput } from './components/NewOptInput';
-import { TriggerOrderInput } from './components/TriggerOrderInput';
-import { RearrangeTopInput } from './components/RearrangeTopInput';
+import {
+  RearrangeTopInput,
+  TriggerOrderInput
+} from './components/CardOrderInput';
 import { NumberInput } from './components/NumberInput';
 import { FormProps } from './playerInputPopupTypes';
 import { OtherInput } from './components/OtherInput';

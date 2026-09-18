@@ -23,7 +23,15 @@ const prepareCards = (cards: Card[]): Card[] =>
       } as Card)
   );
 
-const TriggerOrdering = ({ topCards }: { topCards: Card[] }) => {
+const CardOrdering = ({
+  topCards,
+  submitMode,
+  labelKey
+}: {
+  topCards: Card[];
+  submitMode: number;
+  labelKey: string;
+}) => {
   const { gameID, playerID, authKey } = useAppSelector(
     getGameInfo,
     shallowEqual
@@ -87,7 +95,7 @@ const TriggerOrdering = ({ topCards }: { topCards: Card[] }) => {
       gameName: gameID,
       playerID: playerID,
       authKey: authKey,
-      mode: 109,
+      mode: submitMode,
       submission: { cardListTop: cardNamesTop }
     };
     processInputAPI(body);
@@ -113,7 +121,7 @@ const TriggerOrdering = ({ topCards }: { topCards: Card[] }) => {
           <div
             className={classNames(styles.newOptForm, styles.topAndBottomText)}
           >
-            {t('PLAYER_INPUT.TRIGGERS')}
+            {t(labelKey)}
           </div>
           <Reorder.Group
             className={classNames(styles.newOptForm, styles.reorderCards)}
@@ -140,12 +148,23 @@ const TriggerOrdering = ({ topCards }: { topCards: Card[] }) => {
   );
 };
 
-export const TriggerOrderInput = (props: FormProps) => {
-  const { topCards } = props;
+const cardOrderInput =
+  (submitMode: number, labelKey: string) => (props: FormProps) => {
+    const { topCards } = props;
 
-  return (
-    <div className={classNames(styles.newOptForm, styles.optFormContainer)}>
-      <TriggerOrdering topCards={topCards ?? []} />
-    </div>
-  );
-};
+    return (
+      <div className={classNames(styles.newOptForm, styles.optFormContainer)}>
+        <CardOrdering
+          topCards={topCards ?? []}
+          submitMode={submitMode}
+          labelKey={labelKey}
+        />
+      </div>
+    );
+  };
+
+export const RearrangeTopInput = cardOrderInput(
+  110,
+  'PLAYER_INPUT.NEW_OPT_TOP'
+);
+export const TriggerOrderInput = cardOrderInput(109, 'PLAYER_INPUT.TRIGGERS');
