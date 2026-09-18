@@ -524,7 +524,7 @@
       "TOO_MANY_OFFHANDS": "Too many off-hands equipped.",
       "TOO_MANY_WEAPONS_FOR_HANDS": "Too many weapons for your hands."
     },
-    "UNCONFIRMED_EQUIPMENT": "You have not confirmed your equipment yet.",
+    "UNCONFIRMED_ARENA": "You have not confirmed your equipment yet.",
     "UNCONFIRMED_DECK": "You have not confirmed your deck yet. Equipment and deck are confirmed separately.",
     "WAITING": "Waiting for opponent",
     "WAITING_FOR_ARENA": "waiting for opponent",
