@@ -302,13 +302,14 @@ const HeroVsHeroIntro = () => {
 
   const yourHero = playerID === 1 ? playerOneHero : playerTwoHero;
   const opponentHero = playerID === 1 ? playerTwoHero : playerOneHero;
+  const yourSeat = playerID === 1 ? 1 : 2;
   const yourMasteryLevel =
     masteryLevelPreview('masteryLevel') ??
-    masteryData?.gamePlayers?.[String(playerID)]?.level ??
+    masteryData?.gamePlayers?.[String(yourSeat)]?.level ??
     0;
   const opponentMasteryLevel =
     masteryLevelPreview('opponentMasteryLevel') ??
-    masteryData?.gamePlayers?.[String(playerID === 1 ? 2 : 1)]?.level ??
+    masteryData?.gamePlayers?.[String(3 - yourSeat)]?.level ??
     0;
   const yourPatronInfo =
     playerID === 1 ? playerOnePatronInfo : playerTwoPatronInfo;
