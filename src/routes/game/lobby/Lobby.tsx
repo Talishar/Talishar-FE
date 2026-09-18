@@ -538,8 +538,6 @@ const Lobby = () => {
     data = testData;
   }
 
-  if (!data || !data.deck) return null;
-
   useEffect(() => {
     if (playerID === 3) return;
     if (!gameLobby?.authKey || gameLobby.authKey === authKey) return;
