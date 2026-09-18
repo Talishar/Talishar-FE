@@ -3,8 +3,7 @@ import { useAppSelector, useAppDispatch } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import Displayrow from 'interface/Displayrow';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
-import DamagePopup from '../../elements/damagePopup/DamagePopup';
-import HealingPopup from '../../elements/healingPopup/HealingPopup';
+import FloatingPopup from '../../elements/floatingPopup/FloatingPopup';
 import { Card } from 'features/Card';
 import {
   removeDamagePopup,
@@ -125,18 +124,20 @@ export const HeroZone = React.memo((prop: Displayrow) => {
         <CardDisplay card={cardWithSoul} isPlayer={isPlayer} />
       )}
       {damagePopups.map((popup) => (
-        <DamagePopup
+        <FloatingPopup
           key={popup.id}
           id={popup.id}
           amount={popup.amount}
+          variant="damage"
           onComplete={handleDamagePopupComplete}
         />
       ))}
       {healingPopups.map((popup) => (
-        <HealingPopup
+        <FloatingPopup
           key={popup.id}
           id={popup.id}
           amount={popup.amount}
+          variant="healing"
           onComplete={handleHealingPopupComplete}
         />
       ))}

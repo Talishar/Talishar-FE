@@ -3,7 +3,7 @@ import { useAppSelector, useAppDispatch } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import styles from './ActionPointDisplay.module.css';
 import classNames from 'classnames';
-import ActionPointPopup from '../actionPointPopup/ActionPointPopup';
+import FloatingPopup from '../floatingPopup/FloatingPopup';
 import {
   removeActionPointPopup,
   addActionPointPopup
@@ -81,10 +81,11 @@ export default function ActionPointDisplay(props: ActionPointDisplayProps) {
         <span className={styles.tick}>{`${APAvailable} AP`}</span>
       </div>
       {actionPointPopups.map((popup) => (
-        <ActionPointPopup
+        <FloatingPopup
           key={popup.id}
           id={popup.id}
           amount={popup.amount}
+          variant="actionPoint"
           onComplete={handleActionPointPopupComplete}
         />
       ))}
