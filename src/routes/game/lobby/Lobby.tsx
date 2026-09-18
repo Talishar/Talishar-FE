@@ -13,6 +13,7 @@ import testData from './mockdata.json';
 import '../GameViewport.css';
 import styles from './Lobby.module.css';
 import Equipment from './components/equipment/Equipment';
+import Loadout, { MyLoadout } from './components/loadout/Loadout';
 import classNames from 'classnames';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { LuGlobe, LuUsers } from 'react-icons/lu';
@@ -842,14 +843,34 @@ const Lobby = () => {
 
   type EquipFieldName = 'head' | 'chest' | 'arms' | 'legs';
 
+  const defaultLoadout = React.useMemo(() => {
+    const pool = [...(data.deck.modular ?? [])];
+    const equipment: Record<EquipFieldName, string> = {
+      head: initialEquipment(data.deck.head),
+      chest: initialEquipment(data.deck.chest),
+      arms: initialEquipment(data.deck.arms),
+      legs: initialEquipment(data.deck.legs)
+    };
+    const assignedModulars: Record<EquipFieldName, string[]> = {
+      head: [],
+      chest: [],
+      arms: [],
+      legs: []
+    };
+
+    (['head', 'chest', 'arms', 'legs'] as EquipFieldName[]).forEach((field) => {
+      if (equipment[field] !== 'NONE00' || pool.length === 0) return;
+      const card = pool.shift() as string;
+      equipment[field] = card;
+      assignedModulars[field] = [card];
+    });
+
+    return { equipment, assignedModulars, modular: pool };
+  }, [data.deck]);
+
   const [assigned, setAssigned] = React.useState<
     Record<EquipFieldName, string[]>
-  >({
-    head: [],
-    chest: [],
-    arms: [],
-    legs: []
-  });
+  >(defaultLoadout.assignedModulars);
 
   const hands = React.useMemo(
     () => [...weaponsIndexed, ...weaponsSBIndexed],
@@ -869,13 +890,13 @@ const Lobby = () => {
   );
 
   const [modularState, setModularState] = React.useState<string[]>(
-    baseEquipment.modular
+    defaultLoadout.modular
   );
 
   React.useEffect(() => {
-    setAssigned({ head: [], chest: [], arms: [], legs: [] });
-    setModularState(baseEquipment.modular);
-  }, [baseEquipment.modular]);
+    setAssigned(defaultLoadout.assignedModulars);
+    setModularState(defaultLoadout.modular);
+  }, [defaultLoadout]);
 
   const oneHandedHeroes = [
     'kayo_armed_and_dangerous',
@@ -1244,11 +1265,11 @@ const Lobby = () => {
             weaponsIndexed.length > 0
               ? weaponsIndexed
               : [weaponsSBIndexed.find((w) => w.img === 'NONE00')!],
-          head: initialEquipment(data.deck.head),
-          chest: initialEquipment(data.deck.chest),
-          arms: initialEquipment(data.deck.arms),
-          legs: initialEquipment(data.deck.legs),
-          assignedModulars: { head: [], chest: [], arms: [], legs: [] }
+          head: defaultLoadout.equipment.head,
+          chest: defaultLoadout.equipment.chest,
+          arms: defaultLoadout.equipment.arms,
+          legs: defaultLoadout.equipment.legs,
+          assignedModulars: defaultLoadout.assignedModulars
         }}
         onSubmit={(values) =>
           handleFormSubmission(
@@ -1283,6 +1304,7 @@ const Lobby = () => {
                   style={{ backgroundImage: leftPic }}
                 >
                   <MasteryPlate level={leftMasteryLevel} variant="inside" />
+                  <MyLoadout />
                   <div className={styles.dimPic}>
                     <h3 aria-busy={isLoading}>
                       {createPatreonIconMap(
@@ -1326,6 +1348,13 @@ const Lobby = () => {
                   style={{ backgroundImage: rightPic }}
                 >
                   <MasteryPlate level={rightMasteryLevel} variant="inside" />
+                  {gameLobby?.theirArena && (
+                    <Loadout
+                      loadout={gameLobby.theirArena}
+                      mirrored
+                      isOpponent
+                    />
+                  )}
                   {isOpponentLoading && (
                     <div
                       className={styles.opponentLoading}

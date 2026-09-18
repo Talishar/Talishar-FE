@@ -18,6 +18,7 @@ export interface GetLobbyRefreshResponse {
   playAudio?: boolean;
   theirHero?: string;
   theirHeroName?: string;
+  theirArena?: ArenaLoadout;
   theirName?: string;
   theirNameColor?: string;
   theirOverlayUrl?: string;
@@ -48,6 +49,14 @@ export interface GetLobbyRefreshResponse {
   wasKicked?: boolean;
   sideboardWasReset?: boolean;
   isOpponentAI?: boolean;
+}
+
+export interface ArenaLoadout {
+  head?: string;
+  chest?: string;
+  arms?: string;
+  legs?: string;
+  weapons?: string[];
 }
 
 export interface Matchup {

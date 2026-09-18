@@ -1,0 +1,120 @@
+
+.mat {
+  container-type: size;
+  --slot-size: clamp(18px, min(30cqw, 22cqh), 48px);
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  bottom: 3rem;
+  left: 0.5rem;
+  max-width: 420px;
+  margin-inline: auto;
+  z-index: 3;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.4rem;
+  pointer-events: none;
+}
+
+.matMirrored {
+  flex-direction: row-reverse;
+}
+
+.rail {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+  height: 100%;
+  pointer-events: auto;
+}
+
+.slot {
+  flex: 0 0 auto;
+  width: var(--slot-size);
+  height: var(--slot-size);
+  border-radius: 4px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.32);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+  transition: border-color 0.15s ease;
+}
+
+.slot:hover {
+  border-color: rgba(var(--theme-on-surface-rgb), 0.68);
+}
+
+.slotEmpty {
+  background: rgba(0, 0, 0, 0.28);
+  border-style: dashed;
+  border-color: rgba(var(--theme-on-surface-rgb), 0.18);
+  box-shadow: none;
+}
+
+.slotEmpty:hover {
+  border-color: rgba(var(--theme-on-surface-rgb), 0.18);
+}
+
+.slot > div {
+  width: 100%;
+  height: 100%;
+}
+
+.slotImage {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (min-width: 769px) and (max-width: 1199px) and (min-height: 501px),
+  (min-width: 1200px) and (pointer: coarse) {
+  .mat {
+    --slot-size: clamp(22px, min(22cqw, 46cqh), 44px);
+    max-width: 280px;
+    gap: 0.5rem;
+  }
+
+  .rail {
+    flex-flow: column wrap;
+    align-content: center;
+    gap: 4px;
+  }
+
+  .matMirrored .rail {
+    flex-flow: column wrap-reverse;
+  }
+}
+
+@media (max-width: 768px) {
+  .mat {
+    container-type: normal;
+    top: auto;
+    bottom: 2.2rem;
+    height: auto;
+    align-items: flex-end;
+    gap: 3px;
+  }
+
+  .rail {
+    display: contents;
+  }
+
+  .slot {
+    flex: 1 1 0;
+    width: auto;
+    height: auto;
+    min-width: 0;
+    max-width: 34px;
+    aspect-ratio: 1;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
+  .mat {
+    display: none;
+  }
+}
