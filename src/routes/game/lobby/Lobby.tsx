@@ -393,29 +393,16 @@ const Lobby = () => {
     }
   };
 
-  const handleUnreadyEquipment = async () => {
+  const handleUnready = async (action: string, failureKey: string) => {
     try {
       await submitLobbyInput({
         gameName: gameID,
         playerID: playerID,
         authKey: authKey,
-        action: 'Unready Equipment'
+        action: action
       }).unwrap();
     } catch (err: any) {
-      toast.error(err?.error || t('GAME_LOBBY.EQUIPMENT_UNREADY_FAILURE'));
-    }
-  };
-
-  const handleUnreadySideboard = async () => {
-    try {
-      await submitLobbyInput({
-        gameName: gameID,
-        playerID: playerID,
-        authKey: authKey,
-        action: 'Unready Sideboard'
-      }).unwrap();
-    } catch (err: any) {
-      toast.error(err?.error || t('GAME_LOBBY.SIDEBOARD_UNREADY_FAILURE'));
+      toast.error(err?.error || t(failureKey));
     }
   };
 
@@ -1653,12 +1640,22 @@ const Lobby = () => {
               handleLeave={handleLeave}
               isWidescreen={isWideScreen}
               needToDoDisclaimer={needToDoDisclaimer}
-              onUnreadySideboard={handleUnreadySideboard}
+              onUnreadySideboard={() =>
+                handleUnready(
+                  'Unready Sideboard',
+                  'GAME_LOBBY.SIDEBOARD_UNREADY_FAILURE'
+                )
+              }
               onIsValidChange={setIsDeckValid}
               phase={lobbyPhase}
               canSubmitEquipment={gameLobby?.canSubmitEquipment ?? false}
               canUnreadyEquipment={gameLobby?.canUnreadyEquipment ?? false}
-              onUnreadyEquipment={handleUnreadyEquipment}
+              onUnreadyEquipment={() =>
+                handleUnready(
+                  'Unready Equipment',
+                  'GAME_LOBBY.EQUIPMENT_UNREADY_FAILURE'
+                )
+              }
             />
           </div>
         </Form>
