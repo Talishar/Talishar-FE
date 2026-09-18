@@ -43,7 +43,7 @@ import { useAppSelector } from 'app/Hooks';
 import { shallowEqual } from 'react-redux';
 import { Matchup } from 'interface/API/GetLobbyRefresh.php';
 import { RootState } from 'app/Store';
-import { createPatreonIconMap } from 'utils/patronIcons';
+import UserBadgeIcons from 'components/UserBadgeIcons/UserBadgeIcons';
 import { DeckResponse, Weapon } from 'interface/API/GetLobbyInfo.php';
 import LobbyUpdateHandler from './components/updateHandler/SideboardUpdateHandler';
 import {
@@ -1307,30 +1307,14 @@ const Lobby = () => {
                   <MyLoadout />
                   <div className={styles.dimPic}>
                     <h3 aria-busy={isLoading}>
-                      {createPatreonIconMap(
-                        userPatronStatus.isContributor,
-                        userPatronStatus.isPvtVoidPatron,
-                        userPatronStatus.isPatron,
-                        false,
-                        userMetafyTiers.length > 0 ? userMetafyTiers : undefined
-                      )
-                        .filter((icon) => icon.condition)
-                        .map((icon, index) => (
-                          <a
-                            key={`${icon.src}-${index}`}
-                            href={icon.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            title={icon.title}
-                            className={styles.lobbyIconLink}
-                          >
-                            <img
-                              src={icon.src}
-                              alt={icon.title}
-                              className={styles.lobbyIcon}
-                            />
-                          </a>
-                        ))}
+                      <UserBadgeIcons
+                        isContributor={userPatronStatus.isContributor}
+                        isPvtVoidPatron={userPatronStatus.isPvtVoidPatron}
+                        isPatron={userPatronStatus.isPatron}
+                        metafyTiers={userMetafyTiers}
+                        linkClassName={styles.lobbyIconLink}
+                        iconClassName={styles.lobbyIcon}
+                      />
                       <span className={styles.lobbyPlayerName}>
                         {String(data.displayName ?? '').substring(0, 15)}
                       </span>
@@ -1397,32 +1381,18 @@ const Lobby = () => {
                           aria-busy={!gameLobby}
                           style={{ cursor: opponentNote ? 'help' : 'default' }}
                         >
-                          {createPatreonIconMap(
-                            gameLobby?.theirIsContributor ?? false,
-                            gameLobby?.theirIsPvtVoidPatron ?? false,
-                            gameLobby?.theirIsPatron ? true : false,
-                            false,
-                            (gameLobby?.theirMetafyTiers?.length ?? 0) > 0
-                              ? gameLobby!.theirMetafyTiers
-                              : undefined
-                          )
-                            .filter((icon) => icon.condition)
-                            .map((icon, index) => (
-                              <a
-                                key={`${icon.src}-${index}`}
-                                href={icon.href}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                title={icon.title}
-                                className={styles.lobbyIconLink}
-                              >
-                                <img
-                                  src={icon.src}
-                                  alt={icon.title}
-                                  className={styles.lobbyIcon}
-                                />
-                              </a>
-                            ))}
+                          <UserBadgeIcons
+                            isContributor={
+                              gameLobby?.theirIsContributor ?? false
+                            }
+                            isPvtVoidPatron={
+                              gameLobby?.theirIsPvtVoidPatron ?? false
+                            }
+                            isPatron={gameLobby?.theirIsPatron ? true : false}
+                            metafyTiers={gameLobby?.theirMetafyTiers}
+                            linkClassName={styles.lobbyIconLink}
+                            iconClassName={styles.lobbyIcon}
+                          />
                           <span className={styles.lobbyPlayerName}>
                             {isStreamerMode
                               ? t('GAME_LOBBY.OPPONENT')

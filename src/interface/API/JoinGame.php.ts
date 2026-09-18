@@ -1,3 +1,5 @@
+import { GameEntryFormik, GameEntryResponse } from './GameEntry';
+
 export interface JoinGameAPI {
   gameName?: number;
   playerID?: number;
@@ -11,26 +13,9 @@ export interface JoinGameAPI {
   matchup?: string; //The matchup ID ref
 }
 
-export interface JoinGameFormik {
-  deck?: string;
-  fabdb?: string;
-  deckTestMode?: boolean;
-  format?: string;
-  visibility?: string;
-  decksToTry?: string;
-  favoriteDeck?: boolean;
-  favoriteDecks?: string;
-  gameDescription?: string;
-}
+export type JoinGameFormik = GameEntryFormik;
 
-export interface JoinGameResponse {
-  gameStarted?: boolean;
-  error?: string;
-  message?: string;
-  gameName?: number;
-  playerID?: number;
-  authKey?: string;
-}
+export type JoinGameResponse = GameEntryResponse;
 
 /*
 {

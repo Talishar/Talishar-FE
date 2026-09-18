@@ -21,6 +21,21 @@ type SortMode =
   | 'subtype'
   | 'cost';
 
+const DeckCardCheckbox = ({
+  card,
+  imageSrc
+}: {
+  card: string;
+  imageSrc: string;
+}) => (
+  <label>
+    <Field type="checkbox" name="deck" value={`${card}`} />
+    <CardPopUp cardNumber={card.split('-')[0]}>
+      <CardImage src={imageSrc} draggable={false} className={styles.card} />
+    </CardPopUp>
+  </label>
+);
+
 type DeckProps = {
   deck: string[];
   cardDictionary?: CardData[];
@@ -828,20 +843,10 @@ const Deck = ({
                               key={`${key}-${ix}`}
                               className={styles.deckCardContainer}
                             >
-                              <label>
-                                <Field
-                                  type="checkbox"
-                                  name="deck"
-                                  value={`${card}`}
-                                />
-                                <CardPopUp cardNumber={card.split('-')[0]}>
-                                  <CardImage
-                                    src={getImageSrc(card.split('-')[0])}
-                                    draggable={false}
-                                    className={styles.card}
-                                  />
-                                </CardPopUp>
-                              </label>
+                              <DeckCardCheckbox
+                                card={card}
+                                imageSrc={getImageSrc(card.split('-')[0])}
+                              />
                             </div>
                           ))}
                         </div>
@@ -877,20 +882,10 @@ const Deck = ({
                               key={`${key}-${ix}`}
                               className={styles.deckCardContainer}
                             >
-                              <label>
-                                <Field
-                                  type="checkbox"
-                                  name="deck"
-                                  value={`${card}`}
-                                />
-                                <CardPopUp cardNumber={card.split('-')[0]}>
-                                  <CardImage
-                                    src={getImageSrc(card.split('-')[0])}
-                                    draggable={false}
-                                    className={styles.card}
-                                  />
-                                </CardPopUp>
-                              </label>
+                              <DeckCardCheckbox
+                                card={card}
+                                imageSrc={getImageSrc(card.split('-')[0])}
+                              />
                             </div>
                           ))}
                         </div>
@@ -923,16 +918,10 @@ const Deck = ({
                       key={`no-value-${ix}`}
                       className={styles.deckCardContainer}
                     >
-                      <label>
-                        <Field type="checkbox" name="deck" value={`${card}`} />
-                        <CardPopUp cardNumber={card.split('-')[0]}>
-                          <CardImage
-                            src={getImageSrc(card.split('-')[0])}
-                            draggable={false}
-                            className={styles.card}
-                          />
-                        </CardPopUp>
-                      </label>
+                      <DeckCardCheckbox
+                        card={card}
+                        imageSrc={getImageSrc(card.split('-')[0])}
+                      />
                     </div>
                   ))}
                 </div>
@@ -945,16 +934,10 @@ const Deck = ({
             {sortedDeck.map((card: string, ix: number) => {
               return (
                 <div key={`deck${ix}`} className={styles.deckCardContainer}>
-                  <label>
-                    <Field type="checkbox" name="deck" value={`${card}`} />
-                    <CardPopUp cardNumber={card.split('-')[0]}>
-                      <CardImage
-                        src={getImageSrc(card.split('-')[0])}
-                        draggable={false}
-                        className={styles.card}
-                      />
-                    </CardPopUp>
-                  </label>
+                  <DeckCardCheckbox
+                    card={card}
+                    imageSrc={getImageSrc(card.split('-')[0])}
+                  />
                 </div>
               );
             })}

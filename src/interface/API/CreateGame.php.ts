@@ -1,3 +1,5 @@
+import { GameEntryFormik, GameEntryResponse } from './GameEntry';
+
 export interface CreateGameAPI {
   deck?: string; // This is for limited game modes (see JoinGameInput.php)
   fabdb?: string; // Deck builder decklink (any deckbuilder, name comes from when fabdb was the only one)
@@ -12,26 +14,9 @@ export interface CreateGameAPI {
   deckTestDeck?: string; //Deck of the deck test opponent (AI)
 }
 
-export interface CreateGameFormik {
-  deck?: string;
-  fabdb?: string;
-  deckTestMode?: boolean;
-  format?: string;
-  visibility?: string;
-  decksToTry?: string;
-  favoriteDeck?: boolean;
-  favoriteDecks?: string;
-  gameDescription?: string;
-}
+export type CreateGameFormik = GameEntryFormik;
 
-export interface CreateGameResponse {
-  gameStarted?: boolean;
-  error?: string;
-  message?: string;
-  gameName?: number;
-  playerID?: number;
-  authKey?: string;
-}
+export type CreateGameResponse = GameEntryResponse;
 
 /*
 {

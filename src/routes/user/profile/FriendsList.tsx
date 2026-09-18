@@ -23,7 +23,7 @@ import { IoMdArrowDropright } from 'react-icons/io';
 import { useTranslation } from 'react-i18next';
 import styles from './FriendsList.module.css';
 import { Friend } from 'interface/API/FriendListAPI.php';
-import { createPatreonIconMap } from 'utils/patronIcons';
+import UserBadgeIcons from 'components/UserBadgeIcons/UserBadgeIcons';
 import { useUserSearch } from 'hooks/useUserSearch';
 import { UserSearchResults } from './UserSearchResults';
 
@@ -281,26 +281,13 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
                         <td>
                           <div className={styles.friendNameContainer}>
                             <div className={styles.friendIcons}>
-                              {createPatreonIconMap(
-                                request.isContributor,
-                                request.isPvtVoidPatron,
-                                request.isPatron,
-                                false,
-                                request.metafyTiers
-                              )
-                                .filter((icon) => icon.condition)
-                                .map((icon) => (
-                                  <a
-                                    key={icon.src}
-                                    href={icon.href}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    title={icon.title}
-                                    className={styles.friendIcon}
-                                  >
-                                    <img src={icon.src} alt={icon.title} />
-                                  </a>
-                                ))}
+                              <UserBadgeIcons
+                                isContributor={request.isContributor}
+                                isPvtVoidPatron={request.isPvtVoidPatron}
+                                isPatron={request.isPatron}
+                                metafyTiers={request.metafyTiers}
+                                linkClassName={styles.friendIcon}
+                              />
                             </div>
                             <span>{request.recipientUsername}</span>
                           </div>
@@ -351,26 +338,13 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
                         <td>
                           <div className={styles.friendNameContainer}>
                             <div className={styles.friendIcons}>
-                              {createPatreonIconMap(
-                                request.isContributor,
-                                request.isPvtVoidPatron,
-                                request.isPatron,
-                                false,
-                                request.metafyTiers
-                              )
-                                .filter((icon) => icon.condition)
-                                .map((icon) => (
-                                  <a
-                                    key={icon.src}
-                                    href={icon.href}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    title={icon.title}
-                                    className={styles.friendIcon}
-                                  >
-                                    <img src={icon.src} alt={icon.title} />
-                                  </a>
-                                ))}
+                              <UserBadgeIcons
+                                isContributor={request.isContributor}
+                                isPvtVoidPatron={request.isPvtVoidPatron}
+                                isPatron={request.isPatron}
+                                metafyTiers={request.metafyTiers}
+                                linkClassName={styles.friendIcon}
+                              />
                             </div>
                             <span>{request.requesterUsername}</span>
                           </div>
@@ -435,26 +409,13 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
                         <td>
                           <div className={styles.friendNameContainer}>
                             <div className={styles.friendIcons}>
-                              {createPatreonIconMap(
-                                friend.isContributor,
-                                friend.isPvtVoidPatron,
-                                friend.isPatron,
-                                false,
-                                friend.metafyTiers
-                              )
-                                .filter((icon) => icon.condition)
-                                .map((icon) => (
-                                  <a
-                                    key={icon.src}
-                                    href={icon.href}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    title={icon.title}
-                                    className={styles.friendIcon}
-                                  >
-                                    <img src={icon.src} alt={icon.title} />
-                                  </a>
-                                ))}
+                              <UserBadgeIcons
+                                isContributor={friend.isContributor}
+                                isPvtVoidPatron={friend.isPvtVoidPatron}
+                                isPatron={friend.isPatron}
+                                metafyTiers={friend.metafyTiers}
+                                linkClassName={styles.friendIcon}
+                              />
                             </div>
                             <span className={styles.username}>
                               {friend.username}

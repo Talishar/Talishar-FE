@@ -1,26 +1,10 @@
+import { GameEntryResponse } from './GameEntry';
+
 export interface LoadReplayAPI {
   replayNumber?: number; //number of the replay
 }
 
-// export interface CreateGameFormik {
-//   deck?: string;
-//   fabdb?: string;
-//   deckTestMode?: boolean;
-//   format?: string;
-//   visibility?: string;
-//   decksToTry?: string;
-//   favoriteDeck?: boolean;
-//   favoriteDecks?: string;
-//   gameDescription?: string;
-// }
-
-export interface LoadReplayResponse {
-  gameStarted?: boolean;
-  error?: string;
-  message?: string;
-  gameName?: number;
-  playerID?: number;
-  authKey?: string;
+export interface LoadReplayResponse extends GameEntryResponse {
   success?: boolean;
   missingFiles?: Record<string, string>;
   copyErrors?: string[];
