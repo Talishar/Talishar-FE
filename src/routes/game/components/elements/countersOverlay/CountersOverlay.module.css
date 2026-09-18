@@ -1,13 +1,12 @@
 .label.label {
   background-color: var(--near-black);
-  color: var(--theme-primary);
   order: 99;
   position: absolute;
-  bottom: 10px;
-  left: 5px;
-  right: 3px;
+  bottom: 6px;
+  left: 6px;
+  right: 6px;
   text-align: center;
-  border: 0.5px solid var(--theme-primary);
+  border: 1px solid var(--theme-border);
   border-radius: 5px;
   z-index: 100;
   text-overflow: ellipsis;
@@ -22,11 +21,10 @@
   .label.label {
     font-size: 0.55rem;
     padding: 1px 3px;
-    bottom: 6px;
+    bottom: 3px;
     left: 3px;
-    right: 2px;
+    right: 3px;
     border-radius: 5px;
-    border: 0.25px solid var(--theme-primary);
   }
 }
 
@@ -34,11 +32,10 @@
   .label.label {
     font-size: 0.45rem;
     padding: 1px 2px;
-    bottom: 4px;
+    bottom: 3px;
     left: 2px;
-    right: 1px;
+    right: 2px;
     border-radius: 5px;
-    border: 0.25px solid var(--theme-primary);
   }
 }
 
@@ -757,10 +754,9 @@
   .label.label {
     font-size: 1.8dvw;
     padding: 1px 2px;
-    bottom: 4px;
+    bottom: 2px;
     left: 2px;
-    right: 1px;
+    right: 2px;
     border-radius: 5px;
-    border: 0.25px solid var(--theme-primary);
   }
 }
