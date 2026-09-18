@@ -12,7 +12,8 @@ import {
   forwardRef,
   useEffect,
   KeyboardEvent,
-  ThHTMLAttributes
+  ThHTMLAttributes,
+  ReactElement
 } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import TalisharLogo from 'img/TalisharLogo.webp';
@@ -30,7 +31,8 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  ReferenceLine
+  ReferenceLine,
+  YAxisProps
 } from 'recharts';
 
 const getSortableHeaderProps = (
@@ -343,8 +345,180 @@ function mergeCompanionPairs(cards: CardResult[]): CardResult[] {
   return Array.from(merged.values());
 }
 
+const getPitchStyles = (pitchValue?: number) => {
+  switch (pitchValue) {
+    case 1:
+      return { text: styles.onePitch, border: styles.cardOnePitch };
+    case 2:
+      return { text: styles.twoPitch, border: styles.cardTwoPitch };
+    case 3:
+      return { text: styles.threePitch, border: styles.cardThreePitch };
+    default:
+      return { text: styles.zeroPitch, border: styles.cardZeroPitch };
+  }
+};
+
+const CardThumbnailCell = ({
+  cardId,
+  imgClassName
+}: {
+  cardId: string;
+  imgClassName: string;
+}) => (
+  <td className={`${styles.card} ${styles.hideOnExport}`}>
+    <Effect card={{ cardNumber: cardId } as Card} imgClassName={imgClassName} />
+  </td>
+);
+
 /** Chart palette used when the colorblind accessibility setting is on. */
 const ACCESSIBLE_CHART_COLORS = { you: '#4DA3FF', opponent: '#F0554E' };
+
+type ChartSeries = {
+  dataKey: string;
+  name: string;
+  color: string;
+  gradientId: string;
+  fillOpacity: number;
+};
+
+const ChartSeriesLegend = ({ series }: { series: ChartSeries[] }) => (
+  <div
+    style={{
+      display: 'flex',
+      gap: '12px',
+      justifyContent: 'center',
+      fontSize: '0.68em',
+      paddingBottom: '6px',
+      color: 'rgba(255,255,255,0.6)'
+    }}
+  >
+    {series.map((entry) => (
+      <span
+        key={entry.dataKey}
+        style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
+      >
+        <svg width="14" height="4">
+          <line
+            x1="0"
+            y1="2"
+            x2="14"
+            y2="2"
+            stroke={entry.color}
+            strokeWidth="2"
+          />
+        </svg>
+        {entry.name}
+      </span>
+    ))}
+  </div>
+);
+
+const StatsAreaChart = ({
+  title,
+  data,
+  series,
+  tooltip,
+  onHoverTurn,
+  legendSeries,
+  referenceValue,
+  referenceLabel,
+  xTickFormatter,
+  yDomain
+}: {
+  title: string;
+  data: Record<string, number>[];
+  series: ChartSeries[];
+  tooltip: ReactElement;
+  onHoverTurn: (turn: number | null) => void;
+  legendSeries?: ChartSeries[];
+  referenceValue?: number;
+  referenceLabel?: string;
+  xTickFormatter?: (value: number) => string;
+  yDomain?: YAxisProps['domain'];
+}) => (
+  <div className={styles.turnBreakdownSection}>
+    <h2 className={styles.sectionHeader}>{title}</h2>
+    <ResponsiveContainer width="100%" height={220}>
+      <AreaChart
+        data={data}
+        margin={{ top: 5, right: 16, left: 0, bottom: 5 }}
+        onMouseMove={(e) => {
+          if (e.activeLabel !== undefined) onHoverTurn(Number(e.activeLabel));
+        }}
+        onMouseLeave={() => onHoverTurn(null)}
+      >
+        <defs>
+          {series.map((entry) => (
+            <linearGradient
+              key={entry.gradientId}
+              id={entry.gradientId}
+              x1="0"
+              y1="0"
+              x2="0"
+              y2="1"
+            >
+              <stop
+                offset="5%"
+                stopColor={entry.color}
+                stopOpacity={entry.fillOpacity}
+              />
+              <stop offset="95%" stopColor={entry.color} stopOpacity={0} />
+            </linearGradient>
+          ))}
+        </defs>
+        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.07)" />
+        <XAxis
+          dataKey="turn"
+          stroke="rgba(255,255,255,0.25)"
+          tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }}
+          tickFormatter={xTickFormatter}
+        />
+        <YAxis
+          stroke="rgba(255,255,255,0.25)"
+          tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }}
+          width={30}
+          domain={yDomain}
+        />
+        <Tooltip
+          content={tooltip}
+          cursor={{ stroke: 'rgba(255,255,255,0.15)' }}
+        />
+        {!!legendSeries && (
+          <Legend
+            verticalAlign="top"
+            content={() => <ChartSeriesLegend series={legendSeries} />}
+          />
+        )}
+        {referenceValue !== undefined && referenceValue > 0 && (
+          <ReferenceLine
+            y={referenceValue}
+            stroke="rgba(255,255,255,0.3)"
+            strokeDasharray="5 3"
+            label={{
+              value: referenceLabel,
+              position: 'insideTopLeft',
+              fill: 'rgba(255,255,255,0.4)',
+              fontSize: 10
+            }}
+          />
+        )}
+        {series.map((entry) => (
+          <Area
+            key={entry.dataKey}
+            type="monotone"
+            dataKey={entry.dataKey}
+            name={entry.name}
+            stroke={entry.color}
+            strokeWidth={2}
+            fill={`url(#${entry.gradientId})`}
+            dot={false}
+            activeDot={{ r: 4, fill: entry.color }}
+          />
+        ))}
+      </AreaChart>
+    </ResponsiveContainer>
+  </div>
+);
 
 function downloadViaBackend(
   type: 'csv' | 'png',
@@ -686,6 +860,38 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
           filteredChartData.length
       );
     }, [filteredChartData]);
+
+    const yourLifeSeries: ChartSeries = {
+      dataKey: 'yourLife',
+      name: t('END_GAME.YOUR_LIFE'),
+      color: chartColors.you,
+      gradientId: 'egsColorYourLife',
+      fillOpacity: 0.2
+    };
+
+    const opponentLifeSeries: ChartSeries = {
+      dataKey: 'opponentLife',
+      name: t('END_GAME.OPP_LIFE'),
+      color: chartColors.opponent,
+      gradientId: 'egsColorOppLife',
+      fillOpacity: 0.15
+    };
+
+    const threatenedSeries: ChartSeries = {
+      dataKey: 'avgThreatened',
+      name: t('END_GAME.YOU_THREATENED'),
+      color: chartColors.you,
+      gradientId: 'egsColorThreatened2',
+      fillOpacity: 0.25
+    };
+
+    const damageTakenSeries: ChartSeries = {
+      dataKey: 'damageTaken',
+      name: t('END_GAME.YOU_TOOK'),
+      color: chartColors.opponent,
+      gradientId: 'egsColorTaken',
+      fillOpacity: 0.2
+    };
 
     const handleExportScreenshot = async () => {
       if (!statsRef.current) return;
@@ -1780,17 +1986,12 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
                     </thead>
                     <tbody>
                       {activatedCardResults.map((result, ix) => {
-                        const card: Card = { cardNumber: result.cardId };
                         return (
                           <tr key={`activatedList${ix}`}>
-                            <td
-                              className={`${styles.card} ${styles.hideOnExport}`}
-                            >
-                              <Effect
-                                card={card}
-                                imgClassName={styles.cardZeroPitch}
-                              />
-                            </td>
+                            <CardThumbnailCell
+                              cardId={result.cardId}
+                              imgClassName={styles.cardZeroPitch}
+                            />
                             <td
                               className={styles.zeroPitch}
                               title={result.cardName}
@@ -1933,37 +2134,17 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
                     <tbody>
                       {!!sortedCardResults &&
                         sortedCardResults?.map((result, ix) => {
-                          const card: Card = { cardNumber: result.cardId };
-                          let cardStyle = '';
-                          let cardBorderStyle = '';
-                          switch (result.pitchValue) {
-                            case 1:
-                              cardStyle = styles.onePitch;
-                              cardBorderStyle = styles.cardOnePitch;
-                              break;
-                            case 2:
-                              cardStyle = styles.twoPitch;
-                              cardBorderStyle = styles.cardTwoPitch;
-                              break;
-                            case 3:
-                              cardStyle = styles.threePitch;
-                              cardBorderStyle = styles.cardThreePitch;
-                              break;
-                            default:
-                              cardStyle = styles.zeroPitch;
-                              cardBorderStyle = styles.cardZeroPitch;
-                          }
+                          const pitchStyles = getPitchStyles(result.pitchValue);
                           return (
                             <tr key={`cardList${ix}`}>
+                              <CardThumbnailCell
+                                cardId={result.cardId}
+                                imgClassName={pitchStyles.border}
+                              />
                               <td
-                                className={`${styles.card} ${styles.hideOnExport}`}
+                                className={pitchStyles.text}
+                                title={result.cardName}
                               >
-                                <Effect
-                                  card={card}
-                                  imgClassName={cardBorderStyle}
-                                />
-                              </td>
-                              <td className={cardStyle} title={result.cardName}>
                                 {result.cardName}
                               </td>
                               <td className={styles.played}>{result.played}</td>
@@ -2041,31 +2222,14 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
                           {data.tokenResults
                             .filter((r) => r.played > 0)
                             .map((result, ix) => {
-                              const card: Card = { cardNumber: result.cardId };
-                              let cardBorderStyle = '';
-                              switch (result.pitchValue) {
-                                case 1:
-                                  cardBorderStyle = styles.cardOnePitch;
-                                  break;
-                                case 2:
-                                  cardBorderStyle = styles.cardTwoPitch;
-                                  break;
-                                case 3:
-                                  cardBorderStyle = styles.cardThreePitch;
-                                  break;
-                                default:
-                                  cardBorderStyle = styles.cardZeroPitch;
-                              }
                               return (
                                 <tr key={`tokenList${ix}`}>
-                                  <td
-                                    className={`${styles.card} ${styles.hideOnExport}`}
-                                  >
-                                    <Effect
-                                      card={card}
-                                      imgClassName={cardBorderStyle}
-                                    />
-                                  </td>
+                                  <CardThumbnailCell
+                                    cardId={result.cardId}
+                                    imgClassName={
+                                      getPitchStyles(result.pitchValue).border
+                                    }
+                                  />
                                   <td
                                     className={styles.zeroPitch}
                                     title={result.cardName}
@@ -2582,404 +2746,51 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
         {/* Per Turn Charts - SVGs are converted to static images before html2canvas capture */}
         {filteredChartData.length > 1 && (
           <div className={`${styles.chartsGrid} ${styles.hideOnExport}`}>
-            {/* Chart 1: Value Per Turn with reference lines */}
-            <div className={styles.turnBreakdownSection}>
-              <h2 className={styles.sectionHeader}>
-                {t('END_GAME.VALUE_PER_TURN')}
-              </h2>
-              <ResponsiveContainer width="100%" height={220}>
-                <AreaChart
-                  data={filteredChartData}
-                  margin={{ top: 5, right: 16, left: 0, bottom: 5 }}
-                  onMouseMove={(e) => {
-                    if (e.activeLabel !== undefined)
-                      setHoveredChartTurn(Number(e.activeLabel));
-                  }}
-                  onMouseLeave={() => setHoveredChartTurn(null)}
-                >
-                  <defs>
-                    <linearGradient
-                      id="egsColorValue"
-                      x1="0"
-                      y1="0"
-                      x2="0"
-                      y2="1"
-                    >
-                      <stop
-                        offset="5%"
-                        stopColor={chartColors.you}
-                        stopOpacity={0.3}
-                      />
-                      <stop
-                        offset="95%"
-                        stopColor={chartColors.you}
-                        stopOpacity={0}
-                      />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    stroke="rgba(255,255,255,0.07)"
-                  />
-                  <XAxis
-                    dataKey="turn"
-                    stroke="rgba(255,255,255,0.25)"
-                    tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }}
-                  />
-                  <YAxis
-                    stroke="rgba(255,255,255,0.25)"
-                    tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }}
-                    width={30}
-                  />
-                  <Tooltip
-                    content={<ChartTooltip />}
-                    cursor={{ stroke: 'rgba(255,255,255,0.15)' }}
-                  />
-                  {avgChartValue > 0 && (
-                    <ReferenceLine
-                      y={avgChartValue}
-                      stroke="rgba(255,255,255,0.3)"
-                      strokeDasharray="5 3"
-                      label={{
-                        value: t('END_GAME.AVG_LABEL', {
-                          value: avgChartValue
-                        }),
-                        position: 'insideTopLeft',
-                        fill: 'rgba(255,255,255,0.4)',
-                        fontSize: 10
-                      }}
-                    />
-                  )}
-                  <Area
-                    type="monotone"
-                    dataKey="avgValue"
-                    name={t('END_GAME.VALUE')}
-                    stroke={chartColors.you}
-                    strokeWidth={2}
-                    fill="url(#egsColorValue)"
-                    dot={false}
-                    activeDot={{ r: 4, fill: chartColors.you }}
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
+            <StatsAreaChart
+              title={t('END_GAME.VALUE_PER_TURN')}
+              data={filteredChartData}
+              tooltip={<ChartTooltip />}
+              onHoverTurn={setHoveredChartTurn}
+              referenceValue={avgChartValue}
+              referenceLabel={t('END_GAME.AVG_LABEL', {
+                value: avgChartValue
+              })}
+              series={[
+                {
+                  dataKey: 'avgValue',
+                  name: t('END_GAME.VALUE'),
+                  color: chartColors.you,
+                  gradientId: 'egsColorValue',
+                  fillOpacity: 0.3
+                }
+              ]}
+            />
 
-            {/* Chart 2: Life Totals - both heroes overlaid */}
-            <div className={styles.turnBreakdownSection}>
-              <h2 className={styles.sectionHeader}>
-                {t('END_GAME.LIFE_TOTALS')}
-              </h2>
-              <ResponsiveContainer width="100%" height={220}>
-                <AreaChart
-                  data={lifeChartData}
-                  margin={{ top: 5, right: 16, left: 0, bottom: 5 }}
-                  onMouseMove={(e) => {
-                    if (e.activeLabel !== undefined)
-                      setHoveredChartTurn(Number(e.activeLabel));
-                  }}
-                  onMouseLeave={() => setHoveredChartTurn(null)}
-                >
-                  <defs>
-                    <linearGradient
-                      id="egsColorYourLife"
-                      x1="0"
-                      y1="0"
-                      x2="0"
-                      y2="1"
-                    >
-                      <stop
-                        offset="5%"
-                        stopColor={chartColors.you}
-                        stopOpacity={0.2}
-                      />
-                      <stop
-                        offset="95%"
-                        stopColor={chartColors.you}
-                        stopOpacity={0}
-                      />
-                    </linearGradient>
-                    <linearGradient
-                      id="egsColorOppLife"
-                      x1="0"
-                      y1="0"
-                      x2="0"
-                      y2="1"
-                    >
-                      <stop
-                        offset="5%"
-                        stopColor={chartColors.opponent}
-                        stopOpacity={0.15}
-                      />
-                      <stop
-                        offset="95%"
-                        stopColor={chartColors.opponent}
-                        stopOpacity={0}
-                      />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    stroke="rgba(255,255,255,0.07)"
-                  />
-                  <XAxis
-                    dataKey="turn"
-                    stroke="rgba(255,255,255,0.25)"
-                    tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }}
-                    tickFormatter={(v) =>
-                      v === 0 ? t('END_GAME.START') : String(v)
-                    }
-                  />
-                  <YAxis
-                    stroke="rgba(255,255,255,0.25)"
-                    tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }}
-                    width={30}
-                    domain={[0, 'auto']}
-                  />
-                  <Tooltip
-                    content={<ChartTooltip />}
-                    cursor={{ stroke: 'rgba(255,255,255,0.15)' }}
-                  />
-                  <Legend
-                    verticalAlign="top"
-                    content={() => (
-                      <div
-                        style={{
-                          display: 'flex',
-                          gap: '12px',
-                          justifyContent: 'center',
-                          fontSize: '0.68em',
-                          paddingBottom: '6px',
-                          color: 'rgba(255,255,255,0.6)'
-                        }}
-                      >
-                        <span
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '4px'
-                          }}
-                        >
-                          <svg width="14" height="4">
-                            <line
-                              x1="0"
-                              y1="2"
-                              x2="14"
-                              y2="2"
-                              stroke={chartColors.you}
-                              strokeWidth="2"
-                            />
-                          </svg>
-                          {t('END_GAME.YOUR_LIFE')}
-                        </span>
-                        <span
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '4px'
-                          }}
-                        >
-                          <svg width="14" height="4">
-                            <line
-                              x1="0"
-                              y1="2"
-                              x2="14"
-                              y2="2"
-                              stroke={chartColors.opponent}
-                              strokeWidth="2"
-                            />
-                          </svg>
-                          {t('END_GAME.OPP_LIFE')}
-                        </span>
-                      </div>
-                    )}
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="opponentLife"
-                    name={t('END_GAME.OPP_LIFE')}
-                    stroke={chartColors.opponent}
-                    strokeWidth={2}
-                    fill="url(#egsColorOppLife)"
-                    dot={false}
-                    activeDot={{ r: 4, fill: chartColors.opponent }}
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="yourLife"
-                    name={t('END_GAME.YOUR_LIFE')}
-                    stroke={chartColors.you}
-                    strokeWidth={2}
-                    fill="url(#egsColorYourLife)"
-                    dot={false}
-                    activeDot={{ r: 4, fill: chartColors.you }}
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
+            <StatsAreaChart
+              title={t('END_GAME.LIFE_TOTALS')}
+              data={lifeChartData}
+              tooltip={<ChartTooltip />}
+              onHoverTurn={setHoveredChartTurn}
+              xTickFormatter={(v) =>
+                v === 0 ? t('END_GAME.START') : String(v)
+              }
+              yDomain={[0, 'auto']}
+              series={[opponentLifeSeries, yourLifeSeries]}
+              legendSeries={[yourLifeSeries, opponentLifeSeries]}
+            />
 
-            {/* Chart 3: Pressure Exchange - your threatened vs damage taken */}
-            <div className={styles.turnBreakdownSection}>
-              <h2 className={styles.sectionHeader}>
-                {t('END_GAME.PRESSURE_EXCHANGE')}
-              </h2>
-              <ResponsiveContainer width="100%" height={220}>
-                <AreaChart
-                  data={filteredChartData}
-                  margin={{ top: 5, right: 16, left: 0, bottom: 5 }}
-                  onMouseMove={(e) => {
-                    if (e.activeLabel !== undefined)
-                      setHoveredChartTurn(Number(e.activeLabel));
-                  }}
-                  onMouseLeave={() => setHoveredChartTurn(null)}
-                >
-                  <defs>
-                    <linearGradient
-                      id="egsColorThreatened2"
-                      x1="0"
-                      y1="0"
-                      x2="0"
-                      y2="1"
-                    >
-                      <stop
-                        offset="5%"
-                        stopColor={chartColors.you}
-                        stopOpacity={0.25}
-                      />
-                      <stop
-                        offset="95%"
-                        stopColor={chartColors.you}
-                        stopOpacity={0}
-                      />
-                    </linearGradient>
-                    <linearGradient
-                      id="egsColorTaken"
-                      x1="0"
-                      y1="0"
-                      x2="0"
-                      y2="1"
-                    >
-                      <stop
-                        offset="5%"
-                        stopColor={chartColors.opponent}
-                        stopOpacity={0.2}
-                      />
-                      <stop
-                        offset="95%"
-                        stopColor={chartColors.opponent}
-                        stopOpacity={0}
-                      />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    stroke="rgba(255,255,255,0.07)"
-                  />
-                  <XAxis
-                    dataKey="turn"
-                    stroke="rgba(255,255,255,0.25)"
-                    tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }}
-                  />
-                  <YAxis
-                    stroke="rgba(255,255,255,0.25)"
-                    tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }}
-                    width={30}
-                  />
-                  <Tooltip
-                    content={<ChartTooltip />}
-                    cursor={{ stroke: 'rgba(255,255,255,0.15)' }}
-                  />
-                  <Legend
-                    verticalAlign="top"
-                    content={() => (
-                      <div
-                        style={{
-                          display: 'flex',
-                          gap: '12px',
-                          justifyContent: 'center',
-                          fontSize: '0.68em',
-                          paddingBottom: '6px',
-                          color: 'rgba(255,255,255,0.6)'
-                        }}
-                      >
-                        <span
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '4px'
-                          }}
-                        >
-                          <svg width="14" height="4">
-                            <line
-                              x1="0"
-                              y1="2"
-                              x2="14"
-                              y2="2"
-                              stroke={chartColors.you}
-                              strokeWidth="2"
-                            />
-                          </svg>
-                          {t('END_GAME.YOU_THREATENED')}
-                        </span>
-                        <span
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '4px'
-                          }}
-                        >
-                          <svg width="14" height="4">
-                            <line
-                              x1="0"
-                              y1="2"
-                              x2="14"
-                              y2="2"
-                              stroke={chartColors.opponent}
-                              strokeWidth="2"
-                            />
-                          </svg>
-                          {t('END_GAME.YOU_TOOK')}
-                        </span>
-                      </div>
-                    )}
-                  />
-                  {avgThreatenedValue > 0 && (
-                    <ReferenceLine
-                      y={avgThreatenedValue}
-                      stroke="rgba(255,255,255,0.3)"
-                      strokeDasharray="5 3"
-                      label={{
-                        value: t('END_GAME.AVG_LABEL', {
-                          value: avgThreatenedValue
-                        }),
-                        position: 'insideTopLeft',
-                        fill: 'rgba(255,255,255,0.4)',
-                        fontSize: 10
-                      }}
-                    />
-                  )}
-                  <Area
-                    type="monotone"
-                    dataKey="avgThreatened"
-                    name={t('END_GAME.YOU_THREATENED')}
-                    stroke={chartColors.you}
-                    strokeWidth={2}
-                    fill="url(#egsColorThreatened2)"
-                    dot={false}
-                    activeDot={{ r: 4, fill: chartColors.you }}
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="damageTaken"
-                    name={t('END_GAME.YOU_TOOK')}
-                    stroke={chartColors.opponent}
-                    strokeWidth={2}
-                    fill="url(#egsColorTaken)"
-                    dot={false}
-                    activeDot={{ r: 4, fill: chartColors.opponent }}
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
+            <StatsAreaChart
+              title={t('END_GAME.PRESSURE_EXCHANGE')}
+              data={filteredChartData}
+              tooltip={<ChartTooltip />}
+              onHoverTurn={setHoveredChartTurn}
+              referenceValue={avgThreatenedValue}
+              referenceLabel={t('END_GAME.AVG_LABEL', {
+                value: avgThreatenedValue
+              })}
+              series={[threatenedSeries, damageTakenSeries]}
+              legendSeries={[threatenedSeries, damageTakenSeries]}
+            />
           </div>
         )}
 
