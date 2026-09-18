@@ -26,9 +26,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border: var(--theme-primary) solid 1px;
+  border: var(--theme-border) solid 1px;
   color: var(--white);
-  border-radius: 5px;
+  border-radius: 10px;
   width: 1.5em;
   height: 1.5em;
   font-size: 1.75em;

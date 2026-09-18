@@ -76,7 +76,7 @@
 
 .icon {
   background-color: var(--near-black);
-  border: var(--theme-primary) solid 1px;
+  border: var(--theme-border) solid 1px;
   color: var(--white);
   border-radius: 5px;
   font-size: 1.5em;

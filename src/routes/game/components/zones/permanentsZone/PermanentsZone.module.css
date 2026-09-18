@@ -121,7 +121,7 @@
   min-width: 2em;
   width: auto;
   background-color: var(--near-black);
-  border: var(--theme-primary) solid 1px;
+  border: var(--theme-border) solid 1px;
   color: var(--white);
   border-radius: 5px;
   font-size: max(8px, 0.75em);
@@ -140,7 +140,7 @@
   min-width: 2em;
   width: auto;
   background-color: var(--near-black);
-  border: var(--theme-primary) solid 1px;
+  border: var(--theme-border) solid 1px;
   color: var(--white);
   border-radius: 5px;
   font-size: max(8px, 0.75em);
