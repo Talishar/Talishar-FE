@@ -25,7 +25,7 @@ const Premium = () => {
       name: t('PREMIUM_PAGE.TIERS.FYENDAL_SUPPORTERS'),
       image: METAFY_TIER_MAP['Fyendal Supporters'].image,
       monthlyPrice: 5,
-      yearlyDiscount: 0.05,
+      yearlyDiscount: 0.1,
       benefits: [
         t('PREMIUM_PAGE.BENEFITS.FREE_GUIDES'),
         t('PREMIUM_PAGE.BENEFITS.GENERAL_SUPPORT'),
@@ -44,7 +44,7 @@ const Premium = () => {
       name: t('PREMIUM_PAGE.TIERS.SEERS_OF_OPHIDIA'),
       image: METAFY_TIER_MAP['Seers of Ophidia'].image,
       monthlyPrice: 10,
-      yearlyDiscount: 0.1,
+      yearlyDiscount: 0.15,
       recommended: true,
       benefits: [
         t('PREMIUM_PAGE.BENEFITS.FREE_GUIDES'),
@@ -65,7 +65,7 @@ const Premium = () => {
       name: t('PREMIUM_PAGE.TIERS.ARKNIGHT_SHARDS'),
       image: METAFY_TIER_MAP['Arknight Shards'].image,
       monthlyPrice: 15,
-      yearlyDiscount: 0.15,
+      yearlyDiscount: 0.2,
       benefits: [
         t('PREMIUM_PAGE.BENEFITS.FREE_GUIDES'),
         t('PREMIUM_PAGE.BENEFITS.GENERAL_SUPPORT'),
@@ -85,7 +85,7 @@ const Premium = () => {
       name: t('PREMIUM_PAGE.TIERS.LIGHT_OF_SOL'),
       image: METAFY_TIER_MAP['Light of Sol Gemini Circle'].image,
       monthlyPrice: 20,
-      yearlyDiscount: 0.15,
+      yearlyDiscount: 0.2,
       benefits: [
         t('PREMIUM_PAGE.BENEFITS.FREE_GUIDES'),
         t('PREMIUM_PAGE.BENEFITS.GENERAL_SUPPORT'),
@@ -105,7 +105,7 @@ const Premium = () => {
       name: t('PREMIUM_PAGE.TIERS.CHAMPION_OF_GRANDEUR'),
       image: METAFY_TIER_MAP['Lover of Grandeur' as MetafyTierName].image,
       monthlyPrice: 35,
-      yearlyDiscount: 0.15,
+      yearlyDiscount: 0.25,
       benefits: [
         t('PREMIUM_PAGE.BENEFITS.FREE_GUIDES'),
         t('PREMIUM_PAGE.BENEFITS.GENERAL_SUPPORT'),
@@ -125,7 +125,7 @@ const Premium = () => {
       name: t('PREMIUM_PAGE.TIERS.SPONSORS_OF_TROPAL_DHANI'),
       image: METAFY_TIER_MAP['Sponsors of Trōpal-Dhani'].image,
       monthlyPrice: 50,
-      yearlyDiscount: 0.2,
+      yearlyDiscount: 0.25,
       benefits: [
         t('PREMIUM_PAGE.BENEFITS.FREE_GUIDES'),
         t('PREMIUM_PAGE.BENEFITS.GENERAL_SUPPORT'),
