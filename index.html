@@ -169,6 +169,11 @@
       ]
     }
     </script>
+
+    <!-- RevIQ adblock detection API, powers AdBlockingRecovery -->
+    <script id="rev-adblock-api">
+(function(){var e=`rev_adblock`,t=localStorage,n=atob(`aHR0cHM6Ly9wYWdlYWQyLmdvb2dsZXN5bmRpY2F0aW9uLmNvbS9wYWdlYWQvanMvYWRzYnlnb29nbGUuanM`),r=fetch(n,{method:`HEAD`}).then(e=>!(e.ok&&!e.redirected)).catch(()=>!0).then(n=>n&&(t[e]=!0)),i=globalThis.reviq||=[];i.checkAdblock=()=>r,i.onAdblock=e=>r.then(t=>t&&e()),i.push(n=>r.then(()=>t[e]&&n.setKv(e,1)))})();
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

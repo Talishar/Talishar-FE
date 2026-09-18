@@ -8,7 +8,7 @@ declare global {
 }
 
 const AD_SELECTORS =
-  '[id^="rev-"], [class*="rev-content"], [class*="revcontent"],' +
+  '[id^="rev-"]:not(#rev-adblock-api), [class*="rev-content"], [class*="revcontent"],' +
   'iframe[src*="rev.iq"], iframe[src*="revcontent"],' +
   '[id^="reviq-"], [id^="prims_"], [id^="primis"], [class*="primis"],' +
   'div[data-ad]';
@@ -230,7 +230,7 @@ const CMP_SELECTOR =
   '[id*="onetrust"],[id*="didomi"],[id*="CybotCookie"],[id^="truste"],[id*="usercentrics"]';
 
 const VIDEO_AD_CONTAINER_SELECTOR =
-  '[id^="reviq-"], [id^="prims_"], [id^="primis"], [class*="primis"]';
+  '[id^="reviq-"], [id^="prims_"], [id^="primis"], [class*="primis"], [data-ad="video"]';
 const VIDEO_AD_DISMISS_SELECTOR =
   '[aria-label*="close" i], [aria-label*="dismiss" i], ' +
   '[title*="close" i], [title*="dismiss" i], ' +
