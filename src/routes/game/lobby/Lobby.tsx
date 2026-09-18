@@ -54,7 +54,7 @@ import {
 import { JUDGE_HUB_DISCORD_URL } from 'constants/socialLinks';
 import { getReadableFormatName, getShortFormatName } from 'utils/formatUtils';
 import { masteryLevelPreview } from 'features/mastery/mastery';
-import MasteryBorder from 'features/mastery/MasteryBorder';
+import MasteryPlate from 'features/mastery/MasteryPlate';
 
 const COMPETITIVE_FORMATS = new Set([
   GAME_FORMAT.COMPETITIVE_CC,
@@ -1296,9 +1296,8 @@ const Lobby = () => {
                 <div
                   className={styles.leftCol}
                   style={{ backgroundImage: leftPic }}
-                  data-mastery-level={leftMasteryLevel}
                 >
-                  <MasteryBorder level={leftMasteryLevel} />
+                  <MasteryPlate level={leftMasteryLevel} variant="inside" />
                   <div className={styles.dimPic}>
                     <h3 aria-busy={isLoading}>
                       {createPatreonIconMap(
@@ -1340,9 +1339,8 @@ const Lobby = () => {
                 <div
                   className={styles.rightCol}
                   style={{ backgroundImage: rightPic }}
-                  data-mastery-level={rightMasteryLevel}
                 >
-                  <MasteryBorder level={rightMasteryLevel} />
+                  <MasteryPlate level={rightMasteryLevel} variant="inside" />
                   {isOpponentLoading && (
                     <div
                       className={styles.opponentLoading}

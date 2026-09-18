@@ -1,0 +1,90 @@
+/*
+ * Tier palette shared by every mastery frame (round portrait frames, lobby
+ * portraits, in-game name plates). Selectors are doubled so the tier tokens
+ * always win over a component's own defaults regardless of stylesheet order.
+ */
+
+/* 5 / 10 games: rust. */
+[data-mastery-level='1'][data-mastery-level],
+[data-mastery-level='2'][data-mastery-level] {
+  --mastery-color: #513328;
+  --mastery-highlight: #825b45;
+  --mastery-shadow: #1a0e0a;
+  --mastery-pad: 4px;
+}
+
+/* 15 / 25 games: bronze. */
+[data-mastery-level='3'][data-mastery-level],
+[data-mastery-level='4'][data-mastery-level] {
+  --mastery-color: #c07b28;
+  --mastery-highlight: #f7c682;
+  --mastery-shadow: #4a2a0b;
+  --mastery-pad: 5px;
+}
+
+/* 35 / 50 games: silver. */
+[data-mastery-level='5'][data-mastery-level],
+[data-mastery-level='6'][data-mastery-level] {
+  --mastery-color: #99a5b1;
+  --mastery-highlight: #eff4f8;
+  --mastery-shadow: #414b56;
+  --mastery-pad: 5px;
+}
+
+/* 75 / 100 games: gold. */
+[data-mastery-level='7'][data-mastery-level],
+[data-mastery-level='8'][data-mastery-level] {
+  --mastery-color: #c99228;
+  --mastery-highlight: #ffe48a;
+  --mastery-shadow: #68400f;
+  --mastery-glow: rgba(255, 195, 53, 0.18);
+  --mastery-pad: 6px;
+}
+
+/* 150 / 200 games: emerald. */
+[data-mastery-level='9'][data-mastery-level],
+[data-mastery-level='10'][data-mastery-level] {
+  --mastery-color: #1e9b78;
+  --mastery-highlight: #8bebc7;
+  --mastery-shadow: #0c3d2f;
+  --mastery-glow: rgba(45, 209, 158, 0.2);
+  --mastery-pad: 6px;
+}
+
+/* 250 / 350 games: diamond. */
+[data-mastery-level='11'][data-mastery-level],
+[data-mastery-level='12'][data-mastery-level] {
+  --mastery-color: #3d78d4;
+  --mastery-highlight: #cfeaff;
+  --mastery-shadow: #14264d;
+  --mastery-glow: rgba(88, 156, 255, 0.32);
+  --mastery-pad: 7px;
+}
+
+/* 500 / 750 games: amethyst. */
+[data-mastery-level='13'][data-mastery-level],
+[data-mastery-level='14'][data-mastery-level] {
+  --mastery-color: #7a4fcd;
+  --mastery-highlight: #d5b6ff;
+  --mastery-shadow: #2c1552;
+  --mastery-glow: rgba(146, 92, 235, 0.3);
+  --mastery-pad: 7px;
+}
+
+/* 1,000 games: crimson. */
+[data-mastery-level='15'][data-mastery-level] {
+  --mastery-color: #ab181b;
+  --mastery-highlight: #ff9d8f;
+  --mastery-shadow: #3b0708;
+  --mastery-glow: rgba(190, 26, 30, 0.4);
+  --mastery-pad: 8px;
+  --mastery-gem: 11px;
+}
+
+[data-mastery-level='12'][data-mastery-level],
+[data-mastery-level='14'][data-mastery-level] {
+  --mastery-gem: 10px;
+  --mastery-crest-top: -1.05;
+  --mastery-crest-width: 1.75;
+  --mastery-crest-height: 0.92;
+}

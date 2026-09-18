@@ -404,7 +404,8 @@
   },
   "GAME_LIST": {
     "DISABLE_EXPERIMENTAL": "Disable experimental features",
-    "FEATURED_MATCH": "Featured match",
+    "FEATURED_MATCH_one": "Featured match",
+    "FEATURED_MATCH_other": "Featured matches",
     "FORMATS": {
       "BLITZ": "Blitz",
       "CC": "Classic Constructed",

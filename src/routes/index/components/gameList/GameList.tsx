@@ -41,6 +41,12 @@ export interface IGameInProgress {
   spectatorCount?: number; // Logged-in spectators seen in the last 45 seconds
 }
 
+export interface IFeaturedGame {
+  gameName: string;
+  masteryLevel?: number;
+  spectators?: number;
+}
+
 export interface GameListResponse {
   gamesInProgress: IGameInProgress[];
   openGames: IOpenGame[];
@@ -49,7 +55,8 @@ export interface GameListResponse {
   LastGameName?: number;
   LastPlayerID?: number;
   LastAuthKey?: string;
-  featuredGame?: string; // Auto-selected match pinned above the in-progress list
+  featuredGames?: IFeaturedGame[]; // Auto-selected matches pinned above the in-progress list
+  featuredGame?: string; // Legacy single pick, mirrors featuredGames[0]
   featuredMasteryLevel?: number; // Lower of the two players' hero mastery levels
   featuredSpectators?: number;
 }
@@ -73,15 +80,36 @@ const DEV_FORMAT_LIST = [
   GAME_FORMAT.SEALED,
   GAME_FORMAT.GAGE
 ];
-const DEV_FAKE_FEATURED: IGameInProgress = {
-  gameName: 90999,
-  p1Hero: 'UPR001',
-  p2Hero: 'ROS001',
-  format: GAME_FORMAT.COMPETITIVE_CC,
-  secondsSinceLastUpdate: 12,
-  visibility: '1',
-  spectatorCount: 14
-};
+const DEV_FAKE_FEATURED: IGameInProgress[] = [
+  {
+    gameName: 90999,
+    p1Hero: 'UPR001',
+    p2Hero: 'ROS001',
+    format: GAME_FORMAT.COMPETITIVE_CC,
+    secondsSinceLastUpdate: 12,
+    visibility: '1',
+    spectatorCount: 14
+  },
+  {
+    gameName: 90998,
+    p1Hero: 'ELE001',
+    p2Hero: 'HNT001',
+    format: GAME_FORMAT.BLITZ,
+    secondsSinceLastUpdate: 4,
+    visibility: '1',
+    spectatorCount: 0
+  },
+  {
+    gameName: 90997,
+    p1Hero: 'WTR001',
+    p2Hero: 'MON001',
+    format: GAME_FORMAT.COMPETITIVE_CC,
+    secondsSinceLastUpdate: 31,
+    visibility: '1',
+    spectatorCount: 2
+  }
+];
+const DEV_FAKE_FEATURED_LEVELS = [8, 6, 5];
 
 // Fake games stand in for the API entirely, so the list can be worked on
 // without a backend or a logged-in session. Index.tsx reads this to render the
@@ -133,7 +161,7 @@ const GameList = () => {
     () =>
       devFakeMode
         ? [
-            DEV_FAKE_FEATURED,
+            ...DEV_FAKE_FEATURED,
             ...Array.from({ length: 20 }, (_, i) => ({
               gameName: 90000 + i,
               p1Hero: DEV_HERO_LIST[i % DEV_HERO_LIST.length],
@@ -155,9 +183,11 @@ const GameList = () => {
       gamesInProgress: DEV_FAKE_IN_PROGRESS,
       gameInProgressCount: DEV_FAKE_IN_PROGRESS.length,
       canSeeQueue: true,
-      featuredGame: String(DEV_FAKE_FEATURED.gameName),
-      featuredMasteryLevel: 8,
-      featuredSpectators: DEV_FAKE_FEATURED.spectatorCount
+      featuredGames: DEV_FAKE_FEATURED.map((game, ix) => ({
+        gameName: String(game.gameName),
+        masteryLevel: DEV_FAKE_FEATURED_LEVELS[ix],
+        spectators: game.spectatorCount
+      }))
     }),
     [DEV_FAKE_IN_PROGRESS, DEV_FAKE_OPEN]
   );
@@ -177,11 +207,7 @@ const GameList = () => {
             gameInProgressCount:
               (apiData.gameInProgressCount ?? 0) + DEV_FAKE_IN_PROGRESS.length,
             ...(devFakeMode
-              ? {
-                  featuredGame: devFakeResponse.featuredGame,
-                  featuredMasteryLevel: devFakeResponse.featuredMasteryLevel,
-                  featuredSpectators: devFakeResponse.featuredSpectators
-                }
+              ? { featuredGames: devFakeResponse.featuredGames }
               : {})
           }
         : devFakeMode
@@ -465,20 +491,41 @@ const GameList = () => {
   );
   const displayInProgressGames = sortedInProgressGames;
 
-  const { featuredGame, unfeaturedInProgressGames } = useMemo(() => {
-    const featured = data?.featuredGame
-      ? displayInProgressGames.find(
-          (game) => String(game.gameName) === String(data.featuredGame)
-        )
-      : undefined;
+  const { featuredGames, unfeaturedInProgressGames } = useMemo(() => {
+    // Older backends only send the single pick, so fall back to it.
+    const picks: IFeaturedGame[] =
+      data?.featuredGames ??
+      (data?.featuredGame
+        ? [
+            {
+              gameName: String(data.featuredGame),
+              masteryLevel: data.featuredMasteryLevel,
+              spectators: data.featuredSpectators
+            }
+          ]
+        : []);
+
+    const featured = picks.flatMap((pick) => {
+      const game = displayInProgressGames.find(
+        (entry) => String(entry.gameName) === String(pick.gameName)
+      );
+      return game ? [{ game, masteryLevel: pick.masteryLevel }] : [];
+    });
+    const featuredSet = new Set(featured.map((pick) => pick.game));
 
     return {
-      featuredGame: featured,
-      unfeaturedInProgressGames: featured
-        ? displayInProgressGames.filter((game) => game !== featured)
+      featuredGames: featured,
+      unfeaturedInProgressGames: featuredSet.size
+        ? displayInProgressGames.filter((game) => !featuredSet.has(game))
         : displayInProgressGames
     };
-  }, [data?.featuredGame, displayInProgressGames]);
+  }, [
+    data?.featuredGames,
+    data?.featuredGame,
+    data?.featuredMasteryLevel,
+    data?.featuredSpectators,
+    displayInProgressGames
+  ]);
 
   const { friendGamesInProgress, otherGamesInProgress } = useMemo(() => {
     const friendGames: IGameInProgress[] = [];
@@ -864,25 +911,31 @@ const GameList = () => {
             </>
           ) : (
             <div data-testid="games-in-progress" ref={parent}>
-              {featuredGame && (
+              {featuredGames.length > 0 && (
                 <div className={styles.featuredSection}>
                   <div className={styles.featuredHeading}>
-                    {t('GAME_LIST.FEATURED_MATCH', 'Featured match')}
+                    {t('GAME_LIST.FEATURED_MATCH', {
+                      count: featuredGames.length,
+                      defaultValue: 'Featured match'
+                    })}
                   </div>
-                  <InProgressGame
-                    entry={featuredGame}
-                    isFeatured
-                    masteryLevel={data?.featuredMasteryLevel}
-                    isFriendsGame={
-                      !!(
-                        (featuredGame.gameCreator &&
-                          friendUsernames.has(featuredGame.gameCreator)) ||
-                        (featuredGame.p2Username &&
-                          friendUsernames.has(featuredGame.p2Username))
-                      )
-                    }
-                    formatLabel={getFormatLabel(featuredGame.format)}
-                  />
+                  {featuredGames.map(({ game, masteryLevel }) => (
+                    <InProgressGame
+                      entry={game}
+                      key={game.gameName}
+                      isFeatured
+                      masteryLevel={masteryLevel}
+                      isFriendsGame={
+                        !!(
+                          (game.gameCreator &&
+                            friendUsernames.has(game.gameCreator)) ||
+                          (game.p2Username &&
+                            friendUsernames.has(game.p2Username))
+                        )
+                      }
+                      formatLabel={getFormatLabel(game.format)}
+                    />
+                  ))}
                 </div>
               )}
               {[...friendGamesInProgress, ...otherGamesInProgress].map(

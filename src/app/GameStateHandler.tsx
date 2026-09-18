@@ -26,6 +26,11 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { reportPerformanceMetric } from 'utils/performanceMetrics';
 import useAuth from 'hooks/useAuth';
+import { mockGetNextTurn } from 'mocks/api/GetNextTurn3';
+
+const IS_MOCK_GAME =
+  typeof window !== 'undefined' &&
+  new URLSearchParams(window.location.search).get('mockGame') === '1';
 
 const MAX_RETRIES = 5;
 
@@ -256,8 +261,21 @@ const GameStateHandler = ({
     dispatch
   ]);
 
+  useEffect(() => {
+    if (!IS_MOCK_GAME) return;
+    dispatch(setGameStart({ gameID: 1, playerID: 1, authKey: 'mock' }));
+    const push = () => {
+      dispatch(receiveGameState(ParseGameState(mockGetNextTurn as any)));
+      onInitialStateReceivedRef.current?.(1);
+    };
+    push();
+    const timers = [200, 600, 1200, 2000].map((d) => setTimeout(push, d));
+    return () => timers.forEach(clearTimeout);
+  }, [dispatch]);
+
   // SSE connection to game server
   useEffect(() => {
+    if (IS_MOCK_GAME) return;
     const currentGameID = gameInfo.gameID;
     if (seatLookup?.gameID !== currentGameID || !seatLookup.settled) return;
     const currentPlayerID = gameInfo.playerID;

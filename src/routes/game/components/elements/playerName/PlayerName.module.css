@@ -52,6 +52,12 @@
   }
 }
 
+.playerName[data-framed] .nameContainer {
+  /* Clears the widest compact band (level XV) so the metal never reaches the
+     name. */
+  padding: 0 calc(0.5em + 5px);
+}
+
 .nameContainer {
   display: flex;
   align-items: center;

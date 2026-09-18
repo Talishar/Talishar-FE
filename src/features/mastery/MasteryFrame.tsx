@@ -1,6 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { ornamentTier } from './mastery';
+import './masteryPalette.css';
 import styles from './MasteryFrame.module.css';
 
 interface Props {
