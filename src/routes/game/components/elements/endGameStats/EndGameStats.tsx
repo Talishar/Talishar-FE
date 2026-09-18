@@ -1131,6 +1131,19 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
       );
     }, [data.arenaCardResults, data.cardResults]);
 
+    const activatedColumns = useMemo(
+      () => ({
+        activated: activatedCardResults.some((r) => (r.activated ?? 0) > 0),
+        passiveTriggered: activatedCardResults.some(
+          (r) => (r.passiveTriggered ?? 0) > 0
+        ),
+        blocked: activatedCardResults.some((r) => r.blocked > 0),
+        pitched: activatedCardResults.some((r) => r.pitched > 0),
+        hits: activatedCardResults.some((r) => r.hits > 0)
+      }),
+      [activatedCardResults]
+    );
+
     const sortedCardResults = useMemo(() => {
       if (!filteredCardResults || !sortField) {
         return filteredCardResults;
@@ -1728,33 +1741,41 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
                         >
                           {t('END_GAME.CARD_NAME')}
                         </th>
-                        <th
-                          className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
-                        >
-                          {t('END_GAME.ACTIVATED')}
-                        </th>
-                        <th
-                          className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
-                        >
-                          {t('END_GAME.PASSIVE_TRIGGERED')}
-                        </th>
-                        <th
-                          className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
-                        >
-                          {t('END_GAME.BLOCKED')}
-                        </th>
-                        {activatedCardResults.some((r) => r.pitched > 0) && (
+                        {activatedColumns.activated && (
+                          <th
+                            className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
+                          >
+                            {t('END_GAME.ACTIVATED')}
+                          </th>
+                        )}
+                        {activatedColumns.passiveTriggered && (
+                          <th
+                            className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
+                          >
+                            {t('END_GAME.PASSIVE_TRIGGERED')}
+                          </th>
+                        )}
+                        {activatedColumns.blocked && (
+                          <th
+                            className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
+                          >
+                            {t('END_GAME.BLOCKED')}
+                          </th>
+                        )}
+                        {activatedColumns.pitched && (
                           <th
                             className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
                           >
                             {t('END_GAME.PITCHED')}
                           </th>
                         )}
-                        <th
-                          className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
-                        >
-                          {t('END_GAME.TIMES_HIT')}
-                        </th>
+                        {activatedColumns.hits && (
+                          <th
+                            className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
+                          >
+                            {t('END_GAME.TIMES_HIT')}
+                          </th>
+                        )}
                       </tr>
                     </thead>
                     <tbody>
@@ -1776,23 +1797,29 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
                             >
                               {result.cardName}
                             </td>
-                            <td className={styles.played}>
-                              {result.activated ?? 0}
-                            </td>
-                            <td className={styles.cardStat}>
-                              {result.passiveTriggered ?? 0}
-                            </td>
-                            <td className={styles.cardStat}>
-                              {result.blocked}
-                            </td>
-                            {activatedCardResults.some(
-                              (r) => r.pitched > 0
-                            ) && (
+                            {activatedColumns.activated && (
+                              <td className={styles.played}>
+                                {result.activated ?? 0}
+                              </td>
+                            )}
+                            {activatedColumns.passiveTriggered && (
+                              <td className={styles.cardStat}>
+                                {result.passiveTriggered ?? 0}
+                              </td>
+                            )}
+                            {activatedColumns.blocked && (
+                              <td className={styles.cardStat}>
+                                {result.blocked}
+                              </td>
+                            )}
+                            {activatedColumns.pitched && (
                               <td className={styles.cardStat}>
                                 {result.pitched}
                               </td>
                             )}
-                            <td className={styles.cardStat}>{result.hits}</td>
+                            {activatedColumns.hits && (
+                              <td className={styles.cardStat}>{result.hits}</td>
+                            )}
                           </tr>
                         );
                       })}
