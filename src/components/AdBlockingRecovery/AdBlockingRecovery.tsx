@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
+import useSupporterStatus from 'hooks/useSupporterStatus';
 import styles from './AdBlockingRecovery.module.css';
 
 type ReviqApi = {
@@ -21,9 +22,15 @@ const DISMISS_DURATION_MS = 2 * 60 * 60 * 1000; // 2 hours
 
 const AdBlockingRecovery: React.FC = () => {
   const { t } = useTranslation();
+  const { showAds } = useSupporterStatus();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    if (!showAds) {
+      setVisible(false);
+      return;
+    }
+
     const dismissed = localStorage.getItem(DISMISS_KEY);
     if (dismissed && Date.now() - Number(dismissed) < DISMISS_DURATION_MS) {
       return;
@@ -77,14 +84,14 @@ const AdBlockingRecovery: React.FC = () => {
     };
 
     check();
-  }, []);
+  }, [showAds]);
 
   const handleDismiss = () => {
     localStorage.setItem(DISMISS_KEY, String(Date.now()));
     setVisible(false);
   };
 
-  if (!visible) return null;
+  if (!visible || !showAds) return null;
 
   return (
     <div className={styles.container}>
