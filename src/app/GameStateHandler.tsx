@@ -26,7 +26,6 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { reportPerformanceMetric } from 'utils/performanceMetrics';
 import useAuth from 'hooks/useAuth';
-import { mockGetNextTurn } from 'mocks/api/GetNextTurn3';
 
 const IS_MOCK_GAME =
   typeof window !== 'undefined' &&
@@ -264,13 +263,21 @@ const GameStateHandler = ({
   useEffect(() => {
     if (!IS_MOCK_GAME) return;
     dispatch(setGameStart({ gameID: 1, playerID: 1, authKey: 'mock' }));
-    const push = () => {
-      dispatch(receiveGameState(ParseGameState(mockGetNextTurn as any)));
-      onInitialStateReceivedRef.current?.(1);
+    let timers: ReturnType<typeof setTimeout>[] = [];
+    let cancelled = false;
+    import('mocks/api/GetNextTurn3').then(({ mockGetNextTurn }) => {
+      if (cancelled) return;
+      const push = () => {
+        dispatch(receiveGameState(ParseGameState(mockGetNextTurn as any)));
+        onInitialStateReceivedRef.current?.(1);
+      };
+      push();
+      timers = [200, 600, 1200, 2000].map((d) => setTimeout(push, d));
+    });
+    return () => {
+      cancelled = true;
+      timers.forEach(clearTimeout);
     };
-    push();
-    const timers = [200, 600, 1200, 2000].map((d) => setTimeout(push, d));
-    return () => timers.forEach(clearTimeout);
   }, [dispatch]);
 
   // SSE connection to game server

@@ -3,7 +3,6 @@ const fs = require('fs');
 const path = require('path');
 
 const CR_URL = 'https://rules.fabtcg.com/en/cr/08-keywords/';
-const MAX_TEXT_LENGTH = 1500;
 
 const outputFile = path.join(
   __dirname,
@@ -102,7 +101,6 @@ axios
       const text = stripTags(sectionHtml);
       const numbered = text.match(/(\d+\.\d+\.\d+\.?)\s*([\s\S]*)$/);
       if (!numbered) continue;
-      const body = numbered[2];
       const firstLine = stripTags(
         sectionHtml.match(/<strong>([\s\S]*?)<\/strong>/i)?.[1] ?? ''
       );
@@ -120,11 +118,7 @@ axios
       if (crText[id]) continue;
 
       matchedHeadings.add(id);
-      let ruleText = body.replace(/\n+/g, '\n').trim();
-      if (ruleText.length > MAX_TEXT_LENGTH) {
-        ruleText = `${ruleText.slice(0, MAX_TEXT_LENGTH).trimEnd()}…`;
-      }
-      crText[id] = { anchor: anchors[i].anchor, text: ruleText };
+      crText[id] = { anchor: anchors[i].anchor };
     }
 
     const missingGlossary = [...glossaryIds].filter(

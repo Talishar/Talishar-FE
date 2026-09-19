@@ -13,5 +13,4 @@ export interface KeywordEntry {
 
 export interface CrRule {
   anchor: string;
-  text: string;
 }
