@@ -34,12 +34,17 @@ const settingsAdapter = createEntityAdapter<Setting>({
 export const settingsInitialState = settingsAdapter.getInitialState({
   status: QUERY_STATUS.IDLE,
   language: loadInitialLanguage(),
-  pendingRollbacks: {} as Record<string, Setting[]>
+  pendingRollbacks: {} as Record<string, Setting[]>,
+  latestFetchId: '',
+  loadingSettingsKey: null as string | null
 });
 
 const SPECTATOR_PLAYER_ID = 3;
 const isSpectating = (game: GameStaticInfo) =>
   Number(game.playerID) === SPECTATOR_PLAYER_ID;
+
+const settingsKey = (game: GameStaticInfo) =>
+  isSpectating(game) ? '0' : String(game.gameID);
 
 export const fetchAllSettings = createAsyncThunk(
   'options/fetchAllSettings',
@@ -79,11 +84,12 @@ export const fetchAllSettings = createAsyncThunk(
     }
   },
   {
-    condition: (userId, { getState }) => {
-      const { settings } = getState() as any;
-      const fetchStatus = settings.status;
-      if (fetchStatus === 'loading') {
-        // Already in progress, don't need to re-fetch
+    condition: ({ game }, { getState }) => {
+      const { settings } = getState() as RootState;
+      if (
+        settings.status === QUERY_STATUS.LOADING &&
+        settings.loadingSettingsKey === settingsKey(game)
+      ) {
         return false;
       }
     }
@@ -158,21 +164,26 @@ const optionsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchAllSettings.fulfilled, (state, action) => {
+      if (state.latestFetchId !== action.meta.requestId) return;
       // Handle cases where payload might be undefined or null
       const settings = action.payload ?? [];
       settingsAdapter.setAll(state, settings);
+      state.loadingSettingsKey = null;
       state.status = QUERY_STATUS.SUCCESS;
     });
     builder.addCase(fetchAllSettings.rejected, (state, action) => {
+      if (state.latestFetchId !== action.meta.requestId) return;
       toast.error(JSON.stringify(action.error));
+      state.loadingSettingsKey = null;
       state.status = QUERY_STATUS.FAILED;
     });
-    builder.addCase(fetchAllSettings.pending, (state) => {
+    builder.addCase(fetchAllSettings.pending, (state, action) => {
+      state.latestFetchId = action.meta.requestId;
+      state.loadingSettingsKey = settingsKey(action.meta.arg.game);
       state.status = QUERY_STATUS.LOADING;
     });
     builder.addCase(updateOptions.fulfilled, (state, action) => {
       delete state.pendingRollbacks[action.meta.requestId];
-      state.status = QUERY_STATUS.SUCCESS;
     });
     builder.addCase(updateOptions.rejected, (state, action) => {
       const rollback = state.pendingRollbacks[action.meta.requestId];
@@ -190,7 +201,6 @@ const optionsSlice = createSlice({
         'Your setting could not be saved. Please check your connection and try again.',
         { position: 'top-center' }
       );
-      state.status = QUERY_STATUS.FAILED;
     });
     builder.addCase(updateOptions.pending, (state, action) => {
       state.pendingRollbacks[action.meta.requestId] =
@@ -199,7 +209,6 @@ const optionsSlice = createSlice({
           value: state.entities[setting.name]?.value
         }));
       settingsAdapter.upsertMany(state, action.meta.arg.settings);
-      state.status = QUERY_STATUS.LOADING;
     });
   }
 });
