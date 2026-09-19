@@ -10,19 +10,10 @@ import { useProcessInputAPIMutation } from 'features/api/apiSlice';
 import { getGameInfo } from 'features/game/GameSlice';
 import { shallowEqual } from 'react-redux';
 import classNames from 'classnames';
+import { prepareCards } from '../prepareCards';
 
 let change = false;
 let buttonClick = false;
-const prepareCards = (cards: Card[]): Card[] =>
-  cards.map(
-    (card, index) =>
-      ({
-        ...card,
-        borderColor: '8',
-        uniqueId: `${card.cardNumber}-${index}`
-      } as Card)
-  );
-
 const ReorderOpt = ({
   topCards,
   bottomCards

@@ -8,6 +8,7 @@ import React, {
 } from 'react';
 import { createPortal } from 'react-dom';
 import styles from './ImageSelect.module.css';
+import { useOutsideClick } from 'hooks/useOutsideClick';
 
 interface DropdownPosition {
   top: number;
@@ -100,17 +101,12 @@ export const ImageSelect: React.FC<ImageSelectProps> = ({
     };
   }, [isOpen, options, updatePosition]);
 
+  useOutsideClick([containerRef, listRef], () => setIsOpen(false), {
+    enabled: isOpen
+  });
+
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as Node;
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(target) &&
-        !listRef.current?.contains(target)
-      ) {
-        setIsOpen(false);
-      }
-    };
+    if (!isOpen) return;
 
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -118,15 +114,8 @@ export const ImageSelect: React.FC<ImageSelectProps> = ({
       }
     };
 
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      document.addEventListener('keydown', handleEscape);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('keydown', handleEscape);
-    };
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
   }, [isOpen]);
 
   const handleSelect = (option: ImageSelectOption) => {

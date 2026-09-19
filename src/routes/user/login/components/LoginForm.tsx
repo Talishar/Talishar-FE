@@ -15,7 +15,7 @@ import { FaExclamationCircle } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import { PasswordInput } from './PasswordInput';
 
-const getLoginBody = ({
+export const getLoginBody = ({
   userID,
   password,
   ...rest

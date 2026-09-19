@@ -22,7 +22,7 @@ import {
 } from 'features/auth/authSlice';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { ImageSelectOption } from 'components/ImageSelect';
-import { getReadableFormatName } from 'utils/formatUtils';
+import { formatDeckLabel, getReadableFormatName } from 'utils/formatUtils';
 import { FAB_BAZAAR_DECK_URL_BASE } from 'appConstants';
 import useAuth from 'hooks/useAuth';
 import { FavoriteDeck } from 'interface/API/GetFavoriteDecks.php';
@@ -46,23 +46,6 @@ const shortenFormat = (format: string): string => {
   if (format.toLowerCase() === 'classic constructed') return 'CC';
   const readable = getReadableFormatName(format);
   return readable || format;
-};
-
-const formatDeckLabel = (
-  deckName: string,
-  format: string | null,
-  maxLength = 58
-): string => {
-  const name = String(deckName ?? '');
-  const formatStr = format ? ` (${shortenFormat(format)})` : '';
-  const combined = `${name}${formatStr}`;
-
-  if (combined.length <= maxLength) {
-    return combined;
-  }
-
-  const availableForName = Math.max(1, maxLength - formatStr.length - 3);
-  return `${name.substring(0, availableForName)}...${formatStr}`;
 };
 
 interface QuickJoinContextType {
@@ -169,7 +152,9 @@ export const QuickJoinProvider = ({
     if (!favoritesData?.favoriteDecks) return [];
     return [...favoritesData.favoriteDecks].reverse().map((deck) => ({
       value: deck.key,
-      label: formatDeckLabel(deck.name, deck.format),
+      label: formatDeckLabel(deck.name, deck.format, {
+        shorten: shortenFormat
+      }),
       imageUrl: generateCroppedImageUrl(deck.hero)
     }));
   }, [favoritesData?.favoriteDecks]);
@@ -186,7 +171,9 @@ export const QuickJoinProvider = ({
     if (!bazaarData?.decks) return [];
     return bazaarData.decks.map((deck: BazaarDeck) => ({
       value: deck.id ?? deck.deckId ?? '',
-      label: formatDeckLabel(deck.name, deck.format ?? null),
+      label: formatDeckLabel(deck.name, deck.format ?? null, {
+        shorten: shortenFormat
+      }),
       imageUrl: deck.hero ? generateCroppedImageUrl(deck.hero) : undefined
     }));
   }, [bazaarData?.decks]);

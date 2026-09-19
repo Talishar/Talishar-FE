@@ -56,6 +56,82 @@ const getSortableHeaderProps = (
   }
 });
 
+type CardSortField =
+  | 'played'
+  | 'blocked'
+  | 'pitched'
+  | 'discarded'
+  | 'hits'
+  | 'cardName';
+
+type TurnSortField =
+  | 'turnNo'
+  | 'cardsUsed'
+  | 'cardsBlocked'
+  | 'cardsPitched'
+  | 'cardsDiscarded'
+  | 'cardsLeft'
+  | 'resourcesUsed'
+  | 'resourcesLeft'
+  | 'damageThreatened'
+  | 'damageDealt'
+  | 'damageBlocked'
+  | 'damagePrevented'
+  | 'damageTaken'
+  | 'lifeGained'
+  | 'lifeLost'
+  | 'totalValue';
+
+interface SortState<TField extends string> {
+  field: TField | null;
+  direction: 'asc' | 'desc';
+  toggle: (field: TField) => void;
+}
+
+const useSortState = <TField extends string>(): SortState<TField> => {
+  const [field, setField] = useState<TField | null>(null);
+  const [direction, setDirection] = useState<'asc' | 'desc'>('desc');
+
+  const toggle = (next: TField) => {
+    if (field === next) {
+      // Toggle direction if same field
+      setDirection(direction === 'desc' ? 'asc' : 'desc');
+    } else {
+      // New field, default to descending
+      setField(next);
+      setDirection('desc');
+    }
+  };
+
+  return { field, direction, toggle };
+};
+
+const SortHeader = <TField extends string>({
+  field,
+  label,
+  sort,
+  className,
+  title
+}: {
+  field: TField;
+  label: ReactNode;
+  sort: SortState<TField>;
+  className?: string;
+  title?: string;
+}) => (
+  <th
+    {...getSortableHeaderProps(
+      () => sort.toggle(field),
+      sort.field === field,
+      sort.direction
+    )}
+    className={className}
+    title={title}
+  >
+    {label} {sort.field === field && (sort.direction === 'desc' ? '↓' : '↑')}
+  </th>
+);
+
 const ScrollableTable = ({ children }: { children: ReactNode }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isOverflowing, setIsOverflowing] = useState(false);
@@ -551,16 +627,7 @@ function downloadViaBackend(
 const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
   (data, ref) => {
     const [statsTab, setStatsTab] = useState<'deck' | 'activated'>('deck');
-    const [sortField, setSortField] = useState<
-      | 'played'
-      | 'blocked'
-      | 'pitched'
-      | 'discarded'
-      | 'hits'
-      | 'cardName'
-      | null
-    >(null);
-    const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+    const cardSort = useSortState<CardSortField>();
     const [showAllCards, setShowAllCards] = useState(false);
     const statsRef = useRef<HTMLDivElement>(null);
     const [heroDataUrls, setHeroDataUrls] = useState<{
@@ -588,28 +655,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
 
     const { isSupporter, showAds } = useSupporterStatus();
 
-    const [turnSortField, setTurnSortField] = useState<
-      | 'turnNo'
-      | 'cardsUsed'
-      | 'cardsBlocked'
-      | 'cardsPitched'
-      | 'cardsDiscarded'
-      | 'cardsLeft'
-      | 'resourcesUsed'
-      | 'resourcesLeft'
-      | 'damageThreatened'
-      | 'damageDealt'
-      | 'damageBlocked'
-      | 'damagePrevented'
-      | 'damageTaken'
-      | 'lifeGained'
-      | 'lifeLost'
-      | 'totalValue'
-      | null
-    >(null);
-    const [turnSortDirection, setTurnSortDirection] = useState<'asc' | 'desc'>(
-      'desc'
-    );
+    const turnSort = useSortState<TurnSortField>();
 
     const imageToDataUrl = async (heroName: string): Promise<string | null> => {
       try {
@@ -664,54 +710,6 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
         loadHeroImages();
       }
     }, [data.yourHero, data.opponentHero, data.playerID]);
-
-    const handleSort = (
-      field:
-        | 'played'
-        | 'blocked'
-        | 'pitched'
-        | 'discarded'
-        | 'hits'
-        | 'cardName'
-    ) => {
-      if (sortField === field) {
-        // Toggle direction if same field
-        setSortDirection(sortDirection === 'desc' ? 'asc' : 'desc');
-      } else {
-        // New field, default to descending
-        setSortField(field);
-        setSortDirection('desc');
-      }
-    };
-
-    const handleTurnSort = (
-      field:
-        | 'turnNo'
-        | 'cardsUsed'
-        | 'cardsBlocked'
-        | 'cardsPitched'
-        | 'cardsDiscarded'
-        | 'cardsLeft'
-        | 'resourcesUsed'
-        | 'resourcesLeft'
-        | 'damageThreatened'
-        | 'damageDealt'
-        | 'damageBlocked'
-        | 'damagePrevented'
-        | 'damageTaken'
-        | 'lifeGained'
-        | 'lifeLost'
-        | 'totalValue'
-    ) => {
-      if (turnSortField === field) {
-        // Toggle direction if same field
-        setTurnSortDirection(turnSortDirection === 'desc' ? 'asc' : 'desc');
-      } else {
-        // New field, default to descending
-        setTurnSortField(field);
-        setTurnSortDirection('desc');
-      }
-    };
 
     // Helper function to get stats based on toggle
     const getStats = () => {
@@ -1352,35 +1350,37 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
     );
 
     const sortedCardResults = useMemo(() => {
-      if (!filteredCardResults || !sortField) {
+      const sortBy = cardSort.field;
+      if (!filteredCardResults || !sortBy) {
         return filteredCardResults;
       }
 
       return [...filteredCardResults].sort((a, b) => {
-        if (sortField === 'cardName') {
+        if (sortBy === 'cardName') {
           const aValue = a.cardName.toLowerCase();
           const bValue = b.cardName.toLowerCase();
 
-          if (sortDirection === 'desc') {
+          if (cardSort.direction === 'desc') {
             return bValue.localeCompare(aValue);
           } else {
             return aValue.localeCompare(bValue);
           }
         } else {
-          const aValue = a[sortField];
-          const bValue = b[sortField];
+          const aValue = a[sortBy];
+          const bValue = b[sortBy];
 
-          if (sortDirection === 'desc') {
+          if (cardSort.direction === 'desc') {
             return bValue - aValue;
           } else {
             return aValue - bValue;
           }
         }
       });
-    }, [filteredCardResults, sortField, sortDirection]);
+    }, [filteredCardResults, cardSort.field, cardSort.direction]);
 
     const sortedTurnResults = useMemo(() => {
-      if (!data.turnResults || !turnSortField) {
+      const sortBy = turnSort.field;
+      if (!data.turnResults || !sortBy) {
         return null;
       }
 
@@ -1394,7 +1394,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
         let aValue: number;
         let bValue: number;
 
-        if (turnSortField === 'turnNo') {
+        if (sortBy === 'turnNo') {
           // Sort by turn number (use turnNo from data or fallback to calculation)
           aValue =
             a.turnNo !== undefined
@@ -1404,7 +1404,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
             b.turnNo !== undefined
               ? b.turnNo
               : Object.keys(turnResults).indexOf(b.key);
-        } else if (turnSortField === 'totalValue') {
+        } else if (sortBy === 'totalValue') {
           aValue =
             (+a.damageThreatened || 0) +
             (+a.damageBlocked || 0) +
@@ -1418,11 +1418,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
             (+b.lifeGained || 0) +
             (+b.lifeLost || 0);
         } else {
-          aValue = a[turnSortField] || 0;
-          bValue = b[turnSortField] || 0;
+          aValue = a[sortBy] || 0;
+          bValue = b[sortBy] || 0;
         }
 
-        if (turnSortDirection === 'desc') {
+        if (turnSort.direction === 'desc') {
           return bValue - aValue;
         } else {
           return aValue - bValue;
@@ -1430,7 +1430,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
       });
 
       return sorted;
-    }, [data.turnResults, turnSortField, turnSortDirection]);
+    }, [data.turnResults, turnSort.field, turnSort.direction]);
 
     // Helper function to check if columns should be hidden - We hide those 3 collumns for irrelevant heroes
     const shouldHideDamagePrevented = useMemo(() => {
@@ -2036,86 +2036,50 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
                         <th
                           className={`${styles.firstHeadersStats} ${styles.hideOnExport}`}
                         ></th>
-                        <th
-                          {...getSortableHeaderProps(
-                            () => handleSort('cardName'),
-                            sortField === 'cardName',
-                            sortDirection
-                          )}
+                        <SortHeader
+                          field="cardName"
+                          label={t('END_GAME.CARD_NAME')}
+                          sort={cardSort}
                           className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
                           title={t('END_GAME.CLICK_TO_SORT')}
-                        >
-                          {t('END_GAME.CARD_NAME')}{' '}
-                          {sortField === 'cardName' &&
-                            (sortDirection === 'desc' ? '↓' : '↑')}
-                        </th>
-                        <th
+                        />
+                        <SortHeader
+                          field="played"
+                          label={t('END_GAME.PLAYED')}
+                          sort={cardSort}
                           className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
-                          {...getSortableHeaderProps(
-                            () => handleSort('played'),
-                            sortField === 'played',
-                            sortDirection
-                          )}
                           title={t('END_GAME.CLICK_TO_SORT')}
-                        >
-                          {t('END_GAME.PLAYED')}{' '}
-                          {sortField === 'played' &&
-                            (sortDirection === 'desc' ? '↓' : '↑')}
-                        </th>
-                        <th
+                        />
+                        <SortHeader
+                          field="blocked"
+                          label={t('END_GAME.BLOCKED')}
+                          sort={cardSort}
                           className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
-                          {...getSortableHeaderProps(
-                            () => handleSort('blocked'),
-                            sortField === 'blocked',
-                            sortDirection
-                          )}
                           title={t('END_GAME.CLICK_TO_SORT')}
-                        >
-                          {t('END_GAME.BLOCKED')}{' '}
-                          {sortField === 'blocked' &&
-                            (sortDirection === 'desc' ? '↓' : '↑')}
-                        </th>
-                        <th
+                        />
+                        <SortHeader
+                          field="pitched"
+                          label={t('END_GAME.PITCHED')}
+                          sort={cardSort}
                           className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
-                          {...getSortableHeaderProps(
-                            () => handleSort('pitched'),
-                            sortField === 'pitched',
-                            sortDirection
-                          )}
                           title={t('END_GAME.CLICK_TO_SORT')}
-                        >
-                          {t('END_GAME.PITCHED')}{' '}
-                          {sortField === 'pitched' &&
-                            (sortDirection === 'desc' ? '↓' : '↑')}
-                        </th>
+                        />
                         {numDiscarded > 0 && (
-                          <th
+                          <SortHeader
+                            field="discarded"
+                            label={t('END_GAME.DISCARDED')}
+                            sort={cardSort}
                             className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
-                            {...getSortableHeaderProps(
-                              () => handleSort('discarded'),
-                              sortField === 'discarded',
-                              sortDirection
-                            )}
                             title={t('END_GAME.CLICK_TO_SORT')}
-                          >
-                            {t('END_GAME.DISCARDED')}{' '}
-                            {sortField === 'discarded' &&
-                              (sortDirection === 'desc' ? '↓' : '↑')}
-                          </th>
+                          />
                         )}
-                        <th
+                        <SortHeader
+                          field="hits"
+                          label={t('END_GAME.TIMES_HIT')}
+                          sort={cardSort}
                           className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
-                          {...getSortableHeaderProps(
-                            () => handleSort('hits'),
-                            sortField === 'hits',
-                            sortDirection
-                          )}
                           title={t('END_GAME.CLICK_TO_SORT')}
-                        >
-                          {t('END_GAME.TIMES_HIT')}{' '}
-                          {sortField === 'hits' &&
-                            (sortDirection === 'desc' ? '↓' : '↑')}
-                        </th>
+                        />
                         {numCharged > 0 && (
                           <th
                             className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
@@ -2324,222 +2288,126 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
                     </th>
                   </tr>
                   <tr>
-                    <th
-                      {...getSortableHeaderProps(
-                        () => handleTurnSort('turnNo'),
-                        turnSortField === 'turnNo',
-                        turnSortDirection
-                      )}
+                    <SortHeader
+                      field="turnNo"
+                      label={'#'}
+                      sort={turnSort}
                       className={styles.sortableHeader}
                       title={t('END_GAME.CLICK_TO_SORT')}
-                    >
-                      #{' '}
-                      {turnSortField === 'turnNo' &&
-                        (turnSortDirection === 'desc' ? '↓' : '↑')}
-                    </th>
-                    <th
-                      {...getSortableHeaderProps(
-                        () => handleTurnSort('cardsUsed'),
-                        turnSortField === 'cardsUsed',
-                        turnSortDirection
-                      )}
+                    />
+                    <SortHeader
+                      field="cardsUsed"
+                      label={t('END_GAME.PLAYED')}
+                      sort={turnSort}
                       className={styles.sortableHeader}
                       title={t('END_GAME.CLICK_TO_SORT')}
-                    >
-                      {t('END_GAME.PLAYED')}{' '}
-                      {turnSortField === 'cardsUsed' &&
-                        (turnSortDirection === 'desc' ? '↓' : '↑')}
-                    </th>
-                    <th
-                      {...getSortableHeaderProps(
-                        () => handleTurnSort('cardsBlocked'),
-                        turnSortField === 'cardsBlocked',
-                        turnSortDirection
-                      )}
+                    />
+                    <SortHeader
+                      field="cardsBlocked"
+                      label={t('END_GAME.BLOCKED')}
+                      sort={turnSort}
                       className={styles.sortableHeader}
                       title={t('END_GAME.CLICK_TO_SORT')}
-                    >
-                      {t('END_GAME.BLOCKED')}{' '}
-                      {turnSortField === 'cardsBlocked' &&
-                        (turnSortDirection === 'desc' ? '↓' : '↑')}
-                    </th>
-                    <th
-                      {...getSortableHeaderProps(
-                        () => handleTurnSort('cardsPitched'),
-                        turnSortField === 'cardsPitched',
-                        turnSortDirection
-                      )}
+                    />
+                    <SortHeader
+                      field="cardsPitched"
+                      label={t('END_GAME.PITCHED')}
+                      sort={turnSort}
                       className={styles.sortableHeader}
                       title={t('END_GAME.CLICK_TO_SORT')}
-                    >
-                      {t('END_GAME.PITCHED')}{' '}
-                      {turnSortField === 'cardsPitched' &&
-                        (turnSortDirection === 'desc' ? '↓' : '↑')}
-                    </th>
+                    />
                     {!shouldHideCardsDiscarded && (
-                      <th
-                        {...getSortableHeaderProps(
-                          () => handleTurnSort('cardsDiscarded'),
-                          turnSortField === 'cardsDiscarded',
-                          turnSortDirection
-                        )}
+                      <SortHeader
+                        field="cardsDiscarded"
+                        label={t('END_GAME.DISCARDED')}
+                        sort={turnSort}
                         className={styles.sortableHeader}
                         title={t('END_GAME.CLICK_TO_SORT')}
-                      >
-                        {t('END_GAME.DISCARDED')}{' '}
-                        {turnSortField === 'cardsDiscarded' &&
-                          (turnSortDirection === 'desc' ? '↓' : '↑')}
-                      </th>
+                      />
                     )}
-                    <th
-                      {...getSortableHeaderProps(
-                        () => handleTurnSort('cardsLeft'),
-                        turnSortField === 'cardsLeft',
-                        turnSortDirection
-                      )}
+                    <SortHeader
+                      field="cardsLeft"
+                      label={t('END_GAME.LEFT')}
+                      sort={turnSort}
                       className={styles.sortableHeader}
                       title={t('END_GAME.CLICK_TO_SORT')}
-                    >
-                      {t('END_GAME.LEFT')}{' '}
-                      {turnSortField === 'cardsLeft' &&
-                        (turnSortDirection === 'desc' ? '↓' : '↑')}
-                    </th>
-                    <th
-                      {...getSortableHeaderProps(
-                        () => handleTurnSort('resourcesUsed'),
-                        turnSortField === 'resourcesUsed',
-                        turnSortDirection
-                      )}
+                    />
+                    <SortHeader
+                      field="resourcesUsed"
+                      label={t('END_GAME.USED')}
+                      sort={turnSort}
                       className={styles.sortableHeader}
                       title={t('END_GAME.CLICK_TO_SORT')}
-                    >
-                      {t('END_GAME.USED')}{' '}
-                      {turnSortField === 'resourcesUsed' &&
-                        (turnSortDirection === 'desc' ? '↓' : '↑')}
-                    </th>
-                    <th
-                      {...getSortableHeaderProps(
-                        () => handleTurnSort('resourcesLeft'),
-                        turnSortField === 'resourcesLeft',
-                        turnSortDirection
-                      )}
+                    />
+                    <SortHeader
+                      field="resourcesLeft"
+                      label={t('END_GAME.LEFT')}
+                      sort={turnSort}
                       className={styles.sortableHeader}
                       title={t('END_GAME.CLICK_TO_SORT')}
-                    >
-                      {t('END_GAME.LEFT')}{' '}
-                      {turnSortField === 'resourcesLeft' &&
-                        (turnSortDirection === 'desc' ? '↓' : '↑')}
-                    </th>
-                    <th
-                      {...getSortableHeaderProps(
-                        () => handleTurnSort('damageThreatened'),
-                        turnSortField === 'damageThreatened',
-                        turnSortDirection
-                      )}
+                    />
+                    <SortHeader
+                      field="damageThreatened"
+                      label={t('END_GAME.THREATENED')}
+                      sort={turnSort}
                       className={styles.sortableHeader}
                       title={t('END_GAME.CLICK_TO_SORT')}
-                    >
-                      {t('END_GAME.THREATENED')}{' '}
-                      {turnSortField === 'damageThreatened' &&
-                        (turnSortDirection === 'desc' ? '↓' : '↑')}
-                    </th>
-                    <th
-                      {...getSortableHeaderProps(
-                        () => handleTurnSort('damageDealt'),
-                        turnSortField === 'damageDealt',
-                        turnSortDirection
-                      )}
+                    />
+                    <SortHeader
+                      field="damageDealt"
+                      label={t('END_GAME.DEALT')}
+                      sort={turnSort}
                       className={styles.sortableHeader}
                       title={t('END_GAME.CLICK_TO_SORT')}
-                    >
-                      {t('END_GAME.DEALT')}{' '}
-                      {turnSortField === 'damageDealt' &&
-                        (turnSortDirection === 'desc' ? '↓' : '↑')}
-                    </th>
-                    <th
-                      {...getSortableHeaderProps(
-                        () => handleTurnSort('damageBlocked'),
-                        turnSortField === 'damageBlocked',
-                        turnSortDirection
-                      )}
+                    />
+                    <SortHeader
+                      field="damageBlocked"
+                      label={t('END_GAME.BLOCKED')}
+                      sort={turnSort}
                       className={styles.sortableHeader}
                       title={t('END_GAME.CLICK_TO_SORT')}
-                    >
-                      {t('END_GAME.BLOCKED')}{' '}
-                      {turnSortField === 'damageBlocked' &&
-                        (turnSortDirection === 'desc' ? '↓' : '↑')}
-                    </th>
+                    />
                     {!shouldHideDamagePrevented && (
-                      <th
-                        {...getSortableHeaderProps(
-                          () => handleTurnSort('damagePrevented'),
-                          turnSortField === 'damagePrevented',
-                          turnSortDirection
-                        )}
+                      <SortHeader
+                        field="damagePrevented"
+                        label={t('END_GAME.PREVENTED')}
+                        sort={turnSort}
                         className={styles.sortableHeader}
                         title={t('END_GAME.PREVENTED_TOOLTIP')}
-                      >
-                        {t('END_GAME.PREVENTED')}{' '}
-                        {turnSortField === 'damagePrevented' &&
-                          (turnSortDirection === 'desc' ? '↓' : '↑')}
-                      </th>
+                      />
                     )}
-                    <th
-                      {...getSortableHeaderProps(
-                        () => handleTurnSort('damageTaken'),
-                        turnSortField === 'damageTaken',
-                        turnSortDirection
-                      )}
+                    <SortHeader
+                      field="damageTaken"
+                      label={t('END_GAME.TAKEN')}
+                      sort={turnSort}
                       className={styles.sortableHeader}
                       title={t('END_GAME.CLICK_TO_SORT')}
-                    >
-                      {t('END_GAME.TAKEN')}{' '}
-                      {turnSortField === 'damageTaken' &&
-                        (turnSortDirection === 'desc' ? '↓' : '↑')}
-                    </th>
+                    />
                     {!shouldHideLifeGained && (
-                      <th
-                        {...getSortableHeaderProps(
-                          () => handleTurnSort('lifeGained'),
-                          turnSortField === 'lifeGained',
-                          turnSortDirection
-                        )}
+                      <SortHeader
+                        field="lifeGained"
+                        label={t('END_GAME.LIFE_GAINED')}
+                        sort={turnSort}
                         className={styles.sortableHeader}
                         title={t('END_GAME.CLICK_TO_SORT')}
-                      >
-                        {t('END_GAME.LIFE_GAINED')}{' '}
-                        {turnSortField === 'lifeGained' &&
-                          (turnSortDirection === 'desc' ? '↓' : '↑')}
-                      </th>
+                      />
                     )}
                     {!shouldHideLifeLost && (
-                      <th
-                        {...getSortableHeaderProps(
-                          () => handleTurnSort('lifeLost'),
-                          turnSortField === 'lifeLost',
-                          turnSortDirection
-                        )}
+                      <SortHeader
+                        field="lifeLost"
+                        label={t('END_GAME.SELF_LOST')}
+                        sort={turnSort}
                         className={styles.sortableHeader}
                         title={t('END_GAME.CLICK_TO_SORT')}
-                      >
-                        {t('END_GAME.SELF_LOST')}{' '}
-                        {turnSortField === 'lifeLost' &&
-                          (turnSortDirection === 'desc' ? '↓' : '↑')}
-                      </th>
+                      />
                     )}
-                    <th
-                      {...getSortableHeaderProps(
-                        () => handleTurnSort('totalValue'),
-                        turnSortField === 'totalValue',
-                        turnSortDirection
-                      )}
+                    <SortHeader
+                      field="totalValue"
+                      label={t('END_GAME.THIS_TURN')}
+                      sort={turnSort}
                       className={styles.sortableHeader}
                       title={t('END_GAME.CLICK_TO_SORT')}
-                    >
-                      {t('END_GAME.THIS_TURN')}{' '}
-                      {turnSortField === 'totalValue' &&
-                        (turnSortDirection === 'desc' ? '↓' : '↑')}
-                    </th>
+                    />
                   </tr>
                 </thead>
                 <tbody>

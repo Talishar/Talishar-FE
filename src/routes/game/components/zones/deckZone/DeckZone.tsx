@@ -5,24 +5,20 @@ import Displayrow from 'interface/Displayrow';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import styles from './DeckZone.module.css';
 import { setCardListFocus, clearCardListFocus } from 'features/game/GameSlice';
-import { useMediaQuery } from 'hooks/useMediaQuery';
 import * as optConst from 'features/options/constants';
 import { useTranslation } from 'react-i18next';
 import useSetting from 'hooks/useSetting';
 import { usePanelContextOptional } from '../../leftColumn/PanelContext';
-
-const MAX_STACK_LAYERS = 12;
+import {
+  useAlwaysShowCounters,
+  useStackedZoneGeometry
+} from '../stackedCardZone/useStackedZone';
 
 export const DeckZone = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const alwaysShowCounters = useAppSelector(
-    (state: RootState) =>
-      String(
-        state.settings.entities?.[optConst.ALWAYS_SHOW_COUNTERS]?.value
-      ) === '1'
-  );
+  const alwaysShowCounters = useAlwaysShowCounters();
 
   const deckCards = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.DeckSize : state.game.playerTwo.DeckSize
@@ -83,45 +79,15 @@ export const DeckZone = React.memo((prop: Displayrow) => {
   const isManualMode =
     useSetting({ settingName: optConst.MANUAL_MODE })?.value === '1';
 
-  const isMobileOrTablet = useMediaQuery('(max-width: 1024px)');
   const safeCount = deckCards ?? 0;
-  const baseOffsetY = safeCount * -0.24;
-  const baseOffsetX = safeCount * 0.24;
   const shuffleLayerCount = Math.min(5, Math.max(3, safeCount - 1));
-
-  const baseLayerStyles = useMemo(() => {
-    if (safeCount <= 1) return [];
-    const layerCount = Math.min(MAX_STACK_LAYERS, safeCount - 1);
-    return Array.from({ length: layerCount }, (_, index) => {
-      const sourceIndex =
-        layerCount === 1
-          ? 0
-          : Math.round((index * (safeCount - 2)) / (layerCount - 1));
-
-      return {
-        transform:
-          `translateY(${safeCount * -0.24}px) translateX(${
-            safeCount * 0.24
-          }px) ` +
-          `translateY(${(sourceIndex + 1) * 0.25}px) translateX(${
-            (sourceIndex + 1) * -0.25
-          }px)`,
-        zIndex: safeCount - sourceIndex - 1
-      };
-    });
-  }, [safeCount]);
-
-  const cardWrapperStyle = useMemo(
-    () =>
-      !isMobileOrTablet
-        ? {
-            transform: `translate3d(${Math.round(baseOffsetX)}px, ${Math.round(
-              baseOffsetY
-            )}px, 0)`
-          }
-        : undefined,
-    [isMobileOrTablet, baseOffsetY, baseOffsetX]
-  );
+  const {
+    isMobileOrTablet,
+    baseOffsetX,
+    baseOffsetY,
+    layerStyles: baseLayerStyles,
+    cardWrapperStyle
+  } = useStackedZoneGeometry(safeCount);
 
   const shuffleLayerDelays = useMemo(
     () =>

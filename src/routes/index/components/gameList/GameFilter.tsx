@@ -3,6 +3,7 @@ import styles from './GameFilter.module.scss';
 import { IoMdArrowDropright } from 'react-icons/io';
 import { IoFunnel } from 'react-icons/io5';
 import { useTranslation } from 'react-i18next';
+import { useOutsideClick } from 'hooks/useOutsideClick';
 
 // Utility functions for persisting filters to local storage
 const FILTER_STORAGE_KEY = 'gameFilters';
@@ -47,21 +48,7 @@ const GameFilter = ({
   // Initial stuff to allow the lang to change
   const { t } = useTranslation();
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
+  useOutsideClick(dropdownRef, () => setIsOpen(false));
 
   const updateDropdownPosition = () => {
     if (isOpen && buttonRef.current) {

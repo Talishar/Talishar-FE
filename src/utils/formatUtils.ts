@@ -77,3 +77,30 @@ export const getShortFormatName = (format: string): string => {
     .replace(/Draft \/ Limited/gi, 'Draft')
     .trim();
 };
+
+// Capitalize-first-letter shortener used by the create/join deck pickers
+export const capitalizeFormat = (format: string): string => {
+  if (!format) return '';
+  if (format.toLowerCase() === 'classic constructed') return 'CC';
+  return format.charAt(0).toUpperCase() + format.slice(1).toLowerCase();
+};
+
+export const formatDeckLabel = (
+  deckName: string,
+  format: string | null,
+  {
+    maxLength = 58,
+    shorten = capitalizeFormat
+  }: { maxLength?: number; shorten?: (format: string) => string } = {}
+): string => {
+  const name = String(deckName ?? '');
+  const formatStr = format ? ` (${shorten(format)})` : '';
+  const combined = `${name}${formatStr}`;
+
+  if (combined.length <= maxLength) {
+    return combined;
+  }
+
+  const availableForName = Math.max(1, maxLength - formatStr.length - 3);
+  return `${name.substring(0, availableForName)}...${formatStr}`;
+};

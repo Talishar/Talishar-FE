@@ -27,7 +27,7 @@ import { ErrorMessage } from '@hookform/error-message';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { ImageSelect, ImageSelectOption } from 'components/ImageSelect';
 import { isPreconFormat, PRECON_DECKS } from 'appConstants';
-import { getReadableFormatName } from 'utils/formatUtils';
+import { formatDeckLabel, getReadableFormatName } from 'utils/formatUtils';
 import { useTranslation, Trans } from 'react-i18next';
 import PageBanner from 'components/PageBanner/PageBanner';
 
@@ -53,31 +53,6 @@ const getBaseFormatType = (format: string | null): string => {
   if (readable.includes('precon')) return 'preconstructed decks';
 
   return readable;
-};
-
-// Helper function to shorten format names
-const shortenFormat = (format: string): string => {
-  if (!format) return '';
-  if (format.toLowerCase() === 'classic constructed') return 'CC';
-  // Capitalize first letter of other formats
-  return format.charAt(0).toUpperCase() + format.slice(1).toLowerCase();
-};
-
-const formatDeckLabel = (
-  deckName: string,
-  format: string | null,
-  maxLength = 58
-): string => {
-  const name = String(deckName ?? '');
-  const formatStr = format ? ` (${shortenFormat(format)})` : '';
-  const combined = `${name}${formatStr}`;
-
-  if (combined.length <= maxLength) {
-    return combined;
-  }
-
-  const availableForName = Math.max(1, maxLength - formatStr.length - 3);
-  return `${name.substring(0, availableForName)}...${formatStr}`;
 };
 
 const JoinGame = () => {

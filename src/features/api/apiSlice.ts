@@ -180,6 +180,51 @@ const dynamicBaseQuery: BaseQueryFn<
 };
 
 // Define our single API slice object
+const postJson = (url: string, body: unknown = {}): FetchArgs => ({
+  url,
+  method: 'POST',
+  body,
+  responseHandler: parseResponse
+});
+
+const friendAction =
+  <TArg extends Record<string, unknown> | void>(action: string) =>
+  (arg: TArg): FetchArgs =>
+    postJson(URL_END_POINT.FRIEND_LIST, { action, ...(arg ?? {}) });
+
+interface BazaarAuthParams {
+  metafyId: string | number | null;
+  metafyHash: string | number | null;
+  metafyTimestamp: string | number | null;
+}
+
+const bazaarUrl = (
+  base: string,
+  { metafyId, metafyHash, metafyTimestamp }: BazaarAuthParams
+): string => {
+  const url = new URL(base);
+  url.searchParams.set('metafyId', String(metafyId));
+  url.searchParams.set('metafyHash', String(metafyHash));
+  url.searchParams.set('timestamp', String(metafyTimestamp));
+  return url.toString();
+};
+
+const bazaarFetch = async <T>(url: string, init?: RequestInit) => {
+  try {
+    const response = await fetch(url, init);
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      return { error: { status: response.status, data: errorData } };
+    }
+    const data: T = await response.json();
+    return { data };
+  } catch (error) {
+    return {
+      error: { status: 'FETCH_ERROR' as const, error: String(error) }
+    };
+  }
+};
+
 export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: dynamicBaseQuery,
@@ -219,14 +264,8 @@ export const apiSlice = createApi({
       SaveHeroMasteryFrameResponse,
       SaveHeroMasteryFrameRequest
     >({
-      query: (body: SaveHeroMasteryFrameRequest) => {
-        return {
-          url: URL_END_POINT.SAVE_HERO_MASTERY_FRAME,
-          method: 'POST',
-          body: body,
-          responseHandler: parseResponse
-        };
-      },
+      query: (body: SaveHeroMasteryFrameRequest) =>
+        postJson(URL_END_POINT.SAVE_HERO_MASTERY_FRAME, body),
       invalidatesTags: ['HeroMastery']
     }),
     getPopUpContent: builder.query({
@@ -251,47 +290,20 @@ export const apiSlice = createApi({
       }
     }),
     login: builder.mutation({
-      query: (body) => {
-        return {
-          url: URL_END_POINT.LOGIN,
-          method: 'POST',
-          body: { ...body, submit: true },
-          responseHandler: parseResponse
-        };
-      },
+      query: (body) => postJson(URL_END_POINT.LOGIN, { ...body, submit: true }),
       invalidatesTags: ['Auth']
     }),
     loginWithCookie: builder.query({
-      query: () => {
-        return {
-          url: URL_END_POINT.LOGIN_WITH_COOKIE,
-          method: 'POST',
-          body: {},
-          responseHandler: parseResponse
-        };
-      },
+      query: () => postJson(URL_END_POINT.LOGIN_WITH_COOKIE),
       providesTags: ['Auth']
     }),
     logOut: builder.mutation({
-      query: () => {
-        return {
-          url: URL_END_POINT.LOGOUT,
-          method: 'POST',
-          body: {},
-          responseHandler: parseResponse
-        };
-      },
+      query: () => postJson(URL_END_POINT.LOGOUT),
       invalidatesTags: ['Auth']
     }),
     signUp: builder.mutation({
-      query: (body) => {
-        return {
-          url: URL_END_POINT.SIGNUP,
-          method: 'POST',
-          body: { ...body, submit: true },
-          responseHandler: parseResponse
-        };
-      },
+      query: (body) =>
+        postJson(URL_END_POINT.SIGNUP, { ...body, submit: true }),
       invalidatesTags: ['Auth']
     }),
     forgottenPassword: builder.mutation({
@@ -304,14 +316,7 @@ export const apiSlice = createApi({
       }
     }),
     resetPassword: builder.mutation({
-      query: (body) => {
-        return {
-          url: URL_END_POINT.RESET_PASSWORD,
-          method: 'POST',
-          body: { ...body },
-          responseHandler: parseResponse
-        };
-      }
+      query: (body) => postJson(URL_END_POINT.RESET_PASSWORD, { ...body })
     }),
     submitChat: builder.mutation<SubmitChatAPI, any>({
       query: ({
@@ -336,14 +341,7 @@ export const apiSlice = createApi({
       }
     }),
     processInputAPI: builder.mutation({
-      query: (body) => {
-        return {
-          url: URL_END_POINT.PROCESS_INPUT_POST,
-          method: 'POST',
-          body: body,
-          responseHandler: parseResponse
-        };
-      }
+      query: (body) => postJson(URL_END_POINT.PROCESS_INPUT_POST, body)
     }),
     getGameList: builder.query<GameListResponse, undefined>({
       query: () => {
@@ -355,14 +353,7 @@ export const apiSlice = createApi({
       }
     }),
     getGameInfo: builder.query<{ format?: string; error?: string }, string>({
-      query: (gameName) => {
-        return {
-          url: URL_END_POINT.GET_GAME_INFO,
-          method: 'POST',
-          body: { gameName },
-          responseHandler: parseResponse
-        };
-      }
+      query: (gameName) => postJson(URL_END_POINT.GET_GAME_INFO, { gameName })
     }),
     getCosmetics: builder.query<GetCosmeticsResponse, undefined>({
       query: () => {
@@ -373,64 +364,29 @@ export const apiSlice = createApi({
       }
     }),
     getBazaarDecks: builder.query<BazaarDecksResponse, GetBazaarDecksRequest>({
-      queryFn: async ({ metafyId, metafyHash, metafyTimestamp }) => {
-        const url = new URL(FAB_BAZAAR_DECKS_API_URL);
-        url.searchParams.set('metafyId', String(metafyId));
-        url.searchParams.set('metafyHash', metafyHash);
-        url.searchParams.set('timestamp', String(metafyTimestamp));
-        try {
-          const response = await fetch(url.toString());
-          if (!response.ok) {
-            const errorData = await response.json().catch(() => ({}));
-            return { error: { status: response.status, data: errorData } };
-          }
-          const data: BazaarDecksResponse = await response.json();
-          return { data };
-        } catch (error) {
-          return {
-            error: { status: 'FETCH_ERROR' as const, error: String(error) }
-          };
-        }
-      }
+      queryFn: async (auth) =>
+        bazaarFetch<BazaarDecksResponse>(
+          bazaarUrl(FAB_BAZAAR_DECKS_API_URL, auth)
+        )
     }),
     updateBazaarMatchup: builder.mutation<
       UpdateBazaarMatchupResponse,
       UpdateBazaarMatchupRequest
     >({
-      queryFn: async ({
-        deckId,
-        heroId,
-        metafyId,
-        metafyHash,
-        metafyTimestamp,
-        sideboard
-      }) => {
-        const url = new URL(
-          `https://fabbazaar.app/api/decks/${encodeURIComponent(
-            deckId
-          )}/matchups/${encodeURIComponent(heroId)}`
-        );
-        url.searchParams.set('metafyId', String(metafyId));
-        url.searchParams.set('metafyHash', String(metafyHash));
-        url.searchParams.set('timestamp', String(metafyTimestamp));
-        try {
-          const response = await fetch(url.toString(), {
+      queryFn: async ({ deckId, heroId, sideboard, ...auth }) =>
+        bazaarFetch<UpdateBazaarMatchupResponse>(
+          bazaarUrl(
+            `https://fabbazaar.app/api/decks/${encodeURIComponent(
+              deckId
+            )}/matchups/${encodeURIComponent(heroId)}`,
+            auth
+          ),
+          {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ sideboard })
-          });
-          if (!response.ok) {
-            const errorData = await response.json().catch(() => ({}));
-            return { error: { status: response.status, data: errorData } };
           }
-          const data: UpdateBazaarMatchupResponse = await response.json();
-          return { data };
-        } catch (error) {
-          return {
-            error: { status: 'FETCH_ERROR' as const, error: String(error) }
-          };
-        }
-      }
+        )
     }),
     getFavoriteDecks: builder.query<GetFavoriteDecksResponse, undefined>({
       query: () => {
@@ -441,40 +397,22 @@ export const apiSlice = createApi({
       }
     }),
     deleteDeck: builder.mutation<DeleteDeckAPIResponse, DeleteDeckAPIRequest>({
-      query: (body: DeleteDeckAPIRequest) => {
-        return {
-          url: URL_END_POINT.DELETE_DECK,
-          method: 'POST',
-          body: body,
-          responseHandler: parseResponse
-        };
-      }
+      query: (body: DeleteDeckAPIRequest) =>
+        postJson(URL_END_POINT.DELETE_DECK, body)
     }),
     addFavoriteDeck: builder.mutation<
       AddFavoriteDeckResponse,
       AddFavoriteDeckRequest
     >({
-      query: (body: AddFavoriteDeckRequest) => {
-        return {
-          url: URL_END_POINT.ADD_FAVORITE_DECK,
-          method: 'POST',
-          body: body,
-          responseHandler: parseResponse
-        };
-      }
+      query: (body: AddFavoriteDeckRequest) =>
+        postJson(URL_END_POINT.ADD_FAVORITE_DECK, body)
     }),
     updateFavoriteDeck: builder.mutation<
       UpdateFavoriteDeckResponse,
       UpdateFavoriteDeckRequest
     >({
-      query: (body: UpdateFavoriteDeckRequest) => {
-        return {
-          url: URL_END_POINT.UPDATE_FAVORITE_DECK,
-          method: 'POST',
-          body: body,
-          responseHandler: parseResponse
-        };
-      }
+      query: (body: UpdateFavoriteDeckRequest) =>
+        postJson(URL_END_POINT.UPDATE_FAVORITE_DECK, body)
     }),
     getDeckCards: builder.query<GetDeckCardsResponse, GetDeckCardsRequest>({
       query: ({ decklink }: GetDeckCardsRequest) => {
@@ -490,62 +428,30 @@ export const apiSlice = createApi({
       SaveDeckCosmeticsResponse,
       SaveDeckCosmeticsRequest
     >({
-      query: (body: SaveDeckCosmeticsRequest) => {
-        return {
-          url: URL_END_POINT.SAVE_DECK_COSMETICS,
-          method: 'POST',
-          body: body,
-          responseHandler: parseResponse
-        };
-      }
+      query: (body: SaveDeckCosmeticsRequest) =>
+        postJson(URL_END_POINT.SAVE_DECK_COSMETICS, body)
     }),
     deleteAccount: builder.mutation<
       DeleteAccountAPIResponse,
       DeleteAccountAPIRequest
     >({
-      query: (body: DeleteAccountAPIRequest) => {
-        return {
-          url: URL_END_POINT.DELETE_ACCOUNT,
-          method: 'POST',
-          body: body,
-          responseHandler: parseResponse
-        };
-      }
+      query: (body: DeleteAccountAPIRequest) =>
+        postJson(URL_END_POINT.DELETE_ACCOUNT, body)
     }),
     createGame: builder.mutation<CreateGameResponse, CreateGameAPI>({
-      query: (body: CreateGameAPI) => {
-        return {
-          url: URL_END_POINT.CREATE_GAME,
-          method: 'POST',
-          body: body,
-          responseHandler: parseResponse
-        };
-      },
+      query: (body: CreateGameAPI) => postJson(URL_END_POINT.CREATE_GAME, body),
       // Pick out errors and prevent nested properties in a hook or selector
       transformErrorResponse: (response: { status: string | number }) =>
         response.status
     }),
     joinGame: builder.mutation<JoinGameResponse, JoinGameAPI>({
-      query: (body: JoinGameAPI) => {
-        return {
-          url: URL_END_POINT.JOIN_GAME,
-          method: 'POST',
-          body: body,
-          responseHandler: parseResponse
-        };
-      },
+      query: (body: JoinGameAPI) => postJson(URL_END_POINT.JOIN_GAME, body),
       transformErrorResponse: (response: { status: string | number }) =>
         response.status
     }),
     getLobbyInfo: builder.query({
-      query: ({ ...body }: GetLobbyInfo) => {
-        return {
-          url: URL_END_POINT.GET_LOBBY_INFO,
-          method: 'POST',
-          body: body,
-          responseHandler: parseResponse
-        };
-      }
+      query: ({ ...body }: GetLobbyInfo) =>
+        postJson(URL_END_POINT.GET_LOBBY_INFO, body)
     }),
     getUserProfile: builder.query<UserProfileAPIResponse, undefined>({
       query: () => {
@@ -561,14 +467,8 @@ export const apiSlice = createApi({
       ChangeDisplayNameResponse,
       ChangeDisplayNameRequest
     >({
-      query: (body: ChangeDisplayNameRequest) => {
-        return {
-          url: URL_END_POINT.CHANGE_DISPLAY_NAME,
-          method: 'POST',
-          body: body,
-          responseHandler: parseResponse
-        };
-      },
+      query: (body: ChangeDisplayNameRequest) =>
+        postJson(URL_END_POINT.CHANGE_DISPLAY_NAME, body),
       invalidatesTags: [{ type: 'UserProfile', id: 'LIST' }]
     }),
     clearRustCounters: builder.mutation<ClearRustCountersAPIResponse, void>({
@@ -582,47 +482,22 @@ export const apiSlice = createApi({
       invalidatesTags: [{ type: 'UserProfile', id: 'LIST' }]
     }),
     chooseFirstPlayer: builder.mutation({
-      query: ({ ...body }: ChooseFirstPlayer) => {
-        return {
-          url: URL_END_POINT.CHOOSE_FIRST_PLAYER,
-          method: 'POST',
-          body: body,
-          responseHandler: parseResponse
-        };
-      }
+      query: ({ ...body }: ChooseFirstPlayer) =>
+        postJson(URL_END_POINT.CHOOSE_FIRST_PLAYER, body)
     }),
     submitLobbyInput: builder.mutation({
-      query: ({ ...body }: SubmitLobbyInput) => {
-        return {
-          url: URL_END_POINT.SUBMIT_LOBBY_INPUT,
-          method: 'POST',
-          body: body,
-          responseHandler: parseResponse
-        };
-      }
+      query: ({ ...body }: SubmitLobbyInput) =>
+        postJson(URL_END_POINT.SUBMIT_LOBBY_INPUT, body)
     }),
     kickPlayer: builder.mutation<
       { success: boolean; error?: string },
       { gameName: number; playerID: number; authKey: string }
     >({
-      query: (body) => {
-        return {
-          url: URL_END_POINT.KICK_PLAYER,
-          method: 'POST',
-          body: body,
-          responseHandler: parseResponse
-        };
-      }
+      query: (body) => postJson(URL_END_POINT.KICK_PLAYER, body)
     }),
     submitSideboard: builder.mutation({
-      query: ({ ...body }: SubmitSideboardAPI) => {
-        return {
-          url: URL_END_POINT.SUBMIT_SIDEBOARD,
-          method: 'POST',
-          body: body,
-          responseHandler: parseResponse
-        };
-      }
+      query: ({ ...body }: SubmitSideboardAPI) =>
+        postJson(URL_END_POINT.SUBMIT_SIDEBOARD, body)
     }),
     loadDebugGame: builder.mutation({
       query: ({ ...body }: any) => {
@@ -642,14 +517,8 @@ export const apiSlice = createApi({
       }
     }),
     loadReplay: builder.mutation<LoadReplayResponse, LoadReplayAPI>({
-      query: ({ ...body }: LoadReplayAPI) => {
-        return {
-          url: URL_END_POINT.REPLAYS,
-          method: 'POST',
-          body: body,
-          responseHandler: parseResponse
-        };
-      },
+      query: ({ ...body }: LoadReplayAPI) =>
+        postJson(URL_END_POINT.REPLAYS, body),
       // Pick out errors and prevent nested properties in a hook or selector
       transformErrorResponse: (response) => {
         const data = 'data' in response ? response.data : undefined;
@@ -784,14 +653,7 @@ export const apiSlice = createApi({
       RefreshMetafyCommunitiesResponse,
       void
     >({
-      query: () => {
-        return {
-          url: URL_END_POINT.METAFY_REFRESH_COMMUNITIES,
-          method: 'POST',
-          body: {},
-          responseHandler: parseResponse
-        };
-      },
+      query: () => postJson(URL_END_POINT.METAFY_REFRESH_COMMUNITIES),
       invalidatesTags: [{ type: 'UserProfile', id: 'LIST' }]
     }),
     getModPageData: builder.query<ModPageDataResponse, void>({
@@ -816,71 +678,35 @@ export const apiSlice = createApi({
       ]
     }),
     banPlayerByIP: builder.mutation<any, BanPlayerByIPRequest>({
-      query: ({ ipToBan, playerNumberToBan }) => {
-        return {
-          url: URL_END_POINT.BAN_PLAYER,
-          method: 'POST',
-          body: {
-            ipToBan: ipToBan,
-            playerNumberToBan: playerNumberToBan
-          },
-          responseHandler: parseResponse
-        };
-      },
+      query: ({ ipToBan, playerNumberToBan }) =>
+        postJson(URL_END_POINT.BAN_PLAYER, {
+          ipToBan: ipToBan,
+          playerNumberToBan: playerNumberToBan
+        }),
       invalidatesTags: [{ type: 'ModPageData', id: 'LIST' }]
     }),
     banIPDirect: builder.mutation<any, BanIPDirectRequest>({
-      query: ({ directIPToBan }) => {
-        return {
-          url: URL_END_POINT.BAN_PLAYER,
-          method: 'POST',
-          body: {
-            directIPToBan: directIPToBan
-          },
-          responseHandler: parseResponse
-        };
-      },
+      query: ({ directIPToBan }) =>
+        postJson(URL_END_POINT.BAN_PLAYER, { directIPToBan: directIPToBan }),
       invalidatesTags: [{ type: 'ModPageData', id: 'LIST' }]
     }),
     banPlayerByName: builder.mutation<any, BanPlayerByNameRequest>({
-      query: ({ playerToBan }) => {
-        return {
-          url: URL_END_POINT.BAN_PLAYER,
-          method: 'POST',
-          body: {
-            playerToBan: playerToBan
-          },
-          responseHandler: parseResponse
-        };
-      },
+      query: ({ playerToBan }) =>
+        postJson(URL_END_POINT.BAN_PLAYER, { playerToBan: playerToBan }),
       invalidatesTags: [{ type: 'ModPageData', id: 'LIST' }]
     }),
     deleteUsername: builder.mutation<
       DeleteAccountAPIResponse,
       DeleteUsernameRequest
     >({
-      query: ({ usernameToDelete }) => {
-        return {
-          url: URL_END_POINT.DELETE_ACCOUNT,
-          method: 'POST',
-          body: {
-            confirmationUsername: usernameToDelete
-          },
-          responseHandler: parseResponse
-        };
-      }
+      query: ({ usernameToDelete }) =>
+        postJson(URL_END_POINT.DELETE_ACCOUNT, {
+          confirmationUsername: usernameToDelete
+        })
     }),
     closeGame: builder.mutation<any, CloseGameRequest>({
-      query: ({ gameToClose }) => {
-        return {
-          url: URL_END_POINT.CLOSE_GAME,
-          method: 'POST',
-          body: {
-            gameToClose: gameToClose
-          },
-          responseHandler: parseResponse
-        };
-      }
+      query: ({ gameToClose }) =>
+        postJson(URL_END_POINT.CLOSE_GAME, { gameToClose: gameToClose })
     }),
     searchUsernames: builder.query<SearchUsernamesResponse, string>({
       query: (searchQuery) => {
@@ -894,129 +720,62 @@ export const apiSlice = createApi({
       }
     }),
     getFriendsList: builder.query<FriendListAPIResponse, void>({
-      query: () => {
-        return {
-          url: URL_END_POINT.FRIEND_LIST,
-          method: 'POST',
-          body: { action: 'getFriends' },
-          responseHandler: parseResponse
-        };
-      }
+      query: friendAction<void>('getFriends')
     }),
     addFriend: builder.mutation<
       FriendListAPIResponse,
       { friendUsername: string }
     >({
-      query: ({ friendUsername }) => {
-        return {
-          url: URL_END_POINT.FRIEND_LIST,
-          method: 'POST',
-          body: { action: 'addFriend', friendUsername: friendUsername },
-          responseHandler: parseResponse
-        };
-      }
+      query: friendAction<{ friendUsername: string }>('addFriend')
     }),
     removeFriend: builder.mutation<
       FriendListAPIResponse,
       { friendUserId: number }
     >({
-      query: ({ friendUserId }) => {
-        return {
-          url: URL_END_POINT.FRIEND_LIST,
-          method: 'POST',
-          body: { action: 'removeFriend', friendUserId: friendUserId },
-          responseHandler: parseResponse
-        };
-      }
+      query: friendAction<{ friendUserId: number }>('removeFriend')
     }),
     searchUsers: builder.query<
       FriendListAPIResponse,
       { searchTerm: string; limit?: number }
     >({
-      query: ({ searchTerm, limit = 10 }) => {
-        return {
-          url: URL_END_POINT.FRIEND_LIST,
-          method: 'POST',
-          body: { action: 'searchUsers', searchTerm: searchTerm, limit: limit },
-          responseHandler: parseResponse
-        };
-      }
+      query: ({ searchTerm, limit = 10 }) =>
+        postJson(URL_END_POINT.FRIEND_LIST, {
+          action: 'searchUsers',
+          searchTerm: searchTerm,
+          limit: limit
+        })
     }),
     getPendingRequests: builder.query<FriendListAPIResponse, void>({
-      query: () => {
-        return {
-          url: URL_END_POINT.FRIEND_LIST,
-          method: 'POST',
-          body: { action: 'getPendingRequests' },
-          responseHandler: parseResponse
-        };
-      }
+      query: friendAction<void>('getPendingRequests')
     }),
     acceptRequest: builder.mutation<
       FriendListAPIResponse,
       { requesterUserId: number }
     >({
-      query: ({ requesterUserId }) => {
-        return {
-          url: URL_END_POINT.FRIEND_LIST,
-          method: 'POST',
-          body: { action: 'acceptRequest', requesterUserId: requesterUserId },
-          responseHandler: parseResponse
-        };
-      }
+      query: friendAction<{ requesterUserId: number }>('acceptRequest')
     }),
     rejectRequest: builder.mutation<
       FriendListAPIResponse,
       { requesterUserId: number }
     >({
-      query: ({ requesterUserId }) => {
-        return {
-          url: URL_END_POINT.FRIEND_LIST,
-          method: 'POST',
-          body: { action: 'rejectRequest', requesterUserId: requesterUserId },
-          responseHandler: parseResponse
-        };
-      }
+      query: friendAction<{ requesterUserId: number }>('rejectRequest')
     }),
     getSentRequests: builder.query<FriendListAPIResponse, void>({
-      query: () => {
-        return {
-          url: URL_END_POINT.FRIEND_LIST,
-          method: 'POST',
-          body: { action: 'getSentRequests' },
-          responseHandler: parseResponse
-        };
-      }
+      query: friendAction<void>('getSentRequests')
     }),
     cancelRequest: builder.mutation<
       FriendListAPIResponse,
       { recipientUserId: number }
     >({
-      query: ({ recipientUserId }) => {
-        return {
-          url: URL_END_POINT.FRIEND_LIST,
-          method: 'POST',
-          body: { action: 'cancelRequest', recipientUserId: recipientUserId },
-          responseHandler: parseResponse
-        };
-      }
+      query: friendAction<{ recipientUserId: number }>('cancelRequest')
     }),
     updateFriendNickname: builder.mutation<
       FriendListAPIResponse,
       { friendUserId: number; nickname: string }
     >({
-      query: ({ friendUserId, nickname }) => {
-        return {
-          url: URL_END_POINT.FRIEND_LIST,
-          method: 'POST',
-          body: {
-            action: 'updateNickname',
-            friendUserId: friendUserId,
-            nickname: nickname
-          },
-          responseHandler: parseResponse
-        };
-      }
+      query: friendAction<{ friendUserId: number; nickname: string }>(
+        'updateNickname'
+      )
     }),
 
     // Blocked Users endpoints
@@ -1051,14 +810,11 @@ export const apiSlice = createApi({
       BlockedUsersAPIResponse,
       { blockedUsername: string }
     >({
-      query: ({ blockedUsername }) => {
-        return {
-          url: URL_END_POINT.BLOCKED_USERS,
-          method: 'POST',
-          body: { action: 'blockUser', blockedUsername: blockedUsername },
-          responseHandler: parseResponse
-        };
-      },
+      query: ({ blockedUsername }) =>
+        postJson(URL_END_POINT.BLOCKED_USERS, {
+          action: 'blockUser',
+          blockedUsername: blockedUsername
+        }),
       // Handle errors gracefully - don't crash if BlockedUsersAPI is unavailable
       async onQueryStarted({ blockedUsername }, { queryFulfilled }) {
         try {
@@ -1079,14 +835,11 @@ export const apiSlice = createApi({
       BlockedUsersAPIResponse,
       { blockedUserId: number }
     >({
-      query: ({ blockedUserId }) => {
-        return {
-          url: URL_END_POINT.BLOCKED_USERS,
-          method: 'POST',
-          body: { action: 'unblockUser', blockedUserId: blockedUserId },
-          responseHandler: parseResponse
-        };
-      },
+      query: ({ blockedUserId }) =>
+        postJson(URL_END_POINT.BLOCKED_USERS, {
+          action: 'unblockUser',
+          blockedUserId: blockedUserId
+        }),
       // Handle errors gracefully - don't crash if BlockedUsersAPI is unavailable
       async onQueryStarted({ blockedUserId }, { queryFulfilled }) {
         try {
@@ -1105,36 +858,26 @@ export const apiSlice = createApi({
 
     // Username Moderation endpoints
     getOffensiveUsernames: builder.query<UsernamesModerationResponse, void>({
-      query: () => {
-        return {
-          url: URL_END_POINT.USERNAME_MODERATION,
-          method: 'POST',
-          body: { action: 'getOffensiveUsernames' },
-          responseHandler: parseResponse
-        };
-      }
+      query: () =>
+        postJson(URL_END_POINT.USERNAME_MODERATION, {
+          action: 'getOffensiveUsernames'
+        })
     }),
 
     banOffensiveUsername: builder.mutation<any, BanOffensiveUsernameRequest>({
-      query: ({ username }) => {
-        return {
-          url: URL_END_POINT.USERNAME_MODERATION,
-          method: 'POST',
-          body: { action: 'banOffensiveUsername', username: username },
-          responseHandler: parseResponse
-        };
-      }
+      query: ({ username }) =>
+        postJson(URL_END_POINT.USERNAME_MODERATION, {
+          action: 'banOffensiveUsername',
+          username: username
+        })
     }),
 
     whitelistOffensiveUsername: builder.mutation<any, { username: string }>({
-      query: ({ username }) => {
-        return {
-          url: URL_END_POINT.USERNAME_MODERATION,
-          method: 'POST',
-          body: { action: 'whitelistOffensiveUsername', username: username },
-          responseHandler: parseResponse
-        };
-      }
+      query: ({ username }) =>
+        postJson(URL_END_POINT.USERNAME_MODERATION, {
+          action: 'whitelistOffensiveUsername',
+          username: username
+        })
     }),
 
     // System Message endpoints
@@ -1150,62 +893,42 @@ export const apiSlice = createApi({
       any,
       { username: string; message: string; expiresInHours?: number | null }
     >({
-      query: ({ username, message, expiresInHours }) => {
-        return {
-          url: URL_END_POINT.SYSTEM_MESSAGE,
-          method: 'POST',
-          body: { action: 'sendToPlayer', username, message, expiresInHours },
-          responseHandler: parseResponse
-        };
-      }
+      query: ({ username, message, expiresInHours }) =>
+        postJson(URL_END_POINT.SYSTEM_MESSAGE, {
+          action: 'sendToPlayer',
+          username,
+          message,
+          expiresInHours
+        })
     }),
     sendSystemMessageToAll: builder.mutation<
       any,
       { message: string; expiresInHours?: number | null }
     >({
-      query: ({ message, expiresInHours }) => {
-        return {
-          url: URL_END_POINT.SYSTEM_MESSAGE,
-          method: 'POST',
-          body: { action: 'sendToAll', message, expiresInHours },
-          responseHandler: parseResponse
-        };
-      }
+      query: ({ message, expiresInHours }) =>
+        postJson(URL_END_POINT.SYSTEM_MESSAGE, {
+          action: 'sendToAll',
+          message,
+          expiresInHours
+        })
     }),
     syncMetafySubscribers: builder.mutation<
       any,
       { clearNoMetafyId?: boolean } | void
     >({
-      query: (args) => {
-        return {
-          url: URL_END_POINT.SYNC_METAFY_SUBSCRIBERS,
-          method: 'POST',
-          body: { clearNoMetafyId: args?.clearNoMetafyId ?? false },
-          responseHandler: parseResponse
-        };
-      }
+      query: (args) =>
+        postJson(URL_END_POINT.SYNC_METAFY_SUBSCRIBERS, {
+          clearNoMetafyId: args?.clearNoMetafyId ?? false
+        })
     }),
     acknowledgeSystemMessage: builder.mutation<any, void>({
-      query: () => {
-        return {
-          url: URL_END_POINT.SYSTEM_MESSAGE,
-          method: 'POST',
-          body: { action: 'acknowledge' },
-          responseHandler: parseResponse
-        };
-      },
+      query: () =>
+        postJson(URL_END_POINT.SYSTEM_MESSAGE, { action: 'acknowledge' }),
       invalidatesTags: [{ type: 'SystemMessage', id: 'MINE' }]
     }),
 
     getLastActiveGame: builder.query<GetLastActiveGameResponse, void>({
-      query: () => {
-        return {
-          url: URL_END_POINT.GET_LAST_ACTIVE_GAME,
-          method: 'POST',
-          body: {},
-          responseHandler: parseResponse
-        };
-      }
+      query: () => postJson(URL_END_POINT.GET_LAST_ACTIVE_GAME)
     }),
     reportTyping: builder.mutation<
       any,
@@ -1263,14 +986,8 @@ export const apiSlice = createApi({
       { token: string; error?: string },
       { app_id: string; redirect_uri: string }
     >({
-      query: ({ app_id, redirect_uri }) => {
-        return {
-          url: URL_END_POINT.GENERATE_AUTH_TOKEN,
-          method: 'POST',
-          body: { app_id, redirect_uri },
-          responseHandler: parseResponse
-        };
-      }
+      query: ({ app_id, redirect_uri }) =>
+        postJson(URL_END_POINT.GENERATE_AUTH_TOKEN, { app_id, redirect_uri })
     })
   })
 });

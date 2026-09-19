@@ -26,6 +26,7 @@ import MasteryPlate from 'features/mastery/MasteryPlate';
 import { masteryLevelPreview } from 'features/mastery/mastery';
 import { IS_STREAMER_MODE } from 'features/options/constants';
 import { useTranslation } from 'react-i18next';
+import { useOutsideClick } from 'hooks/useOutsideClick';
 
 export default function PlayerName(player: Player) {
   const { t } = useTranslation();
@@ -308,27 +309,13 @@ export default function PlayerName(player: Player) {
   }, [isDropdownOpen, updateDropdownPosition]);
 
   // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        // Check if the click is on the dropdown portal
-        const dropdown = document.querySelector(`.${styles.dropdown}`);
-        if (dropdown && dropdown.contains(event.target as Node)) {
-          return;
-        }
-        setIsDropdownOpen(false);
-      }
-    };
-
-    if (isDropdownOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () =>
-        document.removeEventListener('mousedown', handleClickOutside);
+  useOutsideClick(dropdownRef, () => setIsDropdownOpen(false), {
+    enabled: isDropdownOpen,
+    isInside: (target) => {
+      const dropdown = document.querySelector(`.${styles.dropdown}`);
+      return !!dropdown && dropdown.contains(target);
     }
-  }, [isDropdownOpen]);
+  });
 
   const handleAddFriend = async () => {
     try {

@@ -29,6 +29,8 @@ import SessionRecovery from 'components/SessionRecovery';
 import { AmbientParticles } from 'routes/game/components/elements/ambientParticles/AmbientParticles';
 import { Toaster } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import { useOutsideClick } from 'hooks/useOutsideClick';
+import { TOAST_OPTIONS } from 'constants/toastOptions';
 
 const Header = () => {
   const { isLoggedIn, isMod, currentUserName, currentDisplayName, logOut } =
@@ -69,19 +71,9 @@ const Header = () => {
     }
   };
 
-  useEffect(() => {
-    if (!userDropdownOpen) return;
-    const handleClickOutside = (e: MouseEvent) => {
-      if (
-        userDropdownRef.current &&
-        !userDropdownRef.current.contains(e.target as Node)
-      ) {
-        setUserDropdownOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [userDropdownOpen]);
+  useOutsideClick(userDropdownRef, () => setUserDropdownOpen(false), {
+    enabled: userDropdownOpen
+  });
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
   const closeUserDropdown = () => setUserDropdownOpen(false);
@@ -98,26 +90,7 @@ const Header = () => {
   return (
     <div>
       <nav className={styles.navBar}>
-        <Toaster
-          position="top-left"
-          toastOptions={{
-            style: {
-              background: 'var(--theme-tertiary)',
-              color: 'var(--white)',
-              border: '1px solid var(--theme-border)',
-              padding: '0.5rem',
-              wordBreak: 'break-word',
-              maxWidth: '100vw',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              userSelect: 'none',
-              msUserSelect: 'none',
-              WebkitUserSelect: 'none',
-              MozUserSelect: 'none',
-              zIndex: 10001
-            }
-          }}
-        />
+        <Toaster position="top-left" toastOptions={TOAST_OPTIONS} />
 
         <ul className={styles.leftGroup}>
           <li>

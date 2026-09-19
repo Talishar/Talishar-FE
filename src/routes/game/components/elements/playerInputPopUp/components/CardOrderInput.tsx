@@ -10,19 +10,10 @@ import { useProcessInputAPIMutation } from 'features/api/apiSlice';
 import { getGameInfo } from 'features/game/GameSlice';
 import { shallowEqual } from 'react-redux';
 import classNames from 'classnames';
+import { prepareCards } from '../prepareCards';
 
 let change = false;
 let buttonClick = false;
-const prepareCards = (cards: Card[]): Card[] =>
-  cards.map(
-    (card, index) =>
-      ({
-        ...card,
-        borderColor: '8',
-        uniqueId: `${card.cardNumber}-${index}`
-      } as Card)
-  );
-
 const CardOrdering = ({
   topCards,
   submitMode,
@@ -54,19 +45,21 @@ const CardOrdering = ({
     change = true;
   };
 
+  const submitOrder = (mode: number) => {
+    processInputAPI({
+      gameName: gameID,
+      playerID: playerID,
+      authKey: authKey,
+      mode: mode,
+      submission: {
+        cardListTop: cardListTop.map((card) => card.cardNumber)
+      }
+    });
+  };
+
   useEffect(() => {
     if (buttonClick) {
-      const cardNamesTop = cardListTop.map((card) => card.cardNumber);
-      const body = {
-        gameName: gameID,
-        playerID: playerID,
-        authKey: authKey,
-        mode: 108,
-        submission: {
-          cardListTop: cardNamesTop
-        }
-      };
-      processInputAPI(body);
+      submitOrder(108);
       change = false;
       buttonClick = false;
     }
@@ -74,31 +67,13 @@ const CardOrdering = ({
 
   const handleDragEnd = () => {
     if (change) {
-      const cardNamesTop = cardListTop.map((card) => card.cardNumber);
-      const body = {
-        gameName: gameID,
-        playerID: playerID,
-        authKey: authKey,
-        mode: 108,
-        submission: {
-          cardListTop: cardNamesTop
-        }
-      };
-      processInputAPI(body);
+      submitOrder(108);
       change = false;
     }
   };
 
   const handleSubmit = () => {
-    const cardNamesTop = cardListTop.map((card) => card.cardNumber);
-    const body = {
-      gameName: gameID,
-      playerID: playerID,
-      authKey: authKey,
-      mode: submitMode,
-      submission: { cardListTop: cardNamesTop }
-    };
-    processInputAPI(body);
+    submitOrder(submitMode);
   };
 
   return (

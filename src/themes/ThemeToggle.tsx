@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import { useTheme } from './ThemeContext';
 import { useTranslation } from 'react-i18next';
 import styles from './ThemeToggle.module.css';
+import { useOutsideClick } from 'hooks/useOutsideClick';
 
 const splitIcon = (label: string): { icon: string; name: string } => {
   const spaceIndex = label.indexOf(' ');
@@ -20,20 +21,7 @@ const ThemeToggle: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const handleOutsideClick = (e: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(e.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-    if (isOpen) {
-      document.addEventListener('mousedown', handleOutsideClick);
-    }
-    return () => document.removeEventListener('mousedown', handleOutsideClick);
-  }, [isOpen]);
+  useOutsideClick(containerRef, () => setIsOpen(false), { enabled: isOpen });
 
   const handleSelect = (themeId: string, isPremium: boolean) => {
     if (isPremium && !isSupporter) return;

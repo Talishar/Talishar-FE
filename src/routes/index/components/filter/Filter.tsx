@@ -1,6 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import styles from './Filter.module.css';
 import { useTranslation } from 'react-i18next';
+import { useOutsideClick } from 'hooks/useOutsideClick';
 
 const Filter = ({
   setHeroFilter,
@@ -44,18 +45,7 @@ const Filter = ({
           label.toLowerCase().includes(query.toLowerCase())
         );
 
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(e.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  useOutsideClick(containerRef, () => setIsOpen(false));
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;

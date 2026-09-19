@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { BsTranslate } from 'react-icons/bs';
 import styles from './LanguageSelector.module.scss';
 import { useTranslation } from 'react-i18next';
@@ -6,6 +6,7 @@ import {
   I18N_LANGUAGE_LABELS,
   I18N_SUPPORTED_LANGUAGE_CODES
 } from '../../constants/i18nSupportedLanguages';
+import { useOutsideClick } from 'hooks/useOutsideClick';
 
 const LanguageSelector = ({
   inDropdown = false,
@@ -24,19 +25,7 @@ const LanguageSelector = ({
     i18n.changeLanguage(lng);
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  useOutsideClick(dropdownRef, () => setIsOpen(false));
 
   return (
     <li

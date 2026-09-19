@@ -14,6 +14,7 @@ import {
   useGetFavoriteDecksQuery
 } from 'features/api/apiSlice';
 import { LoginValidationType } from 'routes/user/login/components/validation';
+import { getLoginBody } from 'routes/user/login/components/LoginForm';
 import styles from './AuthVerify.module.css';
 
 const AuthVerify = () => {
@@ -206,15 +207,7 @@ const InlineLoginForm = () => {
   const onSubmit: SubmitHandler<LoginValidationType> = async (data) => {
     const values = { ...data, rememberMe: data.rememberMe ?? false };
     try {
-      const body = values.rememberMe
-        ? {
-            userID: values.userID,
-            password: values.password,
-            rememberMe: values.rememberMe
-          }
-        : { userID: values.userID, password: values.password };
-
-      const resp = await login({ ...body, submit: true }).unwrap();
+      const resp = await login(getLoginBody(values)).unwrap();
 
       if (resp.error) {
         setError('root.serverError', { type: 'custom', message: resp.error });

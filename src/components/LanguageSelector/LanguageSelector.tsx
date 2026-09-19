@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import { toast } from 'react-hot-toast';
 import { LOCALE_DICTIONARY, LOCALE_FLAGS } from 'utils/multilanguage/constants';
 import { useTranslation } from 'react-i18next';
 import styles from './LanguageSelector.module.css';
+import { useOutsideClick } from 'hooks/useOutsideClick';
 
 const capitalizeFirstLetter = (text: string): string =>
   text.charAt(0).toUpperCase() + text.slice(1);
@@ -23,20 +24,7 @@ const LanguageSelector = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const isChromium = isChromiumBased();
 
-  useEffect(() => {
-    const handleOutsideClick = (e: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(e.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-    if (isOpen) {
-      document.addEventListener('mousedown', handleOutsideClick);
-    }
-    return () => document.removeEventListener('mousedown', handleOutsideClick);
-  }, [isOpen]);
+  useOutsideClick(containerRef, () => setIsOpen(false), { enabled: isOpen });
 
   const handleSelect = (language: string) => {
     setLanguage(language);
@@ -51,7 +39,7 @@ const LanguageSelector = () => {
     }
   };
 
-  const currentIcon = !isChromium ? (LOCALE_FLAGS[selectedLanguage] ?? '') : '';
+  const currentIcon = !isChromium ? LOCALE_FLAGS[selectedLanguage] ?? '' : '';
   const currentLabel = capitalizeFirstLetter(
     LOCALE_DICTIONARY[selectedLanguage] ?? selectedLanguage
   );
@@ -82,7 +70,7 @@ const LanguageSelector = () => {
         <ul className={styles.dropdown} role="listbox">
           {Object.keys(LOCALE_DICTIONARY).map((language, index) => {
             const isSelected = language === selectedLanguage;
-            const icon = !isChromium ? (LOCALE_FLAGS[language] ?? '') : '';
+            const icon = !isChromium ? LOCALE_FLAGS[language] ?? '' : '';
             const label = capitalizeFirstLetter(LOCALE_DICTIONARY[language]);
             return (
               <li

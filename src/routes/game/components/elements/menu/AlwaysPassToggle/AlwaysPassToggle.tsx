@@ -1,18 +1,6 @@
-import React from 'react';
-import styles from '../Menu.module.css';
-import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { BiSkipNextCircle } from 'react-icons/bi';
-import { useTranslation } from 'react-i18next';
-import useSetting from 'hooks/useSetting';
-import classNames from 'classnames';
-import { updateOptions } from 'features/options/optionsSlice';
-import { getGameInfo } from 'features/game/GameSlice';
-import {
-  HOLD_PRIORITY_SETTING,
-  HOLD_PRIORITY_ENUM
-} from 'features/options/constants';
-import { shallowEqual } from 'react-redux';
-import { useButtonDisableContext } from 'contexts/ButtonDisableContext';
+import { HOLD_PRIORITY_ENUM } from 'features/options/constants';
+import HoldPriorityToggle from '../HoldPriorityToggle/HoldPriorityToggle';
 
 const AlwaysPassToggle = ({
   btnClass,
@@ -22,66 +10,16 @@ const AlwaysPassToggle = ({
   btnClass?: string;
   activeBtnClass?: string;
   showLabel?: boolean;
-} = {}) => {
-  const dispatch = useAppDispatch();
-  const { t } = useTranslation();
-  const { isDisabled, triggerDisable } = useButtonDisableContext();
-  const setting = useSetting({
-    settingName: HOLD_PRIORITY_SETTING
-  });
-  const gameInfo = useAppSelector(getGameInfo, shallowEqual);
-
-  const handleClickAlwaysPass = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    e.currentTarget.blur();
-    triggerDisable();
-    // If on Always Pass, turn off Always Pass
-    if (Number(setting?.value) === HOLD_PRIORITY_ENUM.ALWAYS_PASS) {
-      dispatch(
-        updateOptions({
-          game: gameInfo,
-          settings: [
-            {
-              name: HOLD_PRIORITY_SETTING,
-              value: HOLD_PRIORITY_ENUM.AUTO
-            }
-          ]
-        })
-      );
-      return;
-    }
-    dispatch(
-      updateOptions({
-        game: gameInfo,
-        settings: [
-          {
-            name: HOLD_PRIORITY_SETTING,
-            value: HOLD_PRIORITY_ENUM.ALWAYS_PASS
-          }
-        ]
-      })
-    );
-  };
-
-  const buttonStyle = classNames(btnClass ?? styles.btn, {
-    [activeBtnClass ?? styles.buttonActive]:
-      Number(setting?.value) === HOLD_PRIORITY_ENUM.ALWAYS_PASS
-  });
-  return (
-    <div>
-      <button
-        className={buttonStyle}
-        aria-label={t('MENU.ALWAYS_PASS')}
-        onClick={handleClickAlwaysPass}
-        data-tooltip={t('MENU.ALWAYS_PASS')}
-        data-placement="top"
-        disabled={isDisabled}
-      >
-        <BiSkipNextCircle aria-hidden="true" />
-        {showLabel && ` ${t('MENU.ALWAYS_PASS_LABEL')}`}
-      </button>
-    </div>
-  );
-};
+} = {}) => (
+  <HoldPriorityToggle
+    mode={HOLD_PRIORITY_ENUM.ALWAYS_PASS}
+    icon={BiSkipNextCircle}
+    tooltipKey="MENU.ALWAYS_PASS"
+    labelKey="MENU.ALWAYS_PASS_LABEL"
+    btnClass={btnClass}
+    activeBtnClass={activeBtnClass}
+    showLabel={showLabel}
+  />
+);
 
 export default AlwaysPassToggle;
