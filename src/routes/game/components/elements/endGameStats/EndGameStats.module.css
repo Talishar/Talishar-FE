@@ -344,8 +344,9 @@
 .disclaimer {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
   font-size: 0.9em;
   color: rgba(var(--theme-on-surface-rgb), 0.5);
   font-style: italic;
