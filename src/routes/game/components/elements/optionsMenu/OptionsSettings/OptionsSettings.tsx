@@ -11,6 +11,7 @@ import useShortcut from 'hooks/useShortcut';
 import { useWindowWidth } from 'hooks/useWindowDimensions';
 import { RootState } from 'app/Store';
 import SettingsPanel from 'features/settings/SettingsPanel';
+import { useCanUseManualMode } from 'hooks/useManualMode';
 import { SettingsContext } from 'features/settings/settingsRegistry';
 
 interface OptionsSettingsProps {
@@ -32,30 +33,7 @@ const OptionsSettings = ({
     (state: RootState) => state.game.gameInfo.playerID
   );
   const isSpectator = playerID === 3;
-  const isOpponentAI = useAppSelector(
-    (state: RootState) => state.game.gameInfo.isOpponentAI ?? false
-  );
-  const isPrivate = useAppSelector(
-    (state: RootState) =>
-      (state.game.gameInfo.isPrivate ?? false) ||
-      (state.game.gameInfo.isPrivateLobby ?? false)
-  );
-  const isPracticeDummy = useAppSelector(
-    (state: RootState) => state.game.playerTwo?.Name === 'Practice Dummy'
-  );
-  const isLocalEnvironment =
-    import.meta.env.MODE === 'development' ||
-    window.location.hostname === 'localhost';
-  const isFuturesFormat = useAppSelector((state: RootState) => {
-    const fmt = state.game.gameInfo.gameFormat ?? '';
-    return fmt === 'futurecc' || fmt === 'futurell' || fmt === 'futuresage';
-  });
-  const canUseManualMode =
-    isLocalEnvironment ||
-    isOpponentAI ||
-    isPracticeDummy ||
-    isPrivate ||
-    isFuturesFormat;
+  const canUseManualMode = useCanUseManualMode();
 
   // fetch all settings when options is loaded
   useEffect(() => {
@@ -63,6 +41,7 @@ const OptionsSettings = ({
   }, []);
 
   useShortcut(DEFAULT_SHORTCUTS.TOGGLE_MANUAL_MODE, () => {
+    if (!canUseManualMode) return;
     dispatch(
       updateOptions({
         game: gameInfo,

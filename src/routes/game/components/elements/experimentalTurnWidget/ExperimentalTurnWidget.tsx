@@ -7,7 +7,7 @@ import styles from './ExperimentalTurnWidget.module.css';
 import classNames from 'classnames';
 import { submitButton } from 'features/game/GameSlice';
 import { PROCESS_INPUT } from 'appConstants';
-import useSetting from 'hooks/useSetting';
+import useManualMode from 'hooks/useManualMode';
 import { motion, AnimatePresence } from 'framer-motion';
 import { shallowEqual } from 'react-redux';
 import { getGameInfo } from 'features/game/GameSlice';
@@ -17,8 +17,6 @@ import passTurnSound from 'sounds/prioritySound.wav';
 import { createPortal } from 'react-dom';
 import useShortcut from 'hooks/useShortcut';
 import { DEFAULT_SHORTCUTS } from 'appConstants';
-
-const MANUAL_MODE = 'ManualMode';
 
 export default function ExperimentalTurnWidget() {
   return (
@@ -36,7 +34,7 @@ function HealthDisplay(props: Player) {
   const health = useAppSelector((state: RootState) =>
     props.isPlayer ? state.game.playerOne.Health : state.game.playerTwo.Health
   );
-  const isManualMode = useSetting({ settingName: MANUAL_MODE })?.value === '1';
+  const { isManualMode } = useManualMode();
 
   return (
     <div className={styles.health}>
@@ -120,7 +118,7 @@ export function ActionPointDisplay(props: Player) {
     (state: RootState) => state.game.amIActivePlayer
   );
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
-  const isManualMode = useSetting({ settingName: MANUAL_MODE })?.value === '1';
+  const { isManualMode } = useManualMode();
 
   const showAPDisplay =
     (amIActivePlayer && props.isPlayer) || gameInfo.playerID === 3;

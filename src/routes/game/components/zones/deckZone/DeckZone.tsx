@@ -5,9 +5,8 @@ import Displayrow from 'interface/Displayrow';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import styles from './DeckZone.module.css';
 import { setCardListFocus, clearCardListFocus } from 'features/game/GameSlice';
-import * as optConst from 'features/options/constants';
 import { useTranslation } from 'react-i18next';
-import useSetting from 'hooks/useSetting';
+import useManualMode from 'hooks/useManualMode';
 import { usePanelContextOptional } from '../../leftColumn/PanelContext';
 import {
   useAlwaysShowCounters,
@@ -76,8 +75,7 @@ export const DeckZone = React.memo((prop: Displayrow) => {
   const showClash = !!clashCard;
 
   const panelContext = usePanelContextOptional();
-  const isManualMode =
-    useSetting({ settingName: optConst.MANUAL_MODE })?.value === '1';
+  const { isManualMode } = useManualMode();
 
   const safeCount = deckCards ?? 0;
   const shuffleLayerCount = Math.min(5, Math.max(3, safeCount - 1));

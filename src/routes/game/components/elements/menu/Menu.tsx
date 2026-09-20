@@ -24,8 +24,7 @@ import {
 } from 'contexts/ButtonDisableContext';
 import { RootState } from 'app/Store';
 import { usePanelContext } from '../../leftColumn/PanelContext';
-import useSetting from 'hooks/useSetting';
-import { MANUAL_MODE } from 'features/options/constants';
+import { useCanUseManualMode } from 'hooks/useManualMode';
 import { useMediaQuery } from 'hooks/useMediaQuery';
 
 function FullScreenButton() {
@@ -111,15 +110,8 @@ function MobileOverflowMenu({ isSpectator }: { isSpectator: boolean }) {
   const [panelStyle, setPanelStyle] = useState<React.CSSProperties>({});
   const btnRef = useRef<HTMLButtonElement>(null);
   const { setIsManualModeOpen, isManualModeOpen } = usePanelContext();
-  const isManualMode = useSetting({ settingName: MANUAL_MODE })?.value === '1';
-  const isLocalEnvironment =
-    import.meta.env.MODE === 'development' ||
-    window.location.hostname === 'localhost';
-  const isOpponentAI = useAppSelector(
-    (state: RootState) => state.game.gameInfo.isOpponentAI ?? false
-  );
-  const showManualMode =
-    !isSpectator && (isLocalEnvironment || isManualMode || isOpponentAI);
+  const canUseManualMode = useCanUseManualMode();
+  const showManualMode = !isSpectator && canUseManualMode;
 
   const toggleFullScreen = () => {
     screenfull.toggle();
