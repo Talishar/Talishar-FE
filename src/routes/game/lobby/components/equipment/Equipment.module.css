@@ -19,6 +19,7 @@
 }
 
 .cardContainer {
+  position: relative;
   height: 100px;
   width: 100px;
   -webkit-touch-callout: none;
@@ -36,6 +37,60 @@
 
 .hiddenUnequippedInput {
   display: none !important;
+}
+
+.cardPickedUp {
+  outline: 2px solid var(--theme-primary);
+  outline-offset: 2px;
+  border-radius: 0.5em;
+}
+
+.moveHandle {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--theme-primary);
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.65);
+  color: #fff;
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.moveHandle[aria-pressed='true'] {
+  background: var(--theme-primary);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .moveHandle {
+    display: none;
+  }
+}
+
+.tapTarget {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0.25em;
+  border: 2px dashed var(--theme-primary);
+  border-radius: 0.5em;
+  background: transparent;
+  color: inherit;
+  font-size: 0.75em;
+  line-height: 1.2;
+  text-align: center;
+  cursor: pointer;
 }
 
 .dropPlaceholder {

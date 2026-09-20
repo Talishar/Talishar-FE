@@ -457,6 +457,8 @@
     "DEMIHERO": "Demi-Hero",
     "DISPLAY_ORDER": "Display cards in original order",
     "DRAG": "(drag into zone)",
+    "PLACE_IN": "Place in {{zone}}",
+    "MOVE_EQUIPMENT": "Move this equipment to another zone",
     "EDIT_DECK": "Edit Deck",
     "EDIT_EQUIPMENT": "Edit Equipment",
     "EMPTY_EQUIPMENT_WARNING_one": "⚠️ You appear to have empty equipment in the following slot: {{slots}}. Is this correct?",

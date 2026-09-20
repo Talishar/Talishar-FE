@@ -431,6 +431,8 @@
     "DEMIHERO": "Demi-héros",
     "DISPLAY_ORDER": "Afficher les cartes dans leur ordre original",
     "DRAG": "(glisser dans la zone)",
+    "PLACE_IN": "Placer dans {{zone}}",
+    "MOVE_EQUIPMENT": "Deplacer cet equipement vers une autre zone",
     "EDIT_DECK": "Modifier le deck",
     "EDIT_EQUIPMENT": "Modifier l’équipement",
     "EMPTY_EQUIPMENT_WARNING_one": "⚠️ Il semble que l’emplacement d’équipement suivant soit vide : {{slots}}. Est-ce correct ?",

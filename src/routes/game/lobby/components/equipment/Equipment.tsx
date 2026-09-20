@@ -12,6 +12,7 @@ import CardPopUp from 'routes/game/components/elements/cardPopUp/CardPopUp';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import { CARD_SQUARES_PATH, getCollectionCardImagePath } from 'utils';
 import { useTranslation } from 'react-i18next';
+import { MdOpenWith } from 'react-icons/md';
 
 export type EquipFieldName = 'head' | 'chest' | 'arms' | 'legs';
 const EQUIP_FIELDS: EquipFieldName[] = ['head', 'chest', 'arms', 'legs'];
@@ -52,6 +53,10 @@ interface DragPayload {
   from: 'modular' | EquipFieldName;
 }
 
+interface SelectedCard extends DragPayload {
+  key: string;
+}
+
 const MODULAR_DRAG_TYPE = 'application/x-talishar-modular-equipment';
 
 const Equipment = ({
@@ -68,12 +73,22 @@ const Equipment = ({
   const activeDrag = React.useRef<DragPayload | null>(null);
   const [activeDropTarget, setActiveDropTarget] =
     React.useState<EquipFieldName | null>(null);
+  const [selected, setSelected] = React.useState<SelectedCard | null>(null);
   // Initial stuff to allow the lang to change
   const { t } = useTranslation();
 
   React.useEffect(() => {
     setFieldValue('assignedModulars', assigned);
   }, [assigned, setFieldValue]);
+
+  React.useEffect(() => {
+    if (!selected) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setSelected(null);
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [selected]);
 
   const removeOne = (arr: string[], value: string): string[] => {
     const idx = arr.indexOf(value);
@@ -105,6 +120,7 @@ const Equipment = ({
   };
 
   const writeDragPayload = (e: React.DragEvent, payload: DragPayload) => {
+    setSelected(null);
     activeDrag.current = payload;
     const serializedPayload = JSON.stringify(payload);
     const { dataTransfer } = e;
@@ -152,12 +168,7 @@ const Equipment = ({
     writeDragPayload(e, { card, from: fromField });
   };
 
-  const handleEquipmentDrop = (e: React.DragEvent, field: EquipFieldName) => {
-    e.preventDefault();
-    const data = parseDragPayload(e);
-    finishDrag();
-    if (!data) return;
-
+  const assignToField = (data: DragPayload, field: EquipFieldName) => {
     const { card, from } = data;
 
     if (EQUIP_FIELDS.includes(from as EquipFieldName)) {
@@ -185,12 +196,7 @@ const Equipment = ({
     setFieldValue(field, card);
   };
 
-  const handleReturnToModular = (e: React.DragEvent) => {
-    e.preventDefault();
-    const data = parseDragPayload(e);
-    finishDrag();
-    if (!data) return;
-
+  const returnToModular = (data: DragPayload) => {
     const { card, from } = data;
     if (!from || !EQUIP_FIELDS.includes(from as EquipFieldName)) return;
 
@@ -207,6 +213,49 @@ const Equipment = ({
 
     setModularState((prev) => [...prev, card]);
   };
+
+  const handleEquipmentDrop = (e: React.DragEvent, field: EquipFieldName) => {
+    e.preventDefault();
+    const data = parseDragPayload(e);
+    finishDrag();
+    if (!data) return;
+    assignToField(data, field);
+  };
+
+  const handleReturnToModular = (e: React.DragEvent) => {
+    e.preventDefault();
+    const data = parseDragPayload(e);
+    finishDrag();
+    if (!data) return;
+    returnToModular(data);
+  };
+
+  const toggleSelected = (next: SelectedCard) => {
+    clearCardPreview();
+    setSelected((prev) => (prev?.key === next.key ? null : next));
+  };
+
+  const placeSelectedIn = (field: EquipFieldName) => {
+    if (!selected) return;
+    assignToField(selected, field);
+    setSelected(null);
+  };
+
+  const returnSelectedToModular = () => {
+    if (!selected) return;
+    returnToModular(selected);
+    setSelected(null);
+  };
+
+  const renderTapTarget = (label: string, onTap: () => void) => (
+    <button
+      type="button"
+      className={`${styles.cardContainer} ${styles.tapTarget}`}
+      onClick={onTap}
+    >
+      {label}
+    </button>
+  );
 
   const renderEquipZone = (
     label: string,
@@ -238,13 +287,15 @@ const Equipment = ({
           {visibleCards.map((card, i) => {
             const isAssigned = assigned[field].includes(card);
             const isEquipped = values[field] === card;
+            const selectionKey = `${field}-${i}`;
+            const isPickedUp = selected?.key === selectionKey;
 
             return (
               <div
                 key={`${field}-${i}`}
                 className={`${styles.cardContainer} ${
                   isEquipped ? styles.cardSelected : ''
-                }`}
+                } ${isPickedUp ? styles.cardPickedUp : ''}`}
                 draggable={isAssigned}
                 onDragStart={
                   isAssigned
@@ -253,6 +304,21 @@ const Equipment = ({
                 }
                 onDragEnd={isAssigned ? finishDrag : undefined}
               >
+                {isAssigned && (
+                  <button
+                    type="button"
+                    className={styles.moveHandle}
+                    aria-label={t('GAME_LOBBY.MOVE_EQUIPMENT')}
+                    aria-pressed={isPickedUp}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      toggleSelected({ card, from: field, key: selectionKey });
+                    }}
+                  >
+                    <MdOpenWith aria-hidden="true" />
+                  </button>
+                )}
                 <label
                   onClick={(event: React.MouseEvent<HTMLLabelElement>) => {
                     event.preventDefault();
@@ -286,6 +352,10 @@ const Equipment = ({
               aria-hidden="true"
             />
           )}
+          {!!selected &&
+            renderTapTarget(t('GAME_LOBBY.PLACE_IN', { zone: label }), () =>
+              placeSelectedIn(field)
+            )}
         </div>
       </div>
     );
@@ -435,23 +505,39 @@ const Equipment = ({
           </div>
 
           <div className={styles.categoryContainer}>
-            {modularState.map((card, ix) => (
-              <div
-                key={`mod-${ix}`}
-                className={styles.cardContainer}
-                draggable
-                onDragStart={(e) => handleModularDragStart(e, card)}
-                onDragEnd={finishDrag}
-              >
-                <CardPopUp cardNumber={card} disableTilt>
-                  <CardImage
-                    src={getCardSrc(card)}
-                    className={styles.card}
-                    draggable={false}
-                  />
-                </CardPopUp>
-              </div>
-            ))}
+            {modularState.map((card, ix) => {
+              const selectionKey = `mod-${ix}`;
+              const isPickedUp = selected?.key === selectionKey;
+
+              return (
+                <div
+                  key={`mod-${ix}`}
+                  className={`${styles.cardContainer} ${
+                    isPickedUp ? styles.cardPickedUp : ''
+                  }`}
+                  draggable
+                  onDragStart={(e) => handleModularDragStart(e, card)}
+                  onDragEnd={finishDrag}
+                  onClick={() =>
+                    toggleSelected({ card, from: 'modular', key: selectionKey })
+                  }
+                >
+                  <CardPopUp cardNumber={card} disableTilt disableTapToPreview>
+                    <CardImage
+                      src={getCardSrc(card)}
+                      className={styles.card}
+                      draggable={false}
+                    />
+                  </CardPopUp>
+                </div>
+              );
+            })}
+            {selected &&
+              selected.from !== 'modular' &&
+              renderTapTarget(
+                t('GAME_LOBBY.PLACE_IN', { zone: t('GAME_LOBBY.MODULAR') }),
+                returnSelectedToModular
+              )}
           </div>
         </div>
       )}
