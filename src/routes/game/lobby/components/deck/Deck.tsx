@@ -810,90 +810,46 @@ const Deck = ({
         {groupedCards ? (
           // Grouped view
           <>
-            {groupedCards.type === 'numeric' ? (
-              // Numeric grouping (pitch, power, block value)
-              <>
-                {Array.from(groupedCards.groups as Map<number, string[]>)
-                  .sort(([keyA], [keyB]) => {
-                    // For power and block, sort descending (higher first)
-                    if (sortMode === 'power' || sortMode === 'blockValue') {
-                      return (keyB as number) - (keyA as number);
-                    }
-                    // For pitch, sort ascending
-                    return (keyA as number) - (keyB as number);
-                  })
-                  .map(([key, cards]: [number, string[]]) => {
-                    const selectedCount = cards.filter((card) =>
-                      values.deck.includes(card)
-                    ).length;
-                    return (
-                      <div
-                        key={`${sortMode}-${key}`}
-                        className={styles.pitchGroup}
-                      >
-                        <div className={styles.pitchHeader}>
-                          {`${groupedCards.headerPrefix} ${key}`}
-                          <span className={styles.cardCount}>
-                            ({selectedCount}/{cards.length})
-                          </span>
+            {Array.from(groupedCards.groups as Map<number | string, string[]>)
+              .sort(([keyA], [keyB]) => {
+                if (groupedCards.type !== 'numeric') {
+                  return (keyA as string).localeCompare(keyB as string);
+                }
+                // For power and block, sort descending (higher first)
+                if (sortMode === 'power' || sortMode === 'blockValue') {
+                  return (keyB as number) - (keyA as number);
+                }
+                // For pitch, sort ascending
+                return (keyA as number) - (keyB as number);
+              })
+              .map(([key, cards]: [number | string, string[]]) => {
+                const selectedCount = cards.filter((card) =>
+                  values.deck.includes(card)
+                ).length;
+                return (
+                  <div key={`${sortMode}-${key}`} className={styles.pitchGroup}>
+                    <div className={styles.pitchHeader}>
+                      {`${groupedCards.headerPrefix} ${key}`}
+                      <span className={styles.cardCount}>
+                        ({selectedCount}/{cards.length})
+                      </span>
+                    </div>
+                    <div className={styles.cardsGroup}>
+                      {cards.map((card: string, ix: number) => (
+                        <div
+                          key={`${key}-${ix}`}
+                          className={styles.deckCardContainer}
+                        >
+                          <DeckCardCheckbox
+                            card={card}
+                            imageSrc={getImageSrc(card.split('-')[0])}
+                          />
                         </div>
-                        <div className={styles.cardsGroup}>
-                          {cards.map((card: string, ix: number) => (
-                            <div
-                              key={`${key}-${ix}`}
-                              className={styles.deckCardContainer}
-                            >
-                              <DeckCardCheckbox
-                                card={card}
-                                imageSrc={getImageSrc(card.split('-')[0])}
-                              />
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    );
-                  })}
-              </>
-            ) : (
-              // String grouping (class, talent)
-              <>
-                {Array.from(groupedCards.groups as Map<string, string[]>)
-                  .sort(([keyA], [keyB]) =>
-                    (keyA as string).localeCompare(keyB as string)
-                  )
-                  .map(([key, cards]: [string, string[]]) => {
-                    const selectedCount = cards.filter((card) =>
-                      values.deck.includes(card)
-                    ).length;
-                    return (
-                      <div
-                        key={`${sortMode}-${key}`}
-                        className={styles.pitchGroup}
-                      >
-                        <div className={styles.pitchHeader}>
-                          {`${groupedCards.headerPrefix} ${key}`}
-                          <span className={styles.cardCount}>
-                            ({selectedCount}/{cards.length})
-                          </span>
-                        </div>
-                        <div className={styles.cardsGroup}>
-                          {cards.map((card: string, ix: number) => (
-                            <div
-                              key={`${key}-${ix}`}
-                              className={styles.deckCardContainer}
-                            >
-                              <DeckCardCheckbox
-                                card={card}
-                                imageSrc={getImageSrc(card.split('-')[0])}
-                              />
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    );
-                  })}
-              </>
-            )}
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
             {groupedCards.noValueCards.length > 0 && (
               <div className={styles.pitchGroup}>
                 <div className={styles.pitchHeader}>

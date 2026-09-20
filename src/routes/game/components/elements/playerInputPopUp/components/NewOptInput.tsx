@@ -67,21 +67,22 @@ const ReorderOpt = ({
     buttonClick = true;
   };
 
+  const submitOptLists = (mode: number) => {
+    processInputAPI({
+      gameName: gameID,
+      playerID: playerID,
+      authKey: authKey,
+      mode: mode,
+      submission: {
+        cardListTop: cardListTop.map((card) => card.cardNumber),
+        cardListBottom: cardListBottom.map((card) => card.cardNumber)
+      }
+    });
+  };
+
   useEffect(() => {
     if (buttonClick) {
-      const cardNamesTop = cardListTop.map((card) => card.cardNumber);
-      const cardNamesBottom = cardListBottom.map((card) => card.cardNumber);
-      const body = {
-        gameName: gameID,
-        playerID: playerID,
-        authKey: authKey,
-        mode: 106,
-        submission: {
-          cardListTop: cardNamesTop,
-          cardListBottom: cardNamesBottom
-        }
-      };
-      processInputAPI(body);
+      submitOptLists(106);
       change = false;
       buttonClick = false;
     }
@@ -89,34 +90,13 @@ const ReorderOpt = ({
 
   const handleDragEnd = () => {
     if (change) {
-      const cardNamesTop = cardListTop.map((card) => card.cardNumber);
-      const cardNamesBottom = cardListBottom.map((card) => card.cardNumber);
-      const body = {
-        gameName: gameID,
-        playerID: playerID,
-        authKey: authKey,
-        mode: 106,
-        submission: {
-          cardListTop: cardNamesTop,
-          cardListBottom: cardNamesBottom
-        }
-      };
-      processInputAPI(body);
+      submitOptLists(106);
       change = false;
     }
   };
 
   const handleSubmit = () => {
-    const cardNamesTop = cardListTop.map((card) => card.cardNumber);
-    const cardNamesBottom = cardListBottom.map((card) => card.cardNumber);
-    const body = {
-      gameName: gameID,
-      playerID: playerID,
-      authKey: authKey,
-      mode: 107,
-      submission: { cardListTop: cardNamesTop, cardListBottom: cardNamesBottom }
-    };
-    processInputAPI(body);
+    submitOptLists(107);
   };
 
   const cardCounts = new Map<string, number>();

@@ -1145,8 +1145,9 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                 </select>
               </label>
 
-              {gameDescription ===
-                'Looking to play against a specific hero' && (
+              {(gameDescription === 'Looking to play against a specific hero' ||
+                gameDescription ===
+                  'No interest in playing against specific hero') && (
                 <div className={styles.heroSelection}>
                   <div className={styles.heroSelectionHeader}>
                     <label>
@@ -1203,7 +1204,9 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                         </label>
                       ))}
                   </div>
-                  {selectedHeroes.length > 0 &&
+                  {gameDescription ===
+                    'Looking to play against a specific hero' &&
+                    selectedHeroes.length > 0 &&
                     hasOscilioHero(selectedHeroes) && (
                       <label className={styles.oscilioVariant}>
                         {t(
@@ -1233,78 +1236,22 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                     )}
                   {selectedHeroes.length > 0 && (
                     <div className={styles.selectedHeroesPreview}>
-                      {t(
-                        'MENU.CREATE_GAME.GAME_DESCRIPTIONS.HERO_SELECT.PREVIEW'
+                      {gameDescription ===
+                      'Looking to play against a specific hero' ? (
+                        <>
+                          {t(
+                            'MENU.CREATE_GAME.GAME_DESCRIPTIONS.HERO_SELECT.PREVIEW'
+                          )}
+                          {formatSelectedHeroes(selectedHeroes, oscilioVariant)}
+                        </>
+                      ) : (
+                        <>
+                          {t(
+                            'MENU.CREATE_GAME.GAME_DESCRIPTIONS.HERO_SELECT.PREVIEW_NOT'
+                          )}
+                          {selectedHeroes.join(', ')}
+                        </>
                       )}
-                      {formatSelectedHeroes(selectedHeroes, oscilioVariant)}
-                    </div>
-                  )}
-                </div>
-              )}
-              {gameDescription ===
-                'No interest in playing against specific hero' && (
-                <div className={styles.heroSelection}>
-                  <div className={styles.heroSelectionHeader}>
-                    <label>
-                      {t(
-                        'MENU.CREATE_GAME.GAME_DESCRIPTIONS.HERO_SELECT.SELECT_HEROES',
-                        { amount: '3' }
-                      )}
-                    </label>
-                    {selectedHeroes.length > 0 && (
-                      <button
-                        type="button"
-                        onClick={clearSelections}
-                        className={styles.clearSelectionLink}
-                      >
-                        {t(
-                          'MENU.CREATE_GAME.GAME_DESCRIPTIONS.HERO_SELECT.CLEAR'
-                        )}
-                      </button>
-                    )}
-                  </div>
-                  <input
-                    type="text"
-                    placeholder={t(
-                      'MENU.CREATE_GAME.GAME_DESCRIPTIONS.HERO_SELECT.SEARCH_HEROES_PLACEHOLDER'
-                    )}
-                    value={heroSearch}
-                    onChange={(e) => setHeroSearch(e.target.value)}
-                    className={styles.searchInput}
-                    aria-label={t(
-                      'MENU.CREATE_GAME.GAME_DESCRIPTIONS.HERO_SELECT.SEARCH_HEROES'
-                    )}
-                  />
-                  <div className={styles.heroCheckboxes}>
-                    {uniqueHeroes
-                      .filter((heroName) =>
-                        heroName
-                          .toLowerCase()
-                          .includes(heroSearch.toLowerCase())
-                      )
-                      .map((heroName) => (
-                        <label key={heroName} className={styles.heroCheckbox}>
-                          <input
-                            type="checkbox"
-                            checked={selectedHeroes.includes(heroName)}
-                            onChange={(e) =>
-                              handleHeroSelection(heroName, e.target.checked)
-                            }
-                            disabled={
-                              !selectedHeroes.includes(heroName) &&
-                              selectedHeroes.length >= 3
-                            }
-                          />
-                          {heroName}
-                        </label>
-                      ))}
-                  </div>
-                  {selectedHeroes.length > 0 && (
-                    <div className={styles.selectedHeroesPreview}>
-                      {t(
-                        'MENU.CREATE_GAME.GAME_DESCRIPTIONS.HERO_SELECT.PREVIEW_NOT'
-                      )}
-                      {selectedHeroes.join(', ')}
                     </div>
                   )}
                 </div>
