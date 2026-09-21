@@ -1,5 +1,6 @@
 .label.label {
   background-color: var(--near-black);
+  color: var(--theme-text);
   order: 99;
   position: absolute;
   bottom: 6px;
