@@ -246,24 +246,26 @@ const EndGameScreen = () => {
             </div>
           </div>
           {!isSupporter && !isLoading && !error && (
-            <a
-              href={TALISHAR_METAFY_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.supportCta}
-            >
-              <img
-                src={MetafyLogo}
-                alt={t('END_GAME.METAFY')}
-                className={styles.supportCtaLogo}
-              />
-              <span className={styles.supportCtaText}>
-                {t('END_GAME.SUPPORT_CTA_TITLE')}
-              </span>
-              <span className={styles.supportCtaAction}>
-                {t('END_GAME.SUPPORT_CTA_ACTION')}
-              </span>
-            </a>
+            <div className={styles.supportCta}>
+              <a
+                href={TALISHAR_METAFY_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.supportCtaLink}
+              >
+                <img
+                  src={MetafyLogo}
+                  alt={t('END_GAME.METAFY')}
+                  className={styles.supportCtaLogo}
+                />
+                <span className={styles.supportCtaText}>
+                  {t('END_GAME.SUPPORT_CTA_TITLE')}
+                </span>
+                <span className={styles.supportCtaAction}>
+                  {t('END_GAME.SUPPORT_CTA_ACTION')}
+                </span>
+              </a>
+            </div>
           )}
           {content}
         </>

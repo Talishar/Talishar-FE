@@ -206,16 +206,22 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.6rem;
   width: calc(100% + 3rem);
   margin: 0 -1.5rem 1rem -1.5rem;
   background: var(--near-black);
-  text-decoration: none;
   flex-shrink: 0;
+}
+
+.supportCtaLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0 0.75rem;
+  text-decoration: none;
   transition: background 0.2s;
 }
 
-.supportCta:hover {
+.supportCtaLink:hover {
   background: rgba(var(--theme-on-surface-rgb), 0.03);
 }
 
