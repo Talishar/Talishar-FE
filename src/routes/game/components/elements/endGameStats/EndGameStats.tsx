@@ -220,6 +220,7 @@ export interface EndGameData extends AggregateStats {
   totalTime?: number;
   startingLife?: number;
   opponentStartingLife?: number;
+  contractsCompleted?: number;
 }
 
 export interface CardResult {
@@ -1113,6 +1114,10 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
             playerData.totalLifeLost || 0
           }\n\n`;
 
+          if (playerData.contractsCompleted) {
+            content += `Contracts Completed,${playerData.contractsCompleted}\n\n`;
+          }
+
           content += 'CARD PLAY STATS\n';
           content += 'Card Name,Played,Blocked,Pitched,Discarded,Times Hit';
 
@@ -1764,6 +1769,17 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
                     </span>
                     <span className={styles.infoValue}>
                       {stats.totalLifeLost}
+                    </span>
+                  </div>
+                )}
+
+                {!!data.contractsCompleted && (
+                  <div className={styles.infoRow}>
+                    <span className={styles.infoLabel}>
+                      {t('END_GAME.CONTRACTS_COMPLETED')}
+                    </span>
+                    <span className={styles.infoValue}>
+                      {data.contractsCompleted}
                     </span>
                   </div>
                 )}
