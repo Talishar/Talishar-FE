@@ -29,6 +29,7 @@ export function Effect(prop: CardProp) {
       cardNumber={prop.card.cardNumber}
       containerClass={styles.effect}
       isOpponent={!isPlayer}
+      disableTilt
     >
       <div className={styles.overlayContainer}>
         <CardImage

@@ -430,6 +430,8 @@ const getPitchStyles = (pitchValue?: number) => {
       return { text: styles.twoPitch, border: styles.cardTwoPitch };
     case 3:
       return { text: styles.threePitch, border: styles.cardThreePitch };
+    case 4:
+      return { text: styles.fourPitch, border: styles.cardFourPitch };
     default:
       return { text: styles.zeroPitch, border: styles.cardZeroPitch };
   }

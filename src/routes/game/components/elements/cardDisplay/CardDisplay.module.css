@@ -315,6 +315,8 @@
   left: 0px;
   right: 0px;
   animation: subCardSlideUp 0.18s ease-out both;
+  --tilt-x: 0deg;
+  --tilt-y: 0deg;
 }
 
 @keyframes subCardSlideUp {

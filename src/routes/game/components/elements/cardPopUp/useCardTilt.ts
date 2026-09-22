@@ -55,6 +55,9 @@ export function useCardTilt(
     element.style.transform = '';
     element.style.willChange = '';
     element.style.transition = '';
+    element.style.transformStyle = '';
+    element.style.removeProperty('--tilt-x');
+    element.style.removeProperty('--tilt-y');
     runtime.transform = '';
   }, [containerRef, runtime]);
 
@@ -101,13 +104,16 @@ export function useCardTilt(
         runtime.vy = 0;
       }
 
-      const transform = `perspective(600px) rotateX(${runtime.x.toFixed(
-        2
-      )}deg) rotateY(${runtime.y.toFixed(2)}deg)`;
+      const degreesX = runtime.x.toFixed(2);
+      const degreesY = runtime.y.toFixed(2);
+      const transform = `perspective(600px) rotateX(${degreesX}deg) rotateY(${degreesY}deg)`;
       // Identical strings are skipped so a settled frame triggers no repaint.
       if (transform !== runtime.transform) {
         runtime.transform = transform;
         element.style.transform = transform;
+        // Descendants that opt out of the tilt read these back and invert them.
+        element.style.setProperty('--tilt-x', `${degreesX}deg`);
+        element.style.setProperty('--tilt-y', `${degreesY}deg`);
       }
 
       if (!atRest) {
@@ -143,6 +149,8 @@ export function useCardTilt(
         // The stylesheet transitions `transform`, which would fight the spring.
         element.style.transition = 'none';
         element.style.willChange = 'transform';
+        // Children must share the card's 3D space for an inverse to cancel out.
+        element.style.transformStyle = 'preserve-3d';
       }
 
       const centerX = rect.left + rect.width / 2;
