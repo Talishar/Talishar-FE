@@ -375,9 +375,13 @@ function sweepRewardedAttrs(root: Document | Element = document) {
   }
 }
 
-export default function useAdScript(enabled = true) {
+export default function useAdScript(
+  enabled = true,
+  allowOnAdFreeRoute = false
+) {
   const isProtectedRoute = isAdFreeRoute(window.location.pathname);
-  const shouldLoadProvider = enabled && ADS_ENABLED && !isProtectedRoute;
+  const shouldLoadProvider =
+    enabled && ADS_ENABLED && (!isProtectedRoute || allowOnAdFreeRoute);
 
   useEffect(() => {
     if (!shouldLoadProvider) {

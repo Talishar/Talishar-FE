@@ -37,6 +37,7 @@ import { PanelProvider } from '../components/leftColumn/PanelContext';
 import usePlayerPresenceReporter from 'hooks/usePlayerPresenceReporter';
 import useSuppressTouchImageMenu from 'hooks/useSuppressTouchImageMenu';
 import useAdScript, { wasAdProviderLoadedInDocument } from 'hooks/useAdScript';
+import useSupporterStatus from 'hooks/useSupporterStatus';
 import {
   CardScaleVariables,
   HeroInfoSync,
@@ -118,7 +119,14 @@ function Play() {
     }
   }, []);
 
-  useAdScript(false);
+  const turnPhase = useAppSelector(
+    (state: any) => state.game.turnPhase?.turnPhase
+  );
+  const { showAds } = useSupporterStatus();
+  const isGameOver = turnPhase === 'OVER';
+
+  // Keep the play route ad-free until the end-game stats are displayed.
+  useAdScript(isGameOver && showAds, true);
   const { t } = useTranslation();
   usePageTitle(t('PAGES.GAME_PLAY'));
   usePlayerPresenceReporter();
