@@ -91,7 +91,9 @@ import {
   CloseGameRequest,
   DeleteUsernameRequest,
   ResetAllRustCountersResponse,
-  SearchUsernamesResponse
+  SearchUsernamesResponse,
+  PromptStatsRange,
+  PromptStatsResponse
 } from 'interface/API/ModPageAPI';
 import { FriendListAPIResponse } from 'interface/API/FriendListAPI.php';
 import {
@@ -666,6 +668,14 @@ export const apiSlice = createApi({
       },
       providesTags: [{ type: 'ModPageData', id: 'LIST' }]
     }),
+    getPromptStats: builder.query<PromptStatsResponse, PromptStatsRange>({
+      query: (days) => ({
+        url: URL_END_POINT.GET_PROMPT_STATS,
+        method: 'GET',
+        params: { days },
+        responseHandler: parseResponse
+      })
+    }),
     resetAllRustCounters: builder.mutation<ResetAllRustCountersResponse, void>({
       query: () => ({
         url: URL_END_POINT.RESET_ALL_RUST_COUNTERS,
@@ -1038,6 +1048,7 @@ export const {
   useSubmitLobbyInputMutation,
   useKickPlayerMutation,
   useGetModPageDataQuery,
+  useGetPromptStatsQuery,
   useResetAllRustCountersMutation,
   useBanPlayerByIPMutation,
   useBanIPDirectMutation,

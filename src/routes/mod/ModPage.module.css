@@ -27,11 +27,83 @@
   overflow-y: auto;
 }
 
+.tabList {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+  min-width: 0;
+  border-bottom: 1px solid rgba(var(--theme-on-surface-rgb), 0.12);
+}
+
+.tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  width: auto !important;
+  min-height: 2.5rem;
+  padding: 0 0.9rem;
+  margin: 0;
+  border: 0;
+  border-radius: 6px 6px 0 0;
+  background: transparent;
+  box-shadow: none;
+  color: rgba(var(--theme-on-surface-rgb), 0.62);
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.tab:hover {
+  color: var(--theme-text);
+  background: rgba(var(--theme-on-surface-rgb), 0.05);
+}
+
+.tab:focus-visible {
+  outline: 2px solid var(--theme-primary);
+  outline-offset: -2px;
+}
+
+.tabActive {
+  color: var(--theme-text);
+}
+
+.tabActive::after {
+  content: '';
+  position: absolute;
+  left: 0.6rem;
+  right: 0.6rem;
+  bottom: -1px;
+  height: 2px;
+  background: var(--theme-primary);
+  border-radius: 2px;
+}
+
+.tabPanel {
+  padding-top: 20px;
+  min-width: 0;
+}
+
+.tabPanel:focus {
+  outline: none;
+}
+
+.twoColumn {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
 .contentWrapper {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 20px;
-  margin-top: 20px;
 }
 
 .leftColumn {
@@ -69,9 +141,15 @@
     padding: 12px;
   }
 
-  .contentWrapper {
+  .contentWrapper,
+  .twoColumn {
     grid-template-columns: 1fr;
     gap: 12px;
+  }
+
+  .tab {
+    padding: 0 0.6rem;
+    font-size: 0.85rem;
   }
 
   .middleColumn {

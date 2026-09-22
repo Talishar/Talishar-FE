@@ -71,3 +71,29 @@ export interface UserSearchResult {
 export interface SearchUsernamesResponse {
   users: UserSearchResult[];
 }
+
+export type PromptStatsRange = 1 | 7 | 30 | 90;
+
+export interface PromptAnswerCount {
+  answer: string;
+  count: number;
+}
+
+export interface PromptStat {
+  phase: string;
+  context: string;
+  contextName: string;
+  count: number;
+  forced: number;
+  identical: number;
+  avgMs: number;
+  answers: PromptAnswerCount[];
+}
+
+export interface PromptStatsResponse {
+  days: PromptStatsRange;
+  since: string;
+  totalAnswers: number;
+  prompts: PromptStat[];
+  error?: string;
+}
