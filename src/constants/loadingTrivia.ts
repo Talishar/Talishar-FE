@@ -86,5 +86,5 @@ export const LOADING_TRIVIA: string[] = [
   '50% win rate: perfectly balanced, emotionally devastating.',
   'The tech card works best when your opponent draws it against you.',
   'Did you know you can share replays with your friends?',
-  'You can adjust the resolution of Talishar by zooming in or out in your browser?',
+  'You can adjust the resolution of Talishar by zooming in or out in your browser.',
 ];
