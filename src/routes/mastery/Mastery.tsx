@@ -149,7 +149,7 @@ const Mastery = () => {
   return (
     <main className={styles.page}>
       <PageBanner title={t('MASTERY.TITLE')} subtitle={t('MASTERY.SUBTITLE')} />
-      <AdRailLayout>
+      <AdRailLayout contentWidth={1440}>
         <div className={styles.content}>
           <div className={styles.toolbar}>
             <p className={styles.betaNotice} role="note">

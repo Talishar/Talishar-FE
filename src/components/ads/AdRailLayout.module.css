@@ -1,7 +1,8 @@
 .layout {
   display: grid;
-  grid-template-columns: 300px minmax(0, 1fr) 300px;
-  gap: 20px;
+  grid-template-columns: 300px minmax(0, var(--rail-content-width)) 300px;
+  justify-content: center;
+  gap: 32px;
   align-items: start;
   padding: 0 20px;
 }
@@ -16,11 +17,20 @@
   margin-top: var(--block-spacing-vertical);
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: stretch;
+}
+
+.removeAds {
+  display: none;
+  align-self: flex-end;
+}
+
+.rail:has(:global(.ad-unit) > *) .removeAds {
+  display: block;
 }
 
 .rail :global(.ad-unit) {
-  margin-top: 2px;
+  margin-top: 4px;
 }
 
 @media (max-width: 1280px) {

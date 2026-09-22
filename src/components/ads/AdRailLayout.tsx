@@ -7,16 +7,22 @@ import styles from './AdRailLayout.module.css';
 
 interface AdRailLayoutProps {
   children: React.ReactNode;
+  contentWidth?: number;
 }
 
-const AdRailLayout = ({ children }: AdRailLayoutProps) => {
+const AdRailLayout = ({ children, contentWidth = 900 }: AdRailLayoutProps) => {
   const { showAds } = useSupporterStatus();
   useAdScript(showAds);
 
   if (!showAds) return <>{children}</>;
 
   return (
-    <div className={styles.layout}>
+    <div
+      className={styles.layout}
+      style={
+        { '--rail-content-width': `${contentWidth}px` } as React.CSSProperties
+      }
+    >
       <aside className={styles.rail}>
         <RemoveAdsLink className={styles.removeAds} />
         <AdUnit placement="left-rail-1" />

@@ -57,7 +57,7 @@ const Learn: React.FC = () => {
         title={t('PAGES.LEARN_FAB')}
         subtitle={t('LEARN.BANNER_SUBTITLE')}
       />
-      <AdRailLayout>
+      <AdRailLayout contentWidth={1200}>
         <div className={styles.container}>
           {loading ? (
             <div className={styles.loadingContainer}>
