@@ -241,6 +241,17 @@ export const SETTINGS_DEFS: SettingDef[] = [
   },
   {
     kind: 'toggle',
+    key: 'autoPitchForced',
+    group: 'matchControls',
+    labelKey: 'SETTINGS.AUTO_PITCH_FORCED',
+    tooltipKey: 'SETTINGS.AUTO_PITCH_FORCED_TOOLTIP',
+    storage: 'account',
+    name: optConst.AUTO_PITCH_FORCED,
+    defaultOn: true,
+    visible: inAMatch
+  },
+  {
+    kind: 'toggle',
     key: 'manualMode',
     group: 'matchControls',
     labelKey: 'SETTINGS.MANUAL_MODE',

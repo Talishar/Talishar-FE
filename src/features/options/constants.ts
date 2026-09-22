@@ -20,6 +20,7 @@ export const ALWAYS_ALLOW_UNDO = 'AlwaysAllowUndo';
 export const MANUAL_TUNIC = 'ManualTunic';
 export const MANUAL_DYNAMO = 'ManualDynamo';
 export const MANUAL_VALDA = 'ManualValda';
+export const AUTO_PITCH_FORCED = 'AutoPitchForced';
 export const DISABLE_FABINSIGHTS = 'DisableFabInsights';
 export const DISABLE_HERO_INTRO = 'DisableHeroIntro';
 export const MIRRORED_BOARD_LAYOUT = 'MirroredBoardLayout';

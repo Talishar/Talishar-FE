@@ -25,7 +25,24 @@ interface GemSlider {
   controller?: number;
 }
 
-const ALWAYS_WAGER_HEROES = new Set(['olympia', 'olympia_prized_fighter']);
+const HERO_GEM_LABELS: Record<string, [string, string]> = {
+  olympia: [
+    'GEM_SLIDER.ALWAYS_WAGER_ACTIVE_LABEL',
+    'GEM_SLIDER.ALWAYS_WAGER_INACTIVE_LABEL'
+  ],
+  olympia_prized_fighter: [
+    'GEM_SLIDER.ALWAYS_WAGER_ACTIVE_LABEL',
+    'GEM_SLIDER.ALWAYS_WAGER_INACTIVE_LABEL'
+  ],
+  vynnset: [
+    'GEM_SLIDER.ALWAYS_PAY_LIFE_ACTIVE_LABEL',
+    'GEM_SLIDER.ALWAYS_PAY_LIFE_INACTIVE_LABEL'
+  ],
+  vynnset_iron_maiden: [
+    'GEM_SLIDER.ALWAYS_PAY_LIFE_ACTIVE_LABEL',
+    'GEM_SLIDER.ALWAYS_PAY_LIFE_INACTIVE_LABEL'
+  ]
+};
 
 const GemSlider = (props: GemSlider) => {
   const { playerID } = useAppSelector(getGameInfo, shallowEqual);
@@ -38,21 +55,18 @@ const GemSlider = (props: GemSlider) => {
   if (props.gem === undefined || props.gem === 'none') return null;
 
   const isActive = props.gem === 'active';
-  const isAlwaysWager =
-    !!props.cardNumber && ALWAYS_WAGER_HEROES.has(props.cardNumber);
+  const heroGemLabels = props.cardNumber
+    ? HERO_GEM_LABELS[props.cardNumber]
+    : undefined;
   const equipmentGemHidden =
     !props.zone &&
-    !isAlwaysWager &&
+    !heroGemLabels &&
     areEquipmentGemButtonsDisabled(gemButtonsDisabled);
 
   if (equipmentGemHidden) return null;
 
-  const stateLabel = isAlwaysWager
-    ? t(
-        isActive
-          ? 'GEM_SLIDER.ALWAYS_WAGER_ACTIVE_LABEL'
-          : 'GEM_SLIDER.ALWAYS_WAGER_INACTIVE_LABEL'
-      )
+  const stateLabel = heroGemLabels
+    ? t(isActive ? heroGemLabels[0] : heroGemLabels[1])
     : t(isActive ? 'GEM_SLIDER.ACTIVE_LABEL' : 'GEM_SLIDER.INACTIVE_LABEL');
 
   const onClick = () => {

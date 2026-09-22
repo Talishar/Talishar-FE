@@ -554,7 +554,9 @@
     "ACTIVE_LABEL": "Card ability active. Click to deactivate.",
     "INACTIVE_LABEL": "Card ability inactive. Click to activate.",
     "ALWAYS_WAGER_ACTIVE_LABEL": "Always wager is on. You wager automatically without being asked. Click to turn it off.",
-    "ALWAYS_WAGER_INACTIVE_LABEL": "Always wager is off. You are asked each time. Click to always wager automatically."
+    "ALWAYS_WAGER_INACTIVE_LABEL": "Always wager is off. You are asked each time. Click to always wager automatically.",
+    "ALWAYS_PAY_LIFE_ACTIVE_LABEL": "Always pay life is on. Vynnset pays 1 life automatically without asking. Click to turn it off.",
+    "ALWAYS_PAY_LIFE_INACTIVE_LABEL": "Always pay life is off. You are asked each time. Click to always pay 1 life automatically."
   },
   "HAND": {
     "SCROLL_LEFT": "Scroll hand left",
@@ -1621,6 +1623,8 @@
   "SETTINGS": {
     "ALTERNATE_ART": "Alternate Art",
     "ALWAYS_ALLOW_UNDO": "Always Allow Undo",
+    "AUTO_PITCH_FORCED": "Auto-pitch forced choices",
+    "AUTO_PITCH_FORCED_TOOLTIP": "Automatically pitch your last hand card when it can fully pay the remaining resource cost. Undo remains available.",
     "ALWAYS_SHOW_COUNTERS_ON_ZONES": "Always Show Counters on Zones",
     "ATTACK_OPTIONS": {
       "NEVER_SKIP": "Never Skip Attacks",

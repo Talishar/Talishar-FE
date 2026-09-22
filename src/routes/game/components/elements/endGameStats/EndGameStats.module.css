@@ -1037,6 +1037,14 @@
   user-select: none;
 }
 
+@media (max-width: 768px) {
+  .disclaimer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}
+
 .sortableHeader {
   cursor: pointer;
   user-select: none;
