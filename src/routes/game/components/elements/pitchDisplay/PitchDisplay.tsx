@@ -21,6 +21,7 @@ function getPitchColor(
   cardNumber: string
 ): PitchColor {
   if (cardNumber.includes('inner_chi')) return 'blue';
+  if (pitchValue === 4) return 'purple';
   if (pitchValue === 3) return 'blue';
   if (pitchValue === 2) return 'yellow';
   return FALLBACK_PITCH_COLOR;
@@ -82,7 +83,12 @@ export default function PitchDisplay(prop: Displayrow) {
           <motion.div
             key={pulse.id}
             className={`${styles.pitchPulse} ${
-              styles[`pitchPulse${pulse.pitchColor}`]
+              styles[
+                `pitchPulse${
+                  pulse.pitchColor.charAt(0).toUpperCase() +
+                  pulse.pitchColor.slice(1)
+                }`
+              ]
             }`}
             initial={{ opacity: 0.8, scale: 0.45 }}
             animate={{ opacity: 0, scale: 2.5 }}

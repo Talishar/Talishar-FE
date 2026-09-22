@@ -51,6 +51,12 @@
     inset 0 0 12px rgba(105, 219, 255, 0.35);
 }
 
+.pitchPulsePurple {
+  border: 2px solid rgba(192, 141, 255, 0.95);
+  box-shadow: 0 0 14px rgba(155, 93, 224, 0.85),
+    inset 0 0 12px rgba(192, 141, 255, 0.35);
+}
+
 .pitchValue {
   text-align: center;
   font-size: 1.6em;

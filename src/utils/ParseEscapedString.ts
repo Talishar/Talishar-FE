@@ -6,7 +6,8 @@ const COLOR_MAPPING: { [key: string]: string } = {
   '0': '#999999',
   '1': '#af1518',
   '2': '#daa520',
-  '3': '#009ddf'
+  '3': '#009ddf',
+  '4': '#9b5de0'
 };
 
 const ELEMENT_COLOR_MAPPING: {

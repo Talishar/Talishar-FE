@@ -178,7 +178,8 @@ interface ChainLinkCard {
 const PITCH_COLORS: Record<number, string> = {
   1: '#af1518',
   2: '#daa520',
-  3: '#4b84ff'
+  3: '#4b84ff',
+  4: '#9b5de0'
 };
 const pitchColor = (pitch?: number | string): string | undefined =>
   PITCH_COLORS[Number(pitch)];

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import styles from './ResourcesParticle.module.css';
 
-export type PitchColor = 'red' | 'yellow' | 'blue';
+export type PitchColor = 'red' | 'yellow' | 'blue' | 'purple';
 
 interface ResourcesParticleProps {
   pitchColor: PitchColor;
@@ -21,7 +21,8 @@ export default function ResourcesParticle({
   const particleClass = {
     red: styles.redParticle,
     yellow: styles.yellowParticle,
-    blue: styles.blueParticle
+    blue: styles.blueParticle,
+    purple: styles.purpleParticle
   }[pitchColor];
 
   return (

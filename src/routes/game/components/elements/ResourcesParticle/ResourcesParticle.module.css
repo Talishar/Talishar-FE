@@ -43,3 +43,14 @@
   );
   box-shadow: 0 0 8px #68d7ff, 0 0 16px rgba(32, 119, 232, 0.85);
 }
+
+.purpleParticle {
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    #e0c4ff 28%,
+    #9b5de0 70%,
+    transparent
+  );
+  box-shadow: 0 0 8px #c08dff, 0 0 16px rgba(123, 60, 200, 0.85);
+}
