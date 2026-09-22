@@ -4,6 +4,7 @@ import { usePageTitle } from 'hooks/usePageTitle';
 import GuideGrid from './components/GuideGrid';
 import { fetchMetafyGuides, MetafyGuide } from '../../services/metafyService';
 import PageBanner from 'components/PageBanner/PageBanner';
+import AdRailLayout from 'components/ads/AdRailLayout';
 import { useTranslation } from 'react-i18next';
 
 const Learn: React.FC = () => {
@@ -56,57 +57,59 @@ const Learn: React.FC = () => {
         title={t('PAGES.LEARN_FAB')}
         subtitle={t('LEARN.BANNER_SUBTITLE')}
       />
-      <div className={styles.container}>
-        {loading ? (
-          <div className={styles.loadingContainer}>
-            <div className={styles.spinner}></div>
-            <p>{t('LEARN.LOADING')}</p>
-          </div>
-        ) : error ? (
-          <div className={styles.errorContainer}>
-            <p className={styles.errorMessage}>{error}</p>
-            <button
-              onClick={() => loadGuides(1)}
-              className={styles.retryButton}
-            >
-              {t('LEARN.TRY_AGAIN')}
-            </button>
-          </div>
-        ) : guides.length > 0 ? (
-          <>
-            <GuideGrid guides={guides} />
+      <AdRailLayout>
+        <div className={styles.container}>
+          {loading ? (
+            <div className={styles.loadingContainer}>
+              <div className={styles.spinner}></div>
+              <p>{t('LEARN.LOADING')}</p>
+            </div>
+          ) : error ? (
+            <div className={styles.errorContainer}>
+              <p className={styles.errorMessage}>{error}</p>
+              <button
+                onClick={() => loadGuides(1)}
+                className={styles.retryButton}
+              >
+                {t('LEARN.TRY_AGAIN')}
+              </button>
+            </div>
+          ) : guides.length > 0 ? (
+            <>
+              <GuideGrid guides={guides} />
 
-            {totalPages > 1 && (
-              <div className={styles.pagination}>
-                <button
-                  onClick={handlePreviousPage}
-                  disabled={currentPage === 1}
-                  className={styles.paginationButton}
-                >
-                  {t('LEARN.PAGINATION.PREVIOUS')}
-                </button>
-                <span className={styles.pageInfo}>
-                  {t('LEARN.PAGINATION.PAGE_INFO', {
-                    page: currentPage,
-                    totalPages
-                  })}
-                </span>
-                <button
-                  onClick={handleNextPage}
-                  disabled={currentPage === totalPages}
-                  className={styles.paginationButton}
-                >
-                  {t('LEARN.PAGINATION.NEXT')}
-                </button>
-              </div>
-            )}
-          </>
-        ) : (
-          <div className={styles.emptyContainer}>
-            <p>{t('LEARN.NO_GUIDES')}</p>
-          </div>
-        )}
-      </div>
+              {totalPages > 1 && (
+                <div className={styles.pagination}>
+                  <button
+                    onClick={handlePreviousPage}
+                    disabled={currentPage === 1}
+                    className={styles.paginationButton}
+                  >
+                    {t('LEARN.PAGINATION.PREVIOUS')}
+                  </button>
+                  <span className={styles.pageInfo}>
+                    {t('LEARN.PAGINATION.PAGE_INFO', {
+                      page: currentPage,
+                      totalPages
+                    })}
+                  </span>
+                  <button
+                    onClick={handleNextPage}
+                    disabled={currentPage === totalPages}
+                    className={styles.paginationButton}
+                  >
+                    {t('LEARN.PAGINATION.NEXT')}
+                  </button>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className={styles.emptyContainer}>
+              <p>{t('LEARN.NO_GUIDES')}</p>
+            </div>
+          )}
+        </div>
+      </AdRailLayout>
     </main>
   );
 };

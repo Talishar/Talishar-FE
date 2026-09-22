@@ -1,0 +1,35 @@
+.layout {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr) 300px;
+  gap: 20px;
+  align-items: start;
+  padding: 0 20px;
+}
+
+.center {
+  min-width: 0;
+}
+
+.rail {
+  position: sticky;
+  top: 80px;
+  margin-top: var(--block-spacing-vertical);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.rail :global(.ad-unit) {
+  margin-top: 2px;
+}
+
+@media (max-width: 1280px) {
+  .layout {
+    display: block;
+    padding: 0;
+  }
+
+  .rail {
+    display: none;
+  }
+}

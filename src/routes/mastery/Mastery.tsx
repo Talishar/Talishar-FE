@@ -5,6 +5,7 @@ import { HEROES_OF_RATHE } from 'routes/index/components/filter/constants';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import MasteryFrame from 'features/mastery/MasteryFrame';
 import PageBanner from 'components/PageBanner/PageBanner';
+import AdRailLayout from 'components/ads/AdRailLayout';
 import {
   MASTERY_MILESTONES,
   emptyMastery,
@@ -148,232 +149,239 @@ const Mastery = () => {
   return (
     <main className={styles.page}>
       <PageBanner title={t('MASTERY.TITLE')} subtitle={t('MASTERY.SUBTITLE')} />
-      <div className={styles.content}>
-        <div className={styles.toolbar}>
-          <p className={styles.betaNotice} role="note">
-            <Trans
-              i18nKey="MASTERY.BETA_NOTICE"
-              components={{ strong: <strong /> }}
-            />
-          </p>
-          <div className={styles.toolbarControls}>
-            <label className={styles.sortControl}>
-              <select
-                value={sortOrder}
-                onChange={(event) =>
-                  setSortOrder(event.target.value as SortOrder)
-                }
-                aria-label={t('MASTERY.SORT.LABEL')}
-              >
-                <option value="rank">{t('MASTERY.SORT.RANK')}</option>
-                <option value="alphabetical">
-                  {t('MASTERY.SORT.ALPHABETICAL')}
-                </option>
-              </select>
-            </label>
-            <div
-              className={styles.filters}
-              role="group"
-              aria-label={t('MASTERY.FILTER.LABEL')}
-            >
-              {(['all', 'played', 'mastered'] as Filter[]).map((value) => (
-                <button
-                  key={value}
-                  type="button"
-                  aria-pressed={filter === value}
-                  onClick={() => setFilter(value)}
-                  className={filter === value ? styles.activeFilter : ''}
+      <AdRailLayout>
+        <div className={styles.content}>
+          <div className={styles.toolbar}>
+            <p className={styles.betaNotice} role="note">
+              <Trans
+                i18nKey="MASTERY.BETA_NOTICE"
+                components={{ strong: <strong /> }}
+              />
+            </p>
+            <div className={styles.toolbarControls}>
+              <label className={styles.sortControl}>
+                <select
+                  value={sortOrder}
+                  onChange={(event) =>
+                    setSortOrder(event.target.value as SortOrder)
+                  }
+                  aria-label={t('MASTERY.SORT.LABEL')}
                 >
-                  {filterLabels[value]}
-                </button>
-              ))}
+                  <option value="rank">{t('MASTERY.SORT.RANK')}</option>
+                  <option value="alphabetical">
+                    {t('MASTERY.SORT.ALPHABETICAL')}
+                  </option>
+                </select>
+              </label>
+              <div
+                className={styles.filters}
+                role="group"
+                aria-label={t('MASTERY.FILTER.LABEL')}
+              >
+                {(['all', 'played', 'mastered'] as Filter[]).map((value) => (
+                  <button
+                    key={value}
+                    type="button"
+                    aria-pressed={filter === value}
+                    onClick={() => setFilter(value)}
+                    className={filter === value ? styles.activeFilter : ''}
+                  >
+                    {filterLabels[value]}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
 
-        {isLoading && <p className={styles.status}>{t('MASTERY.LOADING')}</p>}
-        {error && <p className={styles.status}>{t('MASTERY.LOAD_ERROR')}</p>}
+          {isLoading && <p className={styles.status}>{t('MASTERY.LOADING')}</p>}
+          {error && <p className={styles.status}>{t('MASTERY.LOAD_ERROR')}</p>}
 
-        {!isLoading &&
-          !error &&
-          groups.map((group) => {
-            const heroes = sortHeroes(
-              group.heroes.filter((hero) => visible(hero.value))
-            );
-            return (
-              <section className={styles.group} key={group.name}>
-                <button
-                  type="button"
-                  className={styles.groupHeading}
-                  onClick={() =>
-                    setCollapsed((current) => ({
-                      ...current,
-                      [group.name]: !current[group.name]
-                    }))
-                  }
-                  aria-expanded={!collapsed[group.name]}
-                >
-                  <svg
-                    className={styles.collapseIcon}
-                    viewBox="0 0 16 16"
-                    aria-hidden="true"
-                    focusable="false"
+          {!isLoading &&
+            !error &&
+            groups.map((group) => {
+              const heroes = sortHeroes(
+                group.heroes.filter((hero) => visible(hero.value))
+              );
+              return (
+                <section className={styles.group} key={group.name}>
+                  <button
+                    type="button"
+                    className={styles.groupHeading}
+                    onClick={() =>
+                      setCollapsed((current) => ({
+                        ...current,
+                        [group.name]: !current[group.name]
+                      }))
+                    }
+                    aria-expanded={!collapsed[group.name]}
                   >
-                    <path d="M4 8h8" />
-                    {collapsed[group.name] && <path d="M8 4v8" />}
-                  </svg>
-                  <b>{group.name}</b> <small>({heroes.length})</small>
-                  <span className={styles.groupSummary}>
-                    <Trans
-                      i18nKey="MASTERY.COLLECTION_SUMMARY"
-                      values={{
-                        played: playedCount(group.heroes),
-                        total: group.heroes.length
-                      }}
-                      components={{ count: <span /> }}
-                    />
-                  </span>
-                </button>
-                {!collapsed[group.name] &&
-                  (heroes.length ? (
-                    <div className={styles.grid}>
-                      {heroes.map((hero) => {
-                        const item =
-                          progress.get(hero.value) ?? emptyMastery(hero.value);
-                        const start = progressStart(item.level, milestones);
-                        const end = item.nextThreshold ?? item.qualifyingGames;
-                        const percent =
-                          end === start
-                            ? 100
-                            : Math.min(
-                                100,
-                                ((item.qualifyingGames - start) /
-                                  (end - start)) *
-                                  100
-                              );
-                        const nextMastery = t('MASTERY.LEVEL', {
-                          level: ROMAN_LEVELS[item.level + 1]
-                        });
-                        const gamesUntil =
-                          item.gamesToNext === 1
-                            ? t('MASTERY.GAMES_UNTIL', {
-                                count: 1,
-                                mastery: nextMastery
-                              })
-                            : t('MASTERY.GAMES_UNTIL', {
-                                count: item.gamesToNext,
-                                mastery: nextMastery
-                              });
-                        const isMaximum = item.nextThreshold === null;
-                        const detailId = `mastery-detail-${hero.value}`;
-                        return (
-                          <article
-                            className={styles.heroCard}
-                            key={hero.value}
-                            tabIndex={0}
-                            data-played={item.qualifyingGames > 0}
-                            data-mastered={item.level > 0}
-                            data-expanded={expandedHero === hero.value}
-                            aria-describedby={detailId}
-                            aria-expanded={expandedHero === hero.value}
-                            onMouseEnter={(event) =>
-                              alignDetail(event.currentTarget)
-                            }
-                            onFocus={(event) => alignDetail(event.currentTarget)}
-                            onClick={(event) => {
-                              alignDetail(event.currentTarget);
-                              setExpandedHero((current) =>
-                                current === hero.value ? null : hero.value
-                              );
-                            }}
-                            onKeyDown={(event) => {
-                              if (event.key === 'Escape') setExpandedHero(null);
-                            }}
-                          >
-                            <MasteryFrame
-                              level={item.level}
-                              className={styles.portraitFrame}
+                    <svg
+                      className={styles.collapseIcon}
+                      viewBox="0 0 16 16"
+                      aria-hidden="true"
+                      focusable="false"
+                    >
+                      <path d="M4 8h8" />
+                      {collapsed[group.name] && <path d="M8 4v8" />}
+                    </svg>
+                    <b>{group.name}</b> <small>({heroes.length})</small>
+                    <span className={styles.groupSummary}>
+                      <Trans
+                        i18nKey="MASTERY.COLLECTION_SUMMARY"
+                        values={{
+                          played: playedCount(group.heroes),
+                          total: group.heroes.length
+                        }}
+                        components={{ count: <span /> }}
+                      />
+                    </span>
+                  </button>
+                  {!collapsed[group.name] &&
+                    (heroes.length ? (
+                      <div className={styles.grid}>
+                        {heroes.map((hero) => {
+                          const item =
+                            progress.get(hero.value) ??
+                            emptyMastery(hero.value);
+                          const start = progressStart(item.level, milestones);
+                          const end =
+                            item.nextThreshold ?? item.qualifyingGames;
+                          const percent =
+                            end === start
+                              ? 100
+                              : Math.min(
+                                  100,
+                                  ((item.qualifyingGames - start) /
+                                    (end - start)) *
+                                    100
+                                );
+                          const nextMastery = t('MASTERY.LEVEL', {
+                            level: ROMAN_LEVELS[item.level + 1]
+                          });
+                          const gamesUntil =
+                            item.gamesToNext === 1
+                              ? t('MASTERY.GAMES_UNTIL', {
+                                  count: 1,
+                                  mastery: nextMastery
+                                })
+                              : t('MASTERY.GAMES_UNTIL', {
+                                  count: item.gamesToNext,
+                                  mastery: nextMastery
+                                });
+                          const isMaximum = item.nextThreshold === null;
+                          const detailId = `mastery-detail-${hero.value}`;
+                          return (
+                            <article
+                              className={styles.heroCard}
+                              key={hero.value}
+                              tabIndex={0}
+                              data-played={item.qualifyingGames > 0}
+                              data-mastered={item.level > 0}
+                              data-expanded={expandedHero === hero.value}
+                              aria-describedby={detailId}
+                              aria-expanded={expandedHero === hero.value}
+                              onMouseEnter={(event) =>
+                                alignDetail(event.currentTarget)
+                              }
+                              onFocus={(event) =>
+                                alignDetail(event.currentTarget)
+                              }
+                              onClick={(event) => {
+                                alignDetail(event.currentTarget);
+                                setExpandedHero((current) =>
+                                  current === hero.value ? null : hero.value
+                                );
+                              }}
+                              onKeyDown={(event) => {
+                                if (event.key === 'Escape')
+                                  setExpandedHero(null);
+                              }}
                             >
-                              <img
-                                src={generateCroppedImageUrl(hero.value)}
-                                alt={hero.label}
-                                loading="lazy"
-                              />
-                            </MasteryFrame>
-                            <strong title={hero.label}>{hero.label}</strong>
-                            <span className={styles.gameCount}>
-                              {t('MASTERY.GAME_COUNT', {
-                                count: item.qualifyingGames,
-                                formattedCount:
-                                  item.qualifyingGames.toLocaleString()
-                              })}
-                            </span>
-                            <div
-                              className={styles.detail}
-                              id={detailId}
-                              role="tooltip"
-                              data-maximum={isMaximum}
-                            >
-                              <strong>{hero.label}</strong>
-                              <b>
-                                {item.level > 0
-                                  ? t('MASTERY.LEVEL', {
-                                      level: ROMAN_LEVELS[item.level]
-                                    })
-                                  : t('MASTERY.TITLE')}
-                              </b>
-                              {isMaximum ? (
-                                <>
-                                  <span className={styles.detailGames}>
-                                    {t('MASTERY.GAMES_PLAYED', {
-                                      count: item.qualifyingGames,
-                                      formattedCount:
-                                        item.qualifyingGames.toLocaleString()
-                                    })}
-                                  </span>
-                                  <em className={styles.maximumMessage}>
-                                    {t('MASTERY.MAXIMUM_REACHED')}
-                                  </em>
-                                </>
-                              ) : (
-                                <>
-                                  <span className={styles.detailGames}>
-                                    {t('MASTERY.GAMES_PROGRESS', {
-                                      games:
-                                        item.qualifyingGames.toLocaleString(),
-                                      threshold:
-                                        item.nextThreshold?.toLocaleString()
-                                    })}
-                                  </span>
-                                  <div
-                                    className={styles.detailProgress}
-                                    aria-label={t(
-                                      'MASTERY.GAMES_PROGRESS_LABEL',
-                                      {
-                                        games: item.qualifyingGames,
-                                        threshold: item.nextThreshold
-                                      }
-                                    )}
-                                  >
-                                    <i style={{ width: `${percent}%` }} />
-                                  </div>
-                                  <em className={styles.milestoneMessage}>
-                                    {gamesUntil}
-                                  </em>
-                                </>
-                              )}
-                            </div>
-                          </article>
-                        );
-                      })}
-                    </div>
-                  ) : (
-                    <p className={styles.empty}>{t('MASTERY.EMPTY')}</p>
-                  ))}
-              </section>
-            );
-          })}
-      </div>
+                              <MasteryFrame
+                                level={item.level}
+                                className={styles.portraitFrame}
+                              >
+                                <img
+                                  src={generateCroppedImageUrl(hero.value)}
+                                  alt={hero.label}
+                                  loading="lazy"
+                                />
+                              </MasteryFrame>
+                              <strong title={hero.label}>{hero.label}</strong>
+                              <span className={styles.gameCount}>
+                                {t('MASTERY.GAME_COUNT', {
+                                  count: item.qualifyingGames,
+                                  formattedCount:
+                                    item.qualifyingGames.toLocaleString()
+                                })}
+                              </span>
+                              <div
+                                className={styles.detail}
+                                id={detailId}
+                                role="tooltip"
+                                data-maximum={isMaximum}
+                              >
+                                <strong>{hero.label}</strong>
+                                <b>
+                                  {item.level > 0
+                                    ? t('MASTERY.LEVEL', {
+                                        level: ROMAN_LEVELS[item.level]
+                                      })
+                                    : t('MASTERY.TITLE')}
+                                </b>
+                                {isMaximum ? (
+                                  <>
+                                    <span className={styles.detailGames}>
+                                      {t('MASTERY.GAMES_PLAYED', {
+                                        count: item.qualifyingGames,
+                                        formattedCount:
+                                          item.qualifyingGames.toLocaleString()
+                                      })}
+                                    </span>
+                                    <em className={styles.maximumMessage}>
+                                      {t('MASTERY.MAXIMUM_REACHED')}
+                                    </em>
+                                  </>
+                                ) : (
+                                  <>
+                                    <span className={styles.detailGames}>
+                                      {t('MASTERY.GAMES_PROGRESS', {
+                                        games:
+                                          item.qualifyingGames.toLocaleString(),
+                                        threshold:
+                                          item.nextThreshold?.toLocaleString()
+                                      })}
+                                    </span>
+                                    <div
+                                      className={styles.detailProgress}
+                                      aria-label={t(
+                                        'MASTERY.GAMES_PROGRESS_LABEL',
+                                        {
+                                          games: item.qualifyingGames,
+                                          threshold: item.nextThreshold
+                                        }
+                                      )}
+                                    >
+                                      <i style={{ width: `${percent}%` }} />
+                                    </div>
+                                    <em className={styles.milestoneMessage}>
+                                      {gamesUntil}
+                                    </em>
+                                  </>
+                                )}
+                              </div>
+                            </article>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <p className={styles.empty}>{t('MASTERY.EMPTY')}</p>
+                    ))}
+                </section>
+              );
+            })}
+        </div>
+      </AdRailLayout>
     </main>
   );
 };
