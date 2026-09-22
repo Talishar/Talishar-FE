@@ -51,8 +51,6 @@
   cursor: default;
   align-content: center;
   opacity: var(--counters-opacity, 1);
-  transform: rotateY(calc(-1 * var(--tilt-y, 0deg)))
-    rotateX(calc(-1 * var(--tilt-x, 0deg)));
   transition: opacity 0.2s ease;
   pointer-events: var(--counters-pointer-events, auto);
   overflow: visible !important;
