@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './ManualModePanel.module.css';
-import useManualMode from 'hooks/useManualMode';
+import useManualMode, { useIsPrivateGame } from 'hooks/useManualMode';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { submitButton } from 'features/game/GameSlice';
 import { PROCESS_INPUT } from 'appConstants';
@@ -25,19 +25,20 @@ export default function ManualModePanel() {
     setIsDeckOrganizerOpen
   } = usePanelContext();
   const { canUseManualMode, isManualMode } = useManualMode();
+  const isPrivateGame = useIsPrivateGame();
   const isPracticeDummy = useAppSelector(
     (state: RootState) => state.game.playerTwo.Name === 'Practice Dummy'
   );
 
   useEffect(() => {
-    if (isManualMode && !isMobileOrTablet) {
-      setIsOpen(true);
-    }
-  }, [isManualMode, isMobileOrTablet]);
-
-  useEffect(() => {
     setIsOpen(isManualModeOpen);
   }, [isManualModeOpen]);
+
+  useEffect(() => {
+    if (isManualMode && (!isMobileOrTablet || isPrivateGame)) {
+      setIsOpen(true);
+    }
+  }, [isManualMode, isMobileOrTablet, isPrivateGame]);
 
   useEffect(() => {
     if (!canUseManualMode) {
@@ -53,7 +54,7 @@ export default function ManualModePanel() {
 
   return (
     <>
-      {!isMobileOrTablet && (
+      {!isMobileOrTablet && !isPrivateGame && (
         <button
           className={`${styles.manualModeTab} ${
             isOpen || isDevToolOpen ? styles.hidden : ''

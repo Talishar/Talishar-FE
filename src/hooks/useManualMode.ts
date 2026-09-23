@@ -5,15 +5,19 @@ import useSetting from './useSetting';
 
 const FUTURES_FORMATS = ['futurecc', 'futurell', 'futuresage'];
 
-export function useCanUseManualMode() {
-  const isOpponentAI = useAppSelector(
-    (state: RootState) => state.game.gameInfo.isOpponentAI ?? false
-  );
-  const isPrivate = useAppSelector(
+export function useIsPrivateGame() {
+  return useAppSelector(
     (state: RootState) =>
       (state.game.gameInfo.isPrivate ?? false) ||
       (state.game.gameInfo.isPrivateLobby ?? false)
   );
+}
+
+export function useCanUseManualMode() {
+  const isOpponentAI = useAppSelector(
+    (state: RootState) => state.game.gameInfo.isOpponentAI ?? false
+  );
+  const isPrivate = useIsPrivateGame();
   const isPracticeDummy = useAppSelector(
     (state: RootState) => state.game.playerTwo?.Name === 'Practice Dummy'
   );

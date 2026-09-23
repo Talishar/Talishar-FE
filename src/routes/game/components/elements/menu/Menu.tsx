@@ -24,7 +24,7 @@ import {
 } from 'contexts/ButtonDisableContext';
 import { RootState } from 'app/Store';
 import { usePanelContext } from '../../leftColumn/PanelContext';
-import { useCanUseManualMode } from 'hooks/useManualMode';
+import { useCanUseManualMode, useIsPrivateGame } from 'hooks/useManualMode';
 import { useMediaQuery } from 'hooks/useMediaQuery';
 
 function FullScreenButton() {
@@ -111,7 +111,8 @@ function MobileOverflowMenu({ isSpectator }: { isSpectator: boolean }) {
   const btnRef = useRef<HTMLButtonElement>(null);
   const { setIsManualModeOpen, isManualModeOpen } = usePanelContext();
   const canUseManualMode = useCanUseManualMode();
-  const showManualMode = !isSpectator && canUseManualMode;
+  const isPrivateGame = useIsPrivateGame();
+  const showManualMode = !isSpectator && canUseManualMode && !isPrivateGame;
 
   const toggleFullScreen = () => {
     screenfull.toggle();
