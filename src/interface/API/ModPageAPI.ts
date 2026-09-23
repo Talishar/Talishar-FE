@@ -98,3 +98,40 @@ export interface PromptStatsResponse {
   prompts: PromptStat[];
   error?: string;
 }
+
+export interface PuzzleCandidate {
+  id: number;
+  createdAt: string;
+  format: string;
+  turn: number;
+  player: number;
+  hero: string;
+  heroName: string;
+  opponentHero: string;
+  opponentHeroName: string;
+  opponentLife: number;
+  handCount: number;
+  opponentHandCount: number;
+  status: number;
+}
+
+export interface PuzzleCandidatesResponse {
+  total: number;
+  candidates: PuzzleCandidate[];
+  error?: string;
+}
+
+export interface CreatePuzzleGameRequest {
+  candidateId: number;
+  emptyOpponentHand: boolean;
+  removeDecks: boolean;
+}
+
+export interface CreatePuzzleGameResponse {
+  gameName: number;
+  playerID: number;
+  authKey: string;
+  opponentPlayerID: number;
+  opponentAuthKey: string;
+  error?: string;
+}

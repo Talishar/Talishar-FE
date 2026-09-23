@@ -1,0 +1,64 @@
+.ready {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem 1rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.12);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: var(--theme-text);
+}
+
+.readyLinks {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.button {
+  display: inline-block;
+  width: auto !important;
+  margin: 0 !important;
+  padding: 0.35rem 0.75rem !important;
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.18) !important;
+  border-radius: 4px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--theme-text) !important;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.button:hover:not(:disabled) {
+  background: rgba(var(--theme-on-surface-rgb), 0.08) !important;
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--theme-primary);
+  outline-offset: 2px;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.primary {
+  border-color: rgba(var(--theme-on-surface-rgb), 0.32) !important;
+  background: rgba(var(--theme-on-surface-rgb), 0.1) !important;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

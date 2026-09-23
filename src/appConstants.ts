@@ -428,6 +428,8 @@ export const URL_END_POINT = {
   KICK_PLAYER: 'APIs/KickPlayer.php',
   GET_MOD_PAGE_DATA: 'APIs/GetModPageData.php',
   GET_PROMPT_STATS: 'APIs/GetPromptStats.php',
+  GET_PUZZLE_CANDIDATES: 'APIs/GetPuzzleCandidates.php',
+  CREATE_PUZZLE_GAME: 'APIs/CreatePuzzleGame.php',
   RESET_ALL_RUST_COUNTERS: 'APIs/ResetAllRustCounters.php',
   SEARCH_USERNAMES: 'APIs/SearchUsernames.php',
   BAN_PLAYER: 'BanPlayer.php',

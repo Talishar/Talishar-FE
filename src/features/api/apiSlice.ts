@@ -93,7 +93,10 @@ import {
   ResetAllRustCountersResponse,
   SearchUsernamesResponse,
   PromptStatsRange,
-  PromptStatsResponse
+  PromptStatsResponse,
+  PuzzleCandidatesResponse,
+  CreatePuzzleGameRequest,
+  CreatePuzzleGameResponse
 } from 'interface/API/ModPageAPI';
 import { FriendListAPIResponse } from 'interface/API/FriendListAPI.php';
 import {
@@ -676,6 +679,19 @@ export const apiSlice = createApi({
         responseHandler: parseResponse
       })
     }),
+    getPuzzleCandidates: builder.query<PuzzleCandidatesResponse, void>({
+      query: () => ({
+        url: URL_END_POINT.GET_PUZZLE_CANDIDATES,
+        method: 'GET',
+        responseHandler: parseResponse
+      })
+    }),
+    createPuzzleGame: builder.mutation<
+      CreatePuzzleGameResponse,
+      CreatePuzzleGameRequest
+    >({
+      query: (body) => postJson(URL_END_POINT.CREATE_PUZZLE_GAME, body)
+    }),
     resetAllRustCounters: builder.mutation<ResetAllRustCountersResponse, void>({
       query: () => ({
         url: URL_END_POINT.RESET_ALL_RUST_COUNTERS,
@@ -1049,6 +1065,8 @@ export const {
   useKickPlayerMutation,
   useGetModPageDataQuery,
   useGetPromptStatsQuery,
+  useGetPuzzleCandidatesQuery,
+  useCreatePuzzleGameMutation,
   useResetAllRustCountersMutation,
   useBanPlayerByIPMutation,
   useBanIPDirectMutation,
