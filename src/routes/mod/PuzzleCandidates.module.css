@@ -11,12 +11,6 @@
   color: var(--theme-text);
 }
 
-.readyLinks {
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
 .button {
   display: inline-block;
   width: auto !important;
@@ -52,6 +46,111 @@
 .primary {
   border-color: rgba(var(--theme-on-surface-rgb), 0.32) !important;
   background: rgba(var(--theme-on-surface-rgb), 0.1) !important;
+}
+
+.table {
+  min-width: 64rem;
+}
+
+.score {
+  display: block;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.difficulty {
+  display: block;
+  color: var(--theme-text-secondary);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.cardStrip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem;
+  max-width: 12rem;
+}
+
+.cardThumb {
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 3px;
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.14);
+  object-fit: cover;
+}
+
+.arsenalThumb {
+  border-style: dashed;
+  border-color: rgba(var(--theme-on-surface-rgb), 0.45);
+}
+
+.cardFallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(var(--theme-on-surface-rgb), 0.06);
+  color: var(--theme-text-secondary);
+  font-size: 0.65rem;
+}
+
+.good {
+  border-color: rgba(76, 175, 80, 0.6);
+  color: #9be29f;
+}
+
+.bad {
+  border-color: rgba(229, 83, 75, 0.55);
+  color: #f0a09b;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.detailRow td {
+  background: rgba(var(--theme-on-surface-rgb), 0.02) !important;
+}
+
+.details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 0.9rem 1.5rem;
+  padding: 0.3rem 0;
+}
+
+.detailGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.detailLabel {
+  color: rgba(var(--theme-on-surface-rgb), 0.62);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.detailList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.8rem;
+}
+
+.detailList li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .visuallyHidden {

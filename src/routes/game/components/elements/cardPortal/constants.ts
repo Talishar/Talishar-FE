@@ -52,6 +52,14 @@ export const doubleFacedCardsMappings: { [key: string]: string } = {
   blasmophet_levia_consumed: 'levia_redeemed',
   levia_redeemed: 'blasmophet_levia_consumed',
 
+  // Both new Viserai heroes share Viserai, Usurper as their reverse face.
+  viserai_the_forsaken: 'viserai_usurper',
+  viserai_between_worlds: 'viserai_usurper',
+  viserai_usurper: 'viserai_the_forsaken',
+  IAR106: 'IAR506',
+  IAR107: 'IAR506',
+  IAR506: 'IAR106',
+
   singularity: 'teklovossen_the_mechropotent',
   teklovossen_the_mechropotent: 'singularity_red',
 
@@ -149,4 +157,51 @@ export const doubleFacedCardsMappings: { [key: string]: string } = {
   MST500: 'MST100',
   MST501: 'MST101',
   MST502: 'MST102'
+};
+
+const VISERAI_DFC_FRONT_FACES = [
+  'viserai_the_forsaken',
+  'viserai_between_worlds',
+  'IAR106',
+  'IAR107'
+];
+
+const VISERAI_DFC_BACK_FACES = ['viserai_usurper', 'IAR506'];
+
+const VISERAI_MARVEL_BACK_IMAGE_IDS: { [key: string]: string } = {
+  viserai_the_forsaken: 'IAR106-MV_BACK',
+  viserai_between_worlds: 'IAR107-MV_BACK',
+  IAR106: 'IAR106-MV_BACK',
+  IAR107: 'IAR107-MV_BACK'
+};
+
+export const getDoubleFacedCardNumber = (
+  cardNumber: string,
+  originalHeroCardNumber?: string
+): string | undefined => {
+  if (
+    VISERAI_DFC_BACK_FACES.includes(cardNumber) &&
+    originalHeroCardNumber &&
+    VISERAI_DFC_FRONT_FACES.includes(originalHeroCardNumber)
+  ) {
+    return originalHeroCardNumber;
+  }
+
+  return doubleFacedCardsMappings[cardNumber];
+};
+
+// The configured T arts also use these set-specific Marvel reverse images.
+export const getViseraiMarvelBackFaceImageId = (
+  originalHeroCardNumber?: string,
+  originalHeroAltArtPath?: string
+): string | undefined => {
+  if (
+    !originalHeroAltArtPath?.match(/^IAR10[67]-(?:MV|T)(?:_BACK)?$/)
+  ) {
+    return undefined;
+  }
+
+  return originalHeroCardNumber
+    ? VISERAI_MARVEL_BACK_IMAGE_IDS[originalHeroCardNumber]
+    : undefined;
 };

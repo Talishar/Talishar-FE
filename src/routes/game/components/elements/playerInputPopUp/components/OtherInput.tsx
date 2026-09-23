@@ -1,7 +1,9 @@
-import React, { lazy, Suspense } from 'react';
+import React, { lazy, Suspense, useEffect } from 'react';
+import Button from 'features/Button';
 import CardDisplay from '../../cardDisplay/CardDisplay';
 import { NAME_A_CARD } from '../constants';
 import { FormProps } from '../playerInputPopupTypes';
+import { promptShortcutKey, shortcutBlockedByFocus } from '../promptShortcuts';
 import styles from '../PlayerInputPopUp.module.css';
 
 const SearchCardInput = lazy(
@@ -22,6 +24,27 @@ export const OtherInput = (props: FormProps) => {
     checkboxes,
     checkBoxSubmit
   } = props;
+
+  useEffect(() => {
+    const shortcuts = new Map<string, Button>();
+    for (const button of buttons ?? []) {
+      const key = promptShortcutKey(id, button);
+      if (key) shortcuts.set(key.toLowerCase(), button);
+    }
+    if (shortcuts.size === 0) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.repeat || event.isComposing) return;
+      if (event.ctrlKey || event.metaKey || event.altKey) return;
+      const button = shortcuts.get(event.key.toLowerCase());
+      if (!button || shortcutBlockedByFocus(event)) return;
+      event.preventDefault();
+      onClickButton(button);
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [buttons, id, onClickButton]);
 
   let selectedCount = 0;
   for (const checked of checkedState) {
@@ -74,6 +97,7 @@ export const OtherInput = (props: FormProps) => {
             return (
               <button
                 className={styles.buttonDiv}
+                aria-keyshortcuts={promptShortcutKey(id, button)}
                 onClick={(e) => {
                   e.stopPropagation();
                   e.preventDefault();

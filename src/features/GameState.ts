@@ -75,6 +75,9 @@ export default interface GameState {
       topCards?: Card[];
       bottomCards?: Card[];
       customInput?: string;
+      sourceCard?: string;
+      deckTopCard?: string;
+      deckTopIsOpponent?: boolean;
     };
     multiChooseText?: {
       submitLink?: string;

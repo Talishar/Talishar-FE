@@ -368,6 +368,28 @@
   align-items: center;
 }
 
+.hasPromptCards .form {
+  margin-bottom: 0;
+}
+
+.promptCards {
+  flex-basis: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1vh;
+  padding-left: 0.45em;
+}
+
+.promptCard {
+  width: var(--card-size);
+}
+
+.promptCard.promptSourceCard {
+  width: calc(0.7 * var(--card-size));
+}
+
 @media (orientation: portrait) and (max-width: 600px) {
   .optionsContainer,
   .optOptionsContainer {

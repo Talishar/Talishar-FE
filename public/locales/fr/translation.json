@@ -1233,7 +1233,10 @@
     "NO_MATCHING_CARDS": "Aucune carte correspondante",
     "OF": "de",
     "SEARCH_CARDS": "Rechercher…",
+    "SOURCE": "Source",
     "SUBMIT": "Soumettre",
+    "TOP_OF_DECK": "Dessus du deck",
+    "TOP_OF_THEIR_DECK": "Dessus du deck adverse",
     "TRIGGERS": "Déclencheurs"
   },
   "PLAYER_NAME": {

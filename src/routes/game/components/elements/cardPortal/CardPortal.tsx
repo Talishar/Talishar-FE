@@ -3,16 +3,26 @@ import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import CardImage from '../cardImage/CardImage';
 import styles from './CardPortal.module.css';
 import { clearCardPreview, useCardPreview } from './cardPreviewStore';
-import { doubleFacedCardsMappings } from './constants';
+import {
+  getDoubleFacedCardNumber,
+  getViseraiMarvelBackFaceImageId
+} from './constants';
 import classNames from 'classnames';
 import useWindowDimensions from 'hooks/useWindowDimensions';
-import { CARD_IMAGES_PATH, getCollectionCardImagePath } from 'utils';
+import {
+  CARD_IMAGES_PATH,
+  DEFAULT_LANGUAGE,
+  getCollectionCardImagePath
+} from 'utils';
 import { useCookieString } from 'utils/cookieStore';
 import { createPortal } from 'react-dom';
 import { isMeldCard } from 'constants/meldCards';
 import CardKeywordStrip from './CardKeywordStrip';
 import { useTranslation } from 'react-i18next';
 import { MdClose } from 'react-icons/md';
+import { useAppSelector } from 'app/Hooks';
+import type { RootState } from 'app/Store';
+import { DISABLE_ALT_ARTS } from 'features/options/constants';
 
 const popUpGap = 130;
 
@@ -57,22 +67,46 @@ function CardDetails({
 
 function getSrcs({
   locale,
-  cardNumber
+  cardNumber,
+  originalHeroCardNumber,
+  originalHeroAltArtPath
 }: {
   locale: string;
   cardNumber: string;
+  originalHeroCardNumber?: string;
+  originalHeroAltArtPath?: string;
 }): Array<string> {
   const cardNumbers = [cardNumber];
-  if (doubleFacedCardsMappings[cardNumber] != null) {
-    cardNumbers.push(doubleFacedCardsMappings[cardNumber]);
+  const doubleFacedCardNumber = getDoubleFacedCardNumber(
+    cardNumber,
+    originalHeroCardNumber
+  );
+  if (doubleFacedCardNumber != null) {
+    cardNumbers.push(doubleFacedCardNumber);
   }
-  return cardNumbers.map((currentCardNumber) =>
-    getCollectionCardImagePath({
+  const marvelBackFaceImageId = getViseraiMarvelBackFaceImageId(
+    originalHeroCardNumber,
+    originalHeroAltArtPath
+  );
+
+  return cardNumbers.map((currentCardNumber) => {
+    if (
+      marvelBackFaceImageId &&
+      ['viserai_usurper', 'IAR506'].includes(currentCardNumber)
+    ) {
+      return getCollectionCardImagePath({
+        path: CARD_IMAGES_PATH,
+        locale: DEFAULT_LANGUAGE,
+        cardNumber: marvelBackFaceImageId
+      });
+    }
+
+    return getCollectionCardImagePath({
       path: CARD_IMAGES_PATH,
       locale,
       cardNumber: currentCardNumber
-    })
-  );
+    });
+  });
 }
 
 export default function CardPortal() {
@@ -81,6 +115,34 @@ export default function CardPortal() {
   const hoverImageSize = Number(useCookieString('hoverImageSize')) || 1;
   const { getLanguage } = useLanguageSelector();
   const [windowWidth, windowHeight] = useWindowDimensions();
+  const originalHeroCardNumber = useAppSelector((state: RootState) =>
+    popup?.isOpponent
+      ? state.game.gameInfo.opponentHeroCardNumber
+      : state.game.gameInfo.yourHeroCardNumber
+  );
+  const originalHeroAltArts = useAppSelector((state: RootState) =>
+    popup?.isOpponent
+      ? state.game.gameInfo.opponentAltArts
+      : state.game.gameInfo.altArts
+  );
+  const altArtsDisabled = useAppSelector(
+    (state: RootState) =>
+      String(state.settings?.entities?.[DISABLE_ALT_ARTS]?.value) === '1'
+  );
+  const originalHeroAltArtPath = useMemo(() => {
+    if (altArtsDisabled || !originalHeroCardNumber) return undefined;
+
+    for (
+      let index = (originalHeroAltArts?.length ?? 0) - 1;
+      index >= 0;
+      index -= 1
+    ) {
+      const altArt = originalHeroAltArts?.[index];
+      if (altArt?.cardId === originalHeroCardNumber) return altArt.altPath;
+    }
+
+    return undefined;
+  }, [altArtsDisabled, originalHeroAltArts, originalHeroCardNumber]);
 
   // useMemo must come before any early return (rules of hooks).
   // getSrcs only recomputes when the hovered card changes, not on every mouse-position update.
@@ -89,9 +151,14 @@ export default function CardPortal() {
   const [src, dfcSrc] = useMemo(
     () =>
       cardNumber
-        ? getSrcs({ locale: getLanguage(), cardNumber })
+        ? getSrcs({
+            locale: getLanguage(),
+            cardNumber,
+            originalHeroCardNumber,
+            originalHeroAltArtPath
+          })
         : (['', undefined] as const),
-    [cardNumber, getLanguage]
+    [cardNumber, getLanguage, originalHeroAltArtPath, originalHeroCardNumber]
   );
 
   if (

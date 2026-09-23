@@ -25,6 +25,8 @@ import {
 import { NumberInput } from './components/NumberInput';
 import { FormProps } from './playerInputPopupTypes';
 import { OtherInput } from './components/OtherInput';
+import { PromptCards } from './components/PromptCards';
+import { PROMPT_CARD_POPUPS } from './constants';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 import classNames from 'classnames';
 import GameState from 'features/GameState';
@@ -193,9 +195,12 @@ export default function PlayerInputPopUp() {
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
   };
 
-  const onClickButton = (button: Button) => {
-    dispatch(submitButton({ button: button }));
-  };
+  const onClickButton = useCallback(
+    (button: Button) => {
+      dispatch(submitButton({ button: button }));
+    },
+    [dispatch]
+  );
 
   const popupActive = !!showModal && !!inputPopUp?.active;
   useEffect(() => {
@@ -220,6 +225,8 @@ export default function PlayerInputPopUp() {
   const usesOtherInput = !PlayerInputFormTypeMap[popupId];
   const popupCardCount = popupCards?.length ?? 0;
   const showCardSearch = usesOtherInput && popupCardCount >= 8;
+  const showPromptCards =
+    popupCardCount === 0 && PROMPT_CARD_POPUPS.has(popupId);
   const { cardListKey, normalizedCardText } = useMemo(() => {
     let nextCardListKey = '';
     const nextNormalizedCardText: string[] = [];
@@ -427,7 +434,11 @@ export default function PlayerInputPopUp() {
             </button>
           ) : null}
         </div>
-        <div className={styles.contentContainer}>
+        <div
+          className={classNames(styles.contentContainer, {
+            [styles.hasPromptCards]: showPromptCards
+          })}
+        >
           {showCardSearch &&
           cardSearch &&
           filteredCardEntries.cards.length === 0 ? (
@@ -451,6 +462,14 @@ export default function PlayerInputPopUp() {
             checkboxes={checkboxes}
             checkBoxSubmit={checkBoxSubmit}
           />
+          {showPromptCards ? (
+            <PromptCards
+              title={inputPopUp.popup?.title ?? ''}
+              sourceCard={inputPopUp.popup?.sourceCard}
+              deckTopCard={inputPopUp.popup?.deckTopCard}
+              deckTopIsOpponent={inputPopUp.popup?.deckTopIsOpponent}
+            />
+          ) : null}
         </div>
       </div>
       <div

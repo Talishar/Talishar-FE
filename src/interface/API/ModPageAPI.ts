@@ -99,20 +99,63 @@ export interface PromptStatsResponse {
   error?: string;
 }
 
+export interface PuzzleCard {
+  id: string;
+  name: string;
+  type: string;
+  cost: number;
+  pitch: number;
+  power: number;
+  defense: number;
+  goAgain: boolean;
+}
+
+export interface PuzzleRealTurn {
+  threatened: number;
+  dealt: number;
+  cardsPlayed: number;
+  pitched: number;
+  resourcesUsed: number;
+  blocked: number;
+  cardsBlocked: number;
+  overkill: number;
+}
+
+export type PuzzleDifficulty = 'easy' | 'medium' | 'hard';
+
+export interface PuzzleFlag {
+  code: string;
+  value: number;
+}
+
 export interface PuzzleCandidate {
   id: number;
   createdAt: string;
   format: string;
   turn: number;
-  player: number;
   hero: string;
   heroName: string;
   opponentHero: string;
   opponentHeroName: string;
-  opponentLife: number;
-  handCount: number;
-  opponentHandCount: number;
   status: number;
+  life: number;
+  opponentLife: number;
+  hand: PuzzleCard[];
+  arsenal: PuzzleCard[];
+  weapons: PuzzleCard[];
+  floating: number;
+  actionPoints: number;
+  handPitch: number;
+  opponentEquipment: PuzzleCard[];
+  opponentDefense: number;
+  opponentHandCount: number;
+  opponentArsenalCount: number;
+  estimatedDamage: number;
+  estimatedAttacks: number;
+  realTurn: PuzzleRealTurn | null;
+  score: number;
+  difficulty: PuzzleDifficulty;
+  flags: PuzzleFlag[];
 }
 
 export interface PuzzleCandidatesResponse {
@@ -131,7 +174,5 @@ export interface CreatePuzzleGameResponse {
   gameName: number;
   playerID: number;
   authKey: string;
-  opponentPlayerID: number;
-  opponentAuthKey: string;
   error?: string;
 }
