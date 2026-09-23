@@ -945,7 +945,8 @@ const Lobby = () => {
     if (confirmsEquipment && !equipmentWarningConfirmed) {
       const emptyEquipmentSlots = getEmptyEquipmentSlots(
         values,
-        data.deck.modular
+        data.deck.modular,
+        baseEquipment
       );
 
       if (emptyEquipmentSlots.length > 0) {
