@@ -90,6 +90,7 @@ export default interface GameState {
       mode: number;
       maxNo: number;
       minNo?: number;
+      defaultChecked?: number[];
     };
   };
   playerPreferences?: {

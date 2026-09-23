@@ -83,6 +83,7 @@ export interface PromptStat {
   phase: string;
   context: string;
   contextName: string;
+  isCard?: boolean;
   count: number;
   forced: number;
   identical: number;

@@ -21,6 +21,30 @@
   z-index: 1150;
 }
 
+.optionsContainer.cardListPopup {
+  --popup-bottom-clearance: calc(3.5dvh + 0.5 * var(--card-size));
+  max-height: calc(99dvh - var(--popup-bottom-clearance));
+}
+
+.cardListPopup.hasSubmit {
+  --card-list-footer: 4.5rem;
+}
+
+.cardListPopup .contentContainer {
+  max-height: calc(
+    3 * var(--card-size) + 2 * (1vh + var(--subcard-overflow, 0px)) +
+      max(0.5em, var(--subcard-overflow, 0px)) + 0.5em +
+      var(--card-list-footer, 0px)
+  );
+}
+
+.cardListPopup .multiChooseActions {
+  position: sticky;
+  bottom: 0;
+  z-index: 3;
+  background-color: var(--near-black);
+}
+
 .optionsTitleContainer {
   position: relative;
   display: flex;

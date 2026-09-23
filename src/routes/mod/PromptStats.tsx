@@ -26,7 +26,10 @@ interface PromptRow extends PromptStat {
   reasons: string[];
 }
 
-const percent = (value: number) => `${Math.round(value * 100)}%`;
+const OPEN_ANSWER = /^(CHOSE|SOME|NAMED|SPLIT|ORDERED)/;
+
+const percent = (value: number) =>
+  value > 0 && value < 0.005 ? '<1%' : `${Math.round(value * 100)}%`;
 const formatAnswer = (answer: string) => answer.replace(/_/g, ' ');
 const formatSeconds = (ms: number) =>
   `${(ms / 1000).toFixed(ms < 10000 ? 1 : 0)}s`;
@@ -40,7 +43,7 @@ const toRow = (prompt: PromptStat): PromptRow => {
   if (prompt.count >= CANDIDATE_MIN_COUNT) {
     if (
       topShare >= CANDIDATE_TOP_SHARE &&
-      prompt.answers[0]?.answer !== 'CHOSE'
+      !OPEN_ANSWER.test(prompt.answers[0]?.answer ?? '')
     )
       reasons.push('SAME_ANSWER');
     if (identicalShare >= CANDIDATE_OPTION_SHARE) reasons.push('IDENTICAL');
@@ -54,9 +57,10 @@ const CardCell = ({ row }: { row: PromptRow }) => {
   const { getLanguage } = useLanguageSelector();
   const [imageFailed, setImageFailed] = useState(false);
   const hasCard = row.context !== '-';
+  const isCard = row.isCard ?? hasCard;
   return (
     <div className={styles.cardCell}>
-      {hasCard && !imageFailed ? (
+      {isCard && !imageFailed ? (
         <img
           className={styles.thumb}
           src={getCollectionCardImagePath({
