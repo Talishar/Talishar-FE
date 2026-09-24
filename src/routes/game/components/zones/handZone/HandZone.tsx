@@ -8,6 +8,7 @@ import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import { useAppDispatch, useAppSelector, useAppStore } from 'app/Hooks';
 import { setCardListFocus, clearCardListFocus } from 'features/game/GameSlice';
 import { useWindowWidth } from 'hooks/useWindowDimensions';
+import { getCardPreview } from '../../elements/cardPortal/cardPreviewStore';
 
 const CARD_GAP = 5; // matches the flex gap in HandZone.module.css
 const ZONE_MAX_WIDTH = 0.6; // matches max-width: 60% in HandZone.module.css
@@ -55,6 +56,7 @@ const HandZone = React.memo(function HandZone(prop: Player) {
 
   const windowWidth = useWindowWidth();
   const zoneRef = useRef<HTMLDivElement>(null);
+  const lastPointerTypeRef = useRef<string | null>(null);
   const [layout, setLayout] = useState<HandLayout>(EMPTY_HAND_LAYOUT);
   const { isOverflowing, overlap } = layout;
   const cardCount = handCards?.length ?? 0;
@@ -126,6 +128,10 @@ const HandZone = React.memo(function HandZone(prop: Player) {
 
   const openHandList = () => {
     if (!canOpenHandList) return;
+    // A tap that just opened a card preview is only a preview request.
+    if (lastPointerTypeRef.current === 'touch' && getCardPreview().popupOn) {
+      return;
+    }
     const cardListFocus = store.getState().game.cardListFocus;
     if (cardListFocus?.active && cardListFocus?.name === zoneTitle) {
       dispatch(clearCardListFocus());
@@ -145,6 +151,9 @@ const HandZone = React.memo(function HandZone(prop: Player) {
           ? ({ '--hand-overlap': `${overlap}px` } as React.CSSProperties)
           : undefined
       }
+      onPointerDown={(event) => {
+        lastPointerTypeRef.current = event.pointerType;
+      }}
       onClick={openHandList}
       title={
         canOpenHandList ? `Click to view ${zoneTitle.toLowerCase()}` : undefined
