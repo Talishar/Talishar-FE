@@ -544,9 +544,12 @@
     border-right: 0;
   }
   .replayTab {
-    width: 3.25rem;
+    width: auto;
+    min-width: 3.25rem;
     height: 2.5rem;
+    padding: 0 0.6rem !important;
     font-size: 0.7rem;
+    white-space: nowrap;
   }
   .content {
     padding: 0.85rem;
