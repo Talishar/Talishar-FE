@@ -10,13 +10,8 @@ import Player from '../features/Player';
 // single poll/SSE push even though the pattern never changes.
 const IMAGE_PATH_RE = /.\/Images\//gm;
 
-const CARD_NAME_CACHE = new Map<string, string>();
-
 function GetCardName(cardNumber: string): string {
   if (!cardNumber || cardNumber === 'blank') return '';
-
-  const cachedName = CARD_NAME_CACHE.get(cardNumber);
-  if (cachedName !== undefined) return cachedName;
 
   let end = cardNumber.length;
   if (cardNumber.endsWith('_red')) end -= 4;
@@ -42,7 +37,6 @@ function GetCardName(cardNumber: string): string {
     wordCount += 1;
   }
 
-  CARD_NAME_CACHE.set(cardNumber, result);
   return result;
 }
 
@@ -172,12 +166,12 @@ function ParseEquipment(input: any) {
 
 function parseCards(input: any, reverse = false): Card[] {
   if (!Array.isArray(input)) return [];
-  const result: Card[] = [];
+  const result: Card[] = new Array(input.length);
   if (reverse) {
-    for (let i = input.length - 1; i >= 0; i--)
-      result.push(ParseCard(input[i]));
+    for (let i = input.length - 1, outputIndex = 0; i >= 0; i--, outputIndex++)
+      result[outputIndex] = ParseCard(input[i]);
   } else {
-    for (const cardObj of input) result.push(ParseCard(cardObj));
+    for (let i = 0; i < input.length; i++) result[i] = ParseCard(input[i]);
   }
   return result;
 }
@@ -438,11 +432,12 @@ export default function ParseGameState(input: any) {
   // Chat log.
   const chatArray = input.chatLog ? input.chatLog.split('<br>') : [];
 
-  result.chatLog = chatArray.map((message: string) => {
-    return message.indexOf('/Images/', 1) === -1
-      ? message
-      : message.replace(IMAGE_PATH_RE, '/images/');
-  });
+  for (let i = 0; i < chatArray.length; i++) {
+    const message = chatArray[i];
+    if (message.indexOf('/Images/', 1) !== -1)
+      chatArray[i] = message.replace(IMAGE_PATH_RE, '/images/');
+  }
+  result.chatLog = chatArray;
 
   // activeplayer
   result.amIActivePlayer = input.amIActivePlayer as boolean;

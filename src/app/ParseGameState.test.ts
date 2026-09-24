@@ -67,3 +67,29 @@ describe('ParseGameState equipment slots', () => {
     expect(gameState.playerOne.HeadEq).toBeUndefined();
   });
 });
+
+describe('ParseGameState card piles and chat', () => {
+  it('preserves pile order, card names, and image path handling', () => {
+    const gameState = ParseGameState({
+      playerHand: [
+        { cardNumber: 'first_card_red' },
+        { cardNumber: 'second_card_blue', cardName: 'Custom name' }
+      ],
+      playerDiscard: [
+        { cardNumber: 'bottom_card_yellow' },
+        { cardNumber: 'top_card_red' }
+      ],
+      chatLog: './Images/one<br>/Images/two'
+    });
+
+    expect(gameState.playerOne.Hand?.map((card) => card.cardName)).toEqual([
+      'First Card',
+      'Custom name'
+    ]);
+    expect(gameState.playerOne.Graveyard?.map((card) => card.cardNumber)).toEqual([
+      'top_card_red',
+      'bottom_card_yellow'
+    ]);
+    expect(gameState.chatLog).toEqual(['/images/one', '/Images/two']);
+  });
+});

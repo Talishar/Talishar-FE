@@ -507,6 +507,7 @@
     "SEND_INVITE_FRIEND": "Send invite to friend",
     "SIDEBOARD_UNREADY_FAILURE": "Failed to unready sideboard.",
     "SOME_ERROR": "Something went wrong.",
+    "SUBMIT_FAILED": "Could not confirm your selection ({{status}}). Please report game #{{gameId}} if this keeps happening.",
     "SUBMITTING": "Submitting…",
     "SUBTYPE": "Subtype",
     "SUBTYPE_SORT": "Group cards by subtype",

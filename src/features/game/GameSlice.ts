@@ -337,14 +337,14 @@ function mergeReceivedGameState(
     payload.oldCombatChain
   );
 
-  {
+  if (!state.showChatModal) {
     const prevChatLog = state.chatLog ?? [];
     let prevLen = 0;
     for (let i = 0; i < prevChatLog.length; i++) {
       if (prevChatLog[i].length > 0) prevLen++;
     }
     const incoming = payload.chatLog ?? [];
-    if (!state.showChatModal && prevLen > 0) {
+    if (prevLen > 0) {
       let nonEmptySeen = 0;
       let newPlayerChats = 0;
       for (let i = 0; i < incoming.length; i++) {

@@ -558,6 +558,17 @@ h3 {
   color: #f0b32e;
 }
 
+.lobbySubmitError {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  color: #ff9b9b;
+  font-size: 0.75em;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
 .lobbySettingsDescription {
   width: 100%;
   font-weight: 400;

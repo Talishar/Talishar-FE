@@ -134,6 +134,7 @@ const Lobby = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [isStartingGame, setIsStartingGame] = useState(false);
   const [opponentUnready, setOpponentUnready] = useState(false);
   const previousOpponentReadyRef = useRef<boolean>();
@@ -726,6 +727,12 @@ const Lobby = () => {
           <span>{selfUnconfirmedMessage}</span>
         </div>
       )}
+      {submitError && (
+        <div className={styles.lobbySubmitError} role="alert">
+          <FaExclamationCircle aria-hidden="true" />
+          <span>{submitError}</span>
+        </div>
+      )}
       {lobbyDescription !== '' && (
         <span className={styles.lobbySettingsDescription}>
           {lobbyDescription}
@@ -959,6 +966,7 @@ const Lobby = () => {
     }
 
     const matchupIdToRestore = selectedMatchupId;
+    setSubmitError(null);
     setIsSubmitting(true);
 
     const hands = values.weapons.map((item) => item.id.split('-')[0]);
@@ -1125,6 +1133,7 @@ const Lobby = () => {
 
       const submitError = submitResponse?.deckError ?? submitResponse?.error;
       if (submitError) {
+        setSubmitError(String(submitError));
         toast.error(String(submitError));
         return;
       }
@@ -1136,8 +1145,16 @@ const Lobby = () => {
         // The existing useEffect in this component will navigate to /game/play/{gameID}
         // when gameLobby?.isMainGameReady becomes true
       }
-    } catch (err) {
-      // Sideboard submit failed
+    } catch (err: any) {
+      const serverError = err?.data?.error ?? err?.data?.deckError;
+      setSubmitError(
+        serverError
+          ? String(serverError)
+          : t('GAME_LOBBY.SUBMIT_FAILED', {
+              status: err?.status ?? 'unknown',
+              gameId: gameID
+            })
+      );
     } finally {
       setIsSubmitting(false);
       if (matchupIdToRestore) {

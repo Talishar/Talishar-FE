@@ -261,16 +261,21 @@ const AI_DECKS_LARGE: AiDeckOption[] = [
   { value: AI_DECK.FAICC, labelKey: 'MENU.CREATE_GAME.FAI_CC', hero: 'UPR044' }
 ];
 
-// 40-card formats need a 40-card, 20-life bot deck; everything else gets a
-// 60-card Classic Constructed one.
+// Formats using young heroes or smaller decks use the 40-card SAGE bots;
+// Classic Constructed formats use the 60-card bots.
 export const isSmallDeckFormat = (
   format: string | number | undefined
 ): boolean => {
-  const normalized = String(format ?? '').toLowerCase();
+  const normalized = normalizeFormat(format)?.toLowerCase() ?? '';
   return (
     normalized.includes('sage') ||
     normalized.includes('blitz') ||
-    normalized === 'commoner'
+    [
+      GAME_FORMAT.COMMONER,
+      GAME_FORMAT.CLASH,
+      GAME_FORMAT.DRAFT,
+      GAME_FORMAT.SEALED
+    ].includes(normalized)
   );
 };
 
