@@ -262,9 +262,10 @@ const Equipment = ({
     field: EquipFieldName,
     baseList: string[]
   ) => {
-    const visibleCards = [...baseList, ...assigned[field]].filter(
-      (card) => card !== 'NONE00'
-    );
+    const visibleCards = [
+      ...Array.from(new Set(baseList)),
+      ...assigned[field]
+    ].filter((card) => card !== 'NONE00');
 
     return (
       <div
@@ -286,7 +287,8 @@ const Equipment = ({
           />
           {visibleCards.map((card, i) => {
             const isAssigned = assigned[field].includes(card);
-            const isEquipped = values[field] === card;
+            const isEquipped =
+              values[field] === card && visibleCards.indexOf(card) === i;
             const selectionKey = `${field}-${i}`;
             const isPickedUp = selected?.key === selectionKey;
 
