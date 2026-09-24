@@ -12,17 +12,11 @@ const CANDIDATE_TOP_SHARE = 0.95;
 const CANDIDATE_OPTION_SHARE = 0.5;
 const INLINE_ANSWERS = 3;
 
-type SortKey =
-  | 'count'
-  | 'topShare'
-  | 'identicalShare'
-  | 'forcedShare'
-  | 'avgMs';
+type SortKey = 'count' | 'topShare' | 'identicalShare' | 'avgMs';
 
 interface PromptRow extends PromptStat {
   topShare: number;
   identicalShare: number;
-  forcedShare: number;
   reasons: string[];
 }
 
@@ -38,7 +32,6 @@ const toRow = (prompt: PromptStat): PromptRow => {
   const count = Math.max(prompt.count, 1);
   const topShare = (prompt.answers[0]?.count ?? 0) / count;
   const identicalShare = prompt.identical / count;
-  const forcedShare = prompt.forced / count;
   const reasons: string[] = [];
   if (prompt.count >= CANDIDATE_MIN_COUNT) {
     if (
@@ -47,20 +40,16 @@ const toRow = (prompt: PromptStat): PromptRow => {
     )
       reasons.push('SAME_ANSWER');
     if (identicalShare >= CANDIDATE_OPTION_SHARE) reasons.push('IDENTICAL');
-    if (forcedShare >= CANDIDATE_OPTION_SHARE) reasons.push('FORCED');
   }
-  return { ...prompt, topShare, identicalShare, forcedShare, reasons };
+  return { ...prompt, topShare, identicalShare, reasons };
 };
 
 const CardCell = ({ row }: { row: PromptRow }) => {
-  const { t } = useTranslation();
   const { getLanguage } = useLanguageSelector();
   const [imageFailed, setImageFailed] = useState(false);
-  const hasCard = row.context !== '-';
-  const isCard = row.isCard ?? hasCard;
   return (
     <div className={styles.cardCell}>
-      {isCard && !imageFailed ? (
+      {row.isCard && !imageFailed ? (
         <img
           className={styles.thumb}
           src={getCollectionCardImagePath({
@@ -76,10 +65,8 @@ const CardCell = ({ row }: { row: PromptRow }) => {
         <span className={styles.thumbPlaceholder} aria-hidden="true" />
       )}
       <div className={styles.cardText}>
-        <span className={styles.cardName}>
-          {hasCard ? row.contextName : t('MOD_PAGE.PROMPTS_NO_CARD')}
-        </span>
-        {hasCard && <code className={styles.cardId}>{row.context}</code>}
+        <span className={styles.cardName}>{row.contextName}</span>
+        <code className={styles.cardId}>{row.context}</code>
       </div>
     </div>
   );
@@ -167,8 +154,7 @@ const PromptStats: React.FC = () => {
 
   const reasonLabels: Record<string, string> = {
     SAME_ANSWER: t('MOD_PAGE.PROMPTS_REASON_SAME_ANSWER'),
-    IDENTICAL: t('MOD_PAGE.PROMPTS_REASON_IDENTICAL'),
-    FORCED: t('MOD_PAGE.PROMPTS_REASON_FORCED')
+    IDENTICAL: t('MOD_PAGE.PROMPTS_REASON_IDENTICAL')
   };
 
   const sortHeader = (id: SortKey, label: string, numeric = true) => (
@@ -298,7 +284,6 @@ const PromptStats: React.FC = () => {
                   'identicalShare',
                   t('MOD_PAGE.PROMPTS_COL_IDENTICAL')
                 )}
-                {sortHeader('forcedShare', t('MOD_PAGE.PROMPTS_COL_FORCED'))}
                 {sortHeader('avgMs', t('MOD_PAGE.PROMPTS_COL_TIME'))}
               </tr>
             </thead>
@@ -328,9 +313,6 @@ const PromptStats: React.FC = () => {
                   </td>
                   <td className={styles.numeric}>
                     {row.identical > 0 ? percent(row.identicalShare) : '-'}
-                  </td>
-                  <td className={styles.numeric}>
-                    {row.forced > 0 ? percent(row.forcedShare) : '-'}
                   </td>
                   <td className={styles.numeric}>{formatSeconds(row.avgMs)}</td>
                 </tr>
