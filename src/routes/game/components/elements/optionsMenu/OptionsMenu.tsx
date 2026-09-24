@@ -32,6 +32,7 @@ const OptionsContent = ({ searchQuery }: { searchQuery: string }) => {
   const {
     gameID,
     playerID,
+    isReplay,
     deckLink,
     canCustomizeDeck,
     deckCardBackId,
@@ -41,6 +42,7 @@ const OptionsContent = ({ searchQuery }: { searchQuery: string }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [allowSpectator, setAllowSpectator] = useState(false);
+  const [isSavingSnapshot, setIsSavingSnapshot] = useState(false);
   const [selectedCardBack, setSelectedCardBack] = useState(
     deckCardBackId ?? '0'
   );
@@ -93,6 +95,9 @@ const OptionsContent = ({ searchQuery }: { searchQuery: string }) => {
   };
 
   const gameURL = `${window.location.origin}/game/play/${gameID}`;
+  const snapshotInviteUrl = sessionStorage.getItem(
+    `talishar_snapshot_invite_${gameID}`
+  );
 
   const clickCloseOptionsHandler = () => {
     dispatch(closeOptionsMenu());
@@ -118,6 +123,37 @@ const OptionsContent = ({ searchQuery }: { searchQuery: string }) => {
   const clickReportBugHandler = () => {
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.REPORT_BUG } }));
     clickCloseOptionsHandler();
+  };
+
+  const handleSaveSnapshot = async () => {
+    setIsSavingSnapshot(true);
+    try {
+      const body = await dispatch(
+        submitButton({ button: { mode: PROCESS_INPUT.SAVE_SNAPSHOT } })
+      ).unwrap();
+      const result = JSON.parse(body || '{}') as {
+        success?: boolean;
+        snapshotNumber?: number;
+        message?: string;
+      };
+      if (!result.success)
+        throw new Error(
+          result.message || t('OPTIONS_MENU.SNAPSHOT_SAVE_ERROR')
+        );
+      dispatch(apiSlice.util.invalidateTags(['SavedReplays']));
+      toast.success(
+        t('OPTIONS_MENU.SNAPSHOT_SAVED', { number: result.snapshotNumber })
+      );
+      clickCloseOptionsHandler();
+    } catch (error) {
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : t('OPTIONS_MENU.SNAPSHOT_SAVE_ERROR')
+      );
+    } finally {
+      setIsSavingSnapshot(false);
+    }
   };
 
   const clickReportPlayerHandler = () => {
@@ -266,6 +302,35 @@ const OptionsContent = ({ searchQuery }: { searchQuery: string }) => {
                 >
                   {t('OPTIONS_MENU.REPORT_PLAYER')}
                 </button>
+                {!isReplay && (
+                  <button
+                    className={styles.buttonDiv}
+                    onClick={handleSaveSnapshot}
+                    disabled={isSavingSnapshot}
+                  >
+                    {isSavingSnapshot
+                      ? t('OPTIONS_MENU.SAVING_SNAPSHOT')
+                      : t('OPTIONS_MENU.SAVE_SNAPSHOT')}
+                  </button>
+                )}
+                {snapshotInviteUrl && (
+                  <button
+                    className={styles.buttonDiv}
+                    onClick={async () => {
+                      try {
+                        await navigator.clipboard.writeText(snapshotInviteUrl);
+                        toast.success(t('LOAD_REPLAY.SNAPSHOT_INVITE_COPIED'));
+                      } catch {
+                        window.prompt(
+                          t('LOAD_REPLAY.SNAPSHOT_COPY_INVITE'),
+                          snapshotInviteUrl
+                        );
+                      }
+                    }}
+                  >
+                    {t('OPTIONS_MENU.COPY_SNAPSHOT_INVITE')}
+                  </button>
+                )}
               </div>
             )}
           </div>

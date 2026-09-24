@@ -139,6 +139,7 @@ export interface PuzzleCandidate {
   status: number;
   life: number;
   opponentLife: number;
+  lifeBonus: number;
   hand: PuzzleCard[];
   arsenal: PuzzleCard[];
   weapons: PuzzleCard[];
@@ -146,15 +147,25 @@ export interface PuzzleCandidate {
   actionPoints: number;
   handPitch: number;
   opponentEquipment: PuzzleCard[];
-  opponentDefense: number;
-  opponentHandCount: number;
-  opponentArsenalCount: number;
+  opponentHand: PuzzleCard[];
+  opponentEquipmentBlock: number;
+  opponentHandBlock: number;
+  opponentBlock: number;
+  needed: number;
+  spareCards: number | null;
+  provenSlack: number | null;
   estimatedDamage: number;
+  estimatedThrough: number;
   estimatedAttacks: number;
   realTurn: PuzzleRealTurn | null;
   score: number;
   difficulty: PuzzleDifficulty;
   flags: PuzzleFlag[];
+}
+
+export interface PuzzleCandidatesRequest {
+  emptyOpponentHand: boolean;
+  raiseLife: boolean;
 }
 
 export interface PuzzleCandidatesResponse {
@@ -167,6 +178,7 @@ export interface CreatePuzzleGameRequest {
   candidateId: number;
   emptyOpponentHand: boolean;
   removeDecks: boolean;
+  raiseLife: boolean;
 }
 
 export interface CreatePuzzleGameResponse {

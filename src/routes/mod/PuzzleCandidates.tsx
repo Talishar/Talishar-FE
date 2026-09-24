@@ -16,22 +16,21 @@ import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import tableStyles from './PromptStats.module.css';
 import styles from './PuzzleCandidates.module.css';
 
-type SortKey = 'score' | 'id' | 'opponentLife';
+type SortKey = 'score' | 'id' | 'needed';
 
 interface ReadyPuzzle extends CreatePuzzleGameResponse {
   candidateId: number;
 }
 
 const DIFFICULTIES: PuzzleDifficulty[] = ['easy', 'medium', 'hard'];
-const GOOD_FLAGS = ['EXACT_LETHAL', 'BIG_TURN', 'RESOURCE_TIGHT'];
+const GOOD_FLAGS = ['EXACT_LETHAL', 'BIG_TURN', 'ALL_CARDS', 'HIGH_PRESSURE'];
 const BAD_FLAGS = [
-  'LOW_LIFE',
-  'HIGH_LIFE',
+  'LOW_PRESSURE',
   'FEW_OPTIONS',
-  'OVERKILL',
   'ONE_CARD',
   'RAW_POWER',
-  'EASY_WITHOUT_HAND'
+  'SPARE_CARDS',
+  'UNPROVEN'
 ];
 
 const playUrl = (gameName: number, playerID: number, authKey: string) =>
@@ -169,6 +168,10 @@ const Details = ({ row }: { row: PuzzleCandidate }) => {
         label={t('MOD_PAGE.PUZZLES_THEIR_EQUIPMENT')}
         cards={row.opponentEquipment}
       />
+      <CardList
+        label={t('MOD_PAGE.PUZZLES_THEIR_HAND')}
+        cards={row.opponentHand}
+      />
       <div className={styles.detailGroup}>
         <span className={styles.detailLabel}>
           {t('MOD_PAGE.PUZZLES_POSITION')}
@@ -184,16 +187,20 @@ const Details = ({ row }: { row: PuzzleCandidate }) => {
           <li>
             {t('MOD_PAGE.PUZZLES_ESTIMATE', {
               damage: row.estimatedDamage,
+              through: row.estimatedThrough,
               attacks: row.estimatedAttacks,
-              needed: row.opponentLife + row.opponentDefense
+              life: row.opponentLife
             })}
           </li>
-          <li>
-            {t('MOD_PAGE.PUZZLES_THEIR_CARDS', {
-              hand: row.opponentHandCount,
-              arsenal: row.opponentArsenalCount
-            })}
-          </li>
+          {row.provenSlack !== null && (
+            <li>
+              {row.provenSlack >= 0
+                ? t('MOD_PAGE.PUZZLES_PROVEN', { slack: row.provenSlack })
+                : t('MOD_PAGE.PUZZLES_NOT_PROVEN', {
+                    short: -row.provenSlack
+                  })}
+            </li>
+          )}
           <li>
             {row.realTurn
               ? t('MOD_PAGE.PUZZLES_REAL_TURN_DETAIL', realTurnValues(row))
@@ -216,7 +223,8 @@ const PuzzleCandidates: React.FC = () => {
   const [query, setQuery] = useState('');
   const [format, setFormat] = useState('');
   const [difficulty, setDifficulty] = useState('');
-  const [emptyOpponentHand, setEmptyOpponentHand] = useState(false);
+  const [emptyOpponentHand, setEmptyOpponentHand] = useState(true);
+  const [raiseLife, setRaiseLife] = useState(true);
   const [removeDecks, setRemoveDecks] = useState(true);
   const [sortKey, setSortKey] = useState<SortKey>('score');
   const [sortDescending, setSortDescending] = useState(true);
@@ -224,7 +232,10 @@ const PuzzleCandidates: React.FC = () => {
   const [creatingId, setCreatingId] = useState<number | null>(null);
   const [ready, setReady] = useState<ReadyPuzzle | null>(null);
 
-  const { data, isFetching, isError } = useGetPuzzleCandidatesQuery();
+  const { data, isFetching, isError } = useGetPuzzleCandidatesQuery({
+    emptyOpponentHand,
+    raiseLife
+  });
   const [createPuzzleGame] = useCreatePuzzleGameMutation();
 
   const candidates = useMemo(() => data?.candidates ?? [], [data]);
@@ -268,7 +279,8 @@ const PuzzleCandidates: React.FC = () => {
       const result = await createPuzzleGame({
         candidateId: candidate.id,
         emptyOpponentHand,
-        removeDecks
+        removeDecks,
+        raiseLife
       }).unwrap();
       setReady({ ...result, candidateId: candidate.id });
     } catch {
@@ -366,6 +378,14 @@ const PuzzleCandidates: React.FC = () => {
         <label className={tableStyles.toggle}>
           <input
             type="checkbox"
+            checked={raiseLife}
+            onChange={(event) => setRaiseLife(event.target.checked)}
+          />
+          {t('MOD_PAGE.PUZZLES_RAISE_LIFE')}
+        </label>
+        <label className={tableStyles.toggle}>
+          <input
+            type="checkbox"
             checked={removeDecks}
             onChange={(event) => setRemoveDecks(event.target.checked)}
           />
@@ -421,7 +441,7 @@ const PuzzleCandidates: React.FC = () => {
               <tr>
                 {sortHeader('score', t('MOD_PAGE.PUZZLES_COL_SCORE'))}
                 <th scope="col">{t('MOD_PAGE.PUZZLES_COL_MATCHUP')}</th>
-                {sortHeader('opponentLife', t('MOD_PAGE.PUZZLES_COL_LIFE'))}
+                {sortHeader('needed', t('MOD_PAGE.PUZZLES_COL_NEEDED'))}
                 <th scope="col">{t('MOD_PAGE.PUZZLES_COL_CARDS')}</th>
                 <th scope="col">{t('MOD_PAGE.PUZZLES_COL_DEFENSE')}</th>
                 <th scope="col">{t('MOD_PAGE.PUZZLES_COL_REAL_TURN')}</th>
@@ -451,8 +471,13 @@ const PuzzleCandidates: React.FC = () => {
                       <HeroCell row={row} />
                     </td>
                     <td className={tableStyles.numeric}>
-                      {row.opponentLife}
-                      <span className={tableStyles.muted}> / {row.life}</span>
+                      <span className={styles.score}>{row.needed}</span>
+                      <span className={tableStyles.muted}>
+                        {t('MOD_PAGE.PUZZLES_NEEDED_SPLIT', {
+                          life: row.opponentLife,
+                          block: row.opponentBlock
+                        })}
+                      </span>
                     </td>
                     <td>
                       <div className={styles.cardStrip}>
@@ -474,8 +499,8 @@ const PuzzleCandidates: React.FC = () => {
                     </td>
                     <td>
                       {t('MOD_PAGE.PUZZLES_DEFENSE', {
-                        defense: row.opponentDefense,
-                        hand: row.opponentHandCount
+                        equipment: row.opponentEquipmentBlock,
+                        hand: row.opponentHandBlock
                       })}
                     </td>
                     <td>

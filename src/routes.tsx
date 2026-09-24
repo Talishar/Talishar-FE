@@ -21,6 +21,7 @@ const Lobby = lazy(() => import('routes/game/lobby/Lobby'));
 const CreateGame = lazy(() => import('routes/game/create/CreateGame'));
 const LoadReplay = lazy(() => import('routes/game/load/LoadReplay'));
 const SharedReplay = lazy(() => import('routes/game/shared/SharedReplay'));
+const JoinSnapshot = lazy(() => import('routes/game/shared/JoinSnapshot'));
 const SettingsPage = lazy(() => import('routes/user/settings'));
 import SyncedSettings from 'features/settings/SyncedSettings';
 const Privacy = lazy(() => import('routes/privacy'));
@@ -196,8 +197,16 @@ export const router = createBrowserRouter(
           />
           <Route path="game/join/:gameID" element={<JoinGame />} />
           <Route path="game/create" element={<CreateGame />} />
-          <Route path="game/load" element={<LoadReplay />} />
+          <Route
+            path="game/load"
+            element={
+              <LoggedInGuard shouldBeLoggedIn={true}>
+                <LoadReplay />
+              </LoggedInGuard>
+            }
+          />
           <Route path="replay/shared" element={<SharedReplay />} />
+          <Route path="snapshot/join" element={<JoinSnapshot />} />
           <Route path="privacy" element={<Privacy />} />
           <Route path="privacy-policy" element={<PrivacyPolicy />} />
           <Route path="terms-of-service" element={<TermsOfService />} />

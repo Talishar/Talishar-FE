@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useAppDispatch } from 'app/Hooks';
 import {
   useDeleteReplayMutation,
+  useCreateSnapshotGameMutation,
   useGetSavedReplaysQuery,
   useLoadReplayMutation,
   useSetReplayFavoriteMutation,
@@ -15,7 +16,7 @@ import {
 } from 'interface/API/GetSavedReplays.php';
 import { toast } from 'react-hot-toast';
 import { LoadReplayAPI } from 'interface/API/LoadReplayAPI.php';
-import { setReplayStart } from 'features/game/GameSlice';
+import { setGameStart, setReplayStart } from 'features/game/GameSlice';
 import { useNavigate } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { TALISHAR_DISCORD_URL } from 'constants/socialLinks';
@@ -25,6 +26,14 @@ import PageBanner from 'components/PageBanner/PageBanner';
 import AdRailLayout from 'components/ads/AdRailLayout';
 import { Link } from 'react-router-dom';
 import { Trans, useTranslation } from 'react-i18next';
+
+interface PreparedSnapshot {
+  snapshotNumber: number;
+  gameName: number;
+  playerID: number;
+  authKey: string;
+  inviteUrl: string;
+}
 
 const LoadReplay = () => {
   const { t } = useTranslation();
@@ -128,6 +137,8 @@ const ReplayGame = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [loadReplay, loadReplayResult] = useLoadReplayMutation();
+  const [createSnapshotGame, { isLoading: isStartingSnapshot }] =
+    useCreateSnapshotGameMutation();
   const [setReplayFavorite, { isLoading: isUpdatingFavorite }] =
     useSetReplayFavoriteMutation();
   const [shareReplay, { isLoading: isSharing }] = useShareReplayMutation();
@@ -135,6 +146,8 @@ const ReplayGame = () => {
   const [deletingReplayNumber, setDeletingReplayNumber] = useState<
     number | null
   >(null);
+  const [preparedSnapshot, setPreparedSnapshot] =
+    useState<PreparedSnapshot | null>(null);
   const { data: savedReplayData, isLoading: isLoadingSavedReplays } =
     useGetSavedReplaysQuery();
 
@@ -220,6 +233,75 @@ const ReplayGame = () => {
 
   const isLoadingReplay = isSubmitting || loadReplayResult.isLoading;
   const savedReplays = savedReplayData?.replays ?? [];
+  const snapshots = savedReplays.filter((entry) => entry.type === 'snapshot');
+  const replays = savedReplays.filter((entry) => entry.type !== 'snapshot');
+  const startSnapshot = async (snapshot: SavedReplay) => {
+    if (preparedSnapshot?.snapshotNumber === snapshot.replayNumber) return;
+    try {
+      const result = await createSnapshotGame({
+        snapshotNumber: snapshot.replayNumber
+      }).unwrap();
+      if (
+        !result.success ||
+        !result.gameName ||
+        !result.authKey ||
+        !result.inviteToken
+      ) {
+        throw new Error(result.error || t('LOAD_REPLAY.SNAPSHOT_START_ERROR'));
+      }
+      const inviteUrl = `${window.location.origin}/snapshot/join?game=${result.gameName}&token=${result.inviteToken}`;
+      sessionStorage.setItem(
+        `talishar_snapshot_invite_${result.gameName}`,
+        inviteUrl
+      );
+      setPreparedSnapshot({
+        snapshotNumber: snapshot.replayNumber,
+        gameName: result.gameName,
+        playerID: result.playerID,
+        authKey: result.authKey,
+        inviteUrl
+      });
+      try {
+        await navigator.clipboard.writeText(inviteUrl);
+        toast.success(t('LOAD_REPLAY.SNAPSHOT_INVITE_COPIED'));
+      } catch {
+        toast(t('LOAD_REPLAY.SNAPSHOT_INVITE_VISIBLE'));
+      }
+    } catch (error) {
+      const apiError = error as { data?: { error?: string } };
+      toast.error(
+        apiError.data?.error ||
+          (error instanceof Error
+            ? error.message
+            : t('LOAD_REPLAY.SNAPSHOT_START_ERROR'))
+      );
+    }
+  };
+  const openSnapshotSeat = () => {
+    if (!preparedSnapshot) return;
+    dispatch(
+      setGameStart({
+        playerID: preparedSnapshot.playerID,
+        gameID: preparedSnapshot.gameName,
+        authKey: preparedSnapshot.authKey
+      })
+    );
+    navigate(`/game/play/${preparedSnapshot.gameName}`, {
+      state: {
+        playerID: preparedSnapshot.playerID,
+        authKey: preparedSnapshot.authKey
+      } as GameLocationState
+    });
+  };
+  const copySnapshotInvite = async () => {
+    if (!preparedSnapshot) return;
+    try {
+      await navigator.clipboard.writeText(preparedSnapshot.inviteUrl);
+      toast.success(t('LOAD_REPLAY.SNAPSHOT_INVITE_COPIED'));
+    } catch {
+      toast.error(t('LOAD_REPLAY.SNAPSHOT_COPY_FAILED'));
+    }
+  };
   const replayLabel = (replay: SavedReplay) => {
     const names = [replay.p1DisplayName, replay.p2DisplayName].filter(Boolean);
     return names.length
@@ -276,7 +358,12 @@ const ReplayGame = () => {
   const deleteSavedReplay = async (replay: SavedReplay) => {
     if (
       !window.confirm(
-        t('LOAD_REPLAY.DELETE_CONFIRM', { number: replay.replayNumber })
+        t(
+          replay.type === 'snapshot'
+            ? 'LOAD_REPLAY.DELETE_SNAPSHOT_CONFIRM'
+            : 'LOAD_REPLAY.DELETE_CONFIRM',
+          { number: replay.replayNumber }
+        )
       )
     ) {
       return;
@@ -286,7 +373,12 @@ const ReplayGame = () => {
     try {
       await deleteReplay({ replayNumber: replay.replayNumber }).unwrap();
       toast.success(
-        t('LOAD_REPLAY.DELETE_SUCCESS', { number: replay.replayNumber })
+        t(
+          replay.type === 'snapshot'
+            ? 'LOAD_REPLAY.DELETE_SNAPSHOT_SUCCESS'
+            : 'LOAD_REPLAY.DELETE_SUCCESS',
+          { number: replay.replayNumber }
+        )
       );
     } catch (error) {
       const apiError = error as { data?: { error?: string } };
@@ -298,6 +390,131 @@ const ReplayGame = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.replayForm}>
+      <section
+        className={styles.savedReplays}
+        aria-labelledby="saved-snapshots-heading"
+      >
+        <div className={styles.savedReplaysHeader}>
+          <div>
+            <h2 id="saved-snapshots-heading">
+              {t('LOAD_REPLAY.SNAPSHOTS_TITLE')}
+            </h2>
+            <p>{t('LOAD_REPLAY.SNAPSHOTS_SUBTITLE')}</p>
+            <p className={styles.favoriteExplanation}>
+              {t('LOAD_REPLAY.SNAPSHOTS_TWO_TABS')}
+            </p>
+          </div>
+        </div>
+        {savedReplayData?.loggedIn === false ? (
+          <p className={styles.emptyReplays}>
+            {t('LOAD_REPLAY.SIGN_IN_TO_VIEW')}
+          </p>
+        ) : !isLoadingSavedReplays && snapshots.length === 0 ? (
+          <p className={styles.emptyReplays}>{t('LOAD_REPLAY.NO_SNAPSHOTS')}</p>
+        ) : (
+          <div className={styles.replayList}>
+            {snapshots.map((snapshot) => (
+              <article
+                key={snapshot.replayNumber}
+                className={styles.replayCard}
+              >
+                <button
+                  type="button"
+                  className={styles.replayCardMain}
+                  onClick={() => startSnapshot(snapshot)}
+                  disabled={isStartingSnapshot}
+                >
+                  <span className={styles.replayNumber}>
+                    {t('LOAD_REPLAY.SNAPSHOT_NUMBER', {
+                      number: snapshot.replayNumber
+                    })}
+                  </span>
+                  <span className={styles.replayPlayers}>
+                    {replayLabel(snapshot)}
+                  </span>
+                  {heroLabel(snapshot) && (
+                    <span className={styles.replayHeroes}>
+                      {heroLabel(snapshot)}
+                    </span>
+                  )}
+                  <span className={styles.replaySavedAt}>
+                    {savedAtLabel(snapshot)}
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  className={`${styles.favoriteButton} ${
+                    snapshot.favorite ? styles.favoriteActive : ''
+                  }`}
+                  onClick={() => toggleFavorite(snapshot)}
+                  disabled={isUpdatingFavorite}
+                  aria-label={`${
+                    snapshot.favorite ? 'Remove' : 'Add'
+                  } Snapshot #${snapshot.replayNumber} ${
+                    snapshot.favorite ? 'from' : 'to'
+                  } favorites`}
+                  aria-pressed={snapshot.favorite}
+                  title={
+                    snapshot.favorite
+                      ? 'Remove from favorites'
+                      : 'Keep this snapshot'
+                  }
+                >
+                  {snapshot.favorite ? <FaStar /> : <FaRegStar />}
+                </button>
+                <button
+                  type="button"
+                  className={styles.shareButton}
+                  onClick={() => startSnapshot(snapshot)}
+                  disabled={isStartingSnapshot}
+                  aria-label={t('LOAD_REPLAY.SHARE_SNAPSHOT_ARIA', {
+                    number: snapshot.replayNumber
+                  })}
+                  title={t('LOAD_REPLAY.SHARE_SNAPSHOT')}
+                >
+                  <MdShare />
+                </button>
+                <button
+                  type="button"
+                  className={styles.deleteButton}
+                  onClick={() => deleteSavedReplay(snapshot)}
+                  disabled={deletingReplayNumber !== null}
+                  aria-label={t('LOAD_REPLAY.DELETE_SNAPSHOT_ARIA', {
+                    number: snapshot.replayNumber
+                  })}
+                  title={t('LOAD_REPLAY.DELETE_SNAPSHOT')}
+                >
+                  <MdDeleteOutline />
+                </button>
+              </article>
+            ))}
+          </div>
+        )}
+        {preparedSnapshot && (
+          <div className={styles.snapshotInvitePanel} role="status">
+            <h3>
+              {t('LOAD_REPLAY.SNAPSHOT_INVITE_READY', {
+                number: preparedSnapshot.snapshotNumber
+              })}
+            </h3>
+            <p>{t('LOAD_REPLAY.SNAPSHOT_INVITE_HELP')}</p>
+            <input
+              aria-label={t('LOAD_REPLAY.SNAPSHOT_INVITE_LABEL')}
+              value={preparedSnapshot.inviteUrl}
+              readOnly
+              onFocus={(event) => event.currentTarget.select()}
+            />
+            <div className={styles.snapshotInviteActions}>
+              <button type="button" onClick={copySnapshotInvite}>
+                {t('LOAD_REPLAY.SNAPSHOT_COPY_LINK')}
+              </button>
+              <button type="button" onClick={openSnapshotSeat}>
+                {t('LOAD_REPLAY.SNAPSHOT_OPEN_SEAT')}
+              </button>
+            </div>
+          </div>
+        )}
+      </section>
       <section
         className={styles.savedReplays}
         aria-labelledby="saved-replays-heading"
@@ -325,13 +542,13 @@ const ReplayGame = () => {
           <p className={styles.emptyReplays}>
             {t('LOAD_REPLAY.SIGN_IN_TO_VIEW')}
           </p>
-        ) : !isLoadingSavedReplays && savedReplays.length === 0 ? (
+        ) : !isLoadingSavedReplays && replays.length === 0 ? (
           <p className={styles.emptyReplays}>
             {t('LOAD_REPLAY.NO_SAVED_REPLAYS')}
           </p>
         ) : (
           <div className={styles.replayList}>
-            {savedReplays.map((replay: SavedReplay) => (
+            {replays.map((replay: SavedReplay) => (
               <article key={replay.replayNumber} className={styles.replayCard}>
                 <button
                   type="button"

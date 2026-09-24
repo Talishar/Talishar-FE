@@ -26,6 +26,7 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { reportPerformanceMetric } from 'utils/performanceMetrics';
 import useAuth from 'hooks/useAuth';
+import { loadSnapshotInviteSeat } from 'utils/snapshotInviteSeat';
 
 const IS_MOCK_GAME =
   typeof window !== 'undefined' &&
@@ -74,6 +75,7 @@ const GameStateHandler = ({
   const [seatLookup, setSeatLookup] = useState<SeatLookup | null>(null);
   const seatLookupKeyRef = useRef('');
   const gameOverRef = useRef(false);
+  const isPuzzleRef = useRef(false);
   const onInitialStateReceivedRef = useRef(onInitialStateReceived);
   const onLoadingErrorRef = useRef(onLoadingError);
 
@@ -98,6 +100,14 @@ const GameStateHandler = ({
   useEffect(() => {
     const currentGameID = parseInt(gameID ?? gameName);
     if (currentGameID <= 0) return;
+
+    // An invite assigns this tab to the opposite seat, even when another tab
+    // has saved the owner's seat for the same game in shared browser storage.
+    const invitedSeat = loadSnapshotInviteSeat(currentGameID);
+    if (invitedSeat) {
+      setSeatLookup({ gameID: currentGameID, settled: true, ...invitedSeat });
+      return;
+    }
 
     // Deciding before the cookie login resolves would lock us into spectating.
     if (isAuthLoading) {
@@ -212,10 +222,18 @@ const GameStateHandler = ({
       currentAuthKey = loadGameAuthKey(currentGameID);
     }
 
+    const claimedSeatOutOfSync =
+      claimedPlayerID &&
+      seatLookup.authKey &&
+      (gameInfo.gameID !== currentGameID ||
+        gameInfo.playerID !== currentPlayerID ||
+        gameInfo.authKey !== currentAuthKey);
+
     if (
       gameParamsRef.current.gameID !== currentGameID ||
       gameParamsRef.current.playerID !== currentPlayerID ||
-      gameParamsRef.current.authKey !== currentAuthKey
+      gameParamsRef.current.authKey !== currentAuthKey ||
+      claimedSeatOutOfSync
     ) {
       const usernameToSave = getCurrentUsername(currentUserName);
       if (usernameToSave) {
@@ -253,6 +271,8 @@ const GameStateHandler = ({
     gameName,
     playerID,
     authKey,
+    gameInfo.gameID,
+    gameInfo.playerID,
     gameInfo.authKey,
     locationState?.playerID,
     currentUserName,
@@ -301,6 +321,7 @@ const GameStateHandler = ({
     if (gameParamsRef.current.gameID !== currentGameID) {
       retryCountRef.current = 0;
       gameOverRef.current = false;
+      isPuzzleRef.current = false;
       gameParamsRef.current = {
         gameID: currentGameID,
         playerID: currentPlayerID,
@@ -400,10 +421,16 @@ const GameStateHandler = ({
             const parsedState = ParseGameState(data);
             const stateParsedAt = performance.now();
 
+            if (parsedState.gameInfo.isPuzzle !== undefined) {
+              isPuzzleRef.current = parsedState.gameInfo.isPuzzle;
+            }
             const phase = parsedState.turnPhase?.turnPhase;
             if (phase === 'OVER') {
               gameOverRef.current = true;
-            } else if (phase !== undefined && phase !== 'YESNO') {
+            } else if (
+              phase !== undefined &&
+              (phase !== 'YESNO' || isPuzzleRef.current)
+            ) {
               gameOverRef.current = false;
             }
 

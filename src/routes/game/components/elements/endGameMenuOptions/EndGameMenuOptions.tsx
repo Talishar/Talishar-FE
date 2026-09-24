@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useAppDispatch } from 'app/Hooks';
+import { useAppDispatch, useAppSelector } from 'app/Hooks';
+import { RootState } from 'app/Store';
 import { submitButton } from 'features/game/GameSlice';
 import styles from './EndGameMenuOptions.module.css';
 import { PROCESS_INPUT } from 'appConstants';
@@ -11,6 +12,7 @@ import {
   FaHome,
   FaExchangeAlt,
   FaPaperPlane,
+  FaRedoAlt,
   FaSave
 } from 'react-icons/fa';
 
@@ -24,6 +26,9 @@ const EndGameMenuOptions = ({ onSwitchPlayer }: EndGameMenuOptionsProps) => {
   const { t } = useTranslation();
   const [isSavingReplay, setIsSavingReplay] = useState(false);
   const [isReplaySaved, setIsReplaySaved] = useState(false);
+  const isPuzzle = useAppSelector(
+    (state: RootState) => state.game.gameInfo.isPuzzle
+  );
   const handleMainMenu = async () => {
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.MAIN_MENU } }));
     dispatch(
@@ -34,6 +39,10 @@ const EndGameMenuOptions = ({ onSwitchPlayer }: EndGameMenuOptionsProps) => {
 
   const handleFullRematch = () => {
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.FULL_REMATCH } }));
+  };
+
+  const handleRestartPuzzle = () => {
+    dispatch(submitButton({ button: { mode: PROCESS_INPUT.RESTART_PUZZLE } }));
   };
 
   const handleSaveReplay = async () => {
@@ -74,10 +83,17 @@ const EndGameMenuOptions = ({ onSwitchPlayer }: EndGameMenuOptionsProps) => {
         <FaHome aria-hidden="true" className={styles.icon} />{' '}
         {t('END_GAME.MAIN_MENU')}
       </button>
-      <button className={styles.buttonDiv} onClick={handleFullRematch}>
-        <FaPaperPlane aria-hidden="true" className={styles.icon} />{' '}
-        {t('END_GAME.SEND_REMATCH')}
-      </button>
+      {isPuzzle ? (
+        <button className={styles.buttonDiv} onClick={handleRestartPuzzle}>
+          <FaRedoAlt aria-hidden="true" className={styles.icon} />{' '}
+          {t('END_GAME.RESTART_PUZZLE')}
+        </button>
+      ) : (
+        <button className={styles.buttonDiv} onClick={handleFullRematch}>
+          <FaPaperPlane aria-hidden="true" className={styles.icon} />{' '}
+          {t('END_GAME.SEND_REMATCH')}
+        </button>
+      )}
       <button
         type="button"
         className={styles.buttonDiv}

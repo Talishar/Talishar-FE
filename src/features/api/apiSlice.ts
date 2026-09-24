@@ -94,6 +94,7 @@ import {
   SearchUsernamesResponse,
   PromptStatsRange,
   PromptStatsResponse,
+  PuzzleCandidatesRequest,
   PuzzleCandidatesResponse,
   CreatePuzzleGameRequest,
   CreatePuzzleGameResponse
@@ -594,6 +595,31 @@ export const apiSlice = createApi({
         responseHandler: parseResponse
       })
     }),
+    createSnapshotGame: builder.mutation<
+      {
+        success: boolean;
+        gameName: number;
+        playerID: number;
+        authKey: string;
+        inviteToken: string;
+        error?: string;
+      },
+      { snapshotNumber: number }
+    >({
+      query: (body) => postJson(URL_END_POINT.CREATE_SNAPSHOT_GAME, body)
+    }),
+    joinSnapshotGame: builder.mutation<
+      {
+        success: boolean;
+        gameName: number;
+        playerID: number;
+        authKey: string;
+        error?: string;
+      },
+      { gameName: number; inviteToken: string }
+    >({
+      query: (body) => postJson(URL_END_POINT.JOIN_SNAPSHOT_GAME, body)
+    }),
     submitPatreonLogin: builder.mutation<
       PatreonLoginResponse,
       {
@@ -679,10 +705,17 @@ export const apiSlice = createApi({
         responseHandler: parseResponse
       })
     }),
-    getPuzzleCandidates: builder.query<PuzzleCandidatesResponse, void>({
-      query: () => ({
+    getPuzzleCandidates: builder.query<
+      PuzzleCandidatesResponse,
+      PuzzleCandidatesRequest
+    >({
+      query: ({ emptyOpponentHand, raiseLife }) => ({
         url: URL_END_POINT.GET_PUZZLE_CANDIDATES,
         method: 'GET',
+        params: {
+          emptyOpponentHand: emptyOpponentHand ? 1 : 0,
+          raiseLife: raiseLife ? 1 : 0
+        },
         responseHandler: parseResponse
       })
     }),
@@ -1061,6 +1094,8 @@ export const {
   useDeleteReplayMutation,
   useShareReplayMutation,
   useLoadSharedReplayMutation,
+  useCreateSnapshotGameMutation,
+  useJoinSnapshotGameMutation,
   useSubmitLobbyInputMutation,
   useKickPlayerMutation,
   useGetModPageDataQuery,

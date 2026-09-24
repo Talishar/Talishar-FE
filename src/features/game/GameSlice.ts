@@ -14,11 +14,7 @@ import {
 import InitialGameState from './InitialGameState';
 import GameStaticInfo, { AltArt } from '../GameStaticInfo';
 import { Card, isAllyCard } from '../Card';
-import {
-  BACKEND_URL,
-  PROCESS_INPUT,
-  URL_END_POINT
-} from 'appConstants';
+import { BACKEND_URL, PROCESS_INPUT, URL_END_POINT } from 'appConstants';
 import Button from '../Button';
 import GameState from '../GameState';
 import Player from '../Player';
@@ -250,7 +246,8 @@ export const submitButton = createAsyncThunk(
       game.gameInfo,
       queryParams
     );
-    return params.button.mode === PROCESS_INPUT.CREATE_REPLAY
+    return params.button.mode === PROCESS_INPUT.CREATE_REPLAY ||
+      params.button.mode === PROCESS_INPUT.SAVE_SNAPSHOT
       ? response
       : undefined;
   }
@@ -287,6 +284,7 @@ const FALLBACK_GAME_INFO_FIELDS = [
   'isPrivate',
   'isReplay',
   'isOpponentAI',
+  'isPuzzle',
   'gameFormat',
   'deckLink',
   'canCustomizeDeck',
@@ -313,9 +311,13 @@ function mergeReceivedGameState(
   state.isPlayerInputInProgress = false;
   state.isFullRematch = payload.isFullRematch ?? false;
   const incomingTurnPhase = payload.turnPhase?.turnPhase;
+  const isPuzzle = payload.gameInfo?.isPuzzle ?? state.gameInfo.isPuzzle;
   if (incomingTurnPhase === 'OVER') {
     state.hasGameEnded = true;
-  } else if (incomingTurnPhase !== undefined && incomingTurnPhase !== 'YESNO') {
+  } else if (
+    incomingTurnPhase !== undefined &&
+    (incomingTurnPhase !== 'YESNO' || isPuzzle)
+  ) {
     state.hasGameEnded = false;
   }
 

@@ -5,7 +5,13 @@ import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { submitButton, setSpectatorCameraView } from 'features/game/GameSlice';
 import { GiExpand } from 'react-icons/gi';
-import { FaUndo, FaEllipsisH, FaExchangeAlt, FaWrench } from 'react-icons/fa';
+import {
+  FaUndo,
+  FaEllipsisH,
+  FaExchangeAlt,
+  FaWrench,
+  FaRedoAlt
+} from 'react-icons/fa';
 import styles from './Menu.module.css';
 import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'appConstants';
 import HideModalsToggle from './HideModalsToggle/HideModalsToggle';
@@ -77,6 +83,33 @@ function UndoButton() {
         disabled={isDisabled}
       >
         <FaUndo aria-hidden="true" />
+      </button>
+    </div>
+  );
+}
+
+function RestartPuzzleButton() {
+  const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+  const { isDisabled, triggerDisable } = useButtonDisableContext();
+
+  const clickRestart = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.currentTarget.blur();
+    triggerDisable();
+    dispatch(submitButton({ button: { mode: PROCESS_INPUT.RESTART_PUZZLE } }));
+  };
+  return (
+    <div>
+      <button
+        className={styles.btn}
+        aria-label={t('MENU.RESTART_PUZZLE')}
+        onClick={clickRestart}
+        data-tooltip={t('MENU.RESTART_PUZZLE')}
+        data-placement="bottom"
+        disabled={isDisabled}
+      >
+        <FaRedoAlt aria-hidden="true" />
       </button>
     </div>
   );
@@ -194,6 +227,9 @@ function MenuContent() {
   const isReplay = useAppSelector(
     (state: RootState) => state.game.gameInfo.isReplay
   );
+  const isPuzzle = useAppSelector(
+    (state: RootState) => state.game.gameInfo.isPuzzle
+  );
   const isSpectator = playerID === 3;
 
   // Replay controls are provided by the replay panel and Advance replay button.
@@ -252,6 +288,7 @@ function MenuContent() {
               placement="bottom"
             />
             <UndoButton />
+            {isPuzzle && <RestartPuzzleButton />}
             <HideModalsToggle />
             <ShowMobileChat />
             <MobileOverflowMenu isSpectator={false} />
@@ -271,6 +308,7 @@ function MenuContent() {
         </div>
         <div className={styles.menuList}>
           <UndoButton />
+          {isPuzzle && <RestartPuzzleButton />}
           <Inventory buttonClassName={styles.btn} />
           <HideModalsToggle />
           <OptionsMenuToggle />

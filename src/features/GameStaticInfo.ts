@@ -10,6 +10,7 @@ export default interface GameStaticInfo {
   altArts?: AltArt[];
   opponentAltArts?: AltArt[];
   isOpponentAI?: boolean;
+  isPuzzle?: boolean;
   gameFormat?: string;
   heroName?: string;
   yourHeroCardNumber?: string;

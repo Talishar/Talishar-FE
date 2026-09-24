@@ -1,4 +1,5 @@
 export interface SavedReplay {
+  type: 'replay' | 'snapshot';
   replayNumber: number;
   savedAt: number;
   p1DisplayName: string;

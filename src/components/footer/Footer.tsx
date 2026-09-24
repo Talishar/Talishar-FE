@@ -14,9 +14,11 @@ import {
 import TalisharLogo from '../../img/TalisharLogo.webp';
 import styles from './Footer.module.scss';
 import useSupporterStatus from 'hooks/useSupporterStatus';
+import useAuth from 'hooks/useAuth';
 import { reopenCookieConsent } from 'utils/privacyPreferences';
 
 const Footer = () => {
+  const { isLoggedIn } = useAuth();
   const { isSupporter, showAds } = useSupporterStatus();
   const { t } = useTranslation();
 
@@ -54,7 +56,7 @@ const Footer = () => {
                 aria-label={t('FOOTER.NAV_LABEL')}
               >
                 <Link to="/">{t('HEADER.PLAY')}</Link>
-                <Link to="/game/load">{t('HEADER.REPLAYS')}</Link>
+                {isLoggedIn && <Link to="/game/load">{t('HEADER.REPLAYS')}</Link>}
                 <Link to="/learn">{t('HEADER.LEARN')}</Link>
                 <Link to="/about">{t('HEADER.ABOUT')}</Link>
               </nav>

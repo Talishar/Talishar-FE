@@ -111,11 +111,13 @@ const Header = () => {
               {t('HEADER.PLAY')}
             </NavLink>
           </li>
-          <li>
-            <NavLink to="/game/load" className={navLinkClass}>
-              {t('HEADER.REPLAYS')}
-            </NavLink>
-          </li>
+          {isLoggedIn && (
+            <li>
+              <NavLink to="/game/load" className={navLinkClass}>
+                {t('HEADER.REPLAYS')}
+              </NavLink>
+            </li>
+          )}
           {isLoggedIn && (
             <li>
               <NavLink to="/mastery" className={navLinkClass}>
@@ -243,11 +245,13 @@ const Header = () => {
                 <BsPlayFill /> <span>{t('HEADER.PLAY')}</span>
               </Link>
             </li>
-            <li>
-              <Link to="/game/load" onClick={closeMobileMenu}>
-                <BsCollectionPlayFill /> <span>{t('HEADER.REPLAYS')}</span>
-              </Link>
-            </li>
+            {isLoggedIn && (
+              <li>
+                <Link to="/game/load" onClick={closeMobileMenu}>
+                  <BsCollectionPlayFill /> <span>{t('HEADER.REPLAYS')}</span>
+                </Link>
+              </li>
+            )}
             {isLoggedIn && (
               <li>
                 <Link to="/mastery" onClick={closeMobileMenu}>
