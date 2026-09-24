@@ -5,12 +5,21 @@ import useSetting from './useSetting';
 
 const FUTURES_FORMATS = ['futurecc', 'futurell', 'futuresage'];
 
-export function useIsPrivateGame() {
+const isLocalEnvironment =
+  import.meta.env.MODE === 'development' ||
+  window.location.hostname === 'localhost';
+
+function useIsPrivateGame() {
   return useAppSelector(
     (state: RootState) =>
       (state.game.gameInfo.isPrivate ?? false) ||
       (state.game.gameInfo.isPrivateLobby ?? false)
   );
+}
+
+export function useHideManualModeToggle() {
+  const isPrivate = useIsPrivateGame();
+  return isPrivate && !isLocalEnvironment;
 }
 
 export function useCanUseManualMode() {
@@ -27,9 +36,6 @@ export function useCanUseManualMode() {
   const isFuturesFormat = useAppSelector((state: RootState) =>
     FUTURES_FORMATS.includes(state.game.gameInfo.gameFormat ?? '')
   );
-  const isLocalEnvironment =
-    import.meta.env.MODE === 'development' ||
-    window.location.hostname === 'localhost';
 
   if (isReplay) return false;
   return (
