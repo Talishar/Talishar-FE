@@ -386,10 +386,6 @@
   width: var(--card-size);
 }
 
-.promptCard.promptSourceCard {
-  width: calc(0.7 * var(--card-size));
-}
-
 @media (orientation: portrait) and (max-width: 600px) {
   .optionsContainer,
   .optOptionsContainer {
