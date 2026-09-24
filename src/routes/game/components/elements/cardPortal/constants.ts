@@ -41,6 +41,8 @@ export const doubleFacedCardsMappings: { [key: string]: string } = {
   figment_of_tenacity_yellow: 'metis_archangel_of_tenacity',
   figment_of_triumph_yellow: 'victoria_archangel_of_triumph',
   figment_of_war_yellow: 'bellona_archangel_of_war',
+  figment_of_hope_yellow: 'suraya_archangel_of_endless_hope',
+  suraya_archangel_of_endless_hope: 'figment_of_hope_yellow',
   suraya_archangel_of_erudition: 'figment_of_erudition_yellow',
   themis_archangel_of_judgment: 'figment_of_judgment_yellow',
   aegis_archangel_of_protection: 'figment_of_protection_yellow',
