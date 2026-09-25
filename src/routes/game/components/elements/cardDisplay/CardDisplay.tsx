@@ -199,14 +199,15 @@ export const CardDisplay = (prop: CardProp) => {
       disableTilt={disableTilt}
       previewYOffset={previewYOffset}
     >
-      {[...subCardsToShow].reverse().map((subCardNumber, reverseIx) => {
+      {subCardsToShow.map((_, reverseIx) => {
+        const ix = subCardsToShow.length - reverseIx - 1;
+        const subCardNumber = subCardsToShow[ix];
         if (
           !subCardNumber ||
           typeof subCardNumber !== 'string' ||
           subCardNumber.trim() === ''
         )
           return null;
-        const ix = subCardsToShow.length - reverseIx - 1;
         const subCardKey = `subcard-${card.cardNumber}-${subCardNumber}-${ix}`;
 
         return (

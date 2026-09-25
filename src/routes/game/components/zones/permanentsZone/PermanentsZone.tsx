@@ -39,11 +39,16 @@ function PermanentsZone(prop: Displayrow) {
   const permanents = useAppSelector((state: RootState) =>
     selectPermanentsAsStack(state, isPlayer)
   );
-  const maxSubcardCount = permanents.reduce(
-    (maximum, permanent) =>
-      Math.max(maximum, permanent.card.subcards?.filter(Boolean).length ?? 0),
-    1
-  );
+  let maxSubcardCount = 1;
+  for (const permanent of permanents) {
+    const subcards = permanent.card.subcards;
+    if (!subcards) continue;
+    let subcardCount = 0;
+    for (const subcard of subcards) {
+      if (subcard) subcardCount++;
+    }
+    if (subcardCount > maxSubcardCount) maxSubcardCount = subcardCount;
+  }
   const subcardOverflowStyle = {
     '--subcard-overflow': `calc(${maxSubcardCount * 0.18} * var(--card-size))`
   } as React.CSSProperties;

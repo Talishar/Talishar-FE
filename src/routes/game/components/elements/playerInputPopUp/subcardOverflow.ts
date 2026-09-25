@@ -4,9 +4,15 @@ import { Card } from 'features/Card';
 export const subcardOverflowStyle = (
   cards?: Card[]
 ): React.CSSProperties | undefined => {
+  if (!cards) return undefined;
   let maxSubcardCount = 0;
-  for (const card of cards ?? []) {
-    const count = card.subcards?.filter(Boolean).length ?? 0;
+  for (const card of cards) {
+    let count = 0;
+    const subcards = card.subcards;
+    if (!subcards) continue;
+    for (const subcard of subcards) {
+      if (subcard) count++;
+    }
     if (count > maxSubcardCount) maxSubcardCount = count;
   }
   if (maxSubcardCount === 0) return undefined;

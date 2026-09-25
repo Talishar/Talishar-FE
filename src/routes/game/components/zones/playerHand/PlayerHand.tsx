@@ -97,13 +97,13 @@ function PlayerHand() {
     const prevByCardNumber = new Map<string, string[]>();
     for (const { id, cardNumber, actionDataOverride } of prevList) {
       const adoKey = `${cardNumber}::${actionDataOverride}`;
-      const adoArr = prevByAdoKey.get(adoKey) ?? [];
-      adoArr.push(id);
-      prevByAdoKey.set(adoKey, adoArr);
+      const adoArr = prevByAdoKey.get(adoKey);
+      if (adoArr) adoArr.push(id);
+      else prevByAdoKey.set(adoKey, [id]);
 
-      const cnArr = prevByCardNumber.get(cardNumber) ?? [];
-      cnArr.push(id);
-      prevByCardNumber.set(cardNumber, cnArr);
+      const cnArr = prevByCardNumber.get(cardNumber);
+      if (cnArr) cnArr.push(id);
+      else prevByCardNumber.set(cardNumber, [id]);
     }
 
     const usedIds = new Set<string>();
@@ -259,13 +259,21 @@ function PlayerHand() {
 
   useEffect(() => {
     setOrderedHandIds((previousOrder) => {
-      const currentIds = handCardsWithStableIds.map((entry) => entry.id);
-      const currentIdSet = new Set(currentIds);
+      const currentIds: string[] = [];
+      const currentIdSet = new Set<string>();
+      for (const entry of handCardsWithStableIds) {
+        currentIds.push(entry.id);
+        currentIdSet.add(entry.id);
+      }
 
-      const preservedOrder = previousOrder.filter((id) => currentIdSet.has(id));
-      const preservedIdSet = new Set(preservedOrder);
-      const newIds = currentIds.filter((id) => !preservedIdSet.has(id));
-      const nextOrder = [...preservedOrder, ...newIds];
+      const nextOrder: string[] = [];
+      for (const id of previousOrder) {
+        if (currentIdSet.has(id)) nextOrder.push(id);
+      }
+      const preservedIdSet = new Set(nextOrder);
+      for (const id of currentIds) {
+        if (!preservedIdSet.has(id)) nextOrder.push(id);
+      }
 
       if (
         nextOrder.length === previousOrder.length &&
@@ -281,14 +289,22 @@ function PlayerHand() {
   useEffect(() => {
     const validIds = new Set(handCardsWithStableIds.map((entry) => entry.id));
     setHandCardRotations((previousRotations) => {
-      const nextRotations = Object.fromEntries(
-        Object.entries(previousRotations).filter(([id]) => validIds.has(id))
-      );
-
-      return Object.keys(nextRotations).length ===
-        Object.keys(previousRotations).length
-        ? previousRotations
-        : nextRotations;
+      const rotationIds = Object.keys(previousRotations);
+      let allValid = true;
+      for (const id of rotationIds) {
+        if (!validIds.has(id)) {
+          allValid = false;
+          break;
+        }
+      }
+      if (allValid) {
+        return previousRotations;
+      }
+      const nextRotations: Record<string, number> = {};
+      for (const id of rotationIds) {
+        if (validIds.has(id)) nextRotations[id] = previousRotations[id];
+      }
+      return nextRotations;
     });
   }, [handCardsWithStableIds]);
 
@@ -329,23 +345,27 @@ function PlayerHand() {
       return [];
     }
 
-    const handCardById = new Map(
-      handCardsWithStableIds.map((entry) => [entry.id, entry] as const)
-    );
+    const handCardById = new Map<string, CardWithStableId>();
+    for (const entry of handCardsWithStableIds) {
+      handCardById.set(entry.id, entry);
+    }
     const idsForRender = previewHandIds ?? orderedHandIds;
-    const ordered = idsForRender
-      .map((id) => handCardById.get(id))
-      .filter((entry): entry is CardWithStableId => entry !== undefined);
+    const ordered: CardWithStableId[] = [];
+    for (const id of idsForRender) {
+      const entry = handCardById.get(id);
+      if (entry !== undefined) ordered.push(entry);
+    }
 
     if (ordered.length === handCardsWithStableIds.length) {
       return ordered;
     }
 
-    const orderedIdSet = new Set(ordered.map((e) => e.id));
-    const newEntries = handCardsWithStableIds.filter(
-      (entry) => !orderedIdSet.has(entry.id)
-    );
-    return [...ordered, ...newEntries];
+    const orderedIdSet = new Set<string>();
+    for (const entry of ordered) orderedIdSet.add(entry.id);
+    for (const entry of handCardsWithStableIds) {
+      if (!orderedIdSet.has(entry.id)) ordered.push(entry);
+    }
+    return ordered;
   }, [handCardsWithStableIds, orderedHandIds, previewHandIds]);
 
   const handleHandCardDragStart = () => {
@@ -421,14 +441,14 @@ function PlayerHand() {
     const handRow = handRowRef.current;
     if (!handRow) return;
 
-    const cardElements = (Array.from(handRow.children) as HTMLElement[]).filter(
-      (el) => !el.dataset.zoneSeparator
-    );
-    const N = cardElements.length;
-
-    const rects = cardElements.map((element) =>
-      element.getBoundingClientRect()
-    );
+    const rects: DOMRect[] = [];
+    for (let i = 0; i < handRow.children.length; i++) {
+      const element = handRow.children[i] as HTMLElement;
+      if (!element.dataset.zoneSeparator) {
+        rects.push(element.getBoundingClientRect());
+      }
+    }
+    const N = rects.length;
 
     if (N === 1) {
       setHandReorderStepPx(Math.max(72, Math.min(220, rects[0].width * 0.9)));

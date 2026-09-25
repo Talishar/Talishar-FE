@@ -283,19 +283,17 @@ function RepeatedMessages({
 }
 
 function combatGroupEnd(messages: LogMessage[], start: number) {
-  if (!flagsFor(messages[start].message).isCombatStart) return -1;
+  const startFlags = flagsFor(messages[start].message);
+  if (!startFlags.isCombatStart) return -1;
+  let hasCombatSignal = startFlags.hasCombatSignal;
 
   for (let index = start + 1; index < messages.length; index++) {
     const flags = flagsFor(messages[index].message);
     if (flags.turnMarker !== null || flags.isChat || flags.isCombatStart)
       return -1;
+    hasCombatSignal = hasCombatSignal || flags.hasCombatSignal;
     if (flags.isCombatEnd) {
-      // Scanned in place; the old `.slice(...).some(...)` allocated a fresh
-      // segment array for every candidate group on every pass.
-      for (let scan = start; scan <= index; scan++) {
-        if (flagsFor(messages[scan].message).hasCombatSignal) return index;
-      }
-      return -1;
+      return hasCombatSignal ? index : -1;
     }
   }
   return -1;
