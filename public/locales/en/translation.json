@@ -874,7 +874,7 @@
     "SNAPSHOT_INVITE_VISIBLE": "The invite link is shown below. Copy it from the field to share it.",
     "SNAPSHOT_COPY_FAILED": "Unable to copy automatically. Select and copy the invite link above.",
     "SNAPSHOT_INVITE_READY": "Snapshot #{{number}} game ready",
-    "SNAPSHOT_INVITE_HELP": "Anyone with this link can play the other seat. Send it to a friend or open it in a second tab, then enter your own seat.",
+    "SNAPSHOT_INVITE_HELP": "Anyone with this link can take the other seat.",
     "SNAPSHOT_INVITE_LABEL": "Invite link for the other seat",
     "SNAPSHOT_COPY_LINK": "Copy invite link",
     "SNAPSHOT_OPEN_SEAT": "Play your seat",

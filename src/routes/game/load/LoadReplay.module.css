@@ -187,34 +187,78 @@
 }
 
 .snapshotInvitePanel {
-  margin-top: 1rem;
-  padding: 1rem;
-  border: 1px solid var(--theme-border);
+  margin-top: 0.75rem;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.16);
   border-radius: 5px;
-  background: rgba(var(--theme-on-surface-rgb), 0.06);
+  background: rgba(var(--theme-on-surface-rgb), 0.025);
 }
 
 .snapshotInvitePanel h3 {
-  margin: 0 0 0.35rem;
+  margin: 0;
+  color: var(--theme-text);
+  font-size: 0.92rem;
+  font-weight: 600;
 }
 
 .snapshotInvitePanel p {
-  margin: 0 0 0.75rem;
+  margin: 0.2rem 0 0.65rem;
+  color: var(--theme-text-secondary, #c6c6c6);
+  font-size: 0.8rem;
+  line-height: 1.4;
 }
 
-.snapshotInvitePanel input {
-  width: 100%;
-  margin: 0 0 0.75rem;
+.snapshotInviteRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 0.45rem;
 }
 
-.snapshotInviteActions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.snapshotInviteActions button {
+.snapshotInviteRow input,
+.snapshotInviteRow button {
+  height: 1.75rem;
   margin: 0;
+  padding: 0 0.7rem;
+  border-radius: 5px;
+  font-size: 0.72rem;
+}
+
+.snapshotInviteRow input {
+  min-width: 0;
+  text-overflow: ellipsis;
+  border-color: rgba(var(--theme-on-surface-rgb), 0.16);
+  background: rgba(var(--theme-on-surface-rgb), 0.04);
+  color: var(--theme-text-secondary, #c6c6c6);
+  font-family: Consolas, Monaco, monospace;
+  font-size: 0.68rem;
+}
+
+.snapshotInviteRow button {
+  width: auto;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.snapshotInviteRow .snapshotCopyButton {
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.25);
+  background: rgba(var(--theme-on-surface-rgb), 0.06);
+  color: var(--theme-text);
+}
+
+.snapshotInviteRow .snapshotCopyButton:hover {
+  border-color: #bed3e6;
+  background: rgba(190, 211, 230, 0.16);
+  color: color-mix(in srgb, #bed3e6 55%, var(--theme-text));
+}
+
+@media (max-width: 640px) {
+  .snapshotInviteRow {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .snapshotInviteRow input {
+    grid-column: 1 / -1;
+  }
 }
 
 .replayCard {

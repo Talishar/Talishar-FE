@@ -498,14 +498,18 @@ const ReplayGame = () => {
               })}
             </h3>
             <p>{t('LOAD_REPLAY.SNAPSHOT_INVITE_HELP')}</p>
-            <input
-              aria-label={t('LOAD_REPLAY.SNAPSHOT_INVITE_LABEL')}
-              value={preparedSnapshot.inviteUrl}
-              readOnly
-              onFocus={(event) => event.currentTarget.select()}
-            />
-            <div className={styles.snapshotInviteActions}>
-              <button type="button" onClick={copySnapshotInvite}>
+            <div className={styles.snapshotInviteRow}>
+              <input
+                aria-label={t('LOAD_REPLAY.SNAPSHOT_INVITE_LABEL')}
+                value={preparedSnapshot.inviteUrl}
+                readOnly
+                onFocus={(event) => event.currentTarget.select()}
+              />
+              <button
+                type="button"
+                className={styles.snapshotCopyButton}
+                onClick={copySnapshotInvite}
+              >
                 {t('LOAD_REPLAY.SNAPSHOT_COPY_LINK')}
               </button>
               <button type="button" onClick={openSnapshotSeat}>
