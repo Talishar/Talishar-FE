@@ -1,6 +1,10 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useGetPromptStatsQuery } from 'features/api/apiSlice';
+import { toast } from 'react-hot-toast';
+import {
+  useClearPromptStatsMutation,
+  useGetPromptStatsQuery
+} from 'features/api/apiSlice';
 import { PromptStat, PromptStatsRange } from 'interface/API/ModPageAPI';
 import { CARD_SQUARES_PATH, getCollectionCardImagePath } from 'utils';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
@@ -115,6 +119,8 @@ const PromptStats: React.FC = () => {
   const [sortDescending, setSortDescending] = useState(true);
 
   const { data, isFetching, isError } = useGetPromptStatsQuery(range);
+  const [clearPromptStats, { isLoading: isClearing }] =
+    useClearPromptStatsMutation();
 
   const rows = useMemo(() => (data?.prompts ?? []).map(toRow), [data]);
 
@@ -149,6 +155,24 @@ const PromptStats: React.FC = () => {
     else {
       setSortKey(key);
       setSortDescending(true);
+    }
+  };
+
+  const handleClear = async () => {
+    if (!window.confirm(t('MOD_PAGE.PROMPTS_CONFIRM_CLEAR'))) return;
+    try {
+      const result = await clearPromptStats().unwrap();
+      toast.success(
+        t('MOD_PAGE.PROMPTS_CLEAR_SUCCESS', {
+          count: result.answersCleared,
+          answers: result.answersCleared.toLocaleString()
+        }),
+        { position: 'top-center' }
+      );
+    } catch (err: any) {
+      toast.error(err?.data?.error || t('MOD_PAGE.PROMPTS_CLEAR_FAILED'), {
+        position: 'top-center'
+      });
     }
   };
 
@@ -242,6 +266,16 @@ const PromptStats: React.FC = () => {
           />
           {t('MOD_PAGE.PROMPTS_CANDIDATES_ONLY', { total: candidateCount })}
         </label>
+        <button
+          type="button"
+          className={styles.clearButton}
+          onClick={handleClear}
+          disabled={isClearing}
+        >
+          {isClearing
+            ? t('MOD_PAGE.PROMPTS_CLEARING')
+            : t('MOD_PAGE.PROMPTS_CLEAR_ALL')}
+        </button>
       </div>
 
       {data && !isError && (

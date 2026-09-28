@@ -98,6 +98,11 @@ export interface PromptStatsResponse {
   error?: string;
 }
 
+export interface ClearPromptStatsResponse {
+  success: boolean;
+  answersCleared: number;
+}
+
 export interface PuzzleCard {
   id: string;
   name: string;

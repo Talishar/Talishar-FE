@@ -94,6 +94,7 @@ import {
   SearchUsernamesResponse,
   PromptStatsRange,
   PromptStatsResponse,
+  ClearPromptStatsResponse,
   PuzzleCandidatesRequest,
   PuzzleCandidatesResponse,
   CreatePuzzleGameRequest,
@@ -240,7 +241,8 @@ export const apiSlice = createApi({
     'Auth',
     'SystemMessage',
     'SavedReplays',
-    'HeroMastery'
+    'HeroMastery',
+    'PromptStats'
   ],
   refetchOnFocus: false,
   refetchOnReconnect: false,
@@ -703,7 +705,12 @@ export const apiSlice = createApi({
         method: 'GET',
         params: { days },
         responseHandler: parseResponse
-      })
+      }),
+      providesTags: ['PromptStats']
+    }),
+    clearPromptStats: builder.mutation<ClearPromptStatsResponse, void>({
+      query: () => postJson(URL_END_POINT.CLEAR_PROMPT_STATS),
+      invalidatesTags: ['PromptStats']
     }),
     getPuzzleCandidates: builder.query<
       PuzzleCandidatesResponse,
@@ -1100,6 +1107,7 @@ export const {
   useKickPlayerMutation,
   useGetModPageDataQuery,
   useGetPromptStatsQuery,
+  useClearPromptStatsMutation,
   useGetPuzzleCandidatesQuery,
   useCreatePuzzleGameMutation,
   useResetAllRustCountersMutation,

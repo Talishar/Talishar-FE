@@ -125,6 +125,37 @@
   margin: 0;
 }
 
+.clearButton {
+  width: auto !important;
+  height: 2.25rem !important;
+  margin: 0 0 0 auto !important;
+  padding: 0 0.9rem !important;
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.12) !important;
+  border-radius: 6px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--theme-text-secondary) !important;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.clearButton:hover:not(:disabled) {
+  border-color: var(--theme-danger) !important;
+  color: var(--theme-text) !important;
+}
+
+.clearButton:focus-visible {
+  outline: 2px solid var(--theme-primary);
+  outline-offset: 2px;
+}
+
+.clearButton:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
 .summary {
   margin: 0;
   font-size: 0.8rem;
