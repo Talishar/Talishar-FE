@@ -54,7 +54,8 @@ const SKIP_POPUP_CARDS = new Set<string>([
   'SHARPEN',
   'HEAVE',
   'INTIMIDATE',
-  'DECAY'
+  'DECAY',
+  'SKIP'
 ]);
 
 type SurfaceProps = {
