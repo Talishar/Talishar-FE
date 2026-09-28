@@ -11,37 +11,31 @@
 }
 
 .hero {
-  text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--theme-border);
 }
 
 .hero h1 {
   font-size: 2.4rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
-  background: linear-gradient(
-    135deg,
-    var(--theme-primary),
-    var(--theme-primary-hover)
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--theme-text);
 }
 
 .hero p {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
+  line-height: 1.6;
   color: var(--theme-text-secondary);
-  max-width: 600px;
-  margin: 0 auto;
+  max-width: 640px;
+  margin: 0;
 }
 
 .billingToggle {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 0.75rem;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .billingToggle span {
@@ -87,69 +81,59 @@
 }
 
 .saveBadge {
-  font-size: 0.75rem;
-  background: transparent;
-  padding: 0.18rem 0.6rem;
-  border: 1px solid var(--theme-primary);
-  border-radius: 999px;
+  font-size: 0.85rem;
   font-weight: 600;
+  color: color-mix(in srgb, #66bb6a 55%, var(--theme-text));
 }
 
 .tierGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1.25rem;
+  gap: 1px;
+  background: var(--theme-border);
+  border: 1px solid var(--theme-border);
+  border-radius: 6px;
+  overflow: hidden;
   margin-bottom: 4rem;
 }
 
 .tierCard {
   position: relative;
-  background: var(--theme-card-background, #1a1a2e);
-  border: 1px solid var(--theme-border);
-  border-radius: 12px;
-  padding: 1.75rem 1.5rem;
+  background: var(--theme-card-background, #1e2329);
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-    box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s;
-}
-
-.tierCard.recommended {
-  border-color: var(--theme-primary);
-  box-shadow: 0 0 20px color-mix(in srgb, var(--theme-primary) 15%, transparent);
 }
 
 .recommendedBadge {
-  position: absolute;
-  top: -11px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--theme-primary);
-  color: var(--theme-primary-inverse);
-  font-size: 0.7rem;
+  display: block;
+  margin-top: 0.15rem;
+  color: var(--theme-primary);
+  font-size: 0.68rem;
+  line-height: 1.2;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 0.25rem 0.9rem;
-  border-radius: 10px;
+  letter-spacing: 0.08em;
 }
 
 .tierHeader {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 .tierImage {
-  width: 72px;
-  height: 72px;
+  width: 3rem;
+  height: 3rem;
   object-fit: contain;
   border-radius: 50%;
-  margin-bottom: 0.75rem;
+  flex-shrink: 0;
 }
 
 .tierName {
   font-size: 1.05rem;
   font-weight: 700;
-  margin-bottom: 0.15rem;
+  line-height: 1.3;
   color: var(--theme-text);
 }
 
@@ -159,8 +143,7 @@
 }
 
 .price {
-  text-align: center;
-  margin-bottom: 1.25rem;
+  margin: 1.25rem 0;
 }
 
 .priceAmount {
@@ -178,7 +161,6 @@
 .originalPriceLine {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 0.35rem;
   margin-top: 0.15rem;
 }
@@ -194,8 +176,8 @@
   font-size: 0.7rem;
   background: rgba(76, 175, 80, 0.15);
   color: color-mix(in srgb, #66bb6a 55%, var(--theme-text));
-  padding: 0.15rem 0.5rem;
-  border-radius: 8px;
+  padding: 0.15rem 0.4rem;
+  border-radius: 3px;
   margin-left: 0.35rem;
   font-weight: 600;
 }
@@ -205,7 +187,7 @@
   width: 100%;
   padding: 0.7rem;
   border: 1px solid var(--theme-border);
-  border-radius: 8px;
+  border-radius: 4px;
   background: transparent;
   color: var(--theme-text);
   font-size: 0.9rem;
@@ -261,23 +243,21 @@
 }
 
 .comparisonSection h2 {
-  text-align: center;
   font-size: 1.6rem;
   font-weight: 700;
   margin-bottom: 0.4rem;
 }
 
 .comparisonSubtitle {
-  text-align: center;
   color: var(--theme-text-secondary);
   font-size: 0.95rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .tableWrapper {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  border-radius: 12px;
+  border-radius: 6px;
   border: 1px solid var(--theme-border);
 }
 
@@ -327,36 +307,37 @@
 }
 
 .ctaSection {
-  text-align: center;
-  padding: 1rem;
-  background: var(--theme-section-background-transparent);
-  border-radius: 16px;
-  border: 1px solid color-mix(in srgb, var(--theme-primary) 10%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.25rem 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--theme-border);
 }
 
 .ctaSection h2 {
   font-size: 1.5rem;
   font-weight: 700;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.35rem;
 }
 
 .ctaSection p {
   color: var(--theme-text-secondary);
-  margin-bottom: 1.5rem;
-  max-width: 500px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0;
+  max-width: 560px;
 }
 
 .ctaBtn {
   display: inline-block;
+  flex-shrink: 0;
   padding: 0.85rem 2.5rem;
   background: var(--theme-primary);
   color: var(--theme-primary-inverse);
   font-weight: 700;
   font-size: 1rem;
   border: none;
-  border-radius: 8px;
+  border-radius: 4px;
   cursor: pointer;
   text-decoration: none;
   transition: background 0.2s;
@@ -387,11 +368,10 @@
 
   .tierGrid {
     grid-template-columns: 1fr;
-    gap: 1rem;
   }
 
   .tierCard {
-    padding: 1.5rem 1.25rem;
+    padding: 1.25rem;
   }
 
   .comparisonTable th,

@@ -263,18 +263,20 @@ const Premium = () => {
                   tier.recommended ? styles.recommended : ''
                 }`}
               >
-                {tier.recommended && (
-                  <span className={styles.recommendedBadge}>
-                    {t('PREMIUM_PAGE.RECOMMENDED')}
-                  </span>
-                )}
                 <div className={styles.tierHeader}>
                   <img
                     src={tier.image}
                     alt={tier.name}
                     className={styles.tierImage}
                   />
-                  <div className={styles.tierName}>{tier.name}</div>
+                  <div>
+                    <div className={styles.tierName}>{tier.name}</div>
+                    {tier.recommended && (
+                      <span className={styles.recommendedBadge}>
+                        {t('PREMIUM_PAGE.RECOMMENDED')}
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <div className={styles.price}>
                   <span className={styles.priceAmount}>{display}</span>
@@ -352,8 +354,10 @@ const Premium = () => {
         </div>
 
         <div className={styles.ctaSection}>
-          <h2>{t('PREMIUM_PAGE.READY_TO_UPGRADE')}</h2>
-          <p>{t('PREMIUM_PAGE.CTA_SUBTITLE')}</p>
+          <div>
+            <h2>{t('PREMIUM_PAGE.READY_TO_UPGRADE')}</h2>
+            <p>{t('PREMIUM_PAGE.CTA_SUBTITLE')}</p>
+          </div>
           <a
             href={TALISHAR_METAFY_URL}
             target="_blank"

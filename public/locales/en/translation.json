@@ -1,16 +1,16 @@
 {
   "ABOUT": {
     "COMMUNITY": {
-      "DESCRIPTION": "Talishar thrives thanks to collaboration with other talented fan software developers from the FAB community:",
+      "DESCRIPTION": "Talishar relies on other fan-made tools from the FaB community:",
       "FABLAZING_DATA_DESCRIPTION": "Discover the current meta landscape and access detailed hero and deck statistics.",
       "FABRARY_DESCRIPTION": "The most advanced Flesh and Blood card search, deck building, and collection management tool.",
       "FAB_CARD_DATABASE_DESCRIPTION": "Open source database with JSON/CSV representations of Flesh and Blood cards.",
       "FAB_INSIGHTS_DESCRIPTION": "Advanced statistical analysis of the meta, hero interactions, and Talishar gameplay data.",
       "LEGENDARY_STORIES_DESCRIPTION": "Fan-curated archive of all official Flesh and Blood lore and world-building.",
       "THE_FAB_CUBE_DESCRIPTION": "Easy to use cube builder with comprehensive card database for the Flesh and Blood TCG.",
-      "TITLE": "Built By The Community"
+      "TITLE": "Community Tools"
     },
-    "DESCRIPTION": "Talishar is the free, browser-based community platform where more than 9,000 players compete daily in real-time games of Flesh & Blood. Bring your deck, face off against players worldwide, and master your heroes.",
+    "DESCRIPTION": "More than 9,000 people play Flesh & Blood here every day. Bring a decklist, find an opponent, and play in your browser.",
     "DISCLAIMER": "<2><1>Disclaimer:</1> Talishar is an open-source, fan-made platform not associated with LSS. It may not be a completely accurate representation of the rules as written. If you have questions about interactions or rulings, please contact the judge community on the <3>JudgeHub Discord</3> for clarification.</2><2>Talishar is in no way affiliated with Legend Story Studios. Legend Story Studios®, Flesh and Blood™, and set names are trademarks of Legend Story Studios. Flesh and Blood characters, cards, logos, and art are property of <4>Legend Story Studios</4>. © Legend Story Studios</2>",
     "DISCORD": "Discord",
     "FAQ": {
@@ -35,17 +35,17 @@
       "WHY_NO_RANKED_Q": "Why is there no matchmaking or ranked play?"
     },
     "FEATURES": {
-      "ACTIVE_DESCRIPTION": "Join 9,000+ daily players worldwide",
+      "ACTIVE_DESCRIPTION": "9,000+ players a day, across every time zone",
       "ACTIVE_TITLE": "Active Community",
-      "FEEDBACK_DESCRIPTION": "We value your input to improve the platform",
-      "FEEDBACK_TITLE": "Open to feedback and suggestions",
-      "INSTANT_DESCRIPTION": "No downloads required. Play directly in your browser",
+      "FEEDBACK_DESCRIPTION": "Bug reports and feature requests go straight to the devs on Discord",
+      "FEEDBACK_TITLE": "Shaped by Players",
+      "INSTANT_DESCRIPTION": "Runs in the browser. Nothing to install",
       "INSTANT_TITLE": "Instant Play",
       "MOBILE_DESCRIPTION": "Play on your phone, tablet, or computer",
       "MOBILE_TITLE": "Mobile Friendly",
-      "NO_STAKES_DESCRIPTION": "Don't stress, play and have fun.",
-      "NO_STAKES_TITLE": "No Stakes Platform",
-      "SPICY_DESCRIPTION": "Experiment with strategies and refine your builds",
+      "NO_STAKES_DESCRIPTION": "No ladder and no rating, so try things",
+      "NO_STAKES_TITLE": "No Stakes",
+      "SPICY_DESCRIPTION": "Play the list you'd never risk at an event",
       "SPICY_TITLE": "Test Your Spicy Brew"
     },
     "GITHUB": "GitHub",
@@ -58,11 +58,11 @@
     },
     "SUB_HEADER": "The Unofficial Online Platform for Flesh & Blood",
     "SUPPORT_METAFY": "Support us on Metafy",
-    "TITLE": "Welcome to Talishar",
+    "TITLE": "About Talishar",
     "UNOFFICIAL_TITLE": "Talishar Is an Unofficial, Independent Platform",
-    "WHAT_IS_DESCRIPTION": "Talishar is a passion project built by the Flesh & Blood community for the community. We created this platform to provide players with a free, accessible, and welcoming space to play and test deck ideas. Whether you're a casual player looking to learn the game before joining a local armory or a competitive player wanting some reps, Talishar is there for the community.",
+    "WHAT_IS_DESCRIPTION": "Talishar is a fan project, built and run by Flesh & Blood players. It's a free place to play and test deck ideas. New players use it to learn the game before their first armory; competitive players use it to get reps in before an event.",
     "WHAT_IS_TITLE": "What is Talishar?",
-    "WHO_MAINTAINS_DESCRIPTION": "Talishar is maintained by a dedicated team of volunteer developers and community members who are passionate about Flesh & Blood. We are in no way associated with Legend Story Studios (LSS). Our team works entirely on a volunteer basis to keep the platform running, code new card sets, fix bugs, and implement new features. We're supported by the community through optional contribution platforms such as Metafy. They help cover server costs and fund development.",
+    "WHO_MAINTAINS_DESCRIPTION": "A small team of volunteers keeps Talishar running. They code each new set, fix bugs, and add features in their spare time. None of us work for Legend Story Studios (LSS). Supporters on Metafy pay for the servers and fund development.",
     "WHO_MAINTAINS_TITLE": "Who Maintains Talishar?"
   },
   "ADS_TEST": {
@@ -176,12 +176,12 @@
   },
   "COMMUNITY_CONTENT": {
     "BY": "by",
-    "CTA_HEADING": "👋 Want your content featured here?",
+    "CTA_HEADING": "Want your content featured here?",
     "CTA_SUB": "Share gameplay videos, podcasts, or strategy content in <1>#talishar-content</1> on Discord and we'll highlight your best work.",
-    "DISCOVER": "Discover content, deck tech, and highlights from the Talishar community",
+    "DISCOVER": "Videos, deck techs, and podcasts from Talishar players",
     "JOIN_DISCORD": "Join Discord",
     "LOADING": "Loading featured content…",
-    "TITLE": "Community & Content Hub",
+    "TITLE": "Community Content",
     "TYPE_DECK_TECH": "Deck tech",
     "TYPE_GUIDE": "Guide",
     "TYPE_LIVE_RECAP": "Live recap",
@@ -198,7 +198,7 @@
     "ESSENTIAL": "<strong>Essential Cookies (always active):</strong> Required for Talishar to work. They store your login session, your \"Remember Me\" token if you use it, and the authorization key that proves you are a player in your current game. Declining below does <strong>not</strong> disable these - but if you block all cookies in your browser settings, you may be disconnected mid-game, unable to rejoin, and forced to log in again between games.",
     "LEARN_MORE": "Learn More",
     "SHOW_LESS": "Show Less",
-    "TITLE": "🍪 Cookie Consent"
+    "TITLE": "Cookie Consent"
   },
   "CURRENT_ATTACK": {
     "ATTACK_SYMBOL": "attack symbol",
@@ -689,7 +689,7 @@
     "SHOW_FEWER": "Show fewer contributors"
   },
   "LEARN": {
-    "BANNER_SUBTITLE": "Master your skills with expert guides from our community",
+    "BANNER_SUBTITLE": "Deck and strategy guides from Flesh and Blood players, published on Metafy",
     "FREE_FOR_SUPPORTERS": "Free for supporters",
     "LOADING": "Loading guides…",
     "NO_GUIDES": "No guides available at this time.",
@@ -1524,14 +1524,14 @@
       "REPLAY_SAVE_SLOTS": "Replay Save Slots",
       "SLEEVES_PLAYMATS": "Talishar Sleeves & Playmats"
     },
-    "COMPARISON_SUBTITLE": "See what you get with a premium membership",
-    "CTA_SUBTITLE": "Join hundreds of supporters keeping Talishar running and thriving.",
+    "COMPARISON_SUBTITLE": "What stays free, and what supporting adds",
+    "CTA_SUBTITLE": "Over 500 players already chip in. Every tier goes toward servers and development.",
     "MONTHLY_INTERVAL": "/month",
     "PAGE_TITLE": "Premium",
-    "READY_TO_UPGRADE": "Ready to upgrade?",
+    "READY_TO_UPGRADE": "Keep Talishar running",
     "RECOMMENDED": "RECOMMENDED",
     "SAVE_UP_TO_15": "Save up to 25%",
-    "SUPPORT_SUBTITLE": "Unlock more features and get the most advanced experience!",
+    "SUPPORT_SUBTITLE": "Talishar is free to play. Supporters cover the server bill and get alternate art, sleeves, playmats, themes, more replay slots, and no ads.",
     "SUPPORT_TITLE": "Support Talishar",
     "TIERS": {
       "ARKNIGHT_SHARDS": "Arknight Shards",
@@ -1700,7 +1700,7 @@
     "SUPPORTER": "💖 Supporter",
     "SUPPORTER_GENEROSITY": "Enjoy premium benefits and thank you for your generosity!",
     "SUPPORTER_PERK": "Changing your display name is a supporter perk. Support Talishar to unlock it!",
-    "SUPPORTER_STATUS": "✨ Supporter Status",
+    "SUPPORTER_STATUS": "Supporter Status",
     "SUPPORTER_THANKS": "Thank you for supporting Talishar! Your contribution helps us keep the platform running and improve the game experience for everyone.",
     "UNBLOCK_CONFIRM": "Are you sure you want to unblock {{username}}?",
     "UNBLOCK_USER": "Unblock user",
@@ -1743,7 +1743,7 @@
     "REJOIN_FAILED": "Failed to rejoin game. Please try again.",
     "REJOIN_GAME": "Rejoin Game",
     "RESUME_TITLE": "Resume your game",
-    "RESUME_YOUR_GAME": "⚡ Resume Your Game?",
+    "RESUME_YOUR_GAME": "Resume Your Game?",
     "UNABLE_TO_RECOVER": "Unable to recover game session. Please rejoin the game."
   },
   "SETTINGS": {

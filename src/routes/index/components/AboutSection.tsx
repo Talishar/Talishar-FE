@@ -58,32 +58,26 @@ const AboutSection: React.FC = () => {
 
   const features = [
     {
-      icon: '⚡',
       title: t('ABOUT.FEATURES.INSTANT_TITLE'),
       desc: t('ABOUT.FEATURES.INSTANT_DESCRIPTION')
     },
     {
-      icon: '🌍',
       title: t('ABOUT.FEATURES.ACTIVE_TITLE'),
       desc: t('ABOUT.FEATURES.ACTIVE_DESCRIPTION')
     },
     {
-      icon: '📱',
       title: t('ABOUT.FEATURES.MOBILE_TITLE'),
       desc: t('ABOUT.FEATURES.MOBILE_DESCRIPTION')
     },
     {
-      icon: '📣',
       title: t('ABOUT.FEATURES.FEEDBACK_TITLE'),
       desc: t('ABOUT.FEATURES.FEEDBACK_DESCRIPTION')
     },
     {
-      icon: '⚖️',
       title: t('ABOUT.FEATURES.NO_STAKES_TITLE'),
       desc: t('ABOUT.FEATURES.NO_STAKES_DESCRIPTION')
     },
     {
-      icon: '🌶️',
       title: t('ABOUT.FEATURES.SPICY_TITLE'),
       desc: t('ABOUT.FEATURES.SPICY_DESCRIPTION')
     }
@@ -147,11 +141,8 @@ const AboutSection: React.FC = () => {
               <ul className={styles.featureList}>
                 {features.map((f, i) => (
                   <li key={i} className={styles.featureItem}>
-                    <span className={styles.featureIcon}>{f.icon}</span>
-                    <div className={styles.featureText}>
-                      <strong>{f.title}</strong>
-                      <p>{f.desc}</p>
-                    </div>
+                    <strong>{f.title}</strong>
+                    <p>{f.desc}</p>
                   </li>
                 ))}
               </ul>
