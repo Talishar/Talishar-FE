@@ -400,9 +400,11 @@ export default function PlayerInputPopUp() {
         <div className={styles.optionsTitleContainer}>
           <div className={styles.optionsTitle}>
             <h3 className={styles.title}>{titleElements}</h3>
-            <h4 className={styles.subtitle}>
-              {inputPopUp.popup?.additionalComments}
-            </h4>
+            {inputPopUp.popup?.additionalComments ? (
+              <h4 className={styles.subtitle}>
+                {inputPopUp.popup.additionalComments}
+              </h4>
+            ) : null}
           </div>
           {showCardSearch ? (
             <div className={styles.cardSearchContainer}>

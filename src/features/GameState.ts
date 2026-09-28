@@ -140,6 +140,8 @@ export default interface GameState {
   clashRevealP1Card: string;
   clashRevealP2Card: string;
   clashRevealTrigger: number;
+  deckPeekCard: string;
+  deckPeekTrigger: number;
   heroTransformP1Card: string;
   heroTransformP2Card: string;
   heroTransformTrigger: number;

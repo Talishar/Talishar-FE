@@ -888,6 +888,10 @@ export const gameSlice = createSlice({
       state.addBotDeckCard = action.payload.cardNumber;
     },
     setClashReveal: createRevealReducer('clashReveal'),
+    setDeckPeek: (state, action: PayloadAction<string>) => {
+      state.deckPeekCard = action.payload;
+      if (action.payload) state.deckPeekTrigger += 1;
+    },
     setHeroTransform: createRevealReducer('heroTransform'),
     setArsenalFlip: createRevealReducer('arsenalFlip'),
     setArsenalDestroy: createRevealReducer('arsenalDestroy'),
@@ -1121,6 +1125,7 @@ export const {
   setShuffling,
   setAddBotDeck,
   setClashReveal,
+  setDeckPeek,
   setHeroTransform,
   setArsenalFlip,
   setArsenalDestroy,

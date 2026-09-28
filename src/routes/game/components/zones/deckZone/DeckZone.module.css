@@ -139,3 +139,62 @@
     opacity: 0;
   }
 }
+
+.deckPeekCard {
+  position: absolute;
+  width: var(--card-size);
+  height: var(--card-size);
+  transform: translateY(var(--deckOffsetY, 0)) translateX(var(--deckOffsetX, 0));
+  animation: deckPeekIn 0.35s ease-out both;
+  transform-style: preserve-3d;
+  z-index: 150;
+  cursor: pointer;
+}
+
+.deckPeekCardClosing {
+  animation: deckPeekOut 0.3s ease-in forwards;
+  pointer-events: none;
+}
+
+.deckPeekBadge {
+  position: absolute;
+  top: 6%;
+  left: 6%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5em;
+  height: 1.5em;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #fff;
+  font-size: 0.8em;
+  pointer-events: none;
+}
+
+@keyframes deckPeekIn {
+  from {
+    transform: translateY(var(--deckOffsetY, 0))
+      translateX(var(--deckOffsetX, 0)) rotateY(-90deg);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(var(--deckOffsetY, 0))
+      translateX(var(--deckOffsetX, 0)) rotateY(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes deckPeekOut {
+  from {
+    transform: translateY(var(--deckOffsetY, 0))
+      translateX(var(--deckOffsetX, 0)) rotateY(0deg);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(var(--deckOffsetY, 0))
+      translateX(var(--deckOffsetX, 0)) rotateY(-90deg);
+    opacity: 0;
+  }
+}

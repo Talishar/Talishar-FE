@@ -1,11 +1,22 @@
 import React from 'react';
 import classNames from 'classnames';
-import { FaEye, FaFireAlt, FaLayerGroup, FaSun } from 'react-icons/fa';
+import {
+  FaBellSlash,
+  FaEye,
+  FaFireAlt,
+  FaLayerGroup,
+  FaSun
+} from 'react-icons/fa';
 import { ToastOptions } from 'react-hot-toast';
 import CardDisplay from '../cardDisplay/CardDisplay';
 import styles from './EventsHandler.module.css';
 
-export type MovementEventType = 'REVEAL' | 'DISCARD' | 'BANISH' | 'SOUL';
+export type MovementEventType =
+  | 'REVEAL'
+  | 'DISCARD'
+  | 'BANISH'
+  | 'SOUL'
+  | 'GEMOFF';
 
 export const MOVEMENT_TOAST_OPTIONS = {
   duration: 5000,
@@ -36,6 +47,11 @@ const EVENT_PRESENTATION = {
     label: 'Into Soul',
     className: styles.soulEvent,
     Icon: FaSun
+  },
+  GEMOFF: {
+    label: "Won't ask this turn",
+    className: styles.privateEvent,
+    Icon: FaBellSlash
   }
 } satisfies Record<
   MovementEventType,
@@ -50,6 +66,7 @@ interface MovementEventCardProps {
   type: MovementEventType;
   cardNumber: string;
   isPlayer?: boolean;
+  caption?: string;
   onDismiss?: () => void;
 }
 
@@ -57,6 +74,7 @@ export default function MovementEventCard({
   type,
   cardNumber,
   isPlayer,
+  caption,
   onDismiss
 }: MovementEventCardProps) {
   const presentation = EVENT_PRESENTATION[type];
@@ -96,6 +114,9 @@ export default function MovementEventCard({
           />
         </div>
       </div>
+      {caption ? (
+        <div className={styles.movementEventCaption}>{caption}</div>
+      ) : null}
     </div>
   );
 }

@@ -49,6 +49,7 @@ import {
   setShuffling,
   setAddBotDeck,
   setClashReveal,
+  setDeckPeek,
   setHeroTransform,
   setArsenalFlip,
   setArsenalDestroy,
@@ -241,6 +242,31 @@ export const EventsHandler = React.memo(() => {
                 />
               ),
               MOVEMENT_TOAST_OPTIONS
+            );
+            continue;
+          }
+          case 'PEEK': {
+            const peek = parseCardEvent(event.eventValue, playerID);
+            if (!peek.isPlayer || !peek.cardNumber) continue;
+            dispatch(setDeckPeek(peek.cardNumber));
+            continue;
+          }
+          case 'GEMOFF': {
+            const [gemPlayerID, gemCardNumber] = (
+              event.eventValue ?? ''
+            ).split(':');
+            if (parseInt(gemPlayerID) !== playerID || !gemCardNumber) continue;
+            toast(
+              (t) => (
+                <MovementEventCard
+                  type="GEMOFF"
+                  cardNumber={gemCardNumber}
+                  isPlayer
+                  caption="Its gem turns back on at the start of the next turn."
+                  onDismiss={() => toast.dismiss(t.id)}
+                />
+              ),
+              { ...MOVEMENT_TOAST_OPTIONS, duration: 7000 }
             );
             continue;
           }

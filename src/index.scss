@@ -300,6 +300,16 @@ body {
   --tooltip-z-index: 10000;
 }
 
+button,
+input[type='submit'],
+input[type='button'],
+input[type='reset'],
+[role='button'] {
+  --primary-focus: transparent;
+  --secondary-focus: transparent;
+  --contrast-focus: transparent;
+}
+
 [data-tooltip]::before {
   box-sizing: border-box;
   width: max-content;

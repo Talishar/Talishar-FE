@@ -4,6 +4,7 @@ import { RootState } from 'app/Store';
 import Displayrow from 'interface/Displayrow';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import styles from './DeckZone.module.css';
+import DeckPeekCard from './DeckPeekCard';
 import { setCardListFocus, clearCardListFocus } from 'features/game/GameSlice';
 import { useTranslation } from 'react-i18next';
 import useManualMode from 'hooks/useManualMode';
@@ -86,6 +87,12 @@ export const DeckZone = React.memo((prop: Displayrow) => {
     layerStyles: baseLayerStyles,
     cardWrapperStyle
   } = useStackedZoneGeometry(safeCount);
+  const deckOffsetStyle = !isMobileOrTablet
+    ? ({
+        '--deckOffsetY': `${baseOffsetY}px`,
+        '--deckOffsetX': `${baseOffsetX}px`
+      } as React.CSSProperties)
+    : undefined;
 
   const shuffleLayerDelays = useMemo(
     () =>
@@ -173,14 +180,7 @@ export const DeckZone = React.memo((prop: Displayrow) => {
           <div
             key={`clashAnimation-${clashRevealTrigger}`}
             className={styles.clashRevealCard}
-            style={
-              !isMobileOrTablet
-                ? ({
-                    '--deckOffsetY': `${baseOffsetY}px`,
-                    '--deckOffsetX': `${baseOffsetX}px`
-                  } as React.CSSProperties)
-                : undefined
-            }
+            style={deckOffsetStyle}
           >
             <CardDisplay
               card={{ cardNumber: clashCard }}
@@ -188,6 +188,12 @@ export const DeckZone = React.memo((prop: Displayrow) => {
               isPlayer={isPlayer}
             />
           </div>
+        )}
+        {isPlayer && (
+          <DeckPeekCard
+            style={deckOffsetStyle}
+            showCountersOnHover={!alwaysShowCounters}
+          />
         )}
       </div>
     </div>

@@ -1449,6 +1449,7 @@
     "CLOSE_POPUP": "Close Popup",
     "DRAG_MOVE_POPUP": "Drag to move popup",
     "ENTER_NUMBER": "Enter a number from {{min}} to {{max}}",
+    "MORE_CHOICES": "More choices",
     "NEW_OPT_BOTTOM": "Bottom",
     "NEW_OPT_FIRST": "FIRST",
     "NEW_OPT_LAST": "LAST",

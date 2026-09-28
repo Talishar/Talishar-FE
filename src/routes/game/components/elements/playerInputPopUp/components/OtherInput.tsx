@@ -1,14 +1,32 @@
-import React, { lazy, Suspense, useEffect } from 'react';
+import React, { lazy, Suspense, useEffect, useState } from 'react';
 import Button from 'features/Button';
 import CardDisplay from '../../cardDisplay/CardDisplay';
 import { NAME_A_CARD } from '../constants';
 import { FormProps } from '../playerInputPopupTypes';
 import { promptShortcutKey, shortcutBlockedByFocus } from '../promptShortcuts';
 import styles from '../PlayerInputPopUp.module.css';
+import { SplitButton } from './SplitButton';
 
 const SearchCardInput = lazy(
   () => import('../../searchCardInput/SearchCardInput')
 );
+
+const groupButtons = (buttons: Button[]): (Button | Button[])[] => {
+  const entries: (Button | Button[])[] = [];
+  for (const button of buttons) {
+    const previous = entries[entries.length - 1];
+    if (
+      button.group &&
+      Array.isArray(previous) &&
+      previous[0].group === button.group
+    ) {
+      previous.push(button);
+    } else {
+      entries.push(button.group ? [button] : button);
+    }
+  }
+  return entries;
+};
 
 export const OtherInput = (props: FormProps) => {
   const {
@@ -24,6 +42,19 @@ export const OtherInput = (props: FormProps) => {
     checkboxes,
     checkBoxSubmit
   } = props;
+
+  const [hint, setHint] = useState<string>();
+  const hints = [
+    ...new Set(
+      (buttons ?? []).flatMap((button) =>
+        button.tooltip ? [button.tooltip] : []
+      )
+    )
+  ];
+
+  useEffect(() => {
+    setHint(undefined);
+  }, [buttons]);
 
   useEffect(() => {
     const shortcuts = new Map<string, Button>();
@@ -93,46 +124,79 @@ export const OtherInput = (props: FormProps) => {
       ) : null}
       {buttons?.length != 0 ? (
         <div className={styles.buttonList}>
-          {buttons?.map((button, ix) => {
+          {groupButtons(buttons ?? []).map((entry, ix) => {
+            if (Array.isArray(entry)) {
+              return (
+                <SplitButton
+                  key={ix.toString()}
+                  buttons={entry}
+                  onClickButton={onClickButton}
+                  onHint={setHint}
+                />
+              );
+            }
             return (
               <button
                 className={styles.buttonDiv}
-                aria-keyshortcuts={promptShortcutKey(id, button)}
+                aria-keyshortcuts={promptShortcutKey(id, entry)}
+                aria-description={entry.tooltip || undefined}
+                onMouseEnter={() => setHint(entry.tooltip)}
+                onMouseLeave={() => setHint(undefined)}
+                onFocus={() => setHint(entry.tooltip)}
+                onBlur={() => setHint(undefined)}
                 onClick={(e) => {
                   e.stopPropagation();
                   e.preventDefault();
-                  onClickButton(button);
+                  onClickButton(entry);
                 }}
                 key={ix.toString()}
               >
-                {button.caption}
+                {entry.caption}
               </button>
             );
           })}
         </div>
       ) : null}
-      <div className={formOptions ? styles.multiChooseActions : undefined}>
-        {formOptions ? (
-          <div>
-            {checkboxes?.length != 0 ? <div>{checkboxes}</div> : null}
-            <button
-              type="button"
-              className={`${styles.buttonDiv} ${styles.multiChooseSubmit}`}
-              disabled={!hasValidSelection}
-              onClick={() => {
-                checkBoxSubmit();
-              }}
+      {hints.length > 0 ? (
+        <div className={styles.buttonHint} aria-live="polite">
+          {hints.map((text) => (
+            <span
+              key={text}
+              className={
+                text === (hint ?? (hints.length === 1 ? hints[0] : undefined))
+                  ? undefined
+                  : styles.buttonHintHidden
+              }
             >
-              {formOptions.caption} - {selectionSummary}
-            </button>
-          </div>
-        ) : null}
-        {id === NAME_A_CARD && (
-          <Suspense fallback={null}>
-            <SearchCardInput />
-          </Suspense>
-        )}
-      </div>
+              {text}
+            </span>
+          ))}
+        </div>
+      ) : null}
+      {formOptions || id === NAME_A_CARD ? (
+        <div className={formOptions ? styles.multiChooseActions : undefined}>
+          {formOptions ? (
+            <div>
+              {checkboxes?.length != 0 ? <div>{checkboxes}</div> : null}
+              <button
+                type="button"
+                className={`${styles.buttonDiv} ${styles.multiChooseSubmit}`}
+                disabled={!hasValidSelection}
+                onClick={() => {
+                  checkBoxSubmit();
+                }}
+              >
+                {formOptions.caption} - {selectionSummary}
+              </button>
+            </div>
+          ) : null}
+          {id === NAME_A_CARD && (
+            <Suspense fallback={null}>
+              <SearchCardInput />
+            </Suspense>
+          )}
+        </div>
+      ) : null}
     </form>
   );
 };

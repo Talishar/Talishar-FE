@@ -11,4 +11,5 @@ export default interface Button {
   fullReload?: boolean;
   inputText?: string;
   cardID?: string;
+  group?: string;
 }
