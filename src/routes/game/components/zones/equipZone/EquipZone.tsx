@@ -4,6 +4,7 @@ import { RootState } from 'app/Store';
 import Displayrow from 'interface/Displayrow';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import DestroyAnimation from '../../elements/destroyAnimation/DestroyAnimation';
+import StackCount from '../../elements/stackCount/StackCount';
 import {
   EquipDestroySlot,
   useEquipDestroy
@@ -37,14 +38,13 @@ export const EquipZone = React.memo(
           <>
             <CardDisplay card={cardToDisplay} isPlayer={isPlayer} />
             {subcardCount > 0 && (
-              <div
+              <StackCount
+                count={subcardCount}
                 className={styles.subcardCounter}
                 title={`${subcardCount} card${
                   subcardCount !== 1 ? 's' : ''
                 } underneath`}
-              >
-                x {subcardCount}
-              </div>
+              />
             )}
           </>
         )}

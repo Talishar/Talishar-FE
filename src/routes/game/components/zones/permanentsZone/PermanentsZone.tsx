@@ -3,6 +3,7 @@ import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import Displayrow from 'interface/Displayrow';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
+import StackCount from '../../elements/stackCount/StackCount';
 import styles from './PermanentsZone.module.css';
 import { Card } from 'features/Card';
 import classNames from 'classnames';
@@ -208,14 +209,13 @@ function PermanentsZone(prop: Displayrow) {
                     gemStackIDs={cardStack.gemStackIDs}
                   />
                   {cardStack.count > 1 && (
-                    <div
+                    <StackCount
+                      count={cardStack.count}
                       title={`Stack of ${cardStack.count}`}
                       className={
                         isPlayer ? styles.counter : styles.counterOpponent
                       }
-                    >
-                      x {cardStack.count}
-                    </div>
+                    />
                   )}
                 </motion.div>
               );

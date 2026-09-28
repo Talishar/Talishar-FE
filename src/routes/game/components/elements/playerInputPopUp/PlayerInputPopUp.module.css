@@ -368,6 +368,29 @@
   align-items: center;
 }
 
+.copyCount {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.copyCountBadge {
+  background-color: var(--near-black);
+  color: var(--theme-text);
+  font-weight: bold;
+  font-size: max(12px, 1.8vh);
+  font-size: max(12px, 1.8dvh);
+  line-height: 1;
+  padding: 4px 9px;
+  border-radius: 10px;
+  white-space: nowrap;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
+}
+
 .hasPromptCards.contentContainer {
   row-gap: 0.4em;
 }

@@ -1,0 +1,17 @@
+.stackCount {
+  position: absolute;
+  z-index: 10;
+  height: 2em;
+  min-width: 2em;
+  width: auto;
+  background-color: var(--near-black);
+  border: var(--theme-border) solid 1px;
+  color: var(--white);
+  border-radius: 5px;
+  font-size: max(8px, 0.75em);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35em;
+}

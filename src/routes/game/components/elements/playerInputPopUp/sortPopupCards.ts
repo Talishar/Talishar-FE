@@ -21,6 +21,13 @@ const SINGLE_ZONE_PHASES = new Set([
 
 const MULTIZONE_PHASES = new Set(['CHOOSEMULTIZONE', 'MAYCHOOSEMULTIZONE']);
 
+const DECK_PICK_PHASES = new Set([
+  'CHOOSEDECK',
+  'MAYCHOOSEDECK',
+  'CHOOSETHEIRDECK',
+  'MAYCHOOSETHEIRDECK'
+]);
+
 const SORTABLE_ZONE = /^((?:MY|THEIR)(?:DISCARD|BANISH|DECK))-\d/;
 const PITCH_SUFFIX = /_(red|yellow|blue)$/;
 const PITCH_ORDER: Record<string, number> = { red: 1, yellow: 2, blue: 3 };
@@ -67,4 +74,41 @@ export const popupCardDisplayOrder = (
     start = end;
   }
   return order;
+};
+
+const deckPickZone = (card: Card, phase: string) => {
+  if (DECK_PICK_PHASES.has(phase)) return phase;
+  if (!MULTIZONE_PHASES.has(phase)) return null;
+  const zone = cardZone(card, phase);
+  return zone === 'MYDECK' || zone === 'THEIRDECK' ? zone : null;
+};
+
+export const stackDeckCopies = (
+  cards: Card[] | undefined,
+  order: number[],
+  phase: string
+): { order: number[]; counts: number[] } => {
+  if (!cards || cards.length < MIN_SORTED_CARDS) {
+    return { order, counts: order.map(() => 1) };
+  }
+
+  const stackedOrder: number[] = [];
+  const counts: number[] = [];
+  let previousZone: string | null = null;
+  for (const index of order) {
+    const zone = deckPickZone(cards[index], phase);
+    const last = stackedOrder.length - 1;
+    if (
+      zone !== null &&
+      zone === previousZone &&
+      cards[stackedOrder[last]].cardNumber === cards[index].cardNumber
+    ) {
+      ++counts[last];
+    } else {
+      stackedOrder.push(index);
+      counts.push(1);
+    }
+    previousZone = zone;
+  }
+  return { order: stackedOrder, counts };
 };

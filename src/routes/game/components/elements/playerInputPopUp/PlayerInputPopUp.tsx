@@ -32,7 +32,7 @@ import classNames from 'classnames';
 import GameState from 'features/GameState';
 import { Card } from 'features/Card';
 import { subcardOverflowStyle } from './subcardOverflow';
-import { popupCardDisplayOrder } from './sortPopupCards';
+import { popupCardDisplayOrder, stackDeckCopies } from './sortPopupCards';
 
 type MultiChooseOption = NonNullable<
   NonNullable<GameState['playerInputPopUp']>['multiChooseText']
@@ -246,34 +246,43 @@ export default function PlayerInputPopUp() {
       normalizedCardText: nextNormalizedCardText
     };
   }, [popupCards]);
-  const displayOrder = useMemo(
-    () => popupCardDisplayOrder(popupCards, turnPhase),
+  const displayEntries = useMemo(
+    () =>
+      stackDeckCopies(
+        popupCards,
+        popupCardDisplayOrder(popupCards, turnPhase),
+        turnPhase
+      ),
     [popupCards, turnPhase]
   );
   const filteredCardEntries = useMemo(() => {
     const cards: Card[] = [];
     const originalIndexes: number[] = [];
-    if (!popupCards) return { cards, originalIndexes };
+    const counts: number[] = [];
+    let copies = 0;
+    if (!popupCards) return { cards, originalIndexes, counts, copies };
 
     const normalizedSearch = showCardSearch
       ? cardSearch.trim().toLocaleLowerCase()
       : '';
-    for (const originalIndex of displayOrder) {
-      const card = popupCards[originalIndex];
+    for (let entry = 0; entry < displayEntries.order.length; entry += 1) {
+      const originalIndex = displayEntries.order[entry];
       if (
         normalizedSearch &&
         !normalizedCardText[originalIndex].includes(normalizedSearch)
       ) {
         continue;
       }
-      cards.push(card);
+      cards.push(popupCards[originalIndex]);
       originalIndexes.push(originalIndex);
+      counts.push(displayEntries.counts[entry]);
+      copies += displayEntries.counts[entry];
     }
 
-    return { cards, originalIndexes };
+    return { cards, originalIndexes, counts, copies };
   }, [
     popupCards,
-    displayOrder,
+    displayEntries,
     normalizedCardText,
     cardSearch,
     showCardSearch
@@ -419,7 +428,7 @@ export default function PlayerInputPopUp() {
               />
               {cardSearch ? (
                 <span className={styles.cardSearchCount} aria-live="polite">
-                  {filteredCardEntries.cards.length} {t('PLAYER_INPUT.OF')}{' '}
+                  {filteredCardEntries.copies} {t('PLAYER_INPUT.OF')}{' '}
                   {popupCardCount}
                 </span>
               ) : null}
@@ -451,6 +460,7 @@ export default function PlayerInputPopUp() {
           <FormDisplay
             cards={filteredCardEntries.cards}
             cardOriginalIndexes={filteredCardEntries.originalIndexes}
+            cardCounts={filteredCardEntries.counts}
             topCards={inputPopUp.popup?.topCards || []}
             bottomCards={inputPopUp.popup?.bottomCards || []}
             buttons={inputPopUp.buttons || []}

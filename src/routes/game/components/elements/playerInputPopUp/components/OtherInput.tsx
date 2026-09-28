@@ -32,6 +32,7 @@ export const OtherInput = (props: FormProps) => {
   const {
     cards,
     cardOriginalIndexes,
+    cardCounts,
     buttons,
     choiceOptions,
     checkedState,
@@ -89,6 +90,7 @@ export const OtherInput = (props: FormProps) => {
 
   const selectCard = cards?.map((card, index) => {
     const originalIndex = cardOriginalIndexes[index] ?? index;
+    const copies = cardCounts[index] ?? 1;
     return choiceOptions == 'checkbox' ? (
       <div
         key={`${card.cardNumber}-${originalIndex}`}
@@ -112,7 +114,13 @@ export const OtherInput = (props: FormProps) => {
         className={styles.cardDiv}
         key={`${card.cardNumber}-${originalIndex}`}
       >
-        <CardDisplay card={card} />
+        <CardDisplay card={card}>
+          {copies > 1 ? (
+            <div className={styles.copyCount}>
+              <span className={styles.copyCountBadge}>×{copies}</span>
+            </div>
+          ) : null}
+        </CardDisplay>
       </div>
     );
   });
