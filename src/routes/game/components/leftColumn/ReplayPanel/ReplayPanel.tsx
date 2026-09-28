@@ -4,6 +4,7 @@ import {
   submitButton,
   getGameInfo,
   setReplayStart,
+  setReplayHideOpponentHand,
   setSpectatorCameraView
 } from 'features/game/GameSlice';
 import { RootState } from 'app/Store';
@@ -123,6 +124,9 @@ function ReplayContent({
   );
   const spectatorCameraView = useAppSelector(
     (state: RootState) => state.game.spectatorCameraView
+  );
+  const hideOpponentHand = useAppSelector(
+    (state: RootState) => !!state.game.replayHideOpponentHand
   );
   const [shareReplay, { isLoading: isSharing }] = useShareReplayMutation();
   const [reloadReplay, { isLoading: isReloadingReplay }] =
@@ -372,6 +376,16 @@ function ReplayContent({
               }
             />
             <span>{t('MATCH_REVIEW.SPACE_ADVANCES_ONE_STEP')}</span>
+          </label>
+          <label className={styles.stepModeToggle}>
+            <input
+              type="checkbox"
+              checked={hideOpponentHand}
+              onChange={(event) =>
+                dispatch(setReplayHideOpponentHand(event.target.checked))
+              }
+            />
+            <span>{t('MATCH_REVIEW.HIDE_OPPONENT_HAND')}</span>
           </label>
           <label className={styles.speedControl}>
             <span>{t('MATCH_REVIEW.PLAYBACK_SPEED')}</span>

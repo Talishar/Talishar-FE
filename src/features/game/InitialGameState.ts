@@ -49,7 +49,8 @@ const InitialGameState: GameState = {
   },
   aiHasInfiniteHP: false,
   practiceDummyWeaponPower: 4,
-  spectatorCameraView: 1
+  spectatorCameraView: 1,
+  replayHideOpponentHand: false
 };
 
 export const OfflineTestingGameState: GameState = {

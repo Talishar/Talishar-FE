@@ -21,7 +21,7 @@ const HandZone = React.memo(function HandZone(prop: Player) {
   const { isPlayer } = prop;
   const dispatch = useAppDispatch();
 
-  const handCards = useAppSelector((state: RootState) => {
+  const revealedHandCards = useAppSelector((state: RootState) => {
     const { playerID, isReplay } = state.game.gameInfo;
     const isP2View =
       (playerID === 3 || isReplay) && state.game.spectatorCameraView === 2;
@@ -33,7 +33,7 @@ const HandZone = React.memo(function HandZone(prop: Player) {
       ? state.game.playerOne.Hand
       : state.game.playerTwo.Hand;
   });
-  const handCardBackNumber = useAppSelector((state: RootState) => {
+  const handCardBack = useAppSelector((state: RootState) => {
     const { playerID, isReplay } = state.game.gameInfo;
     const isP2View =
       (playerID === 3 || isReplay) && state.game.spectatorCameraView === 2;
@@ -44,8 +44,22 @@ const HandZone = React.memo(function HandZone(prop: Player) {
       : isP2View
       ? state.game.playerOne
       : state.game.playerTwo;
-    return handOwner.CardBack?.cardNumber.toLowerCase() ?? 'cardback';
+    return handOwner.CardBack?.cardNumber ?? 'CardBack';
   });
+  const handCardBackNumber = handCardBack.toLowerCase();
+  const hideHand = useAppSelector(
+    (state: RootState) =>
+      !isPlayer &&
+      state.game.gameInfo.isReplay &&
+      !!state.game.replayHideOpponentHand
+  );
+  const handCards = useMemo(
+    () =>
+      hideHand
+        ? revealedHandCards?.map(() => ({ cardNumber: handCardBack }))
+        : revealedHandCards,
+    [hideHand, revealedHandCards, handCardBack]
+  );
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
   );
