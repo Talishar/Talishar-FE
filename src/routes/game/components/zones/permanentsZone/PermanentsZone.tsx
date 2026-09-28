@@ -16,6 +16,7 @@ const PERMANENT_EXIT = {
   opacity: 0,
   transition: { duration: 0.3, ease: 'easeOut' as const }
 };
+const MAX_STACK_LAYERS = 3;
 
 export interface CardStack {
   card: Card;
@@ -162,6 +163,10 @@ function PermanentsZone(prop: Displayrow) {
         <motion.div className={styles.permanentsZone} layout>
           <AnimatePresence>
             {permanents.map((cardStack) => {
+              const stackLayers = Math.min(
+                cardStack.count - 1,
+                MAX_STACK_LAYERS
+              );
               const cardContainerStyles = classNames(
                 {
                   [styles.stacked]: cardStack.count > 1
@@ -177,7 +182,26 @@ function PermanentsZone(prop: Displayrow) {
                   animate={PERMANENT_ANIMATE}
                   exit={PERMANENT_EXIT}
                   layout
+                  style={
+                    stackLayers > 0
+                      ? ({
+                          '--stack-layers': stackLayers
+                        } as React.CSSProperties)
+                      : undefined
+                  }
                 >
+                  {Array.from({ length: stackLayers }, (_, ix) => (
+                    <div
+                      key={ix}
+                      aria-hidden="true"
+                      className={styles.stackLayer}
+                      style={
+                        {
+                          '--stack-depth': stackLayers - ix
+                        } as React.CSSProperties
+                      }
+                    />
+                  ))}
                   <CardDisplay
                     card={cardStack.card}
                     isPlayer={isPlayer}

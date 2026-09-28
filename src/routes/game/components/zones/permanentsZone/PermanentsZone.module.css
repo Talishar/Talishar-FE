@@ -166,8 +166,27 @@
 .stacked {
   display: block;
   aspect-ratio: 1;
+  --stack-offset: 2px;
+  margin-left: calc(var(--stack-layers, 0) * var(--stack-offset));
+}
+
+.stackLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  box-sizing: border-box;
+  border-radius: 7%;
+  border: 1px solid var(--theme-contrastHover);
+  background: #7e7d7d;
+  box-shadow: inset 0 0 2px var(--theme-overlay),
+    1px 1px 2px var(--theme-overlay);
+  transform: translate(
+    calc(var(--stack-depth) * -1 * var(--stack-offset)),
+    calc(var(--stack-depth) * var(--stack-offset) / 2)
+  );
+  pointer-events: none;
 }
 
 .stacked:first-child {
-  margin-left: 1em;
+  margin-left: calc(1em + var(--stack-layers, 0) * var(--stack-offset));
 }
