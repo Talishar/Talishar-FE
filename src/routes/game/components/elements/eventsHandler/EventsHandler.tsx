@@ -246,9 +246,16 @@ export const EventsHandler = React.memo(() => {
             continue;
           }
           case 'PEEK': {
-            const peek = parseCardEvent(event.eventValue, playerID);
-            if (!peek.isPlayer || !peek.cardNumber) continue;
-            dispatch(setDeckPeek(peek.cardNumber));
+            const [viewerID, peekCardNumber, deckOwnerID] = (
+              event.eventValue ?? ''
+            ).split(':');
+            if (parseInt(viewerID) !== playerID || !peekCardNumber) continue;
+            dispatch(
+              setDeckPeek({
+                cardNumber: peekCardNumber,
+                isPlayer: !deckOwnerID || parseInt(deckOwnerID) === playerID
+              })
+            );
             continue;
           }
           case 'GEMOFF': {

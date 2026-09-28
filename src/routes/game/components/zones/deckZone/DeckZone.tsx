@@ -189,12 +189,11 @@ export const DeckZone = React.memo((prop: Displayrow) => {
             />
           </div>
         )}
-        {isPlayer && (
-          <DeckPeekCard
-            style={deckOffsetStyle}
-            showCountersOnHover={!alwaysShowCounters}
-          />
-        )}
+        <DeckPeekCard
+          isPlayer={!!isPlayer}
+          style={deckOffsetStyle}
+          showCountersOnHover={!alwaysShowCounters}
+        />
       </div>
     </div>
   );

@@ -17,21 +17,24 @@ const selectActionSignature = (state: RootState) => [
   state.game.priorityPlayer,
   state.game.playerPrompt,
   state.game.playerInputPopUp,
-  state.game.playerOne.DeckSize
+  state.game.playerOne.DeckSize,
+  state.game.playerTwo.DeckSize
 ];
 
 interface DeckPeekCardProps {
+  isPlayer: boolean;
   style?: React.CSSProperties;
   showCountersOnHover?: boolean;
 }
 
 export default function DeckPeekCard({
+  isPlayer,
   style,
   showCountersOnHover
 }: DeckPeekCardProps) {
   const dispatch = useAppDispatch();
-  const peekCard = useAppSelector(
-    (state: RootState) => state.game.deckPeekCard
+  const peekCard = useAppSelector((state: RootState) =>
+    state.game.deckPeekIsPlayer === isPlayer ? state.game.deckPeekCard : ''
   );
   const peekTrigger = useAppSelector(
     (state: RootState) => state.game.deckPeekTrigger
@@ -76,7 +79,7 @@ export default function DeckPeekCard({
   const onAnimationEnd = (event: React.AnimationEvent<HTMLDivElement>) => {
     if (event.target !== event.currentTarget || !isClosing) return;
     signatureAtPeek.current = null;
-    dispatch(setDeckPeek(''));
+    dispatch(setDeckPeek({ cardNumber: '' }));
   };
 
   return (
@@ -89,12 +92,14 @@ export default function DeckPeekCard({
       style={style}
       onClick={dismiss}
       onAnimationEnd={onAnimationEnd}
-      title="Top of your deck. Only you can see this."
+      title={`Top of ${
+        isPlayer ? 'your' : "your opponent's"
+      } deck. Only you can see this.`}
     >
       <CardDisplay
         card={{ cardNumber: peekCard }}
         showCountersOnHover={showCountersOnHover}
-        isPlayer
+        isPlayer={isPlayer}
       />
       <div className={styles.deckPeekBadge} aria-hidden="true">
         <FaEye />

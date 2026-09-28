@@ -326,6 +326,7 @@ export default function ParseGameState(input: any) {
     clashRevealP2Card: '',
     clashRevealTrigger: 0,
     deckPeekCard: '',
+    deckPeekIsPlayer: true,
     deckPeekTrigger: 0,
     arsenalFlipP1Card: '',
     arsenalFlipP2Card: '',
