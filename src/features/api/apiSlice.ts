@@ -95,10 +95,10 @@ import {
   PromptStatsRange,
   PromptStatsResponse,
   ClearPromptStatsResponse,
-  PuzzleCandidatesRequest,
   PuzzleCandidatesResponse,
   CreatePuzzleGameRequest,
-  CreatePuzzleGameResponse
+  CreatePuzzleGameResponse,
+  VerifyPuzzleCandidatesResponse
 } from 'interface/API/ModPageAPI';
 import { FriendListAPIResponse } from 'interface/API/FriendListAPI.php';
 import {
@@ -712,17 +712,10 @@ export const apiSlice = createApi({
       query: () => postJson(URL_END_POINT.CLEAR_PROMPT_STATS),
       invalidatesTags: ['PromptStats']
     }),
-    getPuzzleCandidates: builder.query<
-      PuzzleCandidatesResponse,
-      PuzzleCandidatesRequest
-    >({
-      query: ({ emptyOpponentHand, raiseLife }) => ({
+    getPuzzleCandidates: builder.query<PuzzleCandidatesResponse, void>({
+      query: () => ({
         url: URL_END_POINT.GET_PUZZLE_CANDIDATES,
         method: 'GET',
-        params: {
-          emptyOpponentHand: emptyOpponentHand ? 1 : 0,
-          raiseLife: raiseLife ? 1 : 0
-        },
         responseHandler: parseResponse
       })
     }),
@@ -731,6 +724,12 @@ export const apiSlice = createApi({
       CreatePuzzleGameRequest
     >({
       query: (body) => postJson(URL_END_POINT.CREATE_PUZZLE_GAME, body)
+    }),
+    verifyPuzzleCandidates: builder.mutation<
+      VerifyPuzzleCandidatesResponse,
+      void
+    >({
+      query: () => postJson(URL_END_POINT.VERIFY_PUZZLE_CANDIDATES)
     }),
     resetAllRustCounters: builder.mutation<ResetAllRustCountersResponse, void>({
       query: () => ({
@@ -1110,6 +1109,7 @@ export const {
   useClearPromptStatsMutation,
   useGetPuzzleCandidatesQuery,
   useCreatePuzzleGameMutation,
+  useVerifyPuzzleCandidatesMutation,
   useResetAllRustCountersMutation,
   useBanPlayerByIPMutation,
   useBanIPDirectMutation,

@@ -438,6 +438,7 @@ export const URL_END_POINT = {
   CLEAR_PROMPT_STATS: 'APIs/ClearPromptStats.php',
   GET_PUZZLE_CANDIDATES: 'APIs/GetPuzzleCandidates.php',
   CREATE_PUZZLE_GAME: 'APIs/CreatePuzzleGame.php',
+  VERIFY_PUZZLE_CANDIDATES: 'APIs/VerifyPuzzleCandidates.php',
   RESET_ALL_RUST_COUNTERS: 'APIs/ResetAllRustCounters.php',
   SEARCH_USERNAMES: 'APIs/SearchUsernames.php',
   BAN_PLAYER: 'BanPlayer.php',

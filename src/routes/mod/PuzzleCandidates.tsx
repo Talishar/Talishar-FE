@@ -1,12 +1,14 @@
-import React, { Fragment, useMemo, useState } from 'react';
+import React, { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   useCreatePuzzleGameMutation,
-  useGetPuzzleCandidatesQuery
+  useGetPuzzleCandidatesQuery,
+  useVerifyPuzzleCandidatesMutation
 } from 'features/api/apiSlice';
 import {
   CreatePuzzleGameResponse,
   PuzzleCandidate,
+  PuzzleCandidatesResponse,
   PuzzleCard,
   PuzzleDifficulty
 } from 'interface/API/ModPageAPI';
@@ -16,7 +18,9 @@ import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import tableStyles from './PromptStats.module.css';
 import styles from './PuzzleCandidates.module.css';
 
-type SortKey = 'score' | 'id' | 'needed';
+type SortKey = 'score' | 'id' | 'opponentLife';
+type ProofFilter = 'proven' | 'all';
+type VerifyState = 'idle' | 'running' | 'failed';
 
 interface ReadyPuzzle extends CreatePuzzleGameResponse {
   candidateId: number;
@@ -32,6 +36,7 @@ const BAD_FLAGS = [
   'SPARE_CARDS',
   'UNPROVEN'
 ];
+const PROOF_FILTERS: ProofFilter[] = ['proven', 'all'];
 
 const playUrl = (gameName: number, playerID: number, authKey: string) =>
   `/game/play/${gameName}?playerID=${playerID}&authKey=${authKey}`;
@@ -44,6 +49,24 @@ const realTurnValues = (row: PuzzleCandidate): Record<string, number> => ({
   blocked: row.realTurn?.blocked ?? 0,
   overkill: row.realTurn?.overkill ?? 0
 });
+
+const isProven = (row: PuzzleCandidate) => row.proof?.status === 'proven';
+
+const proofValues = (row: PuzzleCandidate): Record<string, number> => ({
+  cardsPlayed: row.proof?.cardsPlayed ?? 0,
+  pitched: row.proof?.pitched ?? 0,
+  threatened: row.proof?.threatened ?? 0,
+  blocked: row.proof?.blocked ?? 0,
+  dealt: row.proof?.dealt ?? 0,
+  life: row.opponentLife,
+  realLife: row.realLife
+});
+
+const proofKey = (row: PuzzleCandidate) => {
+  if (!row.hasLine) return 'NO_LINE';
+  if (!row.proof) return 'PENDING';
+  return isProven(row) ? 'PROVEN' : 'FAILED';
+};
 
 const useCardImage = (cardNumber: string) => {
   const { getLanguage } = useLanguageSelector();
@@ -153,6 +176,7 @@ const CardList = ({ label, cards }: { label: string; cards: PuzzleCard[] }) => {
 
 const Details = ({ row }: { row: PuzzleCandidate }) => {
   const { t } = useTranslation();
+  const proof = proofKey(row);
   return (
     <div className={styles.details}>
       <CardList label={t('MOD_PAGE.PUZZLES_YOUR_HAND')} cards={row.hand} />
@@ -192,15 +216,15 @@ const Details = ({ row }: { row: PuzzleCandidate }) => {
               life: row.opponentLife
             })}
           </li>
-          {row.provenSlack !== null && (
-            <li>
-              {row.provenSlack >= 0
-                ? t('MOD_PAGE.PUZZLES_PROVEN', { slack: row.provenSlack })
-                : t('MOD_PAGE.PUZZLES_NOT_PROVEN', {
-                    short: -row.provenSlack
-                  })}
-            </li>
-          )}
+          <li>
+            {proof === 'PROVEN'
+              ? t('MOD_PAGE.PUZZLES_PROOF_DETAIL', proofValues(row))
+              : proof === 'FAILED'
+              ? t('MOD_PAGE.PUZZLES_PROOF_FAILED_DETAIL', {
+                  reason: row.proof?.reason ?? ''
+                })
+              : t(`MOD_PAGE.PUZZLES_PROOF_${proof}_DETAIL`)}
+          </li>
           <li>
             {row.realTurn
               ? t('MOD_PAGE.PUZZLES_REAL_TURN_DETAIL', realTurnValues(row))
@@ -223,22 +247,53 @@ const PuzzleCandidates: React.FC = () => {
   const [query, setQuery] = useState('');
   const [format, setFormat] = useState('');
   const [difficulty, setDifficulty] = useState('');
-  const [emptyOpponentHand, setEmptyOpponentHand] = useState(true);
-  const [raiseLife, setRaiseLife] = useState(true);
-  const [removeDecks, setRemoveDecks] = useState(true);
+  const [proofFilter, setProofFilter] = useState<ProofFilter>('proven');
   const [sortKey, setSortKey] = useState<SortKey>('score');
   const [sortDescending, setSortDescending] = useState(true);
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [creatingId, setCreatingId] = useState<number | null>(null);
   const [ready, setReady] = useState<ReadyPuzzle | null>(null);
 
-  const { data, isFetching, isError } = useGetPuzzleCandidatesQuery({
-    emptyOpponentHand,
-    raiseLife
-  });
+  const { data, isFetching, isError, refetch } = useGetPuzzleCandidatesQuery();
   const [createPuzzleGame] = useCreatePuzzleGameMutation();
+  const [verifyPuzzleCandidates] = useVerifyPuzzleCandidatesMutation();
+  const [verifyState, setVerifyState] = useState<VerifyState>('idle');
+  const [remaining, setRemaining] = useState(0);
+  const verifiedList = useRef<PuzzleCandidatesResponse>();
 
   const candidates = useMemo(() => data?.candidates ?? [], [data]);
+  const pending = data?.pending ?? 0;
+  const provenCount = useMemo(
+    () => candidates.filter(isProven).length,
+    [candidates]
+  );
+
+  useEffect(() => {
+    if (!data || pending === 0 || verifyState !== 'idle') return;
+    if (verifiedList.current === data) return;
+    verifiedList.current = data;
+    setVerifyState('running');
+    setRemaining(pending);
+    const run = async () => {
+      let failed = false;
+      try {
+        for (let left = pending; left > 0; ) {
+          const result = await verifyPuzzleCandidates().unwrap();
+          left = result.remaining;
+          setRemaining(left);
+          if (result.verified === 0) {
+            failed = left > 0;
+            break;
+          }
+        }
+      } catch {
+        failed = true;
+      }
+      setVerifyState(failed ? 'failed' : 'idle');
+      refetch();
+    };
+    run();
+  }, [data, pending, verifyState, verifyPuzzleCandidates, refetch]);
 
   const formats = useMemo(
     () => Array.from(new Set(candidates.map((row) => row.format))).sort(),
@@ -250,6 +305,7 @@ const PuzzleCandidates: React.FC = () => {
     const filtered = candidates.filter((row) => {
       if (format && row.format !== format) return false;
       if (difficulty && row.difficulty !== difficulty) return false;
+      if (proofFilter === 'proven' && !isProven(row)) return false;
       if (!needle) return true;
       return [
         row.heroName,
@@ -263,7 +319,15 @@ const PuzzleCandidates: React.FC = () => {
     return [...filtered].sort(
       (a, b) => (a[sortKey] - b[sortKey]) * direction || b.id - a.id
     );
-  }, [candidates, query, format, difficulty, sortKey, sortDescending]);
+  }, [
+    candidates,
+    query,
+    format,
+    difficulty,
+    proofFilter,
+    sortKey,
+    sortDescending
+  ]);
 
   const handleSort = (key: SortKey) => {
     if (key === sortKey) setSortDescending((value) => !value);
@@ -277,10 +341,7 @@ const PuzzleCandidates: React.FC = () => {
     setCreatingId(candidate.id);
     try {
       const result = await createPuzzleGame({
-        candidateId: candidate.id,
-        emptyOpponentHand,
-        removeDecks,
-        raiseLife
+        candidateId: candidate.id
       }).unwrap();
       setReady({ ...result, candidateId: candidate.id });
     } catch {
@@ -367,30 +428,20 @@ const PuzzleCandidates: React.FC = () => {
             </option>
           ))}
         </select>
-        <label className={tableStyles.toggle}>
-          <input
-            type="checkbox"
-            checked={emptyOpponentHand}
-            onChange={(event) => setEmptyOpponentHand(event.target.checked)}
-          />
-          {t('MOD_PAGE.PUZZLES_EMPTY_OPPONENT_HAND')}
-        </label>
-        <label className={tableStyles.toggle}>
-          <input
-            type="checkbox"
-            checked={raiseLife}
-            onChange={(event) => setRaiseLife(event.target.checked)}
-          />
-          {t('MOD_PAGE.PUZZLES_RAISE_LIFE')}
-        </label>
-        <label className={tableStyles.toggle}>
-          <input
-            type="checkbox"
-            checked={removeDecks}
-            onChange={(event) => setRemoveDecks(event.target.checked)}
-          />
-          {t('MOD_PAGE.PUZZLES_REMOVE_DECKS')}
-        </label>
+        <select
+          className={tableStyles.phaseSelect}
+          value={proofFilter}
+          aria-label={t('MOD_PAGE.PUZZLES_PROOF_FILTER')}
+          onChange={(event) =>
+            setProofFilter(event.target.value as ProofFilter)
+          }
+        >
+          {PROOF_FILTERS.map((value) => (
+            <option key={value} value={value}>
+              {t(`MOD_PAGE.PUZZLES_PROOF_FILTER_${value.toUpperCase()}`)}
+            </option>
+          ))}
+        </select>
       </div>
 
       {ready && (
@@ -416,9 +467,24 @@ const PuzzleCandidates: React.FC = () => {
         <p className={tableStyles.summary}>
           {t('MOD_PAGE.PUZZLES_SUMMARY', {
             total: data.total.toLocaleString(),
-            shown: candidates.length.toLocaleString()
+            shown: candidates.length.toLocaleString(),
+            proven: provenCount.toLocaleString()
           })}
-          {isFetching && (
+          {verifyState === 'running' && (
+            <span className={tableStyles.muted}>
+              {' '}
+              {t('MOD_PAGE.PUZZLES_VERIFYING', {
+                count: remaining.toLocaleString()
+              })}
+            </span>
+          )}
+          {verifyState === 'failed' && (
+            <span className={tableStyles.muted}>
+              {' '}
+              {t('MOD_PAGE.PUZZLES_VERIFY_FAILED')}
+            </span>
+          )}
+          {isFetching && verifyState !== 'running' && (
             <span className={tableStyles.muted}> {t('MOD_PAGE.LOADING')}</span>
           )}
         </p>
@@ -441,10 +507,10 @@ const PuzzleCandidates: React.FC = () => {
               <tr>
                 {sortHeader('score', t('MOD_PAGE.PUZZLES_COL_SCORE'))}
                 <th scope="col">{t('MOD_PAGE.PUZZLES_COL_MATCHUP')}</th>
-                {sortHeader('needed', t('MOD_PAGE.PUZZLES_COL_NEEDED'))}
+                {sortHeader('opponentLife', t('MOD_PAGE.PUZZLES_COL_LIFE'))}
                 <th scope="col">{t('MOD_PAGE.PUZZLES_COL_CARDS')}</th>
                 <th scope="col">{t('MOD_PAGE.PUZZLES_COL_DEFENSE')}</th>
-                <th scope="col">{t('MOD_PAGE.PUZZLES_COL_REAL_TURN')}</th>
+                <th scope="col">{t('MOD_PAGE.PUZZLES_COL_PROOF')}</th>
                 <th scope="col">{t('MOD_PAGE.PUZZLES_COL_FLAGS')}</th>
                 <th scope="col">{t('MOD_PAGE.PUZZLES_COL_FORMAT')}</th>
                 {sortHeader('id', '#')}
@@ -471,13 +537,14 @@ const PuzzleCandidates: React.FC = () => {
                       <HeroCell row={row} />
                     </td>
                     <td className={tableStyles.numeric}>
-                      <span className={styles.score}>{row.needed}</span>
-                      <span className={tableStyles.muted}>
-                        {t('MOD_PAGE.PUZZLES_NEEDED_SPLIT', {
-                          life: row.opponentLife,
-                          block: row.opponentBlock
-                        })}
-                      </span>
+                      <span className={styles.score}>{row.opponentLife}</span>
+                      {row.opponentLife !== row.realLife && (
+                        <span className={tableStyles.muted}>
+                          {t('MOD_PAGE.PUZZLES_LIFE_WAS', {
+                            life: row.realLife
+                          })}
+                        </span>
+                      )}
                     </td>
                     <td>
                       <div className={styles.cardStrip}>
@@ -504,13 +571,15 @@ const PuzzleCandidates: React.FC = () => {
                       })}
                     </td>
                     <td>
-                      {row.realTurn ? (
-                        t(
-                          'MOD_PAGE.PUZZLES_REAL_TURN_SHORT',
-                          realTurnValues(row)
-                        )
+                      {isProven(row) ? (
+                        t('MOD_PAGE.PUZZLES_PROOF_SHORT', proofValues(row))
                       ) : (
-                        <span className={tableStyles.muted}>-</span>
+                        <span
+                          className={tableStyles.muted}
+                          title={row.proof?.reason}
+                        >
+                          {t(`MOD_PAGE.PUZZLES_PROOF_${proofKey(row)}`)}
+                        </span>
                       )}
                     </td>
                     <td>
@@ -538,7 +607,12 @@ const PuzzleCandidates: React.FC = () => {
                         <button
                           type="button"
                           className={styles.button}
-                          disabled={creatingId !== null}
+                          disabled={creatingId !== null || !isProven(row)}
+                          title={
+                            isProven(row)
+                              ? undefined
+                              : t('MOD_PAGE.PUZZLES_PLAY_UNPROVEN')
+                          }
                           onClick={() => handlePlay(row)}
                         >
                           {creatingId === row.id

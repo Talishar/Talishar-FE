@@ -127,6 +127,13 @@ export interface PuzzleRealTurn {
 
 export type PuzzleDifficulty = 'easy' | 'medium' | 'hard';
 
+export interface PuzzleProof extends Partial<PuzzleRealTurn> {
+  status: 'proven' | 'failed';
+  life?: number;
+  realLife?: number;
+  reason?: string;
+}
+
 export interface PuzzleFlag {
   code: string;
   value: number;
@@ -143,8 +150,9 @@ export interface PuzzleCandidate {
   opponentHeroName: string;
   status: number;
   life: number;
+  hasLine: boolean;
   opponentLife: number;
-  lifeBonus: number;
+  realLife: number;
   hand: PuzzleCard[];
   arsenal: PuzzleCard[];
   weapons: PuzzleCard[];
@@ -158,7 +166,7 @@ export interface PuzzleCandidate {
   opponentBlock: number;
   needed: number;
   spareCards: number | null;
-  provenSlack: number | null;
+  proof: PuzzleProof | null;
   estimatedDamage: number;
   estimatedThrough: number;
   estimatedAttacks: number;
@@ -168,22 +176,21 @@ export interface PuzzleCandidate {
   flags: PuzzleFlag[];
 }
 
-export interface PuzzleCandidatesRequest {
-  emptyOpponentHand: boolean;
-  raiseLife: boolean;
-}
-
 export interface PuzzleCandidatesResponse {
   total: number;
+  pending: number;
   candidates: PuzzleCandidate[];
   error?: string;
 }
 
 export interface CreatePuzzleGameRequest {
   candidateId: number;
-  emptyOpponentHand: boolean;
-  removeDecks: boolean;
-  raiseLife: boolean;
+}
+
+export interface VerifyPuzzleCandidatesResponse {
+  verified: number;
+  remaining: number;
+  error?: string;
 }
 
 export interface CreatePuzzleGameResponse {
