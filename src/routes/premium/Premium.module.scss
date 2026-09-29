@@ -27,7 +27,7 @@
   font-size: 1.05rem;
   line-height: 1.6;
   color: var(--theme-text-secondary);
-  max-width: 640px;
+  max-width: 900px;
   margin: 0;
 }
 
@@ -105,17 +105,6 @@
   flex-direction: column;
 }
 
-.recommendedBadge {
-  display: block;
-  margin-top: 0.15rem;
-  color: var(--theme-primary);
-  font-size: 0.68rem;
-  line-height: 1.2;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
 .tierHeader {
   display: flex;
   align-items: center;
@@ -144,6 +133,7 @@
 
 .price {
   margin: 1.25rem 0;
+  text-align: center;
 }
 
 .priceAmount {
@@ -158,28 +148,44 @@
   margin-left: 0.15rem;
 }
 
-.originalPriceLine {
-  display: flex;
+.yearlyPriceRow {
+  display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  margin-top: 0.15rem;
+  justify-content: center;
+  gap: 0.65rem;
+  white-space: nowrap;
 }
 
 .originalPrice {
-  font-size: 0.8rem;
+  font-size: 2rem;
+  font-weight: 700;
   color: var(--theme-text-muted);
-  text-decoration: line-through;
+  line-height: 1;
 }
 
 .discountTag {
-  display: inline-block;
-  font-size: 0.7rem;
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.95rem;
+  line-height: 1;
   background: rgba(76, 175, 80, 0.15);
   color: color-mix(in srgb, #66bb6a 55%, var(--theme-text));
-  padding: 0.15rem 0.4rem;
+  padding: 0.2rem 0.45rem;
   border-radius: 3px;
-  margin-left: 0.35rem;
-  font-weight: 600;
+  font-weight: 700;
+}
+
+.discountedPrice {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.discountedAmount {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--theme-text);
 }
 
 .upgradeBtn {

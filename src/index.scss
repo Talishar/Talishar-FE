@@ -279,6 +279,10 @@ body {
 // Import Pico
 @import '@picocss/pico/scss/pico';
 
+table {
+  margin-bottom: 0;
+}
+
 :root,
 :root[data-theme] {
   --form-element-focus-color: transparent;

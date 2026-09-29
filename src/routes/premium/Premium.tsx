@@ -271,23 +271,25 @@ const Premium = () => {
                   />
                   <div>
                     <div className={styles.tierName}>{tier.name}</div>
-                    {tier.recommended && (
-                      <span className={styles.recommendedBadge}>
-                        {t('PREMIUM_PAGE.RECOMMENDED')}
-                      </span>
-                    )}
                   </div>
                 </div>
                 <div className={styles.price}>
-                  <span className={styles.priceAmount}>{display}</span>
-                  <span className={styles.priceInterval}>{interval}</span>
-                  {original && (
-                    <span className={styles.originalPriceLine}>
-                      <span className={styles.originalPrice}>{original}</span>
+                  {original ? (
+                    <div className={styles.yearlyPriceRow}>
+                      <s className={styles.originalPrice}>{original}</s>
                       <span className={styles.discountTag}>
                         -{Math.round(tier.yearlyDiscount * 100)}%
                       </span>
-                    </span>
+                      <span className={styles.discountedPrice}>
+                        <span className={styles.discountedAmount}>{display}</span>
+                        <span className={styles.priceInterval}>{interval}</span>
+                      </span>
+                    </div>
+                  ) : (
+                    <>
+                      <span className={styles.priceAmount}>{display}</span>
+                      <span className={styles.priceInterval}>{interval}</span>
+                    </>
                   )}
                 </div>
                 <a
