@@ -16,9 +16,10 @@ const CANDIDATE_TOP_SHARE = 0.95;
 const CANDIDATE_OPTION_SHARE = 0.5;
 const INLINE_ANSWERS = 3;
 
-type SortKey = 'count' | 'topShare' | 'identicalShare' | 'avgMs';
+type SortKey = 'count' | 'topShare' | 'identicalShare' | 'avgMs' | 'totalMs';
 
 interface PromptRow extends PromptStat {
+  totalMs: number;
   topShare: number;
   identicalShare: number;
   reasons: string[];
@@ -31,6 +32,12 @@ const percent = (value: number) =>
 const formatAnswer = (answer: string) => answer.replace(/_/g, ' ');
 const formatSeconds = (ms: number) =>
   `${(ms / 1000).toFixed(ms < 10000 ? 1 : 0)}s`;
+const formatDuration = (ms: number) => {
+  const minutes = Math.round(ms / 60000);
+  if (minutes < 1) return formatSeconds(ms);
+  if (minutes < 60) return `${minutes}m`;
+  return `${Math.floor(minutes / 60)}h ${minutes % 60}m`;
+};
 
 const toRow = (prompt: PromptStat): PromptRow => {
   const count = Math.max(prompt.count, 1);
@@ -45,7 +52,13 @@ const toRow = (prompt: PromptStat): PromptRow => {
       reasons.push('SAME_ANSWER');
     if (identicalShare >= CANDIDATE_OPTION_SHARE) reasons.push('IDENTICAL');
   }
-  return { ...prompt, topShare, identicalShare, reasons };
+  return {
+    ...prompt,
+    totalMs: prompt.count * prompt.avgMs,
+    topShare,
+    identicalShare,
+    reasons
+  };
 };
 
 const CardCell = ({ row }: { row: PromptRow }) => {
@@ -115,7 +128,7 @@ const PromptStats: React.FC = () => {
   const [query, setQuery] = useState('');
   const [phase, setPhase] = useState('');
   const [candidatesOnly, setCandidatesOnly] = useState(false);
-  const [sortKey, setSortKey] = useState<SortKey>('count');
+  const [sortKey, setSortKey] = useState<SortKey>('totalMs');
   const [sortDescending, setSortDescending] = useState(true);
 
   const { data, isFetching, isError } = useGetPromptStatsQuery(range);
@@ -319,6 +332,7 @@ const PromptStats: React.FC = () => {
                   t('MOD_PAGE.PROMPTS_COL_IDENTICAL')
                 )}
                 {sortHeader('avgMs', t('MOD_PAGE.PROMPTS_COL_TIME'))}
+                {sortHeader('totalMs', t('MOD_PAGE.PROMPTS_COL_TOTAL'))}
               </tr>
             </thead>
             <tbody>
@@ -349,6 +363,9 @@ const PromptStats: React.FC = () => {
                     {row.identical > 0 ? percent(row.identicalShare) : '-'}
                   </td>
                   <td className={styles.numeric}>{formatSeconds(row.avgMs)}</td>
+                  <td className={styles.numeric}>
+                    {formatDuration(row.totalMs)}
+                  </td>
                 </tr>
               ))}
             </tbody>

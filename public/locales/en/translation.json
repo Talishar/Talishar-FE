@@ -1217,6 +1217,7 @@
     "PROMPTS_COL_IDENTICAL": "Same card",
     "PROMPTS_COL_PROMPT": "Prompt",
     "PROMPTS_COL_TIME": "Avg time",
+    "PROMPTS_COL_TOTAL": "Total time",
     "PROMPTS_CONFIRM_CLEAR": "Delete every logged prompt answer, across all time ranges? This cannot be undone.",
     "PROMPTS_DESCRIPTION": "Every decision prompt players answered by hand, grouped by prompt type and the card that asked. Prompts that almost always get the same answer, or whose options are all the same card, are candidates for an automatic macro. Counts are added when a game ends.",
     "PROMPTS_EMPTY": "No prompts logged in this range yet.",
