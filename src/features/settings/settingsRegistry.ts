@@ -252,6 +252,17 @@ export const SETTINGS_DEFS: SettingDef[] = [
   },
   {
     kind: 'toggle',
+    key: 'requireYesNoAnswer',
+    group: 'matchControls',
+    labelKey: 'SETTINGS.REQUIRE_YES_NO_ANSWER',
+    tooltipKey: 'SETTINGS.REQUIRE_YES_NO_ANSWER_TOOLTIP',
+    storage: 'account',
+    name: optConst.REQUIRE_YES_NO_ANSWER,
+    defaultOn: false,
+    visible: inAMatch
+  },
+  {
+    kind: 'toggle',
     key: 'manualMode',
     group: 'matchControls',
     labelKey: 'SETTINGS.MANUAL_MODE',
