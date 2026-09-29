@@ -35,6 +35,8 @@ export interface Card {
   isOpponent?: boolean; // isOpponent = whether the card belongs to the opponent
   holoCounters?: boolean; // holoCounters = 1 if the card has holographic counters
   goAgain?: boolean; // goAgain = 1 if the card on the layer has go again
+  section?: string; // multi-select popups: heading this card is grouped under
+  limitGroup?: string; // multi-select popups: key into formOptions.groupLimits
 }
 
 const COMMA = 44;

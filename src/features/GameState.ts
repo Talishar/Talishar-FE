@@ -94,6 +94,7 @@ export default interface GameState {
       maxNo: number;
       minNo?: number;
       defaultChecked?: number[];
+      groupLimits?: Record<string, number>;
     };
   };
   playerPreferences?: {

@@ -355,6 +355,21 @@
   row-gap: calc(1vh + var(--subcard-overflow, 0px));
 }
 
+.cardSections {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.cardSectionTitle {
+  margin: 0 0 0.45rem;
+  color: rgba(var(--theme-on-surface-rgb), 0.7);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 .checkBoxRow:last-child {
   padding-bottom: 2vh;
 }
@@ -804,6 +819,7 @@
 
 .buttonHint {
   display: grid;
+  margin-top: 0.25rem;
   color: rgba(var(--theme-on-surface-rgb), 0.55);
   font-size: 0.7rem;
   line-height: 1.35;

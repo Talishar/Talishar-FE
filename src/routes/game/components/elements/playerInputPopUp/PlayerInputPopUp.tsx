@@ -33,6 +33,7 @@ import GameState from 'features/GameState';
 import { Card } from 'features/Card';
 import { subcardOverflowStyle } from './subcardOverflow';
 import { popupCardDisplayOrder, stackDeckCopies } from './sortPopupCards';
+import { withinGroupLimits } from './groupLimits';
 
 type MultiChooseOption = NonNullable<
   NonNullable<GameState['playerInputPopUp']>['multiChooseText']
@@ -308,7 +309,15 @@ export default function PlayerInputPopUp() {
     }
     const minNo = inputPopUp.formOptions?.minNo ?? 0;
     const maxNo = inputPopUp.formOptions?.maxNo ?? checkedState.length;
-    if (selectedCount < minNo || selectedCount > maxNo) {
+    if (
+      selectedCount < minNo ||
+      selectedCount > maxNo ||
+      !withinGroupLimits(
+        inputPopUp.popup?.cards,
+        checkedState,
+        inputPopUp.formOptions?.groupLimits
+      )
+    ) {
       return;
     }
 
@@ -343,17 +352,27 @@ export default function PlayerInputPopUp() {
     if (pos === undefined) {
       return;
     }
+    const cards = inputPopUp.popup?.cards;
+    const groupLimits = inputPopUp.formOptions?.groupLimits;
+    const adding = !checkedState[pos];
+    const group = adding ? cards?.[pos]?.limitGroup : undefined;
+    const swapsInGroup = !!group && groupLimits?.[group] === 1;
+    const updatedCheckedState = checkedState.map((item, index) => {
+      if (index === pos) return !item;
+      return item && !(swapsInGroup && cards?.[index]?.limitGroup === group);
+    });
     const maxNo = inputPopUp.formOptions?.maxNo ?? checkedState.length;
     let selectedCount = 0;
-    for (const checked of checkedState) {
+    for (const checked of updatedCheckedState) {
       if (checked) ++selectedCount;
     }
-    if (!checkedState[pos] && selectedCount >= maxNo) {
+    if (
+      adding &&
+      (selectedCount > maxNo ||
+        !withinGroupLimits(cards, updatedCheckedState, groupLimits))
+    ) {
       return;
     }
-    const updatedCheckedState = checkedState.map((item, index) =>
-      index === pos ? !item : item
-    );
     setCheckedState(updatedCheckedState);
   };
 
