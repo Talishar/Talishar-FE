@@ -70,10 +70,11 @@ function plainText(message: string) {
 }
 
 function computeImportanceClass(message: string) {
+  if (CHAT_RE.test(message)) return undefined;
   const text = plainText(message);
   if (PASS_RE.test(text) || MUTED_COMBAT_END_RE.test(text))
     return styles.logMuted;
-  if (DAMAGE_RE.test(text) && !CHAT_RE.test(message)) return styles.logCritical;
+  if (DAMAGE_RE.test(text)) return styles.logCritical;
   if (ACTION_RE.test(text)) return styles.logAction;
   if (IRREVERSIBLE_RE.test(text)) return styles.logIrreversible;
   return undefined;
