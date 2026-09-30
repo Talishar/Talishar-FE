@@ -1219,6 +1219,10 @@
     "TITLE": "{{subtitle}} - priorité de passage - Espace",
     "WAIT": "ATTENDEZ"
   },
+  "PERMANENTS_ZONE": {
+    "SCROLL_LEFT": "Faire défiler les permanents vers la gauche",
+    "SCROLL_RIGHT": "Faire défiler les permanents vers la droite"
+  },
   "PLAY": {
     "ADVANCE_REPLAY": "Relecture avancée"
   },

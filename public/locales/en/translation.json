@@ -1455,6 +1455,10 @@
     "TITLE_HOLD": "{{subtitle}} - Pass Priority - Space - Hold to auto-pass until end of turn",
     "WAIT": "WAIT"
   },
+  "PERMANENTS_ZONE": {
+    "SCROLL_LEFT": "Scroll permanents left",
+    "SCROLL_RIGHT": "Scroll permanents right"
+  },
   "PLAY": {
     "ADVANCE_REPLAY": "Advance replay"
   },
