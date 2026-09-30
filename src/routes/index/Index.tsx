@@ -37,7 +37,24 @@ const Index = () => {
   useAdScript(showAds);
 
   useEffect(() => {
-    if (!showAds) return;
+    if (!showAds) {
+      document
+        .querySelectorAll(
+          '[id^="reviq-"], [id^="prims_"], [id^="primis"], [class*="primis"], [data-ad="video"]'
+        )
+        .forEach((el) => el.remove());
+      return;
+    }
+
+    document
+      .querySelectorAll(
+        '[id^="reviq-"], [id^="prims_"], [id^="primis"], [class*="primis"], [data-ad="video"]'
+      )
+      .forEach((el) => el.remove());
+
+    const videoDiv = document.createElement('div');
+    videoDiv.setAttribute('data-ad', 'video');
+    document.body.appendChild(videoDiv);
 
     const ANCHOR_SELECTOR = '[data-ad="anchor"]';
     const hideAnchors = () => {

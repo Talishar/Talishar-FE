@@ -1,9 +1,5 @@
 import { useEffect } from 'react';
-import { ADS_ENABLED, isAdFreeRoute, isVideoAdRoute } from 'config/ads';
-import {
-  purgeVideoAdElements,
-  VIDEO_AD_CONTAINER_SELECTOR
-} from 'utils/videoAds';
+import { ADS_ENABLED, isAdFreeRoute } from 'config/ads';
 
 declare global {
   interface Window {
@@ -233,6 +229,8 @@ const CMP_SELECTOR =
   '[id^="fc-"],[id^="sp_message_container"],[id^="qc-cmp"],' +
   '[id*="onetrust"],[id*="didomi"],[id*="CybotCookie"],[id^="truste"],[id*="usercentrics"]';
 
+const VIDEO_AD_CONTAINER_SELECTOR =
+  '[id^="reviq-"], [id^="prims_"], [id^="primis"], [class*="primis"], [data-ad="video"]';
 const VIDEO_AD_DISMISS_SELECTOR =
   '[aria-label*="close" i], [aria-label*="dismiss" i], ' +
   '[title*="close" i], [title*="dismiss" i], ' +
@@ -306,7 +304,7 @@ function lockNonRootBodyChildren() {
       unlockElementTree(h);
       continue;
     }
-    if (isVideoAdRoute(window.location.pathname) && isVideoAdElement(el)) {
+    if (isVideoAdElement(el)) {
       raiseVideoAdElement(h);
       continue;
     }
@@ -322,7 +320,7 @@ function lockNonRootBodyChildren() {
 }
 
 function pinVideoAdAnchor() {
-  if (!document.body || !isVideoAdRoute(window.location.pathname)) return;
+  if (!document.body) return;
   const el = document.body.querySelector(
     ':scope > [data-ad="video"]'
   ) as HTMLElement | null;
@@ -382,7 +380,6 @@ export default function useAdScript(
   allowOnAdFreeRoute = false
 ) {
   const isProtectedRoute = isAdFreeRoute(window.location.pathname);
-  const startedOnVideoAdRoute = isVideoAdRoute(window.location.pathname);
   const shouldLoadProvider =
     enabled && ADS_ENABLED && (!isProtectedRoute || allowOnAdFreeRoute);
 
@@ -438,8 +435,6 @@ export default function useAdScript(
     // Sandbox any ad iframes already present and watch for new ones.
     sandboxAdIframesIn(document);
 
-    purgeVideoAdElements();
-
     // Strip data-google-rewarded from everything except #clearRust on load,
     // then watch for the SDK re-injecting it.
     sweepRewardedAttrs();
@@ -448,7 +443,6 @@ export default function useAdScript(
     lockNonRootBodyChildren();
     pinVideoAdAnchor();
     const overlayInterval = window.setInterval(() => {
-      purgeVideoAdElements();
       lockNonRootBodyChildren();
       pinVideoAdAnchor();
     }, 150);
@@ -458,11 +452,9 @@ export default function useAdScript(
       for (const mutation of mutations) {
         if (mutation.type === 'attributes') {
           stripRewardedAttrsFrom(mutation.target as Element);
-          purgeVideoAdElements(mutation.target as Element);
         } else {
           for (const node of mutation.addedNodes) {
             if (!(node instanceof HTMLElement)) continue;
-            purgeVideoAdElements(node);
             stripRewardedAttrsFrom(node);
             sweepRewardedAttrs(node);
             // Only re-lock when something lands directly on body - React's
@@ -477,7 +469,7 @@ export default function useAdScript(
       childList: true,
       subtree: true,
       attributes: true,
-      attributeFilter: [...REWARDED_ATTRS, 'id', 'class', 'data-ad']
+      attributeFilter: REWARDED_ATTRS
     });
 
     const iframeGuard = new MutationObserver((mutations) => {
@@ -501,15 +493,6 @@ export default function useAdScript(
       domGuard.disconnect();
       iframeGuard.disconnect();
       removeNavGuard();
-      // Removing a script tag does not stop the provider's timers or listeners.
-      // Leave the test page with a fresh document so its player cannot follow
-      // the user into a game or lobby during client-side navigation.
-      if (
-        startedOnVideoAdRoute &&
-        !isVideoAdRoute(window.location.pathname)
-      ) {
-        window.location.reload();
-      }
     };
-  }, [shouldLoadProvider, startedOnVideoAdRoute]);
+  }, [shouldLoadProvider]);
 }

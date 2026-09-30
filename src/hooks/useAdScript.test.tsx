@@ -1,7 +1,6 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { ADS_ENABLED } from 'config/ads';
 import useAdScript from './useAdScript';
-import { installVideoAdGuard, purgeVideoAdElements } from 'utils/videoAds';
 
 describe('ad provider security kill switch', () => {
   afterEach(() => {
@@ -44,12 +43,7 @@ describe('ad provider security kill switch', () => {
 });
 
 describe('video ad hit-area containment', () => {
-  beforeEach(() => {
-    window.history.replaceState({}, '', '/ads-test');
-  });
-
   afterEach(() => {
-    window.history.replaceState({}, '', '/');
     document.body
       .querySelectorAll(':scope > :not(#root)')
       .forEach((element) => {
@@ -103,50 +97,5 @@ describe('video ad hit-area containment', () => {
       'none'
     );
     expect(closeControl.style.getPropertyValue('pointer-events')).toBe('auto');
-  });
-});
-
-describe('video ad suppression outside the test page', () => {
-  it('removes a player added after navigation to a page without the ad hook', async () => {
-    window.history.replaceState({}, '', '/user/settings');
-    const stopGuard = installVideoAdGuard();
-    const video = document.createElement('div');
-    video.id = 'reviq-late-player';
-    document.body.appendChild(video);
-
-    await waitFor(() => expect(document.body.contains(video)).toBe(false));
-    stopGuard();
-    window.history.replaceState({}, '', '/');
-  });
-
-  it('removes a player while preserving a display placement', () => {
-    window.history.replaceState({}, '', '/game/lobby/12345');
-    const wrapper = document.createElement('div');
-    const display = document.createElement('div');
-    const video = document.createElement('div');
-    display.dataset.ad = 'billboard-1';
-    video.setAttribute('data-reviq-sticky-ad', '');
-    wrapper.append(display, video);
-    document.body.appendChild(wrapper);
-
-    purgeVideoAdElements(wrapper);
-
-    expect(wrapper.contains(display)).toBe(true);
-    expect(wrapper.contains(video)).toBe(false);
-    wrapper.remove();
-    window.history.replaceState({}, '', '/');
-  });
-
-  it('allows video on the test page', () => {
-    window.history.replaceState({}, '', '/ads-test');
-    const video = document.createElement('div');
-    video.dataset.ad = 'video';
-    document.body.appendChild(video);
-
-    purgeVideoAdElements();
-
-    expect(document.body.contains(video)).toBe(true);
-    video.remove();
-    window.history.replaceState({}, '', '/');
   });
 });
