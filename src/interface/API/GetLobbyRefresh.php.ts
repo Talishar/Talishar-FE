@@ -16,6 +16,7 @@ export interface GetLobbyRefreshResponse {
   gameDescription?: string;
   gameLog?: string;
   playAudio?: boolean;
+  opponentSeatOccupied?: boolean;
   theirHero?: string;
   theirHeroName?: string;
   theirArena?: ArenaLoadout;
