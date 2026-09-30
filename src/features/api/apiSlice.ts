@@ -98,7 +98,8 @@ import {
   PuzzleCandidatesResponse,
   CreatePuzzleGameRequest,
   CreatePuzzleGameResponse,
-  VerifyPuzzleCandidatesResponse
+  VerifyPuzzleCandidateRequest,
+  VerifyPuzzleCandidateResponse
 } from 'interface/API/ModPageAPI';
 import { FriendListAPIResponse } from 'interface/API/FriendListAPI.php';
 import {
@@ -725,11 +726,11 @@ export const apiSlice = createApi({
     >({
       query: (body) => postJson(URL_END_POINT.CREATE_PUZZLE_GAME, body)
     }),
-    verifyPuzzleCandidates: builder.mutation<
-      VerifyPuzzleCandidatesResponse,
-      void
+    verifyPuzzleCandidate: builder.mutation<
+      VerifyPuzzleCandidateResponse,
+      VerifyPuzzleCandidateRequest
     >({
-      query: () => postJson(URL_END_POINT.VERIFY_PUZZLE_CANDIDATES)
+      query: (body) => postJson(URL_END_POINT.VERIFY_PUZZLE_CANDIDATES, body)
     }),
     resetAllRustCounters: builder.mutation<ResetAllRustCountersResponse, void>({
       query: () => ({
@@ -1109,7 +1110,7 @@ export const {
   useClearPromptStatsMutation,
   useGetPuzzleCandidatesQuery,
   useCreatePuzzleGameMutation,
-  useVerifyPuzzleCandidatesMutation,
+  useVerifyPuzzleCandidateMutation,
   useResetAllRustCountersMutation,
   useBanPlayerByIPMutation,
   useBanIPDirectMutation,

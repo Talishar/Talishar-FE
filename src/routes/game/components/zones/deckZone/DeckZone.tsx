@@ -9,6 +9,7 @@ import { setCardListFocus, clearCardListFocus } from 'features/game/GameSlice';
 import { useTranslation } from 'react-i18next';
 import useManualMode from 'hooks/useManualMode';
 import { usePanelContextOptional } from '../../leftColumn/PanelContext';
+import { useZonePlayerID } from '../../elements/destroyAnimation/useEquipDestroy';
 import {
   useAlwaysShowCounters,
   useStackedZoneGeometry
@@ -44,12 +45,7 @@ export const DeckZone = React.memo((prop: Displayrow) => {
   const addBotDeckPlayerId = useAppSelector(
     (state: RootState) => state.game.addBotDeckPlayerId
   );
-  const playerID = useAppSelector(
-    (state: RootState) => state.game.gameInfo.playerID
-  );
-  const otherPlayerID = useAppSelector((state: RootState) =>
-    state.game.gameInfo.playerID === 1 ? 2 : 1
-  );
+  const currentDeckPlayerID = useZonePlayerID(isPlayer);
   const clashRevealP1Card = useAppSelector(
     (state: RootState) => state.game.clashRevealP1Card
   );
@@ -61,16 +57,11 @@ export const DeckZone = React.memo((prop: Displayrow) => {
   );
 
   const shouldAnimateShuffling =
-    isShuffling &&
-    ((isPlayer && shufflingPlayerId === playerID) ||
-      (!isPlayer && shufflingPlayerId === otherPlayerID));
+    isShuffling && shufflingPlayerId === currentDeckPlayerID;
 
   const shouldAnimateAddBotDeck =
-    addBotDeckPlayerId !== null &&
-    ((isPlayer && addBotDeckPlayerId === playerID) ||
-      (!isPlayer && addBotDeckPlayerId === otherPlayerID));
+    addBotDeckPlayerId !== null && addBotDeckPlayerId === currentDeckPlayerID;
 
-  const currentDeckPlayerID = isPlayer ? playerID : otherPlayerID;
   const clashCard =
     currentDeckPlayerID === 1 ? clashRevealP1Card : clashRevealP2Card;
   const showClash = !!clashCard;

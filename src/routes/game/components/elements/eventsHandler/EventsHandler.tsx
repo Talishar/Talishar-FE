@@ -57,7 +57,10 @@ import {
   clearEquipDestroy
 } from 'features/game/GameSlice';
 import { DESTROY_ANIMATION_DURATION } from '../destroyAnimation/DestroyAnimation';
-import { normalizeEquipSlot } from '../destroyAnimation/useEquipDestroy';
+import {
+  getBottomPlayerID,
+  normalizeEquipSlot
+} from '../destroyAnimation/useEquipDestroy';
 
 // Each destroyed slot animates independently, so every event gets its own
 // handle to clear once its animation is done.
@@ -79,7 +82,7 @@ const parseCardEvent = (
   const colonIndex = raw.indexOf(':');
   if (colonIndex === -1) return { cardNumber: raw, isPlayer: undefined };
   const eventPlayerID = parseInt(raw.slice(0, colonIndex));
-  const viewerID = viewerPlayerID === 2 ? 2 : 1;
+  const viewerID = getBottomPlayerID(viewerPlayerID);
   return {
     cardNumber: raw.slice(colonIndex + 1),
     isPlayer: Number.isNaN(eventPlayerID)

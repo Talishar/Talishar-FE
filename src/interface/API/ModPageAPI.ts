@@ -178,7 +178,6 @@ export interface PuzzleCandidate {
 
 export interface PuzzleCandidatesResponse {
   total: number;
-  pending: number;
   candidates: PuzzleCandidate[];
   error?: string;
 }
@@ -187,9 +186,12 @@ export interface CreatePuzzleGameRequest {
   candidateId: number;
 }
 
-export interface VerifyPuzzleCandidatesResponse {
-  verified: number;
-  remaining: number;
+export interface VerifyPuzzleCandidateRequest {
+  candidateId: number;
+}
+
+export interface VerifyPuzzleCandidateResponse {
+  proof?: PuzzleProof;
   error?: string;
 }
 

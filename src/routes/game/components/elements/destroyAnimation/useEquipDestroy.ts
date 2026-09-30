@@ -22,12 +22,15 @@ const SLOT_ALIASES: Record<string, EquipDestroySlot> = {
 export const normalizeEquipSlot = (slot: string) => SLOT_ALIASES[slot] ?? '';
 
 // playerOne is always the bottom half of the board, so map the absolute
-// controller id coming from the server onto the zone being rendered.
+// controller id coming from the server onto the zone being rendered. The
+// server builds a spectator's board from player 2's side.
+export const getBottomPlayerID = (playerID: number) => (playerID === 1 ? 1 : 2);
+
 export const useZonePlayerID = (isPlayer: boolean) => {
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
   );
-  const bottomPlayerID = playerID === 2 ? 2 : 1;
+  const bottomPlayerID = getBottomPlayerID(playerID);
   return isPlayer ? bottomPlayerID : 3 - bottomPlayerID;
 };
 
