@@ -189,7 +189,12 @@
         EventTarget.prototype.addEventListener = function(type, listener, opts) {
           if (type === 'click' && this.nodeType === 1) {
             var root = document.getElementById('root');
-            if (root && this !== root && root.contains(this)) return;
+            if (
+              root &&
+              this !== root &&
+              root.contains(this) &&
+              !this.closest('[data-allow-click-listeners]')
+            ) return;
           }
           return _origAddEL.call(this, type, listener, opts);
         };

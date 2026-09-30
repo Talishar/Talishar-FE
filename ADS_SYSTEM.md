@@ -171,6 +171,10 @@ The tag reads `data-*` attributes on its own script element as config overrides.
 | `data-destroy-on-host-removal="true"` | Destroy the player when the slot leaves the DOM, then disconnect the tag's body observer |
 | `data-player-api="talisharVideoAdPlayer"` | Hand us the player so `AdStarted`/`AdImpression` reveal the dock even when the ad renders in a cross-origin iframe |
 
+The slot carries `data-allow-click-listeners`. `index.html` silently drops `click` listeners added to elements inside `#root` (so ad SDKs can't wire Talishar's buttons), and without the exemption the player's pause, Stay/Next and mute buttons were dead while its pointer-driven timeline still worked.
+
+The player's volume comes from the tag's own config: it starts "unmuted" at `volume.startValue` 0.001, and unmuting only clears the mute flag, so the speaker icon reads "on" at 0.1% volume. Only dragging the volume slider makes it audible.
+
 `VideoAdDock` is rendered by `Header` and only mounts on `/`, `/game/load`, `/mastery`, `/learn`, `/about` and `/ads-test` (`isVideoAdRoute`). It stays `inert`, transparent and click-through until a video actually plays, so a loading or unfilled player never shows as a blank box or catches clicks. Moving between those pages keeps the same player; leaving them destroys it, and `restartVideoAdTagIfUsed()` re-inserts the tag when a dock mounts again. Desktop has no close button. Mobile (768px wide or less, or a touch-only device) gets a smaller dock with a close button, and closing it hides it until the next full page load.
 
 ---

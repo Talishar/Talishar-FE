@@ -66,7 +66,14 @@ const VideoAdPlayer = ({ onClose }: { onClose: () => void }) => {
           <BsX aria-hidden="true" />
         </button>
       </div>
-      <div id={VIDEO_AD_SLOT_ID} ref={slotRef} className={styles.slot} />
+      {/* index.html drops click listeners added inside #root, which would
+          leave the player's buttons dead. */}
+      <div
+        id={VIDEO_AD_SLOT_ID}
+        ref={slotRef}
+        className={styles.slot}
+        data-allow-click-listeners
+      />
     </div>
   );
 };

@@ -85,6 +85,11 @@ export default function useSupporterStatus(): {
 
   const { data: profileData, isLoading: isProfileLoading } =
     useGetUserProfileQuery(undefined, { skip: skipApiCall });
+  const profileIsSupporter =
+    profileData === undefined
+      ? null
+      : (profileData.isMetafySupporter ?? false) ||
+        (profileData.isPatreonSupporter ?? false);
 
   const [isSupporter, setIsSupporter] = useState<boolean>(
     cached?.isSupporter ?? false
@@ -107,17 +112,31 @@ export default function useSupporterStatus(): {
       return;
     }
 
-    if (!isProfileLoading && profileData !== undefined) {
-      const value =
-        (profileData.isMetafySupporter ?? false) ||
-        (profileData.isPatreonSupporter ?? false);
-      writeCache(value);
-      setIsSupporter(value);
+    if (!isProfileLoading && profileIsSupporter !== null) {
+      writeCache(profileIsSupporter);
+      setIsSupporter(profileIsSupporter);
     }
-  }, [isLoggedIn, isAuthLoading, isProfileLoading, profileData, cacheEpoch]);
+  }, [
+    isLoggedIn,
+    isAuthLoading,
+    isProfileLoading,
+    profileIsSupporter,
+    cacheEpoch
+  ]);
 
   const isLoading = isAuthLoading || (!skipApiCall && isProfileLoading);
-  const showAds = shouldShowAdsForUser(currentUserName, isSupporter, isLoading);
+  // The effect above lands the fetched status in state one commit late, and
+  // the cache it writes can be read by another instance before that. Until
+  // then a supporter would count as ad-eligible, long enough to mount ad units
+  // and load the ad provider, so read the cache and the profile directly.
+  const resolvedIsSupporter = isLoggedIn
+    ? cached?.isSupporter ?? profileIsSupporter ?? isSupporter
+    : isSupporter;
+  const showAds = shouldShowAdsForUser(
+    currentUserName,
+    resolvedIsSupporter,
+    isLoading
+  );
 
-  return { isSupporter, isLoading, showAds };
+  return { isSupporter: resolvedIsSupporter, isLoading, showAds };
 }
