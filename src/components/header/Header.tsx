@@ -25,6 +25,7 @@ import Footer from 'components/footer/Footer';
 import { useGetPendingRequestsQuery } from 'features/api/apiSlice';
 import CookieConsent from 'components/CookieConsent';
 import AdBlockingRecovery from 'components/AdBlockingRecovery';
+import VideoAdDock from 'components/ads/VideoAdDock';
 import SessionRecovery from 'components/SessionRecovery';
 import { AmbientParticles } from 'routes/game/components/elements/ambientParticles/AmbientParticles';
 import { Toaster } from 'react-hot-toast';
@@ -345,6 +346,7 @@ const Header = () => {
       <AmbientParticles variant="global" />
       <CookieConsent />
       <AdBlockingRecovery />
+      <VideoAdDock />
       <SessionRecovery />
     </div>
   );

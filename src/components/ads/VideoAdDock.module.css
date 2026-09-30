@@ -1,0 +1,90 @@
+.dock {
+  position: fixed;
+  right: 1rem;
+  bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+  z-index: 9990;
+  width: 360px;
+  max-width: calc(100vw - 2rem);
+  background: var(--theme-card-background, #1e2329);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.12);
+  border-radius: 5px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms ease;
+}
+
+/* Until a video is actually playing, the dock must not catch a single click,
+   whatever the provider sets on its own elements. */
+.dock:not([data-playing='true']) * {
+  pointer-events: none !important;
+}
+
+.dock[data-playing='true'] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  height: 24px;
+  padding: 0 2px 0 6px;
+}
+
+.removeAds {
+  color: rgba(var(--theme-on-surface-rgb), 0.5) !important;
+  text-decoration: none !important;
+
+  &:hover {
+    color: rgba(var(--theme-on-surface-rgb), 0.8) !important;
+    text-decoration: underline !important;
+  }
+}
+
+.closeButton {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 5px;
+  background: transparent;
+  box-shadow: none;
+  color: rgba(var(--theme-on-surface-rgb), 0.6);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    background: rgba(var(--theme-on-surface-rgb), 0.1);
+    color: rgba(var(--theme-on-surface-rgb), 0.95);
+  }
+}
+
+.slot {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+}
+
+/* Only mobile can close it: small screens, and touch-only devices such as a
+   phone held sideways. */
+@media (max-width: 768px), (hover: none) and (pointer: coarse) {
+  .dock {
+    right: 0.5rem;
+    bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px));
+    width: 240px;
+  }
+
+  .closeButton {
+    display: inline-flex;
+  }
+}

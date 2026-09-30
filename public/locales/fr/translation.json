@@ -1706,6 +1706,10 @@
     "WHITELIST_SELECTED_other": "Liste blanche sélectionnée ({{count}})",
     "WHITELIST_USER_TITLE": "Ajouter ce nom d'utilisateur à la liste blanche"
   },
+  "VIDEO_AD": {
+    "CLOSE": "Fermer la publicité vidéo",
+    "LABEL": "Publicité vidéo"
+  },
   "ZONES": {
     "ACTIVE_LAYERS": "Calques actifs",
     "ARMS": "Bras",

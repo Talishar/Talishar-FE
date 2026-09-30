@@ -14,6 +14,7 @@ import {
   reportPerformanceMetric
 } from 'utils/performanceMetrics';
 import { attemptAssetRecovery } from 'utils/assetRecovery';
+import { installVideoAdTagConfig } from 'utils/videoAds';
 
 import './i18n';
 
@@ -25,6 +26,8 @@ window.addEventListener('vite:preloadError', (event) => {
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const container = document.getElementById('root')!;
 const root = createRoot(container);
+
+installVideoAdTagConfig();
 
 root.render(
   <StrictMode>

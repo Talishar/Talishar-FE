@@ -2016,6 +2016,10 @@
     "WHITELIST_SELECTED_other": "Whitelist Selected ({{count}})",
     "WHITELIST_USER_TITLE": "Whitelist this username"
   },
+  "VIDEO_AD": {
+    "CLOSE": "Close video ad",
+    "LABEL": "Video advertisement"
+  },
   "ZONES": {
     "ACTIVE_LAYERS": "Active Layers",
     "ARMS": "Arms",

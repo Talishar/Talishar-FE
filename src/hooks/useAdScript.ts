@@ -230,7 +230,7 @@ const CMP_SELECTOR =
   '[id*="onetrust"],[id*="didomi"],[id*="CybotCookie"],[id^="truste"],[id*="usercentrics"]';
 
 const VIDEO_AD_CONTAINER_SELECTOR =
-  '[id^="reviq-"], [id^="prims_"], [id^="primis"], [class*="primis"], [data-ad="video"]';
+  '[id^="reviq-"], [id^="prims_"], [id^="primis"], [class*="primis"]';
 const VIDEO_AD_DISMISS_SELECTOR =
   '[aria-label*="close" i], [aria-label*="dismiss" i], ' +
   '[title*="close" i], [title*="dismiss" i], ' +
@@ -317,28 +317,6 @@ function lockNonRootBodyChildren() {
       child.style.setProperty('pointer-events', 'none', 'important');
     });
   }
-}
-
-function pinVideoAdAnchor() {
-  if (!document.body) return;
-  const el = document.body.querySelector(
-    ':scope > [data-ad="video"]'
-  ) as HTMLElement | null;
-  if (!el) return;
-  el.style.setProperty('position', 'fixed', 'important');
-  el.style.setProperty('top', '0', 'important');
-  el.style.setProperty('left', '0', 'important');
-  el.style.setProperty('width', '0', 'important');
-  el.style.setProperty('height', '0', 'important');
-  el.style.setProperty('min-width', '0', 'important');
-  el.style.setProperty('min-height', '0', 'important');
-  el.style.setProperty('max-width', '0', 'important');
-  el.style.setProperty('max-height', '0', 'important');
-  el.style.setProperty('z-index', VIDEO_AD_Z_INDEX, 'important');
-  el.style.setProperty('pointer-events', 'none', 'important');
-  // The provider may mount the floating player inside this zero-sized anchor.
-  // Keep the anchor out of the layout without clipping its fixed descendants.
-  el.style.setProperty('overflow', 'visible', 'important');
 }
 
 function unlockNonRootBodyChildren() {
@@ -441,11 +419,7 @@ export default function useAdScript(
 
     // Immediately lock any non-root body children, then enforce every 150ms.
     lockNonRootBodyChildren();
-    pinVideoAdAnchor();
-    const overlayInterval = window.setInterval(() => {
-      lockNonRootBodyChildren();
-      pinVideoAdAnchor();
-    }, 150);
+    const overlayInterval = window.setInterval(lockNonRootBodyChildren, 150);
 
     const domGuard = new MutationObserver((mutations) => {
       let newBodyChild = false;

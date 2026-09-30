@@ -158,6 +158,23 @@ const REWARDED_ATTRS = ['data-google-rewarded', 'data-google-interstitial'];
 
 ---
 
+## Floating Video Ad (`VideoAdDock.tsx`, `utils/videoAds.ts`)
+
+The video player comes from a VidCrunch (Aniview) tag, `<script id="AV<tagId>" src="...vidcrunch.com/api/adserver/spt?AV_TAGID=...">`, which the provider injects into `<head>`. With no placement config the tag appends its player to the end of `<body>`, which is below the footer. `[data-ad="video"]` divs do nothing: rev.iq has no `video` placement and the tag never looks for them.
+
+The tag reads `data-*` attributes on its own script element as config overrides. `installVideoAdTagConfig()` (called from `src/index.tsx`) watches `<head>`/`<body>` for the tag and sets:
+
+| Attribute | Effect |
+|------|------|
+| `data-pos-selector="#talishar-video-ad"` | Build the player inside the dock's slot |
+| `data-pos-timeout="1000000"` | Keep retrying every 250ms until a dock exists (the default gives up after 10s) |
+| `data-destroy-on-host-removal="true"` | Destroy the player when the slot leaves the DOM, then disconnect the tag's body observer |
+| `data-player-api="talisharVideoAdPlayer"` | Hand us the player so `AdStarted`/`AdImpression` reveal the dock even when the ad renders in a cross-origin iframe |
+
+`VideoAdDock` is rendered by `Header` and only mounts on `/`, `/game/load`, `/mastery`, `/learn`, `/about` and `/ads-test` (`isVideoAdRoute`). It stays `inert`, transparent and click-through until a video actually plays, so a loading or unfilled player never shows as a blank box or catches clicks. Moving between those pages keeps the same player; leaving them destroys it, and `restartVideoAdTagIfUsed()` re-inserts the tag when a dock mounts again. Desktop has no close button. Mobile (768px wide or less, or a touch-only device) gets a smaller dock with a close button, and closing it hides it until the next full page load.
+
+---
+
 ## Key Files
 
 | File | Role |
@@ -165,6 +182,8 @@ const REWARDED_ATTRS = ['data-google-rewarded', 'data-google-interstitial'];
 | `index.html` | `stopImmediatePropagation` override, hash blocking, rewarded slot interception — must run before any other script |
 | `src/hooks/useAdScript.ts` | Rev.iq script injection, pointer-events locking, nav guard, iframe sandboxing, attribute stripping |
 | `src/components/RustCounterPanel/RustCounterPanel.tsx` | "Watch Ad to Clear" button, calls `window._talishar_showRewarded` |
+| `src/utils/videoAds.ts` | VidCrunch tag config overrides and restart |
+| `src/components/ads/VideoAdDock.tsx` | Floating video ad dock on the main pages |
 
 ---
 
@@ -175,3 +194,5 @@ const REWARDED_ATTRS = ['data-google-rewarded', 'data-google-interstitial'];
 - **`isOurClick` (no currentTarget check)** — blocks game's own stopImmediatePropagation, breaks card play
 - **Specific selector targeting** (`ins[id*="gpt_unit"]` etc.) — rev.iq injects with unpredictable IDs; use broad body-child sweep
 - **Setting flag lazily from React** — ad script loads before React mounts; override must be unconditional from page load
+- **Video ad slot in the footer or a zero-size `body > [data-ad="video"]` anchor**: the VidCrunch tag ignores both and lands after the footer, where the overlay lock hides it only some of the time
+- **VidCrunch `data-spa="true"`**: after the first player is destroyed, its body observer reruns the whole tag on every DOM mutation (about 0.2ms per React commit, in games too) for the rest of the session
