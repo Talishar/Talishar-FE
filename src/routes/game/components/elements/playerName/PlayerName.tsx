@@ -2,7 +2,14 @@ import { RootState } from 'app/Store';
 import styles from './PlayerName.module.css';
 import Player from 'interface/Player';
 import { useAppSelector } from 'app/Hooks';
-import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
+import {
+  useState,
+  useRef,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useCallback
+} from 'react';
 import { createPortal } from 'react-dom';
 import {
   useGetHeroMasteryQuery,
@@ -40,6 +47,7 @@ export default function PlayerName(player: Player) {
     left: 0
   });
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const noteButtonRef = useRef<HTMLButtonElement>(null);
 
   const playerID = useAppSelector(
@@ -271,21 +279,36 @@ export default function PlayerName(player: Player) {
   const sentRequestUserId = sentRequestsByUsername.get(playerName);
   const blockedUserId = blockedUsersByUsername.get(playerName);
 
-  // Stable: dropdownRef and setDropdownPosition never change identity
+  // The menu is position: fixed, so it is placed in viewport coordinates:
+  // right-aligned under the name plate, flipped above it when there is no
+  // room below, and clamped so it never leaves the screen.
   const updateDropdownPosition = useCallback(() => {
-    if (dropdownRef.current) {
-      const rect = dropdownRef.current.getBoundingClientRect();
-      const top = rect.bottom + window.scrollY;
-      const left = rect.right + window.scrollX;
-      setDropdownPosition((previous) =>
-        previous.top === top && previous.left === left
-          ? previous
-          : { top, left }
-      );
+    if (!dropdownRef.current) return;
+    const rect = dropdownRef.current.getBoundingClientRect();
+    const menuWidth = menuRef.current?.offsetWidth ?? 220;
+    const menuHeight = menuRef.current?.offsetHeight ?? 0;
+    const margin = 8;
+    const gap = 4;
+    const viewportWidth = document.documentElement.clientWidth;
+    const viewportHeight = window.innerHeight;
+
+    const left = Math.max(
+      margin,
+      Math.min(rect.right - menuWidth, viewportWidth - menuWidth - margin)
+    );
+    let top = rect.bottom + gap;
+    if (top + menuHeight > viewportHeight - margin) {
+      top = Math.max(margin, rect.top - gap - menuHeight);
     }
+
+    setDropdownPosition((previous) =>
+      previous.top === top && previous.left === left
+        ? previous
+        : { top, left }
+    );
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!isDropdownOpen) return;
 
     updateDropdownPosition();
@@ -299,10 +322,13 @@ export default function PlayerName(player: Player) {
       });
     };
 
+    const resizeObserver = new ResizeObserver(scheduleUpdate);
+    if (menuRef.current) resizeObserver.observe(menuRef.current);
     window.addEventListener('scroll', scheduleUpdate, { passive: true });
     window.addEventListener('resize', scheduleUpdate, { passive: true });
     return () => {
       if (frame !== null) cancelAnimationFrame(frame);
+      resizeObserver.disconnect();
       window.removeEventListener('scroll', scheduleUpdate);
       window.removeEventListener('resize', scheduleUpdate);
     };
@@ -418,6 +444,7 @@ export default function PlayerName(player: Player) {
         isDropdownOpen &&
         createPortal(
           <div
+            ref={menuRef}
             className={`${styles.dropdown} ${statusClass}`}
             style={{
               top: `${dropdownPosition.top}px`,
