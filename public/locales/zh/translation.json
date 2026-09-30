@@ -949,6 +949,7 @@
         "BEST_DECK": "寻找环境中最强套牌",
         "CASUAL": "休闲 / 轻松对局",
         "CONTROL": "偏好慢速套牌 (Control)",
+        "EXPERIENCED": "高手对局",
         "DEFAULT": "默认游戏 #",
         "HERO_SELECT": {
           "CLEAR": "清除选择",

@@ -977,6 +977,7 @@
         "BEST_DECK": "À la recherche du meilleur deck du format",
         "CASUAL": "Jeu détendu / casual",
         "CONTROL": "Préfère les decks lents (contrôle)",
+        "EXPERIENCED": "Jeu entre joueurs expérimentés",
         "DEFAULT": "Partie par défaut #",
         "HERO_SELECT": {
           "CLEAR": "Effacer la sélection",

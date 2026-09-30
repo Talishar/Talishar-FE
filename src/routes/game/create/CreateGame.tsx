@@ -1126,6 +1126,9 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                     <option value="Casual / relaxed play">
                       {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.CASUAL')}
                     </option>
+                    <option value="Experienced play">
+                      {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.EXPERIENCED')}
+                    </option>
                     <option value="Looking for a quick game">
                       {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.QUICK')}
                     </option>
