@@ -10,6 +10,7 @@ import classNames from 'classnames';
 import { motion, AnimatePresence } from 'framer-motion';
 import { selectPermanentsAsStack } from '../../../../../features/game/GameSlice';
 import { HiChevronLeft, HiChevronRight } from 'react-icons/hi';
+import { useTranslation } from 'react-i18next';
 
 const PERMANENT_INITIAL = { opacity: 0, x: -100 };
 const PERMANENT_ANIMATE = { opacity: 1, x: 0 };
@@ -28,6 +29,7 @@ export interface CardStack {
 
 function PermanentsZone(prop: Displayrow) {
   const { isPlayer } = prop;
+  const { t } = useTranslation();
   const scrollRef = useRef<HTMLDivElement>(null);
   const isDragging = useRef(false);
   const dragStartX = useRef(0);
@@ -145,7 +147,7 @@ function PermanentsZone(prop: Displayrow) {
         <button
           type="button"
           className={classNames(styles.scrollButton, styles.scrollBack)}
-          aria-label="Scroll permanents left"
+          aria-label={t('PERMANENTS_ZONE.SCROLL_LEFT')}
           disabled={!canScrollLeft}
           onClick={() => scrollByCard(-1)}
         >
@@ -227,7 +229,7 @@ function PermanentsZone(prop: Displayrow) {
         <button
           type="button"
           className={classNames(styles.scrollButton, styles.scrollForward)}
-          aria-label="Scroll permanents right"
+          aria-label={t('PERMANENTS_ZONE.SCROLL_RIGHT')}
           disabled={!canScrollRight}
           onClick={() => scrollByCard(1)}
         >

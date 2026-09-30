@@ -1185,6 +1185,10 @@
     "TITLE": "",
     "WAIT": ""
   },
+  "PERMANENTS_ZONE": {
+    "SCROLL_LEFT": "",
+    "SCROLL_RIGHT": ""
+  },
   "PLAY": {
     "ADVANCE_REPLAY": ""
   },
