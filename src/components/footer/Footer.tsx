@@ -19,7 +19,7 @@ import { reopenCookieConsent } from 'utils/privacyPreferences';
 
 const Footer = () => {
   const { isLoggedIn } = useAuth();
-  const { isSupporter, showAds } = useSupporterStatus();
+  const { isSupporter } = useSupporterStatus();
   const { t } = useTranslation();
 
   return (
@@ -44,11 +44,6 @@ const Footer = () => {
             )}
           </div>
 
-          {showAds && (
-            <div className={styles.adSlot}>
-              <div data-ad="video" />
-            </div>
-          )}
           <div className={styles.rightCol}>
             <div className={styles.navRow}>
               <nav

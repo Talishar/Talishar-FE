@@ -4,3 +4,6 @@ const AD_FREE_ROUTE_RE = /^\/(?:game\/)?play(?:\/|$)/i;
 
 export const isAdFreeRoute = (pathname: string) =>
   AD_FREE_ROUTE_RE.test(pathname);
+
+export const isVideoAdRoute = (pathname: string) =>
+  /^\/ads-test\/?$/i.test(pathname);

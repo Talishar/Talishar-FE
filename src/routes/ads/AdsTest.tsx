@@ -1,20 +1,12 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { AdUnit } from 'components/ads';
+import useAdScript from 'hooks/useAdScript';
 import './AdsTest.css';
 
 const AdsTest: React.FC = () => {
   const { t } = useTranslation();
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.src = '//js.rev.iq/talishar.net';
-    script.async = true;
-    document.head.appendChild(script);
-
-    return () => {
-      document.head.removeChild(script);
-    };
-  }, []);
+  useAdScript();
   return (
     <div className="ads-test-container">
       <header className="ads-test-header">

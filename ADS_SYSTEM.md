@@ -1,5 +1,14 @@
 # Talishar Rewarded Ads System
 
+## Current provider scope
+
+RevIQ display ads retain their existing routes, including the end-game stats.
+Video players are allowed only on `/ads-test`. The home page and shared footer
+no longer create video placements, and `useAdScript` removes provider video
+elements on other routes. Leaving `/ads-test` reloads the destination document
+because removing the provider's script element cannot stop timers and listeners
+it already installed. This prevents a player from carrying into a lobby or game.
+
 ## Overview
 
 Talishar uses rev.iq as an ad management wrapper that loads Google's GPT (Google Publisher Tags) and other demand partners. Non-supporter players accumulate **rust counters** (max 3). When they reach 3, they can watch a rewarded ad to clear them via the **"Watch Ad to Clear"** button in `RustCounterPanel`.
