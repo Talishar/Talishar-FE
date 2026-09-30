@@ -139,6 +139,29 @@ export interface PuzzleFlag {
   value: number;
 }
 
+export interface PuzzleStepCard {
+  id: string;
+  name: string;
+}
+
+export interface PuzzleStep {
+  kind:
+    | 'PLAY'
+    | 'PITCH'
+    | 'ACTIVATE'
+    | 'BLOCK'
+    | 'CHOOSE'
+    | 'DECLINE'
+    | 'OPT'
+    | 'ORDER';
+  cards?: PuzzleStepCard[];
+  top?: PuzzleStepCard[];
+  bottom?: PuzzleStepCard[];
+  from?: string;
+  text?: string;
+  prompt?: string;
+}
+
 export interface PuzzleCandidate {
   id: number;
   createdAt: string;
@@ -167,6 +190,7 @@ export interface PuzzleCandidate {
   needed: number;
   spareCards: number | null;
   proof: PuzzleProof | null;
+  solution: PuzzleStep[] | null;
   estimatedDamage: number;
   estimatedThrough: number;
   estimatedAttacks: number;

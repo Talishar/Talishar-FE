@@ -9,7 +9,9 @@ import {
   CreatePuzzleGameResponse,
   PuzzleCandidate,
   PuzzleCard,
-  PuzzleDifficulty
+  PuzzleDifficulty,
+  PuzzleStep,
+  PuzzleStepCard
 } from 'interface/API/ModPageAPI';
 import { CARD_SQUARES_PATH, getCollectionCardImagePath } from 'utils';
 import { getReadableFormatName } from 'utils/formatUtils';
@@ -50,8 +52,10 @@ const realTurnValues = (row: PuzzleCandidate): Record<string, number> => ({
 
 const isProven = (row: PuzzleCandidate) => row.proof?.status === 'proven';
 
-const canPlay = (row: PuzzleCandidate) =>
-  isProven(row) || (row.hasLine && !row.proof);
+const needsCheck = (row: PuzzleCandidate) => row.hasLine && !row.proof;
+
+const cardNames = (cards: PuzzleStepCard[] = []) =>
+  cards.map((card) => card.name).join(', ');
 
 const proofValues = (row: PuzzleCandidate): Record<string, number> => ({
   cardsPlayed: row.proof?.cardsPlayed ?? 0,
@@ -175,11 +179,64 @@ const CardList = ({ label, cards }: { label: string; cards: PuzzleCard[] }) => {
   );
 };
 
-const Details = ({ row }: { row: PuzzleCandidate }) => {
+const Solution = ({ steps }: { steps: PuzzleStep[] }) => {
+  const { t } = useTranslation();
+  const describe = (step: PuzzleStep): string => {
+    const cards = cardNames(step.cards);
+    switch (step.kind) {
+      case 'PLAY':
+        return step.from
+          ? t('MOD_PAGE.PUZZLES_STEP_PLAY_FROM', {
+              cards,
+              zone: t(`MOD_PAGE.PUZZLES_ZONE_${step.from}`)
+            })
+          : t('MOD_PAGE.PUZZLES_STEP_PLAY', { cards });
+      case 'CHOOSE':
+        return t('MOD_PAGE.PUZZLES_STEP_CHOOSE', {
+          choice: step.cards ? cards : step.text ?? ''
+        });
+      case 'OPT':
+        return t('MOD_PAGE.PUZZLES_STEP_OPT', {
+          top: cardNames(step.top) || t('MOD_PAGE.PUZZLES_NONE'),
+          bottom: cardNames(step.bottom) || t('MOD_PAGE.PUZZLES_NONE')
+        });
+      default:
+        return t(`MOD_PAGE.PUZZLES_STEP_${step.kind}`, { cards });
+    }
+  };
+  return (
+    <div className={`${styles.detailGroup} ${styles.solution}`}>
+      <span className={styles.detailLabel}>
+        {t('MOD_PAGE.PUZZLES_SOLUTION')}
+      </span>
+      <ol className={styles.stepList}>
+        {steps.map((step, index) => (
+          <li key={index}>
+            {describe(step)}
+            {step.prompt && (
+              <span className={tableStyles.muted}> · {step.prompt}</span>
+            )}
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+};
+
+const Details = ({
+  row,
+  checking
+}: {
+  row: PuzzleCandidate;
+  checking: boolean;
+}) => {
   const { t } = useTranslation();
   const proof = proofKey(row);
   return (
     <div className={styles.details}>
+      {isProven(row) && row.solution && row.solution.length > 0 && (
+        <Solution steps={row.solution} />
+      )}
       <CardList label={t('MOD_PAGE.PUZZLES_YOUR_HAND')} cards={row.hand} />
       <CardList
         label={t('MOD_PAGE.PUZZLES_YOUR_ARSENAL')}
@@ -222,9 +279,14 @@ const Details = ({ row }: { row: PuzzleCandidate }) => {
               ? t('MOD_PAGE.PUZZLES_PROOF_DETAIL', proofValues(row))
               : proof === 'FAILED'
               ? t('MOD_PAGE.PUZZLES_PROOF_FAILED_DETAIL', {
-                  reason: row.proof?.reason ?? ''
+                  reason: row.proof?.reason ?? '',
+                  life: row.realLife
                 })
-              : t(`MOD_PAGE.PUZZLES_PROOF_${proof}_DETAIL`)}
+              : checking
+              ? t('MOD_PAGE.PUZZLES_PROOF_CHECKING_DETAIL')
+              : t(`MOD_PAGE.PUZZLES_PROOF_${proof}_DETAIL`, {
+                  life: row.realLife
+                })}
           </li>
           <li>
             {row.realTurn
@@ -258,8 +320,7 @@ const PuzzleCandidates: React.FC = () => {
   const { data, isFetching, isError, refetch } = useGetPuzzleCandidatesQuery();
   const [createPuzzleGame] = useCreatePuzzleGameMutation();
   const [verifyPuzzleCandidate] = useVerifyPuzzleCandidateMutation();
-  const [checking, setChecking] = useState(false);
-  const [notice, setNotice] = useState<string | null>(null);
+  const [checkingId, setCheckingId] = useState<number | null>(null);
 
   const candidates = useMemo(() => data?.candidates ?? [], [data]);
   const provenCount = useMemo(
@@ -309,28 +370,24 @@ const PuzzleCandidates: React.FC = () => {
     }
   };
 
+  const checkLine = async (candidate: PuzzleCandidate) => {
+    if (!needsCheck(candidate)) return;
+    setCheckingId(candidate.id);
+    try {
+      await verifyPuzzleCandidate({ candidateId: candidate.id }).unwrap();
+      await refetch();
+    } catch {
+      // Error will be shown via toast from RTK Query error handler
+    } finally {
+      setCheckingId(null);
+    }
+  };
+
   const handlePlay = async (candidate: PuzzleCandidate) => {
     setCreatingId(candidate.id);
     setReady(null);
-    setNotice(null);
     try {
-      if (!candidate.proof) {
-        setChecking(true);
-        const { proof } = await verifyPuzzleCandidate({
-          candidateId: candidate.id
-        }).unwrap();
-        setChecking(false);
-        refetch();
-        if (proof?.status !== 'proven') {
-          setNotice(
-            t('MOD_PAGE.PUZZLES_CHECK_FAILED', {
-              id: candidate.id,
-              reason: proof?.reason ?? ''
-            })
-          );
-          return;
-        }
-      }
+      await checkLine(candidate);
       const result = await createPuzzleGame({
         candidateId: candidate.id
       }).unwrap();
@@ -338,9 +395,17 @@ const PuzzleCandidates: React.FC = () => {
     } catch {
       // Error will be shown via toast from RTK Query error handler
     } finally {
-      setChecking(false);
       setCreatingId(null);
     }
+  };
+
+  const toggleDetails = (candidate: PuzzleCandidate) => {
+    if (expandedId === candidate.id) {
+      setExpandedId(null);
+      return;
+    }
+    setExpandedId(candidate.id);
+    if (checkingId === null && creatingId === null) checkLine(candidate);
   };
 
   const formatLabel = (code: string) =>
@@ -452,12 +517,6 @@ const PuzzleCandidates: React.FC = () => {
           >
             {t('MOD_PAGE.PUZZLES_OPEN_PUZZLE')}
           </a>
-        </div>
-      )}
-
-      {notice && (
-        <div className={styles.ready} role="status">
-          <span>{notice}</span>
         </div>
       )}
 
@@ -591,27 +650,20 @@ const PuzzleCandidates: React.FC = () => {
                         <button
                           type="button"
                           className={styles.button}
-                          disabled={creatingId !== null || !canPlay(row)}
-                          title={
-                            canPlay(row)
-                              ? undefined
-                              : t('MOD_PAGE.PUZZLES_PLAY_UNPROVEN')
-                          }
+                          disabled={creatingId !== null || checkingId !== null}
                           onClick={() => handlePlay(row)}
                         >
-                          {creatingId !== row.id
-                            ? t('MOD_PAGE.PUZZLES_PLAY')
-                            : checking
+                          {checkingId === row.id
                             ? t('MOD_PAGE.PUZZLES_CHECKING')
-                            : t('MOD_PAGE.PUZZLES_CREATING')}
+                            : creatingId === row.id
+                            ? t('MOD_PAGE.PUZZLES_CREATING')
+                            : t('MOD_PAGE.PUZZLES_PLAY')}
                         </button>
                         <button
                           type="button"
                           className={styles.button}
                           aria-expanded={expandedId === row.id}
-                          onClick={() =>
-                            setExpandedId(expandedId === row.id ? null : row.id)
-                          }
+                          onClick={() => toggleDetails(row)}
                         >
                           {expandedId === row.id
                             ? t('MOD_PAGE.PUZZLES_HIDE_DETAILS')
@@ -623,7 +675,7 @@ const PuzzleCandidates: React.FC = () => {
                   {expandedId === row.id && (
                     <tr className={styles.detailRow}>
                       <td colSpan={10}>
-                        <Details row={row} />
+                        <Details row={row} checking={checkingId === row.id} />
                       </td>
                     </tr>
                   )}

@@ -153,6 +153,25 @@
   list-style: none;
 }
 
+.solution {
+  grid-column: 1 / -1;
+}
+
+.stepList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin: 0;
+  padding-left: 1.4rem;
+  font-size: 0.8rem;
+}
+
+.stepList li {
+  margin: 0;
+  padding: 0;
+  list-style: decimal;
+}
+
 .visuallyHidden {
   position: absolute;
   width: 1px;
