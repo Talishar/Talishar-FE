@@ -38,6 +38,7 @@ import usePlayerPresenceReporter from 'hooks/usePlayerPresenceReporter';
 import useSuppressTouchImageMenu from 'hooks/useSuppressTouchImageMenu';
 import useAdScript, { wasAdProviderLoadedInDocument } from 'hooks/useAdScript';
 import useSupporterStatus from 'hooks/useSupporterStatus';
+import { IN_GAME_ADS_ENABLED } from 'config/ads';
 import {
   CardScaleVariables,
   HeroInfoSync,
@@ -112,7 +113,9 @@ const HeroIntroGate = () => {
 };
 
 function Play() {
-  const needsCleanDocument = useRef(wasAdProviderLoadedInDocument());
+  const needsCleanDocument = useRef(
+    !IN_GAME_ADS_ENABLED && wasAdProviderLoadedInDocument()
+  );
   useLayoutEffect(() => {
     if (needsCleanDocument.current) {
       window.location.reload();
@@ -125,8 +128,13 @@ function Play() {
   const { showAds } = useSupporterStatus();
   const isGameOver = turnPhase === 'OVER';
 
-  // Keep the play route ad-free until the end-game stats are displayed.
-  useAdScript(isGameOver && showAds, true);
+  // During the game only the RightColumn slot may show ads; without it the
+  // play route stays ad-free until the end-game stats are displayed.
+  useAdScript(
+    showAds && (IN_GAME_ADS_ENABLED || isGameOver),
+    true,
+    !isGameOver
+  );
   const { t } = useTranslation();
   usePageTitle(t('PAGES.GAME_PLAY'));
   usePlayerPresenceReporter();

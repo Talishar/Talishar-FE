@@ -179,12 +179,37 @@ The player's volume comes from the tag's own config: it starts "unmuted" at `vol
 
 ---
 
+## In-Game Ad (`InGameAd.tsx`)
+
+The `in-game-block` placement sits under the chat in `RightColumn` on desktop, for non-supporters, when `VITE_IN_GAME_ADS_ENABLED=true`. It was pulled in July 2026 after a malicious creative escaped its slot, so it is fenced in on every side:
+
+| Layer | What it stops |
+|------|------|
+| `.inGameAdBox`: fixed size, `overflow: hidden`, `contain: strict`, `isolation: isolate` | A creative painting, expanding or `position: fixed`-ing itself outside the box. Paint containment makes the box the containing block for fixed descendants too |
+| Placement only mounts when the column is at least `IN_GAME_AD_SIZE` wide | rev.iq rendering a cropped or hidden 250x250. Narrower columns show the member CTA alone |
+| `useAdScript(..., contained = true)` while the game runs | Everything outside `#root` stays hidden, video players included (they are raised on the main pages) |
+| Iframe insertion guard | See below |
+| Navigation guard | See below |
+
+The member CTA sits under the placement, so it shows while the ad loads, when nothing fills, and under an ad blocker. The placement layer is `pointer-events: none` except for iframes, so the CTA stays clickable until a creative lands. `IN_GAME_AD_SIZE` must match the `in-game-block` size in the rev.iq config (`js.rev.iq/talishar.net`).
+
+## Navigation and Iframe Guards (`useAdScript.ts`)
+
+**Navigation guard.** A `navigate` listener on the Navigation API cancels any top-level navigation to a host outside `TRUSTED_HOST_RE` (talishar.net, metafy.gg, patreon.com, fablazing.com). If the user clicked or the page has user activation, the URL opens in a new tab instead, so ad clicks still work but never replace the page. The event only fires for navigations started by this document or a same-origin (friendly) iframe; cross-origin frames are covered by the sandbox.
+
+rev.iq runs its own `navigation-security` module on the same event. Its config has `d` (hosts allowed within `T` ms of a trusted `pointerup`) and `q` (hosts always allowed). Anything Talishar navigates to by script after an `await` (Metafy login, Patreon linking, the Fablazing OAuth redirect) has to be in `q`.
+
+**Iframe insertion guard.** `Node.prototype.appendChild` and `insertBefore` (the only methods GPT uses) are wrapped once and gated by a flag. An ad iframe gets `sandbox` without any `allow-top-navigation*` token before it is connected; an existing provider sandbox only loses those tokens. GPT's own `safeFrame: { sandbox: true }` keeps `allow-top-navigation-by-user-activation`, which lets a click on a malicious SafeFrame replace the page. Nested frames inherit the sandbox, so Prebid and APS creatives rendered inside a GPT friendly iframe are covered too. In contained mode every iframe React did not render counts as an ad iframe.
+
+---
+
 ## Key Files
 
 | File | Role |
 |------|------|
 | `index.html` | `stopImmediatePropagation` override, hash blocking, rewarded slot interception — must run before any other script |
-| `src/hooks/useAdScript.ts` | Rev.iq script injection, pointer-events locking, nav guard, iframe sandboxing, attribute stripping |
+| `src/hooks/useAdScript.ts` | Rev.iq script injection, pointer-events locking, navigation guard, iframe insertion guard, attribute stripping |
+| `src/routes/game/components/rightColumn/InGameAd.tsx` | Contained in-game slot with the member CTA underneath |
 | `src/components/RustCounterPanel/RustCounterPanel.tsx` | "Watch Ad to Clear" button, calls `window._talishar_showRewarded` |
 | `src/utils/videoAds.ts` | VidCrunch tag config overrides and restart |
 | `src/components/ads/VideoAdDock.tsx` | Floating video ad dock on the main pages |
@@ -200,3 +225,6 @@ The player's volume comes from the tag's own config: it starts "unmuted" at `vol
 - **Setting flag lazily from React** — ad script loads before React mounts; override must be unconditional from page load
 - **Video ad slot in the footer or a zero-size `body > [data-ad="video"]` anchor**: the VidCrunch tag ignores both and lands after the footer, where the overlay lock hides it only some of the time
 - **VidCrunch `data-spa="true"`**: after the first player is destroyed, its body observer reruns the whole tag on every DOM mutation (about 0.2ms per React commit, in games too) for the rest of the session
+- **Wrapping `Location.prototype.href`/`assign`/`replace`**: those members are unforgeable own properties of `window.location`, so `Location.prototype` has none of them and the old nav guard was a silent no-op. A cross-origin frame's `top.location = ...` never touches the top window's Location object anyway
+- **Sandboxing ad iframes from a MutationObserver**: sandbox flags are fixed when a frame navigates, and GPT's frames load (or get `document.write`) as soon as they are connected, so a sandbox added afterwards only applies to their next navigation
+- **In-game slot with `overflow: visible`**: the 250x250 creative spilled past the right column, which is narrower than 250px below about 2084x1250

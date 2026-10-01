@@ -13,135 +13,54 @@ const AD_SELECTORS =
   '[id^="reviq-"], [id^="prims_"], [id^="primis"], [class*="primis"],' +
   'div[data-ad]';
 
-// Hosts that are allowed to receive top-level navigation.
-// Relative URLs (no host) are always trusted.
+// Hosts allowed to take over the tab. Everything else Talishar links to opens
+// in a new tab, and so should ad clicks.
 const TRUSTED_HOST_RE =
-  /^(localhost|127\.\d+\.\d+\.\d+|talishar\.net|[a-z0-9-]+\.talishar\.net|metafy\.gg|[a-z0-9-]+\.rev\.iq|[a-z0-9-]+\.revcontent\.com|[a-z0-9-]+\.googlesyndication\.com|[a-z0-9-]+\.doubleclick\.net)$/i;
+  /^(localhost|127\.\d+\.\d+\.\d+|(?:[a-z0-9-]+\.)*talishar\.net|metafy\.gg|(?:www\.)?patreon\.com|(?:www\.)?fablazing\.com)$/i;
 
-const BLOCKED_HASHES = ['#goog_rewarded', '#google_vignette'];
+interface NavigateEventLike extends Event {
+  readonly userInitiated: boolean;
+  readonly destination: { readonly url: string };
+}
 
-function isTrustedNavigation(rawUrl: string): boolean {
-  if (!rawUrl) return true;
-  if (rawUrl.startsWith('javascript:')) return false;
-  if (rawUrl.startsWith('/') || rawUrl.startsWith('?')) return true;
-  if (rawUrl.startsWith('#')) {
-    return !BLOCKED_HASHES.some((h) => rawUrl.startsWith(h));
-  }
+function isTrustedDestination(url: URL): boolean {
+  if (url.protocol === 'blob:' || url.protocol === 'data:') return false;
+  return (
+    url.origin === window.location.origin || TRUSTED_HOST_RE.test(url.hostname)
+  );
+}
+
+// Location's href/assign/replace are unforgeable and cannot be wrapped. The
+// Navigation API sees every top-level navigation started by this document or a
+// same-origin (friendly) ad iframe, and can cancel it.
+function handleNavigate(event: Event) {
+  if (!event.cancelable) return;
+  const { userInitiated, destination } = event as NavigateEventLike;
+  let url: URL;
   try {
-    const url = new URL(rawUrl, window.location.href);
-    if (url.origin === window.location.origin) return true;
-    return TRUSTED_HOST_RE.test(url.hostname);
+    url = new URL(destination.url);
   } catch {
-    return true;
+    return;
+  }
+  if (isTrustedDestination(url)) return;
+  event.preventDefault();
+  if (userInitiated || navigator.userActivation?.isActive) {
+    window.open(url.href, '_blank', 'noopener,noreferrer');
+  } else {
+    console.warn('[Talishar] Ad guard blocked navigation to:', url.href);
   }
 }
 
-let navGuardInstalled = false;
-let savedHrefDescriptor: PropertyDescriptor | null = null;
-let savedAssignDescriptor: PropertyDescriptor | null = null;
-let savedReplaceDescriptor: PropertyDescriptor | null = null;
+function getNavigation(): EventTarget | undefined {
+  return (window as Window & { navigation?: EventTarget }).navigation;
+}
 
 function installNavGuard() {
-  if (navGuardInstalled) return;
-
-  const locProto = window.Location.prototype;
-
-  savedHrefDescriptor =
-    Object.getOwnPropertyDescriptor(locProto, 'href') ?? null;
-  if (savedHrefDescriptor?.set) {
-    const origSet = savedHrefDescriptor.set;
-    try {
-      Object.defineProperty(locProto, 'href', {
-        get: savedHrefDescriptor.get,
-        set(url: string) {
-          if (isTrustedNavigation(url)) {
-            origSet.call(this, url);
-          } else {
-            console.warn('[Talishar] Ad guard blocked navigation to:', url);
-          }
-        },
-        configurable: true,
-        enumerable: savedHrefDescriptor.enumerable
-      });
-    } catch (_) {
-      // Location properties are non-configurable in some browsers.
-    }
-  }
-
-  savedAssignDescriptor =
-    Object.getOwnPropertyDescriptor(locProto, 'assign') ?? null;
-  if (savedAssignDescriptor?.value) {
-    const origAssign = savedAssignDescriptor.value;
-    try {
-      Object.defineProperty(locProto, 'assign', {
-        value(this: Location, url: string) {
-          if (isTrustedNavigation(url)) origAssign.call(this, url);
-          else console.warn('[Talishar] Ad guard blocked assign to:', url);
-        },
-        configurable: true,
-        writable: savedAssignDescriptor.writable,
-        enumerable: savedAssignDescriptor.enumerable
-      });
-    } catch (_) {
-      // Location properties are non-configurable in some browsers.
-    }
-  }
-
-  savedReplaceDescriptor =
-    Object.getOwnPropertyDescriptor(locProto, 'replace') ?? null;
-  if (savedReplaceDescriptor?.value) {
-    const origReplace = savedReplaceDescriptor.value;
-    try {
-      Object.defineProperty(locProto, 'replace', {
-        value(this: Location, url: string) {
-          if (isTrustedNavigation(url)) origReplace.call(this, url);
-          else console.warn('[Talishar] Ad guard blocked replace to:', url);
-        },
-        configurable: true,
-        writable: savedReplaceDescriptor.writable,
-        enumerable: savedReplaceDescriptor.enumerable
-      });
-    } catch (_) {
-      // Location properties are non-configurable in some browsers.
-    }
-  }
-
-  navGuardInstalled = true;
+  getNavigation()?.addEventListener('navigate', handleNavigate);
 }
 
 function removeNavGuard() {
-  if (!navGuardInstalled) return;
-
-  const locProto = window.Location.prototype;
-
-  if (savedHrefDescriptor) {
-    try {
-      Object.defineProperty(locProto, 'href', savedHrefDescriptor);
-    } catch (_) {
-      // Best-effort restoration for browsers with locked Location properties.
-    }
-    savedHrefDescriptor = null;
-  }
-
-  if (savedAssignDescriptor) {
-    try {
-      Object.defineProperty(locProto, 'assign', savedAssignDescriptor);
-    } catch (_) {
-      // Best-effort restoration for browsers with locked Location properties.
-    }
-    savedAssignDescriptor = null;
-  }
-
-  if (savedReplaceDescriptor) {
-    try {
-      Object.defineProperty(locProto, 'replace', savedReplaceDescriptor);
-    } catch (_) {
-      // Best-effort restoration for browsers with locked Location properties.
-    }
-    savedReplaceDescriptor = null;
-  }
-
-  navGuardInstalled = false;
+  getNavigation()?.removeEventListener('navigate', handleNavigate);
 }
 
 function purgeAdElements() {
@@ -177,24 +96,81 @@ export function wasAdProviderLoadedInDocument(): boolean {
   );
 }
 
-// Sandbox an iframe from an ad network so it cannot navigate the top frame.
-// allow-popups-to-escape-sandbox lets ad clicks open a new tab normally.
-// Deliberately omits allow-top-navigation.
-function sandboxAdIframe(iframe: HTMLIFrameElement) {
-  if (iframe.hasAttribute('data-ad-sandboxed')) return;
-  const src = iframe.src || iframe.getAttribute('src') || '';
-  const isAdFrame =
+const AD_IFRAME_SANDBOX =
+  'allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-forms';
+const TOP_NAVIGATION_TOKEN_RE = /(^|\s)allow-top-navigation\S*/g;
+
+// In-game, every iframe Talishar did not render itself belongs to the ad stack.
+let containedMode = false;
+
+function isAdIframe(iframe: HTMLIFrameElement, parent: Node | null): boolean {
+  if (isReactPortalEl(iframe)) return false;
+  if (containedMode) return true;
+  const src = iframe.getAttribute('src') || '';
+  if (
     src.includes('rev.iq') ||
     src.includes('revcontent') ||
-    iframe.id.startsWith('rev-') ||
-    iframe.closest('[data-ad]') !== null ||
-    iframe.closest('[id^="rev-"]') !== null;
-  if (!isAdFrame) return;
-  iframe.setAttribute(
-    'sandbox',
-    'allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-forms'
-  );
-  iframe.setAttribute('data-ad-sandboxed', '1');
+    iframe.id.startsWith('rev-')
+  ) {
+    return true;
+  }
+  const container = parent instanceof Element ? parent : iframe.parentElement;
+  return container?.closest('[data-ad], [id^="rev-"]') != null;
+}
+
+// Sandbox an ad iframe so it cannot navigate the top frame, even on click.
+// allow-popups-to-escape-sandbox lets ad clicks open a new tab normally.
+// A sandbox the provider already set only loses its top-navigation tokens.
+function sandboxAdIframe(
+  iframe: HTMLIFrameElement,
+  parent: Node | null = iframe.parentNode
+) {
+  if (!isAdIframe(iframe, parent)) return;
+  const sandbox = iframe.getAttribute('sandbox');
+  if (sandbox === null) {
+    iframe.setAttribute('sandbox', AD_IFRAME_SANDBOX);
+  } else if (sandbox.includes('allow-top-navigation')) {
+    iframe.setAttribute(
+      'sandbox',
+      sandbox.replace(TOP_NAVIGATION_TOKEN_RE, '').trim()
+    );
+  }
+}
+
+let insertionGuardInstalled = false;
+let insertionGuardActive = false;
+
+// GPT connects creative iframes with appendChild/insertBefore and they start
+// loading at once. Sandbox flags are fixed when a frame navigates, so the
+// sandbox has to be on the iframe before it is connected.
+function installIframeInsertionGuard() {
+  insertionGuardActive = true;
+  if (insertionGuardInstalled) return;
+  insertionGuardInstalled = true;
+
+  const proto = Node.prototype;
+  const originalAppendChild = proto.appendChild;
+  const originalInsertBefore = proto.insertBefore;
+
+  proto.appendChild = function appendChild<T extends Node>(
+    this: Node,
+    node: T
+  ): T {
+    if (insertionGuardActive && node?.nodeName === 'IFRAME') {
+      sandboxAdIframe(node as unknown as HTMLIFrameElement, this);
+    }
+    return originalAppendChild.call(this, node) as T;
+  };
+  proto.insertBefore = function insertBefore<T extends Node>(
+    this: Node,
+    node: T,
+    child: Node | null
+  ): T {
+    if (insertionGuardActive && node?.nodeName === 'IFRAME') {
+      sandboxAdIframe(node as unknown as HTMLIFrameElement, this);
+    }
+    return originalInsertBefore.call(this, node, child) as T;
+  };
 }
 
 function sandboxAdIframesIn(root: Document | Element) {
@@ -304,7 +280,7 @@ function lockNonRootBodyChildren() {
       unlockElementTree(h);
       continue;
     }
-    if (isVideoAdElement(el)) {
+    if (!containedMode && isVideoAdElement(el)) {
       raiseVideoAdElement(h);
       continue;
     }
@@ -355,7 +331,8 @@ function sweepRewardedAttrs(root: Document | Element = document) {
 
 export default function useAdScript(
   enabled = true,
-  allowOnAdFreeRoute = false
+  allowOnAdFreeRoute = false,
+  contained = false
 ) {
   const isProtectedRoute = isAdFreeRoute(window.location.pathname);
   const shouldLoadProvider =
@@ -392,9 +369,11 @@ export default function useAdScript(
       };
     }
 
-    // Install navigation guard before injecting the ad script so any redirect
+    // Install the guards before injecting the ad script so any redirect
     // attempts from the ad network are blocked from the moment the script runs.
+    containedMode = contained;
     installNavGuard();
+    installIframeInsertionGuard();
 
     if (!document.querySelector('script[src="//js.rev.iq/talishar.net"]')) {
       try {
@@ -449,9 +428,10 @@ export default function useAdScript(
     const iframeGuard = new MutationObserver((mutations) => {
       for (const mutation of mutations) {
         for (const node of mutation.addedNodes) {
+          if (!(node instanceof HTMLElement) || isReactPortalEl(node)) continue;
           if (node instanceof HTMLIFrameElement) {
             sandboxAdIframe(node);
-          } else if (node instanceof HTMLElement) {
+          } else {
             sandboxAdIframesIn(node);
           }
         }
@@ -467,6 +447,8 @@ export default function useAdScript(
       domGuard.disconnect();
       iframeGuard.disconnect();
       removeNavGuard();
+      insertionGuardActive = false;
+      containedMode = false;
     };
-  }, [shouldLoadProvider]);
+  }, [shouldLoadProvider, contained]);
 }
