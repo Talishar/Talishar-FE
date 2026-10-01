@@ -31,7 +31,7 @@ export const HelpTooltip = ({ text, placement = 'top' }: HelpTooltipProps) => {
   const showTooltip = (trigger: HTMLElement) => {
     const fullscreenRoot = document.fullscreenElement;
     setPortalRoot(
-      trigger.closest('dialog[open]') ??
+      trigger.closest<HTMLDialogElement>('dialog[open]') ??
         (fullscreenRoot instanceof HTMLElement &&
         fullscreenRoot !== document.documentElement
           ? fullscreenRoot
