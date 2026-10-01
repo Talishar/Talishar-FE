@@ -344,7 +344,7 @@
 .disclaimer {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   flex-wrap: wrap;
   gap: 0.25rem 1rem;
   font-size: 0.9em;
@@ -1056,7 +1056,7 @@
 @media (max-width: 768px) {
   .disclaimer {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     gap: 0.5rem;
   }
 }
