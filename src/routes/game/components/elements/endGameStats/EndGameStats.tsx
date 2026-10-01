@@ -3,6 +3,7 @@ import { Effect } from '../effects/Effects';
 import styles from './EndGameStats.module.css';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import { AdUnit } from 'components/ads';
+import { HelpTooltip } from 'components/Tooltip/HelpTooltip';
 import {
   ReactNode,
   useState,
@@ -662,6 +663,9 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
     const [isExportingImage, setIsExportingImage] = useState(false);
 
     const { t } = useTranslation();
+    const disruptionTooltip = t('END_GAME.INCLUDE_DISRUPTION_TOOLTIP', {
+      value: data.disruptionValuePerCard ?? 0
+    });
 
     const { currentTheme } = useTheme();
     const themeColor = currentTheme.colors.primary;
@@ -1639,23 +1643,23 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
                     </span>
                   </label>
                   {data.disruptionValuePerCard !== undefined && (
-                    <label
-                      className={`${styles.excludeLastTurnLabel} ${styles.disruptionToggle}`}
-                      data-tooltip={t('END_GAME.INCLUDE_DISRUPTION_TOOLTIP', {
-                        value: data.disruptionValuePerCard
-                      })}
-                      data-placement="bottom"
-                    >
-                      <input
-                        type="checkbox"
-                        checked={includeDisruption}
-                        onChange={(e) => setIncludeDisruption(e.target.checked)}
-                        className={styles.excludeLastTurnCheckbox}
+                    <span className={styles.disruptionControl}>
+                      <label className={styles.excludeLastTurnLabel}>
+                        <input
+                          type="checkbox"
+                          checked={includeDisruption}
+                          onChange={(e) => setIncludeDisruption(e.target.checked)}
+                          className={styles.excludeLastTurnCheckbox}
+                        />
+                        <span className={styles.excludeLastTurnText}>
+                          {t('END_GAME.INCLUDE_DISRUPTION')}
+                        </span>
+                      </label>
+                      <HelpTooltip
+                        text={disruptionTooltip}
+                        placement="bottom"
                       />
-                      <span className={styles.excludeLastTurnText}>
-                        {t('END_GAME.INCLUDE_DISRUPTION')}
-                      </span>
-                    </label>
+                    </span>
                   )}
                 </div>
 
@@ -1663,12 +1667,9 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
                 <div className={styles.infoRow}>
                   <span className={styles.infoLabel}>
                     {t('END_GAME.AVG_VALUE_PER_TURN')}
-                    <span
-                      className={styles.tooltipIcon}
-                      data-tooltip={t('END_GAME.AVG_VALUE_PER_TURN_TOOLTIP')}
-                    >
-                      ?
-                    </span>
+                    <HelpTooltip
+                      text={t('END_GAME.AVG_VALUE_PER_TURN_TOOLTIP')}
+                    />
                   </span>
                   <span className={styles.infoValue}>
                     {includeDisruption
@@ -1768,14 +1769,9 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
                   <div className={styles.infoRow}>
                     <span className={styles.infoLabel}>
                       {t('END_GAME.TOTAL_DAMAGE_PREVENTED')}
-                      <span
-                        className={styles.tooltipIcon}
-                        data-tooltip={t(
-                          'END_GAME.TOTAL_DAMAGE_PREVENTED_TOOLTIP'
-                        )}
-                      >
-                        ?
-                      </span>
+                      <HelpTooltip
+                        text={t('END_GAME.TOTAL_DAMAGE_PREVENTED_TOOLTIP')}
+                      />
                     </span>
                     <span className={styles.infoValue}>
                       {stats.totalDamagePrevented}
@@ -2276,14 +2272,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
 
           {/* Turn by Turn Breakdown - Full Width Section */}
           <div className={styles.turnBreakdownSection}>
-            <h2 className={styles.sectionHeader}>
+            <h2
+              className={`${styles.sectionHeader} ${styles.sectionHeaderWithHelp}`}
+            >
               {t('END_GAME.TURN_BY_TURN_BREAKDOWN')}
-              <span
-                className={styles.tooltipIconBreakdown}
-                data-tooltip={t('END_GAME.TURN_BREAKDOWN_TOOLTIP')}
-              >
-                ?
-              </span>
+              <HelpTooltip text={t('END_GAME.TURN_BREAKDOWN_TOOLTIP')} />
             </h2>
             <ScrollableTable>
               <table className={styles.cardTable}>
@@ -2444,7 +2437,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
                     {includeDisruption && (
                       <SortHeader
                         field="cardsDisrupted"
-                        label={t('END_GAME.DISRUPTED')}
+                        label={t('END_GAME.DISRUPTION_VALUE')}
                         sort={turnSort}
                         className={styles.sortableHeader}
                         title={t('END_GAME.CLICK_TO_SORT')}
@@ -2461,6 +2454,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
                 </thead>
                 <tbody>
                   {displayedTurnResults.map((turnData, ix) => {
+                    const disruptedCards = +(turnData.cardsDisrupted ?? 0) || 0;
                     return (
                       <tr
                         key={`turnList${ix}`}
@@ -2518,8 +2512,17 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
                           </td>
                         )}
                         {includeDisruption && (
-                          <td className={styles.pitched}>
-                            {turnData.cardsDisrupted ?? 0}
+                          <td
+                            className={`${styles.pitched} ${styles.disruptionValueCell}`}
+                          >
+                            {disruptedCards * disruptionValue}
+                            {disruptedCards > 0 && (
+                              <small className={styles.disruptedCardCount}>
+                                ({t('END_GAME.DISRUPTED_CARD_COUNT', {
+                                  count: disruptedCards
+                                })})
+                              </small>
+                            )}
                           </td>
                         )}
                         <td className={styles.pitched}>

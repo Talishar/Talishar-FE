@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import LanguageSelector from 'components/LanguageSelector/LanguageSelector';
 import ThemeToggle from 'themes/ThemeToggle';
 import GameStaticInfo from 'features/GameStaticInfo';
+import { HelpTooltip } from 'components/Tooltip/HelpTooltip';
 import styles from './SettingsPanel.module.css';
 import {
   CustomDef,
@@ -44,18 +45,6 @@ interface SettingsPanelProps {
   searchQuery?: string;
 }
 
-const Tooltip = ({ text }: { text: string }) => (
-  <span
-    className={styles.tooltipIcon}
-    data-tooltip={text}
-    data-placement="bottom"
-    role="note"
-    aria-label={text}
-  >
-    ?
-  </span>
-);
-
 const DeviceBadge = () => {
   const { t } = useTranslation();
   return (
@@ -76,7 +65,7 @@ const RowHeader = ({
 }) => (
   <span className={styles.rowLabel}>
     {label}
-    {tooltip && <Tooltip text={tooltip} />}
+    {tooltip && <HelpTooltip text={tooltip} placement="bottom" />}
     {showDeviceBadge && <DeviceBadge />}
   </span>
 );
@@ -345,7 +334,9 @@ const SettingsPanel = ({
         <section key={group.id} className={styles.group}>
           <h4 className={styles.groupTitle}>
             {t(group.labelKey)}
-            {group.tooltipKey && <Tooltip text={t(group.tooltipKey)} />}
+            {group.tooltipKey && (
+              <HelpTooltip text={t(group.tooltipKey)} placement="bottom" />
+            )}
           </h4>
           {defs.map((def) => (
             <SettingRow

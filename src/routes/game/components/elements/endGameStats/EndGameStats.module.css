@@ -96,6 +96,12 @@
   margin: 0 0 0.25rem 0;
 }
 
+.sectionHeaderWithHelp {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .subSectionHeader {
   color: rgba(var(--theme-on-surface-rgb), 0.6);
   font-size: 0.9em;
@@ -143,7 +149,7 @@
 .infoLabel {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 6px;
   color: rgba(var(--theme-on-surface-rgb), 0.7);
   font-weight: 500;
   font-size: 1.1em;
@@ -155,99 +161,6 @@
   font-size: 1.1em;
   text-align: right;
   white-space: nowrap;
-}
-
-.tooltipIcon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.2em;
-  height: 1.2em;
-  border-radius: 50%;
-  background-color: rgba(var(--theme-on-surface-rgb), 0.15);
-  color: rgba(var(--theme-on-surface-rgb), 0.6);
-  font-size: 0.7em;
-  font-weight: 600;
-  cursor: help;
-  position: relative;
-  transition: background-color 0.2s, color 0.2s;
-  margin-left: -0.5em;
-  margin-top: 0em;
-  align-self: flex-start;
-}
-
-.tooltipIcon:hover {
-  background-color: var(--theme-primary);
-  color: var(--near-black);
-}
-
-.tooltipIconBreakdown {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.2em;
-  height: 1.2em;
-  border-radius: 50%;
-  background-color: rgba(var(--theme-on-surface-rgb), 0.15);
-  color: rgba(var(--theme-on-surface-rgb), 0.6);
-  font-size: 0.7em;
-  font-weight: 600;
-  cursor: help;
-  position: relative;
-  transition: background-color 0.2s, color 0.2s;
-  margin-left: 0.5em;
-  align-self: flex-start;
-}
-
-.tooltipIconBreakdown:hover {
-  background-color: var(--theme-primary);
-  color: var(--near-black);
-}
-
-.tooltipIcon[data-tooltip]::before,
-.tooltipIcon[data-tooltip]::after,
-.tooltipIconBreakdown[data-tooltip]::before,
-.tooltipIconBreakdown[data-tooltip]::after {
-  position: absolute;
-  z-index: 1000;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  margin-bottom: 0.5em;
-  font-size: 1.2em;
-}
-
-.tooltipIcon[data-tooltip]::before,
-.tooltipIconBreakdown[data-tooltip]::before {
-  content: attr(data-tooltip);
-  padding: 0.5em 0.75em;
-  border-radius: 5px;
-  font-weight: 400;
-  max-width: 400px;
-  width: max-content;
-  white-space: normal;
-  word-wrap: break-word;
-}
-
-.tooltipIcon[data-tooltip]::after,
-.tooltipIconBreakdown[data-tooltip]::after {
-  content: '';
-  border: 5px solid transparent;
-  bottom: calc(100% - 5px);
-  margin-bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.tooltipIcon:hover[data-tooltip]::before,
-.tooltipIcon:hover[data-tooltip]::after,
-.tooltipIconBreakdown:hover[data-tooltip]::before,
-.tooltipIconBreakdown:hover[data-tooltip]::after {
-  opacity: 1;
-  pointer-events: auto;
 }
 
 .heroPortraitsContainer {
@@ -469,6 +382,16 @@
   text-align: center;
   border-bottom: 1px solid rgba(var(--theme-on-surface-rgb), 0);
   font-size: 1.1em;
+}
+
+.disruptionValueCell {
+  white-space: nowrap;
+}
+
+.disruptedCardCount {
+  margin-left: 0.35em;
+  color: rgba(var(--theme-on-surface-rgb), 0.7);
+  font-size: 0.75em;
 }
 
 .card {
@@ -1037,20 +960,11 @@
   user-select: none;
 }
 
-.disclaimer .disruptionToggle {
-  border-bottom: none;
-  cursor: pointer;
-}
-
-.disruptionToggle[data-tooltip]::before {
-  width: min(320px, 80vw);
-  text-align: left;
-  white-space: normal;
-}
-
-.disruptionToggle[data-tooltip]:focus-within::before,
-.disruptionToggle[data-tooltip]:focus-within::after {
-  opacity: 1;
+.disruptionControl {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
 }
 
 @media (max-width: 768px) {

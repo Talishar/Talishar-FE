@@ -151,7 +151,7 @@
 .groupTitle {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 6px;
   margin: 0 0 0.25rem;
   padding: 0;
   line-height: 1.2;
@@ -206,30 +206,10 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 0.4rem;
+  gap: 6px;
   font-size: 0.92rem;
   line-height: 1.35;
   color: var(--theme-text);
-}
-
-.tooltipIcon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 16px;
-  height: 16px;
-  min-width: 16px;
-  border-radius: 50%;
-  border: 1.5px solid rgba(var(--theme-on-surface-rgb), 0.4);
-  font-size: 0.65em;
-  font-weight: 700;
-  color: rgba(var(--theme-on-surface-rgb), 0.65);
-  cursor: help;
-}
-
-.tooltipIcon:hover {
-  border-color: var(--theme-primary);
-  color: var(--theme-primary);
 }
 
 .deviceBadge {

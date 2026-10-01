@@ -1,0 +1,56 @@
+span.icon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 16px;
+  box-sizing: border-box;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(var(--theme-on-surface-rgb), 0.15);
+  color: rgba(var(--theme-on-surface-rgb), 0.7);
+  line-height: 1;
+  vertical-align: middle;
+  cursor: help;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.icon svg {
+  display: block;
+  width: 8px;
+  height: 8px;
+}
+
+.icon:hover,
+.icon:focus-visible {
+  background: var(--theme-primary);
+  color: var(--near-black);
+}
+
+.icon:focus-visible {
+  outline: 2px solid var(--theme-primary);
+  outline-offset: 2px;
+}
+
+.tooltip {
+  z-index: 2147483647;
+  box-sizing: border-box;
+  width: max-content;
+  max-width: var(--tooltip-max-width);
+  padding: var(--tooltip-padding);
+  border: var(--tooltip-border-width) solid var(--tooltip-border-color);
+  border-radius: var(--tooltip-border-radius);
+  background: var(--tooltip-background-color);
+  color: var(--tooltip-color);
+  box-shadow: var(--tooltip-shadow);
+  font-size: var(--tooltip-font-size);
+  font-weight: var(--tooltip-font-weight);
+  line-height: var(--tooltip-line-height);
+  text-align: left;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  pointer-events: none;
+}
