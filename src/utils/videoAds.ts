@@ -1,3 +1,5 @@
+import { trackVideoAdPlayer } from 'utils/adAnalytics';
+
 export const VIDEO_AD_SLOT_ID = 'talishar-video-ad';
 export const VIDEO_AD_STARTED_EVENT = 'talishar:video-ad-started';
 
@@ -34,6 +36,7 @@ function onVideoAdPlayerCreated(_config: unknown, player: VideoAdPlayer) {
   };
   player?.on?.('AdStarted', notifyStarted);
   player?.on?.('AdImpression', notifyStarted);
+  trackVideoAdPlayer(player);
 }
 
 function configureVideoTag(node: Node) {

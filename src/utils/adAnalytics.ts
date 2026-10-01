@@ -22,6 +22,10 @@ interface GoogleTag {
   };
 }
 
+interface VideoAdPlayer {
+  on?: (event: string, callback: () => void) => void;
+}
+
 interface PrebidBid {
   adUnitCode?: string;
   bidderCode?: string;
@@ -85,10 +89,21 @@ const PAGE_KEYS: Array<[RegExp, string]> = [
 const noop = () => undefined;
 const UNTRACKED_PAGE_RE = /^\/(?:mod|ads-test)(?:\/|$)/i;
 const SLOT_ID_RE = /^ad_(.+)_(\d+)$/;
+const REWARDED_PATH_RE = /reward/i;
+const VIDEO_PLACEMENT = 'video';
+const REWARDED_PLACEMENT = 'rewarded';
+const VIDEO_PLAYER_EVENTS: Array<[string, number | string]> = [
+  ['InventoryRequest', REQUESTS],
+  ['AdImpression', FILLED],
+  ['AdViewableImpression', VIEWABLE],
+  ['AdClickThru', CLICKS],
+  ['AdVideoComplete', 'complete']
+];
 
 const slotCounters = new Map<string, number[]>();
 const pageCounters = new Map<string, number[]>();
 const bidderCounters = new Map<string, number[]>();
+const eventCounters = new Map<string, number[]>();
 const trackers = new Map<Element, SlotTracker>();
 const bestBids = new Map<string, number>();
 
@@ -130,16 +145,7 @@ function cleanPlacement(value: string): string | null {
   return /^[a-z0-9]/.test(placement) ? placement : null;
 }
 
-function placementFromSlotId(id: string): string | null {
-  const match = SLOT_ID_RE.exec(id);
-  if (!match) return null;
-  const index = Number(match[2]);
-  return cleanPlacement(index > 0 ? `${match[1]}#${index + 1}` : match[1]);
-}
-
 function placementFromElement(el: Element): string | null {
-  const fromId = placementFromSlotId(el.id);
-  if (fromId) return fromId;
   const code = el.getAttribute('data-ad');
   if (!code) return null;
   const index = Array.from(
@@ -148,10 +154,20 @@ function placementFromElement(el: Element): string | null {
   return cleanPlacement(index > 0 ? `${code}#${index + 1}` : code);
 }
 
+function placementFromSlotId(id: string): string | null {
+  const el = document.getElementById(id);
+  const fromElement = el && placementFromElement(el);
+  if (fromElement) return fromElement;
+  const match = SLOT_ID_RE.exec(id);
+  return match ? cleanPlacement(match[1]) : null;
+}
+
 function placementFromSlot(slot: GptSlot): string | null {
+  const path = slot.getAdUnitPath();
+  if (REWARDED_PATH_RE.test(path)) return REWARDED_PLACEMENT;
   return (
     placementFromSlotId(slot.getSlotElementId()) ??
-    cleanPlacement(slot.getAdUnitPath().split('/').pop() ?? '')
+    cleanPlacement(path.split('/').pop() ?? '')
   );
 }
 
@@ -184,6 +200,15 @@ function bidderRow(bidder: string): number[] {
   return counters(bidderCounters, `${bidder}\t${currentDevice()}`, 3);
 }
 
+function countEvent(placement: string, event: string) {
+  if (!currentPage) return;
+  counters(
+    eventCounters,
+    `${currentPage}\t${placement}\t${currentDevice()}\t${event}`,
+    1
+  )[0] += 1;
+}
+
 function accruePage(now: number) {
   if (currentPage && pageVisible) {
     pageRow(currentPage)[PAGE_VISIBLE_MS] += now - pageSince;
@@ -196,10 +221,21 @@ class SlotTracker {
   seen = false;
   seenCounted = false;
   inView = false;
+  hasBox = false;
   since = Date.now();
   pendingMs = 0;
+  placement: string | null = null;
 
-  constructor(readonly el: Element, readonly page: string) {}
+  constructor(readonly el: Element, readonly page: string) {
+    this.measure();
+  }
+
+  measure(rect?: DOMRectReadOnly) {
+    if (!rect && !this.el.isConnected) return;
+    const box = rect ?? this.el.getBoundingClientRect();
+    if (box.width > 0 && box.height > 0) this.hasBox = true;
+    if (this.el.isConnected) this.placement = placementFromElement(this.el);
+  }
 
   accrue(now: number) {
     if (this.inView && pageVisible) this.pendingMs += now - this.since;
@@ -214,10 +250,9 @@ class SlotTracker {
 
   settle(now: number) {
     this.accrue(now);
-    if (!gptReady) return;
-    const placement = placementFromElement(this.el);
-    if (!placement) return;
-    const row = slotRow(this.page, placement);
+    this.measure();
+    if (!gptReady || !this.placement || !(this.hasBox || this.seen)) return;
+    const row = slotRow(this.page, this.placement);
     if (!this.counted) {
       row[MOUNTS] += 1;
       this.counted = true;
@@ -259,15 +294,15 @@ function flush() {
   accruePage(now);
   trackers.forEach((tracker) => tracker.settle(now));
   lastFlush = now;
-  if (!slotCounters.size && !pageCounters.size && !bidderCounters.size) return;
+  const maps = [pageCounters, slotCounters, bidderCounters, eventCounters];
+  if (maps.every((map) => map.size === 0)) return;
   const body = JSON.stringify({
     p: rows(pageCounters),
     s: rows(slotCounters),
-    b: rows(bidderCounters)
+    b: rows(bidderCounters),
+    e: rows(eventCounters)
   });
-  slotCounters.clear();
-  pageCounters.clear();
-  bidderCounters.clear();
+  maps.forEach((map) => map.clear());
   send(body);
 }
 
@@ -297,6 +332,7 @@ function onIntersection(entries: IntersectionObserverEntry[]) {
   for (const entry of entries) {
     const tracker = trackers.get(entry.target);
     if (!tracker) continue;
+    tracker.measure(entry.boundingClientRect);
     const inView =
       entry.isIntersecting && entry.intersectionRatio >= IN_VIEW_RATIO;
     if (inView !== tracker.inView) tracker.setInView(inView, now);
@@ -373,6 +409,28 @@ function onSlotRenderEnded({ slot, isEmpty }: GptSlotEvent) {
   }
 }
 
+function onRewardedEvent(event: string) {
+  return ({ slot }: GptSlotEvent) => {
+    if (REWARDED_PATH_RE.test(slot.getAdUnitPath()))
+      countEvent(REWARDED_PLACEMENT, event);
+  };
+}
+
+export function trackRewardedAdClick(shown: boolean) {
+  countEvent(REWARDED_PLACEMENT, 'click');
+  if (shown) countEvent(REWARDED_PLACEMENT, 'shown');
+}
+
+export function trackVideoAdPlayer(player: VideoAdPlayer) {
+  for (const [event, target] of VIDEO_PLAYER_EVENTS) {
+    player?.on?.(event, () => {
+      if (!currentPage) return;
+      if (typeof target === 'string') countEvent(VIDEO_PLACEMENT, target);
+      else slotRow(currentPage, VIDEO_PLACEMENT)[target] += 1;
+    });
+  }
+}
+
 function onImpressionViewable({ slot }: GptSlotEvent) {
   const placement = currentPage && placementFromSlot(slot);
   if (!currentPage || !placement) return;
@@ -420,6 +478,8 @@ export function startAdAnalytics() {
     const pubads = w.googletag?.pubads?.();
     pubads?.addEventListener('slotRenderEnded', onSlotRenderEnded);
     pubads?.addEventListener('impressionViewable', onImpressionViewable);
+    pubads?.addEventListener('rewardedSlotGranted', onRewardedEvent('granted'));
+    pubads?.addEventListener('rewardedSlotClosed', onRewardedEvent('closed'));
   });
 
   w.pbjs = w.pbjs || { que: [] };

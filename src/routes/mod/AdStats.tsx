@@ -5,6 +5,7 @@ import {
   AdBidderStat,
   AdDailyStat,
   AdDevice,
+  AdEventStat,
   AdPageStat,
   AdReportRange,
   AdSlotStat
@@ -19,6 +20,11 @@ const LOW_FILL_RATE = 0.5;
 const LOW_VIEWABLE_RATE = 0.5;
 const SIGNIFICANT_TIME_SHARE = 0.05;
 const NOTABLE_TIME_SHARE = 0.01;
+const MISSED_REWARDED_SHARE = 0.2;
+const PRICE_STORAGE_KEY = 'talishar_mod_ad_cpms';
+const REWARDED_RE = /reward/i;
+const VIDEO_PLACEMENT = 'video';
+const REWARDED_PLACEMENT = 'rewarded';
 
 type SlotFlag =
   | 'DUPLICATE'
@@ -28,6 +34,11 @@ type SlotFlag =
   | 'LOW_FILL'
   | 'LOW_VIEWABILITY';
 type PageFlag = 'NO_ADS' | 'UNDER_MONETIZED';
+type SlotKind = 'display' | 'wrapper' | 'video' | 'rewarded';
+type Prices = { display: number; video: number; rewarded: number };
+type EventCounts = Record<string, number>;
+
+const PRICE_FIELDS: Array<keyof Prices> = ['display', 'video', 'rewarded'];
 
 interface SlotRow {
   key: string;
@@ -44,6 +55,8 @@ interface SlotRow {
   prebidMicros: number;
   estMicros: number;
   pricedFills: number;
+  kind: SlotKind;
+  events: EventCounts;
   seenRate: number;
   avgInViewMs: number;
   fillRate: number;
@@ -86,6 +99,16 @@ interface DayRow {
   views: number;
   estMicros: number;
   rpm: number;
+}
+
+interface RewardedSummary {
+  clicks: number;
+  shown: number;
+  granted: number;
+  closed: number;
+  requests: number;
+  filled: number;
+  micros: number;
 }
 
 type SortState<K extends string> = { key: K; descending: boolean };
@@ -132,6 +155,70 @@ function sumBy<T, K extends keyof T>(
   return merged;
 }
 
+const cpmMicros = (cpm: number) => Math.round(cpm * 1000);
+
+function loadPrices(): Prices {
+  try {
+    const stored = JSON.parse(localStorage.getItem(PRICE_STORAGE_KEY) ?? '{}');
+    return Object.fromEntries(
+      PRICE_FIELDS.map((field) => [
+        field,
+        Math.max(0, Number(stored[field]) || 0)
+      ])
+    ) as Prices;
+  } catch {
+    return { display: 0, video: 0, rewarded: 0 };
+  }
+}
+
+function savePrices(prices: Prices) {
+  try {
+    localStorage.setItem(PRICE_STORAGE_KEY, JSON.stringify(prices));
+  } catch {
+    // Prices then only last for this visit.
+  }
+}
+
+function slotKind(row: AdSlotStat): SlotKind {
+  if (row.placement === VIDEO_PLACEMENT) return 'video';
+  if (REWARDED_RE.test(row.placement)) return 'rewarded';
+  if (row.mounts === 0 && row.requests > 0) return 'wrapper';
+  return 'display';
+}
+
+function unpricedFills(row: { filled: number; pricedFills: number }) {
+  return Math.max(0, row.filled - row.pricedFills);
+}
+
+function slotMicros(
+  row: AdSlotStat,
+  kind: SlotKind,
+  events: EventCounts,
+  prices: Prices
+) {
+  if (kind === 'video') return row.filled * cpmMicros(prices.video);
+  if (kind === 'rewarded')
+    return (events.shown ?? 0) * cpmMicros(prices.rewarded);
+  return row.estMicros + unpricedFills(row) * cpmMicros(prices.display);
+}
+
+const emptySlot = (page: string, placement: string): AdSlotStat => ({
+  page,
+  placement,
+  device: 'desktop',
+  mounts: 0,
+  seen: 0,
+  visibleMs: 0,
+  requests: 0,
+  filled: 0,
+  viewable: 0,
+  clicks: 0,
+  prebidWins: 0,
+  prebidMicros: 0,
+  estMicros: 0,
+  pricedFills: 0
+});
+
 const SLOT_SUM_FIELDS: Array<keyof AdSlotStat> = [
   'mounts',
   'seen',
@@ -146,11 +233,12 @@ const SLOT_SUM_FIELDS: Array<keyof AdSlotStat> = [
   'pricedFills'
 ];
 
-function slotFlags(row: AdSlotStat): SlotFlag[] {
+function slotFlags(row: AdSlotStat, kind: SlotKind): SlotFlag[] {
   const flags: SlotFlag[] = [];
+  if (kind === 'rewarded') return flags;
   if (row.placement.includes('#')) flags.push('DUPLICATE');
-  if (row.mounts === 0 && row.requests > 0) flags.push('WRAPPER');
-  if (row.seen >= MIN_SAMPLE && row.requests === 0)
+  if (kind === 'wrapper') flags.push('WRAPPER');
+  if (row.seen >= MIN_SAMPLE && row.requests === 0 && row.filled === 0)
     flags.push('NEVER_REQUESTED');
   if (
     row.mounts >= MIN_SAMPLE &&
@@ -158,6 +246,7 @@ function slotFlags(row: AdSlotStat): SlotFlag[] {
   )
     flags.push('RARELY_SEEN');
   if (
+    kind !== 'video' &&
     row.requests >= MIN_SAMPLE &&
     ratio(row.filled, row.requests) < LOW_FILL_RATE
   )
@@ -201,16 +290,34 @@ function sorted<T, K extends keyof T & string>(
 function buildInsights(
   slots: SlotRow[],
   pages: PageRow[],
+  rewarded: RewardedSummary,
+  unpriced: number,
   t: Translate,
-  pageLabel: (page: string) => string
+  pageLabel: (page: string) => string,
+  slotLabel: (row: SlotRow) => string
 ): string[] {
   const lines: string[] = [];
+  if (unpriced > 0) {
+    lines.push(t('MOD_PAGE.ADS_INSIGHT_UNPRICED', { count: unpriced }));
+  }
+  const missed = rewarded.clicks - rewarded.shown;
+  if (
+    rewarded.clicks >= MIN_SAMPLE &&
+    ratio(missed, rewarded.clicks) >= MISSED_REWARDED_SHARE
+  ) {
+    lines.push(
+      t('MOD_PAGE.ADS_INSIGHT_REWARDED_MISSED', {
+        missed: count(missed),
+        clicks: count(rewarded.clicks)
+      })
+    );
+  }
   const earning = slots.filter((row) => row.estMicros > 0);
   const top = [...earning].sort((a, b) => b.estMicros - a.estMicros)[0];
   if (top) {
     lines.push(
       t('MOD_PAGE.ADS_INSIGHT_TOP', {
-        slot: top.placement,
+        slot: slotLabel(top),
         page: pageLabel(top.page),
         share: percent(top.share),
         rpm: dollars(top.rpm)
@@ -221,7 +328,7 @@ function buildInsights(
   if (silent) {
     lines.push(
       t('MOD_PAGE.ADS_INSIGHT_NEVER_REQUESTED', {
-        slot: silent.placement,
+        slot: slotLabel(silent),
         page: pageLabel(silent.page),
         seen: percent(silent.seenRate)
       })
@@ -234,7 +341,7 @@ function buildInsights(
   if (worst) {
     lines.push(
       t('MOD_PAGE.ADS_INSIGHT_WORST', {
-        slot: worst.placement,
+        slot: slotLabel(worst),
         page: pageLabel(worst.page),
         rpm: dollars(worst.rpm),
         seen: percent(worst.seenRate)
@@ -337,6 +444,7 @@ const AdStats: React.FC = () => {
   const [range, setRange] = useState<AdReportRange>(7);
   const [device, setDevice] = useState<AdDevice | 'all'>('all');
   const [flaggedOnly, setFlaggedOnly] = useState(false);
+  const [prices, setPrices] = useState<Prices>(loadPrices);
   const [slotSort, toggleSlotSort] = useSort<keyof SlotRow & string>(
     'estMicros'
   );
@@ -354,6 +462,35 @@ const AdStats: React.FC = () => {
       defaultValue: page
     });
 
+  const updatePrice = (field: keyof Prices, value: string) => {
+    const next = { ...prices, [field]: Math.max(0, Number(value) || 0) };
+    setPrices(next);
+    savePrices(next);
+  };
+
+  const slotLabel = (row: SlotRow) =>
+    row.kind === 'video'
+      ? t('MOD_PAGE.ADS_SLOT_VIDEO')
+      : row.kind === 'rewarded'
+      ? t('MOD_PAGE.ADS_SLOT_REWARDED')
+      : row.placement;
+
+  const revenueHint = (row: SlotRow) => {
+    if (row.kind === 'video')
+      return t('MOD_PAGE.ADS_REVENUE_HINT_VIDEO', {
+        impressions: count(row.filled),
+        complete: count(row.events.complete ?? 0)
+      });
+    if (row.kind === 'rewarded')
+      return t('MOD_PAGE.ADS_REVENUE_HINT_REWARDED', {
+        shown: count(row.events.shown ?? 0)
+      });
+    return t('MOD_PAGE.ADS_REVENUE_HINT', {
+      exact: money(row.prebidMicros),
+      unpriced: count(unpricedFills(row))
+    });
+  };
+
   const report = useMemo(() => {
     const matches = (row: { device: AdDevice }) =>
       device === 'all' || row.device === device;
@@ -364,7 +501,13 @@ const AdStats: React.FC = () => {
       ['views', 'visibleMs', 'adblockViews']
     );
     const slotTotals = sumBy<AdSlotStat, keyof AdSlotStat>(
-      (data?.slots ?? []).filter(matches),
+      (data?.slots ?? [])
+        .filter(matches)
+        .map((row) =>
+          REWARDED_RE.test(row.placement)
+            ? { ...row, placement: REWARDED_PLACEMENT }
+            : row
+        ),
       (row) => `${row.page}\t${row.placement}`,
       SLOT_SUM_FIELDS
     );
@@ -376,12 +519,44 @@ const AdStats: React.FC = () => {
     const dayTotals = sumBy<AdDailyStat, keyof AdDailyStat>(
       (data?.daily ?? []).filter(matches),
       (row) => row.day,
-      ['views', 'estMicros', 'filled']
+      [
+        'views',
+        'estMicros',
+        'unpricedFills',
+        'videoImpressions',
+        'rewardedShows'
+      ]
     );
+
+    const eventsBySlot = new Map<string, EventCounts>();
+    for (const row of (data?.events ?? []).filter(matches) as AdEventStat[]) {
+      const placement = REWARDED_RE.test(row.placement)
+        ? REWARDED_PLACEMENT
+        : row.placement;
+      const key = `${row.page}\t${placement}`;
+      const events = eventsBySlot.get(key) ?? {};
+      events[row.event] = (events[row.event] ?? 0) + row.count;
+      eventsBySlot.set(key, events);
+      if (!slotTotals.has(key))
+        slotTotals.set(key, emptySlot(row.page, placement));
+    }
 
     const slotsList = Array.from(slotTotals.values());
     const pagesList = Array.from(pageTotals.values());
-    const totalMicros = slotsList.reduce((sum, row) => sum + row.estMicros, 0);
+    const slotInputs = slotsList.map((row) => {
+      const kind = slotKind(row);
+      const events = eventsBySlot.get(`${row.page}\t${row.placement}`) ?? {};
+      return {
+        row,
+        kind,
+        events,
+        micros: slotMicros(row, kind, events, prices)
+      };
+    });
+    const displayRows = slotInputs
+      .filter(({ kind }) => kind === 'display' || kind === 'wrapper')
+      .map(({ row }) => row);
+    const totalMicros = slotInputs.reduce((sum, slot) => sum + slot.micros, 0);
     const totalPrebid = slotsList.reduce(
       (sum, row) => sum + row.prebidMicros,
       0
@@ -392,35 +567,80 @@ const AdStats: React.FC = () => {
       (sum, row) => sum + row.adblockViews,
       0
     );
-    const totalRequests = slotsList.reduce((sum, row) => sum + row.requests, 0);
-    const totalFilled = slotsList.reduce((sum, row) => sum + row.filled, 0);
-    const totalViewable = slotsList.reduce((sum, row) => sum + row.viewable, 0);
+    const totalRequests = displayRows.reduce(
+      (sum, row) => sum + row.requests,
+      0
+    );
+    const totalFilled = displayRows.reduce((sum, row) => sum + row.filled, 0);
+    const totalViewable = displayRows.reduce(
+      (sum, row) => sum + row.viewable,
+      0
+    );
     const totalBidderMicros = Array.from(bidderTotals.values()).reduce(
       (sum, row) => sum + row.winMicros,
       0
     );
 
-    const slots: SlotRow[] = slotsList.map((row) => {
+    const slots: SlotRow[] = slotInputs.map(({ row, kind, events, micros }) => {
       const views = pageTotals.get(row.page)?.views ?? 0;
+      const impressions = kind === 'rewarded' ? events.shown ?? 0 : row.filled;
       return {
         ...row,
+        estMicros: micros,
+        kind,
+        events,
         key: `${row.page}\t${row.placement}`,
         seenRate: ratio(row.seen, row.mounts),
         avgInViewMs: ratio(row.visibleMs, row.mounts),
         fillRate: ratio(row.filled, row.requests),
         viewableRate: ratio(row.viewable, row.filled),
         ctr: ratio(row.clicks, row.filled),
-        ecpm: perThousand(row.estMicros, row.filled),
-        share: ratio(row.estMicros, totalMicros),
-        rpm: perThousand(row.estMicros, views),
-        flags: slotFlags(row)
+        ecpm: perThousand(micros, impressions),
+        share: ratio(micros, totalMicros),
+        rpm: perThousand(micros, views),
+        flags: slotFlags(row, kind)
       };
     });
+
+    const rewarded: RewardedSummary = {
+      clicks: 0,
+      shown: 0,
+      granted: 0,
+      closed: 0,
+      requests: 0,
+      filled: 0,
+      micros: 0
+    };
+    for (const row of slots.filter((slot) => slot.kind === 'rewarded')) {
+      rewarded.clicks += row.events.click ?? 0;
+      rewarded.shown += row.events.shown ?? 0;
+      rewarded.granted += row.events.granted ?? 0;
+      rewarded.closed += row.events.closed ?? 0;
+      rewarded.requests += row.requests;
+      rewarded.filled += row.filled;
+      rewarded.micros += row.estMicros;
+    }
+
+    const unpriced =
+      (prices.display > 0
+        ? 0
+        : displayRows.reduce((sum, row) => sum + unpricedFills(row), 0)) +
+      (prices.video > 0
+        ? 0
+        : slots
+            .filter((row) => row.kind === 'video')
+            .reduce((sum, row) => sum + row.filled, 0)) +
+      (prices.rewarded > 0 ? 0 : rewarded.shown);
+    const prebidCpm = perThousand(
+      displayRows.reduce((sum, row) => sum + row.estMicros, 0),
+      displayRows.reduce((sum, row) => sum + row.pricedFills, 0)
+    );
 
     const slotsByPage = new Map<string, { slots: number; micros: number }>();
     for (const row of slots) {
       const entry = slotsByPage.get(row.page) ?? { slots: 0, micros: 0 };
-      if (row.mounts > 0) entry.slots += 1;
+      if (row.mounts > 0 || (row.kind === 'video' && row.filled > 0))
+        entry.slots += 1;
       entry.micros += row.estMicros;
       slotsByPage.set(row.page, entry);
     }
@@ -467,18 +687,28 @@ const AdStats: React.FC = () => {
 
     const days: DayRow[] = Array.from(dayTotals.values())
       .sort((a, b) => a.day.localeCompare(b.day))
-      .map((row) => ({
-        day: row.day,
-        views: row.views,
-        estMicros: row.estMicros,
-        rpm: perThousand(row.estMicros, row.views)
-      }));
+      .map((row) => {
+        const micros =
+          row.estMicros +
+          row.unpricedFills * cpmMicros(prices.display) +
+          row.videoImpressions * cpmMicros(prices.video) +
+          row.rewardedShows * cpmMicros(prices.rewarded);
+        return {
+          day: row.day,
+          views: row.views,
+          estMicros: micros,
+          rpm: perThousand(micros, row.views)
+        };
+      });
 
     return {
       slots,
       pages,
       bidders,
       days,
+      rewarded,
+      unpriced,
+      prebidCpm,
       totals: {
         micros: totalMicros,
         prebid: totalPrebid,
@@ -490,9 +720,17 @@ const AdStats: React.FC = () => {
         viewable: totalViewable
       }
     };
-  }, [data, device]);
+  }, [data, device, prices]);
 
-  const insights = buildInsights(report.slots, report.pages, t, pageLabel);
+  const insights = buildInsights(
+    report.slots,
+    report.pages,
+    report.rewarded,
+    report.unpriced,
+    t,
+    pageLabel,
+    slotLabel
+  );
 
   const flagLabel = (flag: SlotFlag | PageFlag) =>
     t(`MOD_PAGE.ADS_FLAG_${flag}`);
@@ -510,7 +748,53 @@ const AdStats: React.FC = () => {
   );
   const visiblePages = sorted(report.pages, pageSort);
   const visibleBidders = sorted(report.bidders, bidderSort);
-  const { totals } = report;
+  const { totals, rewarded } = report;
+  const rewardedTiles = [
+    {
+      label: t('MOD_PAGE.ADS_REWARDED_CLICKS'),
+      value: count(rewarded.clicks),
+      note: t('MOD_PAGE.ADS_REWARDED_CLICKS_NOTE')
+    },
+    {
+      label: t('MOD_PAGE.ADS_REWARDED_SHOWN'),
+      value: count(rewarded.shown),
+      note: t('MOD_PAGE.ADS_REWARDED_SHOWN_NOTE', {
+        share: percent(ratio(rewarded.shown, rewarded.clicks))
+      })
+    },
+    {
+      label: t('MOD_PAGE.ADS_REWARDED_MISSED'),
+      value: count(Math.max(0, rewarded.clicks - rewarded.shown)),
+      note: t('MOD_PAGE.ADS_REWARDED_MISSED_NOTE')
+    },
+    {
+      label: t('MOD_PAGE.ADS_REWARDED_GRANTED'),
+      value: count(rewarded.granted),
+      note: t('MOD_PAGE.ADS_REWARDED_GRANTED_NOTE', {
+        share: percent(ratio(rewarded.granted, rewarded.shown)),
+        closed: count(Math.max(0, rewarded.closed - rewarded.granted))
+      })
+    },
+    {
+      label: t('MOD_PAGE.ADS_REWARDED_READY'),
+      value: percent(ratio(rewarded.filled, rewarded.requests)),
+      note: t('MOD_PAGE.ADS_REWARDED_READY_NOTE', {
+        filled: count(rewarded.filled),
+        requests: count(rewarded.requests)
+      })
+    },
+    {
+      label: t('MOD_PAGE.ADS_KPI_REVENUE'),
+      value: money(rewarded.micros),
+      note:
+        prices.rewarded > 0
+          ? t('MOD_PAGE.ADS_REWARDED_REVENUE_NOTE', {
+              cpm: dollars(prices.rewarded)
+            })
+          : t('MOD_PAGE.ADS_PRICE_MISSING')
+    }
+  ];
+  const hasRewarded = rewarded.requests > 0 || rewarded.clicks > 0;
   const hasData = report.slots.length > 0 || report.pages.length > 0;
 
   const header = <K extends string>(
@@ -659,6 +943,42 @@ const AdStats: React.FC = () => {
         </p>
       )}
 
+      <div
+        className={styles.prices}
+        role="group"
+        aria-label={t('MOD_PAGE.ADS_PRICES_TITLE')}
+      >
+        <div className={styles.pricesText}>
+          <span className={styles.pricesTitle}>
+            {t('MOD_PAGE.ADS_PRICES_TITLE')}
+          </span>
+          <span className={styles.muted}>
+            {t('MOD_PAGE.ADS_PRICES_DESCRIPTION')}
+          </span>
+        </div>
+        {PRICE_FIELDS.map((field) => (
+          <label key={field} className={styles.priceField}>
+            <span>{t(`MOD_PAGE.ADS_PRICE_${field.toUpperCase()}`)}</span>
+            <span className={styles.priceInput}>
+              <span aria-hidden="true">$</span>
+              <input
+                type="number"
+                min={0}
+                step={0.01}
+                inputMode="decimal"
+                value={prices[field] || ''}
+                placeholder={
+                  field === 'display' && report.prebidCpm > 0
+                    ? report.prebidCpm.toFixed(2)
+                    : '0.00'
+                }
+                onChange={(event) => updatePrice(field, event.target.value)}
+              />
+            </span>
+          </label>
+        ))}
+      </div>
+
       {isError || data?.error ? (
         <p className={styles.empty}>{t('MOD_PAGE.ADS_LOAD_FAILED')}</p>
       ) : !data ? (
@@ -692,6 +1012,30 @@ const AdStats: React.FC = () => {
               </div>
             )}
           </div>
+
+          {hasRewarded && (
+            <div className={styles.section}>
+              <div className={styles.sectionHeader}>
+                <div>
+                  <h3 className={styles.sectionTitle}>
+                    {t('MOD_PAGE.ADS_REWARDED_TITLE')}
+                  </h3>
+                  <p className={styles.sectionDescription}>
+                    {t('MOD_PAGE.ADS_REWARDED_DESCRIPTION')}
+                  </p>
+                </div>
+              </div>
+              <div className={styles.tiles}>
+                {rewardedTiles.map((tile) => (
+                  <div key={tile.label} className={styles.tile}>
+                    <span className={styles.tileLabel}>{tile.label}</span>
+                    <span className={styles.tileValue}>{tile.value}</span>
+                    <span className={styles.tileNote}>{tile.note}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className={styles.section}>
             <div className={styles.sectionHeader}>
@@ -792,7 +1136,7 @@ const AdStats: React.FC = () => {
                     <tr key={row.key}>
                       <td>
                         <div className={styles.slotName}>
-                          <code className={styles.code}>{row.placement}</code>
+                          <code className={styles.code}>{slotLabel(row)}</code>
                           <span className={styles.muted}>
                             {pageLabel(row.page)}
                           </span>
@@ -821,13 +1165,7 @@ const AdStats: React.FC = () => {
                         {row.filled > 0 ? dollars(row.ecpm) : '-'}
                       </td>
                       <td className={styles.numeric}>{dollars(row.rpm)}</td>
-                      <td
-                        className={styles.numeric}
-                        title={t('MOD_PAGE.ADS_REVENUE_HINT', {
-                          exact: money(row.prebidMicros),
-                          priced: percent(ratio(row.pricedFills, row.filled))
-                        })}
-                      >
+                      <td className={styles.numeric} title={revenueHint(row)}>
                         <div className={styles.revenueCell}>
                           <span>{money(row.estMicros)}</span>
                           <span className={styles.shareBar} aria-hidden="true">

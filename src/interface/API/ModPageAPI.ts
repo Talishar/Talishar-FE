@@ -267,7 +267,17 @@ export interface AdDailyStat {
   device: AdDevice;
   views: number;
   estMicros: number;
-  filled: number;
+  unpricedFills: number;
+  videoImpressions: number;
+  rewardedShows: number;
+}
+
+export interface AdEventStat {
+  page: string;
+  placement: string;
+  device: AdDevice;
+  event: string;
+  count: number;
 }
 
 export interface AdReportResponse {
@@ -276,6 +286,7 @@ export interface AdReportResponse {
   slots: AdSlotStat[];
   pages: AdPageStat[];
   bidders: AdBidderStat[];
+  events: AdEventStat[];
   daily: AdDailyStat[];
   error?: string;
 }

@@ -1,6 +1,7 @@
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import RemoveAdsLink from 'components/RemoveAdsLink/RemoveAdsLink';
+import useAdSlotRef from 'hooks/useAdSlotRef';
 import { IN_GAME_AD_SIZE } from 'config/ads';
 import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
 import squareMemberCTA from '../../../../img/squareMemberCTA.webp';
@@ -18,6 +19,7 @@ const InGameAd = () => {
   const { t } = useTranslation();
   const columnRef = useRef<HTMLDivElement>(null);
   const [fitsAd, setFitsAd] = useState(false);
+  const slotRef = useAdSlotRef<HTMLDivElement>();
 
   useLayoutEffect(() => {
     const column = columnRef.current;
@@ -51,7 +53,11 @@ const InGameAd = () => {
           />
         </a>
         {fitsAd && (
-          <div data-ad="in-game-block" className={styles.inGameAdSlot} />
+          <div
+            ref={slotRef}
+            data-ad="in-game-block"
+            className={styles.inGameAdSlot}
+          />
         )}
       </div>
     </div>

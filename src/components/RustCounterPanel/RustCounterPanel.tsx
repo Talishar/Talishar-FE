@@ -5,6 +5,7 @@ import {
   MAX_RUST_COUNTERS,
   RUST_PANEL_ATTENTION_EVENT
 } from 'hooks/useRustCounters';
+import { trackRewardedAdClick } from 'utils/adAnalytics';
 import HouseRewardedAd from './HouseRewardedAd';
 import styles from './RustCounterPanel.module.css';
 
@@ -55,6 +56,7 @@ const RustCounterPanel = ({
       // The ad script is third-party and may not be loaded (ad blocker, network
       // failure). Swallow and fall through to the in-house fallback ad below.
     }
+    trackRewardedAdClick(shown);
     if (shown) {
       return;
     }

@@ -91,6 +91,78 @@
   color: var(--theme-text-secondary);
 }
 
+.prices {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.6rem 1rem;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.12);
+  border-radius: 6px;
+}
+
+.pricesText {
+  display: flex;
+  flex: 1 1 16rem;
+  flex-direction: column;
+  gap: 0.15rem;
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+.pricesTitle {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--theme-text);
+}
+
+.priceField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: rgba(var(--theme-on-surface-rgb), 0.62);
+}
+
+.priceInput {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  height: 2.1rem;
+  padding: 0 0.6rem;
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.12);
+  border-radius: 6px;
+  background: rgba(
+    var(--theme-sunken-rgb),
+    calc(0.3 * var(--theme-sunken-alpha))
+  );
+  color: var(--theme-text-secondary);
+  font-size: 0.85rem;
+}
+
+.priceInput:focus-within {
+  border-color: var(--theme-primary);
+}
+
+.priceInput input {
+  width: 4.5rem !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--theme-text);
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.priceInput input:focus {
+  outline: none;
+}
+
 .empty {
   margin: 0;
   padding: 1.5rem 0;
