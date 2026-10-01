@@ -1644,6 +1644,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
                       data-tooltip={t('END_GAME.INCLUDE_DISRUPTION_TOOLTIP', {
                         value: data.disruptionValuePerCard
                       })}
+                      data-placement="bottom"
                     >
                       <input
                         type="checkbox"
