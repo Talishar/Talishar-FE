@@ -1037,6 +1037,21 @@
   user-select: none;
 }
 
+.disclaimer .disruptionToggle {
+  border-bottom: none;
+  cursor: pointer;
+}
+
+.disruptionToggle[data-tooltip]::before {
+  width: min(320px, 80vw);
+  text-align: left;
+}
+
+.disruptionToggle[data-tooltip]:focus-within::before,
+.disruptionToggle[data-tooltip]:focus-within::after {
+  opacity: 1;
+}
+
 @media (max-width: 768px) {
   .disclaimer {
     flex-direction: column;
