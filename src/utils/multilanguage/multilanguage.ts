@@ -12,9 +12,41 @@ import {
   FRENCH_PRINTED_COLLECTIONS,
   JAPANESE_LANGUAGE_PRINTED_COLLECTIONS
 } from './constants';
-import { historyPack1, historyPack2, setIDs } from './collectionMaps';
 import { CollectionCardImagePathData } from './types';
 import { CLOUD_IMAGES_URL } from 'appConstants';
+
+// Only other languages need the collection maps, so they load on first use.
+let setIDs: Record<string, string> = {};
+let historyPack1: Record<string, string> = {};
+let historyPack2: Record<string, string> = {};
+let collectionMapsLoaded = false;
+let collectionMapsRequest: Promise<void> | null = null;
+const collectionMapsListeners = new Set<() => void>();
+
+export const loadCollectionMaps = (): Promise<void> => {
+  collectionMapsRequest ??= import('./collectionMaps').then(
+    (maps) => {
+      setIDs = maps.setIDs;
+      historyPack1 = maps.historyPack1;
+      historyPack2 = maps.historyPack2;
+      collectionMapsLoaded = true;
+      collectionMapsListeners.forEach((listener) => listener());
+    },
+    () => {
+      collectionMapsRequest = null;
+    }
+  );
+  return collectionMapsRequest;
+};
+
+export const areCollectionMapsLoaded = (): boolean => collectionMapsLoaded;
+
+export const subscribeCollectionMaps = (listener: () => void) => {
+  collectionMapsListeners.add(listener);
+  return () => {
+    collectionMapsListeners.delete(listener);
+  };
+};
 
 const hasOwn = (obj: Record<string, string>, key: string): boolean =>
   Object.prototype.hasOwnProperty.call(obj, key);
@@ -94,17 +126,22 @@ export const getCollectionCardImagePath = ({
     languagePath: LOCALE_DICTIONARY[DEFAULT_LANGUAGE],
     cardNumber
   };
-  const collectionCode = getCollectionCode(cardNumber);
-  const setID = getSetID(cardNumber);
-
   if (locale !== DEFAULT_LANGUAGE && !isAlternativeArt(cardNumber)) {
-    if (isJapaneseCard(locale, collectionCode)) {
-      Object.assign(cardPathData, { languagePath: LOCALE_DICTIONARY[locale] });
-    } else if (isEuropeanCard(locale, setID, collectionCode)) {
-      Object.assign(cardPathData, {
-        languagePath: LOCALE_DICTIONARY[locale],
-        cardNumber: getHistoryPackCard(setID, collectionCode) || setID
-      });
+    if (!collectionMapsLoaded) {
+      loadCollectionMaps();
+    } else {
+      const collectionCode = getCollectionCode(cardNumber);
+      const setID = getSetID(cardNumber);
+      if (isJapaneseCard(locale, collectionCode)) {
+        Object.assign(cardPathData, {
+          languagePath: LOCALE_DICTIONARY[locale]
+        });
+      } else if (isEuropeanCard(locale, setID, collectionCode)) {
+        Object.assign(cardPathData, {
+          languagePath: LOCALE_DICTIONARY[locale],
+          cardNumber: getHistoryPackCard(setID, collectionCode) || setID
+        });
+      }
     }
   }
 

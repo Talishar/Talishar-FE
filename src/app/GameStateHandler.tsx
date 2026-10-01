@@ -348,12 +348,13 @@ const GameStateHandler = ({
     const connectionTimeout = setTimeout(() => {
       try {
         const source = new EventSource(
-          `${BACKEND_URL}GetUpdateSSE.php?gameName=${currentGameID}&playerID=${currentPlayerID}&authKey=${currentAuthKey}`,
+          `${BACKEND_URL}GetUpdateSSE.php?gameName=${currentGameID}&playerID=${currentPlayerID}&authKey=${currentAuthKey}&logDelta=1`,
           { withCredentials: true }
         );
         sourceRef.current = source;
 
         let hasConnected = false;
+        let chatLogBase: { seq: number; log: string } | null = null;
 
         lastEventTimeRef.current = Date.now();
 
@@ -416,6 +417,28 @@ const GameStateHandler = ({
               onLoadingErrorRef.current?.(message);
               toast.error(message);
               return;
+            }
+
+            if (typeof data.chatLogSeq === 'number') {
+              chatLogBase = { seq: data.chatLogSeq, log: data.chatLog ?? '' };
+            } else if (data.chatLogDelta) {
+              const delta = data.chatLogDelta;
+              const baseLog =
+                chatLogBase !== null && chatLogBase.seq === delta.base
+                  ? chatLogBase.log
+                  : null;
+              let cut = 0;
+              for (let i = 0; i < delta.drop && cut !== -1; i++) {
+                const at = baseLog?.indexOf('<br>', cut) ?? -1;
+                cut = at === -1 ? -1 : at + 4;
+              }
+              if (baseLog === null || cut === -1) {
+                setForceRetry((prev) => prev + 1);
+                return;
+              }
+              const log = baseLog.slice(cut) + delta.append;
+              chatLogBase = { seq: delta.seq, log };
+              data.chatLog = log;
             }
 
             const parsedState = ParseGameState(data);
