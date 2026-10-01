@@ -94,6 +94,8 @@ import {
   SearchUsernamesResponse,
   PromptStatsRange,
   PromptStatsResponse,
+  AdReportRange,
+  AdReportResponse,
   ClearPromptStatsResponse,
   PuzzleCandidatesResponse,
   CreatePuzzleGameRequest,
@@ -709,6 +711,14 @@ export const apiSlice = createApi({
       }),
       providesTags: ['PromptStats']
     }),
+    getAdReport: builder.query<AdReportResponse, AdReportRange>({
+      query: (days) => ({
+        url: URL_END_POINT.GET_MONETIZATION_REPORT,
+        method: 'GET',
+        params: { days },
+        responseHandler: parseResponse
+      })
+    }),
     clearPromptStats: builder.mutation<ClearPromptStatsResponse, void>({
       query: () => postJson(URL_END_POINT.CLEAR_PROMPT_STATS),
       invalidatesTags: ['PromptStats']
@@ -1108,6 +1118,7 @@ export const {
   useGetModPageDataQuery,
   useGetPromptStatsQuery,
   useClearPromptStatsMutation,
+  useGetAdReportQuery,
   useGetPuzzleCandidatesQuery,
   useCreatePuzzleGameMutation,
   useVerifyPuzzleCandidateMutation,

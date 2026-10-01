@@ -19,6 +19,7 @@ import UsernameModeration from './UsernameModeration';
 import DeleteUsernameAutocomplete from './DeleteUsernameAutocomplete';
 import PromptStats from './PromptStats';
 import PuzzleCandidates from './PuzzleCandidates';
+import AdStats from './AdStats';
 import { LinkedAccount } from 'interface/API/ModPageAPI';
 
 const MOD_TABS = [
@@ -27,7 +28,8 @@ const MOD_TABS = [
   { id: 'usernames', labelKey: 'MOD_PAGE.TAB_USERNAMES' },
   { id: 'tools', labelKey: 'MOD_PAGE.TAB_TOOLS' },
   { id: 'prompts', labelKey: 'MOD_PAGE.TAB_PROMPTS' },
-  { id: 'puzzles', labelKey: 'MOD_PAGE.TAB_PUZZLES' }
+  { id: 'puzzles', labelKey: 'MOD_PAGE.TAB_PUZZLES' },
+  { id: 'ads', labelKey: 'MOD_PAGE.TAB_ADS' }
 ] as const;
 
 type ModTabId = (typeof MOD_TABS)[number]['id'];
@@ -1004,6 +1006,8 @@ const ModPage: React.FC = () => {
           {activeTab === 'prompts' && <PromptStats />}
 
           {activeTab === 'puzzles' && <PuzzleCandidates />}
+
+          {activeTab === 'ads' && <AdStats />}
         </div>
       </div>
     </div>

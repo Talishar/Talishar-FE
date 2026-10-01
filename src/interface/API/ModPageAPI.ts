@@ -225,3 +225,57 @@ export interface CreatePuzzleGameResponse {
   authKey: string;
   error?: string;
 }
+
+export type AdReportRange = 1 | 7 | 30 | 90;
+export type AdDevice = 'desktop' | 'mobile';
+
+export interface AdSlotStat {
+  page: string;
+  placement: string;
+  device: AdDevice;
+  mounts: number;
+  seen: number;
+  visibleMs: number;
+  requests: number;
+  filled: number;
+  viewable: number;
+  clicks: number;
+  prebidWins: number;
+  prebidMicros: number;
+  estMicros: number;
+  pricedFills: number;
+}
+
+export interface AdPageStat {
+  page: string;
+  device: AdDevice;
+  views: number;
+  visibleMs: number;
+  adblockViews: number;
+}
+
+export interface AdBidderStat {
+  bidder: string;
+  device: AdDevice;
+  bids: number;
+  wins: number;
+  winMicros: number;
+}
+
+export interface AdDailyStat {
+  day: string;
+  device: AdDevice;
+  views: number;
+  estMicros: number;
+  filled: number;
+}
+
+export interface AdReportResponse {
+  days: AdReportRange;
+  since: string;
+  slots: AdSlotStat[];
+  pages: AdPageStat[];
+  bidders: AdBidderStat[];
+  daily: AdDailyStat[];
+  error?: string;
+}

@@ -24,6 +24,7 @@ const SharedReplay = lazy(() => import('routes/game/shared/SharedReplay'));
 const JoinSnapshot = lazy(() => import('routes/game/shared/JoinSnapshot'));
 const SettingsPage = lazy(() => import('routes/user/settings'));
 import SyncedSettings from 'features/settings/SyncedSettings';
+import AdAnalyticsTracker from 'components/ads/AdAnalyticsTracker';
 const Privacy = lazy(() => import('routes/privacy'));
 const LinkPatreon = lazy(() => import('routes/user/profile/linkpatreon'));
 const LinkMetafy = lazy(
@@ -160,6 +161,7 @@ export const router = createBrowserRouter(
       element={
         <Suspense fallback={<RouteFallback />}>
           <SyncedSettings />
+          <AdAnalyticsTracker />
           <Outlet />
         </Suspense>
       }

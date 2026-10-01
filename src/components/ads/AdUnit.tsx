@@ -1,4 +1,5 @@
 import React from 'react';
+import useAdSlotRef from 'hooks/useAdSlotRef';
 import './AdUnit.css';
 
 interface AdUnitProps {
@@ -23,7 +24,10 @@ export const AdUnit: React.FC<AdUnitProps> = ({
   placement,
   className = ''
 }) => {
-  return <div className={`ad-unit ${className}`} data-ad={placement} />;
+  const slotRef = useAdSlotRef<HTMLDivElement>();
+  return (
+    <div ref={slotRef} className={`ad-unit ${className}`} data-ad={placement} />
+  );
 };
 
 export default AdUnit;

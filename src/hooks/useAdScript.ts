@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { ADS_ENABLED, isAdFreeRoute } from 'config/ads';
+import { startAdAnalytics } from 'utils/adAnalytics';
 
 declare global {
   interface Window {
@@ -373,6 +374,7 @@ export default function useAdScript(
     // attempts from the ad network are blocked from the moment the script runs.
     containedMode = contained;
     installNavGuard();
+    startAdAnalytics();
     installIframeInsertionGuard();
 
     if (!document.querySelector('script[src="//js.rev.iq/talishar.net"]')) {

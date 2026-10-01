@@ -436,6 +436,8 @@ export const URL_END_POINT = {
   GET_MOD_PAGE_DATA: 'APIs/GetModPageData.php',
   GET_PROMPT_STATS: 'APIs/GetPromptStats.php',
   CLEAR_PROMPT_STATS: 'APIs/ClearPromptStats.php',
+  SITE_METRICS: 'APIs/SiteMetrics.php',
+  GET_MONETIZATION_REPORT: 'APIs/GetMonetizationReport.php',
   GET_PUZZLE_CANDIDATES: 'APIs/GetPuzzleCandidates.php',
   CREATE_PUZZLE_GAME: 'APIs/CreatePuzzleGame.php',
   VERIFY_PUZZLE_CANDIDATES: 'APIs/VerifyPuzzleCandidates.php',
