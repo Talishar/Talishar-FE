@@ -12,7 +12,11 @@ import { RootState } from 'app/Store';
 import PlayerName from '../elements/playerName/PlayerName';
 import { useMediaQuery } from 'hooks/useMediaQuery';
 import useSupporterStatus from 'hooks/useSupporterStatus';
-import { IN_GAME_AD_SIZE, IN_GAME_ADS_ENABLED } from 'config/ads';
+import {
+  IN_GAME_AD_MIN_VIEWPORT_HEIGHT,
+  IN_GAME_AD_SIZE,
+  IN_GAME_ADS_ENABLED
+} from 'config/ads';
 import InGameAd from './InGameAd';
 
 const adColumnStyle = {
@@ -30,8 +34,11 @@ function RightColumn() {
   // branch the CSS would show is mounted; the other used to render in full
   // under `display: none`, duplicating the menu and the whole chat log.
   const isNarrow = useMediaQuery('(max-width: 1200px)');
+  const hasRoomForAd = useMediaQuery(
+    `(min-height: ${IN_GAME_AD_MIN_VIEWPORT_HEIGHT}px)`
+  );
   const { showAds } = useSupporterStatus();
-  const showInGameAd = IN_GAME_ADS_ENABLED && showAds;
+  const showInGameAd = IN_GAME_ADS_ENABLED && showAds && hasRoomForAd;
 
   if (isNarrow) {
     return (
