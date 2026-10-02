@@ -281,7 +281,7 @@
     "HERO_MATCHUP": "Match de héros",
     "HIDE_STATS": "Masquer les statistiques",
     "INCLUDE_DISRUPTION": "Compter la perturbation dans la valeur",
-    "INCLUDE_DISRUPTION_TOOLTIP": "Ajoute {{value}} de valeur pour chaque carte adverse retirée par vos effets : défaussée de sa main, bannie de sa main ou de son arsenal, détruite dans son arsenal, ou un équipement, une arme, un objet, un allié ou une aura détruit ou banni par vous. Les jetons, l'intimidation et les cartes utilisées par l'adversaire lui-même (blocage, prévention de dégâts) ne comptent pas.",
+    "INCLUDE_DISRUPTION_TOOLTIP": "Ajoute {{value}} de valeur pour chaque carte adverse retirée par vos effets : défaussée de sa main, bannie de sa main ou de son arsenal, détruite dans son arsenal, une carte en défense détruite hors de la chaîne de combat, ou un équipement, une arme, un objet, un allié ou une aura détruit ou banni par vous. Les jetons, l'intimidation, les cartes qu'il peut encore jouer depuis le bannissement et les cartes utilisées par l'adversaire lui-même (blocage, prévention de dégâts) ne comptent pas.",
     "LEFT": "Gauche",
     "LIFE": "Vie",
     "LIFE_GAINED": "Vie gagnée",

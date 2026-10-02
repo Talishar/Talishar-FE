@@ -300,7 +300,7 @@
     "HERO_MATCHUP": "Hero Matchup",
     "HIDE_STATS": "Hide statistics",
     "INCLUDE_DISRUPTION": "Count Disruption in Value",
-    "INCLUDE_DISRUPTION_TOOLTIP": "Adds {{value}} value for each opponent card your effects took away: discarded from their hand, banished from their hand or arsenal, destroyed in their arsenal, or an equipment, weapon, item, ally or aura of theirs you destroyed or banished. Tokens, Intimidate and cards they used up themselves (blocking, damage prevention) don't count.",
+    "INCLUDE_DISRUPTION_TOOLTIP": "Adds {{value}} value for each opponent card your effects took away: discarded from their hand, banished from their hand or arsenal, destroyed in their arsenal, a defending card you destroyed off the combat chain, or an equipment, weapon, item, ally or aura of theirs you destroyed or banished. Tokens, Intimidate, cards they can still play from banish and cards they used up themselves (blocking, damage prevention) don't count.",
     "LEFT": "Left",
     "LIFE": "Life",
     "LIFE_GAINED": "Life Gained",
