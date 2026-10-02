@@ -2,6 +2,8 @@ import { BACKEND_URL, URL_END_POINT } from 'appConstants';
 
 type Device = 'desktop' | 'mobile';
 
+export type InGameAdGate = 'ok' | 'short' | 'narrow';
+
 interface GptSlot {
   getSlotElementId(): string;
   getAdUnitPath(): string;
@@ -68,6 +70,8 @@ const FLUSH_INTERVAL_MS = 5 * 60 * 1000;
 const MIN_FLUSH_GAP_MS = 60 * 1000;
 const MAX_CPM = 50;
 const IN_VIEW_RATIO = 0.5;
+// In-game block gate time is sent as event counts, one per 10 seconds.
+const GATE_UNIT_MS = 10 * 1000;
 
 const PAGE_KEYS: Array<[RegExp, string]> = [
   [/^\/$/, 'home'],
@@ -93,6 +97,7 @@ const SLOT_ID_RE = /^ad_(.+)_(\d+)$/;
 const REWARDED_PATH_RE = /reward/i;
 const VIDEO_PLACEMENT = 'video';
 const REWARDED_PLACEMENT = 'rewarded';
+const IN_GAME_PLACEMENT = 'in-game-block';
 const VIDEO_PLAYER_EVENTS: Array<[string, number | string]> = [
   ['InventoryRequest', REQUESTS],
   ['AdImpression', FILLED],
@@ -106,6 +111,7 @@ const slotCounters = new Map<string, number[]>();
 const pageCounters = new Map<string, number[]>();
 const bidderCounters = new Map<string, number[]>();
 const eventCounters = new Map<string, number[]>();
+const gateMs = new Map<string, number>();
 const trackers = new Map<Element, SlotTracker>();
 const bestBids = new Map<string, number>();
 
@@ -117,6 +123,8 @@ let gptReady = false;
 let listenersInstalled = false;
 let clickArmed = true;
 let rewardedReadySeen = false;
+let inGameAdGate: InGameAdGate | null = null;
+let gateSince = 0;
 let lastFlush = Date.now();
 let observer: IntersectionObserver | null = null;
 let mobileQuery: MediaQueryList | null = null;
@@ -212,11 +220,35 @@ function countEvent(placement: string, event: string) {
   )[0] += 1;
 }
 
+function accrueGate(now: number) {
+  if (
+    inGameAdGate &&
+    currentPage &&
+    pageVisible &&
+    gptReady &&
+    currentDevice() === 'desktop'
+  ) {
+    const key = `${currentPage}\t${IN_GAME_PLACEMENT}\tdesktop\tgate-${inGameAdGate}`;
+    gateMs.set(key, (gateMs.get(key) ?? 0) + now - gateSince);
+  }
+  gateSince = now;
+}
+
+function settleGates() {
+  gateMs.forEach((ms, key) => {
+    const units = Math.floor(ms / GATE_UNIT_MS);
+    if (units === 0) return;
+    counters(eventCounters, key, 1)[0] += units;
+    gateMs.set(key, ms - units * GATE_UNIT_MS);
+  });
+}
+
 function accruePage(now: number) {
   if (currentPage && pageVisible) {
     pageRow(currentPage)[PAGE_VISIBLE_MS] += now - pageSince;
   }
   pageSince = now;
+  accrueGate(now);
 }
 
 class SlotTracker {
@@ -295,6 +327,7 @@ function send(body: string) {
 function flush() {
   const now = Date.now();
   accruePage(now);
+  settleGates();
   trackers.forEach((tracker) => tracker.settle(now));
   lastFlush = now;
   const maps = [pageCounters, slotCounters, bidderCounters, eventCounters];
@@ -446,6 +479,11 @@ export function trackRewardedAdClick(shown: boolean) {
       REWARDED_PLACEMENT,
       rewardedReadySeen ? 'miss-spent' : 'miss-unfilled'
     );
+}
+
+export function setInGameAdGate(gate: InGameAdGate | null) {
+  accrueGate(Date.now());
+  inGameAdGate = gate;
 }
 
 export function trackVideoAdPlayer(player: VideoAdPlayer) {

@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGetAdReportQuery } from 'features/api/apiSlice';
+import { IN_GAME_AD_MIN_VIEWPORT_HEIGHT } from 'config/ads';
 import {
   AdBidderStat,
   AdDailyStat,
@@ -31,6 +32,7 @@ const MEASURE_STORAGE_KEY = 'talishar_mod_ad_measure';
 const REWARDED_RE = /reward/i;
 const VIDEO_PLACEMENT = 'video';
 const REWARDED_PLACEMENT = 'rewarded';
+const IN_GAME_PLACEMENT = 'in-game-block';
 // Used while a CPM field is empty. No price reaches the browser for these and
 // RevIQ's dashboard does not split them out, so they are benchmarks.
 const ESTIMATED_CPM = { video: 0.75, rewarded: 2 };
@@ -131,10 +133,17 @@ interface RewardedSummary {
   missSpent: number;
 }
 
+interface InGameGate {
+  ok: number;
+  short: number;
+  narrow: number;
+}
+
 interface InsightInput {
   slots: SlotRow[];
   pages: PageRow[];
   rewarded: RewardedSummary;
+  inGameGate: InGameGate;
   estimated: number;
   used: Prices;
 }
@@ -362,7 +371,7 @@ function sorted<T, K extends keyof T & string>(
 }
 
 function buildInsights(
-  { slots, pages, rewarded, estimated, used }: InsightInput,
+  { slots, pages, rewarded, inGameGate, estimated, used }: InsightInput,
   measure: Measure,
   t: Translate,
   pageLabel: (page: string) => string,
@@ -489,6 +498,17 @@ function buildInsights(
             timeShare: percent(under.timeShare),
             revenueShare: percent(under.revenueShare)
           })
+    );
+  }
+  const gateTotal = inGameGate.ok + inGameGate.short + inGameGate.narrow;
+  if (gateTotal >= MIN_SAMPLE) {
+    lines.push(
+      t('MOD_PAGE.ADS_INSIGHT_IN_GAME_GATE', {
+        ok: percent(ratio(inGameGate.ok, gateTotal)),
+        short: percent(ratio(inGameGate.short, gateTotal)),
+        narrow: percent(ratio(inGameGate.narrow, gateTotal)),
+        height: IN_GAME_AD_MIN_VIEWPORT_HEIGHT
+      })
     );
   }
   const flagged = slots.filter((row) =>
@@ -789,6 +809,14 @@ const AdStats: React.FC = () => {
       rewarded.missSpent += row.events['miss-spent'] ?? 0;
     }
 
+    const inGameGate: InGameGate = { ok: 0, short: 0, narrow: 0 };
+    eventsBySlot.forEach((events, key) => {
+      if (!key.endsWith(`\t${IN_GAME_PLACEMENT}`)) return;
+      inGameGate.ok += events['gate-ok'] ?? 0;
+      inGameGate.short += events['gate-short'] ?? 0;
+      inGameGate.narrow += events['gate-narrow'] ?? 0;
+    });
+
     const estimated =
       (prices.display > 0
         ? 0
@@ -891,6 +919,7 @@ const AdStats: React.FC = () => {
       bidders,
       days,
       rewarded,
+      inGameGate,
       estimated,
       used,
       totals: {

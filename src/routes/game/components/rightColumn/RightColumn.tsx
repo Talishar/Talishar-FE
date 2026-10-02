@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PriorityControl from '../elements/priorityControl/PriorityControl';
 import LastPlayed from '../elements/lastPlayed/LastPlayed';
 import Menu from '../elements/menu/Menu';
@@ -17,6 +17,7 @@ import {
   IN_GAME_AD_SIZE,
   IN_GAME_ADS_ENABLED
 } from 'config/ads';
+import { setInGameAdGate } from 'utils/adAnalytics';
 import InGameAd from './InGameAd';
 
 const adColumnStyle = {
@@ -39,6 +40,13 @@ function RightColumn() {
   );
   const { showAds } = useSupporterStatus();
   const showInGameAd = IN_GAME_ADS_ENABLED && showAds && hasRoomForAd;
+  const inGameAdGate = isNarrow ? 'narrow' : hasRoomForAd ? 'ok' : 'short';
+
+  useEffect(() => {
+    if (!IN_GAME_ADS_ENABLED || !showAds) return;
+    setInGameAdGate(inGameAdGate);
+    return () => setInGameAdGate(null);
+  }, [inGameAdGate, showAds]);
 
   if (isNarrow) {
     return (

@@ -3,7 +3,7 @@
   height: auto;
   display: flex;
   width: 100%;
-  max-width: 260px;
+  max-width: var(--matchups-max-width, 260px);
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { ADS_ENABLED, isAdFreeRoute, isVideoAdRoute } from 'config/ads';
+import { ADS_ENABLED, isAdFreeRoute } from 'config/ads';
 import { startAdAnalytics } from 'utils/adAnalytics';
 
 declare global {
@@ -103,7 +103,6 @@ const TOP_NAVIGATION_TOKEN_RE = /(^|\s)allow-top-navigation\S*/g;
 
 // In-game, every iframe Talishar did not render itself belongs to the ad stack.
 let containedMode = false;
-let anchorAllowed = false;
 
 function isAdIframe(iframe: HTMLIFrameElement, parent: Node | null): boolean {
   if (isReactPortalEl(iframe)) return false;
@@ -222,6 +221,15 @@ const VIDEO_AD_Z_INDEX = '9999';
 // rev.iq's sticky anchor, appended straight to <body>.
 const STICKY_AD_SELECTOR = '[data-reviq-sticky-ad]';
 
+interface GptSlotLike {
+  getSlotElementId(): string;
+}
+
+interface GoogleTagLike {
+  pubads?: () => { getSlots?: () => GptSlotLike[] };
+  destroySlots?: (slots: GptSlotLike[]) => boolean;
+}
+
 function isCMPElement(el: Element): boolean {
   try {
     if (el.matches(CMP_SELECTOR)) return true;
@@ -274,16 +282,20 @@ function raiseVideoAdElement(el: HTMLElement) {
   );
 }
 
-// The anchor manages its own pointer-events and opacity when it opens and
-// closes, so it is either left alone or taken out of layout. Unlike
-// visibility: hidden, display: none also stops rev.iq from refreshing it into
-// ads nobody can see.
-function placeStickyAd(el: HTMLElement) {
-  if (anchorAllowed) {
-    el.style.removeProperty('display');
-  } else {
-    el.style.setProperty('display', 'none', 'important');
+// The anchor is off everywhere. Hiding it is not enough: rev.iq still renders
+// ads into a hidden anchor, so its slot is destroyed and the element removed.
+function removeStickyAd(el: HTMLElement) {
+  try {
+    const googletag = (window as { googletag?: GoogleTagLike }).googletag;
+    const slots = (googletag?.pubads?.().getSlots?.() ?? []).filter((slot) => {
+      const slotEl = document.getElementById(slot.getSlotElementId());
+      return slotEl !== null && el.contains(slotEl);
+    });
+    if (slots.length > 0) googletag?.destroySlots?.(slots);
+  } catch (_) {
+    // The provider may not have initialized Google Publisher Tags.
   }
+  el.remove();
 }
 
 function lockNonRootBodyChildren() {
@@ -297,7 +309,7 @@ function lockNonRootBodyChildren() {
       continue;
     }
     if (el.matches(STICKY_AD_SELECTOR)) {
-      placeStickyAd(h);
+      removeStickyAd(h);
       continue;
     }
     if (!containedMode && isVideoAdElement(el)) {
@@ -355,8 +367,6 @@ export default function useAdScript(
   contained = false
 ) {
   const isProtectedRoute = isAdFreeRoute(window.location.pathname);
-  // The anchor would cover the board's hand in game and the video dock.
-  const allowAnchor = !contained && !isVideoAdRoute(window.location.pathname);
   const shouldLoadProvider =
     enabled && ADS_ENABLED && (!isProtectedRoute || allowOnAdFreeRoute);
 
@@ -394,7 +404,6 @@ export default function useAdScript(
     // Install the guards before injecting the ad script so any redirect
     // attempts from the ad network are blocked from the moment the script runs.
     containedMode = contained;
-    anchorAllowed = allowAnchor;
     installNavGuard();
     startAdAnalytics();
     installIframeInsertionGuard();
@@ -473,7 +482,6 @@ export default function useAdScript(
       removeNavGuard();
       insertionGuardActive = false;
       containedMode = false;
-      anchorAllowed = false;
     };
-  }, [shouldLoadProvider, contained, allowAnchor]);
+  }, [shouldLoadProvider, contained]);
 }

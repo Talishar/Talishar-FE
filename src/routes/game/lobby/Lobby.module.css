@@ -1030,6 +1030,16 @@ nav {
       'chat weapons matchups';
   }
 
+  .gridLayoutWithAd {
+    --matchups-max-width: 300px;
+    grid-template-columns: minmax(300px, 0.6fr) 2fr 300px;
+    grid-template-rows: 240px 1fr auto;
+    grid-template-areas:
+      'hero weapons matchups'
+      'chat weapons matchups'
+      'chat weapons lobbyad';
+  }
+
   .titleContainer {
     grid-area: hero;
   }
