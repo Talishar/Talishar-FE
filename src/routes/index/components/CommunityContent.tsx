@@ -5,7 +5,7 @@ import {
   ContentVideo
 } from '../../../services/contentService';
 import { Trans, useTranslation } from 'react-i18next';
-import { AdUnit } from 'components/ads';
+import { AdUnit } from 'components/ads/AdUnit';
 import RemoveAdsLink from 'components/RemoveAdsLink/RemoveAdsLink';
 import { TALISHAR_DISCORD_URL } from 'constants/socialLinks';
 

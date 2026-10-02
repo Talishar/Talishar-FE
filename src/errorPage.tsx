@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useRouteError } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import styles from './errorPage.module.css';
@@ -9,6 +9,7 @@ import {
   LOCALE_DICTIONARY
 } from 'utils/multilanguage/constants';
 import {
+  assetRecoveryAlreadyAttempted,
   attemptAssetRecovery,
   shouldAttemptAssetRecovery
 } from 'utils/assetRecovery';
@@ -72,7 +73,11 @@ export const ErrorPage = () => {
     statusText = t('ERROR_PAGE.UNKNOWN_ERROR');
   }
 
-  const hasStaleAssets = isStaleAssetError(`${statusText} ${errMessage}`);
+  const isAssetError = isStaleAssetError(`${statusText} ${errMessage}`);
+  const [recoveryFailed] = useState(
+    () => isAssetError && assetRecoveryAlreadyAttempted()
+  );
+  const hasStaleAssets = isAssetError && !recoveryFailed;
 
   useEffect(() => {
     if (!hasStaleAssets) return;
@@ -84,10 +89,22 @@ export const ErrorPage = () => {
       <article className={styles.article}>
         <h1 style={{ marginBottom: '12px' }}>
           {t(
-            hasStaleAssets ? 'ERROR_PAGE.STALE_CACHE_TITLE' : 'ERROR_PAGE.TITLE'
+            hasStaleAssets
+              ? 'ERROR_PAGE.STALE_CACHE_TITLE'
+              : recoveryFailed
+              ? 'ERROR_PAGE.BLOCKED_ASSET_TITLE'
+              : 'ERROR_PAGE.TITLE'
           )}
         </h1>
-        {hasStaleAssets ? (
+        {recoveryFailed ? (
+          <>
+            <p>{t('ERROR_PAGE.BLOCKED_ASSET_MESSAGE')}</p>
+            <p>{t('ERROR_PAGE.BLOCKED_ASSET_INSTRUCTION')}</p>
+            <p>
+              <i>{`${statusText} ${errMessage}`.trim()}</i>
+            </p>
+          </>
+        ) : hasStaleAssets ? (
           <div className={styles.refreshInstructions}>
             <p>{t('ERROR_PAGE.STALE_CACHE_MESSAGE')}</p>
             <p>{t('ERROR_PAGE.STALE_CACHE_INSTRUCTION')}</p>

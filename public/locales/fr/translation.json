@@ -348,6 +348,9 @@
     "YOU_TOOK": "Vous avez pris"
   },
   "ERROR_PAGE": {
+    "BLOCKED_ASSET_INSTRUCTION": "Désactivez les bloqueurs de publicités ou de contenu pour talishar.net, ou essayez sans VPN ni Relais privé iCloud. Si le problème persiste, envoyez-nous l'erreur ci-dessous.",
+    "BLOCKED_ASSET_MESSAGE": "Quelque chose entre votre navigateur et Talishar bloque l'un de ses fichiers, une actualisation ne suffira donc pas.",
+    "BLOCKED_ASSET_TITLE": "Une partie de Talishar n'a pas pu se charger",
     "HOME": "Maison",
     "MAC": "Mac",
     "MESSAGE": "Désolé, une erreur s'est produite.",

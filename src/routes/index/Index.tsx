@@ -15,7 +15,7 @@ import SystemMessageModal from 'components/SystemMessageModal/SystemMessageModal
 import useAuth from 'hooks/useAuth';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import useAdScript from 'hooks/useAdScript';
-import { AdUnit } from 'components/ads';
+import { AdUnit } from 'components/ads/AdUnit';
 import TalisharLogo from '../../img/TalisharLogo.webp';
 import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
 import { TALISHAR_METAFY_URL } from 'constants/socialLinks';

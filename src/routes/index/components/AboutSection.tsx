@@ -3,7 +3,7 @@ import styles from './AboutSection.module.css';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 import { useTranslation, Trans } from 'react-i18next';
 import ContributorLeaderboard from './ContributorLeaderboard';
-import { AdUnit } from 'components/ads';
+import { AdUnit } from 'components/ads/AdUnit';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import { useMediaQuery } from 'hooks/useMediaQuery';
 import PageBanner from 'components/PageBanner/PageBanner';

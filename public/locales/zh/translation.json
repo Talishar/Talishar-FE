@@ -337,6 +337,9 @@
     "YOU_TOOK": ""
   },
   "ERROR_PAGE": {
+    "BLOCKED_ASSET_INSTRUCTION": "",
+    "BLOCKED_ASSET_MESSAGE": "",
+    "BLOCKED_ASSET_TITLE": "",
     "HOME": "",
     "MAC": "",
     "MESSAGE": "",

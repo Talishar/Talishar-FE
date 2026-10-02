@@ -18,6 +18,17 @@ export const buildAssetRecoveryUrl = (href: string, now: number): string => {
   return url.toString();
 };
 
+export const assetRecoveryAlreadyAttempted = (): boolean => {
+  try {
+    return !shouldAttemptAssetRecovery(
+      Date.now(),
+      window.sessionStorage.getItem(ASSET_RECOVERY_STORAGE_KEY)
+    );
+  } catch {
+    return true;
+  }
+};
+
 export const attemptAssetRecovery = (): boolean => {
   const now = Date.now();
 

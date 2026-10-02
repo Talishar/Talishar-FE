@@ -372,6 +372,9 @@
     "YOU_TOOK": "You Took"
   },
   "ERROR_PAGE": {
+    "BLOCKED_ASSET_INSTRUCTION": "Turn off ad or content blockers for talishar.net, or try without a VPN or iCloud Private Relay. If it keeps happening, send us the error below.",
+    "BLOCKED_ASSET_MESSAGE": "Something between your browser and Talishar is blocking one of its files, so refreshing will not help.",
+    "BLOCKED_ASSET_TITLE": "Part of Talishar could not load",
     "HOME": "Home",
     "MAC": "Mac",
     "MESSAGE": "Sorry, an error has occurred.",

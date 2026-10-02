@@ -2,7 +2,7 @@ import { Card } from 'features/Card';
 import { Effect } from '../effects/Effects';
 import styles from './EndGameStats.module.css';
 import useSupporterStatus from 'hooks/useSupporterStatus';
-import { AdUnit } from 'components/ads';
+import { AdUnit } from 'components/ads/AdUnit';
 import { HelpTooltip } from 'components/Tooltip/HelpTooltip';
 import {
   ReactNode,
