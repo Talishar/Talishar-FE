@@ -1,6 +1,14 @@
 .gemTarget {
-  --gem-size: clamp(31px, 4.2vh, 38px);
-  --gem-target-size: clamp(35px, 4.6vh, 42px);
+  --gem-preferred-size: clamp(31px, 4.2vh, 38px);
+  --gem-preferred-target-size: clamp(35px, 4.6vh, 42px);
+  --gem-size: min(
+    var(--gem-preferred-size),
+    calc(var(--card-size, 13vh) * 0.34)
+  );
+  --gem-target-size: min(
+    var(--gem-preferred-target-size),
+    calc(var(--card-size, 13vh) * 0.5)
+  );
 
   position: absolute;
   bottom: -3px;
@@ -93,16 +101,16 @@
 
 @media only screen and (max-width: 768px) {
   .gemTarget {
-    --gem-size: clamp(17px, 2.5vh, 22px);
-    --gem-target-size: clamp(30px, 3.8vh, 36px);
+    --gem-preferred-size: clamp(17px, 2.5vh, 22px);
+    --gem-preferred-target-size: clamp(30px, 3.8vh, 36px);
     align-items: flex-end;
   }
 }
 
 @media (orientation: portrait) and (max-width: 600px) {
   .gemTarget {
-    --gem-size: clamp(16px, 4.5dvw, 20px);
-    --gem-target-size: clamp(30px, 7dvw, 34px);
+    --gem-preferred-size: clamp(16px, 4.5dvw, 20px);
+    --gem-preferred-target-size: clamp(30px, 7dvw, 34px);
     bottom: -2px;
   }
 }
