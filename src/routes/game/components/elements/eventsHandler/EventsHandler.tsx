@@ -261,25 +261,6 @@ export const EventsHandler = React.memo(() => {
             );
             continue;
           }
-          case 'GEMOFF': {
-            const [gemPlayerID, gemCardNumber] = (
-              event.eventValue ?? ''
-            ).split(':');
-            if (parseInt(gemPlayerID) !== playerID || !gemCardNumber) continue;
-            toast(
-              (t) => (
-                <MovementEventCard
-                  type="GEMOFF"
-                  cardNumber={gemCardNumber}
-                  isPlayer
-                  caption="Its gem turns back on at the start of the next turn."
-                  onDismiss={() => toast.dismiss(t.id)}
-                />
-              ),
-              { ...MOVEMENT_TOAST_OPTIONS, duration: 7000 }
-            );
-            continue;
-          }
           case 'CLASH':
             continue;
           case 'TURNARSENALFACEUP': {
