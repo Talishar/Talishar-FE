@@ -40,6 +40,7 @@ interface Prebid {
 interface AdWindow extends Window {
   googletag?: GoogleTag;
   pbjs?: Prebid;
+  _talishar_rewardedAdReady?: boolean;
 }
 
 const MOUNTS = 0;
@@ -95,6 +96,7 @@ const REWARDED_PLACEMENT = 'rewarded';
 const VIDEO_PLAYER_EVENTS: Array<[string, number | string]> = [
   ['InventoryRequest', REQUESTS],
   ['AdImpression', FILLED],
+  ['AdStarted', 'started'],
   ['AdViewableImpression', VIEWABLE],
   ['AdClickThru', CLICKS],
   ['AdVideoComplete', 'complete']
@@ -114,6 +116,7 @@ let providerStarted = false;
 let gptReady = false;
 let listenersInstalled = false;
 let clickArmed = true;
+let rewardedReadySeen = false;
 let lastFlush = Date.now();
 let observer: IntersectionObserver | null = null;
 let mobileQuery: MediaQueryList | null = null;
@@ -314,6 +317,11 @@ function onVisibilityChange() {
   if (!pageVisible && now - lastFlush >= MIN_FLUSH_GAP_MS) flush();
 }
 
+function onRewardedReady(event: Event) {
+  if ((event as CustomEvent<{ ready?: boolean }>).detail?.ready)
+    rewardedReadySeen = true;
+}
+
 function onWindowBlur() {
   window.setTimeout(() => {
     const active = document.activeElement;
@@ -346,6 +354,8 @@ function installListeners() {
   document.addEventListener('visibilitychange', onVisibilityChange);
   window.addEventListener('pagehide', flush);
   window.addEventListener('blur', onWindowBlur);
+  window.addEventListener('talishar:rewardedAdReady', onRewardedReady);
+  if ((window as AdWindow)._talishar_rewardedAdReady) rewardedReadySeen = true;
   window.addEventListener('focus', () => {
     clickArmed = true;
   });
@@ -395,6 +405,15 @@ export function observeAdSlot(el: HTMLElement): () => void {
   };
 }
 
+// An ancestor with display: none leaves no client rects; visibility is
+// inherited, so the computed value covers hidden ancestors too.
+function isHidden(el: Element): boolean {
+  return (
+    el.getClientRects().length === 0 ||
+    getComputedStyle(el).visibility === 'hidden'
+  );
+}
+
 function onSlotRenderEnded({ slot, isEmpty }: GptSlotEvent) {
   const placement = currentPage && placementFromSlot(slot);
   if (!currentPage || !placement) return;
@@ -402,6 +421,9 @@ function onSlotRenderEnded({ slot, isEmpty }: GptSlotEvent) {
   row[REQUESTS] += 1;
   if (isEmpty) return;
   row[FILLED] += 1;
+  const el = document.getElementById(slot.getSlotElementId());
+  if (placement !== REWARDED_PLACEMENT && el && isHidden(el))
+    countEvent(placement, 'hidden');
   const best = micros(bestBids.get(slot.getSlotElementId()));
   if (best > 0) {
     row[FILL_BID_MICROS] += best;
@@ -419,6 +441,11 @@ function onRewardedEvent(event: string) {
 export function trackRewardedAdClick(shown: boolean) {
   countEvent(REWARDED_PLACEMENT, 'click');
   if (shown) countEvent(REWARDED_PLACEMENT, 'shown');
+  else
+    countEvent(
+      REWARDED_PLACEMENT,
+      rewardedReadySeen ? 'miss-spent' : 'miss-unfilled'
+    );
 }
 
 export function trackVideoAdPlayer(player: VideoAdPlayer) {

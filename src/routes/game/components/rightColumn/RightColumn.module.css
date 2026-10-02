@@ -33,6 +33,23 @@
   }
 }
 
+/* Never narrower than the in-game ad, which only mounts when it fits. */
+.rightColumnWithAd {
+  min-width: max(var(--in-game-ad-size), min(20vh, 12vw));
+  min-width: max(var(--in-game-ad-size), min(20dvh, 12dvw));
+  max-width: max(var(--in-game-ad-size), min(20vh, 12vw));
+  max-width: max(var(--in-game-ad-size), min(20dvh, 12dvw));
+}
+
+@media (orientation: landscape) and (max-aspect-ratio: 3/2) {
+  .rightColumnWithAd {
+    min-width: max(var(--in-game-ad-size), 20vh);
+    min-width: max(var(--in-game-ad-size), 20dvh);
+    max-width: max(var(--in-game-ad-size), 20vh);
+    max-width: max(var(--in-game-ad-size), 20dvh);
+  }
+}
+
 .mobileTopBar {
   display: none;
 }

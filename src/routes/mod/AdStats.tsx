@@ -12,21 +12,31 @@ import {
 } from 'interface/API/ModPageAPI';
 import styles from './AdStats.module.css';
 
+type Measure = 'impressions' | 'revenue';
+
 const RANGES: AdReportRange[] = [1, 7, 30, 90];
 const DEVICES: Array<AdDevice | 'all'> = ['all', 'desktop', 'mobile'];
+const MEASURES: Measure[] = ['impressions', 'revenue'];
 const MIN_SAMPLE = 20;
 const RARELY_SEEN_SHARE = 0.05;
 const LOW_FILL_RATE = 0.5;
 const LOW_VIEWABLE_RATE = 0.5;
+const HIDDEN_SHARE = 0.05;
+const MIN_HIDDEN = 5;
 const SIGNIFICANT_TIME_SHARE = 0.05;
 const NOTABLE_TIME_SHARE = 0.01;
 const MISSED_REWARDED_SHARE = 0.2;
 const PRICE_STORAGE_KEY = 'talishar_mod_ad_cpms';
+const MEASURE_STORAGE_KEY = 'talishar_mod_ad_measure';
 const REWARDED_RE = /reward/i;
 const VIDEO_PLACEMENT = 'video';
 const REWARDED_PLACEMENT = 'rewarded';
+// Used while a CPM field is empty. No price reaches the browser for these and
+// RevIQ's dashboard does not split them out, so they are benchmarks.
+const ESTIMATED_CPM = { video: 0.75, rewarded: 2 };
 
 type SlotFlag =
+  | 'HIDDEN'
   | 'DUPLICATE'
   | 'WRAPPER'
   | 'NEVER_REQUESTED'
@@ -57,6 +67,8 @@ interface SlotRow {
   pricedFills: number;
   kind: SlotKind;
   events: EventCounts;
+  impressions: number;
+  hidden: number;
   seenRate: number;
   avgInViewMs: number;
   fillRate: number;
@@ -65,6 +77,8 @@ interface SlotRow {
   ecpm: number;
   share: number;
   rpm: number;
+  impressionsPer1k: number;
+  impressionShare: number;
   flags: SlotFlag[];
 }
 
@@ -75,11 +89,15 @@ interface PageRow {
   adblockViews: number;
   slots: number;
   estMicros: number;
+  impressions: number;
   avgMs: number;
   timeShare: number;
   revenueShare: number;
+  impressionShare: number;
   rpm: number;
   perHour: number;
+  impressionsPer1k: number;
+  impressionsPerHour: number;
   adblockRate: number;
   flags: PageFlag[];
 }
@@ -98,7 +116,7 @@ interface DayRow {
   day: string;
   views: number;
   estMicros: number;
-  rpm: number;
+  impressions: number;
 }
 
 interface RewardedSummary {
@@ -109,6 +127,16 @@ interface RewardedSummary {
   requests: number;
   filled: number;
   micros: number;
+  missUnfilled: number;
+  missSpent: number;
+}
+
+interface InsightInput {
+  slots: SlotRow[];
+  pages: PageRow[];
+  rewarded: RewardedSummary;
+  estimated: number;
+  used: Prices;
 }
 
 type SortState<K extends string> = { key: K; descending: boolean };
@@ -124,9 +152,15 @@ const dollars = (value: number) =>
 const money = (micros: number) => dollars(micros / 1e6);
 const perThousand = (micros: number, count: number) =>
   ratio(micros / 1e6, count) * 1000;
+const perThousandCount = (part: number, whole: number) =>
+  ratio(part, whole) * 1000;
 const percent = (value: number) =>
   value > 0 && value < 0.005 ? '<1%' : `${Math.round(value * 100)}%`;
 const count = (value: number) => value.toLocaleString();
+const rate = (value: number) =>
+  value.toLocaleString(undefined, {
+    maximumFractionDigits: value < 10 ? 1 : 0
+  });
 const seconds = (ms: number) => `${(ms / 1000).toFixed(ms < 10000 ? 1 : 0)}s`;
 const duration = (ms: number) => {
   const minutes = Math.round(ms / 60000);
@@ -179,6 +213,24 @@ function savePrices(prices: Prices) {
   }
 }
 
+function loadMeasure(): Measure {
+  try {
+    return localStorage.getItem(MEASURE_STORAGE_KEY) === 'revenue'
+      ? 'revenue'
+      : 'impressions';
+  } catch {
+    return 'impressions';
+  }
+}
+
+function saveMeasure(measure: Measure) {
+  try {
+    localStorage.setItem(MEASURE_STORAGE_KEY, measure);
+  } catch {
+    // The choice then only lasts for this visit.
+  }
+}
+
 function slotKind(row: AdSlotStat): SlotKind {
   if (row.placement === VIDEO_PLACEMENT) return 'video';
   if (REWARDED_RE.test(row.placement)) return 'rewarded';
@@ -190,15 +242,23 @@ function unpricedFills(row: { filled: number; pricedFills: number }) {
   return Math.max(0, row.filled - row.pricedFills);
 }
 
+// The video player's AdImpression event misses some ads that still start and
+// play to the end, so video takes the largest of the three counts.
+function slotImpressions(row: AdSlotStat, kind: SlotKind, events: EventCounts) {
+  if (kind === 'video')
+    return Math.max(row.filled, events.started ?? 0, events.complete ?? 0);
+  if (kind === 'rewarded') return events.shown ?? 0;
+  return row.filled;
+}
+
 function slotMicros(
   row: AdSlotStat,
   kind: SlotKind,
-  events: EventCounts,
+  impressions: number,
   prices: Prices
 ) {
-  if (kind === 'video') return row.filled * cpmMicros(prices.video);
-  if (kind === 'rewarded')
-    return (events.shown ?? 0) * cpmMicros(prices.rewarded);
+  if (kind === 'video' || kind === 'rewarded')
+    return impressions * cpmMicros(prices[kind]);
   return row.estMicros + unpricedFills(row) * cpmMicros(prices.display);
 }
 
@@ -233,9 +293,22 @@ const SLOT_SUM_FIELDS: Array<keyof AdSlotStat> = [
   'pricedFills'
 ];
 
-function slotFlags(row: AdSlotStat, kind: SlotKind): SlotFlag[] {
+const DAY_SUM_FIELDS: Array<keyof AdDailyStat> = [
+  'views',
+  'estMicros',
+  'unpricedFills',
+  'displayImpressions',
+  'videoImpressions',
+  'videoStarts',
+  'videoCompletes',
+  'rewardedShows'
+];
+
+function slotFlags(row: AdSlotStat, kind: SlotKind, hidden: number) {
   const flags: SlotFlag[] = [];
   if (kind === 'rewarded') return flags;
+  if (hidden >= MIN_HIDDEN && ratio(hidden, row.filled) >= HIDDEN_SHARE)
+    flags.push('HIDDEN');
   if (row.placement.includes('#')) flags.push('DUPLICATE');
   if (kind === 'wrapper') flags.push('WRAPPER');
   if (row.seen >= MIN_SAMPLE && row.requests === 0 && row.filled === 0)
@@ -270,7 +343,8 @@ function useSort<K extends string>(initial: K) {
         ? { key, descending: !current.descending }
         : { key, descending: true }
     );
-  return [sort, toggle] as const;
+  const reset = (key: K) => setSort({ key, descending: true });
+  return [sort, toggle, reset] as const;
 }
 
 function sorted<T, K extends keyof T & string>(
@@ -288,17 +362,37 @@ function sorted<T, K extends keyof T & string>(
 }
 
 function buildInsights(
-  slots: SlotRow[],
-  pages: PageRow[],
-  rewarded: RewardedSummary,
-  unpriced: number,
+  { slots, pages, rewarded, estimated, used }: InsightInput,
+  measure: Measure,
   t: Translate,
   pageLabel: (page: string) => string,
   slotLabel: (row: SlotRow) => string
 ): string[] {
   const lines: string[] = [];
-  if (unpriced > 0) {
-    lines.push(t('MOD_PAGE.ADS_INSIGHT_UNPRICED', { count: unpriced }));
+  const byImpressions = measure === 'impressions';
+  const hidden = slots.filter((row) => row.hidden > 0);
+  if (hidden.length > 0) {
+    const worstHidden = [...hidden].sort((a, b) => b.hidden - a.hidden)[0];
+    const total = hidden.reduce((sum, row) => sum + row.hidden, 0);
+    lines.push(
+      t('MOD_PAGE.ADS_INSIGHT_HIDDEN', {
+        count: total,
+        total: count(total),
+        slot: slotLabel(worstHidden),
+        page: pageLabel(worstHidden.page)
+      })
+    );
+  }
+  if (!byImpressions && estimated > 0) {
+    lines.push(
+      t('MOD_PAGE.ADS_INSIGHT_ESTIMATED', {
+        count: estimated,
+        total: count(estimated),
+        display: dollars(used.display),
+        video: dollars(used.video),
+        rewarded: dollars(used.rewarded)
+      })
+    );
   }
   const missed = rewarded.clicks - rewarded.shown;
   if (
@@ -312,16 +406,26 @@ function buildInsights(
       })
     );
   }
-  const earning = slots.filter((row) => row.estMicros > 0);
-  const top = [...earning].sort((a, b) => b.estMicros - a.estMicros)[0];
+  const value = (row: SlotRow) =>
+    byImpressions ? row.impressions : row.estMicros;
+  const top = slots
+    .filter((row) => value(row) > 0)
+    .sort((a, b) => value(b) - value(a))[0];
   if (top) {
     lines.push(
-      t('MOD_PAGE.ADS_INSIGHT_TOP', {
-        slot: slotLabel(top),
-        page: pageLabel(top.page),
-        share: percent(top.share),
-        rpm: dollars(top.rpm)
-      })
+      byImpressions
+        ? t('MOD_PAGE.ADS_INSIGHT_TOP_IMPRESSIONS', {
+            slot: slotLabel(top),
+            page: pageLabel(top.page),
+            share: percent(top.impressionShare),
+            rate: rate(top.impressionsPer1k)
+          })
+        : t('MOD_PAGE.ADS_INSIGHT_TOP', {
+            slot: slotLabel(top),
+            page: pageLabel(top.page),
+            share: percent(top.share),
+            rpm: dollars(top.rpm)
+          })
     );
   }
   const silent = slots.find((row) => row.flags.includes('NEVER_REQUESTED'));
@@ -334,18 +438,28 @@ function buildInsights(
       })
     );
   }
-  const measured = slots.filter(
-    (row) => row.mounts >= MIN_SAMPLE && row.requests > 0 && row !== top
-  );
-  const worst = [...measured].sort((a, b) => a.rpm - b.rpm)[0];
+  const perView = (row: SlotRow) =>
+    byImpressions ? row.impressionsPer1k : row.rpm;
+  const worst = slots
+    .filter(
+      (row) => row.mounts >= MIN_SAMPLE && row.requests > 0 && row !== top
+    )
+    .sort((a, b) => perView(a) - perView(b))[0];
   if (worst) {
     lines.push(
-      t('MOD_PAGE.ADS_INSIGHT_WORST', {
-        slot: slotLabel(worst),
-        page: pageLabel(worst.page),
-        rpm: dollars(worst.rpm),
-        seen: percent(worst.seenRate)
-      })
+      byImpressions
+        ? t('MOD_PAGE.ADS_INSIGHT_WORST_IMPRESSIONS', {
+            slot: slotLabel(worst),
+            page: pageLabel(worst.page),
+            rate: rate(worst.impressionsPer1k),
+            seen: percent(worst.seenRate)
+          })
+        : t('MOD_PAGE.ADS_INSIGHT_WORST', {
+            slot: slotLabel(worst),
+            page: pageLabel(worst.page),
+            rpm: dollars(worst.rpm),
+            seen: percent(worst.seenRate)
+          })
     );
   }
   const pagesByTime = [...pages].sort((a, b) => b.visibleMs - a.visibleMs);
@@ -364,11 +478,17 @@ function buildInsights(
   );
   if (under) {
     lines.push(
-      t('MOD_PAGE.ADS_INSIGHT_UNDER', {
-        page: pageLabel(under.page),
-        timeShare: percent(under.timeShare),
-        revenueShare: percent(under.revenueShare)
-      })
+      byImpressions
+        ? t('MOD_PAGE.ADS_INSIGHT_UNDER_IMPRESSIONS', {
+            page: pageLabel(under.page),
+            timeShare: percent(under.timeShare),
+            impressionShare: percent(under.impressionShare)
+          })
+        : t('MOD_PAGE.ADS_INSIGHT_UNDER', {
+            page: pageLabel(under.page),
+            timeShare: percent(under.timeShare),
+            revenueShare: percent(under.revenueShare)
+          })
     );
   }
   const flagged = slots.filter((row) =>
@@ -380,41 +500,59 @@ function buildInsights(
   return lines;
 }
 
-const DailyChart = ({ days }: { days: DayRow[] }) => {
+const DailyChart = ({
+  days,
+  measure
+}: {
+  days: DayRow[];
+  measure: Measure;
+}) => {
   const { t } = useTranslation();
   const [active, setActive] = useState<number | null>(null);
-  const max = Math.max(...days.map((day) => day.estMicros), 1);
+  const byImpressions = measure === 'impressions';
+  const value = (day: DayRow) =>
+    byImpressions ? day.impressions : day.estMicros;
+  const peak = Math.max(0, ...days.map(value));
+  const max = Math.max(peak, 1);
   const focused = active === null ? null : days[active];
+  const readout = (day: DayRow) =>
+    byImpressions
+      ? t('MOD_PAGE.ADS_CHART_READOUT_IMPRESSIONS', {
+          day: day.day,
+          impressions: count(day.impressions),
+          views: count(day.views),
+          rate: rate(perThousandCount(day.impressions, day.views))
+        })
+      : t('MOD_PAGE.ADS_CHART_READOUT', {
+          day: day.day,
+          revenue: money(day.estMicros),
+          views: count(day.views),
+          rpm: dollars(perThousand(day.estMicros, day.views))
+        });
 
   return (
     <div className={styles.chartCard}>
       <div className={styles.chartHeader}>
-        <h3 className={styles.sectionTitle}>{t('MOD_PAGE.ADS_CHART_TITLE')}</h3>
+        <h3 className={styles.sectionTitle}>
+          {byImpressions
+            ? t('MOD_PAGE.ADS_CHART_TITLE_IMPRESSIONS')
+            : t('MOD_PAGE.ADS_CHART_TITLE')}
+        </h3>
         <span className={styles.chartReadout} aria-live="polite">
-          {focused
-            ? t('MOD_PAGE.ADS_CHART_READOUT', {
-                day: focused.day,
-                revenue: money(focused.estMicros),
-                views: count(focused.views),
-                rpm: dollars(focused.rpm)
-              })
-            : t('MOD_PAGE.ADS_CHART_HINT')}
+          {focused ? readout(focused) : t('MOD_PAGE.ADS_CHART_HINT')}
         </span>
       </div>
       <div className={styles.chartBody}>
-        <span className={styles.chartMax}>{max > 1 ? money(max) : ''}</span>
+        <span className={styles.chartMax}>
+          {peak > 0 ? (byImpressions ? count(peak) : money(peak)) : ''}
+        </span>
         <div className={styles.chartBars} onMouseLeave={() => setActive(null)}>
           {days.map((day, index) => (
             <div
               key={day.day}
               className={styles.chartColumn}
               tabIndex={0}
-              aria-label={t('MOD_PAGE.ADS_CHART_READOUT', {
-                day: day.day,
-                revenue: money(day.estMicros),
-                views: count(day.views),
-                rpm: dollars(day.rpm)
-              })}
+              aria-label={readout(day)}
               onMouseEnter={() => setActive(index)}
               onFocus={() => setActive(index)}
               onBlur={() => setActive(null)}
@@ -425,7 +563,7 @@ const DailyChart = ({ days }: { days: DayRow[] }) => {
                     ? `${styles.chartBar} ${styles.chartBarActive}`
                     : styles.chartBar
                 }
-                style={{ height: `${(day.estMicros / max) * 100}%` }}
+                style={{ height: `${(value(day) / max) * 100}%` }}
               />
             </div>
           ))}
@@ -443,14 +581,16 @@ const AdStats: React.FC = () => {
   const { t } = useTranslation();
   const [range, setRange] = useState<AdReportRange>(7);
   const [device, setDevice] = useState<AdDevice | 'all'>('all');
+  const [measure, setMeasure] = useState<Measure>(loadMeasure);
   const [flaggedOnly, setFlaggedOnly] = useState(false);
   const [prices, setPrices] = useState<Prices>(loadPrices);
-  const [slotSort, toggleSlotSort] = useSort<keyof SlotRow & string>(
-    'estMicros'
-  );
-  const [pageSort, togglePageSort] = useSort<keyof PageRow & string>(
-    'visibleMs'
-  );
+  const byImpressions = measure === 'impressions';
+  const [slotSort, toggleSlotSort, resetSlotSort] = useSort<
+    keyof SlotRow & string
+  >(byImpressions ? 'impressions' : 'estMicros');
+  const [pageSort, togglePageSort, resetPageSort] = useSort<
+    keyof PageRow & string
+  >('visibleMs');
   const [bidderSort, toggleBidderSort] = useSort<keyof BidderRow & string>(
     'winMicros'
   );
@@ -468,28 +608,19 @@ const AdStats: React.FC = () => {
     savePrices(next);
   };
 
+  const changeMeasure = (next: Measure) => {
+    setMeasure(next);
+    saveMeasure(next);
+    resetSlotSort(next === 'impressions' ? 'impressions' : 'estMicros');
+    resetPageSort('visibleMs');
+  };
+
   const slotLabel = (row: SlotRow) =>
     row.kind === 'video'
       ? t('MOD_PAGE.ADS_SLOT_VIDEO')
       : row.kind === 'rewarded'
       ? t('MOD_PAGE.ADS_SLOT_REWARDED')
       : row.placement;
-
-  const revenueHint = (row: SlotRow) => {
-    if (row.kind === 'video')
-      return t('MOD_PAGE.ADS_REVENUE_HINT_VIDEO', {
-        impressions: count(row.filled),
-        complete: count(row.events.complete ?? 0)
-      });
-    if (row.kind === 'rewarded')
-      return t('MOD_PAGE.ADS_REVENUE_HINT_REWARDED', {
-        shown: count(row.events.shown ?? 0)
-      });
-    return t('MOD_PAGE.ADS_REVENUE_HINT', {
-      exact: money(row.prebidMicros),
-      unpriced: count(unpricedFills(row))
-    });
-  };
 
   const report = useMemo(() => {
     const matches = (row: { device: AdDevice }) =>
@@ -517,15 +648,14 @@ const AdStats: React.FC = () => {
       ['bids', 'wins', 'winMicros']
     );
     const dayTotals = sumBy<AdDailyStat, keyof AdDailyStat>(
-      (data?.daily ?? []).filter(matches),
+      (data?.daily ?? []).filter(matches).map((row) => ({
+        displayImpressions: 0,
+        videoStarts: 0,
+        videoCompletes: 0,
+        ...row
+      })),
       (row) => row.day,
-      [
-        'views',
-        'estMicros',
-        'unpricedFills',
-        'videoImpressions',
-        'rewardedShows'
-      ]
+      DAY_SUM_FIELDS
     );
 
     const eventsBySlot = new Map<string, EventCounts>();
@@ -550,13 +680,35 @@ const AdStats: React.FC = () => {
         row,
         kind,
         events,
-        micros: slotMicros(row, kind, events, prices)
+        impressions: slotImpressions(row, kind, events)
       };
     });
     const displayRows = slotInputs
       .filter(({ kind }) => kind === 'display' || kind === 'wrapper')
       .map(({ row }) => row);
-    const totalMicros = slotInputs.reduce((sum, slot) => sum + slot.micros, 0);
+    const prebidCpm = perThousand(
+      displayRows.reduce((sum, row) => sum + row.estMicros, 0),
+      displayRows.reduce((sum, row) => sum + row.pricedFills, 0)
+    );
+    const used: Prices = {
+      display: prices.display || prebidCpm,
+      video: prices.video || ESTIMATED_CPM.video,
+      rewarded: prices.rewarded || ESTIMATED_CPM.rewarded
+    };
+    const pricedInputs = slotInputs.map((input) => ({
+      ...input,
+      micros: slotMicros(input.row, input.kind, input.impressions, used)
+    }));
+
+    const byKind = { display: 0, video: 0, rewarded: 0 };
+    for (const { kind, impressions } of slotInputs) {
+      byKind[kind === 'wrapper' ? 'display' : kind] += impressions;
+    }
+    const totalImpressions = byKind.display + byKind.video + byKind.rewarded;
+    const totalMicros = pricedInputs.reduce(
+      (sum, slot) => sum + slot.micros,
+      0
+    );
     const totalPrebid = slotsList.reduce(
       (sum, row) => sum + row.prebidMicros,
       0
@@ -581,26 +733,38 @@ const AdStats: React.FC = () => {
       0
     );
 
-    const slots: SlotRow[] = slotInputs.map(({ row, kind, events, micros }) => {
-      const views = pageTotals.get(row.page)?.views ?? 0;
-      const impressions = kind === 'rewarded' ? events.shown ?? 0 : row.filled;
-      return {
-        ...row,
-        estMicros: micros,
-        kind,
-        events,
-        key: `${row.page}\t${row.placement}`,
-        seenRate: ratio(row.seen, row.mounts),
-        avgInViewMs: ratio(row.visibleMs, row.mounts),
-        fillRate: ratio(row.filled, row.requests),
-        viewableRate: ratio(row.viewable, row.filled),
-        ctr: ratio(row.clicks, row.filled),
-        ecpm: perThousand(micros, impressions),
-        share: ratio(micros, totalMicros),
-        rpm: perThousand(micros, views),
-        flags: slotFlags(row, kind)
-      };
-    });
+    const slots: SlotRow[] = pricedInputs.map(
+      ({ row, kind, events, impressions, micros }) => {
+        const views = pageTotals.get(row.page)?.views ?? 0;
+        const hidden = events.hidden ?? 0;
+        const viewable =
+          kind === 'video' ? Math.min(row.viewable, impressions) : row.viewable;
+        return {
+          ...row,
+          viewable,
+          estMicros: micros,
+          kind,
+          events,
+          impressions,
+          hidden,
+          key: `${row.page}\t${row.placement}`,
+          seenRate: ratio(row.seen, row.mounts),
+          avgInViewMs: ratio(row.visibleMs, row.mounts),
+          fillRate: ratio(row.filled, row.requests),
+          viewableRate: ratio(
+            viewable,
+            kind === 'video' ? impressions : row.filled
+          ),
+          ctr: ratio(row.clicks, row.filled),
+          ecpm: perThousand(micros, impressions),
+          share: ratio(micros, totalMicros),
+          rpm: perThousand(micros, views),
+          impressionsPer1k: perThousandCount(impressions, views),
+          impressionShare: ratio(impressions, totalImpressions),
+          flags: slotFlags(row, kind, hidden)
+        };
+      }
+    );
 
     const rewarded: RewardedSummary = {
       clicks: 0,
@@ -609,7 +773,9 @@ const AdStats: React.FC = () => {
       closed: 0,
       requests: 0,
       filled: 0,
-      micros: 0
+      micros: 0,
+      missUnfilled: 0,
+      missSpent: 0
     };
     for (const row of slots.filter((slot) => slot.kind === 'rewarded')) {
       rewarded.clicks += row.events.click ?? 0;
@@ -619,36 +785,45 @@ const AdStats: React.FC = () => {
       rewarded.requests += row.requests;
       rewarded.filled += row.filled;
       rewarded.micros += row.estMicros;
+      rewarded.missUnfilled += row.events['miss-unfilled'] ?? 0;
+      rewarded.missSpent += row.events['miss-spent'] ?? 0;
     }
 
-    const unpriced =
+    const estimated =
       (prices.display > 0
         ? 0
         : displayRows.reduce((sum, row) => sum + unpricedFills(row), 0)) +
-      (prices.video > 0
-        ? 0
-        : slots
-            .filter((row) => row.kind === 'video')
-            .reduce((sum, row) => sum + row.filled, 0)) +
-      (prices.rewarded > 0 ? 0 : rewarded.shown);
-    const prebidCpm = perThousand(
-      displayRows.reduce((sum, row) => sum + row.estMicros, 0),
-      displayRows.reduce((sum, row) => sum + row.pricedFills, 0)
-    );
+      (prices.video > 0 ? 0 : byKind.video) +
+      (prices.rewarded > 0 ? 0 : byKind.rewarded);
 
-    const slotsByPage = new Map<string, { slots: number; micros: number }>();
+    const slotsByPage = new Map<
+      string,
+      { slots: number; micros: number; impressions: number }
+    >();
     for (const row of slots) {
-      const entry = slotsByPage.get(row.page) ?? { slots: 0, micros: 0 };
-      if (row.mounts > 0 || (row.kind === 'video' && row.filled > 0))
+      const entry = slotsByPage.get(row.page) ?? {
+        slots: 0,
+        micros: 0,
+        impressions: 0
+      };
+      if (row.mounts > 0 || (row.kind === 'video' && row.impressions > 0))
         entry.slots += 1;
       entry.micros += row.estMicros;
+      entry.impressions += row.impressions;
       slotsByPage.set(row.page, entry);
     }
 
     const pages: PageRow[] = pagesList.map((row) => {
-      const onPage = slotsByPage.get(row.page) ?? { slots: 0, micros: 0 };
+      const onPage = slotsByPage.get(row.page) ?? {
+        slots: 0,
+        micros: 0,
+        impressions: 0
+      };
       const timeShare = ratio(row.visibleMs, totalVisible);
       const revenueShare = ratio(onPage.micros, totalMicros);
+      const impressionShare = ratio(onPage.impressions, totalImpressions);
+      const valueShare =
+        measure === 'impressions' ? impressionShare : revenueShare;
       const flags: PageFlag[] = [];
       if (
         row.views >= MIN_SAMPLE &&
@@ -659,18 +834,22 @@ const AdStats: React.FC = () => {
       else if (
         row.views >= MIN_SAMPLE &&
         timeShare >= SIGNIFICANT_TIME_SHARE &&
-        revenueShare < timeShare / 3
+        valueShare < timeShare / 3
       )
         flags.push('UNDER_MONETIZED');
       return {
         ...row,
         slots: onPage.slots,
         estMicros: onPage.micros,
+        impressions: onPage.impressions,
         avgMs: ratio(row.visibleMs, row.views),
         timeShare,
         revenueShare,
+        impressionShare,
         rpm: perThousand(onPage.micros, row.views),
         perHour: ratio(onPage.micros / 1e6, row.visibleMs / 3600000),
+        impressionsPer1k: perThousandCount(onPage.impressions, row.views),
+        impressionsPerHour: ratio(onPage.impressions, row.visibleMs / 3600000),
         adblockRate: ratio(row.adblockViews, row.views),
         flags
       };
@@ -688,16 +867,21 @@ const AdStats: React.FC = () => {
     const days: DayRow[] = Array.from(dayTotals.values())
       .sort((a, b) => a.day.localeCompare(b.day))
       .map((row) => {
-        const micros =
-          row.estMicros +
-          row.unpricedFills * cpmMicros(prices.display) +
-          row.videoImpressions * cpmMicros(prices.video) +
-          row.rewardedShows * cpmMicros(prices.rewarded);
+        const videoImpressions = Math.max(
+          row.videoImpressions,
+          row.videoStarts ?? 0,
+          row.videoCompletes ?? 0
+        );
         return {
           day: row.day,
           views: row.views,
-          estMicros: micros,
-          rpm: perThousand(micros, row.views)
+          estMicros:
+            row.estMicros +
+            row.unpricedFills * cpmMicros(used.display) +
+            videoImpressions * cpmMicros(used.video) +
+            row.rewardedShows * cpmMicros(used.rewarded),
+          impressions:
+            (row.displayImpressions ?? 0) + videoImpressions + row.rewardedShows
         };
       });
 
@@ -707,11 +891,13 @@ const AdStats: React.FC = () => {
       bidders,
       days,
       rewarded,
-      unpriced,
-      prebidCpm,
+      estimated,
+      used,
       totals: {
         micros: totalMicros,
         prebid: totalPrebid,
+        impressions: totalImpressions,
+        byKind,
         views: totalViews,
         visibleMs: totalVisible,
         adblock: totalAdblock,
@@ -720,17 +906,28 @@ const AdStats: React.FC = () => {
         viewable: totalViewable
       }
     };
-  }, [data, device, prices]);
+  }, [data, device, prices, measure]);
 
-  const insights = buildInsights(
-    report.slots,
-    report.pages,
-    report.rewarded,
-    report.unpriced,
-    t,
-    pageLabel,
-    slotLabel
-  );
+  const revenueHint = (row: SlotRow) => {
+    if (row.kind === 'video')
+      return t('MOD_PAGE.ADS_REVENUE_HINT_VIDEO', {
+        impressions: count(row.impressions),
+        complete: count(row.events.complete ?? 0),
+        cpm: dollars(report.used.video)
+      });
+    if (row.kind === 'rewarded')
+      return t('MOD_PAGE.ADS_REVENUE_HINT_REWARDED', {
+        shown: count(row.impressions),
+        cpm: dollars(report.used.rewarded)
+      });
+    return t('MOD_PAGE.ADS_REVENUE_HINT', {
+      exact: money(row.prebidMicros),
+      unpriced: count(unpricedFills(row)),
+      cpm: dollars(report.used.display)
+    });
+  };
+
+  const insights = buildInsights(report, measure, t, pageLabel, slotLabel);
 
   const flagLabel = (flag: SlotFlag | PageFlag) =>
     t(`MOD_PAGE.ADS_FLAG_${flag}`);
@@ -748,7 +945,8 @@ const AdStats: React.FC = () => {
   );
   const visiblePages = sorted(report.pages, pageSort);
   const visibleBidders = sorted(report.bidders, bidderSort);
-  const { totals, rewarded } = report;
+  const { totals, rewarded, used } = report;
+  const missed = Math.max(0, rewarded.clicks - rewarded.shown);
   const rewardedTiles = [
     {
       label: t('MOD_PAGE.ADS_REWARDED_CLICKS'),
@@ -764,8 +962,14 @@ const AdStats: React.FC = () => {
     },
     {
       label: t('MOD_PAGE.ADS_REWARDED_MISSED'),
-      value: count(Math.max(0, rewarded.clicks - rewarded.shown)),
-      note: t('MOD_PAGE.ADS_REWARDED_MISSED_NOTE')
+      value: count(missed),
+      note:
+        rewarded.missUnfilled + rewarded.missSpent > 0
+          ? t('MOD_PAGE.ADS_REWARDED_MISSED_SPLIT', {
+              unfilled: count(rewarded.missUnfilled),
+              spent: count(rewarded.missSpent)
+            })
+          : t('MOD_PAGE.ADS_REWARDED_MISSED_NOTE')
     },
     {
       label: t('MOD_PAGE.ADS_REWARDED_GRANTED'),
@@ -789,9 +993,11 @@ const AdStats: React.FC = () => {
       note:
         prices.rewarded > 0
           ? t('MOD_PAGE.ADS_REWARDED_REVENUE_NOTE', {
-              cpm: dollars(prices.rewarded)
+              cpm: dollars(used.rewarded)
             })
-          : t('MOD_PAGE.ADS_PRICE_MISSING')
+          : t('MOD_PAGE.ADS_REWARDED_REVENUE_NOTE_ESTIMATED', {
+              cpm: dollars(used.rewarded)
+            })
     }
   ];
   const hasRewarded = rewarded.requests > 0 || rewarded.clicks > 0;
@@ -841,22 +1047,28 @@ const AdStats: React.FC = () => {
       </div>
     );
 
-  const tiles = [
-    {
-      label: t('MOD_PAGE.ADS_KPI_REVENUE'),
-      value: money(totals.micros),
-      note: t('MOD_PAGE.ADS_KPI_REVENUE_NOTE', { exact: money(totals.prebid) })
-    },
-    {
-      label: t('MOD_PAGE.ADS_KPI_RPM'),
-      value: dollars(perThousand(totals.micros, totals.views)),
-      note: t('MOD_PAGE.ADS_KPI_RPM_NOTE')
-    },
+  const shareCell = (label: string, share: number, hint?: string) => (
+    <td className={styles.numeric} title={hint}>
+      <div className={styles.revenueCell}>
+        <span>{label}</span>
+        <span className={styles.shareBar} aria-hidden="true">
+          <span
+            className={styles.shareFill}
+            style={{ width: `${share * 100}%` }}
+          />
+        </span>
+        <span className={styles.muted}>{percent(share)}</span>
+      </div>
+    </td>
+  );
+
+  const hours = totals.visibleMs / 3600000;
+  const sharedTiles = [
     {
       label: t('MOD_PAGE.ADS_KPI_VIEWS'),
       value: count(totals.views),
       note: t('MOD_PAGE.ADS_KPI_VIEWS_NOTE', {
-        hours: count(Math.round(totals.visibleMs / 3600000))
+        hours: count(Math.round(hours))
       })
     },
     {
@@ -878,6 +1090,67 @@ const AdStats: React.FC = () => {
       note: t('MOD_PAGE.ADS_KPI_ADBLOCK_NOTE')
     }
   ];
+  const tiles = byImpressions
+    ? [
+        {
+          label: t('MOD_PAGE.ADS_KPI_IMPRESSIONS'),
+          value: count(totals.impressions),
+          note: t('MOD_PAGE.ADS_KPI_IMPRESSIONS_NOTE', {
+            display: count(totals.byKind.display),
+            video: count(totals.byKind.video),
+            rewarded: count(totals.byKind.rewarded)
+          })
+        },
+        {
+          label: t('MOD_PAGE.ADS_KPI_PER_HOUR'),
+          value: rate(ratio(totals.impressions, hours)),
+          note: t('MOD_PAGE.ADS_KPI_PER_HOUR_NOTE', {
+            perView: rate(ratio(totals.impressions, totals.views))
+          })
+        },
+        ...sharedTiles
+      ]
+    : [
+        {
+          label: t('MOD_PAGE.ADS_KPI_REVENUE'),
+          value: money(totals.micros),
+          note: t('MOD_PAGE.ADS_KPI_REVENUE_NOTE', {
+            exact: money(totals.prebid)
+          })
+        },
+        {
+          label: t('MOD_PAGE.ADS_KPI_RPM'),
+          value: dollars(perThousand(totals.micros, totals.views)),
+          note: t('MOD_PAGE.ADS_KPI_RPM_NOTE')
+        },
+        ...sharedTiles
+      ];
+
+  const segmented = <V extends string | number>(
+    label: string,
+    values: V[],
+    current: V,
+    onSelect: (value: V) => void,
+    text: (value: V) => string
+  ) => (
+    <div className={styles.segmented} role="group" aria-label={label}>
+      {values.map((value) => (
+        <button
+          key={value}
+          type="button"
+          aria-pressed={current === value}
+          className={
+            current === value
+              ? `${styles.segment} ${styles.segmentActive}`
+              : styles.segment
+          }
+          onClick={() => onSelect(value)}
+        >
+          {text(value)}
+        </button>
+      ))}
+    </div>
+  );
 
   return (
     <div className={styles.panel}>
@@ -887,50 +1160,25 @@ const AdStats: React.FC = () => {
           <p className={styles.description}>{t('MOD_PAGE.ADS_DESCRIPTION')}</p>
         </div>
         <div className={styles.headerControls}>
-          <div
-            className={styles.segmented}
-            role="group"
-            aria-label={t('MOD_PAGE.ADS_DEVICE')}
-          >
-            {DEVICES.map((value) => (
-              <button
-                key={value}
-                type="button"
-                aria-pressed={device === value}
-                className={
-                  device === value
-                    ? `${styles.segment} ${styles.segmentActive}`
-                    : styles.segment
-                }
-                onClick={() => setDevice(value)}
-              >
-                {t(`MOD_PAGE.ADS_DEVICE_${value.toUpperCase()}`)}
-              </button>
-            ))}
-          </div>
-          <div
-            className={styles.segmented}
-            role="group"
-            aria-label={t('MOD_PAGE.ADS_RANGE')}
-          >
-            {RANGES.map((days) => (
-              <button
-                key={days}
-                type="button"
-                aria-pressed={range === days}
-                className={
-                  range === days
-                    ? `${styles.segment} ${styles.segmentActive}`
-                    : styles.segment
-                }
-                onClick={() => setRange(days)}
-              >
-                {days === 1
-                  ? t('MOD_PAGE.PROMPTS_RANGE_TODAY')
-                  : t('MOD_PAGE.PROMPTS_RANGE_DAYS', { days })}
-              </button>
-            ))}
-          </div>
+          {segmented(
+            t('MOD_PAGE.ADS_MEASURE'),
+            MEASURES,
+            measure,
+            changeMeasure,
+            (value) => t(`MOD_PAGE.ADS_MEASURE_${value.toUpperCase()}`)
+          )}
+          {segmented(
+            t('MOD_PAGE.ADS_DEVICE'),
+            DEVICES,
+            device,
+            setDevice,
+            (value) => t(`MOD_PAGE.ADS_DEVICE_${value.toUpperCase()}`)
+          )}
+          {segmented(t('MOD_PAGE.ADS_RANGE'), RANGES, range, setRange, (days) =>
+            days === 1
+              ? t('MOD_PAGE.PROMPTS_RANGE_TODAY')
+              : t('MOD_PAGE.PROMPTS_RANGE_DAYS', { days })
+          )}
         </div>
       </div>
 
@@ -953,12 +1201,22 @@ const AdStats: React.FC = () => {
             {t('MOD_PAGE.ADS_PRICES_TITLE')}
           </span>
           <span className={styles.muted}>
-            {t('MOD_PAGE.ADS_PRICES_DESCRIPTION')}
+            {t('MOD_PAGE.ADS_PRICES_DESCRIPTION', {
+              video: dollars(ESTIMATED_CPM.video),
+              rewarded: dollars(ESTIMATED_CPM.rewarded)
+            })}
           </span>
         </div>
         {PRICE_FIELDS.map((field) => (
           <label key={field} className={styles.priceField}>
-            <span>{t(`MOD_PAGE.ADS_PRICE_${field.toUpperCase()}`)}</span>
+            <span>
+              {t(`MOD_PAGE.ADS_PRICE_${field.toUpperCase()}`)}{' '}
+              {prices[field] === 0 && (
+                <span className={styles.estimateTag}>
+                  {t('MOD_PAGE.ADS_PRICE_ESTIMATE')}
+                </span>
+              )}
+            </span>
             <span className={styles.priceInput}>
               <span aria-hidden="true">$</span>
               <input
@@ -967,11 +1225,7 @@ const AdStats: React.FC = () => {
                 step={0.01}
                 inputMode="decimal"
                 value={prices[field] || ''}
-                placeholder={
-                  field === 'display' && report.prebidCpm > 0
-                    ? report.prebidCpm.toFixed(2)
-                    : '0.00'
-                }
+                placeholder={used[field].toFixed(2)}
                 onChange={(event) => updatePrice(field, event.target.value)}
               />
             </span>
@@ -998,7 +1252,9 @@ const AdStats: React.FC = () => {
           </div>
 
           <div className={styles.overview}>
-            {report.days.length > 1 && <DailyChart days={report.days} />}
+            {report.days.length > 1 && (
+              <DailyChart days={report.days} measure={measure} />
+            )}
             {insights.length > 0 && (
               <div className={styles.insights}>
                 <h3 className={styles.sectionTitle}>
@@ -1107,27 +1363,50 @@ const AdStats: React.FC = () => {
                       'ctr',
                       t('MOD_PAGE.ADS_COL_CTR')
                     )}
-                    {header(
-                      slotSort,
-                      toggleSlotSort,
-                      'ecpm',
-                      t('MOD_PAGE.ADS_COL_ECPM'),
-                      true,
-                      t('MOD_PAGE.ADS_COL_ECPM_HINT')
-                    )}
-                    {header(
-                      slotSort,
-                      toggleSlotSort,
-                      'rpm',
-                      t('MOD_PAGE.ADS_COL_RPM'),
-                      true,
-                      t('MOD_PAGE.ADS_COL_RPM_HINT')
-                    )}
-                    {header(
-                      slotSort,
-                      toggleSlotSort,
-                      'estMicros',
-                      t('MOD_PAGE.ADS_COL_REVENUE')
+                    {byImpressions ? (
+                      <>
+                        {header(
+                          slotSort,
+                          toggleSlotSort,
+                          'impressionsPer1k',
+                          t('MOD_PAGE.ADS_COL_RPM'),
+                          true,
+                          t('MOD_PAGE.ADS_COL_IMPRESSIONS_PER_1K_HINT')
+                        )}
+                        {header(
+                          slotSort,
+                          toggleSlotSort,
+                          'impressions',
+                          t('MOD_PAGE.ADS_COL_IMPRESSIONS'),
+                          true,
+                          t('MOD_PAGE.ADS_COL_IMPRESSIONS_HINT')
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        {header(
+                          slotSort,
+                          toggleSlotSort,
+                          'ecpm',
+                          t('MOD_PAGE.ADS_COL_ECPM'),
+                          true,
+                          t('MOD_PAGE.ADS_COL_ECPM_HINT')
+                        )}
+                        {header(
+                          slotSort,
+                          toggleSlotSort,
+                          'rpm',
+                          t('MOD_PAGE.ADS_COL_RPM'),
+                          true,
+                          t('MOD_PAGE.ADS_COL_RPM_HINT')
+                        )}
+                        {header(
+                          slotSort,
+                          toggleSlotSort,
+                          'estMicros',
+                          t('MOD_PAGE.ADS_COL_REVENUE')
+                        )}
+                      </>
                     )}
                   </tr>
                 </thead>
@@ -1161,24 +1440,35 @@ const AdStats: React.FC = () => {
                           ? `${(row.ctr * 100).toFixed(2)}%`
                           : '-'}
                       </td>
-                      <td className={styles.numeric}>
-                        {row.filled > 0 ? dollars(row.ecpm) : '-'}
-                      </td>
-                      <td className={styles.numeric}>{dollars(row.rpm)}</td>
-                      <td className={styles.numeric} title={revenueHint(row)}>
-                        <div className={styles.revenueCell}>
-                          <span>{money(row.estMicros)}</span>
-                          <span className={styles.shareBar} aria-hidden="true">
-                            <span
-                              className={styles.shareFill}
-                              style={{ width: `${row.share * 100}%` }}
-                            />
-                          </span>
-                          <span className={styles.muted}>
-                            {percent(row.share)}
-                          </span>
-                        </div>
-                      </td>
+                      {byImpressions ? (
+                        <>
+                          <td className={styles.numeric}>
+                            {rate(row.impressionsPer1k)}
+                          </td>
+                          {shareCell(
+                            count(row.impressions),
+                            row.impressionShare,
+                            row.hidden > 0
+                              ? t('MOD_PAGE.ADS_HIDDEN_HINT', {
+                                  count: row.hidden,
+                                  total: count(row.hidden)
+                                })
+                              : undefined
+                          )}
+                        </>
+                      ) : (
+                        <>
+                          <td className={styles.numeric}>
+                            {row.impressions > 0 ? dollars(row.ecpm) : '-'}
+                          </td>
+                          <td className={styles.numeric}>{dollars(row.rpm)}</td>
+                          {shareCell(
+                            money(row.estMicros),
+                            row.share,
+                            revenueHint(row)
+                          )}
+                        </>
+                      )}
                     </tr>
                   ))}
                 </tbody>
@@ -1232,25 +1522,56 @@ const AdStats: React.FC = () => {
                       'slots',
                       t('MOD_PAGE.ADS_COL_SLOTS')
                     )}
-                    {header(
-                      pageSort,
-                      togglePageSort,
-                      'rpm',
-                      t('MOD_PAGE.ADS_COL_RPM')
-                    )}
-                    {header(
-                      pageSort,
-                      togglePageSort,
-                      'perHour',
-                      t('MOD_PAGE.ADS_COL_PER_HOUR'),
-                      true,
-                      t('MOD_PAGE.ADS_COL_PER_HOUR_HINT')
-                    )}
-                    {header(
-                      pageSort,
-                      togglePageSort,
-                      'estMicros',
-                      t('MOD_PAGE.ADS_COL_REVENUE')
+                    {byImpressions ? (
+                      <>
+                        {header(
+                          pageSort,
+                          togglePageSort,
+                          'impressionsPer1k',
+                          t('MOD_PAGE.ADS_COL_RPM'),
+                          true,
+                          t('MOD_PAGE.ADS_COL_IMPRESSIONS_PER_1K_HINT')
+                        )}
+                        {header(
+                          pageSort,
+                          togglePageSort,
+                          'impressionsPerHour',
+                          t('MOD_PAGE.ADS_COL_PER_HOUR'),
+                          true,
+                          t('MOD_PAGE.ADS_COL_IMPRESSIONS_PER_HOUR_HINT')
+                        )}
+                        {header(
+                          pageSort,
+                          togglePageSort,
+                          'impressions',
+                          t('MOD_PAGE.ADS_COL_IMPRESSIONS'),
+                          true,
+                          t('MOD_PAGE.ADS_COL_IMPRESSIONS_HINT')
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        {header(
+                          pageSort,
+                          togglePageSort,
+                          'rpm',
+                          t('MOD_PAGE.ADS_COL_RPM')
+                        )}
+                        {header(
+                          pageSort,
+                          togglePageSort,
+                          'perHour',
+                          t('MOD_PAGE.ADS_COL_PER_HOUR'),
+                          true,
+                          t('MOD_PAGE.ADS_COL_PER_HOUR_HINT')
+                        )}
+                        {header(
+                          pageSort,
+                          togglePageSort,
+                          'estMicros',
+                          t('MOD_PAGE.ADS_COL_REVENUE')
+                        )}
+                      </>
                     )}
                     {header(
                       pageSort,
@@ -1275,9 +1596,29 @@ const AdStats: React.FC = () => {
                         {percent(row.timeShare)}
                       </td>
                       <td className={styles.numeric}>{row.slots}</td>
-                      <td className={styles.numeric}>{dollars(row.rpm)}</td>
-                      <td className={styles.numeric}>{dollars(row.perHour)}</td>
-                      <td className={styles.numeric}>{money(row.estMicros)}</td>
+                      {byImpressions ? (
+                        <>
+                          <td className={styles.numeric}>
+                            {rate(row.impressionsPer1k)}
+                          </td>
+                          <td className={styles.numeric}>
+                            {rate(row.impressionsPerHour)}
+                          </td>
+                          <td className={styles.numeric}>
+                            {count(row.impressions)}
+                          </td>
+                        </>
+                      ) : (
+                        <>
+                          <td className={styles.numeric}>{dollars(row.rpm)}</td>
+                          <td className={styles.numeric}>
+                            {dollars(row.perHour)}
+                          </td>
+                          <td className={styles.numeric}>
+                            {money(row.estMicros)}
+                          </td>
+                        </>
+                      )}
                       <td className={styles.numeric}>
                         {percent(row.adblockRate)}
                       </td>
@@ -1374,6 +1715,7 @@ const AdStats: React.FC = () => {
           <details className={styles.method}>
             <summary>{t('MOD_PAGE.ADS_HOW_TITLE')}</summary>
             <ul>
+              <li>{t('MOD_PAGE.ADS_HOW_IMPRESSIONS')}</li>
               <li>{t('MOD_PAGE.ADS_HOW_SEEN')}</li>
               <li>{t('MOD_PAGE.ADS_HOW_FILL')}</li>
               <li>{t('MOD_PAGE.ADS_HOW_REVENUE')}</li>

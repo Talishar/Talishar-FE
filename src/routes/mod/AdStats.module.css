@@ -126,6 +126,12 @@
   color: rgba(var(--theme-on-surface-rgb), 0.62);
 }
 
+.estimateTag {
+  margin-left: 0.15rem;
+  font-weight: 400;
+  color: var(--theme-text-secondary);
+}
+
 .priceInput {
   display: inline-flex;
   align-items: center;

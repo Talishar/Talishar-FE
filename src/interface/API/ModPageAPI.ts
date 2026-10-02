@@ -268,7 +268,10 @@ export interface AdDailyStat {
   views: number;
   estMicros: number;
   unpricedFills: number;
+  displayImpressions?: number;
   videoImpressions: number;
+  videoStarts?: number;
+  videoCompletes?: number;
   rewardedShows: number;
 }
 

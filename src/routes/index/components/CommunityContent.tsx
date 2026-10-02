@@ -314,7 +314,7 @@ const CommunityContent: React.FC<CommunityContentProps> = ({
             <div className={styles.adHeader}>
               <RemoveAdsLink />
             </div>
-            <AdUnit placement="billboard-1" className={styles.desktopAd} />
+            <AdUnit placement="billboard-2" className={styles.desktopAd} />
             <AdUnit placement="mobile-unit-2" className={styles.mobileAd} />
           </div>
         )}
