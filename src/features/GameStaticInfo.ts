@@ -11,6 +11,7 @@ export default interface GameStaticInfo {
   opponentAltArts?: AltArt[];
   isOpponentAI?: boolean;
   isPuzzle?: boolean;
+  puzzle?: PuzzleGameInfo | null;
   gameFormat?: string;
   heroName?: string;
   yourHeroCardNumber?: string;
@@ -25,6 +26,13 @@ export default interface GameStaticInfo {
   canCustomizeDeck?: boolean;
   deckCardBackId?: string;
   deckPlaymatId?: string;
+}
+
+export interface PuzzleGameInfo {
+  mode: 'lethal' | 'damage' | 'survive';
+  daily: boolean;
+  hintsTotal: number;
+  hintsUsed: number;
 }
 
 export interface AltArt {

@@ -118,7 +118,8 @@ export const PROCESS_INPUT = {
   DECLINE_CHAT: 100020,
   CONFIRM_CHAIN_LINK_UNDO: 100022,
   SAVE_SNAPSHOT: 100023,
-  RESTART_PUZZLE: 100024
+  RESTART_PUZZLE: 100024,
+  PUZZLE_HINT: 100025
 };
 
 // Default shortcut inputs
@@ -441,6 +442,10 @@ export const URL_END_POINT = {
   GET_PUZZLE_CANDIDATES: 'APIs/GetPuzzleCandidates.php',
   CREATE_PUZZLE_GAME: 'APIs/CreatePuzzleGame.php',
   VERIFY_PUZZLE_CANDIDATES: 'APIs/VerifyPuzzleCandidates.php',
+  SCHEDULE_PUZZLE: 'APIs/SchedulePuzzle.php',
+  GET_DAILY_PUZZLE: 'APIs/GetDailyPuzzle.php',
+  START_DAILY_PUZZLE: 'APIs/StartDailyPuzzle.php',
+  RATE_DAILY_PUZZLE: 'APIs/RateDailyPuzzle.php',
   RESET_ALL_RUST_COUNTERS: 'APIs/ResetAllRustCounters.php',
   SEARCH_USERNAMES: 'APIs/SearchUsernames.php',
   BAN_PLAYER: 'BanPlayer.php',

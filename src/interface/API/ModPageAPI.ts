@@ -127,6 +127,10 @@ export interface PuzzleRealTurn {
 
 export type PuzzleDifficulty = 'easy' | 'medium' | 'hard';
 
+export type PuzzleKind = 'lethal' | 'survive';
+
+export type PuzzleMode = 'lethal' | 'damage' | 'survive';
+
 export interface PuzzleProof extends Partial<PuzzleRealTurn> {
   status: 'proven' | 'failed';
   life?: number;
@@ -160,12 +164,30 @@ export interface PuzzleStep {
   from?: string;
   text?: string;
   prompt?: string;
+  target?: PuzzleStepCard;
+}
+
+export interface PuzzleBot {
+  won: boolean;
+  damage: number;
+  played: PuzzleStepCard[];
+  pitched: PuzzleStepCard[];
+  blocked: PuzzleStepCard[];
+}
+
+export interface PuzzleLesson {
+  theme: string;
+  themeText: string;
+  keyCards: PuzzleStepCard[];
+  hints: string[];
+  trick: string;
 }
 
 export interface PuzzleCandidate {
   id: number;
   createdAt: string;
   format: string;
+  kind: PuzzleKind;
   turn: number;
   hero: string;
   heroName: string;
@@ -179,6 +201,7 @@ export interface PuzzleCandidate {
   hand: PuzzleCard[];
   arsenal: PuzzleCard[];
   weapons: PuzzleCard[];
+  equipment: PuzzleCard[];
   floating: number;
   actionPoints: number;
   handPitch: number;
@@ -194,6 +217,10 @@ export interface PuzzleCandidate {
   estimatedDamage: number;
   estimatedThrough: number;
   estimatedAttacks: number;
+  gap: number;
+  bot: PuzzleBot | null;
+  filtered: boolean;
+  lesson: PuzzleLesson | null;
   realTurn: PuzzleRealTurn | null;
   score: number;
   difficulty: PuzzleDifficulty;
@@ -208,6 +235,7 @@ export interface PuzzleCandidatesResponse {
 
 export interface CreatePuzzleGameRequest {
   candidateId: number;
+  mode?: PuzzleMode;
 }
 
 export interface VerifyPuzzleCandidateRequest {
@@ -217,6 +245,43 @@ export interface VerifyPuzzleCandidateRequest {
 export interface VerifyPuzzleCandidateResponse {
   proof?: PuzzleProof;
   error?: string;
+}
+
+export interface PuzzleScheduleStats {
+  players: number;
+  finished: number;
+  solved: number;
+  averageStars: number | null;
+  ups: number;
+  downs: number;
+  best: number | null;
+}
+
+export interface PuzzleScheduleDay {
+  date: string;
+  candidateId: number;
+  mode: PuzzleMode;
+  heroName: string;
+  opponentHeroName: string;
+  life: number;
+  difficulty: PuzzleDifficulty | '';
+  theme: string | null;
+  bars: { bot: number; real: number } | null;
+  stats: PuzzleScheduleStats;
+}
+
+export interface PuzzleScheduleResponse {
+  today: string;
+  days: PuzzleScheduleDay[];
+  scheduled?: string;
+  error?: string;
+}
+
+export interface SchedulePuzzleRequest {
+  action: 'schedule' | 'remove';
+  candidateId?: number;
+  mode?: PuzzleMode;
+  date?: string;
 }
 
 export interface CreatePuzzleGameResponse {

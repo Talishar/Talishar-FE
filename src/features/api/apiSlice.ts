@@ -101,8 +101,17 @@ import {
   CreatePuzzleGameRequest,
   CreatePuzzleGameResponse,
   VerifyPuzzleCandidateRequest,
-  VerifyPuzzleCandidateResponse
+  VerifyPuzzleCandidateResponse,
+  PuzzleKind,
+  PuzzleScheduleResponse,
+  SchedulePuzzleRequest
 } from 'interface/API/ModPageAPI';
+import {
+  DailyPuzzleResponse,
+  StartDailyPuzzleResponse,
+  RateDailyPuzzleRequest,
+  RateDailyPuzzleResponse
+} from 'interface/API/DailyPuzzleAPI';
 import { FriendListAPIResponse } from 'interface/API/FriendListAPI.php';
 import {
   UsernamesModerationResponse,
@@ -245,7 +254,9 @@ export const apiSlice = createApi({
     'SystemMessage',
     'SavedReplays',
     'HeroMastery',
-    'PromptStats'
+    'PromptStats',
+    'PuzzleSchedule',
+    'DailyPuzzle'
   ],
   refetchOnFocus: false,
   refetchOnReconnect: false,
@@ -723,12 +734,50 @@ export const apiSlice = createApi({
       query: () => postJson(URL_END_POINT.CLEAR_PROMPT_STATS),
       invalidatesTags: ['PromptStats']
     }),
-    getPuzzleCandidates: builder.query<PuzzleCandidatesResponse, void>({
-      query: () => ({
+    getPuzzleCandidates: builder.query<
+      PuzzleCandidatesResponse,
+      PuzzleKind | void
+    >({
+      query: (kind) => ({
         url: URL_END_POINT.GET_PUZZLE_CANDIDATES,
         method: 'GET',
+        params: kind ? { kind } : undefined,
         responseHandler: parseResponse
       })
+    }),
+    getPuzzleSchedule: builder.query<PuzzleScheduleResponse, void>({
+      query: () => ({
+        url: URL_END_POINT.SCHEDULE_PUZZLE,
+        method: 'GET',
+        responseHandler: parseResponse
+      }),
+      providesTags: ['PuzzleSchedule']
+    }),
+    schedulePuzzle: builder.mutation<
+      PuzzleScheduleResponse,
+      SchedulePuzzleRequest
+    >({
+      query: (body) => postJson(URL_END_POINT.SCHEDULE_PUZZLE, body),
+      invalidatesTags: ['PuzzleSchedule', 'DailyPuzzle']
+    }),
+    getDailyPuzzle: builder.query<DailyPuzzleResponse, void>({
+      query: () => ({
+        url: URL_END_POINT.GET_DAILY_PUZZLE,
+        method: 'GET',
+        responseHandler: parseResponse
+      }),
+      providesTags: ['DailyPuzzle']
+    }),
+    startDailyPuzzle: builder.mutation<StartDailyPuzzleResponse, void>({
+      query: () => postJson(URL_END_POINT.START_DAILY_PUZZLE),
+      invalidatesTags: ['DailyPuzzle']
+    }),
+    rateDailyPuzzle: builder.mutation<
+      RateDailyPuzzleResponse,
+      RateDailyPuzzleRequest
+    >({
+      query: (body) => postJson(URL_END_POINT.RATE_DAILY_PUZZLE, body),
+      invalidatesTags: ['DailyPuzzle']
     }),
     createPuzzleGame: builder.mutation<
       CreatePuzzleGameResponse,
@@ -1122,6 +1171,11 @@ export const {
   useGetPuzzleCandidatesQuery,
   useCreatePuzzleGameMutation,
   useVerifyPuzzleCandidateMutation,
+  useGetPuzzleScheduleQuery,
+  useSchedulePuzzleMutation,
+  useGetDailyPuzzleQuery,
+  useStartDailyPuzzleMutation,
+  useRateDailyPuzzleMutation,
   useResetAllRustCountersMutation,
   useBanPlayerByIPMutation,
   useBanIPDirectMutation,

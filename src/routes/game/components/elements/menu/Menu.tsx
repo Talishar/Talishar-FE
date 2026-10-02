@@ -10,8 +10,12 @@ import {
   FaEllipsisH,
   FaExchangeAlt,
   FaWrench,
-  FaRedoAlt
+  FaRedoAlt,
+  FaLightbulb
 } from 'react-icons/fa';
+import { toast } from 'react-hot-toast';
+import { parseTextToElements } from 'utils/ParseEscapedString';
+import { PuzzleHintResponse } from 'interface/API/DailyPuzzleAPI';
 import styles from './Menu.module.css';
 import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'appConstants';
 import HideModalsToggle from './HideModalsToggle/HideModalsToggle';
@@ -113,6 +117,68 @@ function RestartPuzzleButton() {
         disabled={isDisabled}
       >
         <FaRedoAlt aria-hidden="true" />
+      </button>
+    </div>
+  );
+}
+
+function PuzzleHintButton() {
+  const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+  const puzzle = useAppSelector(
+    (state: RootState) => state.game.gameInfo.puzzle
+  );
+  const [used, setUsed] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  if (!puzzle || puzzle.hintsTotal === 0) return null;
+  const hintsUsed = used ?? puzzle.hintsUsed;
+  const label = t('MENU.PUZZLE_HINT', {
+    used: hintsUsed,
+    total: puzzle.hintsTotal
+  });
+
+  const clickHint = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.currentTarget.blur();
+    setIsLoading(true);
+    try {
+      const body = await dispatch(
+        submitButton({ button: { mode: PROCESS_INPUT.PUZZLE_HINT } })
+      ).unwrap();
+      const result = JSON.parse(body || '{}') as PuzzleHintResponse;
+      setUsed(result.index);
+      if (result.hint) {
+        toast(
+          <span>
+            {t('MENU.PUZZLE_HINT_TOAST', {
+              index: result.index,
+              total: result.total
+            })}{' '}
+            {parseTextToElements(result.hint)}
+          </span>,
+          { duration: 10000, icon: '💡' }
+        );
+      } else {
+        toast(t('MENU.PUZZLE_NO_MORE_HINTS'), { icon: '💡' });
+      }
+    } catch {
+      toast.error(t('MENU.PUZZLE_HINT_FAILED'));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div>
+      <button
+        className={styles.btn}
+        aria-label={label}
+        onClick={clickHint}
+        data-tooltip={label}
+        data-placement="bottom"
+        disabled={isLoading}
+      >
+        <FaLightbulb aria-hidden="true" />
       </button>
     </div>
   );
@@ -293,6 +359,7 @@ function MenuContent() {
             />
             <UndoButton />
             {isPuzzle && <RestartPuzzleButton />}
+            {isPuzzle && <PuzzleHintButton />}
             <HideModalsToggle />
             <ShowMobileChat />
             <MobileOverflowMenu isSpectator={false} />
@@ -313,6 +380,7 @@ function MenuContent() {
         <div className={styles.menuList}>
           <UndoButton />
           {isPuzzle && <RestartPuzzleButton />}
+          {isPuzzle && <PuzzleHintButton />}
           <Inventory buttonClassName={styles.btn} />
           <HideModalsToggle />
           <OptionsMenuToggle />

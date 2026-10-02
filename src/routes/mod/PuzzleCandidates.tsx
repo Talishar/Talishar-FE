@@ -1,40 +1,57 @@
 import React, { Fragment, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-hot-toast';
 import {
   useCreatePuzzleGameMutation,
   useGetPuzzleCandidatesQuery,
+  useSchedulePuzzleMutation,
   useVerifyPuzzleCandidateMutation
 } from 'features/api/apiSlice';
 import {
   CreatePuzzleGameResponse,
+  PuzzleBot,
   PuzzleCandidate,
   PuzzleCard,
   PuzzleDifficulty,
-  PuzzleStep,
-  PuzzleStepCard
+  PuzzleKind,
+  PuzzleLesson,
+  PuzzleMode,
+  PuzzleStep
 } from 'interface/API/ModPageAPI';
 import { CARD_SQUARES_PATH, getCollectionCardImagePath } from 'utils';
 import { getReadableFormatName } from 'utils/formatUtils';
+import { parseTextToElements } from 'utils/ParseEscapedString';
+import { describePuzzleStep, puzzleCardNames } from 'utils/puzzleText';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
+import PuzzleSchedule from './PuzzleSchedule';
 import tableStyles from './PromptStats.module.css';
 import styles from './PuzzleCandidates.module.css';
 
-type SortKey = 'score' | 'id' | 'opponentLife';
+type SortKey = 'score' | 'id' | 'opponentLife' | 'gap';
 type ProofFilter = 'all' | 'proven';
 
 interface ReadyPuzzle extends CreatePuzzleGameResponse {
   candidateId: number;
+  mode: PuzzleMode;
 }
 
+const KINDS: PuzzleKind[] = ['lethal', 'survive'];
 const DIFFICULTIES: PuzzleDifficulty[] = ['easy', 'medium', 'hard'];
-const GOOD_FLAGS = ['EXACT_LETHAL', 'BIG_TURN', 'ALL_CARDS', 'HIGH_PRESSURE'];
+const GOOD_FLAGS = [
+  'EXACT_LETHAL',
+  'BIG_TURN',
+  'ALL_CARDS',
+  'HIGH_PRESSURE',
+  'NEEDS_TEXT',
+  'BOT_FAILS'
+];
 const BAD_FLAGS = [
   'LOW_PRESSURE',
   'FEW_OPTIONS',
   'ONE_CARD',
-  'RAW_POWER',
-  'SPARE_CARDS',
-  'UNPROVEN'
+  'UNPROVEN',
+  'PLAIN_STATS',
+  'BOT_SOLVES'
 ];
 const PROOF_FILTERS: ProofFilter[] = ['all', 'proven'];
 
@@ -52,10 +69,8 @@ const realTurnValues = (row: PuzzleCandidate): Record<string, number> => ({
 
 const isProven = (row: PuzzleCandidate) => row.proof?.status === 'proven';
 
-const needsCheck = (row: PuzzleCandidate) => row.hasLine && !row.proof;
-
-const cardNames = (cards: PuzzleStepCard[] = []) =>
-  cards.map((card) => card.name).join(', ');
+const needsCheck = (row: PuzzleCandidate) =>
+  row.hasLine && (!row.proof || (isProven(row) && !row.bot));
 
 const proofValues = (row: PuzzleCandidate): Record<string, number> => ({
   cardsPlayed: row.proof?.cardsPlayed ?? 0,
@@ -181,29 +196,6 @@ const CardList = ({ label, cards }: { label: string; cards: PuzzleCard[] }) => {
 
 const Solution = ({ steps }: { steps: PuzzleStep[] }) => {
   const { t } = useTranslation();
-  const describe = (step: PuzzleStep): string => {
-    const cards = cardNames(step.cards);
-    switch (step.kind) {
-      case 'PLAY':
-        return step.from
-          ? t('MOD_PAGE.PUZZLES_STEP_PLAY_FROM', {
-              cards,
-              zone: t(`MOD_PAGE.PUZZLES_ZONE_${step.from}`)
-            })
-          : t('MOD_PAGE.PUZZLES_STEP_PLAY', { cards });
-      case 'CHOOSE':
-        return t('MOD_PAGE.PUZZLES_STEP_CHOOSE', {
-          choice: step.cards ? cards : step.text ?? ''
-        });
-      case 'OPT':
-        return t('MOD_PAGE.PUZZLES_STEP_OPT', {
-          top: cardNames(step.top) || t('MOD_PAGE.PUZZLES_NONE'),
-          bottom: cardNames(step.bottom) || t('MOD_PAGE.PUZZLES_NONE')
-        });
-      default:
-        return t(`MOD_PAGE.PUZZLES_STEP_${step.kind}`, { cards });
-    }
-  };
   return (
     <div className={`${styles.detailGroup} ${styles.solution}`}>
       <span className={styles.detailLabel}>
@@ -212,7 +204,7 @@ const Solution = ({ steps }: { steps: PuzzleStep[] }) => {
       <ol className={styles.stepList}>
         {steps.map((step, index) => (
           <li key={index}>
-            {describe(step)}
+            {describePuzzleStep(step, t)}
             {step.prompt && (
               <span className={tableStyles.muted}> · {step.prompt}</span>
             )}
@@ -223,60 +215,242 @@ const Solution = ({ steps }: { steps: PuzzleStep[] }) => {
   );
 };
 
+const Lesson = ({ lesson }: { lesson: PuzzleLesson }) => {
+  const { t } = useTranslation();
+  return (
+    <div className={`${styles.detailGroup} ${styles.solution}`}>
+      <span className={styles.detailLabel}>
+        {t('MOD_PAGE.PUZZLES_LESSON', {
+          theme: t(`PUZZLE.THEME.${lesson.theme}`)
+        })}
+      </span>
+      <ol className={styles.stepList}>
+        {lesson.hints.map((hint, index) => (
+          <li key={index}>{parseTextToElements(hint)}</li>
+        ))}
+      </ol>
+      <span className={tableStyles.muted}>
+        {t('MOD_PAGE.PUZZLES_TRICK')} {parseTextToElements(lesson.trick)}
+      </span>
+    </div>
+  );
+};
+
+const BotSummary = ({ bot, kind }: { bot: PuzzleBot; kind: PuzzleKind }) => {
+  const { t } = useTranslation();
+  const none = t('MOD_PAGE.PUZZLES_NONE');
+  return (
+    <div className={styles.detailGroup}>
+      <span className={styles.detailLabel}>
+        {t('MOD_PAGE.PUZZLES_BOT_TITLE')}
+      </span>
+      <ul className={styles.detailList}>
+        {kind === 'survive' ? (
+          <>
+            <li>
+              {t(
+                bot.won
+                  ? 'MOD_PAGE.PUZZLES_BOT_SURVIVED'
+                  : 'MOD_PAGE.PUZZLES_BOT_DIED',
+                { damage: bot.damage }
+              )}
+            </li>
+            <li>
+              {t('MOD_PAGE.PUZZLES_BOT_BLOCKED', {
+                cards: puzzleCardNames(bot.blocked) || none
+              })}
+            </li>
+          </>
+        ) : (
+          <>
+            <li>
+              {t(
+                bot.won
+                  ? 'MOD_PAGE.PUZZLES_BOT_KILLED'
+                  : 'MOD_PAGE.PUZZLES_BOT_FELL_SHORT',
+                { damage: bot.damage }
+              )}
+            </li>
+            <li>
+              {t('MOD_PAGE.PUZZLES_BOT_PLAYED', {
+                cards: puzzleCardNames(bot.played) || none
+              })}
+            </li>
+            <li>
+              {t('MOD_PAGE.PUZZLES_BOT_PITCHED', {
+                cards: puzzleCardNames(bot.pitched) || none
+              })}
+            </li>
+          </>
+        )}
+      </ul>
+    </div>
+  );
+};
+
+const ScheduleForm = ({
+  row,
+  mode,
+  onModeChange
+}: {
+  row: PuzzleCandidate;
+  mode: PuzzleMode;
+  onModeChange: (mode: PuzzleMode) => void;
+}) => {
+  const { t } = useTranslation();
+  const [date, setDate] = useState('');
+  const [schedulePuzzle, { isLoading }] = useSchedulePuzzleMutation();
+
+  const schedule = async () => {
+    try {
+      const result = await schedulePuzzle({
+        action: 'schedule',
+        candidateId: row.id,
+        mode,
+        date: date || undefined
+      }).unwrap();
+      if (result.error) toast.error(result.error);
+      else
+        toast.success(
+          t('MOD_PAGE.PUZZLES_SCHEDULED', { date: result.scheduled ?? date })
+        );
+    } catch {
+      // Error will be shown via toast from RTK Query error handler
+    }
+  };
+
+  return (
+    <div className={styles.detailGroup}>
+      <span className={styles.detailLabel}>
+        {t('MOD_PAGE.PUZZLES_DAILY_TITLE')}
+      </span>
+      <div className={styles.scheduleForm}>
+        {row.kind === 'lethal' && (
+          <select
+            className={tableStyles.phaseSelect}
+            value={mode}
+            aria-label={t('MOD_PAGE.PUZZLES_MODE')}
+            onChange={(event) => onModeChange(event.target.value as PuzzleMode)}
+          >
+            <option value="lethal">{t('PUZZLE.MODE.lethal')}</option>
+            <option value="damage">{t('PUZZLE.MODE.damage')}</option>
+          </select>
+        )}
+        <input
+          type="date"
+          className={tableStyles.search}
+          value={date}
+          aria-label={t('MOD_PAGE.PUZZLES_SCHEDULE_DATE')}
+          onChange={(event) => setDate(event.target.value)}
+        />
+        <button
+          type="button"
+          className={styles.button}
+          disabled={isLoading || !isProven(row)}
+          onClick={schedule}
+        >
+          {isLoading
+            ? t('MOD_PAGE.PUZZLES_CHECKING')
+            : t('MOD_PAGE.PUZZLES_SCHEDULE')}
+        </button>
+      </div>
+      <span className={tableStyles.muted}>
+        {isProven(row)
+          ? t('MOD_PAGE.PUZZLES_SCHEDULE_HINT')
+          : t('MOD_PAGE.PUZZLES_SCHEDULE_NEEDS_PROOF')}
+      </span>
+    </div>
+  );
+};
+
 const Details = ({
   row,
-  checking
+  checking,
+  mode,
+  onModeChange
 }: {
   row: PuzzleCandidate;
   checking: boolean;
+  mode: PuzzleMode;
+  onModeChange: (mode: PuzzleMode) => void;
 }) => {
   const { t } = useTranslation();
   const proof = proofKey(row);
+  const survive = row.kind === 'survive';
   return (
     <div className={styles.details}>
+      {row.lesson && <Lesson lesson={row.lesson} />}
       {isProven(row) && row.solution && row.solution.length > 0 && (
         <Solution steps={row.solution} />
       )}
+      {row.bot && <BotSummary bot={row.bot} kind={row.kind} />}
+      <ScheduleForm row={row} mode={mode} onModeChange={onModeChange} />
       <CardList label={t('MOD_PAGE.PUZZLES_YOUR_HAND')} cards={row.hand} />
       <CardList
         label={t('MOD_PAGE.PUZZLES_YOUR_ARSENAL')}
         cards={row.arsenal}
       />
-      <CardList
-        label={t('MOD_PAGE.PUZZLES_YOUR_WEAPONS')}
-        cards={row.weapons}
-      />
-      <CardList
-        label={t('MOD_PAGE.PUZZLES_THEIR_EQUIPMENT')}
-        cards={row.opponentEquipment}
-      />
-      <CardList
-        label={t('MOD_PAGE.PUZZLES_THEIR_HAND')}
-        cards={row.opponentHand}
-      />
+      {survive ? (
+        <CardList
+          label={t('MOD_PAGE.PUZZLES_YOUR_EQUIPMENT')}
+          cards={row.equipment}
+        />
+      ) : (
+        <>
+          <CardList
+            label={t('MOD_PAGE.PUZZLES_YOUR_WEAPONS')}
+            cards={row.weapons}
+          />
+          <CardList
+            label={t('MOD_PAGE.PUZZLES_THEIR_EQUIPMENT')}
+            cards={row.opponentEquipment}
+          />
+          <CardList
+            label={t('MOD_PAGE.PUZZLES_THEIR_HAND')}
+            cards={row.opponentHand}
+          />
+        </>
+      )}
       <div className={styles.detailGroup}>
         <span className={styles.detailLabel}>
           {t('MOD_PAGE.PUZZLES_POSITION')}
         </span>
         <ul className={styles.detailList}>
-          <li>
-            {t('MOD_PAGE.PUZZLES_RESOURCES', {
-              floating: row.floating,
-              pitch: row.handPitch,
-              actionPoints: row.actionPoints
-            })}
-          </li>
-          <li>
-            {t('MOD_PAGE.PUZZLES_ESTIMATE', {
-              damage: row.estimatedDamage,
-              through: row.estimatedThrough,
-              attacks: row.estimatedAttacks,
-              life: row.opponentLife
-            })}
-          </li>
+          {survive ? (
+            <li>
+              {t('MOD_PAGE.PUZZLES_SURVIVE_ESTIMATE', {
+                incoming: row.estimatedDamage,
+                through: row.estimatedThrough,
+                life: row.opponentLife
+              })}
+            </li>
+          ) : (
+            <>
+              <li>
+                {t('MOD_PAGE.PUZZLES_RESOURCES', {
+                  floating: row.floating,
+                  pitch: row.handPitch,
+                  actionPoints: row.actionPoints
+                })}
+              </li>
+              <li>
+                {t('MOD_PAGE.PUZZLES_ESTIMATE', {
+                  damage: row.estimatedDamage,
+                  through: row.estimatedThrough,
+                  attacks: row.estimatedAttacks,
+                  life: row.opponentLife
+                })}
+              </li>
+            </>
+          )}
           <li>
             {proof === 'PROVEN'
-              ? t('MOD_PAGE.PUZZLES_PROOF_DETAIL', proofValues(row))
+              ? t(
+                  survive
+                    ? 'MOD_PAGE.PUZZLES_SURVIVE_PROOF_DETAIL'
+                    : 'MOD_PAGE.PUZZLES_PROOF_DETAIL',
+                  proofValues(row)
+                )
               : proof === 'FAILED'
               ? t('MOD_PAGE.PUZZLES_PROOF_FAILED_DETAIL', {
                   reason: row.proof?.reason ?? '',
@@ -307,17 +481,21 @@ const Details = ({
 
 const PuzzleCandidates: React.FC = () => {
   const { t } = useTranslation();
+  const [kind, setKind] = useState<PuzzleKind>('lethal');
   const [query, setQuery] = useState('');
   const [format, setFormat] = useState('');
   const [difficulty, setDifficulty] = useState('');
   const [proofFilter, setProofFilter] = useState<ProofFilter>('all');
+  const [showFiltered, setShowFiltered] = useState(false);
   const [sortKey, setSortKey] = useState<SortKey>('score');
   const [sortDescending, setSortDescending] = useState(true);
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [creatingId, setCreatingId] = useState<number | null>(null);
   const [ready, setReady] = useState<ReadyPuzzle | null>(null);
+  const [modes, setModes] = useState<Record<number, PuzzleMode>>({});
 
-  const { data, isFetching, isError, refetch } = useGetPuzzleCandidatesQuery();
+  const { data, isFetching, isError, refetch } =
+    useGetPuzzleCandidatesQuery(kind);
   const [createPuzzleGame] = useCreatePuzzleGameMutation();
   const [verifyPuzzleCandidate] = useVerifyPuzzleCandidateMutation();
   const [checkingId, setCheckingId] = useState<number | null>(null);
@@ -327,15 +505,23 @@ const PuzzleCandidates: React.FC = () => {
     () => candidates.filter(isProven).length,
     [candidates]
   );
+  const filteredCount = useMemo(
+    () => candidates.filter((row) => row.filtered).length,
+    [candidates]
+  );
 
   const formats = useMemo(
     () => Array.from(new Set(candidates.map((row) => row.format))).sort(),
     [candidates]
   );
 
+  const modeFor = (row: PuzzleCandidate): PuzzleMode =>
+    row.kind === 'survive' ? 'survive' : modes[row.id] ?? 'lethal';
+
   const visibleRows = useMemo(() => {
     const needle = query.trim().toLowerCase();
     const filtered = candidates.filter((row) => {
+      if (!showFiltered && row.filtered) return false;
       if (format && row.format !== format) return false;
       if (difficulty && row.difficulty !== difficulty) return false;
       if (proofFilter === 'proven' && !isProven(row)) return false;
@@ -358,6 +544,7 @@ const PuzzleCandidates: React.FC = () => {
     format,
     difficulty,
     proofFilter,
+    showFiltered,
     sortKey,
     sortDescending
   ]);
@@ -384,14 +571,16 @@ const PuzzleCandidates: React.FC = () => {
   };
 
   const handlePlay = async (candidate: PuzzleCandidate) => {
+    const mode = modeFor(candidate);
     setCreatingId(candidate.id);
     setReady(null);
     try {
       await checkLine(candidate);
       const result = await createPuzzleGame({
-        candidateId: candidate.id
+        candidateId: candidate.id,
+        mode
       }).unwrap();
-      setReady({ ...result, candidateId: candidate.id });
+      setReady({ ...result, candidateId: candidate.id, mode });
     } catch {
       // Error will be shown via toast from RTK Query error handler
     } finally {
@@ -406,6 +595,12 @@ const PuzzleCandidates: React.FC = () => {
     }
     setExpandedId(candidate.id);
     if (checkingId === null && creatingId === null) checkLine(candidate);
+  };
+
+  const changeKind = (value: PuzzleKind) => {
+    setKind(value);
+    setExpandedId(null);
+    setFormat('');
   };
 
   const formatLabel = (code: string) =>
@@ -441,12 +636,35 @@ const PuzzleCandidates: React.FC = () => {
 
   return (
     <section className={tableStyles.panel}>
+      <PuzzleSchedule />
+
       <div className={tableStyles.header}>
         <div>
           <h2 className={tableStyles.title}>{t('MOD_PAGE.PUZZLES_TITLE')}</h2>
           <p className={tableStyles.description}>
             {t('MOD_PAGE.PUZZLES_DESCRIPTION')}
           </p>
+        </div>
+        <div
+          className={tableStyles.segmented}
+          role="group"
+          aria-label={t('MOD_PAGE.PUZZLES_KIND')}
+        >
+          {KINDS.map((value) => (
+            <button
+              key={value}
+              type="button"
+              aria-pressed={kind === value}
+              className={
+                kind === value
+                  ? `${tableStyles.segment} ${tableStyles.segmentActive}`
+                  : tableStyles.segment
+              }
+              onClick={() => changeKind(value)}
+            >
+              {t(`PUZZLE.MODE.${value}`)}
+            </button>
+          ))}
         </div>
       </div>
 
@@ -499,6 +717,16 @@ const PuzzleCandidates: React.FC = () => {
             </option>
           ))}
         </select>
+        <label className={tableStyles.toggle}>
+          <input
+            type="checkbox"
+            checked={showFiltered}
+            onChange={(event) => setShowFiltered(event.target.checked)}
+          />
+          {t('MOD_PAGE.PUZZLES_SHOW_FILTERED', {
+            count: filteredCount
+          })}
+        </label>
       </div>
 
       {ready && (
@@ -506,7 +734,8 @@ const PuzzleCandidates: React.FC = () => {
           <span>
             {t('MOD_PAGE.PUZZLES_READY', {
               id: ready.candidateId,
-              game: ready.gameName
+              game: ready.gameName,
+              mode: t(`PUZZLE.MODE.${ready.mode}`)
             })}
           </span>
           <a
@@ -525,7 +754,8 @@ const PuzzleCandidates: React.FC = () => {
           {t('MOD_PAGE.PUZZLES_SUMMARY', {
             total: data.total.toLocaleString(),
             shown: candidates.length.toLocaleString(),
-            proven: provenCount.toLocaleString()
+            proven: provenCount.toLocaleString(),
+            filtered: filteredCount.toLocaleString()
           })}
           {isFetching && (
             <span className={tableStyles.muted}> {t('MOD_PAGE.LOADING')}</span>
@@ -551,8 +781,13 @@ const PuzzleCandidates: React.FC = () => {
                 {sortHeader('score', t('MOD_PAGE.PUZZLES_COL_SCORE'))}
                 <th scope="col">{t('MOD_PAGE.PUZZLES_COL_MATCHUP')}</th>
                 {sortHeader('opponentLife', t('MOD_PAGE.PUZZLES_COL_LIFE'))}
+                {sortHeader('gap', t('MOD_PAGE.PUZZLES_COL_GAP'))}
                 <th scope="col">{t('MOD_PAGE.PUZZLES_COL_CARDS')}</th>
-                <th scope="col">{t('MOD_PAGE.PUZZLES_COL_DEFENSE')}</th>
+                <th scope="col">
+                  {kind === 'survive'
+                    ? t('MOD_PAGE.PUZZLES_COL_INCOMING')
+                    : t('MOD_PAGE.PUZZLES_COL_DEFENSE')}
+                </th>
                 <th scope="col">{t('MOD_PAGE.PUZZLES_COL_PROOF')}</th>
                 <th scope="col">{t('MOD_PAGE.PUZZLES_COL_FLAGS')}</th>
                 <th scope="col">{t('MOD_PAGE.PUZZLES_COL_FORMAT')}</th>
@@ -575,9 +810,19 @@ const PuzzleCandidates: React.FC = () => {
                           `MOD_PAGE.PUZZLES_DIFFICULTY_${row.difficulty.toUpperCase()}`
                         )}
                       </span>
+                      {row.lesson && (
+                        <span className={styles.theme}>
+                          {t(`PUZZLE.THEME.${row.lesson.theme}`)}
+                        </span>
+                      )}
                     </td>
                     <td>
                       <HeroCell row={row} />
+                      {row.status === 1 && (
+                        <span className={tableStyles.muted}>
+                          {t('MOD_PAGE.PUZZLES_STATUS_SCHEDULED')}
+                        </span>
+                      )}
                     </td>
                     <td className={tableStyles.numeric}>
                       <span className={styles.score}>{row.opponentLife}</span>
@@ -585,6 +830,16 @@ const PuzzleCandidates: React.FC = () => {
                         <span className={tableStyles.muted}>
                           {t('MOD_PAGE.PUZZLES_LIFE_WAS', {
                             life: row.realLife
+                          })}
+                        </span>
+                      )}
+                    </td>
+                    <td className={tableStyles.numeric}>
+                      <span className={styles.score}>{row.gap}</span>
+                      {row.bot && (
+                        <span className={tableStyles.muted}>
+                          {t('MOD_PAGE.PUZZLES_BOT_SHORT', {
+                            damage: row.bot.damage
                           })}
                         </span>
                       )}
@@ -608,14 +863,24 @@ const PuzzleCandidates: React.FC = () => {
                       </div>
                     </td>
                     <td>
-                      {t('MOD_PAGE.PUZZLES_DEFENSE', {
-                        equipment: row.opponentEquipmentBlock,
-                        hand: row.opponentHandBlock
-                      })}
+                      {row.kind === 'survive'
+                        ? t('MOD_PAGE.PUZZLES_INCOMING', {
+                            incoming: row.estimatedDamage,
+                            attacks: row.estimatedAttacks
+                          })
+                        : t('MOD_PAGE.PUZZLES_DEFENSE', {
+                            equipment: row.opponentEquipmentBlock,
+                            hand: row.opponentHandBlock
+                          })}
                     </td>
                     <td>
                       {isProven(row) ? (
-                        t('MOD_PAGE.PUZZLES_PROOF_SHORT', proofValues(row))
+                        t(
+                          row.kind === 'survive'
+                            ? 'MOD_PAGE.PUZZLES_SURVIVE_PROOF_SHORT'
+                            : 'MOD_PAGE.PUZZLES_PROOF_SHORT',
+                          proofValues(row)
+                        )
                       ) : (
                         <span
                           className={tableStyles.muted}
@@ -674,8 +939,18 @@ const PuzzleCandidates: React.FC = () => {
                   </tr>
                   {expandedId === row.id && (
                     <tr className={styles.detailRow}>
-                      <td colSpan={10}>
-                        <Details row={row} checking={checkingId === row.id} />
+                      <td colSpan={11}>
+                        <Details
+                          row={row}
+                          checking={checkingId === row.id}
+                          mode={modeFor(row)}
+                          onModeChange={(mode) =>
+                            setModes((current) => ({
+                              ...current,
+                              [row.id]: mode
+                            }))
+                          }
+                        />
                       </td>
                     </tr>
                   )}

@@ -549,6 +549,7 @@ export default function ParseGameState(input: any) {
 
   if (input.initialLoad?.isPuzzle !== undefined) {
     result.gameInfo.isPuzzle = input.initialLoad.isPuzzle;
+    result.gameInfo.puzzle = input.initialLoad.puzzle ?? null;
   }
 
   // game format (from initialLoad)

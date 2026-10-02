@@ -180,3 +180,36 @@
   clip: rect(0 0 0 0);
   white-space: nowrap;
 }
+
+.theme {
+  display: block;
+  margin-top: 0.2rem;
+  color: rgba(var(--theme-on-surface-rgb), 0.62);
+  font-size: 0.7rem;
+  white-space: nowrap;
+}
+
+.scheduleForm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.scheduleForm select,
+.scheduleForm input {
+  flex: 0 1 10rem;
+  min-width: 8rem;
+}
+
+.schedule {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(var(--theme-on-surface-rgb), 0.12);
+}
+
+.warning {
+  color: #f0a09b;
+}
