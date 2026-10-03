@@ -24,6 +24,7 @@ const MatchupTooltip: React.FC<MatchupTooltipProps> = ({
   });
   const triggerRef = useRef<HTMLDivElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
+  const openedByTouchRef = useRef(false);
 
   useEffect(() => {
     if (!isVisible || !triggerRef.current || !tooltipRef.current) return;
@@ -84,6 +85,26 @@ const MatchupTooltip: React.FC<MatchupTooltipProps> = ({
     setTooltipPos({ top, left, position });
   }, [isVisible]);
 
+  useEffect(() => {
+    if (!isVisible) return;
+
+    const handlePointerDown = (e: PointerEvent) => {
+      if (e.pointerType === 'mouse') return;
+      if (triggerRef.current?.contains(e.target as Node)) return;
+      setIsVisible(false);
+    };
+    const handleScroll = () => {
+      if (openedByTouchRef.current) setIsVisible(false);
+    };
+
+    document.addEventListener('pointerdown', handlePointerDown, true);
+    window.addEventListener('scroll', handleScroll, true);
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown, true);
+      window.removeEventListener('scroll', handleScroll, true);
+    };
+  }, [isVisible]);
+
   if (!content) {
     return <div>{children}</div>;
   }
@@ -92,14 +113,31 @@ const MatchupTooltip: React.FC<MatchupTooltipProps> = ({
     <div
       ref={triggerRef}
       className={styles.tooltipContainer}
-      onMouseEnter={() => setIsVisible(true)}
-      onMouseLeave={() => setIsVisible(false)}
+      onPointerEnter={(e) => {
+        if (e.pointerType !== 'mouse') return;
+        openedByTouchRef.current = false;
+        setIsVisible(true);
+      }}
+      onPointerLeave={(e) => {
+        if (e.pointerType === 'mouse') setIsVisible(false);
+      }}
+      onPointerUp={(e) => {
+        if (e.pointerType === 'mouse') return;
+        if (tooltipRef.current?.contains(e.target as Node)) return;
+        openedByTouchRef.current = true;
+        setIsVisible(true);
+      }}
     >
       {children}
       {isVisible && (
         <div
           ref={tooltipRef}
           role="tooltip"
+          onClick={(e) => {
+            e.stopPropagation();
+            if ((e.target as Element).closest('a')) return;
+            setIsVisible(false);
+          }}
           className={`${styles.tooltip} ${styles[tooltipPos.position]}`}
           style={{
             top: `${tooltipPos.top}px`,
