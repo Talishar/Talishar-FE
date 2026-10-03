@@ -1666,14 +1666,6 @@ const Lobby = () => {
               </div>
             )}
 
-            {!isWideScreen && effectiveTab !== 'chat' && (
-              <div className={styles.mobileBottomActions}></div>
-            )}
-
-            {!isWideScreen && effectiveTab !== 'chat' && (
-              <div className={styles.spacer}></div>
-            )}
-
             {shouldShowMatchupsUI &&
               (effectiveTab === 'matchups' || isWideScreen) && (
                 <Matchups
@@ -1690,6 +1682,15 @@ const Lobby = () => {
                   }
                 />
               )}
+
+            {!isWideScreen && effectiveTab !== 'chat' && (
+              <div className={styles.mobileBottomActions}></div>
+            )}
+
+            {!isWideScreen && effectiveTab !== 'chat' && (
+              <div className={styles.spacer}></div>
+            )}
+
             {showLobbyAd && <LobbyAd />}
             <StickyFooter
               deckSize={deckSize}
