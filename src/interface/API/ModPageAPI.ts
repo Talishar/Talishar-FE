@@ -335,6 +335,7 @@ export interface AdDailyStat {
   unpricedFills: number;
   displayImpressions?: number;
   videoImpressions: number;
+  videoViewable?: number;
   videoStarts?: number;
   videoCompletes?: number;
   rewardedShows: number;

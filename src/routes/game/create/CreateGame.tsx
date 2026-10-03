@@ -87,6 +87,16 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
   const [createGame] = useCreateGameMutation();
   const [clearRustCounters] = useClearRustCountersMutation();
   const { canViewRustCounters, rustCounters, isRustLocked } = useRustCounters();
+  const showsRustPanel = isLoggedIn && canViewRustCounters && !isEmbedded;
+  useEffect(() => {
+    if (!showsRustPanel) return;
+    (window as any)._talishar_onRewardedAdGranted = () => {
+      clearRustCounters();
+    };
+    return () => {
+      delete (window as any)._talishar_onRewardedAdGranted;
+    };
+  }, [showsRustPanel, clearRustCounters]);
 
   // FaB Bazaar - standalone mode only (embedded mode uses QuickJoinContext)
   const metafyHash = useAppSelector(selectMetafyHash);
@@ -815,7 +825,7 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
             }
             onSubmit={handleSubmit(onSubmit, onInvalid)}
           >
-            {isLoggedIn && canViewRustCounters && !isEmbedded && (
+            {showsRustPanel && (
               <RustCounterPanel
                 rustCounters={rustCounters}
                 isSupporter={isSupporter}

@@ -9,6 +9,20 @@ import { trackRewardedAdClick } from 'utils/adAnalytics';
 import HouseRewardedAd from './HouseRewardedAd';
 import styles from './RustCounterPanel.module.css';
 
+// How long a click waits for a Google ad that is still loading before the
+// house ad takes over.
+const REWARDED_WAIT_MS = 5000;
+
+const showRewardedAd = () => {
+  try {
+    return (window as any)._talishar_showRewarded?.() === true;
+  } catch {
+    // The ad script is third-party and may not be loaded (ad blocker, network
+    // failure). Swallow and fall through to the in-house fallback ad.
+    return false;
+  }
+};
+
 type RustCounterPanelProps = {
   rustCounters: number;
   isSupporter: boolean;
@@ -29,6 +43,7 @@ const RustCounterPanel = ({
   const isLocked = !isSupporter && displayedRustCounters >= MAX_RUST_COUNTERS;
   const shouldShowWatchAd = displayedRustCounters > 0 || canTestRewardedAds;
   const [showFallbackAd, setShowFallbackAd] = useState(false);
+  const [isWaitingForAd, setIsWaitingForAd] = useState(false);
   const [isPulsing, setIsPulsing] = useState(isLocked);
   const panelRef = useRef<HTMLDivElement | null>(null);
 
@@ -48,18 +63,36 @@ const RustCounterPanel = ({
     };
   }, []);
 
+  useEffect(() => {
+    if (!isWaitingForAd) return;
+    const finish = (shown: boolean) => {
+      trackRewardedAdClick(shown, true);
+      setIsWaitingForAd(false);
+      if (!shown) setShowFallbackAd(true);
+    };
+    const handleReady = (event: Event) => {
+      if ((event as CustomEvent<{ ready?: boolean }>).detail?.ready)
+        finish(showRewardedAd());
+    };
+    const timer = window.setTimeout(() => finish(false), REWARDED_WAIT_MS);
+    window.addEventListener('talishar:rewardedAdReady', handleReady);
+    return () => {
+      window.clearTimeout(timer);
+      window.removeEventListener('talishar:rewardedAdReady', handleReady);
+    };
+  }, [isWaitingForAd]);
+
   const handleWatchAdClick = () => {
-    let shown = false;
-    try {
-      shown = (window as any)._talishar_showRewarded?.() === true;
-    } catch {
-      // The ad script is third-party and may not be loaded (ad blocker, network
-      // failure). Swallow and fall through to the in-house fallback ad below.
-    }
-    trackRewardedAdClick(shown);
-    if (shown) {
+    if (isWaitingForAd) return;
+    if (showRewardedAd()) {
+      trackRewardedAdClick(true);
       return;
     }
+    if ((window as any)._talishar_rewardedLoading?.() === true) {
+      setIsWaitingForAd(true);
+      return;
+    }
+    trackRewardedAdClick(false);
     setShowFallbackAd(true);
   };
 
@@ -126,8 +159,11 @@ const RustCounterPanel = ({
               } ${isLocked && isPulsing ? styles.pulse : ''}`}
               onClick={handleWatchAdClick}
               onAnimationEnd={() => setIsPulsing(false)}
+              aria-busy={isWaitingForAd || undefined}
             >
-              {t('RUST_COUNTER_PANEL.WATCH_AD_TO_CLEAR')}
+              {isWaitingForAd
+                ? t('RUST_COUNTER_PANEL.LOADING_AD')
+                : t('RUST_COUNTER_PANEL.WATCH_AD_TO_CLEAR')}
             </button>
           </div>
         )}

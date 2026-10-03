@@ -322,6 +322,11 @@
         window.googletag = window.googletag || { cmd: [] };
         var _pendingMakeVisible = null;
         var _rewardGranted = false;
+        var _lastRewardedRequest = 0;
+        // The provider asks for the rewarded ad only once the Watch ad button
+        // exists and retries every ~50ms while nothing fills, so a request this
+        // recent means an ad may still arrive.
+        var REWARDED_LOADING_MS = 3000;
 
         function setAdReady(ready) {
           window._talishar_rewardedAdReady = ready;
@@ -341,6 +346,11 @@
               setAdReady(true);
             });
           };
+          origOn('slotRequested', function(event) {
+            if (/reward/i.test(event.slot.getAdUnitPath())) {
+              _lastRewardedRequest = Date.now();
+            }
+          });
           // Only fires once the viewer has watched enough of the ad to earn the reward.
           origOn('rewardedSlotGranted', function() {
             window._talishar_lockOverlays?.();
@@ -366,6 +376,9 @@
             return true;
           }
           return false;
+        };
+        window._talishar_rewardedLoading = function() {
+          return Date.now() - _lastRewardedRequest < REWARDED_LOADING_MS;
         };
       })();
     </script>

@@ -19,7 +19,7 @@ const Index = lazy(() => import('./routes/index/Index'));
 const Play = lazy(() => import('routes/game/play/Play'));
 const JoinGame = lazy(() => import('routes/game/join/Join'));
 const Lobby = lazy(() => import('routes/game/lobby/Lobby'));
-const CreateGame = lazy(() => import('routes/game/create/CreateGame'));
+const CreateGame = lazy(() => import('routes/game/create/CreateGamePage'));
 const LoadReplay = lazy(() => import('routes/game/load/LoadReplay'));
 const SharedReplay = lazy(() => import('routes/game/shared/SharedReplay'));
 const JoinSnapshot = lazy(() => import('routes/game/shared/JoinSnapshot'));

@@ -131,13 +131,29 @@ interface RewardedSummary {
   micros: number;
   missUnfilled: number;
   missSpent: number;
+  missBlocked: number;
+  shownLate: number;
 }
 
 interface InGameGate {
   ok: number;
   short: number;
   narrow: number;
+  states: Record<InGameState, number>;
 }
+
+// What the in-game block showed, sampled every 10 seconds while it had room.
+const IN_GAME_STATES = [
+  'ad',
+  'empty',
+  'covered',
+  'below',
+  'offscreen',
+  'hidden',
+  'noslot'
+] as const;
+type InGameState = (typeof IN_GAME_STATES)[number];
+const QUICK_CLICK_SHARE = 0.25;
 
 interface InsightInput {
   slots: SlotRow[];
@@ -251,11 +267,16 @@ function unpricedFills(row: { filled: number; pricedFills: number }) {
   return Math.max(0, row.filled - row.pricedFills);
 }
 
-// The video player's AdImpression event misses some ads that still start and
-// play to the end, so video takes the largest of the three counts.
+// The video player's AdImpression event misses some ads that still start,
+// become viewable and play to the end, so video takes the largest count.
 function slotImpressions(row: AdSlotStat, kind: SlotKind, events: EventCounts) {
   if (kind === 'video')
-    return Math.max(row.filled, events.started ?? 0, events.complete ?? 0);
+    return Math.max(
+      row.filled,
+      row.viewable,
+      events.started ?? 0,
+      events.complete ?? 0
+    );
   if (kind === 'rewarded') return events.shown ?? 0;
   return row.filled;
 }
@@ -308,6 +329,7 @@ const DAY_SUM_FIELDS: Array<keyof AdDailyStat> = [
   'unpricedFills',
   'displayImpressions',
   'videoImpressions',
+  'videoViewable',
   'videoStarts',
   'videoCompletes',
   'rewardedShows'
@@ -403,15 +425,29 @@ function buildInsights(
       })
     );
   }
-  const missed = rewarded.clicks - rewarded.shown;
+  const reachable = rewarded.clicks - rewarded.missBlocked;
+  const missed = Math.max(0, reachable - rewarded.shown);
   if (
-    rewarded.clicks >= MIN_SAMPLE &&
-    ratio(missed, rewarded.clicks) >= MISSED_REWARDED_SHARE
+    reachable >= MIN_SAMPLE &&
+    ratio(missed, reachable) >= MISSED_REWARDED_SHARE
   ) {
     lines.push(
       t('MOD_PAGE.ADS_INSIGHT_REWARDED_MISSED', {
         missed: count(missed),
-        clicks: count(rewarded.clicks)
+        clicks: count(reachable)
+      })
+    );
+  }
+  const clicked = slots
+    .filter((row) => row.clicks >= MIN_SAMPLE)
+    .sort((a, b) => b.clicks - a.clicks)[0];
+  const quick = clicked?.events['click-quick'] ?? 0;
+  if (clicked && ratio(quick, clicked.clicks) >= QUICK_CLICK_SHARE) {
+    lines.push(
+      t('MOD_PAGE.ADS_INSIGHT_QUICK_CLICKS', {
+        share: percent(ratio(quick, clicked.clicks)),
+        slot: slotLabel(clicked),
+        page: pageLabel(clicked.page)
       })
     );
   }
@@ -508,6 +544,19 @@ function buildInsights(
         short: percent(ratio(inGameGate.short, gateTotal)),
         narrow: percent(ratio(inGameGate.narrow, gateTotal)),
         height: IN_GAME_AD_MIN_VIEWPORT_HEIGHT
+      })
+    );
+  }
+  const states = inGameGate.states;
+  const sampled = IN_GAME_STATES.reduce((sum, state) => sum + states[state], 0);
+  if (sampled >= MIN_SAMPLE) {
+    lines.push(
+      t('MOD_PAGE.ADS_INSIGHT_IN_GAME_STATES', {
+        ad: percent(ratio(states.ad, sampled)),
+        empty: percent(ratio(states.empty, sampled)),
+        off: percent(ratio(states.below + states.offscreen, sampled)),
+        covered: percent(ratio(states.covered, sampled)),
+        missing: percent(ratio(states.hidden + states.noslot, sampled))
       })
     );
   }
@@ -670,6 +719,7 @@ const AdStats: React.FC = () => {
     const dayTotals = sumBy<AdDailyStat, keyof AdDailyStat>(
       (data?.daily ?? []).filter(matches).map((row) => ({
         displayImpressions: 0,
+        videoViewable: 0,
         videoStarts: 0,
         videoCompletes: 0,
         ...row
@@ -768,7 +818,7 @@ const AdStats: React.FC = () => {
           impressions,
           hidden,
           key: `${row.page}\t${row.placement}`,
-          seenRate: ratio(row.seen, row.mounts),
+          seenRate: Math.min(1, ratio(row.seen, row.mounts)),
           avgInViewMs: ratio(row.visibleMs, row.mounts),
           fillRate: ratio(row.filled, row.requests),
           viewableRate: ratio(
@@ -795,7 +845,9 @@ const AdStats: React.FC = () => {
       filled: 0,
       micros: 0,
       missUnfilled: 0,
-      missSpent: 0
+      missSpent: 0,
+      missBlocked: 0,
+      shownLate: 0
     };
     for (const row of slots.filter((slot) => slot.kind === 'rewarded')) {
       rewarded.clicks += row.events.click ?? 0;
@@ -807,14 +859,25 @@ const AdStats: React.FC = () => {
       rewarded.micros += row.estMicros;
       rewarded.missUnfilled += row.events['miss-unfilled'] ?? 0;
       rewarded.missSpent += row.events['miss-spent'] ?? 0;
+      rewarded.missBlocked += row.events['miss-blocked'] ?? 0;
+      rewarded.shownLate += row.events['shown-late'] ?? 0;
     }
 
-    const inGameGate: InGameGate = { ok: 0, short: 0, narrow: 0 };
+    const inGameGate: InGameGate = {
+      ok: 0,
+      short: 0,
+      narrow: 0,
+      states: Object.fromEntries(
+        IN_GAME_STATES.map((state) => [state, 0])
+      ) as Record<InGameState, number>
+    };
     eventsBySlot.forEach((events, key) => {
       if (!key.endsWith(`\t${IN_GAME_PLACEMENT}`)) return;
       inGameGate.ok += events['gate-ok'] ?? 0;
       inGameGate.short += events['gate-short'] ?? 0;
       inGameGate.narrow += events['gate-narrow'] ?? 0;
+      for (const state of IN_GAME_STATES)
+        inGameGate.states[state] += events[`ok-${state}`] ?? 0;
     });
 
     const estimated =
@@ -897,6 +960,7 @@ const AdStats: React.FC = () => {
       .map((row) => {
         const videoImpressions = Math.max(
           row.videoImpressions,
+          row.videoViewable ?? 0,
           row.videoStarts ?? 0,
           row.videoCompletes ?? 0
         );
@@ -975,7 +1039,10 @@ const AdStats: React.FC = () => {
   const visiblePages = sorted(report.pages, pageSort);
   const visibleBidders = sorted(report.bidders, bidderSort);
   const { totals, rewarded, used } = report;
-  const missed = Math.max(0, rewarded.clicks - rewarded.shown);
+  const missed = Math.max(
+    0,
+    rewarded.clicks - rewarded.shown - rewarded.missBlocked
+  );
   const rewardedTiles = [
     {
       label: t('MOD_PAGE.ADS_REWARDED_CLICKS'),
@@ -985,9 +1052,20 @@ const AdStats: React.FC = () => {
     {
       label: t('MOD_PAGE.ADS_REWARDED_SHOWN'),
       value: count(rewarded.shown),
-      note: t('MOD_PAGE.ADS_REWARDED_SHOWN_NOTE', {
-        share: percent(ratio(rewarded.shown, rewarded.clicks))
-      })
+      note:
+        rewarded.shownLate > 0
+          ? t('MOD_PAGE.ADS_REWARDED_SHOWN_LATE_NOTE', {
+              share: percent(ratio(rewarded.shown, rewarded.clicks)),
+              late: count(rewarded.shownLate)
+            })
+          : t('MOD_PAGE.ADS_REWARDED_SHOWN_NOTE', {
+              share: percent(ratio(rewarded.shown, rewarded.clicks))
+            })
+    },
+    {
+      label: t('MOD_PAGE.ADS_REWARDED_BLOCKED'),
+      value: count(rewarded.missBlocked),
+      note: t('MOD_PAGE.ADS_REWARDED_BLOCKED_NOTE')
     },
     {
       label: t('MOD_PAGE.ADS_REWARDED_MISSED'),

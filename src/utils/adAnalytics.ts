@@ -72,6 +72,9 @@ const MAX_CPM = 50;
 const IN_VIEW_RATIO = 0.5;
 // In-game block gate time is sent as event counts, one per 10 seconds.
 const GATE_UNIT_MS = 10 * 1000;
+// Coming back this soon after focus moved into an ad usually means the
+// click was a mistake, or landed on part of the ad that opens nothing.
+const QUICK_RETURN_MS = 5 * 1000;
 
 const PAGE_KEYS: Array<[RegExp, string]> = [
   [/^\/$/, 'home'],
@@ -85,6 +88,7 @@ const PAGE_KEYS: Array<[RegExp, string]> = [
   [/^\/about(?:\/|$)/i, 'about'],
   [/^\/premium(?:\/|$)/i, 'premium'],
   [/^\/mastery(?:\/|$)/i, 'mastery'],
+  [/^\/puzzle(?:\/|$)/i, 'puzzle'],
   [/^\/user\/profile(?:\/|$)/i, 'profile'],
   [/^\/user\/settings(?:\/|$)/i, 'settings'],
   [/^\/user\/decks(?:\/|$)/i, 'decks'],
@@ -125,6 +129,8 @@ let clickArmed = true;
 let rewardedReadySeen = false;
 let inGameAdGate: InGameAdGate | null = null;
 let gateSince = 0;
+let inGameSampler = 0;
+let lastClick: { placement: string; at: number } | null = null;
 let lastFlush = Date.now();
 let observer: IntersectionObserver | null = null;
 let mobileQuery: MediaQueryList | null = null;
@@ -351,8 +357,9 @@ function onVisibilityChange() {
 }
 
 function onRewardedReady(event: Event) {
-  if ((event as CustomEvent<{ ready?: boolean }>).detail?.ready)
-    rewardedReadySeen = true;
+  if (!(event as CustomEvent<{ ready?: boolean }>).detail?.ready) return;
+  rewardedReadySeen = true;
+  countEvent(REWARDED_PLACEMENT, 'ready');
 }
 
 function onWindowBlur() {
@@ -365,7 +372,15 @@ function onWindowBlur() {
     if (!placement) return;
     clickArmed = false;
     slotRow(currentPage, placement)[CLICKS] += 1;
+    lastClick = { placement, at: Date.now() };
   }, 0);
+}
+
+function onWindowFocus() {
+  clickArmed = true;
+  if (lastClick && Date.now() - lastClick.at < QUICK_RETURN_MS)
+    countEvent(lastClick.placement, 'click-quick');
+  lastClick = null;
 }
 
 function onIntersection(entries: IntersectionObserverEntry[]) {
@@ -389,9 +404,7 @@ function installListeners() {
   window.addEventListener('blur', onWindowBlur);
   window.addEventListener('talishar:rewardedAdReady', onRewardedReady);
   if ((window as AdWindow)._talishar_rewardedAdReady) rewardedReadySeen = true;
-  window.addEventListener('focus', () => {
-    clickArmed = true;
-  });
+  window.addEventListener('focus', onWindowFocus);
   window.setInterval(flush, FLUSH_INTERVAL_MS);
 }
 
@@ -471,19 +484,81 @@ function onRewardedEvent(event: string) {
   };
 }
 
-export function trackRewardedAdClick(shown: boolean) {
+// A player behind an ad blocker can never get a Google ad, so those clicks are
+// kept apart from the ones where Google had nothing ready.
+export function trackRewardedAdClick(shown: boolean, waited = false) {
   countEvent(REWARDED_PLACEMENT, 'click');
-  if (shown) countEvent(REWARDED_PLACEMENT, 'shown');
-  else
+  if (shown) {
+    countEvent(REWARDED_PLACEMENT, 'shown');
+    if (waited) countEvent(REWARDED_PLACEMENT, 'shown-late');
+    return;
+  }
+  checkAdblock().then((blocked) => {
     countEvent(
       REWARDED_PLACEMENT,
-      rewardedReadySeen ? 'miss-spent' : 'miss-unfilled'
+      blocked
+        ? 'miss-blocked'
+        : rewardedReadySeen
+        ? 'miss-spent'
+        : 'miss-unfilled'
     );
+  });
+}
+
+function visibleShare(rect: DOMRect): number {
+  const width =
+    Math.min(rect.right, window.innerWidth) - Math.max(rect.left, 0);
+  const height =
+    Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
+  return width > 0 && height > 0
+    ? (width * height) / (rect.width * rect.height)
+    : 0;
+}
+
+// What the player sees where the in-game block should be: an ad, the member
+// card because nothing filled, or nothing because the slot is missing, hidden,
+// off screen or covered.
+function inGameSlotState(): string {
+  const el = document.querySelector(`[data-ad="${IN_GAME_PLACEMENT}"]`);
+  if (!el) return 'noslot';
+  const rect = el.getBoundingClientRect();
+  if (
+    rect.width === 0 ||
+    rect.height === 0 ||
+    getComputedStyle(el).visibility === 'hidden'
+  )
+    return 'hidden';
+  if (visibleShare(rect) < IN_VIEW_RATIO)
+    return rect.bottom > window.innerHeight ? 'below' : 'offscreen';
+  const hit = document.elementFromPoint(
+    rect.left + rect.width / 2,
+    rect.top + rect.height / 2
+  );
+  if (!hit || !el.parentElement?.contains(hit)) return 'covered';
+  return el.getAttribute('data-ad-status') === 'filled' ? 'ad' : 'empty';
+}
+
+function sampleInGameSlot() {
+  if (
+    inGameAdGate !== 'ok' ||
+    !currentPage ||
+    !pageVisible ||
+    !gptReady ||
+    currentDevice() !== 'desktop'
+  )
+    return;
+  countEvent(IN_GAME_PLACEMENT, `ok-${inGameSlotState()}`);
 }
 
 export function setInGameAdGate(gate: InGameAdGate | null) {
   accrueGate(Date.now());
   inGameAdGate = gate;
+  if (gate && !inGameSampler) {
+    inGameSampler = window.setInterval(sampleInGameSlot, GATE_UNIT_MS);
+  } else if (!gate && inGameSampler) {
+    window.clearInterval(inGameSampler);
+    inGameSampler = 0;
+  }
 }
 
 export function trackVideoAdPlayer(player: VideoAdPlayer) {

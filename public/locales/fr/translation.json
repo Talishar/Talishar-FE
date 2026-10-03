@@ -1503,6 +1503,7 @@
   },
   "RUST_COUNTER_PANEL": {
     "DEV_MODE_NOTE": "Mode développement : les compteurs rust ne bloquent pas les jeux.",
+    "LOADING_AD": "Chargement de la pub...",
     "RUST_COUNTERS_many": "Compteurs de rouille : {{count}} / {{max}}",
     "RUST_COUNTERS_one": "Compteurs de rouille : {{count}} / {{max}}",
     "RUST_COUNTERS_other": "Compteurs de rouille : {{count}} / {{max}}",
