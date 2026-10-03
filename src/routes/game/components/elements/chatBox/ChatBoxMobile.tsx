@@ -9,13 +9,39 @@ import { useTranslation } from 'react-i18next';
 
 const INITIAL_MOBILE_LOG_MESSAGES = 120;
 const MOBILE_LOG_PAGE_SIZE = 200;
+const CHAT_FILTER_STORAGE_KEY = 'mobileChatFilter';
+
+type ChatFilter = 'none' | 'chat' | 'log';
+
+const CHAT_FILTERS: { value: ChatFilter; label: string }[] = [
+  { value: 'none', label: 'CHAT.ALL' },
+  { value: 'chat', label: 'CHAT.CHAT' },
+  { value: 'log', label: 'CHAT.LOG' }
+];
+
+const readStoredFilter = (): ChatFilter => {
+  try {
+    const stored = localStorage.getItem(CHAT_FILTER_STORAGE_KEY);
+    return stored === 'chat' || stored === 'log' ? stored : 'none';
+  } catch {
+    return 'none';
+  }
+};
+
+const storeFilter = (filter: ChatFilter) => {
+  try {
+    localStorage.setItem(CHAT_FILTER_STORAGE_KEY, filter);
+  } catch {
+    return;
+  }
+};
 
 export default function ChatBox() {
   const { t } = useTranslation();
   const amIPlayerOne = useAppSelector((state: RootState) => {
     return state.game.gameInfo.playerID === 1;
   });
-  const [chatFilter] = useState<'none' | 'chat' | 'log'>('none');
+  const [chatFilter, setChatFilter] = useState<ChatFilter>(readStoredFilter);
   const [logReady, setLogReady] = useState(false);
   const [visibleMessageCount, setVisibleMessageCount] = useState(
     INITIAL_MOBILE_LOG_MESSAGES
@@ -32,11 +58,18 @@ export default function ChatBox() {
   const prevChatLengthRef = useRef<number>(0);
   const prevChatFilterRef = useRef<string>('none');
 
+  const showFullLog = chatFilter === 'chat';
   const visibleChatLog = useMemo(
-    () => chatLog?.slice(-visibleMessageCount),
-    [chatLog, visibleMessageCount]
+    () => (showFullLog ? chatLog : chatLog?.slice(-visibleMessageCount)),
+    [chatLog, visibleMessageCount, showFullLog]
   );
-  const hasEarlierMessages = (chatLog?.length ?? 0) > visibleMessageCount;
+  const hasEarlierMessages =
+    !showFullLog && (chatLog?.length ?? 0) > visibleMessageCount;
+
+  const selectFilter = (filter: ChatFilter) => {
+    setChatFilter(filter);
+    storeFilter(filter);
+  };
 
   const playerNames = useMemo<[string, string]>(
     () => [amIPlayerOne ? myName : oppName, amIPlayerOne ? oppName : myName],
@@ -95,6 +128,30 @@ export default function ChatBox() {
 
   return ReactDOM.createPortal(
     <div className={styles.chatBoxMobileContainer}>
+      <div className={styles.chatMobileHeader}>
+        <div
+          role="tablist"
+          aria-label={t('CHAT.CHAT')}
+          className={styles.chatMobileTabs}
+        >
+          {CHAT_FILTERS.map(({ value, label }) => (
+            <button
+              key={value}
+              type="button"
+              role="tab"
+              aria-selected={chatFilter === value}
+              className={
+                chatFilter === value
+                  ? styles.chatMobileTabActive
+                  : styles.chatMobileTab
+              }
+              onClick={() => selectFilter(value)}
+            >
+              {t(label)}
+            </button>
+          ))}
+        </div>
+      </div>
       {/* Message list */}
       <div className={styles.chatMobileScrollArea}>
         {logReady && (
