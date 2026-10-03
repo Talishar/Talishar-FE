@@ -183,8 +183,11 @@ function sandboxAdIframesIn(root: Document | Element) {
 
 // React attaches __reactFiber$xxx to every DOM node it manages, including
 // portal nodes that land outside #root. Skip those so we don't break game UI
-// (e.g. PlayerHand portals to document.body).
+// (e.g. PlayerHand portals to document.body). Floating UI creates its portal
+// root with document.createElement, so it carries no fiber key; match its
+// marker attribute instead (keyword popovers render there).
 function isReactPortalEl(el: Element): boolean {
+  if (el.hasAttribute('data-floating-ui-portal')) return true;
   const keys = Object.keys(el);
   for (const key of keys) {
     if (key.startsWith('__reactFiber') || key.startsWith('__reactProps'))
