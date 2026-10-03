@@ -1687,7 +1687,6 @@ const Lobby = () => {
               <div className={styles.mobileBottomActions}></div>
             )}
 
-            {/* Keep last so every mobile tab can scroll clear of the fixed footer */}
             {!isWideScreen && effectiveTab !== 'chat' && (
               <div className={styles.spacer}></div>
             )}
