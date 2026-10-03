@@ -15,7 +15,6 @@
   gap: 0.25rem;
   position: relative;
   z-index: 1001;
-  overflow-y: auto;
 }
 
 .matchupContainer h4 {
@@ -225,8 +224,11 @@
     padding: 0rem 0.5rem;
     gap: 0.5rem;
     height: auto;
-    max-height: calc(100vh - var(--sticky-footer-height, 80px) - 130px - 120px);
-    overflow-y: auto;
+    /* Scroll with the page (like Equipment/Deck) so the lobby spacer keeps the
+       last row clear of the fixed footer, and sit below the footer. */
+    max-height: none;
+    overflow-y: visible;
+    z-index: auto;
   }
 
   .matchupContainer h4 {
@@ -280,8 +282,11 @@
     padding: 0rem 0.5rem;
     gap: 0.4rem;
     height: auto;
-    max-height: calc(100vh - var(--sticky-footer-height, 80px) - 130px - 120px);
-    overflow-y: auto;
+    /* Scroll with the page (like Equipment/Deck) so the lobby spacer keeps the
+       last row clear of the fixed footer, and sit below the footer. */
+    max-height: none;
+    overflow-y: visible;
+    z-index: auto;
   }
 
   .matchupContainer h4 {
