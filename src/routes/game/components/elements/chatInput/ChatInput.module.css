@@ -28,7 +28,10 @@
 .buttonDiv {
   background-color: color-mix(in srgb, var(--theme-text) 7%, transparent);
   color: var(--theme-text-secondary);
-  padding: 8px 16px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: max(1em, 14px);
   margin-right: 0.25rem;
   width: 2rem;
