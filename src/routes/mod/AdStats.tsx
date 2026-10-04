@@ -451,6 +451,19 @@ function buildInsights(
       })
     );
   }
+  const steals = (row: SlotRow) => row.events['focus-steal'] ?? 0;
+  const stealer = slots
+    .filter((row) => steals(row) >= MIN_SAMPLE)
+    .sort((a, b) => steals(b) - steals(a))[0];
+  if (stealer) {
+    lines.push(
+      t('MOD_PAGE.ADS_INSIGHT_FOCUS_STEAL', {
+        count: count(steals(stealer)),
+        slot: slotLabel(stealer),
+        page: pageLabel(stealer.page)
+      })
+    );
+  }
   const value = (row: SlotRow) =>
     byImpressions ? row.impressions : row.estMicros;
   const top = slots

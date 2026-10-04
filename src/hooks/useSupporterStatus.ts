@@ -12,6 +12,8 @@ interface CachedSupporterStatus {
   cachedAt: number;
 }
 
+let lastResolved: boolean | null = null;
+
 function readCache(): CachedSupporterStatus | null {
   try {
     const raw = localStorage.getItem(CACHE_KEY);
@@ -22,6 +24,7 @@ function readCache(): CachedSupporterStatus | null {
       localStorage.removeItem(CACHE_KEY);
       return null;
     }
+    lastResolved = parsed.isSupporter;
     return parsed;
   } catch {
     return null;
@@ -29,6 +32,7 @@ function readCache(): CachedSupporterStatus | null {
 }
 
 function writeCache(isSupporter: boolean): void {
+  lastResolved = isSupporter;
   try {
     const entry: CachedSupporterStatus = { isSupporter, cachedAt: Date.now() };
     localStorage.setItem(CACHE_KEY, JSON.stringify(entry));
@@ -40,6 +44,7 @@ function writeCache(isSupporter: boolean): void {
 const INVALIDATED_EVENT = 'talishar:supporter-status-invalidated';
 
 function removeCache(): void {
+  lastResolved = null;
   try {
     localStorage.removeItem(CACHE_KEY);
   } catch {
@@ -124,13 +129,15 @@ export default function useSupporterStatus(): {
     cacheEpoch
   ]);
 
-  const isLoading = isAuthLoading || (!skipApiCall && isProfileLoading);
+  const isLoading =
+    isAuthLoading ||
+    (!skipApiCall && isProfileLoading && lastResolved === null);
   // The effect above lands the fetched status in state one commit late, and
   // the cache it writes can be read by another instance before that. Until
   // then a supporter would count as ad-eligible, long enough to mount ad units
   // and load the ad provider, so read the cache and the profile directly.
   const resolvedIsSupporter = isLoggedIn
-    ? cached?.isSupporter ?? profileIsSupporter ?? isSupporter
+    ? cached?.isSupporter ?? profileIsSupporter ?? lastResolved ?? isSupporter
     : isSupporter;
   const showAds = shouldShowAdsForUser(
     currentUserName,

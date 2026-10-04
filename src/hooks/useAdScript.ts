@@ -64,11 +64,15 @@ function removeNavGuard() {
   getNavigation()?.removeEventListener('navigate', handleNavigate);
 }
 
+function removeUnlessReactOwned(el: Element) {
+  if (!isReactOwned(el)) el.remove();
+}
+
 function purgeAdElements() {
   document
     .querySelectorAll('script[src*="rev.iq"]')
     .forEach((el) => el.remove());
-  document.querySelectorAll(AD_SELECTORS).forEach((el) => el.remove());
+  document.querySelectorAll(AD_SELECTORS).forEach(removeUnlessReactOwned);
 }
 
 function purgeAdElement(node: Element): boolean {
@@ -76,7 +80,7 @@ function purgeAdElement(node: Element): boolean {
     node instanceof HTMLScriptElement && node.src.includes('rev.iq');
 
   if (isProviderScript || node.matches?.(AD_SELECTORS)) {
-    node.remove();
+    removeUnlessReactOwned(node);
     return true;
   }
 
@@ -87,7 +91,7 @@ function purgeAdElementOrDescendants(node: Element) {
   if (purgeAdElement(node)) return;
 
   node.querySelectorAll?.('script[src*="rev.iq"]').forEach((el) => el.remove());
-  node.querySelectorAll?.(AD_SELECTORS)?.forEach((el) => el.remove());
+  node.querySelectorAll?.(AD_SELECTORS)?.forEach(removeUnlessReactOwned);
 }
 
 export function wasAdProviderLoadedInDocument(): boolean {
@@ -186,14 +190,16 @@ function sandboxAdIframesIn(root: Document | Element) {
 // (e.g. PlayerHand portals to document.body). Floating UI creates its portal
 // root with document.createElement, so it carries no fiber key; match its
 // marker attribute instead (keyword popovers render there).
-function isReactPortalEl(el: Element): boolean {
-  if (el.hasAttribute('data-floating-ui-portal')) return true;
-  const keys = Object.keys(el);
-  for (const key of keys) {
+function isReactOwned(el: Element): boolean {
+  for (const key of Object.keys(el)) {
     if (key.startsWith('__reactFiber') || key.startsWith('__reactProps'))
       return true;
   }
   return false;
+}
+
+function isReactPortalEl(el: Element): boolean {
+  return el.hasAttribute('data-floating-ui-portal') || isReactOwned(el);
 }
 
 const CMP_IFRAME_HOSTS = [

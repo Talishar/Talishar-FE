@@ -1308,6 +1308,7 @@
     "ADS_INSIGHT_NEVER_REQUESTED":"{{slot}} on {{page}} is on screen in {{seen}} of views but has never asked for an ad. Check that RevIQ has this code set up.",
     "ADS_INSIGHT_NO_ADS": "{{page}} has no ad slot but holds {{share}} of on-screen time ({{avg}} per visit). It is the strongest candidate for a new slot.",
     "ADS_INSIGHT_QUICK_CLICKS": "{{share}} of clicks on {{slot}} on {{page}} came back within 5 seconds. That usually means a misclick, which annoys players and which Google discounts.",
+    "ADS_INSIGHT_FOCUS_STEAL": "Ads in {{slot}} on {{page}} took keyboard focus {{count}} times with the pointer elsewhere. These are not clicks: a creative focused itself, and anything the player was typing went to the ad.",
     "ADS_INSIGHT_REWARDED_MISSED": "{{missed}} of {{clicks}} Watch ad clicks from players without an ad blocker found no Google ad ready. Each one is a rewarded ad a player wanted to watch.",
     "ADS_INSIGHT_TOP": "{{slot}} on {{page}} is the top earner with {{share}} of revenue, {{rpm}} per 1,000 page views.",
     "ADS_INSIGHT_TOP_IMPRESSIONS": "{{slot}} on {{page}} brings the most impressions: {{share}} of all, {{rate}} per 1,000 page views.",

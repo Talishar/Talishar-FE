@@ -127,6 +127,7 @@ let gptReady = false;
 let listenersInstalled = false;
 let clickArmed = true;
 let rewardedReadySeen = false;
+let rewardedReadyNow = false;
 let inGameAdGate: InGameAdGate | null = null;
 let gateSince = 0;
 let inGameSampler = 0;
@@ -134,6 +135,7 @@ let lastClick: { placement: string; at: number } | null = null;
 let lastFlush = Date.now();
 let observer: IntersectionObserver | null = null;
 let mobileQuery: MediaQueryList | null = null;
+let hoverQuery: MediaQueryList | null = null;
 
 export function adPageKey(pathname: string): string | null {
   if (UNTRACKED_PAGE_RE.test(pathname)) return null;
@@ -146,6 +148,11 @@ export function adPageKey(pathname: string): string | null {
 function currentDevice(): Device {
   mobileQuery ??= window.matchMedia('(max-width: 728px)');
   return mobileQuery.matches ? 'mobile' : 'desktop';
+}
+
+function canHover(): boolean {
+  hoverQuery ??= window.matchMedia('(hover: hover)');
+  return hoverQuery.matches;
 }
 
 function micros(cpm: unknown): number {
@@ -357,9 +364,12 @@ function onVisibilityChange() {
 }
 
 function onRewardedReady(event: Event) {
-  if (!(event as CustomEvent<{ ready?: boolean }>).detail?.ready) return;
-  rewardedReadySeen = true;
-  countEvent(REWARDED_PLACEMENT, 'ready');
+  const ready = Boolean(
+    (event as CustomEvent<{ ready?: boolean }>).detail?.ready
+  );
+  if (ready && !rewardedReadyNow) countEvent(REWARDED_PLACEMENT, 'ready');
+  rewardedReadyNow = ready;
+  if (ready) rewardedReadySeen = true;
 }
 
 function onWindowBlur() {
@@ -371,6 +381,10 @@ function onWindowBlur() {
     const placement = slot && placementFromElement(slot);
     if (!placement) return;
     clickArmed = false;
+    if (canHover() && !slot?.matches(':hover')) {
+      countEvent(placement, 'focus-steal');
+      return;
+    }
     slotRow(currentPage, placement)[CLICKS] += 1;
     lastClick = { placement, at: Date.now() };
   }, 0);
@@ -403,7 +417,10 @@ function installListeners() {
   window.addEventListener('pagehide', flush);
   window.addEventListener('blur', onWindowBlur);
   window.addEventListener('talishar:rewardedAdReady', onRewardedReady);
-  if ((window as AdWindow)._talishar_rewardedAdReady) rewardedReadySeen = true;
+  if ((window as AdWindow)._talishar_rewardedAdReady) {
+    rewardedReadySeen = true;
+    rewardedReadyNow = true;
+  }
   window.addEventListener('focus', onWindowFocus);
   window.setInterval(flush, FLUSH_INTERVAL_MS);
 }
