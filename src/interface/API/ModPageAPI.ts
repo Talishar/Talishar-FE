@@ -138,6 +138,22 @@ export interface PuzzleProof extends Partial<PuzzleRealTurn> {
   reason?: string;
 }
 
+export interface PuzzleRubricCriterion {
+  code: string;
+  points: number;
+  max: number;
+  measured: boolean;
+}
+
+export interface PuzzleRubric {
+  percent: number;
+  potential: number;
+  capped: boolean;
+  points: number;
+  max: number;
+  criteria: PuzzleRubricCriterion[];
+}
+
 export interface PuzzleFlag {
   code: string;
   value: number;
@@ -223,6 +239,8 @@ export interface PuzzleCandidate {
   lesson: PuzzleLesson | null;
   realTurn: PuzzleRealTurn | null;
   score: number;
+  interest: number;
+  rubric: PuzzleRubric;
   difficulty: PuzzleDifficulty;
   flags: PuzzleFlag[];
 }
@@ -265,6 +283,8 @@ export interface PuzzleScheduleDay {
   opponentHeroName: string;
   life: number;
   difficulty: PuzzleDifficulty | '';
+  interest: number | null;
+  auto: boolean;
   theme: string | null;
   bars: { bot: number; real: number } | null;
   stats: PuzzleScheduleStats;

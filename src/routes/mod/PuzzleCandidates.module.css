@@ -153,6 +153,35 @@
   list-style: none;
 }
 
+.rubricList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.8rem;
+}
+
+.rubricList li {
+  display: flex;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rubricPoints {
+  flex: 0 0 2.6rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  text-align: right;
+}
+
+.rubricMiss {
+  color: rgba(var(--theme-on-surface-rgb), 0.62);
+}
+
 .solution {
   grid-column: 1 / -1;
 }

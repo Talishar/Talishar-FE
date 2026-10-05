@@ -115,6 +115,19 @@ const PuzzleSchedule: React.FC = () => {
                             name: day.opponentHeroName
                           })}
                         </span>
+                        {(day.interest !== null || day.auto) && (
+                          <span className={tableStyles.muted}>
+                            {[
+                              day.interest !== null &&
+                                t('MOD_PAGE.PUZZLES_SCHEDULE_INTEREST', {
+                                  percent: day.interest
+                                }),
+                              day.auto && t('MOD_PAGE.PUZZLES_SCHEDULE_AUTO')
+                            ]
+                              .filter(Boolean)
+                              .join(' · ')}
+                          </span>
+                        )}
                       </div>
                     </td>
                     <td>{day.theme ? t(`PUZZLE.THEME.${day.theme}`) : '-'}</td>

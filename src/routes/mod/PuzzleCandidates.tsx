@@ -16,6 +16,7 @@ import {
   PuzzleKind,
   PuzzleLesson,
   PuzzleMode,
+  PuzzleRubric,
   PuzzleStep
 } from 'interface/API/ModPageAPI';
 import { CARD_SQUARES_PATH, getCollectionCardImagePath } from 'utils';
@@ -27,7 +28,7 @@ import PuzzleSchedule from './PuzzleSchedule';
 import tableStyles from './PromptStats.module.css';
 import styles from './PuzzleCandidates.module.css';
 
-type SortKey = 'score' | 'id' | 'opponentLife' | 'gap';
+type SortKey = 'interest' | 'id' | 'opponentLife' | 'gap';
 type ProofFilter = 'all' | 'proven';
 
 interface ReadyPuzzle extends CreatePuzzleGameResponse {
@@ -236,6 +237,50 @@ const Lesson = ({ lesson }: { lesson: PuzzleLesson }) => {
   );
 };
 
+const Rubric = ({ rubric }: { rubric: PuzzleRubric }) => {
+  const { t } = useTranslation();
+  return (
+    <div className={`${styles.detailGroup} ${styles.solution}`}>
+      <span className={styles.detailLabel}>
+        {t('MOD_PAGE.PUZZLES_RUBRIC_TITLE', {
+          percent: rubric.percent,
+          points: rubric.points,
+          max: rubric.max
+        })}
+      </span>
+      <ul className={styles.rubricList}>
+        {rubric.criteria.map((criterion) => (
+          <li
+            key={criterion.code}
+            className={
+              criterion.points === criterion.max ? undefined : styles.rubricMiss
+            }
+          >
+            <span className={styles.rubricPoints}>
+              {t('MOD_PAGE.PUZZLES_RUBRIC_POINTS', {
+                points: criterion.points,
+                max: criterion.max
+              })}
+            </span>
+            {t(`MOD_PAGE.PUZZLES_RUBRIC_${criterion.code}`)}
+            {!criterion.measured && (
+              <span className={tableStyles.muted}>
+                {' '}
+                · {t('MOD_PAGE.PUZZLES_RUBRIC_UNMEASURED')}
+              </span>
+            )}
+          </li>
+        ))}
+      </ul>
+      {rubric.capped && (
+        <span className={tableStyles.muted}>
+          {t('MOD_PAGE.PUZZLES_RUBRIC_CAPPED')}
+        </span>
+      )}
+    </div>
+  );
+};
+
 const BotSummary = ({ bot, kind }: { bot: PuzzleBot; kind: PuzzleKind }) => {
   const { t } = useTranslation();
   const none = t('MOD_PAGE.PUZZLES_NONE');
@@ -379,6 +424,7 @@ const Details = ({
   const survive = row.kind === 'survive';
   return (
     <div className={styles.details}>
+      <Rubric rubric={row.rubric} />
       {row.lesson && <Lesson lesson={row.lesson} />}
       {isProven(row) && row.solution && row.solution.length > 0 && (
         <Solution steps={row.solution} />
@@ -487,7 +533,7 @@ const PuzzleCandidates: React.FC = () => {
   const [difficulty, setDifficulty] = useState('');
   const [proofFilter, setProofFilter] = useState<ProofFilter>('all');
   const [showFiltered, setShowFiltered] = useState(false);
-  const [sortKey, setSortKey] = useState<SortKey>('score');
+  const [sortKey, setSortKey] = useState<SortKey>('interest');
   const [sortDescending, setSortDescending] = useState(true);
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [creatingId, setCreatingId] = useState<number | null>(null);
@@ -778,7 +824,7 @@ const PuzzleCandidates: React.FC = () => {
           <table className={`${tableStyles.table} ${styles.table}`}>
             <thead>
               <tr>
-                {sortHeader('score', t('MOD_PAGE.PUZZLES_COL_SCORE'))}
+                {sortHeader('interest', t('MOD_PAGE.PUZZLES_COL_INTEREST'))}
                 <th scope="col">{t('MOD_PAGE.PUZZLES_COL_MATCHUP')}</th>
                 {sortHeader('opponentLife', t('MOD_PAGE.PUZZLES_COL_LIFE'))}
                 {sortHeader('gap', t('MOD_PAGE.PUZZLES_COL_GAP'))}
@@ -804,7 +850,18 @@ const PuzzleCandidates: React.FC = () => {
                 <Fragment key={row.id}>
                   <tr>
                     <td className={tableStyles.numeric}>
-                      <span className={styles.score}>{row.score}</span>
+                      <span className={styles.score}>
+                        {t('MOD_PAGE.PUZZLES_INTEREST_VALUE', {
+                          percent: row.interest
+                        })}
+                      </span>
+                      {row.rubric.potential > row.interest && (
+                        <span className={tableStyles.muted}>
+                          {t('MOD_PAGE.PUZZLES_INTEREST_UP_TO', {
+                            percent: row.rubric.potential
+                          })}
+                        </span>
+                      )}
                       <span className={styles.difficulty}>
                         {t(
                           `MOD_PAGE.PUZZLES_DIFFICULTY_${row.difficulty.toUpperCase()}`
