@@ -28,7 +28,9 @@ const MOD_USERNAMES = [
   'Tower',
   'PvtVoid',
   'Aegisworn',
-  'Fablazing'
+  'Fablazing',
+  'Bluffkin',
+  'Bluffkin1'
 ];
 
 export default function useAuth() {
