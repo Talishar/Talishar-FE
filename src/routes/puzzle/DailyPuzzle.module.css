@@ -298,12 +298,6 @@
   font-weight: 700;
 }
 
-.trick {
-  margin: 0;
-  font-size: 0.95rem;
-  line-height: 1.5;
-}
-
 .steps {
   display: flex;
   flex-direction: column;

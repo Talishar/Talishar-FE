@@ -230,9 +230,6 @@ const Lesson = ({ lesson }: { lesson: PuzzleLesson }) => {
           <li key={index}>{parseTextToElements(hint)}</li>
         ))}
       </ol>
-      <span className={tableStyles.muted}>
-        {t('MOD_PAGE.PUZZLES_TRICK')} {parseTextToElements(lesson.trick)}
-      </span>
     </div>
   );
 };
@@ -344,7 +341,9 @@ const ScheduleForm = ({
 }) => {
   const { t } = useTranslation();
   const [date, setDate] = useState('');
+  const [life, setLife] = useState('');
   const [schedulePuzzle, { isLoading }] = useSchedulePuzzleMutation();
+  const setsLife = mode !== 'damage';
 
   const schedule = async () => {
     try {
@@ -352,7 +351,8 @@ const ScheduleForm = ({
         action: 'schedule',
         candidateId: row.id,
         mode,
-        date: date || undefined
+        date: date || undefined,
+        life: setsLife && life !== '' ? Number(life) : undefined
       }).unwrap();
       if (result.error) toast.error(result.error);
       else
@@ -388,6 +388,19 @@ const ScheduleForm = ({
           aria-label={t('MOD_PAGE.PUZZLES_SCHEDULE_DATE')}
           onChange={(event) => setDate(event.target.value)}
         />
+        {setsLife && (
+          <input
+            type="number"
+            min={1}
+            max={99}
+            className={`${tableStyles.search} ${styles.lifeInput}`}
+            value={life}
+            placeholder={String(row.opponentLife)}
+            aria-label={t('MOD_PAGE.PUZZLES_SCHEDULE_LIFE')}
+            title={t('MOD_PAGE.PUZZLES_SCHEDULE_LIFE')}
+            onChange={(event) => setLife(event.target.value)}
+          />
+        )}
         <button
           type="button"
           className={styles.button}
@@ -401,7 +414,7 @@ const ScheduleForm = ({
       </div>
       <span className={tableStyles.muted}>
         {isProven(row)
-          ? t('MOD_PAGE.PUZZLES_SCHEDULE_HINT')
+          ? t('MOD_PAGE.PUZZLES_SCHEDULE_HINT', { life: row.opponentLife })
           : t('MOD_PAGE.PUZZLES_SCHEDULE_NEEDS_PROOF')}
       </span>
     </div>
@@ -422,6 +435,7 @@ const Details = ({
   const { t } = useTranslation();
   const proof = proofKey(row);
   const survive = row.kind === 'survive';
+  const spare = (isProven(row) && row.proof?.spare) || [];
   return (
     <div className={styles.details}>
       <Rubric rubric={row.rubric} />
@@ -508,6 +522,13 @@ const Details = ({
                   life: row.realLife
                 })}
           </li>
+          {spare.length > 0 && (
+            <li>
+              {t('MOD_PAGE.PUZZLES_SURVIVE_PROOF_SPARE', {
+                cards: puzzleCardNames(spare)
+              })}
+            </li>
+          )}
           <li>
             {row.realTurn
               ? t('MOD_PAGE.PUZZLES_REAL_TURN_DETAIL', realTurnValues(row))

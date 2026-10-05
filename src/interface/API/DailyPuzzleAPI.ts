@@ -1,9 +1,4 @@
-import {
-  PuzzleDifficulty,
-  PuzzleMode,
-  PuzzleStep,
-  PuzzleStepCard
-} from './ModPageAPI';
+import { PuzzleDifficulty, PuzzleMode, PuzzleStep } from './ModPageAPI';
 
 export interface DailyPuzzleBars {
   bot: number;
@@ -42,12 +37,8 @@ export interface DailyPuzzleResult {
   rating: number;
 }
 
-export interface DailyPuzzleLesson {
-  theme: string | null;
-  themeText: string | null;
-  keyCards: PuzzleStepCard[];
+export interface DailyPuzzleReview {
   hints: string[];
-  trick: string;
   solution: PuzzleStep[];
 }
 
@@ -65,7 +56,7 @@ export interface DailyPuzzleResponse {
   puzzle: DailyPuzzleInfo | null;
   stats?: DailyPuzzleStats;
   result?: DailyPuzzleResult | null;
-  lesson?: DailyPuzzleLesson;
+  review?: DailyPuzzleReview;
   leaderboard?: DailyPuzzleLeader[];
   error?: string;
 }

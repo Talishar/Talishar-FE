@@ -231,6 +231,20 @@
   min-width: 8rem;
 }
 
+.scheduleForm .lifeInput,
+.lifeEdit .lifeInput {
+  flex: 0 0 4.5rem;
+  width: 4.5rem !important;
+  min-width: 0;
+}
+
+.lifeEdit {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
 .schedule {
   display: flex;
   flex-direction: column;

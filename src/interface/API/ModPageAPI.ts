@@ -136,6 +136,7 @@ export interface PuzzleProof extends Partial<PuzzleRealTurn> {
   life?: number;
   realLife?: number;
   reason?: string;
+  spare?: PuzzleStepCard[];
 }
 
 export interface PuzzleRubricCriterion {
@@ -196,7 +197,6 @@ export interface PuzzleLesson {
   themeText: string;
   keyCards: PuzzleStepCard[];
   hints: string[];
-  trick: string;
 }
 
 export interface PuzzleCandidate {
@@ -282,10 +282,10 @@ export interface PuzzleScheduleDay {
   heroName: string;
   opponentHeroName: string;
   life: number;
+  provenLife: number | null;
   difficulty: PuzzleDifficulty | '';
   interest: number | null;
   auto: boolean;
-  theme: string | null;
   bars: { bot: number; real: number } | null;
   stats: PuzzleScheduleStats;
 }
@@ -294,14 +294,16 @@ export interface PuzzleScheduleResponse {
   today: string;
   days: PuzzleScheduleDay[];
   scheduled?: string;
+  updated?: string;
   error?: string;
 }
 
 export interface SchedulePuzzleRequest {
-  action: 'schedule' | 'remove';
+  action: 'schedule' | 'remove' | 'life';
   candidateId?: number;
   mode?: PuzzleMode;
   date?: string;
+  life?: number;
 }
 
 export interface CreatePuzzleGameResponse {

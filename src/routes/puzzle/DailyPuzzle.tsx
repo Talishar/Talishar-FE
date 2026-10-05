@@ -10,9 +10,9 @@ import {
 } from 'features/api/apiSlice';
 import {
   DailyPuzzleInfo,
-  DailyPuzzleLesson,
   DailyPuzzleResponse,
-  DailyPuzzleResult
+  DailyPuzzleResult,
+  DailyPuzzleReview
 } from 'interface/API/DailyPuzzleAPI';
 import PageBanner from 'components/PageBanner/PageBanner';
 import AdRailLayout from 'components/ads/AdRailLayout';
@@ -295,35 +295,26 @@ const ResultPanel = ({
   );
 };
 
-const LessonPanel = ({ lesson }: { lesson: DailyPuzzleLesson }) => {
+const ReviewPanel = ({ review }: { review: DailyPuzzleReview }) => {
   const { t } = useTranslation();
+  if (review.solution.length === 0 && review.hints.length === 0) return null;
   return (
-    <section className={styles.panel} aria-labelledby="daily-puzzle-lesson">
-      <h2 id="daily-puzzle-lesson" className={styles.panelTitle}>
-        {lesson.theme
-          ? t('DAILY_PUZZLE.LESSON_TITLE', {
-              theme: t(`PUZZLE.THEME.${lesson.theme}`)
-            })
-          : t('DAILY_PUZZLE.LESSON_TITLE_PLAIN')}
+    <section className={styles.panel} aria-labelledby="daily-puzzle-review">
+      <h2 id="daily-puzzle-review" className={styles.panelTitle}>
+        {t('DAILY_PUZZLE.SOLUTION')}
       </h2>
-      {lesson.trick && (
-        <p className={styles.trick}>{parseTextToElements(lesson.trick)}</p>
+      {review.solution.length > 0 && (
+        <ol className={styles.steps}>
+          {review.solution.map((step, index) => (
+            <li key={index}>{describePuzzleStep(step, t)}</li>
+          ))}
+        </ol>
       )}
-      {lesson.solution.length > 0 && (
-        <>
-          <h3 className={styles.subTitle}>{t('DAILY_PUZZLE.SOLUTION')}</h3>
-          <ol className={styles.steps}>
-            {lesson.solution.map((step, index) => (
-              <li key={index}>{describePuzzleStep(step, t)}</li>
-            ))}
-          </ol>
-        </>
-      )}
-      {lesson.hints.length > 0 && (
+      {review.hints.length > 0 && (
         <>
           <h3 className={styles.subTitle}>{t('DAILY_PUZZLE.HINTS')}</h3>
           <ol className={styles.steps}>
-            {lesson.hints.map((hint, index) => (
+            {review.hints.map((hint, index) => (
               <li key={index}>{parseTextToElements(hint)}</li>
             ))}
           </ol>
@@ -482,16 +473,14 @@ const DailyPuzzle: React.FC = () => {
                     </button>
                   )}
                 </div>
-                <p className={styles.rules}>
-                  {finished
-                    ? t('DAILY_PUZZLE.RULES_PRACTICE')
-                    : t('DAILY_PUZZLE.RULES')}
-                </p>
+                {!finished && (
+                  <p className={styles.rules}>{t('DAILY_PUZZLE.RULES')}</p>
+                )}
               </section>
               {finished && result && (
                 <ResultPanel data={data} result={result} />
               )}
-              {finished && data.lesson && <LessonPanel lesson={data.lesson} />}
+              {finished && data.review && <ReviewPanel review={data.review} />}
               {puzzle.mode === 'damage' && <Leaderboard data={data} />}
             </>
           )}
