@@ -144,6 +144,7 @@ const Lobby = () => {
   const [opponentUnready, setOpponentUnready] = useState(false);
   const previousOpponentReadyRef = useRef<boolean>();
   const opponentUnreadyTimerRef = useRef<ReturnType<typeof setTimeout>>();
+  const previousLobbyPhaseRef = useRef<LobbyPhase>();
   const [pendingEquipmentSubmission, setPendingEquipmentSubmission] = useState<{
     values: DeckResponse;
     emptySlots: EquipmentSlotName[];
@@ -222,6 +223,13 @@ const Lobby = () => {
     : gameLobby?.opponentSideboardSubmitted;
 
   useEffect(() => {
+    if (
+      previousLobbyPhaseRef.current === 'deck' &&
+      lobbyPhase === 'equipment'
+    ) {
+      setActiveTab((tab) => (tab === 'deck' ? 'equipment' : tab));
+    }
+    previousLobbyPhaseRef.current = lobbyPhase;
     previousOpponentReadyRef.current = undefined;
     setOpponentUnready(false);
     if (opponentUnreadyTimerRef.current !== undefined) {
@@ -784,21 +792,12 @@ const Lobby = () => {
 
   const isOpponentLoading = !rightHero || rightHero === 'UNKNOWNHERO';
 
+  const isDeckPhase = lobbyHasPhaseInfo && !isEquipmentPhase;
   const effectiveTab =
-    lobbyHasPhaseInfo && (activeTab === 'equipment' || activeTab === 'deck')
-      ? isEquipmentPhase
-        ? 'equipment'
-        : 'deck'
-      : activeTab;
-  const showEquipmentTab = !lobbyHasPhaseInfo || isEquipmentPhase;
-  const showDeckTab = !lobbyHasPhaseInfo || !isEquipmentPhase;
-  const buildTab: 'equipment' | 'deck' = lobbyHasPhaseInfo
-    ? isEquipmentPhase
-      ? 'equipment'
-      : 'deck'
-    : activeTab === 'deck'
-    ? 'deck'
-    : 'equipment';
+    isDeckPhase && activeTab === 'equipment' ? 'deck' : activeTab;
+  const showEquipmentTab = !isDeckPhase;
+  const buildTab: 'equipment' | 'deck' =
+    isDeckPhase || activeTab === 'deck' ? 'deck' : 'equipment';
 
   const eqClasses = classNames(styles.tabButton, {
     [styles.tabActive]: effectiveTab === 'equipment'
@@ -1523,20 +1522,18 @@ const Lobby = () => {
                           </button>
                         </li>
                       )}
-                      {showDeckTab && (
-                        <li>
-                          <button
-                            className={deckClasses}
-                            onClick={handleDeckClick}
-                            type="button"
-                          >
-                            <div className={styles.icon}>
-                              <SiBookstack />
-                            </div>
-                            {t('GAME_LOBBY.DECK')}
-                          </button>
-                        </li>
-                      )}
+                      <li>
+                        <button
+                          className={deckClasses}
+                          onClick={handleDeckClick}
+                          type="button"
+                        >
+                          <div className={styles.icon}>
+                            <SiBookstack />
+                          </div>
+                          {t('GAME_LOBBY.DECK')}
+                        </button>
+                      </li>
                       <li>
                         <button
                           className={chatClasses}
@@ -1572,20 +1569,18 @@ const Lobby = () => {
                         </button>
                       </li>
                     )}
-                    {showDeckTab && (
-                      <li>
-                        <button
-                          className={deckClasses}
-                          onClick={handleDeckClick}
-                          type="button"
-                        >
-                          <div className={styles.icon}>
-                            <SiBookstack />
-                          </div>
-                          {t('GAME_LOBBY.DECK')}
-                        </button>
-                      </li>
-                    )}
+                    <li>
+                      <button
+                        className={deckClasses}
+                        onClick={handleDeckClick}
+                        type="button"
+                      >
+                        <div className={styles.icon}>
+                          <SiBookstack />
+                        </div>
+                        {t('GAME_LOBBY.DECK')}
+                      </button>
+                    </li>
                   </ul>
                   <div style={{ marginLeft: 'auto' }}>
                     <DesktopDeckSelectionButtons

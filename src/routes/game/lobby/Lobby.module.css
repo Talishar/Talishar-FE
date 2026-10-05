@@ -539,11 +539,7 @@ h3 {
   gap: 6px;
   width: 100%;
   margin-top: 3px;
-  padding: 4px 7px;
-  border: 1px solid rgba(240, 179, 46, 0.35);
-  border-radius: 4px;
-  background: rgba(240, 179, 46, 0.08);
-  color: rgba(var(--theme-on-surface-rgb), 0.92);
+  color: #f0b32e;
   font-weight: 600;
   line-height: 1.35;
   white-space: normal;
@@ -555,7 +551,6 @@ h3 {
   width: 13px;
   height: 13px;
   translate: 0 1px;
-  color: #f0b32e;
 }
 
 .lobbySubmitError {

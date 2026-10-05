@@ -224,18 +224,15 @@
 }
 
 .confirmReady {
-  background: var(--lobby-control-background, #1e2329) !important;
-  border: 1px solid var(--lobby-control-border, rgba(255, 255, 255, 0.12)) !important;
-  color: var(--lobby-control-color, #9aa0a6) !important;
+  background: #236537 !important;
+  border: 1px solid #236537 !important;
+  color: var(--theme-text, #f4eded) !important;
 }
 
 .confirmReady:hover {
-  background: var(--lobby-control-background, #1e2329) !important;
-  border-color: var(
-    --lobby-control-hover-border,
-    rgba(255, 255, 255, 0.2)
-  ) !important;
-  color: var(--lobby-control-hover-color, #d0d3d6) !important;
+  background: #24723a !important;
+  border-color: #24723a !important;
+  color: var(--theme-text, #f4eded) !important;
   transform: none;
   box-shadow: none !important;
 }
