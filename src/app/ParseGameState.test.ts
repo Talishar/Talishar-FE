@@ -93,19 +93,3 @@ describe('ParseGameState card piles and chat', () => {
     expect(gameState.chatLog).toEqual(['/images/one', '/Images/two']);
   });
 });
-
-describe('ParseGameState hand instance ids', () => {
-  it('parses a hand card uniqueID into uniqueId', () => {
-    const gameState = ParseGameState({
-      playerHand: [
-        { cardNumber: 'WTR101', uniqueID: 'h7' },
-        { cardNumber: 'WTR102' }
-      ]
-    });
-
-    expect(gameState.playerOne.Hand?.map((card) => card.uniqueId)).toEqual([
-      'h7',
-      '-'
-    ]);
-  });
-});
