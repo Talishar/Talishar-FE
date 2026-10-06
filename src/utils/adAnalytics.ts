@@ -1,4 +1,5 @@
 import { BACKEND_URL, URL_END_POINT } from 'appConstants';
+import { isAdBlocked } from 'utils/adBlockDetection';
 
 type Device = 'desktop' | 'mobile';
 
@@ -426,11 +427,7 @@ function installListeners() {
 }
 
 function checkAdblock(): Promise<boolean> {
-  const check = window.reviq?.checkAdblock;
-  if (typeof check !== 'function') return Promise.resolve(false);
-  return Promise.resolve(check())
-    .then(Boolean)
-    .catch(() => false);
+  return Promise.resolve(isAdBlocked());
 }
 
 export function beginAdPageView(pathname: string) {

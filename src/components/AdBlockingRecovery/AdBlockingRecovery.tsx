@@ -2,11 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
 import useSupporterStatus from 'hooks/useSupporterStatus';
+import { isAdBlocked } from 'utils/adBlockDetection';
 import styles from './AdBlockingRecovery.module.css';
 
 type ReviqApi = {
-  checkAdblock?: () => Promise<boolean>;
-  onAdblock?: (cb: () => void) => void;
   setAdsEnabled?: (enabled: boolean) => void;
   push?: (fn: (api: ReviqApi) => void) => unknown;
 };
@@ -40,50 +39,29 @@ const AdBlockingRecovery: React.FC = () => {
     if (new URLSearchParams(window.location.search).get('adblock') === '1') {
       const reviq = window.reviq ?? ([] as unknown as ReviqApi);
       window.reviq = reviq;
-      reviq.push?.((api) => api.setAdsEnabled?.(true));
+      if (typeof reviq.setAdsEnabled === 'function') {
+        reviq.setAdsEnabled(true);
+      } else {
+        reviq.push?.((api) => api.setAdsEnabled?.(true));
+      }
       setVisible(true);
       return;
     }
 
-    const handleAdblock = (api: ReviqApi) => {
-      try {
-        api.setAdsEnabled?.(true);
-      } catch {
-        // Still show recovery messaging if RevIQ cannot enable ads.
+    if (!isAdBlocked()) return;
+
+    try {
+      const reviq = window.reviq ?? ([] as unknown as ReviqApi);
+      window.reviq = reviq;
+      if (typeof reviq.setAdsEnabled === 'function') {
+        reviq.setAdsEnabled(true);
+      } else {
+        reviq.push?.((api) => api.setAdsEnabled?.(true));
       }
-      setVisible(true);
-    };
-
-    const check = async () => {
-      try {
-        const reviq = window.reviq ?? ([] as unknown as ReviqApi);
-        window.reviq = reviq;
-
-        if (typeof reviq.checkAdblock === 'function') {
-          const hasAdblock = await reviq.checkAdblock();
-          if (hasAdblock) handleAdblock(reviq);
-        } else if (typeof reviq.onAdblock === 'function') {
-          reviq.onAdblock(() => handleAdblock(reviq));
-        } else if (typeof reviq.push === 'function') {
-          reviq.push((api) => {
-            if (typeof api.checkAdblock === 'function') {
-              api
-                .checkAdblock()
-                .then((hasAdblock) => {
-                  if (hasAdblock) handleAdblock(api);
-                })
-                .catch(() => undefined);
-            } else if (typeof api.onAdblock === 'function') {
-              api.onAdblock(() => handleAdblock(api));
-            }
-          });
-        }
-      } catch {
-        // Detection unavailable; silently ignore
-      }
-    };
-
-    check();
+    } catch {
+      // Recovery messaging still works if RevIQ is unavailable.
+    }
+    setVisible(true);
   }, [showAds]);
 
   const handleDismiss = () => {
