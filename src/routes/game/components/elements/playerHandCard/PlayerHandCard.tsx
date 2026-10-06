@@ -5,7 +5,13 @@ import React, {
   useEffect,
   useCallback
 } from 'react';
-import { playCard, removeCardFromHand } from 'features/game/GameSlice';
+import {
+  canQueueHandPlay,
+  isHandPlayBusy,
+  playCard,
+  queueHandPlay,
+  removeCardFromHand
+} from 'features/game/GameSlice';
 import { clearCardPreview } from '../cardPortal/cardPreviewStore';
 import {
   GiTombstone,
@@ -53,7 +59,8 @@ import {
 } from '../../zones/playerHand/fanLayout';
 import {
   classifyDragRelease,
-  isAbovePlayLine
+  isAbovePlayLine,
+  isClickMove
 } from '../../zones/playerHand/playLine';
 
 const supportsHover =
@@ -171,6 +178,7 @@ export const PlayerHandCard = React.memo(
     const isLongPress = useRef<boolean>();
     const hasDispatchedClearRef = useRef<boolean>(false);
     const draggedRef = useRef<boolean>(false);
+    const dragArmedRef = useRef(false);
     const cardElRef = useRef<HTMLDivElement | null>(null);
     const slotRef = useRef<HTMLDivElement | null>(null);
     const [isReturning, setIsReturning] = useState(false);
@@ -204,8 +212,9 @@ export const PlayerHandCard = React.memo(
     const springY = useSpring(dragY, GHOST_FOLLOW_SPRING);
     const reduceMotion = useReducedMotion();
     const dispatch = useAppDispatch();
-    const isPlayerInputInProgress = useAppSelector(
-      (state) => state.game.isPlayerInputInProgress
+    const isPlayBusy = useAppSelector((state) => isHandPlayBusy(state.game));
+    const canQueuePlay = useAppSelector(
+      (state) => !!card && canQueueHandPlay(state.game, card)
     );
 
     useEffect(() => {
@@ -401,14 +410,25 @@ export const PlayerHandCard = React.memo(
       cardNumber: card.cardNumber
     });
 
-    const playCardFunc = () => {
-      if (isPlayerInputInProgress) return;
-      clearTapToPreviewSelection();
-      dispatch(playCard({ cardParams: card }));
-      clearCardPreview();
-      if (!isBanished && !isGraveyard && !isArsenal) {
-        dispatch(removeCardFromHand({ card }));
+    const isHandZoneCard = !isBanished && !isGraveyard && !isArsenal;
+
+    const playCardFunc = (): boolean => {
+      if (!isPlayBusy) {
+        clearTapToPreviewSelection();
+        dispatch(playCard({ cardParams: card }));
+        clearCardPreview();
+        if (isHandZoneCard) {
+          dispatch(removeCardFromHand({ card }));
+        }
+        return true;
       }
+      if (isHandZoneCard && canQueuePlay) {
+        clearTapToPreviewSelection();
+        dispatch(queueHandPlay({ card }));
+        clearCardPreview();
+        return true;
+      }
+      return false;
     };
 
     const handlePlayFromTap = () => {
@@ -419,24 +439,14 @@ export const PlayerHandCard = React.memo(
       if (scrollBlockedRef?.current) return;
       if (isLongPress.current) return;
       if (!card.action) return;
-      if (
-        isFanned &&
-        isHovered &&
-        !isPlayerInputInProgress &&
-        !isBanished &&
-        !isGraveyard &&
-        !isArsenal
-      ) {
+      if (!playCardFunc()) return;
+      if (isFanned && isHovered && isHandZoneCard) {
         onClickPlay?.(cardId ?? '');
       }
-      playCardFunc();
       addCardToPlayedCards?.(card.cardNumber);
     };
 
-    const handleDragStart = (
-      event: MouseEvent | TouchEvent | PointerEvent,
-      info: PanInfo
-    ) => {
+    const beginDrag = (info: PanInfo, shift = { x: 0, y: 0 }) => {
       const element = cardElRef.current;
       if (isFanned) {
         setIsReturning(false);
@@ -446,6 +456,7 @@ export const PlayerHandCard = React.memo(
       if (isFanned && element) {
         const img = element.querySelector('img');
         const rect = (img ?? element).getBoundingClientRect();
+        const pointX = info.point.x - shift.x;
         const height = fanCardHeight ?? element.offsetHeight;
         const width = fanCardHeight
           ? (fanCardHeight * 2) / 3
@@ -453,13 +464,13 @@ export const PlayerHandCard = React.memo(
         const grabOffset =
           GHOST_GRAB_RATIO *
           (fanCardHeight ?? img?.offsetHeight ?? element.offsetHeight);
-        const left = rect.left + rect.width / 2 - width / 2;
+        const left = rect.left - shift.x + rect.width / 2 - width / 2;
         setFixedRect({
           left,
-          top: info.point.y - grabOffset,
+          top: info.point.y - shift.y - grabOffset,
           width,
           height,
-          originX: Math.min(1, Math.max(0, (info.point.x - left) / width)),
+          originX: Math.min(1, Math.max(0, (pointX - left) / width)),
           originY: grabOffset / height
         });
         ghostRotate.jump((fanSlot?.rotate ?? 0) + rotation);
@@ -469,8 +480,8 @@ export const PlayerHandCard = React.memo(
         const rect = element?.getBoundingClientRect();
         if (rect) {
           setFixedRect({
-            left: rect.left,
-            top: rect.top,
+            left: rect.left - shift.x,
+            top: rect.top - shift.y,
             width: rect.width,
             height: rect.height
           });
@@ -482,10 +493,27 @@ export const PlayerHandCard = React.memo(
       onHandReorderDragStart?.();
     };
 
+    const handleDragStart = (
+      event: MouseEvent | TouchEvent | PointerEvent,
+      info: PanInfo
+    ) => {
+      if (lastPointerTypeRef.current === 'mouse' || dragArmedRef.current) {
+        return;
+      }
+      dragArmedRef.current = true;
+      beginDrag(info);
+    };
+
     const handleDragEnd = (
       event: MouseEvent | TouchEvent | PointerEvent,
       info: PanInfo
     ) => {
+      if (!dragArmedRef.current) {
+        dragX.jump(0);
+        dragY.jump(0);
+        return;
+      }
+      dragArmedRef.current = false;
       const ghostFromX = (reduceMotion ? dragX : springX).get();
       const ghostFromY = (reduceMotion ? dragY : springY).get();
       let played = false;
@@ -501,9 +529,8 @@ export const PlayerHandCard = React.memo(
           viewportHeight: window.innerHeight
         });
 
-        if (release === 'play' && card.action && !isPlayerInputInProgress) {
+        if (release === 'play' && card.action && playCardFunc()) {
           setSnapback(false);
-          playCardFunc();
           addCardToPlayedCards?.(card.cardNumber);
           played = true;
         } else if (release === 'reorder' && onHandReorderDragEnd) {
@@ -542,6 +569,7 @@ export const PlayerHandCard = React.memo(
     };
 
     const handlePointerCancel = () => {
+      dragArmedRef.current = false;
       resetDragOffset();
       draggedRef.current = false;
       setIsDragging(false);
@@ -556,6 +584,7 @@ export const PlayerHandCard = React.memo(
 
     const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
       lastPointerTypeRef.current = event.pointerType;
+      dragArmedRef.current = false;
       if (event.pointerType === 'mouse' && event.button === 0) {
         onRotationHoldStart?.(cardId ?? '');
       }
@@ -569,6 +598,17 @@ export const PlayerHandCard = React.memo(
       event: MouseEvent | TouchEvent | PointerEvent,
       info: PanInfo
     ) => {
+      if (!dragArmedRef.current && lastPointerTypeRef.current === 'mouse') {
+        const cardHeight =
+          fanCardHeight ?? cardElRef.current?.offsetHeight ?? 0;
+        if (isClickMove(info.offset.x, info.offset.y, cardHeight)) {
+          dragX.jump(0);
+          dragY.jump(0);
+          return;
+        }
+        dragArmedRef.current = true;
+        beginDrag(info, { x: dragX.get(), y: dragY.get() });
+      }
       onHandReorderDragMove?.(cardId ?? '', info);
       setDragPlayState(
         isAbovePlayLine(info.offset.y, window.innerHeight) ? 'above' : 'below'
@@ -749,7 +789,7 @@ export const PlayerHandCard = React.memo(
               ? undefined
               : CARD_WHILE_HOVER
           }
-          whileDrag={CARD_WHILE_DRAG}
+          whileDrag={isDragging ? CARD_WHILE_DRAG : undefined}
         >
           <CardPopUp
             containerClass={styles.imgContainer}

@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   classifyDragRelease,
   isAbovePlayLine,
+  isClickMove,
   playDragDistance
 } from './playLine';
 
@@ -81,5 +82,20 @@ describe('classifyDragRelease', () => {
         viewportHeight
       })
     ).toBe('reorder');
+  });
+});
+
+describe('isClickMove', () => {
+  const cardHeight = 254;
+
+  it('treats movement under 5% of the card height as a click', () => {
+    expect(isClickMove(0, 0, cardHeight)).toBe(true);
+    expect(isClickMove(5, 0, cardHeight)).toBe(true);
+    expect(isClickMove(0, -12, cardHeight)).toBe(true);
+  });
+
+  it('treats movement of 5% of the card height or more as a drag', () => {
+    expect(isClickMove(13, 0, cardHeight)).toBe(false);
+    expect(isClickMove(9, 9, cardHeight)).toBe(false);
   });
 });

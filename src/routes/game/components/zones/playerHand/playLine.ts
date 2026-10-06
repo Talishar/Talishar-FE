@@ -31,3 +31,13 @@ export function classifyDragRelease(a: {
   if (a.pointerY > a.viewportHeight * CANCEL_ZONE_RATIO) return 'cancel';
   return 'none';
 }
+
+export const CLICK_MOVE_TOLERANCE_RATIO = 0.05;
+
+export function isClickMove(
+  offsetX: number,
+  offsetY: number,
+  cardHeight: number
+): boolean {
+  return Math.hypot(offsetX, offsetY) < cardHeight * CLICK_MOVE_TOLERANCE_RATIO;
+}

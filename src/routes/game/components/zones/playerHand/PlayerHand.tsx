@@ -13,7 +13,8 @@ import styles from './PlayerHand.module.css';
 import PlayerHandCard, {
   DragPlayState
 } from '../../elements/playerHandCard/PlayerHandCard';
-import { useAppSelector } from 'app/Hooks';
+import { useAppDispatch, useAppSelector } from 'app/Hooks';
+import { flushHandPlayQueue } from 'features/game/GameSlice';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { useMediaQuery } from 'hooks/useMediaQuery';
 import { AnimatePresence, MotionConfig, PanInfo } from 'framer-motion';
@@ -134,6 +135,42 @@ function PlayerHand() {
   const turnPhase = useAppSelector(
     (state: RootState) => state.game.turnPhase?.turnPhase
   );
+  const dispatch = useAppDispatch();
+  const queuedHandPlayCount = useAppSelector(
+    (state: RootState) => state.game.queuedHandPlays?.length ?? 0
+  );
+  const isPlayerInputInProgress = useAppSelector(
+    (state: RootState) => !!state.game.isPlayerInputInProgress
+  );
+  const isPlayInFlight = useAppSelector(
+    (state: RootState) => state.game.inFlightPlay !== undefined
+  );
+  const isAwaitingPlayState = useAppSelector(
+    (state: RootState) => !!state.game.isAwaitingPlayState
+  );
+  const isButtonInputPending = useAppSelector(
+    (state: RootState) => !!state.game.buttonInput
+  );
+
+  useEffect(() => {
+    if (
+      queuedHandPlayCount === 0 ||
+      isPlayerInputInProgress ||
+      isPlayInFlight ||
+      isAwaitingPlayState ||
+      isButtonInputPending
+    ) {
+      return;
+    }
+    dispatch(flushHandPlayQueue());
+  }, [
+    queuedHandPlayCount,
+    isPlayerInputInProgress,
+    isPlayInFlight,
+    isAwaitingPlayState,
+    isButtonInputPending,
+    dispatch
+  ]);
   const [dragPlayState, setDragPlayState] = useState<DragPlayState>('idle');
   const { hoveredCardId, handleHoverChange, clearHover } = useFanHover();
   const [purgatoryCardId, setPurgatoryCardId] = useState<string | null>(null);

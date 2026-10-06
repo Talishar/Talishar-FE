@@ -11,6 +11,8 @@ import {
 import { clearCardPreview } from '../../cardPortal/cardPreviewStore';
 import { Card } from 'features/Card';
 import { playCard } from 'features/game/GameSlice';
+import InitialGameState from 'features/game/InitialGameState';
+import { globalInitialState } from 'app/Store';
 import { FanSlot } from '../../../zones/playerHand/fanLayout';
 
 vi.mock('hooks/useLanguageSelector', () => ({
@@ -111,7 +113,7 @@ describe('PlayerHandCard click play handover', () => {
     expect(onClickPlay).not.toHaveBeenCalled();
   });
 
-  it('does not report a click while player input is in progress', async () => {
+  it('ignores a click while player input is in progress outside the block step', async () => {
     const { store, onClickPlay } = renderFanCard();
     const cardImg = screen.getByTestId('card-image');
 
@@ -121,6 +123,57 @@ describe('PlayerHandCard click play handover', () => {
     });
 
     fireEvent.click(cardImg);
+    expect(playCard).toHaveBeenCalledTimes(1);
     expect(onClickPlay).toHaveBeenCalledTimes(1);
+  });
+
+  it('queues a click while player input is in progress in the block step', async () => {
+    document.cookie = `${TAP_TO_PREVIEW_PLAY_COOKIE}=false; path=/`;
+    const first: Card = { ...playableCard, uniqueId: 'h0' };
+    const second: Card = {
+      ...playableCard,
+      cardIndex: 1,
+      actionDataOverride: '1',
+      uniqueId: 'h1'
+    };
+    const onClickPlay = vi.fn();
+    const { store } = renderWithProviders(
+      <CookiesProvider>
+        {[first, second].map((card) => (
+          <PlayerHandCard
+            key={card.uniqueId}
+            card={card}
+            cardId={`uid-${card.uniqueId}`}
+            isFanned
+            fanSlot={slot}
+            isHovered
+            onClickPlay={onClickPlay}
+          />
+        ))}
+      </CookiesProvider>,
+      {
+        preloadedState: {
+          ...globalInitialState,
+          game: {
+            ...InitialGameState,
+            turnPhase: { turnPhase: 'B' },
+            playerOne: { Hand: [first, second] }
+          }
+        }
+      }
+    );
+    const [firstImg, secondImg] = screen.getAllByTestId('card-image');
+
+    fireEvent.click(firstImg);
+    await waitFor(() => {
+      expect(store.getState().game.isPlayerInputInProgress).toBe(true);
+    });
+
+    fireEvent.click(secondImg);
+    expect(playCard).toHaveBeenCalledTimes(1);
+    expect(store.getState().game.queuedHandPlays).toHaveLength(1);
+    expect(store.getState().game.queuedHandPlays?.[0].card.uniqueId).toBe('h1');
+    expect(onClickPlay).toHaveBeenCalledTimes(2);
+    expect(onClickPlay).toHaveBeenLastCalledWith('uid-h1');
   });
 });
