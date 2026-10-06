@@ -209,6 +209,7 @@ export const gameLobby = createAsyncThunk<
 });
 
 export const PLAY_STATE_WAIT_MS = 3000;
+export const PLAY_IN_FLIGHT_TIMEOUT_MS = 10000;
 
 export const playCard = createAsyncThunk(
   'game/playCard',
@@ -227,7 +228,15 @@ export const playCard = createAsyncThunk(
     queryParams.set('mode', String(params.cardParams.action));
     queryParams.set('cardID', String(playNo));
 
-    await sendProcessInput('playCard', game.gameInfo, queryParams);
+    const inFlightTimeout = setTimeout(
+      () => dispatch(expireInFlightPlay(requestId)),
+      PLAY_IN_FLIGHT_TIMEOUT_MS
+    );
+    try {
+      await sendProcessInput('playCard', game.gameInfo, queryParams);
+    } finally {
+      clearTimeout(inFlightTimeout);
+    }
     setTimeout(
       () => dispatch(expireAwaitingPlayState(requestId)),
       PLAY_STATE_WAIT_MS
@@ -355,15 +364,15 @@ function serverHandIndex(state: Draft<GameState>, handIndex: number): number {
   return index;
 }
 
-function markPlayStateSeen(state: Draft<GameState>, payload: GameState): void {
+function releaseLandedPlay(state: Draft<GameState>, payload: GameState): void {
   const inFlight = state.inFlightPlay;
-  if (!inFlight || inFlight.stateSeen) return;
+  if (!inFlight) return;
   const incomingHand = payload.playerOne?.Hand ?? [];
   if (
     !inFlight.uniqueId ||
     !incomingHand.some((card) => card.uniqueId === inFlight.uniqueId)
   ) {
-    inFlight.stateSeen = true;
+    state.inFlightPlay = undefined;
   }
 }
 
@@ -400,7 +409,7 @@ function mergeReceivedGameState(
   state.pendingHandRemoval = undefined;
   if (state.isAwaitingPlayState) state.isAwaitingPlayState = false;
   if (state.buttonInput === 'awaiting') state.buttonInput = undefined;
-  markPlayStateSeen(state, payload);
+  releaseLandedPlay(state, payload);
   state.isFullRematch = payload.isFullRematch ?? false;
   const incomingTurnPhase = payload.turnPhase?.turnPhase;
   const isPuzzle = payload.gameInfo?.isPuzzle ?? state.gameInfo.isPuzzle;
@@ -912,6 +921,23 @@ export const gameSlice = createSlice({
       hand.splice(Math.min(head.index, hand.length), 0, head.card);
       state.playerOne.Hand = hand;
     },
+    expireInFlightPlay: (state, action: PayloadAction<string>) => {
+      if (state.inFlightPlay?.requestId !== action.payload) return;
+      state.inFlightPlay = undefined;
+      if (state.playerInputRequestId === action.payload) {
+        state.isPlayerInputInProgress = false;
+      }
+      const hungIndex = state.pendingHandRemoval?.index;
+      restoreHandCards(
+        state,
+        restorableQueuedHandPlays(state).map((entry) =>
+          hungIndex !== undefined && entry.index > hungIndex
+            ? { ...entry, index: entry.index - 1 }
+            : entry
+        )
+      );
+      state.queuedHandPlays = [];
+    },
     expireAwaitingPlayState: (state, action: PayloadAction<string>) => {
       if (
         !state.isAwaitingPlayState ||
@@ -1143,8 +1169,7 @@ export const gameSlice = createSlice({
           requestId: action.meta.requestId,
           ...(playedCard && hasUniqueId(playedCard)
             ? { uniqueId: playedCard.uniqueId }
-            : {}),
-          stateSeen: false
+            : {})
         };
       }
       return state;
@@ -1152,9 +1177,9 @@ export const gameSlice = createSlice({
     builder.addCase(playCard.fulfilled, (state, action) => {
       // The next SSE game-state update clears isPlayerInputInProgress.
       state.isPlayerInputInProgress = false;
-      state.pendingHandRemoval = undefined;
       if (state.inFlightPlay?.requestId === action.meta.requestId) {
-        state.isAwaitingPlayState = !state.inFlightPlay.stateSeen;
+        state.pendingHandRemoval = undefined;
+        state.isAwaitingPlayState = true;
         state.awaitingPlayRequestId = action.meta.requestId;
         state.inFlightPlay = undefined;
       }
@@ -1162,17 +1187,16 @@ export const gameSlice = createSlice({
     });
     builder.addCase(playCard.rejected, (state, action) => {
       state.isPlayerInputInProgress = false;
-      const isInFlight =
-        state.inFlightPlay?.requestId === action.meta.requestId;
+      if (state.inFlightPlay?.requestId !== action.meta.requestId) {
+        return state;
+      }
       restoreHandCards(state, [
         ...(state.pendingHandRemoval ? [state.pendingHandRemoval] : []),
-        ...(isInFlight ? restorableQueuedHandPlays(state) : [])
+        ...restorableQueuedHandPlays(state)
       ]);
       state.pendingHandRemoval = undefined;
-      if (isInFlight) {
-        state.inFlightPlay = undefined;
-        state.queuedHandPlays = [];
-      }
+      state.inFlightPlay = undefined;
+      state.queuedHandPlays = [];
       return state;
     });
 
@@ -1286,6 +1310,7 @@ export const {
   queueHandPlay,
   sendQueuedHandPlay,
   dropQueuedHandPlay,
+  expireInFlightPlay,
   expireAwaitingPlayState,
   openOptionsMenu,
   closeOptionsMenu,

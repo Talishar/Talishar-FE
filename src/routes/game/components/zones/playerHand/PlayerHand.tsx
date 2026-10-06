@@ -39,7 +39,6 @@ import {
 import { useFanHover } from './useFanHover';
 import ClassicPlayerHand from './ClassicPlayerHand';
 
-const DEFAULT_HAND_REORDER_STEP_PX = 120;
 const CARD_ROTATION_STEP_DEGREES = 90;
 const CARD_ROTATION_KEY_STEP_DEGREES = 3;
 const WHEEL_ROTATION_DEGREES_PER_PIXEL = 0.15;
@@ -127,7 +126,6 @@ function PlayerHand() {
   const isPortrait = useMediaQuery('(orientation: portrait)');
   const canCollapseHand = isMobile || isPortrait;
   const [isHandCollapsed, setIsHandCollapsed] = useState(false);
-  const isFanned = !isPortrait;
   const fanHoverScale = fanHoverScaleFor(useCookieString('hoverImageSize'));
   const hasPriority = useAppSelector(
     (state: RootState) => state.game.hasPriority
@@ -184,10 +182,6 @@ function PlayerHand() {
   const isReplay = useAppSelector(
     (state: RootState) => state.game.gameInfo.isReplay
   );
-
-  let hasArsenal = true;
-
-  const showArsenal = false;
 
   const isMuted = useAppSelector(
     (state: RootState) => state.settings.entities['MuteSound']?.value === '1'
@@ -292,28 +286,7 @@ function PlayerHand() {
     null
   );
   const [handShuffleRevision, setHandShuffleRevision] = useState(0);
-  const [handReorderStepPx, setHandReorderStepPx] = useState<number>(
-    DEFAULT_HAND_REORDER_STEP_PX
-  );
-  const handRowRef = useRef<HTMLDivElement | null>(null);
-  const scrollInnerRef = useRef<HTMLDivElement | null>(null);
   const soundPlayedForDragRef = useRef<boolean>(false);
-  const [cardSpacingPx, setCardSpacingPx] = useState<number | null>(null);
-  const [maxScrollOffset, setMaxScrollOffset] = useState(0);
-  const maxScrollOffsetRef = useRef(0);
-  const setMaxScroll = useCallback((next: number) => {
-    maxScrollOffsetRef.current = next;
-    setMaxScrollOffset(next);
-  }, []);
-  const scrollOffsetRef = useRef(0);
-  const scrollAvailabilityRef = useRef({ left: false, right: false });
-  const [scrollAvailability, setScrollAvailability] = useState(
-    scrollAvailabilityRef.current
-  );
-  const pendingHandScrollDeltaRef = useRef(0);
-  const handScrollFrameRef = useRef<number | null>(null);
-  const scrollBlockTimerRef = useRef<number | null>(null);
-  const scrollBlockedRef = useRef(false);
   const [gameZoneBounds, setGameZoneBounds] = useState<{
     left: number;
     right: number;
@@ -344,42 +317,11 @@ function PlayerHand() {
     ro.observe(gameZone);
     return () => ro.disconnect();
   }, [isMobile]);
-  const arsenalCards = useAppSelector(
-    (state: RootState) => state.game.playerOne.Arsenal
-  );
   const playableBanishedCards = useAppSelector(selectPlayableBanishedCards);
   const playableTheirBanishedCards = useAppSelector(
     selectPlayableTheirBanishedCards
   );
   const playableGraveyardCards = useAppSelector(selectPlayableGraveyardCards);
-
-  const applyScrollOffset = useCallback(
-    (requestedOffset: number, limit = maxScrollOffsetRef.current) => {
-      const nextOffset = Math.max(0, Math.min(limit, requestedOffset));
-      scrollOffsetRef.current = nextOffset;
-
-      if (handRowRef.current) {
-        handRowRef.current.style.transform =
-          nextOffset > 0 ? `translate3d(-${nextOffset}px, 0, 0)` : '';
-      }
-
-      const nextAvailability = {
-        left: nextOffset > 0,
-        right: nextOffset < limit
-      };
-      const previousAvailability = scrollAvailabilityRef.current;
-      if (
-        previousAvailability.left !== nextAvailability.left ||
-        previousAvailability.right !== nextAvailability.right
-      ) {
-        scrollAvailabilityRef.current = nextAvailability;
-        setScrollAvailability(nextAvailability);
-      }
-
-      return nextOffset;
-    },
-    []
-  );
 
   useEffect(() => {
     setOrderedHandIds((previousOrder) => {
@@ -523,7 +465,6 @@ function PlayerHand() {
 
   const fanSlotById = useMemo(() => {
     const slots = new Map<string, FanSlot>();
-    if (!isFanned) return slots;
     const laidOut = fanItems.filter((item) => item.id !== purgatoryCardId);
     const hoveredIndex =
       activeHoveredCardId === null
@@ -538,7 +479,6 @@ function PlayerHand() {
     laidOut.forEach((item, index) => slots.set(item.id, computed[index]));
     return slots;
   }, [
-    isFanned,
     fanItems,
     purgatoryCardId,
     activeHoveredCardId,
@@ -557,7 +497,6 @@ function PlayerHand() {
   }, [fanItems, fanSlotById]);
 
   useEffect(() => {
-    if (!isFanned) return;
     const handlePointerMove = (e: PointerEvent) => {
       lastPointerRef.current = { x: e.clientX, y: e.clientY };
     };
@@ -565,7 +504,7 @@ function PlayerHand() {
       passive: true
     });
     return () => window.removeEventListener('pointermove', handlePointerMove);
-  }, [isFanned]);
+  }, []);
 
   const handleClickPlay = useCallback(
     (cardId: string) => {
@@ -600,9 +539,7 @@ function PlayerHand() {
     ]
   );
 
-  const reorderStepPx = isFanned
-    ? Math.max(1, fanSpacing(fanItems.length, fanGeometry))
-    : handReorderStepPx;
+  const reorderStepPx = Math.max(1, fanSpacing(fanItems.length, fanGeometry));
 
   const handleHandCardDragStart = () => {
     setDragStartOrderIds(orderedHandIds);
@@ -619,7 +556,7 @@ function PlayerHand() {
       return;
     }
 
-    if (isFanned && offsetY < -0.35 * fanGeometry.cardHeight) {
+    if (offsetY < -0.35 * fanGeometry.cardHeight) {
       if (purgatoryCardId !== draggedCardId) setPurgatoryCardId(draggedCardId);
       return;
     }
@@ -683,154 +620,6 @@ function PlayerHand() {
     }
   }, [previewHandIds, dragStartOrderIds, isMuted, playDrawingCardsSound]);
 
-  useEffect(() => {
-    if (isFanned) {
-      setCardSpacingPx(null);
-      setMaxScroll(0);
-      applyScrollOffset(0, 0);
-      return;
-    }
-
-    if (isHandCollapsed) return;
-
-    const handRow = handRowRef.current;
-    if (!handRow) return;
-
-    const rects: DOMRect[] = [];
-    for (let i = 0; i < handRow.children.length; i++) {
-      const element = handRow.children[i] as HTMLElement;
-      if (!element.dataset.zoneSeparator) {
-        rects.push(element.getBoundingClientRect());
-      }
-    }
-    const N = rects.length;
-
-    if (N === 1) {
-      setHandReorderStepPx(Math.max(72, Math.min(220, rects[0].width * 0.9)));
-    } else if (N > 1) {
-      let totalGap = 0;
-      let gapCount = 0;
-      let previousCenter = rects[0].left + rects[0].width / 2;
-      for (let index = 1; index < N; index++) {
-        const center = rects[index].left + rects[index].width / 2;
-        const gap = Math.abs(center - previousCenter);
-        if (gap > 1) {
-          totalGap += gap;
-          gapCount += 1;
-        }
-        previousCenter = center;
-      }
-      if (gapCount > 0) {
-        setHandReorderStepPx(Math.max(72, Math.min(220, totalGap / gapCount)));
-      }
-    }
-
-    if (N <= 1) {
-      setCardSpacingPx(null);
-      setMaxScroll(0);
-      applyScrollOffset(0, 0);
-      return;
-    }
-
-    // Use the visible scroll-inner width so button widths are excluded
-    const containerWidth =
-      scrollInnerRef.current?.clientWidth ?? handRow.offsetWidth;
-    // getBoundingClientRect().width is the intrinsic card width, unaffected by margin-right
-    const cardWidth = rects[0].width;
-    const isPortrait = window.innerHeight > window.innerWidth;
-    const defaultSpacing = isPortrait
-      ? window.innerHeight * 0.01
-      : window.innerHeight * 0.02;
-    const naturalWidth = N * cardWidth + (N - 1) * defaultSpacing;
-
-    if (naturalWidth <= containerWidth) {
-      if (isPortrait) {
-        const availableForGaps = containerWidth - N * cardWidth;
-        const spreadGap = availableForGaps / (N - 1);
-        setCardSpacingPx(Math.min(40, Math.max(defaultSpacing, spreadGap)));
-      } else {
-        setCardSpacingPx(null);
-      }
-      setMaxScroll(0);
-      applyScrollOffset(0, 0);
-      return;
-    }
-
-    // On desktop (landscape): compress cards using negative spacing (overlap) up to 30%
-    // of card width before falling back to scrolling.
-    if (!isPortrait) {
-      const maxOverlapSpacing = -cardWidth * 0.3;
-      const widthAtMaxOverlap = N * cardWidth + (N - 1) * maxOverlapSpacing;
-      if (widthAtMaxOverlap <= containerWidth) {
-        // Cards fit if we overlap - find exact spacing needed
-        const fittingSpacing = (containerWidth - N * cardWidth) / (N - 1);
-        setCardSpacingPx(Math.max(maxOverlapSpacing, fittingSpacing));
-        setMaxScroll(0);
-        applyScrollOffset(0, 0);
-        return;
-      }
-      // Even at max overlap they don't fit - use max overlap and scroll the rest
-      setCardSpacingPx(maxOverlapSpacing);
-      const overflowWidth = widthAtMaxOverlap;
-      const newMax = Math.max(0, overflowWidth - containerWidth);
-      setMaxScroll(newMax);
-      applyScrollOffset(scrollOffsetRef.current, newMax);
-      return;
-    }
-
-    const maxOverlapSpacing = -cardWidth * 0.2;
-    const widthAtMaxOverlap = N * cardWidth + (N - 1) * maxOverlapSpacing;
-    if (widthAtMaxOverlap <= containerWidth) {
-      const fittingSpacing = (containerWidth - N * cardWidth) / (N - 1);
-      setCardSpacingPx(Math.max(maxOverlapSpacing, fittingSpacing));
-      setMaxScroll(0);
-      applyScrollOffset(0, 0);
-      return;
-    }
-    setCardSpacingPx(maxOverlapSpacing);
-    const overflowWidth = widthAtMaxOverlap;
-    const newMax = Math.max(0, overflowWidth - containerWidth);
-    setMaxScroll(newMax);
-    applyScrollOffset(scrollOffsetRef.current, newMax);
-  }, [
-    orderedHandCards.length,
-    arsenalCards?.length,
-    playableBanishedCards?.length,
-    playableTheirBanishedCards?.length,
-    playableGraveyardCards?.length,
-    width,
-    height,
-    applyScrollOffset,
-    setMaxScroll,
-    isFanned,
-    isHandCollapsed
-  ]);
-
-  const scrollHand = useCallback(
-    (direction: 'left' | 'right') => {
-      const inner = scrollInnerRef.current;
-      if (!inner) return;
-      const amount = inner.clientWidth * 0.6;
-      const requestedOffset =
-        direction === 'right'
-          ? scrollOffsetRef.current + amount
-          : scrollOffsetRef.current - amount;
-      applyScrollOffset(requestedOffset);
-      scrollBlockedRef.current = true;
-      if (scrollBlockTimerRef.current !== null) {
-        window.clearTimeout(scrollBlockTimerRef.current);
-      }
-      scrollBlockTimerRef.current = window.setTimeout(() => {
-        scrollBlockedRef.current = false;
-        scrollBlockTimerRef.current = null;
-      }, 400);
-    },
-    [applyScrollOffset]
-  );
-
-  const scrollHandLeft = useCallback(() => scrollHand('left'), [scrollHand]);
-  const scrollHandRight = useCallback(() => scrollHand('right'), [scrollHand]);
-
   // The hand's card art overflows far above its own box, so on narrow/portrait
   // layouts it covers the player's own board row and swallows taps meant for
   // the zones underneath it (the arsenal in particular).
@@ -843,65 +632,36 @@ function PlayerHand() {
   }, [canCollapseHand]);
 
   useEffect(() => {
-    return () => {
-      if (scrollBlockTimerRef.current !== null) {
-        window.clearTimeout(scrollBlockTimerRef.current);
-      }
-    };
-  }, []);
-
-  // A held card can be rotated with the wheel anywhere on the game board. When
-  // no card is held, wheel scrolling remains limited to the hand itself.
-  useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
       const heldCardId = heldHandCardIdRef.current;
-      if (heldCardId) {
-        e.preventDefault();
-        const wheelDelta = e.deltaY || e.deltaX;
-        const rotationDelta = Math.max(
-          -MAX_WHEEL_ROTATION_DEGREES,
-          Math.min(
-            MAX_WHEEL_ROTATION_DEGREES,
-            wheelDelta * WHEEL_ROTATION_DEGREES_PER_PIXEL
-          )
-        );
-        pendingWheelRotationRef.current = Math.max(
-          -MAX_WHEEL_ROTATION_DEGREES,
-          Math.min(
-            MAX_WHEEL_ROTATION_DEGREES,
-            pendingWheelRotationRef.current + rotationDelta
-          )
-        );
-
-        if (wheelRotationFrameRef.current === null) {
-          wheelRotationFrameRef.current = window.requestAnimationFrame(() => {
-            const pendingRotation = pendingWheelRotationRef.current;
-            pendingWheelRotationRef.current = 0;
-            wheelRotationFrameRef.current = null;
-
-            const activeCardId = heldHandCardIdRef.current;
-            if (activeCardId && pendingRotation !== 0) {
-              adjustHandCardRotationRef.current(activeCardId, pendingRotation);
-            }
-          });
-        }
-        return;
-      }
-
-      const handRow = handRowRef.current;
-      if (!handRow || !handRow.contains(e.target as Node)) return;
-      if (maxScrollOffset === 0) return;
+      if (!heldCardId) return;
       e.preventDefault();
-      const delta =
-        Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-      pendingHandScrollDeltaRef.current += delta;
-      if (handScrollFrameRef.current === null) {
-        handScrollFrameRef.current = window.requestAnimationFrame(() => {
-          const pendingDelta = pendingHandScrollDeltaRef.current;
-          pendingHandScrollDeltaRef.current = 0;
-          handScrollFrameRef.current = null;
+      const wheelDelta = e.deltaY || e.deltaX;
+      const rotationDelta = Math.max(
+        -MAX_WHEEL_ROTATION_DEGREES,
+        Math.min(
+          MAX_WHEEL_ROTATION_DEGREES,
+          wheelDelta * WHEEL_ROTATION_DEGREES_PER_PIXEL
+        )
+      );
+      pendingWheelRotationRef.current = Math.max(
+        -MAX_WHEEL_ROTATION_DEGREES,
+        Math.min(
+          MAX_WHEEL_ROTATION_DEGREES,
+          pendingWheelRotationRef.current + rotationDelta
+        )
+      );
 
-          applyScrollOffset(scrollOffsetRef.current + pendingDelta);
+      if (wheelRotationFrameRef.current === null) {
+        wheelRotationFrameRef.current = window.requestAnimationFrame(() => {
+          const pendingRotation = pendingWheelRotationRef.current;
+          pendingWheelRotationRef.current = 0;
+          wheelRotationFrameRef.current = null;
+
+          const activeCardId = heldHandCardIdRef.current;
+          if (activeCardId && pendingRotation !== 0) {
+            adjustHandCardRotationRef.current(activeCardId, pendingRotation);
+          }
         });
       }
     };
@@ -916,14 +676,9 @@ function PlayerHand() {
         window.cancelAnimationFrame(wheelRotationFrameRef.current);
         wheelRotationFrameRef.current = null;
       }
-      if (handScrollFrameRef.current !== null) {
-        window.cancelAnimationFrame(handScrollFrameRef.current);
-        handScrollFrameRef.current = null;
-      }
       pendingWheelRotationRef.current = 0;
-      pendingHandScrollDeltaRef.current = 0;
     };
-  }, [maxScrollOffset, applyScrollOffset]);
+  }, []);
 
   const handleHandCardReorder = (
     draggedCardId: string,
@@ -1107,48 +862,20 @@ function PlayerHand() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [orderedHandIds.length, isMuted, playDrawingCardsSound]);
 
-  if (
-    arsenalCards === undefined ||
-    arsenalCards.length === 0 ||
-    arsenalCards[0].cardNumber === ''
-  ) {
-    hasArsenal = false;
-  }
-
   if (playerID === 3 || isReplay) {
     return <></>;
   }
-
-  const zoneSeparatorMarginLeft =
-    cardSpacingPx !== null && cardSpacingPx < 0
-      ? Math.max(0, 4 - cardSpacingPx)
-      : 0;
-  const zoneSeparatorStyle =
-    zoneSeparatorMarginLeft > 0
-      ? { marginLeft: zoneSeparatorMarginLeft }
-      : undefined;
 
   const hasHandCards = orderedHandCards.length > 0;
   const hasBanishedCards = (playableBanishedCards?.length ?? 0) > 0;
   const hasTheirBanishedCards = (playableTheirBanishedCards?.length ?? 0) > 0;
   const hasGraveyardCards = (playableGraveyardCards?.length ?? 0) > 0;
 
-  const banishedMineKeys = zoneCardKeys('banished-mine', playableBanishedCards);
-  const banishedTheirsKeys = zoneCardKeys(
-    'banished-theirs',
-    playableTheirBanishedCards
-  );
-  const graveyardKeys = zoneCardKeys('graveyard', playableGraveyardCards);
-  const arsenalKeys = zoneCardKeys('arsenal', arsenalCards);
-
   const hasRowCards =
     hasHandCards ||
     hasBanishedCards ||
     hasTheirBanishedCards ||
     hasGraveyardCards;
-
-  const canScrollLeft = scrollAvailability.left;
-  const canScrollRight = scrollAvailability.right;
 
   const isHandIdle = hasPriority === false;
   const dimWhenUnplayable = hasPriority === true;
@@ -1220,7 +947,6 @@ function PlayerHand() {
                 key={`hand-${id}`}
                 rotation={handCardRotations[id]}
                 shuffleRevision={handShuffleRevision}
-                scrollBlockedRef={scrollBlockedRef}
                 onHandReorderDragStart={stableDragStart}
                 onHandReorderDragMove={stableDragMove}
                 onHandReorderDragEnd={stableDragEnd}
@@ -1246,7 +972,6 @@ function PlayerHand() {
                 key={id}
                 isBanished={zone !== 'graveyard'}
                 isGraveyard={zone === 'graveyard'}
-                scrollBlockedRef={scrollBlockedRef}
                 isFanned
                 fanSlot={fanSlotFor(id)}
                 isHovered={activeHoveredCardId === id}
@@ -1269,197 +994,10 @@ function PlayerHand() {
     </>
   );
 
-  const rowHand = (
-    <div
-      className={classNames(styles.handScrollContainer, {
-        [styles.handIdle]: isHandIdle
-      })}
-      style={stageBoundsStyle}
-    >
-      <button
-        className={classNames(styles.scrollButton, styles.scrollButtonLeft, {
-          [styles.scrollButtonHidden]: !canScrollLeft || isHandCollapsed
-        })}
-        onPointerDown={scrollHandLeft}
-        aria-label={t('HAND.SCROLL_LEFT')}
-      >
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <polyline points="15 18 9 12 15 6" />
-        </svg>
-      </button>
-      <div
-        ref={scrollInnerRef}
-        className={classNames(styles.handScrollInner, {
-          [styles.handScrollInnerScrollable]: maxScrollOffset > 0,
-          [styles.handScrollInnerCollapsed]: isHandCollapsed
-        })}
-        aria-hidden={isHandCollapsed}
-      >
-        <div
-          ref={handRowRef}
-          className={classNames(styles.handRow, {
-            [styles.handRowCollapsed]: isHandCollapsed
-          })}
-          style={
-            {
-              ...(cardSpacingPx !== null
-                ? { '--card-spacing': `${cardSpacingPx}px` }
-                : {}),
-              transform:
-                scrollOffsetRef.current > 0
-                  ? `translate3d(-${scrollOffsetRef.current}px, 0, 0)`
-                  : undefined
-            } as React.CSSProperties
-          }
-          onContextMenu={preventContextMenu}
-        >
-          <AnimatePresence>
-            {orderedHandCards.length > 0 &&
-              orderedHandCards.map(({ card, id }, ix) => (
-                <PlayerHandCard
-                  card={card}
-                  cardId={id}
-                  key={`hand-${id}`}
-                  rotation={handCardRotations[id]}
-                  zIndex={ix + 200}
-                  enableLayoutAnimation
-                  shuffleRevision={handShuffleRevision}
-                  scrollBlockedRef={scrollBlockedRef}
-                  onHandReorderDragStart={stableDragStart}
-                  onHandReorderDragMove={stableDragMove}
-                  onHandReorderDragEnd={stableDragEnd}
-                  onHandReorderDragCancel={stableDragCancel}
-                  onRotate={rotateHandCard}
-                  onRotationHoldStart={startHoldingHandCardForRotation}
-                  onRotationHoldEnd={stopHoldingHandCardForRotation}
-                  dimWhenUnplayable={dimWhenUnplayable}
-                  onDragPlayStateChange={setDragPlayState}
-                />
-              ))}
-            {hasArsenal &&
-              showArsenal &&
-              arsenalCards !== undefined &&
-              arsenalCards.map((card: Card, ix: number) => (
-                <PlayerHandCard
-                  card={card}
-                  isArsenal
-                  key={arsenalKeys[ix]}
-                  zIndex={ix}
-                />
-              ))}
-            {hasHandCards && hasBanishedCards && (
-              <div
-                className={styles.zoneSeparator}
-                data-zone-separator="true"
-                style={zoneSeparatorStyle}
-              />
-            )}
-            {playableBanishedCards !== undefined &&
-              playableBanishedCards.map((card: Card, ix: number) => (
-                <PlayerHandCard
-                  card={card}
-                  isBanished
-                  key={banishedMineKeys[ix]}
-                  zIndex={orderedHandCards.length + ix + 200}
-                  scrollBlockedRef={scrollBlockedRef}
-                  dimWhenUnplayable={dimWhenUnplayable}
-                  onDragPlayStateChange={setDragPlayState}
-                />
-              ))}
-            {(hasHandCards || hasBanishedCards) && hasTheirBanishedCards && (
-              <div
-                className={styles.zoneSeparator}
-                data-zone-separator="true"
-                style={zoneSeparatorStyle}
-              />
-            )}
-            {playableTheirBanishedCards !== undefined &&
-              playableTheirBanishedCards.map((card: Card, ix: number) => (
-                <PlayerHandCard
-                  card={card}
-                  isBanished
-                  key={banishedTheirsKeys[ix]}
-                  zIndex={
-                    orderedHandCards.length +
-                    (playableBanishedCards?.length ?? 0) +
-                    ix +
-                    200
-                  }
-                  scrollBlockedRef={scrollBlockedRef}
-                  dimWhenUnplayable={dimWhenUnplayable}
-                  onDragPlayStateChange={setDragPlayState}
-                />
-              ))}
-            {(hasHandCards || hasBanishedCards || hasTheirBanishedCards) &&
-              hasGraveyardCards && (
-                <div
-                  className={styles.zoneSeparator}
-                  data-zone-separator="true"
-                  style={zoneSeparatorStyle}
-                />
-              )}
-            {playableGraveyardCards !== undefined &&
-              playableGraveyardCards.map((card: Card, ix: number) => (
-                <PlayerHandCard
-                  card={card}
-                  isGraveyard
-                  key={graveyardKeys[ix]}
-                  zIndex={
-                    orderedHandCards.length +
-                    (playableBanishedCards?.length ?? 0) +
-                    (playableTheirBanishedCards?.length ?? 0) +
-                    ix +
-                    200
-                  }
-                  scrollBlockedRef={scrollBlockedRef}
-                  dimWhenUnplayable={dimWhenUnplayable}
-                  onDragPlayStateChange={setDragPlayState}
-                />
-              ))}
-          </AnimatePresence>
-        </div>
-      </div>
-      <button
-        className={classNames(styles.scrollButton, styles.scrollButtonRight, {
-          [styles.scrollButtonHidden]: !canScrollRight || isHandCollapsed
-        })}
-        onPointerDown={scrollHandRight}
-        aria-label={t('HAND.SCROLL_RIGHT')}
-      >
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <polyline points="9 18 15 12 9 6" />
-        </svg>
-      </button>
-      {collapseButton}
-    </div>
-  );
-
   return (
     <>
       {createPortal(
-        <MotionConfig reducedMotion="user">
-          {isFanned ? fanHand : rowHand}
-        </MotionConfig>,
+        <MotionConfig reducedMotion="user">{fanHand}</MotionConfig>,
         document.body
       )}
     </>

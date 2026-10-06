@@ -59,7 +59,7 @@ export default interface GameState {
   isPlayerInputInProgress?: boolean;
   pendingHandRemoval?: { card: Card; index: number };
   queuedHandPlays?: QueuedHandPlay[];
-  inFlightPlay?: { requestId: string; uniqueId?: string; stateSeen: boolean };
+  inFlightPlay?: { requestId: string; uniqueId?: string };
   isAwaitingPlayState?: boolean;
   awaitingPlayRequestId?: string;
   buttonInput?: 'inflight' | 'awaiting';
