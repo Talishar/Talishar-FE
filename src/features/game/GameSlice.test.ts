@@ -1,9 +1,15 @@
 import reducer, {
   gameLobby,
+  playCard,
+  receiveGameState,
+  removeCardFromHand,
   setGameStart,
   submitButton
 } from 'features/game/GameSlice';
 import GameStaticInfo from 'features/GameStaticInfo';
+import { Card } from 'features/Card';
+import GameState from 'features/GameState';
+import InitialGameState from 'features/game/InitialGameState';
 
 const game = (
   gameID: number,
@@ -203,5 +209,110 @@ describe('player input guard', () => {
     state = reducer(state, submitButton.pending('req-2', button));
 
     expect(state.playerInputRequestId).toBe('req-2');
+  });
+});
+
+describe('optimistic hand removal', () => {
+  const withHand = (hand: Card[]): GameState =>
+    reducer(
+      undefined,
+      receiveGameState({
+        ...InitialGameState,
+        playerOne: { ...InitialGameState.playerOne, Hand: hand }
+      })
+    );
+
+  const arsA: Card = {
+    cardNumber: 'WTR098',
+    action: 4,
+    actionDataOverride: 'WTR098'
+  };
+  const arsB: Card = { ...arsA };
+  const other: Card = {
+    cardNumber: 'WTR100',
+    action: 4,
+    actionDataOverride: 'WTR100'
+  };
+
+  it('removes only one of two copies sharing a slug actionDataOverride', () => {
+    let state = withHand([arsA, other, arsB]);
+    state = reducer(state, removeCardFromHand({ card: arsB }));
+
+    expect(state.playerOne.Hand?.map((card) => card.cardNumber)).toEqual([
+      'WTR100',
+      'WTR098'
+    ]);
+    expect(state.pendingHandRemoval?.index).toBe(0);
+  });
+
+  it('removes the card whose uniqueId matches', () => {
+    const first: Card = {
+      cardNumber: 'WTR101',
+      actionDataOverride: '0',
+      uniqueId: 'h1'
+    };
+    const second: Card = {
+      cardNumber: 'WTR101',
+      actionDataOverride: '1',
+      uniqueId: 'h2'
+    };
+    let state = withHand([first, second]);
+    state = reducer(
+      state,
+      removeCardFromHand({ card: { ...second, actionDataOverride: '0' } })
+    );
+
+    expect(state.playerOne.Hand?.map((card) => card.uniqueId)).toEqual(['h1']);
+    expect(state.pendingHandRemoval).toEqual({ card: second, index: 1 });
+  });
+
+  it('restores the removed card at its original index when the play is rejected', () => {
+    const params = { cardParams: other };
+    let state = withHand([arsA, other, arsB]);
+    state = reducer(state, removeCardFromHand({ card: other }));
+    state = reducer(state, playCard.pending('req-1', params));
+    state = reducer(
+      state,
+      playCard.rejected(new Error('Invalid'), 'req-1', params)
+    );
+
+    expect(state.playerOne.Hand?.map((card) => card.cardNumber)).toEqual([
+      'WTR098',
+      'WTR100',
+      'WTR098'
+    ]);
+    expect(state.pendingHandRemoval).toBeUndefined();
+  });
+
+  it('clears the pending removal when the play succeeds', () => {
+    const params = { cardParams: other };
+    let state = withHand([arsA, other]);
+    state = reducer(state, removeCardFromHand({ card: other }));
+    state = reducer(state, playCard.fulfilled(undefined, 'req-1', params));
+
+    expect(state.pendingHandRemoval).toBeUndefined();
+  });
+
+  it('does not restore after a received game state clears the pending removal', () => {
+    const params = { cardParams: other };
+    let state = withHand([arsA, other]);
+    state = reducer(state, removeCardFromHand({ card: other }));
+    state = reducer(
+      state,
+      receiveGameState({
+        ...InitialGameState,
+        playerOne: { ...InitialGameState.playerOne, Hand: [arsA] }
+      })
+    );
+    expect(state.pendingHandRemoval).toBeUndefined();
+
+    state = reducer(
+      state,
+      playCard.rejected(new Error('Invalid'), 'req-1', params)
+    );
+
+    expect(state.playerOne.Hand?.map((card) => card.cardNumber)).toEqual([
+      'WTR098'
+    ]);
   });
 });

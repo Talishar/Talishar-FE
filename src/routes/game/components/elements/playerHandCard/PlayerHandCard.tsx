@@ -1,4 +1,10 @@
-import React, { useRef, useState, useMemo } from 'react';
+import React, {
+  useRef,
+  useState,
+  useMemo,
+  useEffect,
+  useCallback
+} from 'react';
 import { playCard, removeCardFromHand } from 'features/game/GameSlice';
 import { clearCardPreview } from '../cardPortal/cardPreviewStore';
 import {
@@ -9,7 +15,7 @@ import {
 } from 'react-icons/gi';
 import { Card } from 'features/Card';
 import styles from './PlayerHandCard.module.css';
-import { useAppDispatch } from 'app/Hooks';
+import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { LONG_PRESS_TIMER } from 'appConstants';
 import classNames from 'classnames';
 import CardImage from '../cardImage/CardImage';
@@ -18,10 +24,17 @@ import {
   motion,
   PanInfo,
   useMotionValue,
+  useReducedMotion,
+  useSpring,
   animate as animateValue
 } from 'framer-motion';
 import { createPortal } from 'react-dom';
-import { CARD_SQUARES_PATH, getCollectionCardImagePath } from 'utils';
+import {
+  CARD_IMAGES_PATH,
+  CARD_SQUARES_PATH,
+  getCollectionCardImagePath
+} from 'utils';
+import CardKeywordStrip from '../cardPortal/CardKeywordStrip';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import { formatRestriction } from 'data/keywords';
 import { useTranslation } from 'react-i18next';
@@ -30,8 +43,15 @@ import {
   clearTapToPreviewSelection,
   getTapToPreviewSelectedCardKey
 } from './tapToPreviewPlay';
-
-const ScreenPercentageForCardPlayed = 0.25;
+import {
+  FAN_HOVER_HIT_RATIO,
+  FAN_HOVER_SCALE,
+  FanSlot
+} from '../../zones/playerHand/fanLayout';
+import {
+  classifyDragRelease,
+  isAbovePlayLine
+} from '../../zones/playerHand/playLine';
 
 const supportsHover =
   typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches;
@@ -45,6 +65,27 @@ const CARD_TRANSITION = {
   opacity: { duration: 0.14, ease: 'easeOut' as const },
   y: { duration: 0.14, ease: 'easeOut' as const }
 };
+const FAN_SPRING = {
+  type: 'spring' as const,
+  stiffness: 260,
+  damping: 34,
+  mass: 1
+};
+const FAN_HOVER_SPRING = {
+  type: 'spring' as const,
+  stiffness: 1600,
+  damping: 80,
+  mass: 1
+};
+const GHOST_FOLLOW_SPRING = { stiffness: 700, damping: 45 };
+const GHOST_GRAB_RATIO = 0.31;
+const GHOST_ROTATE_SPRING = {
+  type: 'spring' as const,
+  stiffness: 400,
+  damping: 40
+};
+
+export type DragPlayState = 'idle' | 'below' | 'above';
 
 export interface HandCard {
   isArsenal?: boolean;
@@ -53,7 +94,7 @@ export interface HandCard {
   card?: Card;
   cardId?: string;
   zIndex?: number;
-  addCardToPlayedCards: (cardName: string) => void;
+  addCardToPlayedCards?: (cardName: string) => void;
   disableDrag?: boolean;
   rotation?: number;
   enableLayoutAnimation?: boolean;
@@ -66,6 +107,13 @@ export interface HandCard {
   onHandReorderDragMove?: (cardId: string, info: PanInfo) => void;
   onHandReorderDragEnd?: (cardId: string, info: PanInfo) => boolean;
   onHandReorderDragCancel?: () => void;
+  isFanned?: boolean;
+  fanSlot?: FanSlot;
+  isHovered?: boolean;
+  fanHoverScale?: number;
+  onHoverChange?: (cardId: string, hovering: boolean) => void;
+  dimWhenUnplayable?: boolean;
+  onDragPlayStateChange?: (s: DragPlayState) => void;
 }
 
 export const PlayerHandCard = React.memo(
@@ -88,7 +136,14 @@ export const PlayerHandCard = React.memo(
     onHandReorderDragStart,
     onHandReorderDragMove,
     onHandReorderDragEnd,
-    onHandReorderDragCancel
+    onHandReorderDragCancel,
+    isFanned = false,
+    fanSlot,
+    isHovered = false,
+    fanHoverScale = FAN_HOVER_SCALE,
+    onHoverChange,
+    dimWhenUnplayable,
+    onDragPlayStateChange
   }: HandCard) => {
     const [canPopUp, setCanPopup] = useState(true);
     const [isDragging, setIsDragging] = useState(false);
@@ -102,7 +157,14 @@ export const PlayerHandCard = React.memo(
     const hasDispatchedClearRef = useRef<boolean>(false);
     const draggedRef = useRef<boolean>(false);
     const cardElRef = useRef<HTMLDivElement | null>(null);
+    const slotRef = useRef<HTMLDivElement | null>(null);
+    const [isReturning, setIsReturning] = useState(false);
     const lastPointerTypeRef = useRef<string | null>(null);
+    const cancelledRef = useRef(false);
+    const dragPlayStateRef = useRef<DragPlayState>('idle');
+    const [isAboveLine, setIsAboveLine] = useState(false);
+    const prevActionRef = useRef(card?.action);
+    const [playableFlash, setPlayableFlash] = useState(0);
 
     // Screen rect captured when dragging starts. While dragging, the card is pinned
     // to this rect via position:fixed so hand-reorder logic can freely shuffle the
@@ -113,11 +175,171 @@ export const PlayerHandCard = React.memo(
       top: number;
       width: number;
       height: number;
+      originX?: number;
+      originY?: number;
     } | null>(null);
 
     const dragX = useMotionValue(0);
     const dragY = useMotionValue(0);
+    const ghostRotate = useMotionValue(0);
+    const returnX = useMotionValue(0);
+    const returnY = useMotionValue(0);
+    const returnScale = useMotionValue(1.05);
+    const springX = useSpring(dragX, GHOST_FOLLOW_SPRING);
+    const springY = useSpring(dragY, GHOST_FOLLOW_SPRING);
+    const reduceMotion = useReducedMotion();
     const dispatch = useAppDispatch();
+    const isPlayerInputInProgress = useAppSelector(
+      (state) => state.game.isPlayerInputInProgress
+    );
+
+    useEffect(() => {
+      const wasPlayable = !!prevActionRef.current;
+      prevActionRef.current = card?.action;
+      if (!wasPlayable && card?.action) {
+        setPlayableFlash((count) => count + 1);
+      }
+    }, [card?.action]);
+
+    useEffect(() => {
+      if (!isDragging || !isFanned) return;
+      const controls = animateValue(ghostRotate, rotation, GHOST_ROTATE_SPRING);
+      return () => controls.stop();
+    }, [isDragging, isFanned, rotation, ghostRotate]);
+
+    useEffect(() => {
+      if (!isFanned || !isHovered || isDragging) return;
+      const unhover = () => onHoverChange?.(cardId ?? '', false);
+      const unhoverIfOutside = (event: PointerEvent) => {
+        if (event.pointerType === 'touch') return;
+        const element = cardElRef.current;
+        if (
+          element &&
+          event.target instanceof Node &&
+          element.contains(event.target)
+        ) {
+          return;
+        }
+        unhover();
+      };
+      const root = document.documentElement;
+      window.addEventListener('pointermove', unhoverIfOutside);
+      root.addEventListener('pointerleave', unhover);
+      return () => {
+        window.removeEventListener('pointermove', unhoverIfOutside);
+        root.removeEventListener('pointerleave', unhover);
+      };
+    }, [isFanned, isHovered, isDragging, cardId, onHoverChange]);
+
+    const slotX = fanSlot?.x ?? 0;
+    const slotY = fanSlot?.y ?? 0;
+    const slotRotate = fanSlot?.rotate ?? 0;
+    const slotScale = fanSlot?.scale ?? 1;
+
+    useEffect(() => {
+      if (!isReturning) return;
+      const wrapper = slotRef.current;
+      const stage = wrapper?.parentElement;
+      if (!fixedRect || !wrapper || !stage) {
+        setIsReturning(false);
+        setFixedRect(null);
+        return;
+      }
+      const stageRect = stage.getBoundingClientRect();
+      const targetX = stageRect.left + stageRect.width / 2 + slotX;
+      const targetY = stageRect.bottom - wrapper.offsetHeight / 2 + slotY;
+      const ghostCenterX = fixedRect.left + fixedRect.width / 2;
+      const ghostCenterY = fixedRect.top + fixedRect.height / 2;
+      const transition = reduceMotion ? { duration: 0 } : FAN_SPRING;
+      let cancelled = false;
+      const controls = [
+        animateValue(returnX, targetX - ghostCenterX, transition),
+        animateValue(returnY, targetY - ghostCenterY, transition),
+        animateValue(ghostRotate, slotRotate + rotation, transition),
+        animateValue(returnScale, slotScale, transition)
+      ];
+      Promise.all(controls).then(() => {
+        if (cancelled) return;
+        setIsReturning(false);
+        setFixedRect(null);
+      });
+      return () => {
+        cancelled = true;
+        controls.forEach((control) => control.stop());
+      };
+    }, [
+      isReturning,
+      fixedRect,
+      slotX,
+      slotY,
+      slotRotate,
+      slotScale,
+      rotation,
+      returnX,
+      returnY,
+      returnScale,
+      ghostRotate,
+      reduceMotion
+    ]);
+
+    const setDragPlayState = useCallback(
+      (next: DragPlayState) => {
+        if (dragPlayStateRef.current === next) return;
+        dragPlayStateRef.current = next;
+        setIsAboveLine(next === 'above');
+        onDragPlayStateChange?.(next);
+      },
+      [onDragPlayStateChange]
+    );
+
+    const onDragPlayStateChangeRef = useRef(onDragPlayStateChange);
+    onDragPlayStateChangeRef.current = onDragPlayStateChange;
+
+    useEffect(
+      () => () => {
+        if (dragPlayStateRef.current !== 'idle') {
+          onDragPlayStateChangeRef.current?.('idle');
+        }
+      },
+      []
+    );
+
+    const cancelDrag = useCallback(() => {
+      cancelledRef.current = true;
+      const event =
+        typeof PointerEvent === 'function'
+          ? new PointerEvent('pointercancel', {
+              pointerType: lastPointerTypeRef.current ?? 'mouse',
+              isPrimary: true,
+              button: 0
+            })
+          : new Event('pointercancel');
+      window.dispatchEvent(event);
+    }, []);
+
+    useEffect(() => {
+      if (!isDragging) return;
+      const handleKeyDown = (event: KeyboardEvent) => {
+        if (event.key !== 'Escape') return;
+        event.preventDefault();
+        cancelDrag();
+      };
+      const handleWindowContextMenu = (event: MouseEvent) => {
+        event.preventDefault();
+        event.stopPropagation();
+        cancelDrag();
+      };
+      window.addEventListener('keydown', handleKeyDown);
+      window.addEventListener('contextmenu', handleWindowContextMenu, true);
+      return () => {
+        window.removeEventListener('keydown', handleKeyDown);
+        window.removeEventListener(
+          'contextmenu',
+          handleWindowContextMenu,
+          true
+        );
+      };
+    }, [isDragging, cancelDrag]);
 
     const imgStyles = useMemo(
       () =>
@@ -130,9 +352,13 @@ export const PlayerHandCard = React.memo(
           [styles.border6]: card?.borderColor == '6',
           [styles.border7]: card?.borderColor == '7',
           [styles.border8]: card?.borderColor == '8',
-          [styles.border9]: card?.borderColor == '9'
+          [styles.border9]: card?.borderColor == '9',
+          [styles.border10]: card?.borderColor == '10',
+          [styles.unplayable]: dimWhenUnplayable && !card?.action,
+          [styles.playableFlashA]: playableFlash > 0 && playableFlash % 2 === 1,
+          [styles.playableFlashB]: playableFlash > 0 && playableFlash % 2 === 0
         }),
-      [card?.borderColor]
+      [card?.borderColor, card?.action, dimWhenUnplayable, playableFlash]
     );
 
     if (card === undefined) {
@@ -153,12 +379,13 @@ export const PlayerHandCard = React.memo(
     });
 
     const src = getCollectionCardImagePath({
-      path: CARD_SQUARES_PATH,
+      path: isFanned ? CARD_IMAGES_PATH : CARD_SQUARES_PATH,
       locale: getLanguage(),
       cardNumber: card.cardNumber
     });
 
     const playCardFunc = () => {
+      if (isPlayerInputInProgress) return;
       clearTapToPreviewSelection();
       dispatch(playCard({ cardParams: card }));
       clearCardPreview();
@@ -176,20 +403,51 @@ export const PlayerHandCard = React.memo(
       if (isLongPress.current) return;
       if (!card.action) return;
       playCardFunc();
-      addCardToPlayedCards(card.cardNumber);
+      addCardToPlayedCards?.(card.cardNumber);
     };
 
-    const handleDragStart = () => {
-      const rect = cardElRef.current?.getBoundingClientRect();
-      if (rect) {
-        setFixedRect({
-          left: rect.left,
-          top: rect.top,
-          width: rect.width,
-          height: rect.height
-        });
+    const handleDragStart = (
+      event: MouseEvent | TouchEvent | PointerEvent,
+      info: PanInfo
+    ) => {
+      const element = cardElRef.current;
+      if (isFanned) {
+        setIsReturning(false);
+        springX.jump(dragX.get());
+        springY.jump(dragY.get());
       }
+      if (isFanned && element) {
+        const img = element.querySelector('img');
+        const rect = (img ?? element).getBoundingClientRect();
+        const width = element.offsetWidth;
+        const height = element.offsetHeight;
+        const grabOffset = GHOST_GRAB_RATIO * (img?.offsetHeight ?? height);
+        const left = rect.left + rect.width / 2 - width / 2;
+        setFixedRect({
+          left,
+          top: info.point.y - grabOffset,
+          width,
+          height,
+          originX: Math.min(1, Math.max(0, (info.point.x - left) / width)),
+          originY: grabOffset / height
+        });
+        ghostRotate.jump((fanSlot?.rotate ?? 0) + rotation);
+        returnScale.jump(fanSlot?.scale ?? 1);
+        animateValue(returnScale, 1.05, FAN_SPRING);
+      } else {
+        const rect = element?.getBoundingClientRect();
+        if (rect) {
+          setFixedRect({
+            left: rect.left,
+            top: rect.top,
+            width: rect.width,
+            height: rect.height
+          });
+        }
+      }
+      cancelledRef.current = false;
       setIsDragging(true);
+      setDragPlayState('below');
       onHandReorderDragStart?.();
     };
 
@@ -197,43 +455,70 @@ export const PlayerHandCard = React.memo(
       event: MouseEvent | TouchEvent | PointerEvent,
       info: PanInfo
     ) => {
-      const absY = Math.abs(info.offset.y);
-      const absX = Math.abs(info.offset.x);
+      const ghostFromX = (reduceMotion ? dragX : springX).get();
+      const ghostFromY = (reduceMotion ? dragY : springY).get();
+      let played = false;
+      if (cancelledRef.current) {
+        cancelledRef.current = false;
+        resetDragOffset();
+        setSnapback(true);
+      } else {
+        const release = classifyDragRelease({
+          pointerY: info.point.y,
+          offsetX: info.offset.x,
+          offsetY: info.offset.y,
+          viewportHeight: window.innerHeight
+        });
 
-      const currentHeight = window.innerHeight;
-      const isMobile = currentHeight > 800;
-      const dragThreshold = isMobile
-        ? currentHeight * ScreenPercentageForCardPlayed * 1.5
-        : currentHeight * ScreenPercentageForCardPlayed;
-
-      if (absY > dragThreshold) {
-        if (card.action) {
+        if (release === 'play' && card.action && !isPlayerInputInProgress) {
           setSnapback(false);
           playCardFunc();
-          addCardToPlayedCards(card.cardNumber);
+          addCardToPlayedCards?.(card.cardNumber);
+          played = true;
+        } else if (release === 'reorder' && onHandReorderDragEnd) {
+          onHandReorderDragEnd(cardId ?? '', info);
         }
-      } else if (onHandReorderDragEnd && absX > 8 && absX > absY) {
-        onHandReorderDragEnd(cardId ?? '', info);
+      }
+      const startsReturn = isFanned && !played && fixedRect !== null;
+      if (isFanned && !played) {
+        dragX.jump(0);
+        dragY.jump(0);
+      }
+      if (startsReturn) {
+        returnX.set(ghostFromX);
+        returnY.set(ghostFromY);
+        setIsReturning(true);
       }
 
       draggedRef.current = false;
       setIsDragging(false);
-      setFixedRect(null);
+      if (!startsReturn) setFixedRect(null);
       setCanPopup(true);
       hasDispatchedClearRef.current = false;
+      setDragPlayState('idle');
       onRotationHoldEnd?.();
       onHandReorderDragCancel?.();
     };
 
-    const handlePointerCancel = () => {
+    const resetDragOffset = () => {
+      if (isFanned) {
+        dragX.jump(0);
+        dragY.jump(0);
+        return;
+      }
       animateValue(dragX, 0, { type: 'spring', bounce: 0.25, duration: 0.3 });
       animateValue(dragY, 0, { type: 'spring', bounce: 0.25, duration: 0.3 });
+    };
+
+    const handlePointerCancel = () => {
+      resetDragOffset();
       draggedRef.current = false;
       setIsDragging(false);
       setFixedRect(null);
       setCanPopup(true);
       setSnapback(true);
       hasDispatchedClearRef.current = false;
+      setDragPlayState('idle');
       onRotationHoldEnd?.();
       onHandReorderDragCancel?.();
     };
@@ -254,6 +539,9 @@ export const PlayerHandCard = React.memo(
       info: PanInfo
     ) => {
       onHandReorderDragMove?.(cardId ?? '', info);
+      setDragPlayState(
+        isAbovePlayLine(info.offset.y, window.innerHeight) ? 'above' : 'below'
+      );
 
       if (Math.abs(info.offset.x) > 8 || Math.abs(info.offset.y) > 8) {
         draggedRef.current = true;
@@ -275,6 +563,11 @@ export const PlayerHandCard = React.memo(
     const handleContextMenu = (event: React.MouseEvent<HTMLDivElement>) => {
       event.preventDefault();
       event.stopPropagation();
+
+      if (isDragging) {
+        cancelDrag();
+        return;
+      }
 
       const nativePointerType = (event.nativeEvent as PointerEvent).pointerType;
       const pointerType = nativePointerType || lastPointerTypeRef.current;
@@ -327,18 +620,57 @@ export const PlayerHandCard = React.memo(
       <div className={styles.label}>{card.label}</div>
     );
 
-    return (
+    const isAboveFanHoverLine = (clientY: number) => {
+      const stage = slotRef.current?.parentElement;
+      const element = cardElRef.current;
+      if (!stage || !element) return false;
+      const liftedHitHeight =
+        element.offsetHeight * fanHoverScale * FAN_HOVER_HIT_RATIO;
+      return clientY < stage.getBoundingClientRect().bottom - liftedHitHeight;
+    };
+
+    const updateFanHover = (event: React.PointerEvent<HTMLDivElement>) => {
+      if (!isFanned || isDragging || event.pointerType === 'touch') return;
+      const hovering = !isAboveFanHoverLine(event.clientY);
+      if (hovering !== isHovered) onHoverChange?.(cardId ?? '', hovering);
+    };
+
+    const handleFanPointerOut = (event: React.PointerEvent<HTMLDivElement>) => {
+      if (!isFanned || event.pointerType === 'touch') return;
+      if (
+        event.relatedTarget instanceof Node &&
+        event.currentTarget.contains(event.relatedTarget)
+      ) {
+        return;
+      }
+      if (isHovered) onHoverChange?.(cardId ?? '', false);
+    };
+
+    const ghostX = reduceMotion ? dragX : springX;
+    const ghostY = reduceMotion ? dragY : springY;
+
+    const content = (
       <>
         <motion.div
           ref={cardElRef}
           data-is-dragging={isDragging}
-          layout={enableLayoutAnimation && !isDragging ? 'position' : false}
+          data-hand-uid={card.uniqueId !== '-' ? card.uniqueId : undefined}
+          data-hand-card-number={card.cardNumber}
+          layout={
+            !isFanned && enableLayoutAnimation && !isDragging
+              ? 'position'
+              : false
+          }
           drag={!disableDrag}
-          className={classNames(styles.handCard, {
-            [styles.shuffleAccentA]:
-              shuffleRevision > 0 && shuffleRevision % 2 === 0,
-            [styles.shuffleAccentB]: shuffleRevision % 2 === 1
-          })}
+          className={classNames(
+            isFanned ? styles.handCardFan : styles.handCard,
+            {
+              [styles.shuffleAccentA]:
+                shuffleRevision > 0 && shuffleRevision % 2 === 0,
+              [styles.shuffleAccentB]: shuffleRevision % 2 === 1,
+              [styles.contentHidden]: isReturning && !isDragging
+            }
+          )}
           style={{
             x: dragX,
             y: dragY,
@@ -351,7 +683,7 @@ export const PlayerHandCard = React.memo(
             // element keeps tracking the pointer/gesture underneath so drag
             // handling never gets interrupted.
             visibility: isDragging ? 'hidden' : 'visible',
-            ...(isDragging && fixedRect
+            ...(isDragging && fixedRect && !isFanned
               ? {
                   position: 'fixed',
                   left: fixedRect.left,
@@ -371,13 +703,18 @@ export const PlayerHandCard = React.memo(
           onPointerCancel={handlePointerCancel}
           onPointerDown={handlePointerDown}
           onPointerUp={handlePointerUp}
+          onPointerOver={updateFanHover}
+          onPointerMove={updateFanHover}
+          onPointerOut={handleFanPointerOut}
           dragSnapToOrigin={snapback}
           dragMomentum={false}
           initial={CARD_INITIAL}
           animate={CARD_ANIMATE}
           transition={CARD_TRANSITION}
           whileHover={
-            isDragging || !supportsHover ? undefined : CARD_WHILE_HOVER
+            isFanned || isDragging || !supportsHover
+              ? undefined
+              : CARD_WHILE_HOVER
           }
           whileDrag={CARD_WHILE_DRAG}
         >
@@ -388,22 +725,29 @@ export const PlayerHandCard = React.memo(
             disableTilt={isDragging}
             tapPreviewKey={selectionKey}
             onClick={handlePlayFromTap}
+            hoverPreviewDelayMs={150}
+            disableHoverPreview={isFanned}
           >
             <CardImage src={src} className={imgStyles} draggable="false" />
             {iconColumn}
           </CardPopUp>
           {cardLabel}
         </motion.div>
-        {isDragging &&
+        {(isDragging || isReturning) &&
           fixedRect &&
           createPortal(
             <motion.div
-              className={styles.handCard}
+              className={classNames(
+                isFanned ? styles.handCardFan : styles.handCard,
+                { [styles.ghostReady]: isAboveLine }
+              )}
               style={{
-                x: dragX,
-                y: dragY,
-                scale: 1.05,
-                rotate: rotation,
+                x: isReturning ? returnX : ghostX,
+                y: isReturning ? returnY : ghostY,
+                scale: isFanned ? returnScale : 1.05,
+                rotate: isFanned ? ghostRotate : rotation,
+                originX: isReturning ? 0.5 : fixedRect.originX ?? 0.5,
+                originY: isReturning ? 0.5 : fixedRect.originY ?? 0.5,
                 position: 'fixed',
                 left: fixedRect.left,
                 top: fixedRect.top,
@@ -423,6 +767,36 @@ export const PlayerHandCard = React.memo(
             document.body
           )}
       </>
+    );
+
+    if (!isFanned) return content;
+
+    return (
+      <motion.div
+        ref={slotRef}
+        className={styles.fanSlot}
+        initial={false}
+        animate={{
+          x: fanSlot?.x ?? 0,
+          y: fanSlot?.y ?? 0,
+          rotate: fanSlot?.rotate ?? 0,
+          scale: fanSlot?.scale ?? 1
+        }}
+        style={{ zIndex: fanSlot?.zIndex ?? zIndex }}
+        transition={FAN_HOVER_SPRING}
+      >
+        {content}
+        {isHovered && !isDragging && (
+          <div
+            className={classNames(styles.fanKeywords, {
+              [styles.fanKeywordsLeft]: (fanSlot?.x ?? 0) > 0
+            })}
+            style={{ transform: `scale(${1 / fanHoverScale})` }}
+          >
+            <CardKeywordStrip cardNumber={card.cardNumber} />
+          </div>
+        )}
+      </motion.div>
     );
   }
 );

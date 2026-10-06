@@ -11,6 +11,39 @@
   user-select: none;
   clip-path: inset(-500px 0 -500px 0);
   pointer-events: none;
+  transition: transform 0.2s ease-out, filter 0.2s ease-out;
+}
+
+.fanStage {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 0;
+  user-select: none;
+  pointer-events: none;
+  transition: transform 0.2s ease-out, filter 0.2s ease-out;
+}
+
+.fanStageCollapsed {
+  display: none;
+}
+
+.fanCollapseDock {
+  position: fixed;
+  bottom: 2vh;
+  bottom: 2dvh;
+  left: 0;
+  right: 0;
+  height: 3vh;
+  height: 3dvh;
+  pointer-events: none;
+}
+
+.handIdle {
+  transform: translateY(4dvh);
+  filter: grayscale(0.55) brightness(0.8);
+  transition: transform 0.2s ease-out, filter 0.2s ease-out;
 }
 
 .handScrollInner {

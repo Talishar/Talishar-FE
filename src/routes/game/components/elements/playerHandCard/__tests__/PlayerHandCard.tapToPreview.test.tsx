@@ -1,3 +1,4 @@
+import React from 'react';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { CookiesProvider } from 'react-cookie';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
@@ -13,6 +14,7 @@ import {
   getCardPreview
 } from '../../cardPortal/cardPreviewStore';
 import { Card } from 'features/Card';
+import { playCard } from 'features/game/GameSlice';
 
 vi.mock('hooks/useLanguageSelector', () => ({
   useLanguageSelector: () => ({
@@ -202,5 +204,36 @@ describe('PlayerHandCard tap to preview play', () => {
       expect(getCardPreview().popupCard?.cardNumber).toBe('WTR001');
     });
     expect(addCardToPlayedCards).not.toHaveBeenCalled();
+  });
+});
+
+describe('PlayerHandCard play guard', () => {
+  const renderPlayable = (card: Card) => {
+    document.cookie = `${TAP_TO_PREVIEW_PLAY_COOKIE}=false; path=/`;
+    return renderWithProviders(
+      <CookiesProvider>
+        <PlayerHandCard card={card} cardId="hand-1" disableDrag />
+      </CookiesProvider>
+    );
+  };
+
+  beforeEach(() => {
+    clearTapToPreviewSelection();
+    clearCardPreview();
+    vi.mocked(playCard).mockClear();
+  });
+
+  it('does not dispatch a second play while player input is in progress', async () => {
+    const { store } = renderPlayable(playableCard);
+    const cardImg = screen.getByTestId('card-image');
+
+    tapCard(cardImg);
+    await waitFor(() => {
+      expect(store.getState().game.isPlayerInputInProgress).toBe(true);
+    });
+    expect(playCard).toHaveBeenCalledTimes(1);
+
+    tapCard(cardImg);
+    expect(playCard).toHaveBeenCalledTimes(1);
   });
 });

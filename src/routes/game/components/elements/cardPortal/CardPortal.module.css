@@ -42,10 +42,12 @@
   z-index: 2;
   isolation: isolate;
   display: grid;
-  grid-template-columns: 100px minmax(0, 1fr);
+  grid-template-columns: max-content minmax(0, 1fr);
   column-gap: 8px;
   row-gap: 8px;
-  width: min(100%, 360px);
+  box-sizing: border-box;
+  width: max-content;
+  max-width: min(100%, 360px);
   margin-top: 4px;
   padding: 9px 11px;
   border-radius: 5px;
@@ -67,7 +69,6 @@
   justify-content: center;
   align-self: center;
   box-sizing: border-box;
-  width: 100px;
   padding: 6px 8px;
   border: 1px solid var(--theme-border-light, rgba(255, 255, 255, 0.1));
   border-radius: 5px;

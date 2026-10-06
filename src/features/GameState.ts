@@ -50,6 +50,7 @@ export default interface GameState {
   opponentPresence?: PlayerPresence | null;
   isUpdateInProgress?: boolean;
   isPlayerInputInProgress?: boolean;
+  pendingHandRemoval?: { card: Card; index: number };
   playerInputRequestId?: string;
   turnPhase?: {
     turnPhase?: string;

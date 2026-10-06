@@ -50,7 +50,108 @@
   border-radius: 1dvh;
   max-height: 100%;
   max-width: 100%;
-  transition: box-shadow 0.25s, border-color 0.25s;
+  transition: box-shadow 0.5s ease-out, filter 0.2s;
+}
+
+.unplayable {
+  filter: brightness(0.72) saturate(0.6);
+}
+
+.fanSlot {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  height: 25vh;
+  height: 25dvh;
+  width: calc(25vh * 2 / 3);
+  width: calc(25dvh * 2 / 3);
+  margin-left: calc(25vh / -3);
+  margin-left: calc(25dvh / -3);
+  pointer-events: none;
+}
+
+.handCardFan {
+  position: relative;
+  height: 25vh;
+  height: 25dvh;
+  aspect-ratio: 2/3;
+  width: auto;
+  overflow: visible;
+  pointer-events: auto;
+}
+
+.handCardFan .imgContainer {
+  inset: 0;
+  height: 100%;
+}
+
+.fanKeywords {
+  position: absolute;
+  top: 4%;
+  left: calc(100% + 4px);
+  width: max-content;
+  max-width: 360px;
+  transform-origin: top left;
+  pointer-events: none;
+}
+
+.fanKeywordsLeft {
+  left: auto;
+  right: calc(100% + 4px);
+  transform-origin: top right;
+}
+
+.contentHidden > * {
+  visibility: hidden;
+}
+
+.ghostReady {
+  filter: brightness(1.1);
+}
+
+.ghostReady .img {
+  box-shadow: 0 0 0 3px var(--theme-primary), 0 0 18px 6px var(--theme-primary);
+}
+
+.playableFlashA {
+  animation: hand-playable-flash-a 500ms ease-out;
+}
+
+.playableFlashB {
+  animation: hand-playable-flash-b 500ms ease-out;
+}
+
+@keyframes hand-playable-flash-a {
+  0% {
+    filter: brightness(1);
+  }
+  35% {
+    filter: brightness(1.35);
+    box-shadow: 0 0 0 3px #fff, 0 0 16px 6px #fff;
+  }
+  100% {
+    filter: brightness(1);
+  }
+}
+
+@keyframes hand-playable-flash-b {
+  0% {
+    filter: brightness(1);
+  }
+  35% {
+    filter: brightness(1.35);
+    box-shadow: 0 0 0 3px #fff, 0 0 16px 6px #fff;
+  }
+  100% {
+    filter: brightness(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .playableFlashA,
+  .playableFlashB {
+    animation: none;
+  }
 }
 
 .imgContainer {
@@ -88,47 +189,52 @@
 
 .border1 {
   border-color: deepskyblue;
-  box-shadow: 0 0 4px 4px deepskyblue;
+  box-shadow: 0 0 0 2px deepskyblue, 0 0 10px 2px deepskyblue;
 }
 
 .border2 {
   border-color: red;
-  box-shadow: 0 0 4px 4px red;
+  box-shadow: 0 0 0 2px red, 0 0 10px 2px red;
 }
 
 .border3 {
   border-color: var(--theme-primary);
-  box-shadow: 0 0 4px 4px var(--theme-primary);
+  box-shadow: 0 0 0 2px var(--theme-primary), 0 0 10px 2px var(--theme-primary);
 }
 
 .border4 {
   border-color: #c5cbcf;
-  box-shadow: 0 0 4px 4px #c5cbcf;
+  box-shadow: 0 0 0 2px #c5cbcf, 0 0 10px 2px #c5cbcf;
 }
 
 .border5 {
   border-color: tan;
-  box-shadow: 0 0 4px 4px tan;
+  box-shadow: 0 0 0 2px tan, 0 0 10px 2px tan;
 }
 
 .border6 {
   border-color: chartreuse;
-  box-shadow: 0 0 4px 4px chartreuse;
+  box-shadow: 0 0 0 2px chartreuse, 0 0 10px 2px chartreuse;
 }
 
 .border7 {
   border-color: purple;
-  box-shadow: 0 0 4px 4px purple;
+  box-shadow: 0 0 0 2px purple, 0 0 10px 2px purple;
 }
 
 .border8 {
   border-color: #ffd700;
-  box-shadow: 0 0 4px 4px #ffd700;
+  box-shadow: 0 0 0 2px #ffd700, 0 0 10px 2px #ffd700;
 }
 
 .border9 {
   border-color: rgb(192, 6, 6);
-  box-shadow: 0 0 4px 4px rgb(192, 6, 6);
+  box-shadow: 0 0 0 2px rgb(192, 6, 6), 0 0 10px 2px rgb(192, 6, 6);
+}
+
+.border10 {
+  border-color: rgb(21, 155, 25);
+  box-shadow: 0 0 0 2px rgb(21, 155, 25), 0 0 10px 2px rgb(21, 155, 25);
 }
 
 .label {

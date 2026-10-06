@@ -311,6 +311,7 @@ function mergeReceivedGameState(
 ): void {
   state.isUpdateInProgress = false;
   state.isPlayerInputInProgress = false;
+  state.pendingHandRemoval = undefined;
   state.isFullRematch = payload.isFullRematch ?? false;
   const incomingTurnPhase = payload.turnPhase?.turnPhase;
   const isPuzzle = payload.gameInfo?.isPuzzle ?? state.gameInfo.isPuzzle;
@@ -779,10 +780,20 @@ export const gameSlice = createSlice({
       state.replayHideOpponentHand = action.payload;
     },
     removeCardFromHand: (state, action: PayloadAction<{ card: Card }>) => {
-      state.playerOne.Hand = state.playerOne?.Hand?.filter(
-        (cardObj) =>
-          cardObj.actionDataOverride != action.payload.card.actionDataOverride
-      );
+      const hand = state.playerOne?.Hand;
+      if (!hand) return;
+      const { card } = action.payload;
+      const index =
+        card.uniqueId && card.uniqueId !== '-'
+          ? hand.findIndex((cardObj) => cardObj.uniqueId === card.uniqueId)
+          : hand.findIndex(
+              (cardObj) =>
+                cardObj.actionDataOverride == card.actionDataOverride &&
+                cardObj.cardNumber === card.cardNumber
+            );
+      if (index === -1) return;
+      const [removed] = hand.splice(index, 1);
+      state.pendingHandRemoval = { card: removed, index };
     },
     showChainLinkSummary: (
       state,
@@ -1004,10 +1015,18 @@ export const gameSlice = createSlice({
     builder.addCase(playCard.fulfilled, (state) => {
       // The next SSE game-state update clears isPlayerInputInProgress.
       state.isPlayerInputInProgress = false;
+      state.pendingHandRemoval = undefined;
       return state;
     });
     builder.addCase(playCard.rejected, (state) => {
       state.isPlayerInputInProgress = false;
+      const pending = state.pendingHandRemoval;
+      if (pending) {
+        const hand = state.playerOne.Hand ?? [];
+        hand.splice(Math.min(pending.index, hand.length), 0, pending.card);
+        state.playerOne.Hand = hand;
+        state.pendingHandRemoval = undefined;
+      }
       return state;
     });
 
