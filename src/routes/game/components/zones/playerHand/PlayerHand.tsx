@@ -470,6 +470,7 @@ function PlayerHand() {
 
   const isDragActive = dragPlayState !== 'idle' || dragStartOrderIds !== null;
   const activeHoveredCardId = isDragActive ? null : hoveredCardId;
+  const isFanLifted = activeHoveredCardId !== null;
 
   useEffect(() => {
     if (isDragActive) clearHover();
@@ -1141,6 +1142,8 @@ function PlayerHand() {
                 fanSlot={fanSlotFor(id)}
                 isHovered={activeHoveredCardId === id}
                 fanHoverScale={fanHoverScale}
+                fanCardHeight={fanGeometry.cardHeight}
+                isFanLifted={isFanLifted}
                 onHoverChange={handleHoverChange}
                 dimWhenUnplayable={dimWhenUnplayable}
                 onDragPlayStateChange={setDragPlayState}
@@ -1157,6 +1160,8 @@ function PlayerHand() {
                 fanSlot={fanSlotFor(id)}
                 isHovered={activeHoveredCardId === id}
                 fanHoverScale={fanHoverScale}
+                fanCardHeight={fanGeometry.cardHeight}
+                isFanLifted={isFanLifted}
                 onHoverChange={handleHoverChange}
                 dimWhenUnplayable={dimWhenUnplayable}
                 onDragPlayStateChange={setDragPlayState}

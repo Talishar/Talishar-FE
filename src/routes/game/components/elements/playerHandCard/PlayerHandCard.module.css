@@ -72,8 +72,7 @@
 
 .handCardFan {
   position: relative;
-  height: 25vh;
-  height: 25dvh;
+  height: 100%;
   aspect-ratio: 2/3;
   width: auto;
   overflow: visible;

@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
+  FAN_DROP_DURATION_S,
   FAN_HOVER_SCALE,
   FAN_MAX_ROTATION_DEG,
   FanGeometry,
@@ -8,6 +9,7 @@ import {
   HOVER_PUSH_PX,
   applyFanHover,
   computeFanSlots,
+  fanDropEase,
   fanHoverScaleFor,
   fanScaleFor
 } from './fanLayout';
@@ -79,6 +81,32 @@ describe('fanHoverScaleFor', () => {
 
   it('never shrinks the hovered card below its resting size', () => {
     expect(fanHoverScaleFor('0.5')).toBe(1);
+  });
+});
+
+describe('fanDropEase', () => {
+  it('starts at 0 and ends at 1', () => {
+    expect(fanDropEase(0)).toBe(0);
+    expect(fanDropEase(1)).toBeCloseTo(1, 10);
+  });
+
+  it('is non-decreasing and never overshoots', () => {
+    let previous = -Infinity;
+    for (let i = 0; i <= 100; i++) {
+      const value = fanDropEase(i / 100);
+      expect(value).toBeGreaterThanOrEqual(previous);
+      expect(value).toBeLessThanOrEqual(1);
+      previous = value;
+    }
+  });
+
+  it('covers most of the travel within the first frames', () => {
+    expect(fanDropEase(1 / 60 / FAN_DROP_DURATION_S)).toBeGreaterThanOrEqual(
+      0.35
+    );
+    expect(fanDropEase(0.085 / FAN_DROP_DURATION_S)).toBeGreaterThanOrEqual(
+      0.9
+    );
   });
 });
 

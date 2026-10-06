@@ -23,6 +23,14 @@ export const HOVER_NEAR_LIFT_RATIO = [0.2, 0.13, 0.07];
 export const FAN_HOVER_SCALE = 1.725;
 export const FAN_HOVER_HIT_RATIO = 0.7;
 
+export const FAN_DROP_RATE = 32;
+export const FAN_DROP_DURATION_S = 0.22;
+
+export function fanDropEase(progress: number): number {
+  const k = FAN_DROP_RATE * FAN_DROP_DURATION_S;
+  return (1 - Math.exp(-k * progress)) / (1 - Math.exp(-k));
+}
+
 export function fanHoverScaleFor(raw: string | undefined): number {
   const size = Number(raw);
   return Math.max(1, FAN_HOVER_SCALE * (size > 0 ? size : 1));

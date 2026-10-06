@@ -22,6 +22,7 @@ import CardImage from '../cardImage/CardImage';
 import CardPopUp from '../cardPopUp/CardPopUp';
 import {
   motion,
+  MotionConfig,
   PanInfo,
   useMotionValue,
   useReducedMotion,
@@ -44,9 +45,11 @@ import {
   getTapToPreviewSelectedCardKey
 } from './tapToPreviewPlay';
 import {
+  FAN_DROP_DURATION_S,
   FAN_HOVER_HIT_RATIO,
   FAN_HOVER_SCALE,
-  FanSlot
+  FanSlot,
+  fanDropEase
 } from '../../zones/playerHand/fanLayout';
 import {
   classifyDragRelease,
@@ -77,6 +80,12 @@ const FAN_HOVER_SPRING = {
   damping: 80,
   mass: 1
 };
+const FAN_DROP_TRANSITION = {
+  type: 'tween' as const,
+  duration: FAN_DROP_DURATION_S,
+  ease: fanDropEase
+};
+const FAN_LIFTED_TRANSITION = FAN_HOVER_SPRING;
 const GHOST_FOLLOW_SPRING = { stiffness: 700, damping: 45 };
 const GHOST_GRAB_RATIO = 0.31;
 const GHOST_ROTATE_SPRING = {
@@ -111,6 +120,8 @@ export interface HandCard {
   fanSlot?: FanSlot;
   isHovered?: boolean;
   fanHoverScale?: number;
+  fanCardHeight?: number;
+  isFanLifted?: boolean;
   onHoverChange?: (cardId: string, hovering: boolean) => void;
   dimWhenUnplayable?: boolean;
   onDragPlayStateChange?: (s: DragPlayState) => void;
@@ -141,6 +152,8 @@ export const PlayerHandCard = React.memo(
     fanSlot,
     isHovered = false,
     fanHoverScale = FAN_HOVER_SCALE,
+    fanCardHeight,
+    isFanLifted = false,
     onHoverChange,
     dimWhenUnplayable,
     onDragPlayStateChange
@@ -247,7 +260,8 @@ export const PlayerHandCard = React.memo(
       }
       const stageRect = stage.getBoundingClientRect();
       const targetX = stageRect.left + stageRect.width / 2 + slotX;
-      const targetY = stageRect.bottom - wrapper.offsetHeight / 2 + slotY;
+      const targetY =
+        stageRect.bottom - (fanCardHeight ?? wrapper.offsetHeight) / 2 + slotY;
       const ghostCenterX = fixedRect.left + fixedRect.width / 2;
       const ghostCenterY = fixedRect.top + fixedRect.height / 2;
       const transition = reduceMotion ? { duration: 0 } : FAN_SPRING;
@@ -279,7 +293,8 @@ export const PlayerHandCard = React.memo(
       returnY,
       returnScale,
       ghostRotate,
-      reduceMotion
+      reduceMotion,
+      fanCardHeight
     ]);
 
     const setDragPlayState = useCallback(
@@ -419,9 +434,13 @@ export const PlayerHandCard = React.memo(
       if (isFanned && element) {
         const img = element.querySelector('img');
         const rect = (img ?? element).getBoundingClientRect();
-        const width = element.offsetWidth;
-        const height = element.offsetHeight;
-        const grabOffset = GHOST_GRAB_RATIO * (img?.offsetHeight ?? height);
+        const height = fanCardHeight ?? element.offsetHeight;
+        const width = fanCardHeight
+          ? (fanCardHeight * 2) / 3
+          : element.offsetWidth;
+        const grabOffset =
+          GHOST_GRAB_RATIO *
+          (fanCardHeight ?? img?.offsetHeight ?? element.offsetHeight);
         const left = rect.left + rect.width / 2 - width / 2;
         setFixedRect({
           left,
@@ -625,7 +644,9 @@ export const PlayerHandCard = React.memo(
       const element = cardElRef.current;
       if (!stage || !element) return false;
       const liftedHitHeight =
-        element.offsetHeight * fanHoverScale * FAN_HOVER_HIT_RATIO;
+        (fanCardHeight ?? element.offsetHeight) *
+        fanHoverScale *
+        FAN_HOVER_HIT_RATIO;
       return clientY < stage.getBoundingClientRect().bottom - liftedHitHeight;
     };
 
@@ -771,32 +792,45 @@ export const PlayerHandCard = React.memo(
 
     if (!isFanned) return content;
 
+    const slotWidth = fanCardHeight ? ((fanCardHeight * 2) / 3) * slotScale : 0;
+    const fanTarget = fanCardHeight
+      ? {
+          x: slotX,
+          y: slotY + ((slotScale - 1) * fanCardHeight) / 2,
+          rotate: slotRotate,
+          width: slotWidth,
+          height: fanCardHeight * slotScale,
+          marginLeft: -slotWidth / 2
+        }
+      : { x: slotX, y: slotY, rotate: slotRotate, scale: slotScale };
+
     return (
-      <motion.div
-        ref={slotRef}
-        className={styles.fanSlot}
-        initial={false}
-        animate={{
-          x: fanSlot?.x ?? 0,
-          y: fanSlot?.y ?? 0,
-          rotate: fanSlot?.rotate ?? 0,
-          scale: fanSlot?.scale ?? 1
-        }}
-        style={{ zIndex: fanSlot?.zIndex ?? zIndex }}
-        transition={FAN_HOVER_SPRING}
-      >
-        {content}
-        {isHovered && !isDragging && (
-          <div
-            className={classNames(styles.fanKeywords, {
-              [styles.fanKeywordsLeft]: (fanSlot?.x ?? 0) > 0
-            })}
-            style={{ transform: `scale(${1 / fanHoverScale})` }}
-          >
-            <CardKeywordStrip cardNumber={card.cardNumber} />
-          </div>
-        )}
-      </motion.div>
+      <MotionConfig reducedMotion="never">
+        <motion.div
+          ref={slotRef}
+          className={styles.fanSlot}
+          initial={false}
+          animate={fanTarget}
+          style={{ zIndex: fanSlot?.zIndex ?? zIndex }}
+          transition={isFanLifted ? FAN_LIFTED_TRANSITION : FAN_DROP_TRANSITION}
+        >
+          <MotionConfig reducedMotion="user">{content}</MotionConfig>
+          {isHovered && !isDragging && (
+            <div
+              className={classNames(styles.fanKeywords, {
+                [styles.fanKeywordsLeft]: slotX > 0
+              })}
+              style={
+                fanCardHeight
+                  ? undefined
+                  : { transform: `scale(${1 / fanHoverScale})` }
+              }
+            >
+              <CardKeywordStrip cardNumber={card.cardNumber} />
+            </div>
+          )}
+        </motion.div>
+      </MotionConfig>
     );
   }
 );
