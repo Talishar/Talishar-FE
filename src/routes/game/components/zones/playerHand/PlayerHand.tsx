@@ -25,7 +25,7 @@ import { setHandCardRotationHeld } from 'utils/handCardRotation';
 import { useTranslation } from 'react-i18next';
 import { useCookieString } from 'utils/cookieStore';
 import {
-  DISABLE_FANNED_HAND_COOKIE,
+  ENABLE_FANNED_HAND_COOKIE,
   FAN_HOVER_HIT_RATIO,
   FanGeometry,
   FanSlot,
@@ -137,9 +137,6 @@ function PlayerHand() {
   const queuedHandPlayCount = useAppSelector(
     (state: RootState) => state.game.queuedHandPlays?.length ?? 0
   );
-  const isPlayerInputInProgress = useAppSelector(
-    (state: RootState) => !!state.game.isPlayerInputInProgress
-  );
   const isPlayInFlight = useAppSelector(
     (state: RootState) => state.game.inFlightPlay !== undefined
   );
@@ -153,7 +150,6 @@ function PlayerHand() {
   useEffect(() => {
     if (
       queuedHandPlayCount === 0 ||
-      isPlayerInputInProgress ||
       isPlayInFlight ||
       isAwaitingPlayState ||
       isButtonInputPending
@@ -163,7 +159,6 @@ function PlayerHand() {
     dispatch(flushHandPlayQueue());
   }, [
     queuedHandPlayCount,
-    isPlayerInputInProgress,
     isPlayInFlight,
     isAwaitingPlayState,
     isButtonInputPending,
@@ -1007,10 +1002,10 @@ function PlayerHand() {
 const FannedPlayerHand = React.memo(PlayerHand);
 
 function PlayerHandForSetting() {
-  return useCookieString(DISABLE_FANNED_HAND_COOKIE) === 'true' ? (
-    <ClassicPlayerHand />
-  ) : (
+  return useCookieString(ENABLE_FANNED_HAND_COOKIE) === 'true' ? (
     <FannedPlayerHand />
+  ) : (
+    <ClassicPlayerHand />
   );
 }
 

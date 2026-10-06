@@ -10,7 +10,7 @@ import {
   isHandPlayBusy,
   playCard,
   queueHandPlay,
-  removeCardFromHand
+  removeHandCard
 } from 'features/game/GameSlice';
 import { clearCardPreview } from '../cardPortal/cardPreviewStore';
 import {
@@ -418,7 +418,7 @@ export const PlayerHandCard = React.memo(
         dispatch(playCard({ cardParams: card }));
         clearCardPreview();
         if (isHandZoneCard) {
-          dispatch(removeCardFromHand({ card }));
+          dispatch(removeHandCard({ card }));
         }
         return true;
       }

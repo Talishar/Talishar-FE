@@ -879,6 +879,12 @@ export const gameSlice = createSlice({
       state.replayHideOpponentHand = action.payload;
     },
     removeCardFromHand: (state, action: PayloadAction<{ card: Card }>) => {
+      state.playerOne.Hand = state.playerOne?.Hand?.filter(
+        (cardObj) =>
+          cardObj.actionDataOverride != action.payload.card.actionDataOverride
+      );
+    },
+    removeHandCard: (state, action: PayloadAction<{ card: Card }>) => {
       const hand = state.playerOne?.Hand;
       if (!hand) return;
       const { card } = action.payload;
@@ -924,9 +930,6 @@ export const gameSlice = createSlice({
     expireInFlightPlay: (state, action: PayloadAction<string>) => {
       if (state.inFlightPlay?.requestId !== action.payload) return;
       state.inFlightPlay = undefined;
-      if (state.playerInputRequestId === action.payload) {
-        state.isPlayerInputInProgress = false;
-      }
       const hungIndex = state.pendingHandRemoval?.index;
       restoreHandCards(
         state,
@@ -1307,6 +1310,7 @@ export const {
   clearCardListFocus,
   toggleCardListSort,
   removeCardFromHand,
+  removeHandCard,
   queueHandPlay,
   sendQueuedHandPlay,
   dropQueuedHandPlay,
@@ -1355,7 +1359,6 @@ export const {
 } = actions;
 
 export const isHandPlayBusy = (game: GameState): boolean =>
-  !!game.isPlayerInputInProgress ||
   game.inFlightPlay !== undefined ||
   !!game.isAwaitingPlayState ||
   (game.queuedHandPlays?.length ?? 0) > 0;
@@ -1374,7 +1377,6 @@ export const flushHandPlayQueue = (): AppThunk => (dispatch, getState) => {
   if (
     gate.inFlightPlay ||
     gate.isAwaitingPlayState ||
-    gate.isPlayerInputInProgress ||
     gate.buttonInput
   ) {
     return;

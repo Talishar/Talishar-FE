@@ -7,7 +7,7 @@ import React, { ReactNode, useEffect, useId, useRef } from 'react';
 import { CARD_BACK } from 'features/options/cardBacks';
 import { useCardTilt } from './useCardTilt';
 import { useCookieString } from 'utils/cookieStore';
-import { DISABLE_FANNED_HAND_COOKIE } from 'routes/game/components/zones/playerHand/fanLayout';
+import { ENABLE_FANNED_HAND_COOKIE } from 'routes/game/components/zones/playerHand/fanLayout';
 import {
   TAP_TO_PREVIEW_PLAY_COOKIE,
   buildBoardCardSelectionKey,
@@ -173,7 +173,7 @@ export default function CardPopUp({
 }: CardPopUpProps) {
   const ref = useRef<HTMLDivElement>(null);
   const disableCardTilt = useCookieString('disableCardTilt');
-  const classicHover = useCookieString(DISABLE_FANNED_HAND_COOKIE) === 'true';
+  const classicHover = useCookieString(ENABLE_FANNED_HAND_COOKIE) !== 'true';
   const tapToPreviewCookie = useCookieString(TAP_TO_PREVIEW_PLAY_COOKIE);
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const suppressNextClick = useRef(false);

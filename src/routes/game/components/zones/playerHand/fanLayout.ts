@@ -1,4 +1,4 @@
-export const DISABLE_FANNED_HAND_COOKIE = 'disableFannedHand';
+export const ENABLE_FANNED_HAND_COOKIE = 'enableFannedHand';
 
 export type FanSlot = {
   x: number;

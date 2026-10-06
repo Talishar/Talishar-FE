@@ -2166,7 +2166,7 @@
     "EQUIPMENT_GEM_BUTTONS_TOOLTIP": "Shows gems on equipment. Switch off so taps go directly to the equipment card. Gems on permanent cards remain visible and interactive either way.",
     "FABRARY_STATS": "Share Stats With FaBrary",
     "FANNED_HAND": "Fanned hand",
-    "FANNED_HAND_TOOLTIP": "Use the new hand: a fan on wide screens, drag to play and quick card-by-card blocking. Turn off for the classic hand.",
+    "FANNED_HAND_TOOLTIP": "Try the new hand: a fan of cards with drag to play and quick card-by-card blocking. Off keeps the classic hand.",
     "GAME_SOUNDS": "Game Sounds",
     "GEMS_OFF_BY_DEFAULT": "Start Gems Switched Off",
     "GEMS_OFF_BY_DEFAULT_TOOLTIP": "Equipment, hero, items, auras, etc. enter play with their gem switched off, so their optional triggers stay inactive until you switch the gem on. Cards whose gem is always on are unaffected.",
