@@ -42,12 +42,10 @@
   z-index: 2;
   isolation: isolate;
   display: grid;
-  grid-template-columns: max-content minmax(0, 1fr);
+  grid-template-columns: 100px minmax(0, 1fr);
   column-gap: 8px;
   row-gap: 8px;
-  box-sizing: border-box;
-  width: max-content;
-  max-width: min(100%, 360px);
+  width: min(100%, 360px);
   margin-top: 4px;
   padding: 9px 11px;
   border-radius: 5px;
@@ -57,6 +55,17 @@
   box-shadow: 0 4px 14px rgb(0 0 0 / 35%);
   font-size: 0.72rem;
   line-height: 1.25;
+}
+
+.keywordStripFit {
+  grid-template-columns: max-content minmax(0, 1fr);
+  box-sizing: border-box;
+  width: max-content;
+  max-width: min(100%, 360px);
+}
+
+.keywordStripFit .keywordPill {
+  width: auto;
 }
 
 .keywordLine {
@@ -69,6 +78,7 @@
   justify-content: center;
   align-self: center;
   box-sizing: border-box;
+  width: 100px;
   padding: 6px 8px;
   border: 1px solid var(--theme-border-light, rgba(255, 255, 255, 0.1));
   border-radius: 5px;

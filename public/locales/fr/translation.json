@@ -1556,7 +1556,7 @@
     "DISABLE_HERO_INTRO_ANIMATION": "Désactiver l'animation d'introduction du héros",
     "DISABLE_PARTICLE_EFFECTS": "Désactiver les effets de particules",
     "FANNED_HAND": "Main en éventail",
-    "FANNED_HAND_TOOLTIP": "Affiche votre main en éventail sur les grands écrans. Désactivez pour retrouver la rangée classique.",
+    "FANNED_HAND_TOOLTIP": "Utilise la nouvelle main : en éventail sur les grands écrans, glisser pour jouer et blocage rapide carte par carte. Désactivez pour retrouver la main classique.",
     "GAME_SETTINGS": "Paramètres du jeu",
     "HIDE_GAMES_FROM_FRIENDS": "Cacher vos parties à votre liste d'amis",
     "HIDE_GAMES_FROM_FRIENDS_TOOLTIP": "Vos parties n'apparaissent plus dans les listes de parties ouvertes et de parties en cours de vos amis. Les autres joueurs les voient toujours.",

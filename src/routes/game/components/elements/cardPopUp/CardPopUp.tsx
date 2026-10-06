@@ -7,6 +7,7 @@ import React, { ReactNode, useEffect, useId, useRef } from 'react';
 import { CARD_BACK } from 'features/options/cardBacks';
 import { useCardTilt } from './useCardTilt';
 import { useCookieString } from 'utils/cookieStore';
+import { DISABLE_FANNED_HAND_COOKIE } from 'routes/game/components/zones/playerHand/fanLayout';
 import {
   TAP_TO_PREVIEW_PLAY_COOKIE,
   buildBoardCardSelectionKey,
@@ -63,6 +64,7 @@ type SurfaceProps = {
   className?: string;
   containerRef: React.RefObject<HTMLDivElement>;
   tiltEnabled: boolean;
+  classicHover: boolean;
   onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
   onPointerDown: (event: React.PointerEvent<HTMLDivElement>) => void;
   onMouseEnter: () => void;
@@ -81,6 +83,7 @@ const CardSurface = ({
   className,
   containerRef,
   tiltEnabled,
+  classicHover,
   onHoverStart,
   onHoverEnd,
   onMouseEnter,
@@ -98,7 +101,7 @@ const CardSurface = ({
     event.relatedTarget instanceof Node &&
     event.currentTarget.contains(event.relatedTarget);
 
-  const handlePointerOver = (event: React.PointerEvent<HTMLDivElement>) => {
+  const handleHoverIn = (event: React.PointerEvent<HTMLDivElement>) => {
     if (event.pointerType === 'touch' || isMoveWithinSurface(event)) return;
     onHoverStart?.();
     if (event.pointerType === 'pen') {
@@ -107,7 +110,7 @@ const CardSurface = ({
       onMouseEnter();
     }
   };
-  const handlePointerOut = (event: React.PointerEvent<HTMLDivElement>) => {
+  const handleHoverOut = (event: React.PointerEvent<HTMLDivElement>) => {
     if (event.pointerType === 'touch' || isMoveWithinSurface(event)) return;
     onHoverEnd?.();
   };
@@ -124,8 +127,9 @@ const CardSurface = ({
       onMouseMove={tiltEnabled ? handleMouseMove : undefined}
       onMouseLeave={onSurfaceMouseLeave}
       onPointerDown={onPointerDown}
-      onPointerOver={handlePointerOver}
-      onPointerOut={handlePointerOut}
+      {...(classicHover
+        ? { onPointerEnter: handleHoverIn, onPointerLeave: handleHoverOut }
+        : { onPointerOver: handleHoverIn, onPointerOut: handleHoverOut })}
       {...handlers}
     >
       {children}
@@ -169,6 +173,7 @@ export default function CardPopUp({
 }: CardPopUpProps) {
   const ref = useRef<HTMLDivElement>(null);
   const disableCardTilt = useCookieString('disableCardTilt');
+  const classicHover = useCookieString(DISABLE_FANNED_HAND_COOKIE) === 'true';
   const tapToPreviewCookie = useCookieString(TAP_TO_PREVIEW_PLAY_COOKIE);
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const suppressNextClick = useRef(false);
@@ -393,6 +398,7 @@ export default function CardPopUp({
       className={containerClass}
       containerRef={ref}
       tiltEnabled={tiltEnabled}
+      classicHover={classicHover}
       onClick={handleOnClick}
       onPointerDown={(event) => {
         cancelHoverPreview();

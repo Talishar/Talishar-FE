@@ -1,8 +1,11 @@
 import React from 'react';
+import classNames from 'classnames';
 import { getKeywordEntry, normalizeKeyword } from 'data/keywords';
 import { useCardKeywords } from 'utils/cardKeywords';
 import styles from './CardPortal.module.css';
 import { useTranslation } from 'react-i18next';
+import { useCookieString } from 'utils/cookieStore';
+import { DISABLE_FANNED_HAND_COOKIE } from 'routes/game/components/zones/playerHand/fanLayout';
 
 const CANONICAL_LABEL_IDS = new Set([
   'specialization',
@@ -20,6 +23,7 @@ export default function CardKeywordStrip({
 }) {
   const { t } = useTranslation();
   const keywordLabels = useCardKeywords(cardNumber);
+  const fitToContent = useCookieString(DISABLE_FANNED_HAND_COOKIE) !== 'true';
   const entries = keywordLabels?.flatMap((label) => {
     const id = normalizeKeyword(label);
     const entry = id ? getKeywordEntry(id) : undefined;
@@ -29,7 +33,9 @@ export default function CardKeywordStrip({
   const visible = entries.slice(0, 4);
   return (
     <div
-      className={styles.keywordStrip}
+      className={classNames(styles.keywordStrip, {
+        [styles.keywordStripFit]: fitToContent
+      })}
       aria-label={t('CARD_KEYWORD_STRIP.TITLE')}
     >
       {visible.map(({ entry, label }) => (
