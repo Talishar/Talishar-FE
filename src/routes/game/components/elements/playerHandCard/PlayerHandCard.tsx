@@ -123,6 +123,7 @@ export interface HandCard {
   fanCardHeight?: number;
   isFanLifted?: boolean;
   onHoverChange?: (cardId: string, hovering: boolean) => void;
+  onClickPlay?: (cardId: string) => void;
   dimWhenUnplayable?: boolean;
   onDragPlayStateChange?: (s: DragPlayState) => void;
 }
@@ -155,6 +156,7 @@ export const PlayerHandCard = React.memo(
     fanCardHeight,
     isFanLifted = false,
     onHoverChange,
+    onClickPlay,
     dimWhenUnplayable,
     onDragPlayStateChange
   }: HandCard) => {
@@ -417,6 +419,16 @@ export const PlayerHandCard = React.memo(
       if (scrollBlockedRef?.current) return;
       if (isLongPress.current) return;
       if (!card.action) return;
+      if (
+        isFanned &&
+        isHovered &&
+        !isPlayerInputInProgress &&
+        !isBanished &&
+        !isGraveyard &&
+        !isArsenal
+      ) {
+        onClickPlay?.(cardId ?? '');
+      }
       playCardFunc();
       addCardToPlayedCards?.(card.cardNumber);
     };

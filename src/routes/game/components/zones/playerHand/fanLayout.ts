@@ -73,6 +73,21 @@ export function computeFanSlots(count: number, g: FanGeometry): FanSlot[] {
   return slots;
 }
 
+export function fanIndexAt(
+  slots: FanSlot[],
+  x: number,
+  cardWidth: number
+): number | null {
+  if (slots.length === 0) return null;
+  if (x < slots[0].x - cardWidth / 2) return null;
+  if (x > slots[slots.length - 1].x + cardWidth / 2) return null;
+  let best = 0;
+  slots.forEach((slot, index) => {
+    if (Math.abs(slot.x - x) < Math.abs(slots[best].x - x)) best = index;
+  });
+  return best;
+}
+
 export function applyFanHover(
   slots: FanSlot[],
   hoveredIndex: number | null,

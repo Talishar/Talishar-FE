@@ -25,11 +25,14 @@ import { useTranslation } from 'react-i18next';
 import { useCookieString } from 'utils/cookieStore';
 import {
   DISABLE_FANNED_HAND_COOKIE,
+  FAN_HOVER_HIT_RATIO,
   FanGeometry,
   FanSlot,
   applyFanHover,
   computeFanSlots,
   fanHoverScaleFor,
+  fanIndexAt,
+  fanScaleFor,
   fanSpacing
 } from './fanLayout';
 import { useFanHover } from './useFanHover';
@@ -128,10 +131,15 @@ function PlayerHand() {
   const hasPriority = useAppSelector(
     (state: RootState) => state.game.hasPriority
   );
+  const turnPhase = useAppSelector(
+    (state: RootState) => state.game.turnPhase?.turnPhase
+  );
   const [dragPlayState, setDragPlayState] = useState<DragPlayState>('idle');
   const { hoveredCardId, handleHoverChange, clearHover } = useFanHover();
   const [purgatoryCardId, setPurgatoryCardId] = useState<string | null>(null);
   const lastFanSlotsRef = useRef(new Map<string, FanSlot>());
+  const fanStageRef = useRef<HTMLDivElement>(null);
+  const lastPointerRef = useRef<{ x: number; y: number } | null>(null);
 
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
@@ -510,6 +518,50 @@ function PlayerHand() {
     }
     lastFanSlotsRef.current = next;
   }, [fanItems, fanSlotById]);
+
+  useEffect(() => {
+    if (!isFanned) return;
+    const handlePointerMove = (e: PointerEvent) => {
+      lastPointerRef.current = { x: e.clientX, y: e.clientY };
+    };
+    window.addEventListener('pointermove', handlePointerMove, {
+      passive: true
+    });
+    return () => window.removeEventListener('pointermove', handlePointerMove);
+  }, [isFanned]);
+
+  const handleClickPlay = useCallback(
+    (cardId: string) => {
+      const pointer = lastPointerRef.current;
+      const stage = fanStageRef.current;
+      if (turnPhase !== 'B' || !pointer || !stage) return;
+      const next = fanItems.filter(
+        (item) => item.id !== cardId && item.id !== purgatoryCardId
+      );
+      const rect = stage.getBoundingClientRect();
+      if (
+        pointer.y <
+        rect.bottom -
+          fanGeometry.cardHeight * fanHoverScale * FAN_HOVER_HIT_RATIO
+      ) {
+        return;
+      }
+      const index = fanIndexAt(
+        computeFanSlots(next.length, fanGeometry),
+        pointer.x - (rect.left + rect.width / 2),
+        fanGeometry.cardWidth * fanScaleFor(next.length)
+      );
+      if (index !== null) handleHoverChange(next[index].id, true);
+    },
+    [
+      turnPhase,
+      fanItems,
+      purgatoryCardId,
+      fanGeometry,
+      fanHoverScale,
+      handleHoverChange
+    ]
+  );
 
   const reorderStepPx = isFanned
     ? Math.max(1, fanSpacing(fanItems.length, fanGeometry))
@@ -1113,6 +1165,7 @@ function PlayerHand() {
   const fanHand = (
     <>
       <div
+        ref={fanStageRef}
         className={classNames(styles.fanStage, {
           [styles.fanStageCollapsed]: isHandCollapsed,
           [styles.handIdle]: isHandIdle
@@ -1145,6 +1198,7 @@ function PlayerHand() {
                 fanCardHeight={fanGeometry.cardHeight}
                 isFanLifted={isFanLifted}
                 onHoverChange={handleHoverChange}
+                onClickPlay={handleClickPlay}
                 dimWhenUnplayable={dimWhenUnplayable}
                 onDragPlayStateChange={setDragPlayState}
               />

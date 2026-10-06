@@ -11,6 +11,7 @@ import {
   computeFanSlots,
   fanDropEase,
   fanHoverScaleFor,
+  fanIndexAt,
   fanScaleFor
 } from './fanLayout';
 
@@ -107,6 +108,37 @@ describe('fanDropEase', () => {
     expect(fanDropEase(0.085 / FAN_DROP_DURATION_S)).toBeGreaterThanOrEqual(
       0.9
     );
+  });
+});
+
+describe('fanIndexAt', () => {
+  const g = geometry(1600);
+  const count = 6;
+  const slots = computeFanSlots(count, g);
+  const cardWidth = g.cardWidth * fanScaleFor(count);
+
+  it('returns the index of the slot at x', () => {
+    slots.forEach((slot, index) => {
+      expect(fanIndexAt(slots, slot.x, cardWidth)).toBe(index);
+    });
+  });
+
+  it('picks the nearer slot just past the midpoint between two slots', () => {
+    const midpoint = (slots[1].x + slots[2].x) / 2;
+    expect(fanIndexAt(slots, midpoint + 1, cardWidth)).toBe(2);
+  });
+
+  it('hits the end cards up to their outer half-card edge', () => {
+    const left = slots[0].x - cardWidth / 2;
+    const right = slots[count - 1].x + cardWidth / 2;
+    expect(fanIndexAt(slots, left + 1, cardWidth)).toBe(0);
+    expect(fanIndexAt(slots, right - 1, cardWidth)).toBe(count - 1);
+    expect(fanIndexAt(slots, left - 1, cardWidth)).toBeNull();
+    expect(fanIndexAt(slots, right + 1, cardWidth)).toBeNull();
+  });
+
+  it('returns null without slots', () => {
+    expect(fanIndexAt([], 0, cardWidth)).toBeNull();
   });
 });
 
