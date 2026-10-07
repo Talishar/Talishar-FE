@@ -101,6 +101,21 @@ const GHOST_ROTATE_SPRING = {
   damping: 40
 };
 
+const isPointInElement = (
+  element: HTMLElement | null,
+  clientX: number,
+  clientY: number
+) => {
+  const rect = element?.getBoundingClientRect();
+  return (
+    !!rect &&
+    clientX >= rect.left &&
+    clientX <= rect.right &&
+    clientY >= rect.top &&
+    clientY <= rect.bottom
+  );
+};
+
 export type DragPlayState = 'idle' | 'below' | 'above';
 
 export interface HandCard {
@@ -244,6 +259,7 @@ export const PlayerHandCard = React.memo(
         ) {
           return;
         }
+        if (isPointInElement(element, event.clientX, event.clientY)) return;
         unhover();
       };
       const root = document.documentElement;
@@ -714,6 +730,9 @@ export const PlayerHandCard = React.memo(
         event.relatedTarget instanceof Node &&
         event.currentTarget.contains(event.relatedTarget)
       ) {
+        return;
+      }
+      if (isPointInElement(cardElRef.current, event.clientX, event.clientY)) {
         return;
       }
       if (isHovered) onHoverChange?.(cardId ?? '', false);
