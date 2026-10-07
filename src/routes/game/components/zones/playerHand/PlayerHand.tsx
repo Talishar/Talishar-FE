@@ -30,7 +30,6 @@ import {
   FAN_UNHOVER_ANCHOR_ATTR,
   FanGeometry,
   FanSlot,
-  HOVER_HAND_LIFT_RATIO,
   applyFanHover,
   computeFanSlots,
   fanHoverLineY,
@@ -47,8 +46,6 @@ const CARD_ROTATION_KEY_STEP_DEGREES = 3;
 const WHEEL_ROTATION_DEGREES_PER_PIXEL = 0.15;
 const MAX_WHEEL_ROTATION_DEGREES = 15;
 const NUMERIC_RE = /^\d+$/;
-// The backend's pitch prompts (paying a cost uses CHOOSEHANDCANCEL, not P).
-const PITCH_PHASES = new Set(['P', 'CHOOSEHANDCANCEL', 'PAYGOLDORPITCH']);
 
 const preventContextMenu = (event: React.MouseEvent) => event.preventDefault();
 
@@ -134,9 +131,6 @@ function PlayerHand() {
   const fanHoverScale = fanHoverScaleFor(useCookieString('hoverImageSize'));
   const hasPriority = useAppSelector(
     (state: RootState) => state.game.hasPriority
-  );
-  const turnPhase = useAppSelector(
-    (state: RootState) => state.game.turnPhase?.turnPhase
   );
   const dispatch = useAppDispatch();
   const queuedHandPlayCount = useAppSelector(
@@ -476,27 +470,13 @@ function PlayerHand() {
         width - (gameZoneBounds?.left ?? 0) - (gameZoneBounds?.right ?? 0)
       ),
       cardHeight,
-      cardWidth: (cardHeight * 2) / 3,
-      viewportHeight: height
+      cardWidth: (cardHeight * 2) / 3
     };
   }, [width, height, gameZoneBounds]);
 
   const isDragActive = dragPlayState !== 'idle' || dragStartOrderIds !== null;
   const activeHoveredCardId = isDragActive ? null : hoveredCardId;
-  // Keep the whole hand raised while pitching, hovered or not. A card played
-  // from the raised hand also holds it up until the server replies, so a
-  // pitch prompt that follows doesn't drop and re-raise the hand.
-  const [isHoldingLiftForPlay, setIsHoldingLiftForPlay] = useState(false);
-  const isPlayPending = isPlayInFlight || isAwaitingPlayState;
-  const isPitching = !!turnPhase && PITCH_PHASES.has(turnPhase);
-  const keepFanLifted = isPitching || isHoldingLiftForPlay;
-  const isFanLifted = activeHoveredCardId !== null || keepFanLifted;
-
-  useEffect(() => {
-    if (!isHoldingLiftForPlay || isPlayPending) return;
-    setIsHoldingLiftForPlay(false);
-    if (!isPitching && turnPhase !== 'B') clearHover();
-  }, [isHoldingLiftForPlay, isPlayPending, isPitching, turnPhase, clearHover]);
+  const isFanLifted = activeHoveredCardId !== null;
 
   useEffect(() => {
     if (isDragActive) clearHover();
@@ -509,26 +489,18 @@ function PlayerHand() {
       activeHoveredCardId === null
         ? -1
         : laidOut.findIndex((item) => item.id === activeHoveredCardId);
-    const resting = computeFanSlots(laidOut.length, fanGeometry);
-    const computed =
-      hoveredIndex === -1 && keepFanLifted
-        ? resting.map((slot) => ({
-            ...slot,
-            y: slot.y - HOVER_HAND_LIFT_RATIO * fanGeometry.cardHeight
-          }))
-        : applyFanHover(
-            resting,
-            hoveredIndex === -1 ? null : hoveredIndex,
-            fanGeometry,
-            fanHoverScale
-          );
+    const computed = applyFanHover(
+      computeFanSlots(laidOut.length, fanGeometry),
+      hoveredIndex === -1 ? null : hoveredIndex,
+      fanGeometry,
+      fanHoverScale
+    );
     laidOut.forEach((item, index) => slots.set(item.id, computed[index]));
     return slots;
   }, [
     fanItems,
     purgatoryCardId,
     activeHoveredCardId,
-    keepFanLifted,
     fanGeometry,
     fanHoverScale
   ]);
@@ -558,7 +530,6 @@ function PlayerHand() {
       const pointer = lastPointerRef.current;
       const stage = fanStageRef.current;
       if (!pointer || !stage) return;
-      if (turnPhase !== 'B' && !isPitching) setIsHoldingLiftForPlay(true);
       const next = fanItems.filter(
         (item) => item.id !== cardId && item.id !== purgatoryCardId
       );
@@ -582,8 +553,6 @@ function PlayerHand() {
       if (index !== null) handleHoverChange(next[index].id, true);
     },
     [
-      turnPhase,
-      isPitching,
       fanItems,
       purgatoryCardId,
       fanGeometry,

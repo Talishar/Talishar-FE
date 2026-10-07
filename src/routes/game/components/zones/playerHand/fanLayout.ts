@@ -12,14 +12,10 @@ export type FanGeometry = {
   stageWidth: number;
   cardWidth: number;
   cardHeight: number;
-  viewportHeight: number;
 };
 
-export const FAN_REST_HIDDEN_RATIO = 0.68;
+export const FAN_REST_HIDDEN_RATIO = 0.54;
 export const FAN_MAX_ROTATION_DEG = 12;
-export const HOVER_PUSH_PX = [60, 40, 20];
-export const HOVER_HAND_LIFT_RATIO = 0.28;
-export const HOVER_NEAR_LIFT_RATIO = [0.16, 0.104, 0.056];
 export const FAN_HOVER_SCALE = 1.725;
 export const FAN_HOVER_HIT_RATIO = 0.7;
 export const FAN_UNHOVER_ANCHOR_ATTR = 'data-fan-unhover-anchor';
@@ -111,26 +107,15 @@ export function applyFanHover(
 ): FanSlot[] {
   if (hoveredIndex === null || !slots[hoveredIndex]) return slots;
   const maxX = Math.max(0, (g.stageWidth - g.cardWidth * hoverScale) / 2);
-  const pushScale = g.viewportHeight / 1080;
-  return slots.map((slot, i) => {
-    if (i === hoveredIndex) {
-      return {
-        x: Math.max(-maxX, Math.min(maxX, slot.x)),
-        y: (-(hoverScale - 1) * g.cardHeight) / 2,
-        rotate: 0,
-        scale: hoverScale,
-        zIndex: 1000
-      };
-    }
-    const distance = Math.abs(i - hoveredIndex);
-    const direction = Math.sign(i - hoveredIndex);
-    const push = HOVER_PUSH_PX[distance - 1] ?? 0;
-    const lift =
-      HOVER_HAND_LIFT_RATIO + (HOVER_NEAR_LIFT_RATIO[distance - 1] ?? 0);
-    return {
-      ...slot,
-      x: slot.x + direction * push * pushScale,
-      y: slot.y - lift * g.cardHeight
-    };
-  });
+  return slots.map((slot, i) =>
+    i === hoveredIndex
+      ? {
+          x: Math.max(-maxX, Math.min(maxX, slot.x)),
+          y: (-(hoverScale - 1) * g.cardHeight) / 2,
+          rotate: 0,
+          scale: hoverScale,
+          zIndex: 1000
+        }
+      : slot
+  );
 }
