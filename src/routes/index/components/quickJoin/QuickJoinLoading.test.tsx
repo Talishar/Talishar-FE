@@ -62,13 +62,13 @@ vi.mock('features/api/apiSlice', () => ({
   useClearRustCountersMutation: () => [vi.fn()]
 }));
 vi.mock('routes/game/create/CreateGame', () => ({
-  default: () => <div>Creation form</div>
+  default: () => <div data-testid="creation-form" />
 }));
 vi.mock('components/RustCounterPanel', () => ({ default: () => null }));
 
 const JoinButton = () => {
   const { quickJoin } = useQuickJoin();
-  return <button onClick={() => quickJoin(123)}>Join test game</button>;
+  return <button data-testid="join-test-game" onClick={() => quickJoin(123)} />;
 };
 
 const homePanels = () => (
@@ -94,10 +94,10 @@ afterEach(cleanup);
 it('keeps the real deck controls mounted through auth and deck loading', () => {
   const view = render(homePanels());
   const deckPicker = screen.getByRole('combobox');
-  const creationForm = screen.getByText('Creation form');
+  const creationForm = screen.getByTestId('creation-form');
   expect(deckPicker).toHaveAttribute('aria-busy', 'true');
   expect(state.favoritesQuery).toHaveBeenLastCalledWith({ skip: true });
-  fireEvent.click(screen.getByText('Join test game'));
+  fireEvent.click(screen.getByTestId('join-test-game'));
   expect(state.joinGame).not.toHaveBeenCalled();
 
   state.auth = { isLoggedIn: true, isLoading: false };
@@ -110,7 +110,7 @@ it('keeps the real deck controls mounted through auth and deck loading', () => {
   state.favoritesLoading = true;
   view.rerender(homePanels());
   expect(screen.getByRole('combobox')).toBe(deckPicker);
-  expect(screen.getByText('Creation form')).toBe(creationForm);
+  expect(screen.getByTestId('creation-form')).toBe(creationForm);
   expect(deckPicker).toHaveAttribute('aria-busy', 'true');
   expect(state.favoritesQuery).toHaveBeenLastCalledWith({ skip: false });
 

@@ -21,17 +21,19 @@ vi.mock('hooks/useAdScript', () => ({ default: vi.fn() }));
 vi.mock('features/api/apiSlice', () => ({
   useGetSystemMessageQuery: () => ({})
 }));
-vi.mock('./components/gameList', () => ({ default: () => <div>Games</div> }));
+vi.mock('./components/gameList', () => ({
+  default: () => <div data-testid="games" />
+}));
 vi.mock('./components/gameList/GameList', () => ({ DEV_FAKE_MODE: false }));
 vi.mock('./components/UnifiedGamePanel', () => ({
-  default: () => <div>Game setup</div>
+  default: () => <div data-testid="game-setup" />
 }));
 vi.mock('./components/quickJoin/QuickJoinContext', () => ({
   QuickJoinProvider: ({ children }: { children: React.ReactNode }) => (
     <>{children}</>
   )
 }));
-vi.mock('routes/news', () => ({ default: () => <div>News</div> }));
+vi.mock('routes/news', () => ({ default: () => <div data-testid="news" /> }));
 vi.mock('./components/CommunityContent', () => ({ default: () => null }));
 
 const renderHome = () =>
@@ -68,7 +70,7 @@ it.each([null, '1', '0'])(
     expect(
       screen.getByRole('button', { pressed: saved !== '0' })
     ).toBeInTheDocument();
-    expect(screen.getByText('Games')).toBeInTheDocument();
+    expect(screen.getByTestId('games')).toBeInTheDocument();
   }
 );
 
@@ -76,10 +78,10 @@ it('renders the cached layout while auth loads, then refreshes the cache', () =>
   localStorage.setItem('talishar_home_last_user_v1', 'Player');
   state.auth = { isLoggedIn: false, isLoading: true, currentUserName: null };
   const view = renderHome();
-  expect(screen.getByText('News')).toBeInTheDocument();
+  expect(screen.getByTestId('news')).toBeInTheDocument();
   expect(screen.getByRole('button', { pressed: true })).toBeInTheDocument();
-  const setupPanel = screen.getByText('Game setup');
-  const gameList = screen.getByText('Games');
+  const setupPanel = screen.getByTestId('game-setup');
+  const gameList = screen.getByTestId('games');
   expect(screen.queryByRole('status')).not.toBeInTheDocument();
   state.auth.isLoading = false;
   state.auth.isLoggedIn = true;
@@ -91,8 +93,8 @@ it('renders the cached layout while auth loads, then refreshes the cache', () =>
     </MemoryRouter>
   );
   expect(screen.queryByRole('status')).not.toBeInTheDocument();
-  expect(screen.getByText('Game setup')).toBe(setupPanel);
-  expect(screen.getByText('Games')).toBe(gameList);
+  expect(screen.getByTestId('game-setup')).toBe(setupPanel);
+  expect(screen.getByTestId('games')).toBe(gameList);
   expect(screen.queryByRole('img')).not.toBeInTheDocument();
   expect(localStorage.getItem('talishar_home_last_user_v1')).toBe('Player');
 });
@@ -109,7 +111,7 @@ it('clears the cached layout when auth resolves to a guest', () => {
     </MemoryRouter>
   );
   expect(screen.getByRole('img')).toBeInTheDocument();
-  expect(screen.queryByText('Games')).not.toBeInTheDocument();
+  expect(screen.queryByTestId('games')).not.toBeInTheDocument();
   expect(localStorage.getItem('talishar_home_last_user_v1')).toBeNull();
 });
 
@@ -117,11 +119,11 @@ it('renders the guest shell immediately when no layout is cached', () => {
   state.auth = { isLoggedIn: false, isLoading: true, currentUserName: null };
   renderHome();
   expect(screen.getByRole('img')).toBeInTheDocument();
-  expect(screen.getByText('News')).toBeInTheDocument();
+  expect(screen.getByTestId('news')).toBeInTheDocument();
   expect(
     screen.getByRole('link', { name: 'Log in to play' })
   ).toBeInTheDocument();
-  expect(screen.getByText('Game setup')).toBeInTheDocument();
+  expect(screen.getByTestId('game-setup')).toBeInTheDocument();
   expect(screen.queryByRole('status')).not.toBeInTheDocument();
 });
 
@@ -166,8 +168,8 @@ it('always renders the expanded hero for guests', () => {
   renderHome();
   expect(screen.getByRole('img')).toBeInTheDocument();
   expect(screen.queryByRole('button')).not.toBeInTheDocument();
-  expect(screen.getByText('Game setup')).toBeInTheDocument();
-  expect(screen.queryByText('Games')).not.toBeInTheDocument();
+  expect(screen.getByTestId('game-setup')).toBeInTheDocument();
+  expect(screen.queryByTestId('games')).not.toBeInTheDocument();
 });
 
 it('uses the compact default when preference storage is unavailable', () => {
