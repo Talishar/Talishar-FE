@@ -22,6 +22,9 @@ export const HOVER_HAND_LIFT_RATIO = 0.28;
 export const HOVER_NEAR_LIFT_RATIO = [0.16, 0.104, 0.056];
 export const FAN_HOVER_SCALE = 1.725;
 export const FAN_HOVER_HIT_RATIO = 0.7;
+export const FAN_UNHOVER_ANCHOR_ATTR = 'data-fan-unhover-anchor';
+export const FAN_HOVER_FALLBACK_RATIO = 0.8;
+export const FAN_HOVER_MIN_BAND_RATIO = 0.6;
 
 export const FAN_DROP_RATE = 32;
 export const FAN_DROP_DURATION_S = 0.22;
@@ -34,6 +37,18 @@ export function fanDropEase(progress: number): number {
 export function fanHoverScaleFor(raw: string | undefined): number {
   const size = Number(raw);
   return Math.max(1, FAN_HOVER_SCALE * (size > 0 ? size : 1));
+}
+
+export function fanHoverLineY(
+  stageBottom: number,
+  cardHeight: number,
+  hoverScale: number,
+  anchorY: number | null
+): number {
+  const highest = stageBottom - cardHeight * hoverScale * FAN_HOVER_HIT_RATIO;
+  const lowest = stageBottom - cardHeight * FAN_HOVER_MIN_BAND_RATIO;
+  const target = anchorY ?? stageBottom - cardHeight * FAN_HOVER_FALLBACK_RATIO;
+  return Math.min(lowest, Math.max(highest, target));
 }
 
 export function fanScaleFor(count: number): number {

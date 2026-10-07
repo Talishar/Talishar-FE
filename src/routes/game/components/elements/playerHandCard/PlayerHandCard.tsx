@@ -52,10 +52,10 @@ import {
 } from './tapToPreviewPlay';
 import {
   FAN_DROP_DURATION_S,
-  FAN_HOVER_HIT_RATIO,
   FAN_HOVER_SCALE,
   FanSlot,
-  fanDropEase
+  fanDropEase,
+  fanHoverLineY
 } from '../../zones/playerHand/fanLayout';
 import {
   classifyDragRelease,
@@ -143,6 +143,7 @@ export interface HandCard {
   isHovered?: boolean;
   fanHoverScale?: number;
   fanCardHeight?: number;
+  fanUnhoverAnchorY?: number | null;
   isFanLifted?: boolean;
   onHoverChange?: (cardId: string, hovering: boolean) => void;
   onClickPlay?: (cardId: string) => void;
@@ -176,6 +177,7 @@ export const PlayerHandCard = React.memo(
     isHovered = false,
     fanHoverScale = FAN_HOVER_SCALE,
     fanCardHeight,
+    fanUnhoverAnchorY = null,
     isFanLifted = false,
     onHoverChange,
     onClickPlay,
@@ -740,11 +742,15 @@ export const PlayerHandCard = React.memo(
       const stage = slotRef.current?.parentElement;
       const element = cardElRef.current;
       if (!stage || !element) return false;
-      const liftedHitHeight =
-        (fanCardHeight ?? element.offsetHeight) *
-        fanHoverScale *
-        FAN_HOVER_HIT_RATIO;
-      return clientY < stage.getBoundingClientRect().bottom - liftedHitHeight;
+      return (
+        clientY <
+        fanHoverLineY(
+          stage.getBoundingClientRect().bottom,
+          fanCardHeight ?? element.offsetHeight,
+          fanHoverScale,
+          fanUnhoverAnchorY
+        )
+      );
     };
 
     const updateFanHover = (event: React.PointerEvent<HTMLDivElement>) => {
