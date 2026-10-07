@@ -26,6 +26,7 @@ import { useTranslation } from 'react-i18next';
 import { useCookieString } from 'utils/cookieStore';
 import {
   ENABLE_FANNED_HAND_COOKIE,
+  FAN_REST_HIDDEN_RATIO,
   FAN_HOVER_HIT_RATIO,
   FanGeometry,
   FanSlot,
@@ -880,7 +881,7 @@ function PlayerHand() {
 
   const restingFanSlot: FanSlot = {
     x: 0,
-    y: fanGeometry.cardHeight * 0.58,
+    y: fanGeometry.cardHeight * FAN_REST_HIDDEN_RATIO,
     rotate: 0,
     scale: 1,
     zIndex: 200

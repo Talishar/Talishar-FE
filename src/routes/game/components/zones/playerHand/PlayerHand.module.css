@@ -6,7 +6,7 @@
   height: 0;
   user-select: none;
   pointer-events: none;
-  transition: transform 0.2s ease-out, filter 0.2s ease-out;
+  transition: filter 0.2s ease-out;
 }
 
 .fanStageCollapsed {
@@ -25,9 +25,8 @@
 }
 
 .handIdle {
-  transform: translateY(4dvh);
-  filter: grayscale(0.55) brightness(0.8);
-  transition: transform 0.2s ease-out, filter 0.2s ease-out;
+  filter: brightness(0.85) saturate(0.75);
+  transition: filter 0.2s ease-out;
 }
 
 .handCollapseButton {
