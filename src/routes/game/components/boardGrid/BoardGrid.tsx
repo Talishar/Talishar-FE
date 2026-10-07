@@ -19,9 +19,10 @@ import BanishZone from '../zones/banishZone/BanishZone';
 interface Props {
   isPlayer: boolean;
   styles: { readonly [key: string]: string };
+  children?: React.ReactNode;
 }
 
-export default function BoardGrid({ isPlayer, styles }: Props) {
+export default function BoardGrid({ isPlayer, styles, children }: Props) {
   const p1Playmat = useAppSelector(
     (state: RootState) => state.game.playerOne.Playmat
   );
@@ -55,6 +56,7 @@ export default function BoardGrid({ isPlayer, styles }: Props) {
         <ZoneCounts isPlayer={isPlayer} />
         <BanishZone isPlayer={isPlayer} />
       </div>
+      {children}
     </div>
   );
 }

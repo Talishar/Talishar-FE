@@ -43,6 +43,12 @@
   overflow-x: hidden;
 }
 
+.playerEffectsSpacer {
+  width: 100%;
+  height: 50%;
+  max-height: 50%;
+}
+
 .img {
   flex-shrink: 0;
   border: 1px solid var(--theme-secondary);
