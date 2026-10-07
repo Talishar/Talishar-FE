@@ -6,7 +6,7 @@ import {
   GiCycle,
   GiStomp,
   GiShieldReflect,
-  GiPiercedHeart,
+  GiOpenWound,
   GiShoulderArmor,
   GiZigzagLeaf,
   GiCash,
@@ -127,7 +127,7 @@ export const ActiveCardCounterOverlay = (props: Props) => {
       )}
       {activeCombatChain.unpreventable && (
         <TooltipWrapper className={styles.icon} tooltip="Unpreventable">
-          <GiPiercedHeart />
+          <GiOpenWound />
         </TooltipWrapper>
       )}
       {activeCombatChain.numRequiredEquipBlock && (
