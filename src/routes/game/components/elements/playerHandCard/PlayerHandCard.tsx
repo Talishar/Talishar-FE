@@ -248,7 +248,10 @@ export const PlayerHandCard = React.memo(
 
     useEffect(() => {
       if (!isFanned || !isHovered || isDragging) return;
-      const unhover = () => onHoverChange?.(cardId ?? '', false);
+      const unhover = (event: PointerEvent) => {
+        if (event.pointerType === 'touch') return;
+        onHoverChange?.(cardId ?? '', false);
+      };
       const unhoverIfOutside = (event: PointerEvent) => {
         if (event.pointerType === 'touch') return;
         const element = cardElRef.current;
@@ -260,7 +263,7 @@ export const PlayerHandCard = React.memo(
           return;
         }
         if (isPointInElement(element, event.clientX, event.clientY)) return;
-        unhover();
+        unhover(event);
       };
       const root = document.documentElement;
       window.addEventListener('pointermove', unhoverIfOutside);
@@ -270,6 +273,30 @@ export const PlayerHandCard = React.memo(
         root.removeEventListener('pointerleave', unhover);
       };
     }, [isFanned, isHovered, isDragging, cardId, onHoverChange]);
+
+    useEffect(() => {
+      if (!isFanned || !isHovered || isDragging) return;
+      const unhoverOnOutsideTouch = (event: PointerEvent) => {
+        if (event.pointerType !== 'touch') return;
+        const element = cardElRef.current;
+        if (
+          element &&
+          event.target instanceof Node &&
+          element.contains(event.target)
+        ) {
+          return;
+        }
+        onHoverChange?.(cardId ?? '', false);
+      };
+      window.addEventListener('pointerdown', unhoverOnOutsideTouch, true);
+      return () =>
+        window.removeEventListener('pointerdown', unhoverOnOutsideTouch, true);
+    }, [isFanned, isHovered, isDragging, cardId, onHoverChange]);
+
+    const liftFromTouch = useCallback(() => {
+      clearCardPreview();
+      onHoverChange?.(cardId ?? '', true);
+    }, [cardId, onHoverChange]);
 
     const slotX = fanSlot?.x ?? 0;
     const slotY = fanSlot?.y ?? 0;
@@ -559,8 +586,10 @@ export const PlayerHandCard = React.memo(
         dragY.jump(0);
       }
       if (startsReturn) {
-        returnX.set(ghostFromX);
-        returnY.set(ghostFromY);
+        springX.jump(ghostFromX);
+        springY.jump(ghostFromY);
+        returnX.jump(ghostFromX);
+        returnY.jump(ghostFromY);
         setIsReturning(true);
       }
 
@@ -819,6 +848,7 @@ export const PlayerHandCard = React.memo(
             onClick={handlePlayFromTap}
             hoverPreviewDelayMs={150}
             disableHoverPreview={isFanned}
+            onTouchPreview={isFanned ? liftFromTouch : undefined}
           >
             <CardImage src={src} className={imgStyles} draggable="false" />
             {iconColumn}

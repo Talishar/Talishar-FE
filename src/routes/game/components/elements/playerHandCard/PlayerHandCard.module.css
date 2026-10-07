@@ -100,6 +100,21 @@
   transform-origin: top right;
 }
 
+@media (orientation: portrait) {
+  .fanKeywords,
+  .fanKeywordsLeft {
+    top: auto;
+    bottom: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    width: auto;
+    max-width: none;
+    display: flex;
+    justify-content: center;
+    transform-origin: bottom center;
+  }
+}
+
 .contentHidden > * {
   visibility: hidden;
 }
@@ -126,7 +141,6 @@
   }
   35% {
     filter: brightness(1.35);
-    box-shadow: 0 0 0 3px #fff, 0 0 16px 6px #fff;
   }
   100% {
     filter: brightness(1);
@@ -139,7 +153,6 @@
   }
   35% {
     filter: brightness(1.35);
-    box-shadow: 0 0 0 3px #fff, 0 0 16px 6px #fff;
   }
   100% {
     filter: brightness(1);
