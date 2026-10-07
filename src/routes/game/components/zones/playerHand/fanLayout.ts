@@ -15,11 +15,11 @@ export type FanGeometry = {
   viewportHeight: number;
 };
 
-export const FAN_REST_HIDDEN_RATIO = 0.58;
+export const FAN_REST_HIDDEN_RATIO = 0.68;
 export const FAN_MAX_ROTATION_DEG = 12;
-export const HOVER_PUSH_PX = [75, 50, 25];
-export const HOVER_HAND_LIFT_RATIO = 0.35;
-export const HOVER_NEAR_LIFT_RATIO = [0.2, 0.13, 0.07];
+export const HOVER_PUSH_PX = [60, 40, 20];
+export const HOVER_HAND_LIFT_RATIO = 0.28;
+export const HOVER_NEAR_LIFT_RATIO = [0.16, 0.104, 0.056];
 export const FAN_HOVER_SCALE = 1.725;
 export const FAN_HOVER_HIT_RATIO = 0.7;
 

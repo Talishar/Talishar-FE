@@ -25,7 +25,7 @@
 }
 
 .handIdle {
-  filter: grayscale(0.55) brightness(0.8);
+  filter: brightness(0.85) saturate(0.75);
   transition: filter 0.2s ease-out;
 }
 
