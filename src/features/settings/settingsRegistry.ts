@@ -1,5 +1,6 @@
 import * as optConst from 'features/options/constants';
 import { DISABLE_EQUIPMENT_GEM_BUTTONS_COOKIE } from 'routes/game/components/elements/gemSlider/equipmentGemPreference';
+import { ENABLE_FANNED_HAND_COOKIE } from 'routes/game/components/zones/playerHand/fanLayout';
 
 export type SettingsSurface = 'account' | 'game';
 
@@ -398,6 +399,16 @@ export const SETTINGS_DEFS: SettingDef[] = [
     accountName: 'DisableCardTilt',
     invert: true,
     defaultOn: true
+  },
+  {
+    kind: 'toggle',
+    key: 'fannedHand',
+    group: 'cardVisuals',
+    labelKey: 'SETTINGS.FANNED_HAND',
+    tooltipKey: 'SETTINGS.FANNED_HAND_TOOLTIP',
+    storage: 'device',
+    name: ENABLE_FANNED_HAND_COOKIE,
+    defaultOn: false
   },
   {
     kind: 'toggle',

@@ -7,6 +7,7 @@ import React, { ReactNode, useEffect, useId, useRef } from 'react';
 import { CARD_BACK } from 'features/options/cardBacks';
 import { useCardTilt } from './useCardTilt';
 import { useCookieString } from 'utils/cookieStore';
+import { ENABLE_FANNED_HAND_COOKIE } from 'routes/game/components/zones/playerHand/fanLayout';
 import {
   TAP_TO_PREVIEW_PLAY_COOKIE,
   buildBoardCardSelectionKey,
@@ -63,6 +64,7 @@ type SurfaceProps = {
   className?: string;
   containerRef: React.RefObject<HTMLDivElement>;
   tiltEnabled: boolean;
+  classicHover: boolean;
   onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
   onPointerDown: (event: React.PointerEvent<HTMLDivElement>) => void;
   onMouseEnter: () => void;
@@ -81,6 +83,7 @@ const CardSurface = ({
   className,
   containerRef,
   tiltEnabled,
+  classicHover,
   onHoverStart,
   onHoverEnd,
   onMouseEnter,
@@ -94,8 +97,12 @@ const CardSurface = ({
     tiltEnabled
   );
 
-  const handlePointerEnter = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (event.pointerType === 'touch') return;
+  const isMoveWithinSurface = (event: React.PointerEvent<HTMLDivElement>) =>
+    event.relatedTarget instanceof Node &&
+    event.currentTarget.contains(event.relatedTarget);
+
+  const handleHoverIn = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.pointerType === 'touch' || isMoveWithinSurface(event)) return;
     onHoverStart?.();
     if (event.pointerType === 'pen') {
       onPenHover();
@@ -103,8 +110,9 @@ const CardSurface = ({
       onMouseEnter();
     }
   };
-  const handlePointerLeave = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (event.pointerType !== 'touch') onHoverEnd?.();
+  const handleHoverOut = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.pointerType === 'touch' || isMoveWithinSurface(event)) return;
+    onHoverEnd?.();
   };
 
   const onSurfaceMouseLeave = () => {
@@ -119,8 +127,9 @@ const CardSurface = ({
       onMouseMove={tiltEnabled ? handleMouseMove : undefined}
       onMouseLeave={onSurfaceMouseLeave}
       onPointerDown={onPointerDown}
-      onPointerEnter={handlePointerEnter}
-      onPointerLeave={handlePointerLeave}
+      {...(classicHover
+        ? { onPointerEnter: handleHoverIn, onPointerLeave: handleHoverOut }
+        : { onPointerOver: handleHoverIn, onPointerOut: handleHoverOut })}
       {...handlers}
     >
       {children}
@@ -142,6 +151,8 @@ type CardPopUpProps = {
   previewYOffset?: number;
   /** Override sticky-selection key (hand cards pass a unique id-based key). */
   tapPreviewKey?: string;
+  hoverPreviewDelayMs?: number;
+  disableHoverPreview?: boolean;
 };
 
 export default function CardPopUp({
@@ -156,15 +167,21 @@ export default function CardPopUp({
   disableTilt,
   disableTapToPreview,
   previewYOffset = 0,
-  tapPreviewKey
+  tapPreviewKey,
+  hoverPreviewDelayMs = 0,
+  disableHoverPreview = false
 }: CardPopUpProps) {
   const ref = useRef<HTMLDivElement>(null);
   const disableCardTilt = useCookieString('disableCardTilt');
+  const classicHover = useCookieString(ENABLE_FANNED_HAND_COOKIE) !== 'true';
   const tapToPreviewCookie = useCookieString(TAP_TO_PREVIEW_PLAY_COOKIE);
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const suppressNextClick = useRef(false);
   const lastPointerTypeRef = useRef<string | null>(null);
   const touchOrigin = useRef<{ x: number; y: number } | null>(null);
+  const hoverPreviewTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isHiddenRef = useRef(isHidden);
+  isHiddenRef.current = isHidden;
   const instanceId = useId();
 
   const selectionKey =
@@ -194,6 +211,7 @@ export default function CardPopUp({
   useEffect(() => {
     return () => {
       if (longPressTimer.current) clearTimeout(longPressTimer.current);
+      if (hoverPreviewTimer.current) clearTimeout(hoverPreviewTimer.current);
       clearCardPreview(instanceId);
     };
   }, [instanceId]);
@@ -229,7 +247,7 @@ export default function CardPopUp({
       return;
     }
     const rect = ref.current.getBoundingClientRect();
-    if (isHidden === true || SKIP_POPUP_CARDS.has(cardNumber)) {
+    if (isHiddenRef.current === true || SKIP_POPUP_CARDS.has(cardNumber)) {
       return;
     }
     const xCoord = rect.left < window.innerWidth / 2 ? rect.right : rect.left;
@@ -245,14 +263,30 @@ export default function CardPopUp({
     });
   };
 
+  const cancelHoverPreview = () => {
+    if (hoverPreviewTimer.current) {
+      clearTimeout(hoverPreviewTimer.current);
+      hoverPreviewTimer.current = null;
+    }
+  };
+
   const showHoverPreview = (pointerKind: 'mouse' | 'pen') => {
     // A stylus hovers on devices whose primary input reports no hover at all,
     // so trust the pen event over the media query.
     if (pointerKind !== 'pen' && !supportsHover) return;
+    if (disableHoverPreview) return;
     // A touch emits synthetic mouse events after touchend. Surfaces that opted
     // out of tap-to-preview must not get a preview from that replayed hover.
     if (disableTapToPreview && lastPointerTypeRef.current === 'touch') return;
-    showPreview();
+    if (hoverPreviewDelayMs <= 0) {
+      showPreview();
+      return;
+    }
+    cancelHoverPreview();
+    hoverPreviewTimer.current = setTimeout(() => {
+      hoverPreviewTimer.current = null;
+      showPreview();
+    }, hoverPreviewDelayMs);
   };
 
   const handleMouseEnter = () => showHoverPreview('mouse');
@@ -269,6 +303,7 @@ export default function CardPopUp({
   };
 
   const handleMouseLeave = () => {
+    cancelHoverPreview();
     clearPopUpUnlessSticky();
   };
 
@@ -363,8 +398,10 @@ export default function CardPopUp({
       className={containerClass}
       containerRef={ref}
       tiltEnabled={tiltEnabled}
+      classicHover={classicHover}
       onClick={handleOnClick}
       onPointerDown={(event) => {
+        cancelHoverPreview();
         lastPointerTypeRef.current = event.pointerType;
         if (event.pointerType !== 'touch') suppressNextClick.current = false;
       }}

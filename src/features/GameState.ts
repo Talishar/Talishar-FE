@@ -7,6 +7,13 @@ import GameStaticInfo from './GameStaticInfo';
 import Player from './Player';
 import { PlayerPresence } from './PlayerPresence';
 
+export type QueuedHandPlay = {
+  card: Card;
+  index: number;
+  mode: number | undefined;
+  missing?: boolean;
+};
+
 export default interface GameState {
   gameInfo: GameStaticInfo;
   gameDynamicInfo: GameDynamicInfo;
@@ -50,6 +57,12 @@ export default interface GameState {
   opponentPresence?: PlayerPresence | null;
   isUpdateInProgress?: boolean;
   isPlayerInputInProgress?: boolean;
+  pendingHandRemoval?: { card: Card; index: number };
+  queuedHandPlays?: QueuedHandPlay[];
+  inFlightPlay?: { requestId: string; uniqueId?: string };
+  isAwaitingPlayState?: boolean;
+  awaitingPlayRequestId?: string;
+  buttonInput?: 'inflight' | 'awaiting';
   playerInputRequestId?: string;
   turnPhase?: {
     turnPhase?: string;

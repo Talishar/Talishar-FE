@@ -57,6 +57,17 @@
   line-height: 1.25;
 }
 
+.keywordStripFit {
+  grid-template-columns: max-content minmax(0, 1fr);
+  box-sizing: border-box;
+  width: max-content;
+  max-width: min(100%, 360px);
+}
+
+.keywordStripFit .keywordPill {
+  width: auto;
+}
+
 .keywordLine {
   display: contents;
 }

@@ -1555,6 +1555,8 @@
     "DISABLE_GLOBAL_STATS_TOOLTIP": "Désactive l'envoi des statistiques de jeu à FaB Insights et FaBlazing pour le suivi des statistiques.",
     "DISABLE_HERO_INTRO_ANIMATION": "Désactiver l'animation d'introduction du héros",
     "DISABLE_PARTICLE_EFFECTS": "Désactiver les effets de particules",
+    "FANNED_HAND": "Main en éventail",
+    "FANNED_HAND_TOOLTIP": "Essayez la nouvelle main : cartes en éventail, glisser pour jouer et blocage rapide carte par carte. Désactivé, la main classique est conservée.",
     "GAME_SETTINGS": "Paramètres du jeu",
     "HIDE_GAMES_FROM_FRIENDS": "Cacher vos parties à votre liste d'amis",
     "HIDE_GAMES_FROM_FRIENDS_TOOLTIP": "Vos parties n'apparaissent plus dans les listes de parties ouvertes et de parties en cours de vos amis. Les autres joueurs les voient toujours.",
