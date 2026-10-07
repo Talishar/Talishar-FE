@@ -586,8 +586,10 @@ export const PlayerHandCard = React.memo(
         dragY.jump(0);
       }
       if (startsReturn) {
-        returnX.set(ghostFromX);
-        returnY.set(ghostFromY);
+        springX.jump(ghostFromX);
+        springY.jump(ghostFromY);
+        returnX.jump(ghostFromX);
+        returnY.jump(ghostFromY);
         setIsReturning(true);
       }
 
