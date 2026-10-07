@@ -83,8 +83,9 @@
 .heroFallback {
   display: block;
   width: 100%;
-  aspect-ratio: 5 / 2;
+  aspect-ratio: 4 / 3;
   object-fit: cover;
+  object-position: center 30%;
   border: 1px solid rgba(var(--theme-on-surface-rgb), 0.16);
   border-radius: 6px;
   background: rgba(var(--theme-on-surface-rgb), 0.06);

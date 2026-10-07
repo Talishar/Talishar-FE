@@ -47,11 +47,14 @@ const GOOD_FLAGS = [
   'BOT_FAILS'
 ];
 const BAD_FLAGS = [
+  'BASELINE_STALLED',
   'LOW_PRESSURE',
   'FEW_OPTIONS',
   'ONE_CARD',
   'UNPROVEN',
   'PLAIN_STATS',
+  'PLAIN_BLOCKS',
+  'NO_TACTIC',
   'BOT_SOLVES'
 ];
 const PROOF_FILTERS: ProofFilter[] = ['all', 'proven'];
