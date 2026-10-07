@@ -126,7 +126,6 @@
   }
   35% {
     filter: brightness(1.35);
-    box-shadow: 0 0 0 3px #fff, 0 0 16px 6px #fff;
   }
   100% {
     filter: brightness(1);
@@ -139,7 +138,6 @@
   }
   35% {
     filter: brightness(1.35);
-    box-shadow: 0 0 0 3px #fff, 0 0 16px 6px #fff;
   }
   100% {
     filter: brightness(1);
