@@ -164,18 +164,16 @@
 
 .blockedUsersTable {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0 0.3rem;
   background: transparent;
   table-layout: fixed;
   margin-bottom: 0 !important;
 }
 
-.blockedUsersTable thead {
-  border-bottom: 1px solid var(--theme-border, rgba(255, 255, 255, 0.15));
-}
-
 .blockedUsersTable th {
   padding: 0.5rem 1rem;
+  border-bottom: 1px solid var(--theme-border, rgba(255, 255, 255, 0.15));
   text-align: left;
   color: var(--theme-text-muted, rgba(255, 255, 255, 0.5));
   font-weight: 600;
@@ -192,8 +190,9 @@
 }
 
 .blockedUsersTable td {
-  padding: 0.5rem 1rem;
-  border-bottom: 1px solid var(--theme-border-light, rgba(255, 255, 255, 0.07));
+  padding: 0.65rem 1rem;
+  background: rgba(var(--theme-on-surface-rgb), 0.06);
+  transition: background-color 0.2s ease;
   color: var(--theme-text, #e0e0e0);
   text-align: left;
   vertical-align: middle;
@@ -209,12 +208,21 @@
   text-align: center;
 }
 
-.blockedUsersTable tbody tr {
-  transition: background-color 0.2s;
+.blockedUsersTable td:first-child {
+  border-radius: 5px 0 0 5px;
+  font-weight: 600;
 }
 
-.blockedUsersTable tbody tr:hover {
-  background-color: var(--theme-primary-focus, color-mix(in srgb, var(--theme-primary) 8%, transparent));
+.blockedUsersTable td:last-child {
+  border-radius: 0 5px 5px 0;
+}
+
+.blockedUsersTable tbody tr:nth-child(even) td {
+  background: rgba(var(--theme-on-surface-rgb), 0.1);
+}
+
+.blockedUsersTable tbody tr:hover td {
+  background: var(--theme-primary-focus, color-mix(in srgb, var(--theme-primary) 12%, transparent));
 }
 
 .deleteColumn {

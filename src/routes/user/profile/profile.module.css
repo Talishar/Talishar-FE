@@ -3,7 +3,8 @@
 }
 
 .usernameHeader {
-  padding-bottom: 0.25rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--theme-border-light, rgba(255, 255, 255, 0.1));
 }
 
 .usernameLabel {
@@ -45,7 +46,7 @@
 .articleTitle {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 0;
   margin: 0;
   padding: 0.5rem;
   background: transparent;
@@ -56,9 +57,9 @@
 
 .wideContainer {
   width: 100%;
-  max-width: 90vw;
+  max-width: 82rem;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 1rem 3rem;
 }
 
 .twoColumnLayout {
@@ -101,7 +102,7 @@
   }
 
   .articleTitle {
-    gap: 1.25rem;
+    gap: 0;
     padding: 0;
   }
 }
@@ -114,7 +115,21 @@
 .accountOverview {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+}
+
+.accountOverview > div,
+.accountOverview > p {
+  padding: 1.1rem 0;
+}
+
+.accountOverview > :not(:first-child) {
+  border-top: 1px solid var(--theme-border-light, rgba(255, 255, 255, 0.1));
+}
+
+.displayNameSection,
+.dangerSection {
+  border-top: 1px solid var(--theme-border-light, rgba(255, 255, 255, 0.1));
+  padding: 1.1rem 0;
 }
 
 /* Profile sections share one flat treatment, matching the settings page. */
@@ -214,7 +229,6 @@
 
 .displayNameSection {
   margin: 0;
-  padding: 0;
 }
 
 .displayNameSection h3 {
@@ -562,7 +576,7 @@
 }
 
 .dangerSection {
-  padding-top: 0.25rem;
+  padding-bottom: 0;
 }
 
 .dangerSection .title {
