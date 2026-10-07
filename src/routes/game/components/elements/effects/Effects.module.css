@@ -36,6 +36,17 @@
   gap: 0.5em;
 }
 
+.underEquipment {
+  position: absolute;
+  top: 100%;
+  left: calc(1dvw * 0.95);
+  width: calc(var(--card-size) * 0.95 * 2 + 1dvw * 0.95);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: calc(1dvw * 0.95);
+  padding-top: calc(1dvw * 0.95);
+}
+
 .img {
   flex-shrink: 0;
   width: 90%;

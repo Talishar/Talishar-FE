@@ -8,6 +8,9 @@ import CardImage from '../cardImage/CardImage';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import CountersOverlay from '../countersOverlay/CountersOverlay';
 
+export const PHONE_PORTRAIT_QUERY =
+  '(orientation: portrait) and (max-width: 600px)';
+
 export interface CardProp {
   card: Card;
   num?: number;
@@ -44,8 +47,12 @@ export function Effect(prop: CardProp) {
   );
 }
 
-export default function Effects(props: Player) {
-  const classCSS = props.isPlayer ? styles.isPlayer : styles.isOpponent;
+export default function Effects(props: Player & { underEquipment?: boolean }) {
+  const classCSS = props.underEquipment
+    ? styles.underEquipment
+    : props.isPlayer
+    ? styles.isPlayer
+    : styles.isOpponent;
 
   const isPlayer = props.isPlayer;
   const effects = useAppSelector((state: RootState) => {
