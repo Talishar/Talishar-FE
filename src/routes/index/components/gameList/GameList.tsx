@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
+import LoadingSkeleton from 'components/LoadingSkeleton/LoadingSkeleton';
 import {
   useGetGameListQuery,
   useGetFriendsListQuery
@@ -735,11 +736,6 @@ const GameList = () => {
             </button>
           )}
         </div>
-        {canAccessPublicGames && isLoading ? (
-          <div role="status" aria-live="polite" aria-busy="true">
-            {t('GAME_LIST.LOADING')}
-          </div>
-        ) : null}
         {canAccessPublicGames && error ? (
           <div>
             <h2>{t('GAME_LIST.LOAD_ERROR_TITLE')}</h2>
@@ -766,7 +762,7 @@ const GameList = () => {
             </div>
           </div>
         )}
-        {!isLoading && !error && canAccessPublicGames && (
+        {!error && canAccessPublicGames && (
           <>
             <div className={styles.tabs}>
               <button
@@ -889,6 +885,11 @@ const GameList = () => {
       </div>
 
       {/* Scrollable game list content */}
+      {isLoading && !error && canAccessPublicGames && (
+        <div className={styles.scrollableContent}>
+          <LoadingSkeleton label={t('GAME_LIST.LOADING')} />
+        </div>
+      )}
       {!isLoading && !error && canAccessPublicGames && (
         <div className={styles.scrollableContent} ref={scrollableContentRef}>
           {activeTab === 'open' ? (

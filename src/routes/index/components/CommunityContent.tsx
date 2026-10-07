@@ -8,6 +8,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { AdUnit } from 'components/ads/AdUnit';
 import RemoveAdsLink from 'components/RemoveAdsLink/RemoveAdsLink';
 import { TALISHAR_DISCORD_URL } from 'constants/socialLinks';
+import LoadingSkeleton from 'components/LoadingSkeleton/LoadingSkeleton';
 
 interface CommunityContentProps {
   showAds?: boolean;
@@ -106,7 +107,6 @@ const CommunityContent: React.FC<CommunityContentProps> = ({
 
   useEffect(() => {
     const loadContent = async () => {
-      setLoading(true);
       try {
         const fetchedVideos = await fetchDiscordContentCarousel(20);
         setVideos(fetchedVideos);
@@ -125,8 +125,33 @@ const CommunityContent: React.FC<CommunityContentProps> = ({
     return (
       <section className={styles.communityContentContainer}>
         <div className={styles.content}>
-          <h2>{t('COMMUNITY_CONTENT.TITLE')}</h2>
-          <p className={styles.subtitle}>{t('COMMUNITY_CONTENT.LOADING')}</p>
+          <div className={styles.sectionHeader}>
+            <h2>{t('COMMUNITY_CONTENT.TITLE')}</h2>
+            <p className={styles.subtitle}>{t('COMMUNITY_CONTENT.DISCOVER')}</p>
+          </div>
+          <div className={styles.heroLayout}>
+            <div className={styles.featuredSection}>
+              <div
+                className={`${styles.featuredEmbed} ${styles.mediaSkeleton}`}
+              />
+              <div className={styles.featuredInfo}>
+                <LoadingSkeleton
+                  label={t('COMMUNITY_CONTENT.LOADING')}
+                  rows={1}
+                />
+              </div>
+            </div>
+            <div className={styles.rightColumn}>
+              <div
+                className={`${styles.secondaryEmbed} ${styles.mediaSkeleton}`}
+              />
+              <LoadingSkeleton
+                label={t('COMMUNITY_CONTENT.LOADING')}
+                rows={1}
+              />
+            </div>
+          </div>
+          <LoadingSkeleton label={t('COMMUNITY_CONTENT.LOADING')} rows={5} />
         </div>
       </section>
     );

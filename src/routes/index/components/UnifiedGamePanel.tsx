@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa';
 import useAuth from 'hooks/useAuth';
 import useSupporterStatus from 'hooks/useSupporterStatus';
@@ -14,7 +14,7 @@ import { getCookie, setCookie } from 'utils/cookies';
 const UnifiedGamePanel = () => {
   const { isLoggedIn } = useAuth();
   const { canViewRustCounters, rustCounters } = useRustCounters();
-  const { isSupporter, isLoading: isAuthLoading } = useSupporterStatus();
+  const { isSupporter } = useSupporterStatus();
   const [clearRustCounters] = useClearRustCountersMutation();
   useEffect(() => {
     if (!canViewRustCounters) return;
@@ -35,10 +35,6 @@ const UnifiedGamePanel = () => {
   useEffect(() => {
     setCookie('unifiedGamePanelExpanded', String(isExpanded));
   }, [isExpanded]);
-
-  if (isAuthLoading) {
-    return null;
-  }
 
   if (!isLoggedIn) {
     return (

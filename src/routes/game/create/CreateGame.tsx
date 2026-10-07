@@ -925,7 +925,6 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                 ))}
               {!isEmbedded &&
                 isLoggedIn &&
-                !isLoading &&
                 standaloneDeckSource === 'talishar' &&
                 !isPreconFormat(formFormat || selectedFormat) && (
                   <label>

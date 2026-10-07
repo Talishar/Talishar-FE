@@ -383,8 +383,9 @@
     border: none;
     border-radius: 0;
     margin: 0;
-    height: auto;
-    min-height: auto;
+    // Keep the first response and subsequent polling inside the same viewport.
+    height: clamp(360px, 60svh, 560px);
+    min-height: 360px;
   }
 
   .stickyHeader {
@@ -393,7 +394,6 @@
 
   .scrollableContent {
     padding: 0.25rem 0.75rem 0.5rem;
-    max-height: 60vh;
   }
 
   .viewAllFooter {

@@ -261,3 +261,6 @@
   color: var(--alarm, red);
   margin-top: 0.25rem;
 }
+.masterySlot {
+  min-height: 4rem;
+}

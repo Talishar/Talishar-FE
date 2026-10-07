@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from '../index/Index.module.css';
 import {
   fetchDiscordReleaseNotes,
@@ -44,7 +44,6 @@ const News = () => {
 
   useEffect(() => {
     const loadContent = async () => {
-      setLoading(true);
       try {
         const messages = await fetchDiscordReleaseNotes(3);
         setDiscordMessages(messages);

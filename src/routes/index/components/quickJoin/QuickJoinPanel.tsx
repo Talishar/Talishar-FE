@@ -10,6 +10,7 @@ import { useQuickJoin } from './QuickJoinContext';
 import styles from './QuickJoinPanel.module.css';
 import { Trans, useTranslation } from 'react-i18next';
 import { getCookie, setCookie } from 'utils/cookies';
+import LoadingSkeleton from 'components/LoadingSkeleton/LoadingSkeleton';
 
 interface Props {
   embedded?: boolean;
@@ -92,15 +93,21 @@ const QuickJoinPanel = ({ embedded = false }: Props) => {
         />
       </label>
 
-      {selectedFavoriteDeckHero && selectedMasteryProgress && (
-        <MasteryProgressCard
-          heroId={selectedFavoriteDeckHero}
-          games={selectedMasteryProgress.qualifyingGames}
-          level={selectedMasteryProgress.level}
-          nextThreshold={selectedMasteryProgress.nextThreshold}
-          gamesToNext={selectedMasteryProgress.gamesToNext}
-          compact
-        />
+      {selectedFavoriteDeck && (
+        <div className={styles.masterySlot}>
+          {isFavoritesLoading ? (
+            <LoadingSkeleton label={t('BASE.LOADING')} rows={1} />
+          ) : selectedFavoriteDeckHero && selectedMasteryProgress ? (
+            <MasteryProgressCard
+              heroId={selectedFavoriteDeckHero}
+              games={selectedMasteryProgress.qualifyingGames}
+              level={selectedMasteryProgress.level}
+              nextThreshold={selectedMasteryProgress.nextThreshold}
+              gamesToNext={selectedMasteryProgress.gamesToNext}
+              compact
+            />
+          ) : null}
+        </div>
       )}
 
       <label className={styles.label}>

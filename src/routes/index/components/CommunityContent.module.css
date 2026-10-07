@@ -47,11 +47,29 @@
 
 .featuredEmbed {
   width: 100%;
-  flex: 1;
-  min-height: 320px;
+  flex: 0 0 auto;
+  min-height: 0;
+  aspect-ratio: 16 / 9;
   background: #000;
   border-radius: 10px;
   overflow: hidden;
+}
+
+.mediaSkeleton {
+  background: rgba(var(--theme-on-surface-rgb), 0.1);
+  animation: contentPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes contentPulse {
+  50% {
+    opacity: 0.4;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mediaSkeleton {
+    animation: none;
+  }
 }
 
 .videoFrame {
@@ -201,7 +219,6 @@
   border: none;
   background: transparent;
 }
-
 
 .videoList {
   list-style: none;

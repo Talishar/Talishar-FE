@@ -1,6 +1,6 @@
 import { useAppDispatch } from 'app/Hooks';
 import { clearGameInfo } from 'features/game/GameSlice';
-import { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { usePageTitle } from 'hooks/usePageTitle';
 import GameList from './components/gameList';
@@ -21,6 +21,9 @@ import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
 import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
 import { Link } from 'react-router-dom';
 import RemoveAdsLink from 'components/RemoveAdsLink/RemoveAdsLink';
+import LoadingSkeleton from 'components/LoadingSkeleton/LoadingSkeleton';
+
+const LAST_HOME_USER_KEY = 'talishar_home_last_user_v1';
 
 const Index = () => {
   const { t } = useTranslation();
@@ -28,13 +31,61 @@ const Index = () => {
   const dispatch = useAppDispatch();
   const { isLoggedIn, isLoading: isAuthLoading, currentUserName } = useAuth();
   const { isSupporter, showAds } = useSupporterStatus();
-  const [isBannerHidden, setIsBannerHidden] = useState(false);
+  const [cachedUserName, setCachedUserName] = useState<string | null>(() => {
+    try {
+      return localStorage.getItem(LAST_HOME_USER_KEY) || null;
+    } catch {
+      return null;
+    }
+  });
+  const isAuthReady = !isAuthLoading && (!isLoggedIn || !!currentUserName);
+  // This is a layout hint only. Queries and account actions still use real auth.
+  const layoutUserName = isAuthReady
+    ? isLoggedIn
+      ? currentUserName
+      : null
+    : currentUserName || cachedUserName;
+  const hasUserLayout = !!layoutUserName;
+  const [bannerOverride, setBannerOverride] = useState<{
+    key: string | null;
+    hidden: boolean;
+  } | null>(null);
 
   const bannerPreferenceKey = useMemo(() => {
-    if (!isLoggedIn || !currentUserName) return null;
-    return `talishar_home_banner_hidden_v2_${currentUserName}`;
-  }, [isLoggedIn, currentUserName]);
+    if (!layoutUserName) return null;
+    return `talishar_home_banner_hidden_v2_${layoutUserName}`;
+  }, [layoutUserName]);
+  // Resolve the saved layout during render, before the hero can be painted.
+  const savedBannerHidden = useMemo(() => {
+    if (!bannerPreferenceKey) return false;
+    try {
+      const stored = localStorage.getItem(bannerPreferenceKey);
+      return stored === null ? true : stored === '1';
+    } catch {
+      return true;
+    }
+  }, [bannerPreferenceKey]);
+  const isBannerHidden =
+    hasUserLayout &&
+    (bannerOverride?.key === bannerPreferenceKey
+      ? bannerOverride.hidden
+      : savedBannerHidden);
   useAdScript(showAds);
+
+  useEffect(() => {
+    if (!isAuthReady) return;
+    const nextUserName = isLoggedIn ? currentUserName : null;
+    setCachedUserName(nextUserName);
+    try {
+      if (nextUserName) {
+        localStorage.setItem(LAST_HOME_USER_KEY, nextUserName);
+      } else {
+        localStorage.removeItem(LAST_HOME_USER_KEY);
+      }
+    } catch {
+      // Rendering and auth continue normally if storage is unavailable.
+    }
+  }, [isAuthReady, isLoggedIn, currentUserName]);
 
   const { data: systemMessageData } = useGetSystemMessageQuery(undefined, {
     skip: !isLoggedIn
@@ -54,29 +105,9 @@ const Index = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if (!isLoggedIn) {
-      // Logged out users should always see the banner.
-      setIsBannerHidden(false);
-      return;
-    }
-
-    if (!bannerPreferenceKey) {
-      setIsBannerHidden(false);
-      return;
-    }
-
-    try {
-      const stored = localStorage.getItem(bannerPreferenceKey);
-      setIsBannerHidden(stored === null ? true : stored === '1');
-    } catch {
-      setIsBannerHidden(true);
-    }
-  }, [isLoggedIn, bannerPreferenceKey]);
-
   const handleToggleBanner = () => {
     const nextHiddenValue = !isBannerHidden;
-    setIsBannerHidden(nextHiddenValue);
+    setBannerOverride({ key: bannerPreferenceKey, hidden: nextHiddenValue });
 
     if (!bannerPreferenceKey) return;
 
@@ -87,14 +118,61 @@ const Index = () => {
     }
   };
 
+  const gameGrid = (
+    <div className={styles.gridWrapper}>
+      <div
+        className={`${styles.grid}${
+          !hasUserLayout ? ` ${styles.gridLoggedOut}` : ''
+        }`}
+      >
+        {(hasUserLayout || DEV_FAKE_MODE) && (
+          <div className={styles.gameListContainer}>
+            {isAuthReady ? (
+              <GameList />
+            ) : (
+              <div
+                className={`${styles.panelPlaceholder} ${styles.gameListPlaceholder}`}
+              >
+                <LoadingSkeleton label={t('GAME_LIST.LOADING')} />
+              </div>
+            )}
+          </div>
+        )}
+        <div className={styles.createGameContainer}>
+          {isAuthReady ? (
+            <UnifiedGamePanel />
+          ) : (
+            <div
+              className={`${styles.panelPlaceholder}${
+                hasUserLayout ? ` ${styles.userPanelPlaceholder}` : ''
+              }`}
+            >
+              <h3>
+                {t(
+                  hasUserLayout
+                    ? 'UNITED_GAME_PANEL.JOIN_CREATE'
+                    : 'UNITED_GAME_PANEL.GUEST_PRIVATE_TITLE'
+                )}
+              </h3>
+              <LoadingSkeleton
+                label={t('BASE.LOADING')}
+                rows={hasUserLayout ? 6 : 3}
+              />
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <main className={styles.main}>
       <div
         className={`${styles.bannerSection}${
-          isLoggedIn && isBannerHidden ? ` ${styles.bannerSectionCompact}` : ''
+          isBannerHidden ? ` ${styles.bannerSectionCompact}` : ''
         }`}
       >
-        {isLoggedIn && (
+        {hasUserLayout && (
           <button
             type="button"
             className={styles.bannerToggle}
@@ -118,12 +196,14 @@ const Index = () => {
         <div className={styles.bannerOverlay} />
         <div
           className={`${styles.bannerContent}${
-            !isAuthLoading && !isLoggedIn ? ` ${styles.bannerContentGuest}` : ''
+            !hasUserLayout ? ` ${styles.bannerContentGuest}` : ''
           }`}
         >
           {!isBannerHidden && (
             <img
               src={TalisharLogo}
+              width={1080}
+              height={483}
               alt={t('HOME.HERO.LOGO_ALT')}
               className={styles.heroLogo}
             />
@@ -132,63 +212,46 @@ const Index = () => {
             <>
               <h1 className={styles.heroTitle}>{t('HOME.HERO.TITLE')}</h1>
               <p className={styles.heroSubtitle}>{t('HOME.HERO.SUBTITLE')}</p>
-              {!isAuthLoading && (
-                <div className={styles.heroCta}>
-                  {isLoggedIn ? (
-                    <>
-                      <a href="#games" className={styles.heroCtaPrimary}>
-                        {t('HOME.HERO.JOIN_CTA')}
-                      </a>
-                      {!isSupporter && (
-                        <a
-                          href={TALISHAR_METAFY_URL}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={styles.heroCtaSecondary}
-                        >
-                          {t('HOME.HERO.SUPPORT_CTA')}
-                        </a>
-                      )}
-                    </>
-                  ) : (
-                    <>
-                      <Link to="/user/login" className={styles.heroCtaPrimary}>
-                        {t('HOME.HERO.LOGIN_CTA')}
-                      </Link>
-                      <Link
-                        to="/user/login/signup"
+              <div className={styles.heroCta}>
+                {hasUserLayout ? (
+                  <>
+                    <a href="#games" className={styles.heroCtaPrimary}>
+                      {t('HOME.HERO.JOIN_CTA')}
+                    </a>
+                    {!isSupporter && (
+                      <a
+                        href={TALISHAR_METAFY_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className={styles.heroCtaSecondary}
                       >
-                        {t('HOME.HERO.SIGN_UP_CTA')}
-                      </Link>
-                    </>
-                  )}
-                </div>
-              )}
+                        {t('HOME.HERO.SUPPORT_CTA')}
+                      </a>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <Link to="/user/login" className={styles.heroCtaPrimary}>
+                      {t('HOME.HERO.LOGIN_CTA')}
+                    </Link>
+                    <Link
+                      to="/user/login/signup"
+                      className={styles.heroCtaSecondary}
+                    >
+                      {t('HOME.HERO.SIGN_UP_CTA')}
+                    </Link>
+                  </>
+                )}
+              </div>
             </>
           )}
         </div>
       </div>
       <div id="games" className={styles.contentSection}>
-        {!isAuthLoading && (
-          <QuickJoinProvider>
-            <div className={styles.gridWrapper}>
-              <div
-                className={`${styles.grid}${
-                  !isLoggedIn ? ` ${styles.gridLoggedOut}` : ''
-                }`}
-              >
-                {(isLoggedIn || DEV_FAKE_MODE) && (
-                  <div className={styles.gameListContainer}>
-                    <GameList />
-                  </div>
-                )}
-                <div className={styles.createGameContainer}>
-                  <UnifiedGamePanel />
-                </div>
-              </div>
-            </div>
-          </QuickJoinProvider>
+        {isAuthReady ? (
+          <QuickJoinProvider>{gameGrid}</QuickJoinProvider>
+        ) : (
+          gameGrid
         )}
         <section className={styles.newsContainer}>
           <News />

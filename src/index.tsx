@@ -1,4 +1,4 @@
-import { StrictMode } from 'react';
+import React, { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { store } from './app/Store';
@@ -17,6 +17,19 @@ import { attemptAssetRecovery } from 'utils/assetRecovery';
 import { installVideoAdTagConfig } from 'utils/videoAds';
 
 import './i18n';
+import { useTranslation } from 'react-i18next';
+import LoadingScreen from 'components/LoadingScreen/LoadingScreen';
+
+const TranslatedApp = () => {
+  const { ready } = useTranslation();
+  // Locale files are asynchronous; do not paint translation keys and then
+  // resize every label when the selected language arrives.
+  return ready ? (
+    <RouterProvider router={router} />
+  ) : (
+    <LoadingScreen message="Loading…" showTrivia={false} />
+  );
+};
 
 window.addEventListener('vite:preloadError', (event) => {
   if (attemptAssetRecovery()) event.preventDefault();
@@ -34,7 +47,7 @@ root.render(
     <CookiesProvider cookies={appCookies}>
       <ThemeProvider>
         <Provider store={store}>
-          <RouterProvider router={router} />
+          <TranslatedApp />
         </Provider>
       </ThemeProvider>
     </CookiesProvider>
