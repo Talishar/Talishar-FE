@@ -15,7 +15,10 @@ export const WeaponRZone = React.memo((prop: Displayrow) => {
   const destroy = useEquipDestroy('RWep', isPlayer);
 
   return (
-    <div className={styles.weaponRZone}>
+    <div
+      className={styles.weaponRZone}
+      data-fan-unhover-anchor={isPlayer ? '' : undefined}
+    >
       <CardDisplay card={cardToDisplay} isPlayer={isPlayer} />
       {destroy && (
         <DestroyAnimation

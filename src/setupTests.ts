@@ -72,7 +72,7 @@ export const restHandlers = [
     );
   }),
   rest.get(
-    'http://127.0.0.1:5173/api/live/APIs/GetGameList.php',
+    'http://127.0.0.1:5173/api/live/APIs/GetGameListV2.php',
     (req, res, ctx) => {
       return res(
         ctx.status(200),
