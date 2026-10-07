@@ -153,6 +153,7 @@ type CardPopUpProps = {
   tapPreviewKey?: string;
   hoverPreviewDelayMs?: number;
   disableHoverPreview?: boolean;
+  onTouchPreview?: () => void;
 };
 
 export default function CardPopUp({
@@ -169,7 +170,8 @@ export default function CardPopUp({
   previewYOffset = 0,
   tapPreviewKey,
   hoverPreviewDelayMs = 0,
-  disableHoverPreview = false
+  disableHoverPreview = false,
+  onTouchPreview
 }: CardPopUpProps) {
   const ref = useRef<HTMLDivElement>(null);
   const disableCardTilt = useCookieString('disableCardTilt');
@@ -322,8 +324,13 @@ export default function CardPopUp({
     touchOrigin.current = touch ? { x: touch.clientX, y: touch.clientY } : null;
     longPressTimer.current = setTimeout(() => {
       longPressTimer.current = null;
-      showPreview('mobile-modal');
       suppressNextClick.current = true;
+      if (onTouchPreview) {
+        if (cookieEnabled) setTapToPreviewSelectedCardKey(selectionKey);
+        onTouchPreview();
+        return;
+      }
+      showPreview('mobile-modal');
     }, LONG_PRESS_DELAY);
   };
 
@@ -381,7 +388,8 @@ export default function CardPopUp({
       });
       setTapToPreviewSelectedCardKey(nextSelectedKey);
       if (action === 'preview') {
-        showPreview();
+        if (onTouchPreview) onTouchPreview();
+        else showPreview();
         return;
       }
       onClick?.();

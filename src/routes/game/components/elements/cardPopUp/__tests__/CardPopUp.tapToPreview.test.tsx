@@ -40,12 +40,14 @@ const renderBoardCard = ({
   cookieEnabled,
   cardNumber = 'WTR076',
   onClick,
-  disableTapToPreview = false
+  disableTapToPreview = false,
+  onTouchPreview
 }: {
   cookieEnabled: boolean;
   cardNumber?: string;
   onClick?: () => void;
   disableTapToPreview?: boolean;
+  onTouchPreview?: () => void;
 }) => {
   document.cookie = `${TAP_TO_PREVIEW_PLAY_COOKIE}=${
     cookieEnabled ? 'true' : 'false'
@@ -56,6 +58,7 @@ const renderBoardCard = ({
         cardNumber={cardNumber}
         onClick={onClick}
         disableTapToPreview={disableTapToPreview}
+        onTouchPreview={onTouchPreview}
       >
         <button type="button" data-testid="board-card" />
       </CardPopUp>
@@ -134,6 +137,42 @@ describe('CardPopUp board tap to preview', () => {
     });
     expect(onClick).not.toHaveBeenCalled();
     vi.useRealTimers();
+  });
+
+  it('hands a touch long-press to onTouchPreview instead of the modal', () => {
+    vi.useFakeTimers();
+    const onClick = vi.fn();
+    const onTouchPreview = vi.fn();
+    renderBoardCard({ cookieEnabled: true, onClick, onTouchPreview });
+    const card = screen.getByTestId('board-card');
+
+    fireEvent.touchStart(card, { touches: [{ clientX: 10, clientY: 10 }] });
+    act(() => vi.advanceTimersByTime(500));
+    fireEvent.touchEnd(card);
+    fireEvent.click(card);
+
+    expect(onTouchPreview).toHaveBeenCalledTimes(1);
+    expect(getCardPreview().popupOn).not.toBe(true);
+    expect(onClick).not.toHaveBeenCalled();
+    vi.useRealTimers();
+
+    tapCard(card);
+    expect(onClick).toHaveBeenCalledTimes(1);
+  });
+
+  it('hands a first tap to onTouchPreview and plays on the second', () => {
+    const onClick = vi.fn();
+    const onTouchPreview = vi.fn();
+    renderBoardCard({ cookieEnabled: true, onClick, onTouchPreview });
+    const card = screen.getByTestId('board-card');
+
+    tapCard(card);
+    expect(onTouchPreview).toHaveBeenCalledTimes(1);
+    expect(getCardPreview().popupOn).not.toBe(true);
+    expect(onClick).not.toHaveBeenCalled();
+
+    tapCard(card);
+    expect(onClick).toHaveBeenCalledTimes(1);
   });
 
   it('tap board card → sticky preview; second tap runs onClick', async () => {
