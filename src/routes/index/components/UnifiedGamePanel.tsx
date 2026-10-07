@@ -81,15 +81,17 @@ const UnifiedGamePanel = ({ userLayout }: { userLayout?: boolean }) => {
         </button>
       </div>
 
+      {canViewRustCounters &&
+        (isExpanded || (!isSupporter && rustCounters > 0)) && (
+          <RustCounterPanel
+            rustCounters={rustCounters}
+            isSupporter={isSupporter}
+            onFallbackAdComplete={() => clearRustCounters()}
+          />
+        )}
+
       {isExpanded && (
         <div className={styles.content}>
-          {canViewRustCounters && (
-            <RustCounterPanel
-              rustCounters={rustCounters}
-              isSupporter={isSupporter}
-              onFallbackAdComplete={() => clearRustCounters()}
-            />
-          )}
           <div className={styles.quickJoinSection}>
             <QuickJoinPanel embedded userLayout={userLayout} />
           </div>

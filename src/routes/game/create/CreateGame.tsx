@@ -831,6 +831,16 @@ const CreateGame = ({
           <FaExclamationCircle /> Warning - SOON! an update will be pushed to the live servers. The games in progress will crash and new games will be required.
           </p> 
         */}
+        {showsRustPanel &&
+          (useUnifiedPanelStyles ||
+            isExpanded ||
+            (!isSupporter && rustCounters > 0)) && (
+            <RustCounterPanel
+              rustCounters={rustCounters}
+              isSupporter={isSupporter}
+              onFallbackAdComplete={() => clearRustCounters()}
+            />
+          )}
         {(useUnifiedPanelStyles || isExpanded) && (
           <form
             className={
@@ -838,13 +848,6 @@ const CreateGame = ({
             }
             onSubmit={handleSubmit(onSubmit, onInvalid)}
           >
-            {showsRustPanel && (
-              <RustCounterPanel
-                rustCounters={rustCounters}
-                isSupporter={isSupporter}
-                onFallbackAdComplete={() => clearRustCounters()}
-              />
-            )}
             <div
               className={
                 useUnifiedPanelStyles
