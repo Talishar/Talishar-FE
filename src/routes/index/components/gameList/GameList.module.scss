@@ -248,11 +248,11 @@
   justify-content: center;
   box-sizing: border-box;
   flex: 0 0 auto;
-  width: calc(4ch + 0.6em);
-  height: 1.4em;
-  padding: 0 0.3em;
+  min-width: 1.8em;
+  height: 1.8em;
+  padding: 0 0.2em;
   background: rgba(var(--theme-on-surface-rgb), 0.12);
-  border-radius: 10px;
+  border-radius: 999px;
   font-size: 0.78rem;
   font-weight: 700;
   line-height: 1;
