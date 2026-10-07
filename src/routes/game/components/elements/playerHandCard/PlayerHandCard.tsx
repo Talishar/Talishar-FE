@@ -203,8 +203,6 @@ export const PlayerHandCard = React.memo(
     const cancelledRef = useRef(false);
     const dragPlayStateRef = useRef<DragPlayState>('idle');
     const [isAboveLine, setIsAboveLine] = useState(false);
-    const prevActionRef = useRef(card?.action);
-    const [playableFlash, setPlayableFlash] = useState(0);
 
     // Screen rect captured when dragging starts. While dragging, the card is pinned
     // to this rect via position:fixed so hand-reorder logic can freely shuffle the
@@ -233,14 +231,6 @@ export const PlayerHandCard = React.memo(
     const canQueuePlay = useAppSelector(
       (state) => !!card && canQueueHandPlay(state.game, card)
     );
-
-    useEffect(() => {
-      const wasPlayable = !!prevActionRef.current;
-      prevActionRef.current = card?.action;
-      if (!wasPlayable && card?.action) {
-        setPlayableFlash((count) => count + 1);
-      }
-    }, [card?.action]);
 
     useEffect(() => {
       if (!isDragging || !isFanned) return;
@@ -425,11 +415,9 @@ export const PlayerHandCard = React.memo(
           [styles.border8]: card?.borderColor == '8',
           [styles.border9]: card?.borderColor == '9',
           [styles.border10]: card?.borderColor == '10',
-          [styles.unplayable]: dimWhenUnplayable && !card?.action,
-          [styles.playableFlashA]: playableFlash > 0 && playableFlash % 2 === 1,
-          [styles.playableFlashB]: playableFlash > 0 && playableFlash % 2 === 0
+          [styles.unplayable]: dimWhenUnplayable && !card?.action
         }),
-      [card?.borderColor, card?.action, dimWhenUnplayable, playableFlash]
+      [card?.borderColor, card?.action, dimWhenUnplayable]
     );
 
     if (card === undefined) {
