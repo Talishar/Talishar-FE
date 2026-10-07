@@ -126,9 +126,11 @@ const GameList = () => {
 
   // Initial stuff to allow the lang to change
   const { t } = useTranslation();
-  const { isLoggedIn, isLoading: isAuthLoading } = useAuth();
+  const { isLoggedIn, isLoading: isAuthLoading, currentUserName } = useAuth();
+  const isAuthPending = isAuthLoading || (isLoggedIn && !currentUserName);
   const devFakeMode = DEV_FAKE_MODE;
-  const canAccessPublicGames = devFakeMode || (!isAuthLoading && isLoggedIn);
+  const showPublicGames = devFakeMode || isAuthLoading || isLoggedIn;
+  const canAccessPublicGames = devFakeMode || (!isAuthPending && isLoggedIn);
 
   const {
     data: apiData,
@@ -141,7 +143,7 @@ const GameList = () => {
   });
   // In fake mode the list renders from local data, so a missing or failing
   // backend must not blank it out.
-  const isLoading = devFakeMode ? false : isQueryLoading;
+  const isLoading = devFakeMode ? false : isAuthPending || isQueryLoading;
   const error = devFakeMode ? undefined : queryError;
 
   const DEV_FAKE_OPEN: IOpenGame[] = useMemo(
@@ -699,7 +701,7 @@ const GameList = () => {
   return (
     <article
       className={`${styles.gameList}${
-        !isLoggedIn ? ` ${styles.gameListLoggedOut}` : ''
+        !showPublicGames ? ` ${styles.gameListLoggedOut}` : ''
       }`}
     >
       {/* Sticky header - always visible, never scrolls */}
@@ -718,11 +720,11 @@ const GameList = () => {
           <h3 className={styles.title}>
             {t('GAME_LIST.OPEN_GAMES', 'Open Games')}
           </h3>
-          {canAccessPublicGames && (
+          {showPublicGames && (
             <button
               onClick={handleReloadClick}
               className={styles.reloadButton}
-              disabled={isFetching || isRateLimited}
+              disabled={!canAccessPublicGames || isFetching || isRateLimited}
               title={t('GAME_LIST.MANUAL_REFRESH')}
             >
               {t('GAME_LIST.REFRESH')}
@@ -762,7 +764,7 @@ const GameList = () => {
             </div>
           </div>
         )}
-        {!error && canAccessPublicGames && (
+        {!error && showPublicGames && (
           <>
             <div className={styles.tabs}>
               <button
@@ -885,7 +887,7 @@ const GameList = () => {
       </div>
 
       {/* Scrollable game list content */}
-      {isLoading && !error && canAccessPublicGames && (
+      {isLoading && !error && showPublicGames && (
         <div className={styles.scrollableContent}>
           <LoadingSkeleton label={t('GAME_LIST.LOADING')} />
         </div>

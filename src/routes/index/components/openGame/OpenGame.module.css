@@ -40,20 +40,27 @@
 }
 
 .buttonWrapper {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 0.4em;
   flex-shrink: 0;
   align-self: center;
 
-  &[aria-busy='true'] {
-    flex-direction: row-reverse;
-  }
-
   &[aria-busy='true']::before {
+    position: absolute;
+    left: 0.6em;
+    top: calc(50% - 0.6em);
+    z-index: 1;
     width: 1.2em;
     height: 1.2em;
     flex-shrink: 0;
+    margin: 0;
+    pointer-events: none;
+  }
+
+  &[aria-busy='true'] .joinHeroIcon {
+    opacity: 0.25;
   }
 }
 
@@ -102,15 +109,6 @@
   line-height: 1.15;
   padding: 0.3em 0.65em;
   gap: 0.05em;
-}
-
-.joinMicroLabel {
-  font-size: 0.58em;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  opacity: 0.55;
-  font-weight: 600;
-  white-space: nowrap;
 }
 
 .descriptionBlock {

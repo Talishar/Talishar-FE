@@ -4,6 +4,7 @@
 }
 
 .selectTrigger {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -13,9 +14,24 @@
   border: 1px solid var(--theme-form-border, #797c80);
   border-radius: 0.5rem;
   cursor: pointer;
-  min-height: 2.5rem;
+  min-height: calc(3rem + 2px);
+  gap: 0.75rem;
   transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
   margin-bottom: 0;
+}
+
+/* Pico's in-flow spinner would move the label as busy changes. Replace the
+   arrow inside its existing space instead. */
+.selectTrigger[aria-busy='true']::before {
+  position: absolute;
+  right: 0.5rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  margin: 0;
+}
+
+.selectTrigger[aria-busy='true'] .arrow {
+  visibility: hidden;
 }
 
 .selectTrigger:hover {
@@ -31,7 +47,10 @@
 
 .selectTrigger.open {
   border-color: var(--theme-primary, #d4af37);
-  background: var(--theme-form-active, color-mix(in srgb, var(--theme-primary) 10%, transparent));
+  background: var(
+    --theme-form-active,
+    color-mix(in srgb, var(--theme-primary) 10%, transparent)
+  );
 }
 
 .selectTrigger.invalid {
@@ -47,6 +66,20 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.selectedOption > span,
+.placeholder {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.placeholder {
   flex: 1;
 }
 
@@ -104,22 +137,34 @@
 }
 
 .option:hover {
-  background-color: var(--theme-form-active, color-mix(in srgb, var(--theme-primary) 10%, transparent));
+  background-color: var(
+    --theme-form-active,
+    color-mix(in srgb, var(--theme-primary) 10%, transparent)
+  );
 }
 
 .option:focus {
   outline: none;
-  background-color: var(--theme-form-active, color-mix(in srgb, var(--theme-primary) 10%, transparent));
+  background-color: var(
+    --theme-form-active,
+    color-mix(in srgb, var(--theme-primary) 10%, transparent)
+  );
 }
 
 .option.selected {
-  background-color: var(--theme-primary-focus, color-mix(in srgb, var(--theme-primary) 20%, transparent));
+  background-color: var(
+    --theme-primary-focus,
+    color-mix(in srgb, var(--theme-primary) 20%, transparent)
+  );
   color: var(--theme-primary, #d4af37);
   font-weight: 500;
 }
 
 .option.selected:hover {
-  background-color: var(--theme-primary-focus, color-mix(in srgb, var(--theme-primary) 30%, transparent));
+  background-color: var(
+    --theme-primary-focus,
+    color-mix(in srgb, var(--theme-primary) 30%, transparent)
+  );
 }
 
 /* Scrollbar styling */

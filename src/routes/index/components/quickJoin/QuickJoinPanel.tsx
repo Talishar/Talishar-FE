@@ -14,9 +14,10 @@ import LoadingSkeleton from 'components/LoadingSkeleton/LoadingSkeleton';
 
 interface Props {
   embedded?: boolean;
+  userLayout?: boolean;
 }
 
-const QuickJoinPanel = ({ embedded = false }: Props) => {
+const QuickJoinPanel = ({ embedded = false, userLayout }: Props) => {
   const { isLoggedIn } = useAuth();
   const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(() => {
@@ -75,7 +76,7 @@ const QuickJoinPanel = ({ embedded = false }: Props) => {
     }
   }, [importDeckError]);
 
-  if (!isLoggedIn) return null;
+  if (!(userLayout ?? isLoggedIn)) return null;
 
   const talisharContent = (
     <>

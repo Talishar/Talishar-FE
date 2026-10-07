@@ -4,23 +4,6 @@
   background: var(--theme-background);
 }
 
-.panelPlaceholder {
-  padding: 1.75rem 1.25rem;
-  min-height: 20rem;
-}
-
-.userPanelPlaceholder {
-  min-height: 550px;
-}
-
-@media (max-width: 768px) {
-  .gameListPlaceholder {
-    height: clamp(360px, 60svh, 560px);
-    min-height: 360px;
-    overflow: hidden;
-  }
-}
-
 .bannerSectionCompact .bannerContent {
   padding: 120px 0 0;
 }

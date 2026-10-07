@@ -78,9 +78,9 @@ it('renders the cached layout while auth loads, then refreshes the cache', () =>
   const view = renderHome();
   expect(screen.getByText('News')).toBeInTheDocument();
   expect(screen.getByRole('button', { pressed: true })).toBeInTheDocument();
-  expect(screen.getAllByRole('status')).toHaveLength(2);
-  expect(screen.queryByText('Game setup')).not.toBeInTheDocument();
-  expect(screen.queryByText('Games')).not.toBeInTheDocument();
+  const setupPanel = screen.getByText('Game setup');
+  const gameList = screen.getByText('Games');
+  expect(screen.queryByRole('status')).not.toBeInTheDocument();
   state.auth.isLoading = false;
   state.auth.isLoggedIn = true;
   state.auth.currentUserName = 'Player';
@@ -91,8 +91,8 @@ it('renders the cached layout while auth loads, then refreshes the cache', () =>
     </MemoryRouter>
   );
   expect(screen.queryByRole('status')).not.toBeInTheDocument();
-  expect(screen.getByText('Game setup')).toBeInTheDocument();
-  expect(screen.getByText('Games')).toBeInTheDocument();
+  expect(screen.getByText('Game setup')).toBe(setupPanel);
+  expect(screen.getByText('Games')).toBe(gameList);
   expect(screen.queryByRole('img')).not.toBeInTheDocument();
   expect(localStorage.getItem('talishar_home_last_user_v1')).toBe('Player');
 });
@@ -121,7 +121,8 @@ it('renders the guest shell immediately when no layout is cached', () => {
   expect(
     screen.getByRole('link', { name: 'Log in to play' })
   ).toBeInTheDocument();
-  expect(screen.getAllByRole('status')).toHaveLength(1);
+  expect(screen.getByText('Game setup')).toBeInTheDocument();
+  expect(screen.queryByRole('status')).not.toBeInTheDocument();
 });
 
 it('uses the remembered expanded banner before auth and preserves a toggle through resolution', () => {

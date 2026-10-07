@@ -39,6 +39,28 @@
   flex-direction: column;
 }
 
+.unavailable {
+  visibility: hidden;
+}
+
+.loadingStatus {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+.textSkeleton {
+  display: block;
+  width: 80%;
+  height: 0.75em;
+  margin-top: 0.25em;
+  border-radius: 5px;
+  background: rgba(var(--theme-on-surface-rgb), 0.1);
+  animation: contentPulse 1.5s ease-in-out infinite;
+}
+
 .rightColumn {
   display: flex;
   flex-direction: column;
@@ -46,6 +68,7 @@
 }
 
 .featuredEmbed {
+  position: relative;
   width: 100%;
   flex: 0 0 auto;
   min-height: 0;
@@ -67,12 +90,15 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .mediaSkeleton {
+  .mediaSkeleton,
+  .textSkeleton {
     animation: none;
   }
 }
 
 .videoFrame {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   border: none;
@@ -86,7 +112,8 @@
 }
 
 .guideCard {
-  position: relative;
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   min-height: 0;
@@ -144,12 +171,25 @@
   color: var(--theme-text-secondary);
   margin: 0;
   line-height: 1.35;
+  height: 2lh;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 .featuredMeta {
   font-size: 0.87rem;
   color: #777;
   margin: 0;
+  line-height: 1.5;
+  height: 2lh;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 .metaAuthor {
@@ -179,7 +219,9 @@
 }
 
 .secondaryEmbed {
+  position: relative;
   width: 100%;
+  flex: 0 0 auto;
   aspect-ratio: 16 / 9;
   background: #000;
   border-radius: 10px;
@@ -199,6 +241,7 @@
   color: var(--theme-text-secondary);
   font-weight: 500;
   line-height: 1.35;
+  height: 2lh;
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -210,6 +253,13 @@
   margin: 0;
   font-size: 0.78rem;
   color: #777;
+  line-height: 1.5;
+  height: 2lh;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 .communityAdSection {
@@ -245,6 +295,7 @@
   transition: background 0.18s ease, border-color 0.18s ease;
   box-sizing: border-box;
   width: 100%;
+  height: 5rem;
 }
 
 .videoListItem:hover {
@@ -299,6 +350,7 @@
   font-weight: 500;
   color: var(--theme-text-secondary);
   line-height: 1.3;
+  height: 2lh;
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -394,6 +446,7 @@
   display: block;
   width: 100%;
   max-width: 970px;
+  min-height: 250px;
 }
 
 .mobileAd {

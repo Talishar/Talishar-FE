@@ -67,20 +67,32 @@ import { formatDeckLabel } from 'utils/formatUtils';
 
 type CreateGameProps = {
   inUnifiedPanel?: boolean;
+  userLayout?: boolean;
 };
 
-const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
+const CreateGame = ({
+  inUnifiedPanel = false,
+  userLayout
+}: CreateGameProps) => {
   const quickJoinCtx = useQuickJoinOptional();
-  const { isLoggedIn, isLoading: isAuthLoading } = useAuth();
+  const {
+    isLoggedIn,
+    isLoading: isAuthLoading,
+    currentUserName: authUserName
+  } = useAuth();
+  const isAuthPending = isAuthLoading || (isLoggedIn && !authUserName);
   const { isSupporter } = useSupporterStatus();
-  // True when rendered inside the unified main-menu panel (logged-in users only)
-  const isEmbedded = quickJoinCtx !== null && isLoggedIn;
+  const hasUserLayout = userLayout ?? isLoggedIn;
+  // Keep the cached user form mounted while actual authentication resolves.
+  const isEmbedded = quickJoinCtx !== null && hasUserLayout;
   const useUnifiedPanelStyles = isEmbedded || inUnifiedPanel;
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { data, isLoading, isSuccess } = useGetFavoriteDecksQuery(undefined);
+  const { data, isLoading, isSuccess } = useGetFavoriteDecksQuery(undefined, {
+    skip: isAuthPending || !isLoggedIn
+  });
   const { data: masteryData } = useGetHeroMasteryQuery(undefined, {
-    skip: !isLoggedIn || isEmbedded,
+    skip: isAuthPending || !isLoggedIn || isEmbedded,
     refetchOnMountOrArgChange: true
   });
   const [searchParams] = useSearchParams();
@@ -204,14 +216,14 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
       deckTestMode: false,
       format:
         searchParams.get('format') ??
-        (isLoggedIn
+        (hasUserLayout
           ? data?.lastFormat !== undefined
             ? data.lastFormat
             : GAME_FORMAT.CLASSIC_CONSTRUCTED
           : GAME_FORMAT.OPEN_CC),
       visibility:
         searchParams.get('visibility') ??
-        (isLoggedIn
+        (hasUserLayout
           ? data?.lastVisibility !== undefined
             ? data.lastVisibility == 1
               ? GAME_VISIBILITY.PUBLIC
@@ -231,7 +243,7 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
       gameDescription,
       deckTestDeck: AI_DECK.DUMMY
     };
-  }, [isSuccess, isLoggedIn]);
+  }, [isSuccess, hasUserLayout]);
 
   const [selectedFormat, setSelectedFormat] = React.useState(
     initialValues.format
@@ -671,6 +683,7 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
   const onSubmit: SubmitHandler<CreateGameAPI> = async (
     values: CreateGameAPI
   ) => {
+    if (isAuthPending) return;
     // Guard against implicit form submission (e.g. Enter key) while locked
     if (isRustLocked) {
       requestRustPanelAttention();
@@ -848,7 +861,7 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
               )}
               {/* Deck source tabs - standalone logged-in non-precon only */}
               {!isEmbedded &&
-                isLoggedIn &&
+                hasUserLayout &&
                 !isPreconFormat(formFormat || selectedFormat) && (
                   <div className={styles.deckTabBar} role="tablist">
                     <button
@@ -895,7 +908,7 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                 )}
               {/* FaB Bazaar deck picker (standalone) */}
               {!isEmbedded &&
-                isLoggedIn &&
+                hasUserLayout &&
                 standaloneDeckSource === 'bazaar' &&
                 !isPreconFormat(formFormat || selectedFormat) &&
                 (metafyHash ? (
@@ -924,7 +937,7 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                   </p>
                 ))}
               {!isEmbedded &&
-                isLoggedIn &&
+                hasUserLayout &&
                 standaloneDeckSource === 'talishar' &&
                 !isPreconFormat(formFormat || selectedFormat) && (
                   <label>
@@ -970,7 +983,7 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                 />
               )}
               {!isEmbedded &&
-                isLoggedIn &&
+                hasUserLayout &&
                 selectedMasteryHero &&
                 (() => {
                   const mastery =
@@ -1053,7 +1066,7 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                       )}
                     />
                   </label>
-                  {isLoggedIn && !isEmbedded && (
+                  {hasUserLayout && !isEmbedded && (
                     <label>
                       <input
                         type="checkbox"
@@ -1067,7 +1080,7 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                 </fieldset>
               )}
               <label
-                className={!isLoggedIn ? styles.guestHiddenField : undefined}
+                className={!hasUserLayout ? styles.guestHiddenField : undefined}
               >
                 {t('MENU.CREATE_GAME.GAME_DESCRIPTION')}
                 <select
@@ -1401,7 +1414,7 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                 </select>
               </label>
               <fieldset>
-                {isLoggedIn && (
+                {hasUserLayout && (
                   <label>
                     {t('MENU.CREATE_GAME.VISIBILITY')}
                     <select
@@ -1437,7 +1450,7 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                   />
                   {t('MENU.CREATE_GAME.SINGLE_PLAYER')}
                 </label>
-                {isLoggedIn && deckTestMode && (
+                {hasUserLayout && deckTestMode && (
                   <label>
                     {t('MENU.CREATE_GAME.AI_DECK')}
                     <ImageSelect
@@ -1462,7 +1475,7 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                 isEmbedded && styles.embeddedSubmitButton,
                 isRustLocked && styles.submitLocked
               )}
-              disabled={isSubmitting}
+              disabled={isSubmitting || isAuthPending}
               aria-disabled={isRustLocked || undefined}
               aria-busy={isSubmitting}
               onClick={
@@ -1476,7 +1489,7 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
             >
               {isSubmitting
                 ? t('GAME_LOBBY.SUBMITTING')
-                : isLoggedIn
+                : hasUserLayout
                 ? t('MENU.CREATE_GAME.TITLE')
                 : t('MENU.CREATE_GAME.PRIVATE_TITLE')}
             </button>

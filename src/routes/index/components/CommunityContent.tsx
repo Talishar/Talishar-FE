@@ -8,7 +8,6 @@ import { Trans, useTranslation } from 'react-i18next';
 import { AdUnit } from 'components/ads/AdUnit';
 import RemoveAdsLink from 'components/RemoveAdsLink/RemoveAdsLink';
 import { TALISHAR_DISCORD_URL } from 'constants/socialLinks';
-import LoadingSkeleton from 'components/LoadingSkeleton/LoadingSkeleton';
 
 interface CommunityContentProps {
   showAds?: boolean;
@@ -121,58 +120,13 @@ const CommunityContent: React.FC<CommunityContentProps> = ({
     return () => clearInterval(interval);
   }, []);
 
-  if (loading) {
-    return (
-      <section className={styles.communityContentContainer}>
-        <div className={styles.content}>
-          <div className={styles.sectionHeader}>
-            <h2>{t('COMMUNITY_CONTENT.TITLE')}</h2>
-            <p className={styles.subtitle}>{t('COMMUNITY_CONTENT.DISCOVER')}</p>
-          </div>
-          <div className={styles.heroLayout}>
-            <div className={styles.featuredSection}>
-              <div
-                className={`${styles.featuredEmbed} ${styles.mediaSkeleton}`}
-              />
-              <div className={styles.featuredInfo}>
-                <LoadingSkeleton
-                  label={t('COMMUNITY_CONTENT.LOADING')}
-                  rows={1}
-                />
-              </div>
-            </div>
-            <div className={styles.rightColumn}>
-              <div
-                className={`${styles.secondaryEmbed} ${styles.mediaSkeleton}`}
-              />
-              <LoadingSkeleton
-                label={t('COMMUNITY_CONTENT.LOADING')}
-                rows={1}
-              />
-            </div>
-          </div>
-          <LoadingSkeleton label={t('COMMUNITY_CONTENT.LOADING')} rows={5} />
-        </div>
-      </section>
-    );
-  }
-
-  if (!videos || videos.length === 0) {
-    return (
-      <section className={styles.communityContentContainer}>
-        <div className={styles.content}>
-          <h2>{t('COMMUNITY_CONTENT.TITLE')}</h2>
-        </div>
-      </section>
-    );
-  }
-
-  const featured = videos[selectedIndex];
-  const secondaryIndex = (selectedIndex + 1) % videos.length;
+  const featuredIndex = selectedIndex < videos.length ? selectedIndex : 0;
+  const featured = videos[featuredIndex];
+  const secondaryIndex = (featuredIndex + 1) % videos.length;
   const secondary = videos.length > 1 ? videos[secondaryIndex] : null;
   const listVideos = videos
     .map((v, i) => ({ video: v, idx: i }))
-    .filter(({ idx }) => idx !== selectedIndex && idx !== secondaryIndex)
+    .filter(({ idx }) => idx !== featuredIndex && idx !== secondaryIndex)
     .slice(0, 5);
 
   const renderEmbed = (video: ContentVideo) => {
@@ -216,9 +170,69 @@ const CommunityContent: React.FC<CommunityContentProps> = ({
     );
   };
 
+  const skeletonText = (
+    <span className={styles.textSkeleton} aria-hidden="true" />
+  );
+  const renderCard = (
+    video: ContentVideo | undefined | null,
+    primary: boolean
+  ) => (
+    <div
+      className={`${
+        primary ? styles.featuredSection : styles.secondarySection
+      }${!loading && !video ? ` ${styles.unavailable}` : ''}`}
+      data-testid={primary ? 'community-featured' : 'community-secondary'}
+    >
+      <div
+        className={`${primary ? styles.featuredEmbed : styles.secondaryEmbed}${
+          loading ? ` ${styles.mediaSkeleton}` : ''
+        }`}
+      >
+        {video && renderEmbed(video)}
+      </div>
+      <div className={primary ? styles.featuredInfo : styles.secondaryInfo}>
+        {primary ? (
+          <h3
+            className={styles.featuredTitle}
+            title={video ? cleanTitle(video.title) : undefined}
+          >
+            {video ? cleanTitle(video.title) : skeletonText}
+          </h3>
+        ) : (
+          <p
+            className={styles.secondaryTitle}
+            title={video ? cleanTitle(video.title) : undefined}
+          >
+            {video ? cleanTitle(video.title) : skeletonText}
+          </p>
+        )}
+        <p className={primary ? styles.featuredMeta : styles.secondaryMeta}>
+          {video ? (
+            <>
+              <span className={styles.metaAuthor}>
+                {t('COMMUNITY_CONTENT.BY')} {capitalize(video.author)}
+              </span>
+              &nbsp;-&nbsp;
+              <span className={styles.metaDate}>
+                {formatDate(video.timestamp)}
+              </span>
+            </>
+          ) : (
+            skeletonText
+          )}
+        </p>
+      </div>
+    </div>
+  );
+
   return (
     <section className={styles.communityContentContainer}>
       <div className={styles.content}>
+        {loading && (
+          <span className={styles.loadingStatus} role="status">
+            {t('COMMUNITY_CONTENT.LOADING')}
+          </span>
+        )}
         <div className={styles.sectionHeader}>
           <h2>{t('COMMUNITY_CONTENT.TITLE')}</h2>
           <p className={styles.subtitle}>{t('COMMUNITY_CONTENT.DISCOVER')}</p>
@@ -227,42 +241,10 @@ const CommunityContent: React.FC<CommunityContentProps> = ({
         {/* Hero: featured video + secondary card + ad */}
         <div className={styles.heroLayout}>
           {/* Featured */}
-          <div className={styles.featuredSection}>
-            <div className={styles.featuredEmbed}>{renderEmbed(featured)}</div>
-            <div className={styles.featuredInfo}>
-              <h3 className={styles.featuredTitle}>
-                {cleanTitle(featured.title)}
-              </h3>
-              <p className={styles.featuredMeta}>
-                <span className={styles.metaAuthor}>
-                  {t('COMMUNITY_CONTENT.BY')} {capitalize(featured.author)}
-                </span>
-                &nbsp;-&nbsp;
-                <span className={styles.metaDate}>
-                  {formatDate(featured.timestamp)}
-                </span>
-              </p>
-            </div>
-          </div>
+          {renderCard(featured, true)}
 
           <div className={styles.rightColumn}>
-            {secondary && (
-              <div className={styles.secondarySection}>
-                <div className={styles.secondaryEmbed}>
-                  {renderEmbed(secondary)}
-                </div>
-                <div className={styles.secondaryInfo}>
-                  <p className={styles.secondaryTitle}>
-                    {cleanTitle(secondary.title)}
-                  </p>
-                  <p className={styles.secondaryMeta}>
-                    {t('COMMUNITY_CONTENT.BY')} {capitalize(secondary.author)}
-                    &nbsp;-&nbsp;
-                    {formatDate(secondary.timestamp)}
-                  </p>
-                </div>
-              </div>
-            )}
+            {renderCard(secondary, false)}
 
             {showAds && (
               <div className={styles.communityAdSection}>
@@ -274,44 +256,57 @@ const CommunityContent: React.FC<CommunityContentProps> = ({
             )}
           </div>
         </div>
-        {listVideos.length > 0 && (
-          <ul className={styles.videoList}>
-            {listVideos.map(({ video, idx }) => (
-              <li key={video.videoId}>
-                <button
-                  className={styles.videoListItem}
-                  onClick={() => setSelectedIndex(idx)}
-                >
-                  <div className={styles.listThumbWrapper}>
-                    <img
-                      src={getThumbnail(video)}
-                      alt={cleanTitle(video.title)}
-                      className={styles.thumbImg}
-                      loading="lazy"
-                      onError={(e) => handleThumbError(e, video)}
-                    />
-                    <div className={styles.thumbPlayOverlay}>
-                      <div className={styles.playCircleSmall} />
-                    </div>
+        <ul className={styles.videoList}>
+          {listVideos.map(({ video, idx }) => (
+            <li key={video.videoId}>
+              <button
+                className={styles.videoListItem}
+                onClick={() => setSelectedIndex(idx)}
+              >
+                <div className={styles.listThumbWrapper}>
+                  <img
+                    src={getThumbnail(video)}
+                    alt={cleanTitle(video.title)}
+                    className={styles.thumbImg}
+                    loading="lazy"
+                    onError={(e) => handleThumbError(e, video)}
+                  />
+                  <div className={styles.thumbPlayOverlay}>
+                    <div className={styles.playCircleSmall} />
                   </div>
-                  <div className={styles.listInfo}>
-                    <p className={styles.listTitle}>
-                      {cleanTitle(video.title)}
-                    </p>
-                    <p className={styles.listMeta}>
-                      {t('COMMUNITY_CONTENT.BY')} {capitalize(video.author)}
-                      &nbsp;-&nbsp;
-                      {formatDate(video.timestamp)}
-                    </p>
-                  </div>
-                  <span className={styles.contentTypeTag}>
-                    {getContentTypeLabel(video)}
-                  </span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
+                </div>
+                <div className={styles.listInfo}>
+                  <p className={styles.listTitle}>{cleanTitle(video.title)}</p>
+                  <p className={styles.listMeta}>
+                    {t('COMMUNITY_CONTENT.BY')} {capitalize(video.author)}
+                    &nbsp;-&nbsp;
+                    {formatDate(video.timestamp)}
+                  </p>
+                </div>
+                <span className={styles.contentTypeTag}>
+                  {getContentTypeLabel(video)}
+                </span>
+              </button>
+            </li>
+          ))}
+          {Array.from({ length: 5 - listVideos.length }, (_, index) => (
+            <li
+              key={`placeholder-${index}`}
+              className={!loading ? styles.unavailable : undefined}
+              aria-hidden="true"
+            >
+              <div className={styles.videoListItem}>
+                <span
+                  className={`${styles.listThumbWrapper} ${styles.mediaSkeleton}`}
+                />
+                <div className={styles.listInfo}>
+                  <p className={styles.listTitle}>{skeletonText}</p>
+                  <p className={styles.listMeta}>{skeletonText}</p>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
 
         <div className={styles.ctaBar}>
           <div className={styles.ctaContent}>

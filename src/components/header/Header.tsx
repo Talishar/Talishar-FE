@@ -36,8 +36,29 @@ import { TOAST_OPTIONS } from 'constants/toastOptions';
 import { canSeeDailyPuzzle } from 'utils/dailyPuzzleAccess';
 
 const Header = () => {
-  const { isLoggedIn, isMod, currentUserName, currentDisplayName, logOut } =
-    useAuth();
+  const {
+    isLoggedIn,
+    isLoading: isAuthLoading,
+    isMod,
+    currentUserName,
+    currentDisplayName,
+    logOut
+  } = useAuth();
+  const [cachedNavigationUser] = useState(() => {
+    try {
+      return localStorage.getItem('talishar_home_last_user_v1');
+    } catch {
+      return null;
+    }
+  });
+  // Navigation links can use the same layout hint as the home page. Route
+  // guards still check real auth before showing any account content.
+  const navigationUserName =
+    isAuthLoading || (isLoggedIn && !currentUserName)
+      ? currentUserName || cachedNavigationUser
+      : isLoggedIn
+      ? currentUserName
+      : null;
   const { data: pendingData } = useGetPendingRequestsQuery(undefined, {
     skip: !isLoggedIn
   });
@@ -114,21 +135,21 @@ const Header = () => {
               {t('HEADER.PLAY')}
             </NavLink>
           </li>
-          {isLoggedIn && (
+          {navigationUserName && (
             <li>
               <NavLink to="/game/load" className={navLinkClass}>
                 {t('HEADER.REPLAYS')}
               </NavLink>
             </li>
           )}
-          {isLoggedIn && (
+          {navigationUserName && (
             <li>
               <NavLink to="/mastery" className={navLinkClass}>
                 {t('HEADER.MASTERY')}
               </NavLink>
             </li>
           )}
-          {canSeeDailyPuzzle(currentUserName) && (
+          {canSeeDailyPuzzle(navigationUserName) && (
             <li>
               <NavLink to="/puzzle" className={navLinkClass}>
                 {t('HEADER.PUZZLE')}

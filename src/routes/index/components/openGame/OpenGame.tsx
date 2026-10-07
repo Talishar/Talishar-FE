@@ -244,10 +244,7 @@ const OpenGame = ({
             className={styles.joinHeroIcon}
             aria-hidden="true"
           />
-          <span className={styles.joinLabel}>
-            {hasDeckReady && <span className={styles.joinMicroLabel}></span>}
-            {t('OPEN_GAME.JOIN')}
-          </span>
+          <span className={styles.joinLabel}>{t('OPEN_GAME.JOIN')}</span>
         </a>
       </div>
     </div>

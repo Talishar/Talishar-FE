@@ -158,20 +158,24 @@ export const ImageSelect: React.FC<ImageSelectProps> = ({
         aria-invalid={ariaInvalid}
         aria-label={ariaLabel}
       >
-        {selectedOption ? (
-          <div className={styles.selectedOption}>
-            {selectedOption.imageUrl && (
+        <div className={styles.selectedOption}>
+          {value &&
+            (selectedOption?.imageUrl ? (
               <img
                 src={selectedOption.imageUrl}
                 alt=""
                 className={styles.optionImage}
               />
-            )}
-            <span>{selectedOption.label}</span>
-          </div>
-        ) : (
-          <span className={styles.placeholder}>{placeholder}</span>
-        )}
+            ) : (
+              <span className={styles.optionImage} aria-hidden="true" />
+            ))}
+          <span
+            className={!selectedOption ? styles.placeholder : undefined}
+            title={selectedOption?.label ?? placeholder}
+          >
+            {selectedOption?.label ?? placeholder}
+          </span>
+        </div>
         <svg
           className={styles.arrow}
           width="12"

@@ -108,8 +108,14 @@ export const QuickJoinProvider = ({
   const canResolveBazaarAccess =
     !isAuthLoading && (!isLoggedIn || !!currentUserName);
 
-  const { data: favoritesData, isLoading: isFavoritesLoading } =
-    useGetFavoriteDecksQuery(undefined);
+  const { data: favoritesData, isLoading: isFavoritesQueryLoading } =
+    useGetFavoriteDecksQuery(undefined, {
+      skip: isAuthLoading || !isLoggedIn || !currentUserName
+    });
+  const isFavoritesLoading =
+    isAuthLoading ||
+    (isLoggedIn && !currentUserName) ||
+    isFavoritesQueryLoading;
 
   const [deckSource, setDeckSourceState] = useState<'talishar' | 'bazaar'>(
     () =>
@@ -134,10 +140,15 @@ export const QuickJoinProvider = ({
   const [isJoining, setIsJoining] = useState(false);
 
   const canFetchBazaar =
-    deckSource === 'bazaar' && !!metafyId && !!metafyHash && !!metafyTimestamp;
+    !isAuthLoading &&
+    isLoggedIn &&
+    deckSource === 'bazaar' &&
+    !!metafyId &&
+    !!metafyHash &&
+    !!metafyTimestamp;
   const {
     data: bazaarData,
-    isLoading: isBazaarLoading,
+    isLoading: isBazaarQueryLoading,
     error: bazaarFetchError
   } = useGetBazaarDecksQuery(
     {
@@ -147,6 +158,9 @@ export const QuickJoinProvider = ({
     },
     { skip: !canFetchBazaar }
   );
+
+  const isBazaarLoading =
+    isAuthLoading || (isLoggedIn && !currentUserName) || isBazaarQueryLoading;
 
   const favoriteDeckOptions: ImageSelectOption[] = useMemo(() => {
     if (!favoritesData?.favoriteDecks) return [];
@@ -272,6 +286,7 @@ export const QuickJoinProvider = ({
 
   const quickJoin = useCallback(
     async (gameName: number) => {
+      if (isAuthLoading || !isLoggedIn || !currentUserName) return;
       if (isRustLocked) {
         requestRustPanelAttention();
         return;
@@ -349,6 +364,9 @@ export const QuickJoinProvider = ({
       }
     },
     [
+      isAuthLoading,
+      isLoggedIn,
+      currentUserName,
       joinGame,
       selectedFavoriteDeck,
       importDeckUrl,

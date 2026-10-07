@@ -11,7 +11,7 @@ import useRustCounters from 'hooks/useRustCounters';
 import { useClearRustCountersMutation } from 'features/api/apiSlice';
 import { getCookie, setCookie } from 'utils/cookies';
 
-const UnifiedGamePanel = () => {
+const UnifiedGamePanel = ({ userLayout }: { userLayout?: boolean }) => {
   const { isLoggedIn } = useAuth();
   const { canViewRustCounters, rustCounters } = useRustCounters();
   const { isSupporter } = useSupporterStatus();
@@ -36,7 +36,7 @@ const UnifiedGamePanel = () => {
     setCookie('unifiedGamePanelExpanded', String(isExpanded));
   }, [isExpanded]);
 
-  if (!isLoggedIn) {
+  if (!(userLayout ?? isLoggedIn)) {
     return (
       <section
         className={`${styles.panel} ${styles.guestPanel}`}
@@ -91,11 +91,11 @@ const UnifiedGamePanel = () => {
             />
           )}
           <div className={styles.quickJoinSection}>
-            <QuickJoinPanel embedded />
+            <QuickJoinPanel embedded userLayout={userLayout} />
           </div>
           <hr className={styles.divider} />
           <div className={styles.createGameSection}>
-            <CreateGame />
+            <CreateGame userLayout={userLayout} />
           </div>
         </div>
       )}

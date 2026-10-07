@@ -21,7 +21,6 @@ import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
 import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
 import { Link } from 'react-router-dom';
 import RemoveAdsLink from 'components/RemoveAdsLink/RemoveAdsLink';
-import LoadingSkeleton from 'components/LoadingSkeleton/LoadingSkeleton';
 
 const LAST_HOME_USER_KEY = 'talishar_home_last_user_v1';
 
@@ -127,39 +126,11 @@ const Index = () => {
       >
         {(hasUserLayout || DEV_FAKE_MODE) && (
           <div className={styles.gameListContainer}>
-            {isAuthReady ? (
-              <GameList />
-            ) : (
-              <div
-                className={`${styles.panelPlaceholder} ${styles.gameListPlaceholder}`}
-              >
-                <LoadingSkeleton label={t('GAME_LIST.LOADING')} />
-              </div>
-            )}
+            <GameList />
           </div>
         )}
         <div className={styles.createGameContainer}>
-          {isAuthReady ? (
-            <UnifiedGamePanel />
-          ) : (
-            <div
-              className={`${styles.panelPlaceholder}${
-                hasUserLayout ? ` ${styles.userPanelPlaceholder}` : ''
-              }`}
-            >
-              <h3>
-                {t(
-                  hasUserLayout
-                    ? 'UNITED_GAME_PANEL.JOIN_CREATE'
-                    : 'UNITED_GAME_PANEL.GUEST_PRIVATE_TITLE'
-                )}
-              </h3>
-              <LoadingSkeleton
-                label={t('BASE.LOADING')}
-                rows={hasUserLayout ? 6 : 3}
-              />
-            </div>
-          )}
+          <UnifiedGamePanel userLayout={hasUserLayout} />
         </div>
       </div>
     </div>
@@ -248,11 +219,7 @@ const Index = () => {
         </div>
       </div>
       <div id="games" className={styles.contentSection}>
-        {isAuthReady ? (
-          <QuickJoinProvider>{gameGrid}</QuickJoinProvider>
-        ) : (
-          gameGrid
-        )}
+        <QuickJoinProvider>{gameGrid}</QuickJoinProvider>
         <section className={styles.newsContainer}>
           <News />
         </section>
