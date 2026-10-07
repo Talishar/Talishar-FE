@@ -50,7 +50,7 @@
   border-radius: 1dvh;
   max-height: 100%;
   max-width: 100%;
-  transition: box-shadow 0.5s ease-out, filter 0.2s;
+  transition: box-shadow 0.25s, border-color 0.25s;
 }
 
 .unplayable {
@@ -125,45 +125,6 @@
 
 .ghostReady .img {
   box-shadow: 0 0 0 3px var(--theme-primary), 0 0 18px 6px var(--theme-primary);
-}
-
-.playableFlashA {
-  animation: hand-playable-flash-a 500ms ease-out;
-}
-
-.playableFlashB {
-  animation: hand-playable-flash-b 500ms ease-out;
-}
-
-@keyframes hand-playable-flash-a {
-  0% {
-    filter: brightness(1);
-  }
-  35% {
-    filter: brightness(1.35);
-  }
-  100% {
-    filter: brightness(1);
-  }
-}
-
-@keyframes hand-playable-flash-b {
-  0% {
-    filter: brightness(1);
-  }
-  35% {
-    filter: brightness(1.35);
-  }
-  100% {
-    filter: brightness(1);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .playableFlashA,
-  .playableFlashB {
-    animation: none;
-  }
 }
 
 .imgContainer {

@@ -112,7 +112,10 @@ export const HeroZone = React.memo((prop: Displayrow) => {
   );
 
   return (
-    <div className={styles.heroZone}>
+    <div
+      className={styles.heroZone}
+      data-fan-unhover-anchor={isPlayer ? '' : undefined}
+    >
       {transformCard ? (
         <HeroTransformEventCard
           key={`heroTransform-${transformTrigger}`}

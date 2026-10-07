@@ -27,11 +27,12 @@ import { useCookieString } from 'utils/cookieStore';
 import {
   ENABLE_FANNED_HAND_COOKIE,
   FAN_REST_HIDDEN_RATIO,
-  FAN_HOVER_HIT_RATIO,
+  FAN_UNHOVER_ANCHOR_ATTR,
   FanGeometry,
   FanSlot,
   applyFanHover,
   computeFanSlots,
+  fanHoverLineY,
   fanHoverScaleFor,
   fanIndexAt,
   fanScaleFor,
@@ -313,6 +314,32 @@ function PlayerHand() {
     ro.observe(gameZone);
     return () => ro.disconnect();
   }, [isMobile]);
+
+  const [unhoverAnchorY, setUnhoverAnchorY] = useState<number | null>(null);
+
+  useEffect(() => {
+    const anchors = Array.from(
+      document.querySelectorAll<HTMLElement>(`[${FAN_UNHOVER_ANCHOR_ATTR}]`)
+    );
+    if (anchors.length === 0) {
+      setUnhoverAnchorY(null);
+      return;
+    }
+
+    const update = () => {
+      const bottom = Math.max(
+        ...anchors.map((anchor) => anchor.getBoundingClientRect().bottom)
+      );
+      setUnhoverAnchorY((previousBottom) =>
+        previousBottom === bottom ? previousBottom : bottom
+      );
+    };
+
+    update();
+    const ro = new ResizeObserver(update);
+    anchors.forEach((anchor) => ro.observe(anchor));
+    return () => ro.disconnect();
+  }, [width, height]);
   const playableBanishedCards = useAppSelector(selectPlayableBanishedCards);
   const playableTheirBanishedCards = useAppSelector(
     selectPlayableTheirBanishedCards
@@ -513,8 +540,12 @@ function PlayerHand() {
       const rect = stage.getBoundingClientRect();
       if (
         pointer.y <
-        rect.bottom -
-          fanGeometry.cardHeight * fanHoverScale * FAN_HOVER_HIT_RATIO
+        fanHoverLineY(
+          rect.bottom,
+          fanGeometry.cardHeight,
+          fanHoverScale,
+          unhoverAnchorY
+        )
       ) {
         return;
       }
@@ -531,6 +562,7 @@ function PlayerHand() {
       purgatoryCardId,
       fanGeometry,
       fanHoverScale,
+      unhoverAnchorY,
       handleHoverChange
     ]
   );
@@ -955,6 +987,7 @@ function PlayerHand() {
                 isHovered={activeHoveredCardId === id}
                 fanHoverScale={fanHoverScale}
                 fanCardHeight={fanGeometry.cardHeight}
+                fanUnhoverAnchorY={unhoverAnchorY}
                 isFanLifted={isFanLifted}
                 onHoverChange={handleHoverChange}
                 onClickPlay={handleClickPlay}
@@ -973,6 +1006,7 @@ function PlayerHand() {
                 isHovered={activeHoveredCardId === id}
                 fanHoverScale={fanHoverScale}
                 fanCardHeight={fanGeometry.cardHeight}
+                fanUnhoverAnchorY={unhoverAnchorY}
                 isFanLifted={isFanLifted}
                 onHoverChange={handleHoverChange}
                 dimWhenUnplayable={dimWhenUnplayable}
