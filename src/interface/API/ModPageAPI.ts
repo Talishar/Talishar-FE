@@ -72,37 +72,6 @@ export interface SearchUsernamesResponse {
   users: UserSearchResult[];
 }
 
-export type PromptStatsRange = 1 | 7 | 30 | 90;
-
-export interface PromptAnswerCount {
-  answer: string;
-  count: number;
-}
-
-export interface PromptStat {
-  phase: string;
-  context: string;
-  contextName: string;
-  isCard: boolean;
-  count: number;
-  identical: number;
-  avgMs: number;
-  answers: PromptAnswerCount[];
-}
-
-export interface PromptStatsResponse {
-  days: PromptStatsRange;
-  since: string;
-  totalAnswers: number;
-  prompts: PromptStat[];
-  error?: string;
-}
-
-export interface ClearPromptStatsResponse {
-  success: boolean;
-  answersCleared: number;
-}
-
 export interface PuzzleCard {
   id: string;
   name: string;

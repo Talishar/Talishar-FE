@@ -92,11 +92,8 @@ import {
   DeleteUsernameRequest,
   ResetAllRustCountersResponse,
   SearchUsernamesResponse,
-  PromptStatsRange,
-  PromptStatsResponse,
   AdReportRange,
   AdReportResponse,
-  ClearPromptStatsResponse,
   PuzzleCandidatesResponse,
   CreatePuzzleGameRequest,
   CreatePuzzleGameResponse,
@@ -254,7 +251,6 @@ export const apiSlice = createApi({
     'SystemMessage',
     'SavedReplays',
     'HeroMastery',
-    'PromptStats',
     'PuzzleSchedule',
     'DailyPuzzle'
   ],
@@ -713,15 +709,6 @@ export const apiSlice = createApi({
       },
       providesTags: [{ type: 'ModPageData', id: 'LIST' }]
     }),
-    getPromptStats: builder.query<PromptStatsResponse, PromptStatsRange>({
-      query: (days) => ({
-        url: URL_END_POINT.GET_PROMPT_STATS,
-        method: 'GET',
-        params: { days },
-        responseHandler: parseResponse
-      }),
-      providesTags: ['PromptStats']
-    }),
     getAdReport: builder.query<AdReportResponse, AdReportRange>({
       query: (days) => ({
         url: URL_END_POINT.GET_MONETIZATION_REPORT,
@@ -729,10 +716,6 @@ export const apiSlice = createApi({
         params: { days },
         responseHandler: parseResponse
       })
-    }),
-    clearPromptStats: builder.mutation<ClearPromptStatsResponse, void>({
-      query: () => postJson(URL_END_POINT.CLEAR_PROMPT_STATS),
-      invalidatesTags: ['PromptStats']
     }),
     getPuzzleCandidates: builder.query<
       PuzzleCandidatesResponse,
@@ -1165,8 +1148,6 @@ export const {
   useSubmitLobbyInputMutation,
   useKickPlayerMutation,
   useGetModPageDataQuery,
-  useGetPromptStatsQuery,
-  useClearPromptStatsMutation,
   useGetAdReportQuery,
   useGetPuzzleCandidatesQuery,
   useCreatePuzzleGameMutation,

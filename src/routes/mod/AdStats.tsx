@@ -1296,8 +1296,8 @@ const AdStats: React.FC = () => {
           )}
           {segmented(t('MOD_PAGE.ADS_RANGE'), RANGES, range, setRange, (days) =>
             days === 1
-              ? t('MOD_PAGE.PROMPTS_RANGE_TODAY')
-              : t('MOD_PAGE.PROMPTS_RANGE_DAYS', { days })
+              ? t('MOD_PAGE.ADS_RANGE_TODAY')
+              : t('MOD_PAGE.ADS_RANGE_DAYS', { days })
           )}
         </div>
       </div>

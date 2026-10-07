@@ -6,7 +6,7 @@ import {
   useSchedulePuzzleMutation
 } from 'features/api/apiSlice';
 import { PuzzleScheduleDay } from 'interface/API/ModPageAPI';
-import tableStyles from './PromptStats.module.css';
+import tableStyles from './ModTable.module.css';
 import styles from './PuzzleCandidates.module.css';
 
 const MAX_LIFE = 99;

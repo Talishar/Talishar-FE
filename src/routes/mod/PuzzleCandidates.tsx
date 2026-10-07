@@ -25,7 +25,7 @@ import { parseTextToElements } from 'utils/ParseEscapedString';
 import { describePuzzleStep, puzzleCardNames } from 'utils/puzzleText';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import PuzzleSchedule from './PuzzleSchedule';
-import tableStyles from './PromptStats.module.css';
+import tableStyles from './ModTable.module.css';
 import styles from './PuzzleCandidates.module.css';
 
 type SortKey = 'interest' | 'id' | 'opponentLife' | 'gap';
