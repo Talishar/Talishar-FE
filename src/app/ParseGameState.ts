@@ -381,6 +381,7 @@ export default function ParseGameState(input: any) {
     result.activeChainLink.damagePrevention = Number(
       input.activeChainLink.damagePrevention
     );
+    result.activeChainLink.unpreventable = input.activeChainLink.unpreventable;
     result.activeChainLink.attackTarget = input.activeChainLink.attackTarget;
     result.activeChainLink.numRequiredEquipBlock =
       input.activeChainLink.numRequiredEquipBlock;

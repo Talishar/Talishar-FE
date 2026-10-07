@@ -19,6 +19,7 @@ export default interface CombatChainLink {
   combo?: boolean;
   highTide?: boolean;
   damagePrevention?: number;
+  unpreventable?: boolean;
   attackTarget?: string;
   isDraconic?: boolean;
   isIllusionist?: boolean;

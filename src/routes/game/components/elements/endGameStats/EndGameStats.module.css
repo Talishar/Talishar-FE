@@ -948,12 +948,44 @@
   cursor: pointer;
 }
 
-.excludeLastTurnCheckbox {
+input.excludeLastTurnCheckbox {
   flex: 0 0 auto;
   margin: 0;
   cursor: pointer;
   width: 18px;
   height: 18px;
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.45);
+  border-radius: 4px;
+  background-color: rgba(var(--theme-on-surface-rgb), 0.06);
+  background-image: none;
+  box-shadow: none;
+}
+
+input.excludeLastTurnCheckbox:hover:not(:checked):not(:indeterminate) {
+  border-color: var(--theme-primary);
+  background-color: color-mix(in srgb, var(--theme-primary) 12%, transparent);
+}
+
+input.excludeLastTurnCheckbox:checked,
+input.excludeLastTurnCheckbox:indeterminate {
+  border-color: var(--theme-primary);
+  background-color: var(--theme-primary);
+}
+
+input.excludeLastTurnCheckbox:checked {
+  background-image: var(--theme-checkbox-icon);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 12px 12px;
+}
+
+input.excludeLastTurnCheckbox:focus {
+  box-shadow: none;
+}
+
+input.excludeLastTurnCheckbox:focus-visible {
+  outline: 2px solid var(--theme-primary);
+  outline-offset: 2px;
 }
 
 .excludeLastTurnText {
