@@ -123,6 +123,8 @@ const tiltFromVelocityX = (velocity: number) =>
   clampTilt(velocity * GHOST_TILT_DEG_PER_PX_S);
 const tiltFromVelocityY = (velocity: number) =>
   clampTilt(-velocity * GHOST_TILT_DEG_PER_PX_S);
+const withoutGpuLayer = (_: unknown, generated: string) =>
+  generated.replace(/\s*translateZ\(0\)/, '');
 
 export type DragPlayState = 'idle' | 'below' | 'above';
 
@@ -747,6 +749,9 @@ export const PlayerHandCard = React.memo(
           data-is-dragging={isDragging}
           data-hand-uid={card.uniqueId !== '-' ? card.uniqueId : undefined}
           data-hand-card-number={card.cardNumber}
+          transformTemplate={
+            isFanned && !isHovered ? withoutGpuLayer : undefined
+          }
           layout={
             !isFanned && enableLayoutAnimation && !isDragging
               ? 'position'
@@ -897,6 +902,7 @@ export const PlayerHandCard = React.memo(
           className={styles.fanSlot}
           initial={false}
           animate={fanTarget}
+          transformTemplate={isHovered ? undefined : withoutGpuLayer}
           style={{
             zIndex: isLanding ? FAN_LANDING_Z_INDEX : fanSlot?.zIndex ?? zIndex
           }}

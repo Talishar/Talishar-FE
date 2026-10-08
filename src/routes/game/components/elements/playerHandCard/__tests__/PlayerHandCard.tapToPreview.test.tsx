@@ -142,6 +142,32 @@ const renderFannedHoveredCard = () => {
   return { ...view, addCardToPlayedCards, onHoverChange, onClickPlay };
 };
 
+const renderRotatedCard = (fanned: boolean, hovered: boolean) => {
+  const view = renderWithProviders(
+    <CookiesProvider>
+      <PlayerHandCard
+        card={playableCard}
+        cardId="hand-1"
+        addCardToPlayedCards={vi.fn()}
+        isFanned={fanned}
+        isHovered={hovered}
+        fanSlot={
+          fanned
+            ? { x: 40, y: 120, rotate: 8, scale: 1, zIndex: 200 }
+            : undefined
+        }
+        fanCardHeight={fanned ? 225 : undefined}
+        rotation={15}
+        disableDrag
+      />
+    </CookiesProvider>
+  );
+  const inner = view.container.querySelector(
+    '[data-hand-card-number]'
+  ) as HTMLElement;
+  return { ...view, inner, slot: inner.parentElement as HTMLElement };
+};
+
 describe('PlayerHandCard tap to preview play', () => {
   beforeEach(() => {
     clearTapToPreviewSelection();
@@ -270,5 +296,27 @@ describe('fanned hovered card play', () => {
     });
     expect(onClickPlay).toHaveBeenCalledWith('hand-1');
     expect(onHoverChange).not.toHaveBeenCalledWith('hand-1', false);
+  });
+});
+
+describe('fanned card GPU layer', () => {
+  it('resting fanned card has no translateZ on slot or inner card', () => {
+    const { slot, inner } = renderRotatedCard(true, false);
+    expect(slot.style.transform).toContain('rotate(8deg)');
+    expect(slot.style.transform).not.toContain('translateZ');
+    expect(inner.style.transform).toContain('rotate(15deg)');
+    expect(inner.style.transform).not.toContain('translateZ');
+  });
+
+  it('hovered fanned card keeps its translateZ layer', () => {
+    const { slot, inner } = renderRotatedCard(true, true);
+    expect(slot.style.transform).toContain('translateZ');
+    expect(inner.style.transform).toContain('translateZ');
+  });
+
+  it('classic card keeps its translateZ layer', () => {
+    const { inner } = renderRotatedCard(false, false);
+    expect(inner.style.transform).toContain('rotate(15deg)');
+    expect(inner.style.transform).toContain('translateZ');
   });
 });
