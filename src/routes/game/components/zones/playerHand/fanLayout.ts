@@ -33,8 +33,7 @@ export const FAN_DROP_RATE = 32;
 export const FAN_DROP_DURATION_S = 0.22;
 export const FAN_RISE_RATE = 55;
 export const FAN_RISE_DURATION_S = 0.07;
-export const FAN_UNHOVER_RATE = 40;
-export const FAN_UNHOVER_DURATION_S = 0.09;
+export const FAN_UNHOVER_DURATION_S = 0.25;
 export const FAN_LAND_DURATION_S = FAN_UNHOVER_DURATION_S;
 
 function expEaseOut(rate: number, duration: number) {
@@ -45,10 +44,7 @@ function expEaseOut(rate: number, duration: number) {
 
 export const fanDropEase = expEaseOut(FAN_DROP_RATE, FAN_DROP_DURATION_S);
 export const fanRiseEase = expEaseOut(FAN_RISE_RATE, FAN_RISE_DURATION_S);
-export const fanUnhoverEase = expEaseOut(
-  FAN_UNHOVER_RATE,
-  FAN_UNHOVER_DURATION_S
-);
+export const fanUnhoverEase = (progress: number) => 1 - (1 - progress) ** 2;
 
 export function fanHoverScaleFor(
   raw: string | undefined,
