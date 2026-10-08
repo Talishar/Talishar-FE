@@ -17,6 +17,7 @@ export type FanGeometry = {
 export const FAN_REST_HIDDEN_RATIO = 0.54;
 export const FAN_MAX_ROTATION_DEG = 12;
 export const FAN_HOVER_SCALE = 1.725;
+export const FAN_CARD_ART_ASPECT = 450 / 628;
 export const FAN_HOVER_HIT_RATIO = 0.7;
 export const FAN_UNHOVER_ANCHOR_ATTR = 'data-fan-unhover-anchor';
 export const FAN_HOVER_FALLBACK_RATIO = 0.8;
@@ -28,8 +29,10 @@ export const FAN_LANDING_Z_INDEX = 999;
 
 export const FAN_DROP_RATE = 32;
 export const FAN_DROP_DURATION_S = 0.22;
-export const FAN_UNHOVER_RATE = 16;
-export const FAN_UNHOVER_DURATION_S = 0.18;
+export const FAN_RISE_RATE = 55;
+export const FAN_RISE_DURATION_S = 0.07;
+export const FAN_UNHOVER_RATE = 40;
+export const FAN_UNHOVER_DURATION_S = 0.09;
 export const FAN_LAND_DURATION_S = FAN_UNHOVER_DURATION_S;
 
 function expEaseOut(rate: number, duration: number) {
@@ -39,6 +42,7 @@ function expEaseOut(rate: number, duration: number) {
 }
 
 export const fanDropEase = expEaseOut(FAN_DROP_RATE, FAN_DROP_DURATION_S);
+export const fanRiseEase = expEaseOut(FAN_RISE_RATE, FAN_RISE_DURATION_S);
 export const fanUnhoverEase = expEaseOut(
   FAN_UNHOVER_RATE,
   FAN_UNHOVER_DURATION_S
@@ -155,6 +159,7 @@ export function applyFanHover(
 ): FanSlot[] {
   if (hoveredIndex === null || !slots[hoveredIndex]) return slots;
   const maxX = Math.max(0, (g.stageWidth - g.cardWidth * hoverScale) / 2);
+  const artGap = Math.max(0, g.cardHeight - g.cardWidth / FAN_CARD_ART_ASPECT);
   return slots.map((slot, i) => {
     if (i !== hoveredIndex) return slot;
     if (!expanded) {
@@ -166,7 +171,7 @@ export function applyFanHover(
     }
     return {
       x: Math.max(-maxX, Math.min(maxX, slot.x)),
-      y: (-(hoverScale - 1) * g.cardHeight) / 2,
+      y: (-(hoverScale - 1) * g.cardHeight) / 2 + hoverScale * artGap,
       rotate: 0,
       scale: hoverScale,
       zIndex: 1000

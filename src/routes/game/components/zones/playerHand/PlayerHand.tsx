@@ -1078,7 +1078,6 @@ function PlayerHand() {
                 fanHoverScale={fanHoverScale}
                 fanCardHeight={fanGeometry.cardHeight}
                 isFanLifted={isFanLifted}
-                instantFanHover={!isPitching}
                 onHoverChange={handleHoverChange}
                 onFanPointerEnter={handleFanPointerEnter}
                 onClickPlay={handleClickPlay}
@@ -1102,7 +1101,6 @@ function PlayerHand() {
                 fanHoverScale={fanHoverScale}
                 fanCardHeight={fanGeometry.cardHeight}
                 isFanLifted={isFanLifted}
-                instantFanHover={!isPitching}
                 onHoverChange={handleHoverChange}
                 onFanPointerEnter={handleFanPointerEnter}
                 dimWhenUnplayable={dimWhenUnplayable}
