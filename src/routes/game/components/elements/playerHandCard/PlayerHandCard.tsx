@@ -56,8 +56,10 @@ import {
   FAN_DROP_DURATION_S,
   FAN_HOVER_SCALE,
   FAN_LANDING_Z_INDEX,
+  FAN_UNHOVER_DURATION_S,
   FanSlot,
-  fanDropEase
+  fanDropEase,
+  fanUnhoverEase
 } from '../../zones/playerHand/fanLayout';
 import {
   classifyDragRelease,
@@ -87,6 +89,12 @@ const FAN_DROP_TRANSITION = {
   type: 'tween' as const,
   duration: FAN_DROP_DURATION_S,
   ease: fanDropEase
+};
+const FAN_HOVER_INSTANT = { duration: 0 };
+const FAN_UNHOVER_TRANSITION = {
+  type: 'tween' as const,
+  duration: FAN_UNHOVER_DURATION_S,
+  ease: fanUnhoverEase
 };
 const FAN_RETURN_TRANSITION = {
   type: 'tween' as const,
@@ -140,6 +148,7 @@ export interface HandCard {
   fanHoverScale?: number;
   fanCardHeight?: number;
   isFanLifted?: boolean;
+  instantFanHover?: boolean;
   onHoverChange?: (cardId: string, hovering: boolean) => void;
   onFanPointerEnter?: (clientX: number, clientY: number) => void;
   onClickPlay?: (cardId: string) => void;
@@ -176,6 +185,7 @@ export const PlayerHandCard = React.memo(
     fanHoverScale = FAN_HOVER_SCALE,
     fanCardHeight,
     isFanLifted = false,
+    instantFanHover = false,
     onHoverChange,
     onFanPointerEnter,
     onClickPlay,
@@ -883,8 +893,12 @@ export const PlayerHandCard = React.memo(
             zIndex: isLanding ? FAN_LANDING_Z_INDEX : fanSlot?.zIndex ?? zIndex
           }}
           transition={
-            isHovered || (isLanding && isFanLifted)
-              ? FAN_HOVER_SPRING
+            isHovered
+              ? instantFanHover
+                ? FAN_HOVER_INSTANT
+                : FAN_HOVER_SPRING
+              : isLanding
+              ? FAN_UNHOVER_TRANSITION
               : FAN_DROP_TRANSITION
           }
         >

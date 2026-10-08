@@ -170,7 +170,7 @@ function PlayerHand() {
     dispatch
   ]);
   const [dragPlayState, setDragPlayState] = useState<DragPlayState>('idle');
-  const { hoveredCardId, landingCardId, handleHoverChange, clearHover } =
+  const { hoveredCardId, landingCardIds, handleHoverChange, clearHover } =
     useFanHover();
   const lastFanSlotsRef = useRef(new Map<string, FanSlot>());
   const fanStageRef = useRef<HTMLDivElement>(null);
@@ -1071,11 +1071,14 @@ function PlayerHand() {
                 isFanned
                 fanSlot={fanSlotFor(id)}
                 isHovered={activeHoveredCardId === id}
-                isLanding={landingCardId === id && activeHoveredCardId !== id}
+                isLanding={
+                  landingCardIds.includes(id) && activeHoveredCardId !== id
+                }
                 showHoverKeywords={showHoverKeywords}
                 fanHoverScale={fanHoverScale}
                 fanCardHeight={fanGeometry.cardHeight}
                 isFanLifted={isFanLifted}
+                instantFanHover={!isPitching}
                 onHoverChange={handleHoverChange}
                 onFanPointerEnter={handleFanPointerEnter}
                 onClickPlay={handleClickPlay}
@@ -1092,11 +1095,14 @@ function PlayerHand() {
                 isFanned
                 fanSlot={fanSlotFor(id)}
                 isHovered={activeHoveredCardId === id}
-                isLanding={landingCardId === id && activeHoveredCardId !== id}
+                isLanding={
+                  landingCardIds.includes(id) && activeHoveredCardId !== id
+                }
                 showHoverKeywords={showHoverKeywords}
                 fanHoverScale={fanHoverScale}
                 fanCardHeight={fanGeometry.cardHeight}
                 isFanLifted={isFanLifted}
+                instantFanHover={!isPitching}
                 onHoverChange={handleHoverChange}
                 onFanPointerEnter={handleFanPointerEnter}
                 dimWhenUnplayable={dimWhenUnplayable}

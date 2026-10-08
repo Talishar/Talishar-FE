@@ -1,59 +1,52 @@
-import { useCallback, useEffect, useState } from 'react';
-import {
-  FAN_LAND_DURATION_S,
-  FAN_SWITCH_LAND_DURATION_S
-} from './fanLayout';
-
-type FanHoverState = {
-  hoveredCardId: string | null;
-  landingCardId: string | null;
-};
-
-const NO_HOVER: FanHoverState = { hoveredCardId: null, landingCardId: null };
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { FAN_LAND_DURATION_S } from './fanLayout';
 
 export function useFanHover() {
-  const [state, setState] = useState<FanHoverState>(NO_HOVER);
+  const [hoveredCardId, setHoveredCardId] = useState<string | null>(null);
+  const [landingCardIds, setLandingCardIds] = useState<string[]>([]);
+  const hoveredRef = useRef<string | null>(null);
+  const landTimersRef = useRef(
+    new Map<string, ReturnType<typeof setTimeout>>()
+  );
 
-  const handleHoverChange = useCallback((cardId: string, hovering: boolean) => {
-    setState((current) => {
-      const next = hovering
-        ? cardId
-        : current.hoveredCardId === cardId
-        ? null
-        : current.hoveredCardId;
-      if (next === current.hoveredCardId) return current;
-      return { hoveredCardId: next, landingCardId: current.hoveredCardId };
-    });
-  }, []);
-
-  const clearHover = useCallback(() => {
-    setState((current) =>
-      current.hoveredCardId === null
-        ? current
-        : { hoveredCardId: null, landingCardId: current.hoveredCardId }
+  const startLanding = useCallback((cardId: string) => {
+    const timers = landTimersRef.current;
+    clearTimeout(timers.get(cardId));
+    timers.set(
+      cardId,
+      setTimeout(() => {
+        timers.delete(cardId);
+        setLandingCardIds((ids) => ids.filter((id) => id !== cardId));
+      }, FAN_LAND_DURATION_S * 1000)
     );
+    setLandingCardIds((ids) => (ids.includes(cardId) ? ids : [...ids, cardId]));
   }, []);
+
+  const moveHover = useCallback(
+    (next: string | null) => {
+      const previous = hoveredRef.current;
+      if (next === previous) return;
+      hoveredRef.current = next;
+      setHoveredCardId(next);
+      if (previous !== null) startLanding(previous);
+    },
+    [startLanding]
+  );
+
+  const handleHoverChange = useCallback(
+    (cardId: string, hovering: boolean) => {
+      const current = hoveredRef.current;
+      moveHover(hovering ? cardId : current === cardId ? null : current);
+    },
+    [moveHover]
+  );
+
+  const clearHover = useCallback(() => moveHover(null), [moveHover]);
 
   useEffect(() => {
-    if (state.landingCardId === null) return;
-    const timer = setTimeout(
-      () =>
-        setState((current) =>
-          current.landingCardId === null
-            ? current
-            : { ...current, landingCardId: null }
-        ),
-      (state.hoveredCardId === null
-        ? FAN_LAND_DURATION_S
-        : FAN_SWITCH_LAND_DURATION_S) * 1000
-    );
-    return () => clearTimeout(timer);
-  }, [state.landingCardId, state.hoveredCardId]);
+    const timers = landTimersRef.current;
+    return () => timers.forEach((timer) => clearTimeout(timer));
+  }, []);
 
-  return {
-    hoveredCardId: state.hoveredCardId,
-    landingCardId: state.landingCardId,
-    handleHoverChange,
-    clearHover
-  };
+  return { hoveredCardId, landingCardIds, handleHoverChange, clearHover };
 }

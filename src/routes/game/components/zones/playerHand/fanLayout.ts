@@ -28,13 +28,21 @@ export const FAN_LANDING_Z_INDEX = 999;
 
 export const FAN_DROP_RATE = 32;
 export const FAN_DROP_DURATION_S = 0.22;
-export const FAN_LAND_DURATION_S = FAN_DROP_DURATION_S;
-export const FAN_SWITCH_LAND_DURATION_S = 0.14;
+export const FAN_UNHOVER_RATE = 16;
+export const FAN_UNHOVER_DURATION_S = 0.18;
+export const FAN_LAND_DURATION_S = FAN_UNHOVER_DURATION_S;
 
-export function fanDropEase(progress: number): number {
-  const k = FAN_DROP_RATE * FAN_DROP_DURATION_S;
-  return (1 - Math.exp(-k * progress)) / (1 - Math.exp(-k));
+function expEaseOut(rate: number, duration: number) {
+  const k = rate * duration;
+  return (progress: number) =>
+    (1 - Math.exp(-k * progress)) / (1 - Math.exp(-k));
 }
+
+export const fanDropEase = expEaseOut(FAN_DROP_RATE, FAN_DROP_DURATION_S);
+export const fanUnhoverEase = expEaseOut(
+  FAN_UNHOVER_RATE,
+  FAN_UNHOVER_DURATION_S
+);
 
 export function fanHoverScaleFor(raw: string | undefined): number {
   const size = Number(raw);
