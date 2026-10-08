@@ -1,43 +1,52 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { FAN_LAND_DURATION_S } from './fanLayout';
 
-export const FAN_UNHOVER_GRACE_MS = 100;
-
-export function useFanHover(graceMs = FAN_UNHOVER_GRACE_MS) {
+export function useFanHover() {
   const [hoveredCardId, setHoveredCardId] = useState<string | null>(null);
-  const clearTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const pendingClearId = useRef<string | null>(null);
+  const [landingCardIds, setLandingCardIds] = useState<string[]>([]);
+  const hoveredRef = useRef<string | null>(null);
+  const landTimersRef = useRef(
+    new Map<string, ReturnType<typeof setTimeout>>()
+  );
 
-  const cancelClear = useCallback(() => {
-    if (clearTimer.current) clearTimeout(clearTimer.current);
-    clearTimer.current = null;
-    pendingClearId.current = null;
+  const startLanding = useCallback((cardId: string) => {
+    const timers = landTimersRef.current;
+    clearTimeout(timers.get(cardId));
+    timers.set(
+      cardId,
+      setTimeout(() => {
+        timers.delete(cardId);
+        setLandingCardIds((ids) => ids.filter((id) => id !== cardId));
+      }, FAN_LAND_DURATION_S * 1000)
+    );
+    setLandingCardIds((ids) => (ids.includes(cardId) ? ids : [...ids, cardId]));
   }, []);
+
+  const moveHover = useCallback(
+    (next: string | null) => {
+      const previous = hoveredRef.current;
+      if (next === previous) return;
+      hoveredRef.current = next;
+      setHoveredCardId(next);
+      if (previous !== null) startLanding(previous);
+    },
+    [startLanding]
+  );
 
   const handleHoverChange = useCallback(
     (cardId: string, hovering: boolean) => {
-      if (hovering) {
-        cancelClear();
-        setHoveredCardId(cardId);
-        return;
-      }
-      if (pendingClearId.current === cardId) return;
-      cancelClear();
-      pendingClearId.current = cardId;
-      clearTimer.current = setTimeout(() => {
-        clearTimer.current = null;
-        pendingClearId.current = null;
-        setHoveredCardId((current) => (current === cardId ? null : current));
-      }, graceMs);
+      const current = hoveredRef.current;
+      moveHover(hovering ? cardId : current === cardId ? null : current);
     },
-    [cancelClear, graceMs]
+    [moveHover]
   );
 
-  const clearHover = useCallback(() => {
-    cancelClear();
-    setHoveredCardId(null);
-  }, [cancelClear]);
+  const clearHover = useCallback(() => moveHover(null), [moveHover]);
 
-  useEffect(() => cancelClear, [cancelClear]);
+  useEffect(() => {
+    const timers = landTimersRef.current;
+    return () => timers.forEach((timer) => clearTimeout(timer));
+  }, []);
 
-  return { hoveredCardId, handleHoverChange, clearHover };
+  return { hoveredCardId, landingCardIds, handleHoverChange, clearHover };
 }
