@@ -130,7 +130,7 @@ function PlayerHand() {
   const isPortrait = useMediaQuery('(orientation: portrait)');
   const canCollapseHand = isMobile || isPortrait;
   const [isHandCollapsed, setIsHandCollapsed] = useState(false);
-  const fanHoverScale = fanHoverScaleFor(useCookieString('hoverImageSize'));
+  const hoverImageSize = useCookieString('hoverImageSize');
   const hasPriority = useAppSelector(
     (state: RootState) => state.game.hasPriority
   );
@@ -481,6 +481,11 @@ function PlayerHand() {
       cardWidth: (cardHeight * 2) / 3
     };
   }, [width, height, gameZoneBounds]);
+  const fanHoverScale = fanHoverScaleFor(
+    hoverImageSize,
+    fanGeometry.cardHeight,
+    height
+  );
 
   const isDragActive = dragPlayState !== 'idle' || dragStartOrderIds !== null;
   const activeHoveredCardId = isDragActive ? null : hoveredCardId;
@@ -1078,7 +1083,6 @@ function PlayerHand() {
                 fanHoverScale={fanHoverScale}
                 fanCardHeight={fanGeometry.cardHeight}
                 isFanLifted={isFanLifted}
-                instantFanHover={!isPitching}
                 onHoverChange={handleHoverChange}
                 onFanPointerEnter={handleFanPointerEnter}
                 onClickPlay={handleClickPlay}
@@ -1102,7 +1106,6 @@ function PlayerHand() {
                 fanHoverScale={fanHoverScale}
                 fanCardHeight={fanGeometry.cardHeight}
                 isFanLifted={isFanLifted}
-                instantFanHover={!isPitching}
                 onHoverChange={handleHoverChange}
                 onFanPointerEnter={handleFanPointerEnter}
                 dimWhenUnplayable={dimWhenUnplayable}
