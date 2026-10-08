@@ -26,6 +26,7 @@ import { useTranslation } from 'react-i18next';
 import { useCookieString } from 'utils/cookieStore';
 import {
   ENABLE_FANNED_HAND_COOKIE,
+  FAN_EXPAND_DELAY_MS,
   FAN_REST_HIDDEN_RATIO,
   FAN_UNHOVER_ANCHOR_ATTR,
   FanGeometry,
@@ -168,7 +169,9 @@ function PlayerHand() {
   const [purgatoryCardId, setPurgatoryCardId] = useState<string | null>(null);
   const lastFanSlotsRef = useRef(new Map<string, FanSlot>());
   const fanStageRef = useRef<HTMLDivElement>(null);
-  const lastPointerRef = useRef<{ x: number; y: number } | null>(null);
+  const lastPointerRef = useRef<{ x: number; y: number; type: string } | null>(
+    null
+  );
 
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
@@ -482,6 +485,31 @@ function PlayerHand() {
     if (isDragActive) clearHover();
   }, [isDragActive, clearHover]);
 
+  const [expandedCardId, setExpandedCardId] = useState<string | null>(null);
+  const isHoverExpanded =
+    activeHoveredCardId !== null && expandedCardId === activeHoveredCardId;
+
+  useEffect(() => {
+    setExpandedCardId(null);
+    if (activeHoveredCardId === null) return;
+    const expand = () => setExpandedCardId(activeHoveredCardId);
+    if (lastPointerRef.current?.type === 'touch') {
+      expand();
+      return;
+    }
+    let timer = setTimeout(expand, FAN_EXPAND_DELAY_MS);
+    const restartOnMove = (event: PointerEvent) => {
+      if (event.pointerType === 'touch') return;
+      clearTimeout(timer);
+      timer = setTimeout(expand, FAN_EXPAND_DELAY_MS);
+    };
+    window.addEventListener('pointermove', restartOnMove, { passive: true });
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('pointermove', restartOnMove);
+    };
+  }, [activeHoveredCardId]);
+
   const fanSlotById = useMemo(() => {
     const slots = new Map<string, FanSlot>();
     const laidOut = fanItems.filter((item) => item.id !== purgatoryCardId);
@@ -493,7 +521,8 @@ function PlayerHand() {
       computeFanSlots(laidOut.length, fanGeometry),
       hoveredIndex === -1 ? null : hoveredIndex,
       fanGeometry,
-      fanHoverScale
+      fanHoverScale,
+      isHoverExpanded
     );
     laidOut.forEach((item, index) => slots.set(item.id, computed[index]));
     return slots;
@@ -501,6 +530,7 @@ function PlayerHand() {
     fanItems,
     purgatoryCardId,
     activeHoveredCardId,
+    isHoverExpanded,
     fanGeometry,
     fanHoverScale
   ]);
@@ -516,13 +546,22 @@ function PlayerHand() {
   }, [fanItems, fanSlotById]);
 
   useEffect(() => {
-    const handlePointerMove = (e: PointerEvent) => {
-      lastPointerRef.current = { x: e.clientX, y: e.clientY };
+    const handlePointer = (e: PointerEvent) => {
+      lastPointerRef.current = {
+        x: e.clientX,
+        y: e.clientY,
+        type: e.pointerType
+      };
     };
-    window.addEventListener('pointermove', handlePointerMove, {
+    window.addEventListener('pointermove', handlePointer, { passive: true });
+    window.addEventListener('pointerdown', handlePointer, {
+      capture: true,
       passive: true
     });
-    return () => window.removeEventListener('pointermove', handlePointerMove);
+    return () => {
+      window.removeEventListener('pointermove', handlePointer);
+      window.removeEventListener('pointerdown', handlePointer, true);
+    };
   }, []);
 
   const handleClickPlay = useCallback(
@@ -980,6 +1019,7 @@ function PlayerHand() {
                 isFanned
                 fanSlot={fanSlotFor(id)}
                 isHovered={activeHoveredCardId === id}
+                isHoverExpanded={isHoverExpanded}
                 fanHoverScale={fanHoverScale}
                 fanCardHeight={fanGeometry.cardHeight}
                 fanUnhoverAnchorY={unhoverAnchorY}
@@ -999,6 +1039,7 @@ function PlayerHand() {
                 isFanned
                 fanSlot={fanSlotFor(id)}
                 isHovered={activeHoveredCardId === id}
+                isHoverExpanded={isHoverExpanded}
                 fanHoverScale={fanHoverScale}
                 fanCardHeight={fanGeometry.cardHeight}
                 fanUnhoverAnchorY={unhoverAnchorY}

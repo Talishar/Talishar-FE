@@ -83,8 +83,8 @@ const FAN_SPRING = {
 };
 const FAN_HOVER_SPRING = {
   type: 'spring' as const,
-  stiffness: 1600,
-  damping: 80,
+  stiffness: 2500,
+  damping: 100,
   mass: 1
 };
 const FAN_DROP_TRANSITION = {
@@ -141,6 +141,7 @@ export interface HandCard {
   isFanned?: boolean;
   fanSlot?: FanSlot;
   isHovered?: boolean;
+  isHoverExpanded?: boolean;
   fanHoverScale?: number;
   fanCardHeight?: number;
   fanUnhoverAnchorY?: number | null;
@@ -175,6 +176,7 @@ export const PlayerHandCard = React.memo(
     isFanned = false,
     fanSlot,
     isHovered = false,
+    isHoverExpanded = true,
     fanHoverScale = FAN_HOVER_SCALE,
     fanCardHeight,
     fanUnhoverAnchorY = null,
@@ -910,7 +912,7 @@ export const PlayerHandCard = React.memo(
           transition={isFanLifted ? FAN_LIFTED_TRANSITION : FAN_DROP_TRANSITION}
         >
           <MotionConfig reducedMotion="user">{content}</MotionConfig>
-          {isHovered && !isDragging && (
+          {isHovered && isHoverExpanded && !isDragging && (
             <div
               className={classNames(styles.fanKeywords, {
                 [styles.fanKeywordsLeft]: slotX > 0

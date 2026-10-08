@@ -21,6 +21,8 @@ export const FAN_HOVER_HIT_RATIO = 0.7;
 export const FAN_UNHOVER_ANCHOR_ATTR = 'data-fan-unhover-anchor';
 export const FAN_HOVER_FALLBACK_RATIO = 0.8;
 export const FAN_HOVER_MIN_BAND_RATIO = 0.6;
+export const FAN_POINT_LIFT_RATIO = 0.12;
+export const FAN_EXPAND_DELAY_MS = 120;
 
 export const FAN_DROP_RATE = 32;
 export const FAN_DROP_DURATION_S = 0.22;
@@ -103,19 +105,22 @@ export function applyFanHover(
   slots: FanSlot[],
   hoveredIndex: number | null,
   g: FanGeometry,
-  hoverScale = FAN_HOVER_SCALE
+  hoverScale = FAN_HOVER_SCALE,
+  expanded = true
 ): FanSlot[] {
   if (hoveredIndex === null || !slots[hoveredIndex]) return slots;
   const maxX = Math.max(0, (g.stageWidth - g.cardWidth * hoverScale) / 2);
-  return slots.map((slot, i) =>
-    i === hoveredIndex
-      ? {
-          x: Math.max(-maxX, Math.min(maxX, slot.x)),
-          y: (-(hoverScale - 1) * g.cardHeight) / 2,
-          rotate: 0,
-          scale: hoverScale,
-          zIndex: 1000
-        }
-      : slot
-  );
+  return slots.map((slot, i) => {
+    if (i !== hoveredIndex) return slot;
+    if (!expanded) {
+      return { ...slot, y: slot.y - FAN_POINT_LIFT_RATIO * g.cardHeight };
+    }
+    return {
+      x: Math.max(-maxX, Math.min(maxX, slot.x)),
+      y: (-(hoverScale - 1) * g.cardHeight) / 2,
+      rotate: 0,
+      scale: hoverScale,
+      zIndex: 1000
+    };
+  });
 }

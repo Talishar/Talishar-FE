@@ -23,7 +23,7 @@ vi.mock('features/api/apiSlice', () => ({
   useClearRustCountersMutation: () => [vi.fn()]
 }));
 vi.mock('components/RustCounterPanel', () => ({
-  default: () => <button id="clearRust">Watch Ad to Clear</button>
+  default: () => <button id="clearRust" data-testid="clear-rust" />
 }));
 vi.mock('./quickJoin/QuickJoinPanel', () => ({ default: () => null }));
 vi.mock('routes/game/create/CreateGame', () => ({ default: () => null }));
@@ -37,15 +37,15 @@ afterEach(cleanup);
 
 it('keeps the rewarded button mounted while game setup is collapsed', () => {
   render(<UnifiedGamePanel />);
-  const button = screen.getByRole('button', { name: 'Watch Ad to Clear' });
+  const button = screen.getByTestId('clear-rust');
   expect(button).toBeInTheDocument();
 
   fireEvent.click(screen.getByRole('button', { name: /expand/i }));
-  expect(screen.getByRole('button', { name: 'Watch Ad to Clear' })).toBe(button);
+  expect(screen.getByTestId('clear-rust')).toBe(button);
 });
 
 it('does not expose a rewarded button to a supporter in the collapsed panel', () => {
   state.isSupporter = true;
   render(<UnifiedGamePanel />);
-  expect(screen.queryByRole('button', { name: 'Watch Ad to Clear' })).toBeNull();
+  expect(screen.queryByTestId('clear-rust')).toBeNull();
 });
