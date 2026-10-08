@@ -478,8 +478,12 @@ export const PlayerHandCard = React.memo(
       if (isLongPress.current) return;
       if (!card.action) return;
       if (!playCardFunc()) return;
-      if (isFanned && isHovered && isHandZoneCard) {
-        onClickPlay?.(cardId ?? '');
+      if (isFanned && isHovered) {
+        if (lastPointerTypeRef.current === 'touch') {
+          onHoverChange?.(cardId ?? '', false);
+        } else if (isHandZoneCard) {
+          onClickPlay?.(cardId ?? '');
+        }
       }
       addCardToPlayedCards?.(card.cardNumber);
     };

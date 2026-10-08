@@ -18,6 +18,8 @@ export const FAN_REST_HIDDEN_RATIO = 0.54;
 export const FAN_MAX_ROTATION_DEG = 12;
 export const FAN_HOVER_SCALE = 1.725;
 export const FAN_CARD_ART_ASPECT = 450 / 628;
+export const FAN_MIN_HOVER_HEIGHT_PX = 300;
+export const FAN_MAX_HOVER_SCREEN_RATIO = 0.75;
 export const FAN_HOVER_HIT_RATIO = 0.7;
 export const FAN_UNHOVER_ANCHOR_ATTR = 'data-fan-unhover-anchor';
 export const FAN_HOVER_FALLBACK_RATIO = 0.8;
@@ -48,9 +50,19 @@ export const fanUnhoverEase = expEaseOut(
   FAN_UNHOVER_DURATION_S
 );
 
-export function fanHoverScaleFor(raw: string | undefined): number {
+export function fanHoverScaleFor(
+  raw: string | undefined,
+  cardHeight: number,
+  screenHeight: number
+): number {
   const size = Number(raw);
-  return Math.max(1, FAN_HOVER_SCALE * (size > 0 ? size : 1));
+  const scale = Math.max(1, FAN_HOVER_SCALE * (size > 0 ? size : 1));
+  if (cardHeight <= 0) return scale;
+  const minHeight = Math.min(
+    FAN_MIN_HOVER_HEIGHT_PX,
+    screenHeight * FAN_MAX_HOVER_SCREEN_RATIO
+  );
+  return Math.max(scale, minHeight / cardHeight);
 }
 
 export function fanHoverLineY(

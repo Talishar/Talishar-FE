@@ -1,4 +1,9 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import {
+  createEvent,
+  fireEvent,
+  screen,
+  waitFor
+} from '@testing-library/react';
 import { CookiesProvider } from 'react-cookie';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { renderWithProviders } from 'utils/TestUtils';
@@ -66,6 +71,13 @@ const tapCard = (el: HTMLElement) => {
   fireEvent.click(el);
 };
 
+const pressWith = (el: HTMLElement, pointerType: 'touch' | 'mouse') => {
+  const down = createEvent.pointerDown(el);
+  Object.defineProperty(down, 'pointerType', { value: pointerType });
+  fireEvent(el, down);
+  fireEvent.click(el);
+};
+
 const renderHandCard = (cookieEnabled: boolean) => {
   document.cookie = `${TAP_TO_PREVIEW_PLAY_COOKIE}=${
     cookieEnabled ? 'true' : 'false'
@@ -104,6 +116,30 @@ const renderTwoHandCards = () => {
     </CookiesProvider>
   );
   return { ...view, addCardToPlayedCards };
+};
+
+const renderFannedHoveredCard = () => {
+  document.cookie = `${TAP_TO_PREVIEW_PLAY_COOKIE}=false; path=/`;
+  const addCardToPlayedCards = vi.fn();
+  const onHoverChange = vi.fn();
+  const onClickPlay = vi.fn();
+  const view = renderWithProviders(
+    <CookiesProvider>
+      <PlayerHandCard
+        card={playableCard}
+        cardId="hand-1"
+        addCardToPlayedCards={addCardToPlayedCards}
+        isFanned
+        isHovered
+        fanSlot={{ x: 0, y: 0, rotate: 0, scale: 1, zIndex: 200 }}
+        fanCardHeight={225}
+        onHoverChange={onHoverChange}
+        onClickPlay={onClickPlay}
+        disableDrag
+      />
+    </CookiesProvider>
+  );
+  return { ...view, addCardToPlayedCards, onHoverChange, onClickPlay };
 };
 
 describe('PlayerHandCard tap to preview play', () => {
@@ -202,5 +238,37 @@ describe('PlayerHandCard tap to preview play', () => {
       expect(getCardPreview().popupCard?.cardNumber).toBe('WTR001');
     });
     expect(addCardToPlayedCards).not.toHaveBeenCalled();
+  });
+});
+
+describe('fanned hovered card play', () => {
+  beforeEach(() => {
+    clearTapToPreviewSelection();
+    clearCardPreview();
+    document.cookie = `${TAP_TO_PREVIEW_PLAY_COOKIE}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+  });
+
+  it('touch play drops the hover instead of chaining', async () => {
+    const { addCardToPlayedCards, onHoverChange, onClickPlay } =
+      renderFannedHoveredCard();
+    pressWith(screen.getByTestId('card-image'), 'touch');
+
+    await waitFor(() => {
+      expect(addCardToPlayedCards).toHaveBeenCalledWith('WTR001');
+    });
+    expect(onHoverChange).toHaveBeenCalledWith('hand-1', false);
+    expect(onClickPlay).not.toHaveBeenCalled();
+  });
+
+  it('mouse play chains the hover to the next card', async () => {
+    const { addCardToPlayedCards, onHoverChange, onClickPlay } =
+      renderFannedHoveredCard();
+    pressWith(screen.getByTestId('card-image'), 'mouse');
+
+    await waitFor(() => {
+      expect(addCardToPlayedCards).toHaveBeenCalledWith('WTR001');
+    });
+    expect(onClickPlay).toHaveBeenCalledWith('hand-1');
+    expect(onHoverChange).not.toHaveBeenCalledWith('hand-1', false);
   });
 });
