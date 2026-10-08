@@ -24,7 +24,7 @@
 }
 
 .handIdle {
-  filter: brightness(0.85) saturate(0.75);
+  filter: brightness(0.92) saturate(0.85);
 }
 
 .handCollapseButton {
