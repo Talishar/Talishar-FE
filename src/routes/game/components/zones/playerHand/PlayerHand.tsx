@@ -29,8 +29,6 @@ import {
   FAN_EXPAND_DELAY_MS,
   FAN_KEYWORD_DELAY_MS,
   FAN_REST_HIDDEN_RATIO,
-  FAN_SHARPEN_FILTER_ID,
-  FAN_SHARPEN_KERNEL,
   FAN_UNHOVER_ANCHOR_ATTR,
   FanGeometry,
   FanSlot,
@@ -1049,22 +1047,6 @@ function PlayerHand() {
 
   const fanHand = (
     <>
-      <svg className={styles.filterDefs} aria-hidden focusable="false">
-        <filter
-          id={FAN_SHARPEN_FILTER_ID}
-          x="-25%"
-          y="-25%"
-          width="150%"
-          height="150%"
-          colorInterpolationFilters="sRGB"
-        >
-          <feConvolveMatrix
-            order="3"
-            preserveAlpha
-            kernelMatrix={FAN_SHARPEN_KERNEL}
-          />
-        </filter>
-      </svg>
       <div
         ref={fanStageRef}
         className={classNames(styles.fanStage, {
@@ -1101,7 +1083,6 @@ function PlayerHand() {
                 fanHoverScale={fanHoverScale}
                 fanCardHeight={fanGeometry.cardHeight}
                 isFanLifted={isFanLifted}
-                isHoverExpanded={isHoverExpanded}
                 onHoverChange={handleHoverChange}
                 onFanPointerEnter={handleFanPointerEnter}
                 onClickPlay={handleClickPlay}
@@ -1125,7 +1106,6 @@ function PlayerHand() {
                 fanHoverScale={fanHoverScale}
                 fanCardHeight={fanGeometry.cardHeight}
                 isFanLifted={isFanLifted}
-                isHoverExpanded={isHoverExpanded}
                 onHoverChange={handleHoverChange}
                 onFanPointerEnter={handleFanPointerEnter}
                 dimWhenUnplayable={dimWhenUnplayable}

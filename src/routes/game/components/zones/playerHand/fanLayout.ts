@@ -28,8 +28,6 @@ export const FAN_POINT_LIFT_RATIO = 0.12;
 export const FAN_EXPAND_DELAY_MS = 500;
 export const FAN_KEYWORD_DELAY_MS = 500;
 export const FAN_LANDING_Z_INDEX = 999;
-export const FAN_SHARPEN_FILTER_ID = 'fan-card-sharpen';
-export const FAN_SHARPEN_KERNEL = '0 -0.35 0 -0.35 2.4 -0.35 0 -0.35 0';
 
 export const FAN_DROP_RATE = 32;
 export const FAN_DROP_DURATION_S = 0.22;
