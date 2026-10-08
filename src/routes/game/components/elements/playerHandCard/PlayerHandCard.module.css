@@ -57,6 +57,14 @@
   filter: brightness(0.92) saturate(0.85);
 }
 
+.sharpen {
+  filter: url(#fan-card-sharpen);
+}
+
+.sharpen.unplayable {
+  filter: url(#fan-card-sharpen) brightness(0.92) saturate(0.85);
+}
+
 .fanSlot {
   position: absolute;
   left: 50%;

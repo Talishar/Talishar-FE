@@ -156,6 +156,7 @@ export interface HandCard {
   fanHoverScale?: number;
   fanCardHeight?: number;
   isFanLifted?: boolean;
+  isHoverExpanded?: boolean;
   onHoverChange?: (cardId: string, hovering: boolean) => void;
   onFanPointerEnter?: (clientX: number, clientY: number) => void;
   onClickPlay?: (cardId: string) => void;
@@ -192,6 +193,7 @@ export const PlayerHandCard = React.memo(
     fanHoverScale = FAN_HOVER_SCALE,
     fanCardHeight,
     isFanLifted = false,
+    isHoverExpanded = false,
     onHoverChange,
     onFanPointerEnter,
     onClickPlay,
@@ -417,6 +419,14 @@ export const PlayerHandCard = React.memo(
           [styles.unplayable]: dimWhenUnplayable && !card?.action
         }),
       [card?.borderColor, card?.action, dimWhenUnplayable]
+    );
+
+    const handImgStyles = useMemo(
+      () =>
+        classNames(imgStyles, {
+          [styles.sharpen]: isFanned && !(isHovered && isHoverExpanded)
+        }),
+      [imgStyles, isFanned, isHovered, isHoverExpanded]
     );
 
     if (card === undefined) {
@@ -825,7 +835,7 @@ export const PlayerHandCard = React.memo(
             disableHoverPreview={isFanned}
             onTouchPreview={isFanned ? liftFromTouch : undefined}
           >
-            <CardImage src={src} className={imgStyles} draggable="false" />
+            <CardImage src={src} className={handImgStyles} draggable="false" />
             {iconColumn}
           </CardPopUp>
           {cardLabel}

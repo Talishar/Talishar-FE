@@ -4,6 +4,8 @@ import {
   screen,
   waitFor
 } from '@testing-library/react';
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
 import { CookiesProvider } from 'react-cookie';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { renderWithProviders } from 'utils/TestUtils';
@@ -17,6 +19,10 @@ import {
   clearCardPreview,
   getCardPreview
 } from '../../cardPortal/cardPreviewStore';
+import {
+  FAN_SHARPEN_FILTER_ID,
+  FAN_SHARPEN_KERNEL
+} from '../../../zones/playerHand/fanLayout';
 import { Card } from 'features/Card';
 
 vi.mock('hooks/useLanguageSelector', () => ({
@@ -142,7 +148,11 @@ const renderFannedHoveredCard = () => {
   return { ...view, addCardToPlayedCards, onHoverChange, onClickPlay };
 };
 
-const renderRotatedCard = (fanned: boolean, hovered: boolean) => {
+const renderRotatedCard = (
+  fanned: boolean,
+  hovered: boolean,
+  expanded = false
+) => {
   const view = renderWithProviders(
     <CookiesProvider>
       <PlayerHandCard
@@ -151,6 +161,7 @@ const renderRotatedCard = (fanned: boolean, hovered: boolean) => {
         addCardToPlayedCards={vi.fn()}
         isFanned={fanned}
         isHovered={hovered}
+        isHoverExpanded={expanded}
         fanSlot={
           fanned
             ? { x: 40, y: 120, rotate: 8, scale: 1, zIndex: 200 }
@@ -318,5 +329,42 @@ describe('fanned card GPU layer', () => {
     const { inner } = renderRotatedCard(false, false);
     expect(inner.style.transform).toContain('rotate(15deg)');
     expect(inner.style.transform).toContain('translateZ');
+  });
+});
+
+describe('fanned card sharpen', () => {
+  it('resting fanned card image is sharpened', () => {
+    renderRotatedCard(true, false);
+    expect(screen.getByTestId('card-image').className).toMatch(/sharpen/);
+  });
+
+  it('expanded hovered fanned card image is not sharpened', () => {
+    renderRotatedCard(true, true, true);
+    expect(screen.getByTestId('card-image').className).not.toMatch(/sharpen/);
+  });
+
+  it('lifted but not expanded fanned card image stays sharpened', () => {
+    renderRotatedCard(true, true, false);
+    expect(screen.getByTestId('card-image').className).toMatch(/sharpen/);
+  });
+
+  it('classic card image is not sharpened', () => {
+    renderRotatedCard(false, false);
+    expect(screen.getByTestId('card-image').className).not.toMatch(/sharpen/);
+  });
+
+  it('sharpen kernel has 9 weights summing to 1', () => {
+    const weights = FAN_SHARPEN_KERNEL.split(' ').map(Number);
+    expect(weights).toHaveLength(9);
+    expect(weights.reduce((sum, w) => sum + w, 0)).toBeCloseTo(1);
+  });
+
+  it('sharpen filter id matches the card stylesheet', () => {
+    const css = readFileSync(
+      resolve(__dirname, '../PlayerHandCard.module.css'),
+      'utf8'
+    );
+    expect(FAN_SHARPEN_FILTER_ID).toBe('fan-card-sharpen');
+    expect(css.split(`url(#${FAN_SHARPEN_FILTER_ID})`)).toHaveLength(3);
   });
 });
