@@ -33,7 +33,7 @@ export const FAN_DROP_RATE = 32;
 export const FAN_DROP_DURATION_S = 0.22;
 export const FAN_RISE_RATE = 55;
 export const FAN_RISE_DURATION_S = 0.07;
-export const FAN_UNHOVER_DURATION_S = 0.25;
+export const FAN_UNHOVER_DURATION_S = 0.23;
 export const FAN_LAND_DURATION_S = FAN_UNHOVER_DURATION_S;
 
 function expEaseOut(rate: number, duration: number) {
