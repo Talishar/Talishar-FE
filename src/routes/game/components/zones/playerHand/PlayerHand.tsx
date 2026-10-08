@@ -27,17 +27,17 @@ import { useCookieString } from 'utils/cookieStore';
 import {
   ENABLE_FANNED_HAND_COOKIE,
   FAN_EXPAND_DELAY_MS,
+  FAN_KEYWORD_DELAY_MS,
   FAN_REST_HIDDEN_RATIO,
   FAN_UNHOVER_ANCHOR_ATTR,
   FanGeometry,
   FanSlot,
   applyFanHover,
   computeFanSlots,
+  fanHoverIndexAt,
   fanHoverLineY,
   fanHoverScaleFor,
-  fanIndexAt,
-  fanScaleFor,
-  fanSpacing
+  fanSlotIndexAt
 } from './fanLayout';
 import { useFanHover } from './useFanHover';
 import ClassicPlayerHand from './ClassicPlayerHand';
@@ -47,6 +47,7 @@ const CARD_ROTATION_KEY_STEP_DEGREES = 3;
 const WHEEL_ROTATION_DEGREES_PER_PIXEL = 0.15;
 const MAX_WHEEL_ROTATION_DEGREES = 15;
 const NUMERIC_RE = /^\d+$/;
+const PITCH_PHASES = new Set(['P', 'CHOOSEHANDCANCEL', 'PAYGOLDORPITCH']);
 
 const preventContextMenu = (event: React.MouseEvent) => event.preventDefault();
 
@@ -133,6 +134,10 @@ function PlayerHand() {
   const hasPriority = useAppSelector(
     (state: RootState) => state.game.hasPriority
   );
+  const turnPhase = useAppSelector(
+    (state: RootState) => state.game.turnPhase?.turnPhase
+  );
+  const isPitching = !!turnPhase && PITCH_PHASES.has(turnPhase);
   const dispatch = useAppDispatch();
   const queuedHandPlayCount = useAppSelector(
     (state: RootState) => state.game.queuedHandPlays?.length ?? 0
@@ -165,8 +170,8 @@ function PlayerHand() {
     dispatch
   ]);
   const [dragPlayState, setDragPlayState] = useState<DragPlayState>('idle');
-  const { hoveredCardId, handleHoverChange, clearHover } = useFanHover();
-  const [purgatoryCardId, setPurgatoryCardId] = useState<string | null>(null);
+  const { hoveredCardId, landingCardId, handleHoverChange, clearHover } =
+    useFanHover();
   const lastFanSlotsRef = useRef(new Map<string, FanSlot>());
   const fanStageRef = useRef<HTMLDivElement>(null);
   const lastPointerRef = useRef<{ x: number; y: number; type: string } | null>(
@@ -487,11 +492,12 @@ function PlayerHand() {
 
   const [expandedCardId, setExpandedCardId] = useState<string | null>(null);
   const isHoverExpanded =
-    activeHoveredCardId !== null && expandedCardId === activeHoveredCardId;
+    activeHoveredCardId !== null &&
+    (!isPitching || expandedCardId === activeHoveredCardId);
 
   useEffect(() => {
     setExpandedCardId(null);
-    if (activeHoveredCardId === null) return;
+    if (activeHoveredCardId === null || !isPitching) return;
     const expand = () => setExpandedCardId(activeHoveredCardId);
     if (lastPointerRef.current?.type === 'touch') {
       expand();
@@ -508,32 +514,120 @@ function PlayerHand() {
       clearTimeout(timer);
       window.removeEventListener('pointermove', restartOnMove);
     };
+  }, [activeHoveredCardId, isPitching]);
+
+  const [keywordCardId, setKeywordCardId] = useState<string | null>(null);
+  useEffect(() => {
+    setKeywordCardId(null);
+    if (activeHoveredCardId === null) return;
+    if (lastPointerRef.current?.type === 'touch') {
+      setKeywordCardId(activeHoveredCardId);
+      return;
+    }
+    const timer = setTimeout(
+      () => setKeywordCardId(activeHoveredCardId),
+      FAN_KEYWORD_DELAY_MS
+    );
+    return () => clearTimeout(timer);
   }, [activeHoveredCardId]);
+  const showHoverKeywords =
+    isHoverExpanded && keywordCardId === activeHoveredCardId;
 
   const fanSlotById = useMemo(() => {
     const slots = new Map<string, FanSlot>();
-    const laidOut = fanItems.filter((item) => item.id !== purgatoryCardId);
     const hoveredIndex =
       activeHoveredCardId === null
         ? -1
-        : laidOut.findIndex((item) => item.id === activeHoveredCardId);
+        : fanItems.findIndex((item) => item.id === activeHoveredCardId);
     const computed = applyFanHover(
-      computeFanSlots(laidOut.length, fanGeometry),
+      computeFanSlots(fanItems.length, fanGeometry),
       hoveredIndex === -1 ? null : hoveredIndex,
       fanGeometry,
       fanHoverScale,
       isHoverExpanded
     );
-    laidOut.forEach((item, index) => slots.set(item.id, computed[index]));
+    fanItems.forEach((item, index) => slots.set(item.id, computed[index]));
     return slots;
   }, [
     fanItems,
-    purgatoryCardId,
     activeHoveredCardId,
     isHoverExpanded,
     fanGeometry,
     fanHoverScale
   ]);
+
+  const hoverTargetAt = useCallback(
+    (x: number, y: number, items: FanItem[], hoveredId: string | null) => {
+      const stage = fanStageRef.current;
+      if (!stage || items.length === 0) return null;
+      const rect = stage.getBoundingClientRect();
+      if (
+        y <
+        fanHoverLineY(
+          rect.bottom,
+          fanGeometry.cardHeight,
+          fanHoverScale,
+          unhoverAnchorY
+        )
+      ) {
+        return null;
+      }
+      const hoveredIndex =
+        hoveredId === null
+          ? -1
+          : items.findIndex((item) => item.id === hoveredId);
+      const index = fanHoverIndexAt(
+        items.length,
+        x - (rect.left + rect.width / 2),
+        fanGeometry,
+        hoveredIndex === -1 ? null : hoveredIndex,
+        fanHoverScale,
+        isHoverExpanded
+      );
+      return index === null ? null : items[index].id;
+    },
+    [fanGeometry, fanHoverScale, unhoverAnchorY, isHoverExpanded]
+  );
+
+  useEffect(() => {
+    if (activeHoveredCardId === null) return;
+    const track = (event: PointerEvent) => {
+      if (event.pointerType === 'touch') return;
+      const target = hoverTargetAt(
+        event.clientX,
+        event.clientY,
+        fanItems,
+        activeHoveredCardId
+      );
+      if (target === null) clearHover();
+      else if (target !== activeHoveredCardId) handleHoverChange(target, true);
+    };
+    const leave = (event: PointerEvent) => {
+      if (event.pointerType !== 'touch') clearHover();
+    };
+    const root = document.documentElement;
+    window.addEventListener('pointermove', track, { passive: true });
+    root.addEventListener('pointerleave', leave);
+    return () => {
+      window.removeEventListener('pointermove', track);
+      root.removeEventListener('pointerleave', leave);
+    };
+  }, [
+    activeHoveredCardId,
+    fanItems,
+    hoverTargetAt,
+    clearHover,
+    handleHoverChange
+  ]);
+
+  const handleFanPointerEnter = useCallback(
+    (x: number, y: number) => {
+      if (isDragActive) return;
+      const target = hoverTargetAt(x, y, fanItems, null);
+      if (target !== null) handleHoverChange(target, true);
+    },
+    [isDragActive, hoverTargetAt, fanItems, handleHoverChange]
+  );
 
   useEffect(() => {
     const previous = lastFanSlotsRef.current;
@@ -567,41 +661,36 @@ function PlayerHand() {
   const handleClickPlay = useCallback(
     (cardId: string) => {
       const pointer = lastPointerRef.current;
-      const stage = fanStageRef.current;
-      if (!pointer || !stage) return;
-      const next = fanItems.filter(
-        (item) => item.id !== cardId && item.id !== purgatoryCardId
-      );
-      const rect = stage.getBoundingClientRect();
-      if (
-        pointer.y <
-        fanHoverLineY(
-          rect.bottom,
-          fanGeometry.cardHeight,
-          fanHoverScale,
-          unhoverAnchorY
-        )
-      ) {
-        return;
-      }
-      const index = fanIndexAt(
-        computeFanSlots(next.length, fanGeometry),
-        pointer.x - (rect.left + rect.width / 2),
-        fanGeometry.cardWidth * fanScaleFor(next.length)
-      );
-      if (index !== null) handleHoverChange(next[index].id, true);
+      if (!pointer) return;
+      const next = fanItems.filter((item) => item.id !== cardId);
+      const target = hoverTargetAt(pointer.x, pointer.y, next, null);
+      if (target !== null) handleHoverChange(target, true);
     },
-    [
-      fanItems,
-      purgatoryCardId,
-      fanGeometry,
-      fanHoverScale,
-      unhoverAnchorY,
-      handleHoverChange
-    ]
+    [fanItems, hoverTargetAt, handleHoverChange]
   );
 
-  const reorderStepPx = Math.max(1, fanSpacing(fanItems.length, fanGeometry));
+  const handZoneIndexAt = (x: number, y: number): number | null => {
+    const stage = fanStageRef.current;
+    if (!stage) return null;
+    const rect = stage.getBoundingClientRect();
+    if (x < rect.left || x > rect.right) return null;
+    if (
+      y <
+      fanHoverLineY(
+        rect.bottom,
+        fanGeometry.cardHeight,
+        fanHoverScale,
+        unhoverAnchorY
+      )
+    ) {
+      return null;
+    }
+    return fanSlotIndexAt(
+      fanItems.length,
+      x - (rect.left + rect.width / 2),
+      fanGeometry
+    );
+  };
 
   const handleHandCardDragStart = () => {
     setDragStartOrderIds(orderedHandIds);
@@ -611,42 +700,22 @@ function PlayerHand() {
 
   const handleHandCardDragMove = (
     draggedCardId: string,
-    offsetX: number,
-    offsetY: number
+    pointX: number,
+    pointY: number
   ) => {
     if (!dragStartOrderIds) {
       return;
     }
 
-    if (offsetY < -0.35 * fanGeometry.cardHeight) {
-      if (purgatoryCardId !== draggedCardId) setPurgatoryCardId(draggedCardId);
-      return;
-    }
-
-    if (purgatoryCardId !== null) {
-      return;
-    }
-
-    if (Math.abs(offsetX) <= Math.abs(offsetY)) {
-      return;
-    }
-
-    const fromIndex = dragStartOrderIds.indexOf(draggedCardId);
-    if (fromIndex === -1) {
-      return;
-    }
-
-    const cardSlotsMoved = Math.round(offsetX / reorderStepPx);
-    const toIndex = Math.min(
-      dragStartOrderIds.length - 1,
-      Math.max(0, fromIndex + cardSlotsMoved)
-    );
-
-    const nextPreviewOrder = moveCardIdInOrder(
-      dragStartOrderIds,
-      draggedCardId,
-      toIndex
-    );
+    const index = handZoneIndexAt(pointX, pointY);
+    const nextPreviewOrder =
+      index === null
+        ? dragStartOrderIds
+        : moveCardIdInOrder(
+            dragStartOrderIds,
+            draggedCardId,
+            Math.min(index, dragStartOrderIds.length - 1)
+          );
 
     setPreviewHandIds((currentPreview) => {
       if (
@@ -664,7 +733,6 @@ function PlayerHand() {
   const clearHandDragPreview = () => {
     setDragStartOrderIds(null);
     setPreviewHandIds(null);
-    setPurgatoryCardId(null);
     soundPlayedForDragRef.current = false;
   };
 
@@ -744,37 +812,21 @@ function PlayerHand() {
 
   const handleHandCardReorder = (
     draggedCardId: string,
-    offsetX: number,
-    offsetY: number
+    pointX: number,
+    pointY: number
   ) => {
-    if (Math.abs(offsetX) <= Math.abs(offsetY)) {
-      return false;
-    }
-
-    const cardSlotsMoved = Math.round(offsetX / reorderStepPx);
-    if (cardSlotsMoved === 0) {
+    const index = handZoneIndexAt(pointX, pointY);
+    if (index === null) {
+      clearHandDragPreview();
       return false;
     }
 
     const baseOrder = dragStartOrderIds ?? orderedHandIds;
+    const toIndex = Math.min(index, baseOrder.length - 1);
 
     setOrderedHandIds((currentOrder) => {
       const effectiveOrder =
         currentOrder.length === baseOrder.length ? currentOrder : baseOrder;
-      const fromIndex = effectiveOrder.indexOf(draggedCardId);
-      if (fromIndex === -1) {
-        return effectiveOrder;
-      }
-
-      const toIndex = Math.min(
-        effectiveOrder.length - 1,
-        Math.max(0, fromIndex + cardSlotsMoved)
-      );
-
-      if (toIndex === fromIndex) {
-        return effectiveOrder;
-      }
-
       return moveCardIdInOrder(effectiveOrder, draggedCardId, toIndex);
     });
 
@@ -793,12 +845,12 @@ function PlayerHand() {
   dragCancelImplRef.current = clearHandDragPreview;
 
   const stableDragMove = useCallback((cardId: string, info: PanInfo) => {
-    dragMoveImplRef.current(cardId, info.offset.x, info.offset.y);
+    dragMoveImplRef.current(cardId, info.point.x, info.point.y);
   }, []);
   const stableDragEnd = useCallback(
     (cardId: string, info: PanInfo): boolean => {
       return (
-        dragEndImplRef.current(cardId, info.offset.x, info.offset.y) ?? false
+        dragEndImplRef.current(cardId, info.point.x, info.point.y) ?? false
       );
     },
     []
@@ -1019,12 +1071,13 @@ function PlayerHand() {
                 isFanned
                 fanSlot={fanSlotFor(id)}
                 isHovered={activeHoveredCardId === id}
-                isHoverExpanded={isHoverExpanded}
+                isLanding={landingCardId === id && activeHoveredCardId !== id}
+                showHoverKeywords={showHoverKeywords}
                 fanHoverScale={fanHoverScale}
                 fanCardHeight={fanGeometry.cardHeight}
-                fanUnhoverAnchorY={unhoverAnchorY}
                 isFanLifted={isFanLifted}
                 onHoverChange={handleHoverChange}
+                onFanPointerEnter={handleFanPointerEnter}
                 onClickPlay={handleClickPlay}
                 dimWhenUnplayable={dimWhenUnplayable}
                 onDragPlayStateChange={setDragPlayState}
@@ -1039,12 +1092,13 @@ function PlayerHand() {
                 isFanned
                 fanSlot={fanSlotFor(id)}
                 isHovered={activeHoveredCardId === id}
-                isHoverExpanded={isHoverExpanded}
+                isLanding={landingCardId === id && activeHoveredCardId !== id}
+                showHoverKeywords={showHoverKeywords}
                 fanHoverScale={fanHoverScale}
                 fanCardHeight={fanGeometry.cardHeight}
-                fanUnhoverAnchorY={unhoverAnchorY}
                 isFanLifted={isFanLifted}
                 onHoverChange={handleHoverChange}
+                onFanPointerEnter={handleFanPointerEnter}
                 dimWhenUnplayable={dimWhenUnplayable}
                 onDragPlayStateChange={setDragPlayState}
               />

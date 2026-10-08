@@ -33,6 +33,8 @@ import {
   useMotionValue,
   useReducedMotion,
   useSpring,
+  useTransform,
+  useVelocity,
   animate as animateValue
 } from 'framer-motion';
 import { createPortal } from 'react-dom';
@@ -53,9 +55,9 @@ import {
 import {
   FAN_DROP_DURATION_S,
   FAN_HOVER_SCALE,
+  FAN_LANDING_Z_INDEX,
   FanSlot,
-  fanDropEase,
-  fanHoverLineY
+  fanDropEase
 } from '../../zones/playerHand/fanLayout';
 import {
   classifyDragRelease,
@@ -75,12 +77,6 @@ const CARD_TRANSITION = {
   opacity: { duration: 0.14, ease: 'easeOut' as const },
   y: { duration: 0.14, ease: 'easeOut' as const }
 };
-const FAN_SPRING = {
-  type: 'spring' as const,
-  stiffness: 260,
-  damping: 34,
-  mass: 1
-};
 const FAN_HOVER_SPRING = {
   type: 'spring' as const,
   stiffness: 2500,
@@ -92,29 +88,27 @@ const FAN_DROP_TRANSITION = {
   duration: FAN_DROP_DURATION_S,
   ease: fanDropEase
 };
-const FAN_LIFTED_TRANSITION = FAN_HOVER_SPRING;
-const GHOST_FOLLOW_SPRING = { stiffness: 700, damping: 45 };
-const GHOST_GRAB_RATIO = 0.31;
+const FAN_RETURN_TRANSITION = {
+  type: 'tween' as const,
+  duration: 0.2,
+  ease: 'easeOut' as const
+};
+const GHOST_FOLLOW_SPRING = { stiffness: 220, damping: 26 };
 const GHOST_ROTATE_SPRING = {
   type: 'spring' as const,
   stiffness: 400,
   damping: 40
 };
-
-const isPointInElement = (
-  element: HTMLElement | null,
-  clientX: number,
-  clientY: number
-) => {
-  const rect = element?.getBoundingClientRect();
-  return (
-    !!rect &&
-    clientX >= rect.left &&
-    clientX <= rect.right &&
-    clientY >= rect.top &&
-    clientY <= rect.bottom
-  );
-};
+const GHOST_TILT_MAX_DEG = 4;
+const GHOST_TILT_DEG_PER_PX_S = 0.004;
+const GHOST_TILT_SPRING = { stiffness: 300, damping: 30 };
+const GHOST_PERSPECTIVE_RATIO = 1;
+const clampTilt = (deg: number) =>
+  Math.max(-GHOST_TILT_MAX_DEG, Math.min(GHOST_TILT_MAX_DEG, deg));
+const tiltFromVelocityX = (velocity: number) =>
+  clampTilt(velocity * GHOST_TILT_DEG_PER_PX_S);
+const tiltFromVelocityY = (velocity: number) =>
+  clampTilt(-velocity * GHOST_TILT_DEG_PER_PX_S);
 
 export type DragPlayState = 'idle' | 'below' | 'above';
 
@@ -141,12 +135,13 @@ export interface HandCard {
   isFanned?: boolean;
   fanSlot?: FanSlot;
   isHovered?: boolean;
-  isHoverExpanded?: boolean;
+  isLanding?: boolean;
+  showHoverKeywords?: boolean;
   fanHoverScale?: number;
   fanCardHeight?: number;
-  fanUnhoverAnchorY?: number | null;
   isFanLifted?: boolean;
   onHoverChange?: (cardId: string, hovering: boolean) => void;
+  onFanPointerEnter?: (clientX: number, clientY: number) => void;
   onClickPlay?: (cardId: string) => void;
   dimWhenUnplayable?: boolean;
   onDragPlayStateChange?: (s: DragPlayState) => void;
@@ -176,12 +171,13 @@ export const PlayerHandCard = React.memo(
     isFanned = false,
     fanSlot,
     isHovered = false,
-    isHoverExpanded = true,
+    isLanding = false,
+    showHoverKeywords = false,
     fanHoverScale = FAN_HOVER_SCALE,
     fanCardHeight,
-    fanUnhoverAnchorY = null,
     isFanLifted = false,
     onHoverChange,
+    onFanPointerEnter,
     onClickPlay,
     dimWhenUnplayable,
     onDragPlayStateChange
@@ -215,8 +211,6 @@ export const PlayerHandCard = React.memo(
       top: number;
       width: number;
       height: number;
-      originX?: number;
-      originY?: number;
     } | null>(null);
 
     const dragX = useMotionValue(0);
@@ -224,10 +218,23 @@ export const PlayerHandCard = React.memo(
     const ghostRotate = useMotionValue(0);
     const returnX = useMotionValue(0);
     const returnY = useMotionValue(0);
+    const followX = useMotionValue(0);
+    const followY = useMotionValue(0);
     const returnScale = useMotionValue(1.05);
     const springX = useSpring(dragX, GHOST_FOLLOW_SPRING);
     const springY = useSpring(dragY, GHOST_FOLLOW_SPRING);
+    const ghostTiltY = useSpring(
+      useTransform(useVelocity(followX), tiltFromVelocityX),
+      GHOST_TILT_SPRING
+    );
+    const ghostTiltX = useSpring(
+      useTransform(useVelocity(followY), tiltFromVelocityY),
+      GHOST_TILT_SPRING
+    );
     const reduceMotion = useReducedMotion();
+    const reduceDragMotion = reduceMotion && !isFanned;
+    const ghostX = isFanned ? followX : reduceDragMotion ? dragX : springX;
+    const ghostY = isFanned ? followY : reduceDragMotion ? dragY : springY;
     const dispatch = useAppDispatch();
     const isPlayBusy = useAppSelector((state) => isHandPlayBusy(state.game));
     const canQueuePlay = useAppSelector(
@@ -239,34 +246,6 @@ export const PlayerHandCard = React.memo(
       const controls = animateValue(ghostRotate, rotation, GHOST_ROTATE_SPRING);
       return () => controls.stop();
     }, [isDragging, isFanned, rotation, ghostRotate]);
-
-    useEffect(() => {
-      if (!isFanned || !isHovered || isDragging) return;
-      const unhover = (event: PointerEvent) => {
-        if (event.pointerType === 'touch') return;
-        onHoverChange?.(cardId ?? '', false);
-      };
-      const unhoverIfOutside = (event: PointerEvent) => {
-        if (event.pointerType === 'touch') return;
-        const element = cardElRef.current;
-        if (
-          element &&
-          event.target instanceof Node &&
-          element.contains(event.target)
-        ) {
-          return;
-        }
-        if (isPointInElement(element, event.clientX, event.clientY)) return;
-        unhover(event);
-      };
-      const root = document.documentElement;
-      window.addEventListener('pointermove', unhoverIfOutside);
-      root.addEventListener('pointerleave', unhover);
-      return () => {
-        window.removeEventListener('pointermove', unhoverIfOutside);
-        root.removeEventListener('pointerleave', unhover);
-      };
-    }, [isFanned, isHovered, isDragging, cardId, onHoverChange]);
 
     useEffect(() => {
       if (!isFanned || !isHovered || isDragging) return;
@@ -312,7 +291,9 @@ export const PlayerHandCard = React.memo(
         stageRect.bottom - (fanCardHeight ?? wrapper.offsetHeight) / 2 + slotY;
       const ghostCenterX = fixedRect.left + fixedRect.width / 2;
       const ghostCenterY = fixedRect.top + fixedRect.height / 2;
-      const transition = reduceMotion ? { duration: 0 } : FAN_SPRING;
+      const transition = reduceDragMotion
+        ? { duration: 0 }
+        : FAN_RETURN_TRANSITION;
       let cancelled = false;
       const controls = [
         animateValue(returnX, targetX - ghostCenterX, transition),
@@ -341,7 +322,7 @@ export const PlayerHandCard = React.memo(
       returnY,
       returnScale,
       ghostRotate,
-      reduceMotion,
+      reduceDragMotion,
       fanCardHeight
     ]);
 
@@ -471,6 +452,14 @@ export const PlayerHandCard = React.memo(
         draggedRef.current = false;
         return;
       }
+      if (
+        isFanned &&
+        isFanLifted &&
+        !isHovered &&
+        lastPointerTypeRef.current === 'mouse'
+      ) {
+        return;
+      }
       if (scrollBlockedRef?.current) return;
       if (isLongPress.current) return;
       if (!card.action) return;
@@ -485,32 +474,24 @@ export const PlayerHandCard = React.memo(
       const element = cardElRef.current;
       if (isFanned) {
         setIsReturning(false);
-        springX.jump(dragX.get());
-        springY.jump(dragY.get());
+        followX.jump(dragX.get());
+        followY.jump(dragY.get());
       }
       if (isFanned && element) {
-        const img = element.querySelector('img');
-        const rect = (img ?? element).getBoundingClientRect();
-        const pointX = info.point.x - shift.x;
         const height = fanCardHeight ?? element.offsetHeight;
         const width = fanCardHeight
           ? (fanCardHeight * 2) / 3
           : element.offsetWidth;
-        const grabOffset =
-          GHOST_GRAB_RATIO *
-          (fanCardHeight ?? img?.offsetHeight ?? element.offsetHeight);
-        const left = rect.left - shift.x + rect.width / 2 - width / 2;
         setFixedRect({
-          left,
-          top: info.point.y - shift.y - grabOffset,
+          left: info.point.x - shift.x - width / 2,
+          top: info.point.y - shift.y - height / 2,
           width,
-          height,
-          originX: Math.min(1, Math.max(0, (pointX - left) / width)),
-          originY: grabOffset / height
+          height
         });
         ghostRotate.jump((fanSlot?.rotate ?? 0) + rotation);
         returnScale.jump(fanSlot?.scale ?? 1);
-        animateValue(returnScale, 1.05, FAN_SPRING);
+        if (reduceDragMotion) returnScale.jump(fanHoverScale);
+        else animateValue(returnScale, fanHoverScale, FAN_HOVER_SPRING);
       } else {
         const rect = element?.getBoundingClientRect();
         if (rect) {
@@ -536,7 +517,7 @@ export const PlayerHandCard = React.memo(
         return;
       }
       dragArmedRef.current = true;
-      beginDrag(info);
+      beginDrag(info, { x: info.offset.x, y: info.offset.y });
     };
 
     const handleDragEnd = (
@@ -549,8 +530,8 @@ export const PlayerHandCard = React.memo(
         return;
       }
       dragArmedRef.current = false;
-      const ghostFromX = (reduceMotion ? dragX : springX).get();
-      const ghostFromY = (reduceMotion ? dragY : springY).get();
+      const ghostFromX = ghostX.get();
+      const ghostFromY = ghostY.get();
       let played = false;
       if (cancelledRef.current) {
         cancelledRef.current = false;
@@ -558,18 +539,15 @@ export const PlayerHandCard = React.memo(
         setSnapback(true);
       } else {
         const release = classifyDragRelease({
-          pointerY: info.point.y,
-          offsetX: info.offset.x,
           offsetY: info.offset.y,
           viewportHeight: window.innerHeight
         });
-
         if (release === 'play' && card.action && playCardFunc()) {
           setSnapback(false);
           addCardToPlayedCards?.(card.cardNumber);
           played = true;
-        } else if (release === 'reorder' && onHandReorderDragEnd) {
-          onHandReorderDragEnd(cardId ?? '', info);
+        } else {
+          onHandReorderDragEnd?.(cardId ?? '', info);
         }
       }
       const startsReturn = isFanned && !played && fixedRect !== null;
@@ -578,8 +556,6 @@ export const PlayerHandCard = React.memo(
         dragY.jump(0);
       }
       if (startsReturn) {
-        springX.jump(ghostFromX);
-        springY.jump(ghostFromY);
         returnX.jump(ghostFromX);
         returnY.jump(ghostFromY);
         setIsReturning(true);
@@ -645,6 +621,10 @@ export const PlayerHandCard = React.memo(
         }
         dragArmedRef.current = true;
         beginDrag(info, { x: dragX.get(), y: dragY.get() });
+      }
+      if (isFanned) {
+        followX.set(dragX.get());
+        followY.set(dragY.get());
       }
       onHandReorderDragMove?.(cardId ?? '', info);
       setDragPlayState(
@@ -728,43 +708,19 @@ export const PlayerHandCard = React.memo(
       <div className={styles.label}>{card.label}</div>
     );
 
-    const isAboveFanHoverLine = (clientY: number) => {
-      const stage = slotRef.current?.parentElement;
-      const element = cardElRef.current;
-      if (!stage || !element) return false;
-      return (
-        clientY <
-        fanHoverLineY(
-          stage.getBoundingClientRect().bottom,
-          fanCardHeight ?? element.offsetHeight,
-          fanHoverScale,
-          fanUnhoverAnchorY
-        )
-      );
-    };
-
-    const updateFanHover = (event: React.PointerEvent<HTMLDivElement>) => {
-      if (!isFanned || isDragging || event.pointerType === 'touch') return;
-      const hovering = !isAboveFanHoverLine(event.clientY);
-      if (hovering !== isHovered) onHoverChange?.(cardId ?? '', hovering);
-    };
-
-    const handleFanPointerOut = (event: React.PointerEvent<HTMLDivElement>) => {
-      if (!isFanned || event.pointerType === 'touch') return;
+    const handleFanPointerHover = (
+      event: React.PointerEvent<HTMLDivElement>
+    ) => {
       if (
-        event.relatedTarget instanceof Node &&
-        event.currentTarget.contains(event.relatedTarget)
+        !isFanned ||
+        isDragging ||
+        isFanLifted ||
+        event.pointerType === 'touch'
       ) {
         return;
       }
-      if (isPointInElement(cardElRef.current, event.clientX, event.clientY)) {
-        return;
-      }
-      if (isHovered) onHoverChange?.(cardId ?? '', false);
+      onFanPointerEnter?.(event.clientX, event.clientY);
     };
-
-    const ghostX = reduceMotion ? dragX : springX;
-    const ghostY = reduceMotion ? dragY : springY;
 
     const content = (
       <>
@@ -800,6 +756,7 @@ export const PlayerHandCard = React.memo(
             // element keeps tracking the pointer/gesture underneath so drag
             // handling never gets interrupted.
             visibility: isDragging ? 'hidden' : 'visible',
+            pointerEvents: isLanding && !isDragging ? 'none' : undefined,
             ...(isDragging && fixedRect && !isFanned
               ? {
                   position: 'fixed',
@@ -820,9 +777,8 @@ export const PlayerHandCard = React.memo(
           onPointerCancel={handlePointerCancel}
           onPointerDown={handlePointerDown}
           onPointerUp={handlePointerUp}
-          onPointerOver={updateFanHover}
-          onPointerMove={updateFanHover}
-          onPointerOut={handleFanPointerOut}
+          onPointerOver={handleFanPointerHover}
+          onPointerMove={handleFanPointerHover}
           dragSnapToOrigin={snapback}
           dragMomentum={false}
           initial={CARD_INITIAL}
@@ -855,17 +811,15 @@ export const PlayerHandCard = React.memo(
           fixedRect &&
           createPortal(
             <motion.div
-              className={classNames(
-                isFanned ? styles.handCardFan : styles.handCard,
-                { [styles.ghostReady]: isAboveLine }
-              )}
               style={{
                 x: isReturning ? returnX : ghostX,
                 y: isReturning ? returnY : ghostY,
                 scale: isFanned ? returnScale : 1.05,
-                rotate: isFanned ? ghostRotate : rotation,
-                originX: isReturning ? 0.5 : fixedRect.originX ?? 0.5,
-                originY: isReturning ? 0.5 : fixedRect.originY ?? 0.5,
+                rotateX: isFanned && !reduceDragMotion ? ghostTiltX : 0,
+                rotateY: isFanned && !reduceDragMotion ? ghostTiltY : 0,
+                transformPerspective: isFanned
+                  ? fixedRect.height * GHOST_PERSPECTIVE_RATIO
+                  : undefined,
                 position: 'fixed',
                 left: fixedRect.left,
                 top: fixedRect.top,
@@ -876,11 +830,28 @@ export const PlayerHandCard = React.memo(
                 pointerEvents: 'none'
               }}
             >
-              <div className={styles.imgContainer}>
-                <CardImage src={src} className={imgStyles} draggable="false" />
-                {iconColumn}
-              </div>
-              {cardLabel}
+              <motion.div
+                className={classNames(
+                  isFanned ? styles.handCardFan : styles.handCard,
+                  { [styles.ghostReady]: isAboveLine }
+                )}
+                style={{
+                  rotate: isFanned ? ghostRotate : rotation,
+                  width: '100%',
+                  height: '100%',
+                  pointerEvents: 'none'
+                }}
+              >
+                <div className={styles.imgContainer}>
+                  <CardImage
+                    src={src}
+                    className={imgStyles}
+                    draggable="false"
+                  />
+                  {iconColumn}
+                </div>
+                {cardLabel}
+              </motion.div>
             </motion.div>,
             document.body
           )}
@@ -908,11 +879,17 @@ export const PlayerHandCard = React.memo(
           className={styles.fanSlot}
           initial={false}
           animate={fanTarget}
-          style={{ zIndex: fanSlot?.zIndex ?? zIndex }}
-          transition={isFanLifted ? FAN_LIFTED_TRANSITION : FAN_DROP_TRANSITION}
+          style={{
+            zIndex: isLanding ? FAN_LANDING_Z_INDEX : fanSlot?.zIndex ?? zIndex
+          }}
+          transition={
+            isHovered || (isLanding && isFanLifted)
+              ? FAN_HOVER_SPRING
+              : FAN_DROP_TRANSITION
+          }
         >
           <MotionConfig reducedMotion="user">{content}</MotionConfig>
-          {isHovered && isHoverExpanded && !isDragging && (
+          {isHovered && showHoverKeywords && !isDragging && (
             <div
               className={classNames(styles.fanKeywords, {
                 [styles.fanKeywordsLeft]: slotX > 0

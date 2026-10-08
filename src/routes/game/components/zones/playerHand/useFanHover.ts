@@ -1,43 +1,59 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import {
+  FAN_LAND_DURATION_S,
+  FAN_SWITCH_LAND_DURATION_S
+} from './fanLayout';
 
-export const FAN_UNHOVER_GRACE_MS = 100;
+type FanHoverState = {
+  hoveredCardId: string | null;
+  landingCardId: string | null;
+};
 
-export function useFanHover(graceMs = FAN_UNHOVER_GRACE_MS) {
-  const [hoveredCardId, setHoveredCardId] = useState<string | null>(null);
-  const clearTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const pendingClearId = useRef<string | null>(null);
+const NO_HOVER: FanHoverState = { hoveredCardId: null, landingCardId: null };
 
-  const cancelClear = useCallback(() => {
-    if (clearTimer.current) clearTimeout(clearTimer.current);
-    clearTimer.current = null;
-    pendingClearId.current = null;
+export function useFanHover() {
+  const [state, setState] = useState<FanHoverState>(NO_HOVER);
+
+  const handleHoverChange = useCallback((cardId: string, hovering: boolean) => {
+    setState((current) => {
+      const next = hovering
+        ? cardId
+        : current.hoveredCardId === cardId
+        ? null
+        : current.hoveredCardId;
+      if (next === current.hoveredCardId) return current;
+      return { hoveredCardId: next, landingCardId: current.hoveredCardId };
+    });
   }, []);
 
-  const handleHoverChange = useCallback(
-    (cardId: string, hovering: boolean) => {
-      if (hovering) {
-        cancelClear();
-        setHoveredCardId(cardId);
-        return;
-      }
-      if (pendingClearId.current === cardId) return;
-      cancelClear();
-      pendingClearId.current = cardId;
-      clearTimer.current = setTimeout(() => {
-        clearTimer.current = null;
-        pendingClearId.current = null;
-        setHoveredCardId((current) => (current === cardId ? null : current));
-      }, graceMs);
-    },
-    [cancelClear, graceMs]
-  );
-
   const clearHover = useCallback(() => {
-    cancelClear();
-    setHoveredCardId(null);
-  }, [cancelClear]);
+    setState((current) =>
+      current.hoveredCardId === null
+        ? current
+        : { hoveredCardId: null, landingCardId: current.hoveredCardId }
+    );
+  }, []);
 
-  useEffect(() => cancelClear, [cancelClear]);
+  useEffect(() => {
+    if (state.landingCardId === null) return;
+    const timer = setTimeout(
+      () =>
+        setState((current) =>
+          current.landingCardId === null
+            ? current
+            : { ...current, landingCardId: null }
+        ),
+      (state.hoveredCardId === null
+        ? FAN_LAND_DURATION_S
+        : FAN_SWITCH_LAND_DURATION_S) * 1000
+    );
+    return () => clearTimeout(timer);
+  }, [state.landingCardId, state.hoveredCardId]);
 
-  return { hoveredCardId, handleHoverChange, clearHover };
+  return {
+    hoveredCardId: state.hoveredCardId,
+    landingCardId: state.landingCardId,
+    handleHoverChange,
+    clearHover
+  };
 }
