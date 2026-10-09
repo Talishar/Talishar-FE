@@ -27,6 +27,7 @@ import classNames from 'classnames';
 import CardImage from '../cardImage/CardImage';
 import CardPopUp from '../cardPopUp/CardPopUp';
 import {
+  DragControls,
   motion,
   MotionConfig,
   PanInfo,
@@ -158,6 +159,8 @@ export interface HandCard {
   isFanLifted?: boolean;
   onHoverChange?: (cardId: string, hovering: boolean) => void;
   onFanPointerEnter?: (clientX: number, clientY: number) => void;
+  onTouchScrubStart?: (cardId: string, event: PointerEvent) => void;
+  dragControls?: DragControls;
   onClickPlay?: (cardId: string) => void;
   onDragPlayStateChange?: (s: DragPlayState) => void;
 }
@@ -193,6 +196,8 @@ export const PlayerHandCard = React.memo(
     isFanLifted = false,
     onHoverChange,
     onFanPointerEnter,
+    onTouchScrubStart,
+    dragControls,
     onClickPlay,
     onDragPlayStateChange
   }: HandCard) => {
@@ -530,6 +535,8 @@ export const PlayerHandCard = React.memo(
       event: MouseEvent | TouchEvent | PointerEvent,
       info: PanInfo
     ) => {
+      if ('pointerType' in event)
+        lastPointerTypeRef.current = event.pointerType;
       if (lastPointerTypeRef.current === 'mouse' || dragArmedRef.current) {
         return;
       }
@@ -617,6 +624,12 @@ export const PlayerHandCard = React.memo(
       dragArmedRef.current = false;
       if (event.pointerType === 'mouse' && event.button === 0) {
         onRotationHoldStart?.(cardId ?? '');
+      }
+      if (!onTouchScrubStart) return;
+      if (event.pointerType === 'touch') {
+        onTouchScrubStart(cardId ?? '', event.nativeEvent);
+      } else if (!disableDrag) {
+        dragControls?.start(event);
       }
     };
 
@@ -755,6 +768,8 @@ export const PlayerHandCard = React.memo(
               : false
           }
           drag={!disableDrag}
+          dragListener={!onTouchScrubStart}
+          dragControls={dragControls}
           className={classNames(
             isFanned ? styles.handCardFan : styles.handCard,
             {

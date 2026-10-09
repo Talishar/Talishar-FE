@@ -42,11 +42,18 @@ export function useFanHover() {
   );
 
   const clearHover = useCallback(() => moveHover(null), [moveHover]);
+  const getHoveredCardId = useCallback(() => hoveredRef.current, []);
 
   useEffect(() => {
     const timers = landTimersRef.current;
     return () => timers.forEach((timer) => clearTimeout(timer));
   }, []);
 
-  return { hoveredCardId, landingCardIds, handleHoverChange, clearHover };
+  return {
+    hoveredCardId,
+    landingCardIds,
+    handleHoverChange,
+    clearHover,
+    getHoveredCardId
+  };
 }
