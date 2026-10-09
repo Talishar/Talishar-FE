@@ -38,6 +38,7 @@ import {
   ENABLE_FANNED_HAND_COOKIE,
   FAN_EXPAND_DELAY_MS,
   FAN_KEYWORD_DELAY_MS,
+  FAN_MOUSE_LINE_DROP_RATIO,
   FAN_REST_HIDDEN_RATIO,
   FAN_UNHOVER_ANCHOR_ATTR,
   FanGeometry,
@@ -582,7 +583,13 @@ function PlayerHand() {
   ]);
 
   const hoverTargetAt = useCallback(
-    (x: number, y: number, items: FanItem[], hoveredId: string | null) => {
+    (
+      x: number,
+      y: number,
+      items: FanItem[],
+      hoveredId: string | null,
+      touch = false
+    ) => {
       const stage = fanStageRef.current;
       if (!stage || items.length === 0) return null;
       const rect = stage.getBoundingClientRect();
@@ -592,7 +599,8 @@ function PlayerHand() {
           rect.bottom,
           fanGeometry.cardHeight,
           fanHoverScale,
-          unhoverAnchorY
+          unhoverAnchorY,
+          touch ? 0 : FAN_MOUSE_LINE_DROP_RATIO
         )
       ) {
         return null;
@@ -988,7 +996,8 @@ function PlayerHand() {
       event.clientX,
       event.clientY,
       fanItems,
-      hoveredId
+      hoveredId,
+      true
     );
     if (target === hoveredId) return;
     if (target === null) clearHover();
