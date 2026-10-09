@@ -131,9 +131,6 @@ function PlayerHand() {
   const canCollapseHand = isMobile || isPortrait;
   const [isHandCollapsed, setIsHandCollapsed] = useState(false);
   const hoverImageSize = useCookieString('hoverImageSize');
-  const hasPriority = useAppSelector(
-    (state: RootState) => state.game.hasPriority
-  );
   const turnPhase = useAppSelector(
     (state: RootState) => state.game.turnPhase?.turnPhase
   );
@@ -996,8 +993,6 @@ function PlayerHand() {
     hasTheirBanishedCards ||
     hasGraveyardCards;
 
-  const isHandIdle = hasPriority === false;
-  const dimWhenUnplayable = hasPriority === true;
   const stageBoundsStyle = gameZoneBounds
     ? { left: gameZoneBounds.left, right: gameZoneBounds.right }
     : undefined;
@@ -1050,8 +1045,7 @@ function PlayerHand() {
       <div
         ref={fanStageRef}
         className={classNames(styles.fanStage, {
-          [styles.fanStageCollapsed]: isHandCollapsed,
-          [styles.handIdle]: isHandIdle
+          [styles.fanStageCollapsed]: isHandCollapsed
         })}
         style={stageBoundsStyle}
         aria-hidden={isHandCollapsed}
@@ -1086,7 +1080,6 @@ function PlayerHand() {
                 onHoverChange={handleHoverChange}
                 onFanPointerEnter={handleFanPointerEnter}
                 onClickPlay={handleClickPlay}
-                dimWhenUnplayable={dimWhenUnplayable}
                 onDragPlayStateChange={setDragPlayState}
               />
             ) : (
@@ -1108,7 +1101,6 @@ function PlayerHand() {
                 isFanLifted={isFanLifted}
                 onHoverChange={handleHoverChange}
                 onFanPointerEnter={handleFanPointerEnter}
-                dimWhenUnplayable={dimWhenUnplayable}
                 onDragPlayStateChange={setDragPlayState}
               />
             )

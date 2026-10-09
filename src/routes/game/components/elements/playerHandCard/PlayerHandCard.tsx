@@ -159,7 +159,6 @@ export interface HandCard {
   onHoverChange?: (cardId: string, hovering: boolean) => void;
   onFanPointerEnter?: (clientX: number, clientY: number) => void;
   onClickPlay?: (cardId: string) => void;
-  dimWhenUnplayable?: boolean;
   onDragPlayStateChange?: (s: DragPlayState) => void;
 }
 
@@ -195,7 +194,6 @@ export const PlayerHandCard = React.memo(
     onHoverChange,
     onFanPointerEnter,
     onClickPlay,
-    dimWhenUnplayable,
     onDragPlayStateChange
   }: HandCard) => {
     const [canPopUp, setCanPopup] = useState(true);
@@ -413,10 +411,9 @@ export const PlayerHandCard = React.memo(
           [styles.border7]: card?.borderColor == '7',
           [styles.border8]: card?.borderColor == '8',
           [styles.border9]: card?.borderColor == '9',
-          [styles.border10]: card?.borderColor == '10',
-          [styles.unplayable]: dimWhenUnplayable && !card?.action
+          [styles.border10]: card?.borderColor == '10'
         }),
-      [card?.borderColor, card?.action, dimWhenUnplayable]
+      [card?.borderColor]
     );
 
     if (card === undefined) {
@@ -856,7 +853,7 @@ export const PlayerHandCard = React.memo(
               <motion.div
                 className={classNames(
                   isFanned ? styles.handCardFan : styles.handCard,
-                  { [styles.ghostReady]: isAboveLine }
+                  { [styles.ghostReady]: isAboveLine && !!card.action }
                 )}
                 style={{
                   rotate: isFanned ? ghostRotate : rotation,
