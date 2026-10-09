@@ -695,7 +695,6 @@ function PlayerHand() {
   );
 
   const handZoneIndexAt = (x: number, y: number): number | null => {
-    if (isMobile) return null;
     const stage = fanStageRef.current;
     if (!stage) return null;
     const rect = stage.getBoundingClientRect();
