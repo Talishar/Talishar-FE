@@ -13,11 +13,21 @@ import styles from './PlayerHand.module.css';
 import PlayerHandCard, {
   DragPlayState
 } from '../../elements/playerHandCard/PlayerHandCard';
+import {
+  clearTapToPreviewSelection,
+  getTapToPreviewSelectedCardKey
+} from '../../elements/playerHandCard/tapToPreviewPlay';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { flushHandPlayQueue } from 'features/game/GameSlice';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { useMediaQuery } from 'hooks/useMediaQuery';
-import { AnimatePresence, MotionConfig, PanInfo } from 'framer-motion';
+import {
+  AnimatePresence,
+  DragControls,
+  MotionConfig,
+  PanInfo
+} from 'framer-motion';
+import { LONG_PRESS_TIMER } from 'appConstants';
 import { createPortal } from 'react-dom';
 import useSound from 'use-sound';
 import drawingCardsSound from 'sounds/drawing_cards.wav';
@@ -48,6 +58,9 @@ const WHEEL_ROTATION_DEGREES_PER_PIXEL = 0.15;
 const MAX_WHEEL_ROTATION_DEGREES = 15;
 const NUMERIC_RE = /^\d+$/;
 const PITCH_PHASES = new Set(['P', 'CHOOSEHANDCANCEL', 'PAYGOLDORPITCH']);
+const TOUCH_TAP_SLOP_PX = 10;
+const TOUCH_LOOK_CLICK_SWALLOW_MS = 500;
+const TOUCH_TAP_CLICK_WAIT_MS = 300;
 
 const preventContextMenu = (event: React.MouseEvent) => event.preventDefault();
 
@@ -167,8 +180,18 @@ function PlayerHand() {
     dispatch
   ]);
   const [dragPlayState, setDragPlayState] = useState<DragPlayState>('idle');
-  const { hoveredCardId, landingCardIds, handleHoverChange, clearHover } =
-    useFanHover();
+  const dragPlayStateRef = useRef<DragPlayState>('idle');
+  const handleDragPlayStateChange = useCallback((next: DragPlayState) => {
+    dragPlayStateRef.current = next;
+    setDragPlayState(next);
+  }, []);
+  const {
+    hoveredCardId,
+    landingCardIds,
+    handleHoverChange,
+    clearHover,
+    getHoveredCardId
+  } = useFanHover();
   const lastFanSlotsRef = useRef(new Map<string, FanSlot>());
   const fanStageRef = useRef<HTMLDivElement>(null);
   const lastPointerRef = useRef<{ x: number; y: number; type: string } | null>(
@@ -672,6 +695,7 @@ function PlayerHand() {
   );
 
   const handZoneIndexAt = (x: number, y: number): number | null => {
+    if (isMobile) return null;
     const stage = fanStageRef.current;
     if (!stage) return null;
     const rect = stage.getBoundingClientRect();
@@ -864,6 +888,164 @@ function PlayerHand() {
     dragCancelImplRef.current();
   }, []);
 
+  const dragControlsRef = useRef(new Map<string, DragControls>());
+  const dragControlsFor = (id: string): DragControls => {
+    const controlsById = dragControlsRef.current;
+    let controls = controlsById.get(id);
+    if (!controls) {
+      controls = new DragControls();
+      controlsById.set(id, controls);
+    }
+    return controls;
+  };
+
+  const touchScrubRef = useRef<{
+    pointerId: number;
+    startX: number;
+    startY: number;
+    startTime: number;
+    moved: boolean;
+    pickedUp: boolean;
+  } | null>(null);
+  const pendingTapClearRef = useRef(false);
+  const tapClearTimerRef = useRef<ReturnType<typeof setTimeout>>();
+  const swallowClickUntilRef = useRef(0);
+  const touchScrubMoveRef = useRef<(event: PointerEvent) => void>(
+    () => undefined
+  );
+  const touchScrubEndRef = useRef<(event: PointerEvent) => void>(
+    () => undefined
+  );
+  const touchScrubListeners = useMemo(() => {
+    const move = (event: PointerEvent) => touchScrubMoveRef.current(event);
+    const end = (event: PointerEvent) => touchScrubEndRef.current(event);
+    return {
+      add: () => {
+        window.addEventListener('pointermove', move, { passive: true });
+        window.addEventListener('pointerup', end);
+        window.addEventListener('pointercancel', end);
+      },
+      remove: () => {
+        window.removeEventListener('pointermove', move);
+        window.removeEventListener('pointerup', end);
+        window.removeEventListener('pointercancel', end);
+      }
+    };
+  }, []);
+
+  useEffect(() => touchScrubListeners.remove, [touchScrubListeners]);
+
+  useEffect(() => {
+    const resetTouchTap = () => {
+      pendingTapClearRef.current = false;
+      swallowClickUntilRef.current = 0;
+      clearTimeout(tapClearTimerRef.current);
+    };
+    const swallowLookClick = (event: MouseEvent) => {
+      if (performance.now() >= swallowClickUntilRef.current) return;
+      swallowClickUntilRef.current = 0;
+      event.preventDefault();
+      event.stopPropagation();
+    };
+    window.addEventListener('pointerdown', resetTouchTap, true);
+    window.addEventListener('click', swallowLookClick, true);
+    return () => {
+      window.removeEventListener('pointerdown', resetTouchTap, true);
+      window.removeEventListener('click', swallowLookClick, true);
+      clearTimeout(tapClearTimerRef.current);
+    };
+  }, []);
+
+  touchScrubMoveRef.current = (event: PointerEvent) => {
+    const scrub = touchScrubRef.current;
+    if (!scrub || scrub.pickedUp || event.pointerId !== scrub.pointerId) {
+      return;
+    }
+    if (!scrub.moved) {
+      if (
+        Math.hypot(event.clientX - scrub.startX, event.clientY - scrub.startY) <
+        TOUCH_TAP_SLOP_PX
+      ) {
+        return;
+      }
+      scrub.moved = true;
+    }
+    const stage = fanStageRef.current;
+    if (!stage) return;
+    const hoveredId = getHoveredCardId();
+    const lineY = fanHoverLineY(
+      stage.getBoundingClientRect().bottom,
+      fanGeometry.cardHeight,
+      fanHoverScale,
+      unhoverAnchorY
+    );
+    if (event.clientY < lineY) {
+      if (hoveredId === null) return;
+      scrub.pickedUp = true;
+      dragControlsFor(hoveredId).start(event);
+      return;
+    }
+    const target = hoverTargetAt(
+      event.clientX,
+      event.clientY,
+      fanItems,
+      hoveredId
+    );
+    if (target === hoveredId) return;
+    if (target === null) clearHover();
+    else handleHoverChange(target, true);
+  };
+
+  const finishTouchTap = useCallback(() => {
+    clearTimeout(tapClearTimerRef.current);
+    if (!pendingTapClearRef.current) return;
+    pendingTapClearRef.current = false;
+    if (getTapToPreviewSelectedCardKey() === null) clearHover();
+  }, [clearHover]);
+
+  touchScrubEndRef.current = (event: PointerEvent) => {
+    const scrub = touchScrubRef.current;
+    if (!scrub || event.pointerId !== scrub.pointerId) return;
+    touchScrubListeners.remove();
+    touchScrubRef.current = null;
+    const isTap =
+      !scrub.moved &&
+      event.type !== 'pointercancel' &&
+      performance.now() - scrub.startTime < LONG_PRESS_TIMER;
+    if (isTap) {
+      pendingTapClearRef.current = true;
+      clearTimeout(tapClearTimerRef.current);
+      tapClearTimerRef.current = setTimeout(
+        finishTouchTap,
+        TOUCH_TAP_CLICK_WAIT_MS
+      );
+      return;
+    }
+    swallowClickUntilRef.current =
+      performance.now() + TOUCH_LOOK_CLICK_SWALLOW_MS;
+    if (scrub.pickedUp && dragPlayStateRef.current !== 'idle') return;
+    clearHover();
+    clearTapToPreviewSelection();
+  };
+
+  const handleTouchScrubStart = useCallback(
+    (cardId: string, event: PointerEvent) => {
+      if (!event.isPrimary) return;
+      touchScrubListeners.remove();
+      touchScrubRef.current = {
+        pointerId: event.pointerId,
+        startX: event.clientX,
+        startY: event.clientY,
+        startTime: performance.now(),
+        moved: false,
+        pickedUp: false
+      };
+      handleHoverChange(cardId, true);
+      touchScrubListeners.add();
+    },
+    [touchScrubListeners, handleHoverChange]
+  );
+
   const adjustHandCardRotation = useCallback(
     (cardId: string, rotationDelta: number) => {
       if (!cardId) return;
@@ -1050,6 +1232,7 @@ function PlayerHand() {
         style={stageBoundsStyle}
         aria-hidden={isHandCollapsed}
         onContextMenu={preventContextMenu}
+        onClick={finishTouchTap}
       >
         <AnimatePresence>
           {fanItems.map(({ id, card, zone }) =>
@@ -1080,7 +1263,9 @@ function PlayerHand() {
                 onHoverChange={handleHoverChange}
                 onFanPointerEnter={handleFanPointerEnter}
                 onClickPlay={handleClickPlay}
-                onDragPlayStateChange={setDragPlayState}
+                onDragPlayStateChange={handleDragPlayStateChange}
+                dragControls={dragControlsFor(id)}
+                onTouchScrubStart={isMobile ? handleTouchScrubStart : undefined}
               />
             ) : (
               <PlayerHandCard
@@ -1101,7 +1286,9 @@ function PlayerHand() {
                 isFanLifted={isFanLifted}
                 onHoverChange={handleHoverChange}
                 onFanPointerEnter={handleFanPointerEnter}
-                onDragPlayStateChange={setDragPlayState}
+                onDragPlayStateChange={handleDragPlayStateChange}
+                dragControls={dragControlsFor(id)}
+                onTouchScrubStart={isMobile ? handleTouchScrubStart : undefined}
               />
             )
           )}
