@@ -9,7 +9,6 @@ import AdRailLayout from 'components/ads/AdRailLayout';
 import {
   MASTERY_MILESTONES,
   emptyMastery,
-  masteryLevel,
   progressStart,
   ROMAN_LEVELS
 } from 'features/mastery/mastery';
@@ -17,26 +16,6 @@ import styles from './Mastery.module.css';
 
 type Filter = 'all' | 'played' | 'mastered';
 type SortOrder = 'rank' | 'alphabetical';
-
-const seededNumber = (value: string) => {
-  let hash = 2166136261;
-  for (let index = 0; index < value.length; index += 1) {
-    hash ^= value.charCodeAt(index);
-    hash = Math.imul(hash, 16777619);
-  }
-  return hash >>> 0;
-};
-
-const devGamesForHero = (
-  heroId: string,
-  index: number,
-  milestones: number[]
-) => {
-  const rankBand = index % (milestones.length + 1);
-  const minimum = rankBand === 0 ? 0 : milestones[rankBand - 1];
-  const maximum = milestones[rankBand] ?? minimum + 500;
-  return minimum + (seededNumber(heroId) % Math.max(1, maximum - minimum));
-};
 
 /* Keep a hero's detail popup inside the grid; edge columns would otherwise
    centre it off the side of the screen. */
@@ -62,35 +41,10 @@ const Mastery = () => {
   const [sortOrder, setSortOrder] = useState<SortOrder>('rank');
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
   const [expandedHero, setExpandedHero] = useState<string | null>(null);
-  const milestones = import.meta.env.DEV
-    ? MASTERY_MILESTONES
-    : data?.milestones ?? MASTERY_MILESTONES;
+  const milestones = data?.milestones ?? MASTERY_MILESTONES;
   const progress = useMemo(() => {
-    const result = new Map(
-      (data?.heroes ?? []).map((hero) => [hero.heroId, hero])
-    );
-
-    if (import.meta.env.DEV) {
-      (data?.heroGroups?.classicConstructed ?? []).forEach((heroId, index) => {
-        const qualifyingGames = devGamesForHero(heroId, index, milestones);
-        const level = masteryLevel(qualifyingGames, milestones);
-        const nextThreshold = milestones[level] ?? null;
-        result.set(heroId, {
-          heroId,
-          qualifyingGames,
-          level,
-          displayLevel: null,
-          frameLevel: level,
-          asset: null,
-          nextThreshold,
-          gamesToNext:
-            nextThreshold === null ? null : nextThreshold - qualifyingGames
-        });
-      });
-    }
-
-    return result;
-  }, [data, milestones]);
+    return new Map((data?.heroes ?? []).map((hero) => [hero.heroId, hero]));
+  }, [data?.heroes]);
 
   const groups = useMemo(() => {
     const makeGroup = (name: string, heroIds: string[] = []) => {
