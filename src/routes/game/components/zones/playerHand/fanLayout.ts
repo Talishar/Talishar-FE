@@ -24,6 +24,7 @@ export const FAN_HOVER_HIT_RATIO = 0.7;
 export const FAN_UNHOVER_ANCHOR_ATTR = 'data-fan-unhover-anchor';
 export const FAN_HOVER_FALLBACK_RATIO = 0.8;
 export const FAN_HOVER_MIN_BAND_RATIO = 0.6;
+export const FAN_MOUSE_LINE_DROP_RATIO = 0.07;
 export const FAN_POINT_LIFT_RATIO = 0.12;
 export const FAN_MIN_STEP_RATIO = 0.2;
 export const FAN_EXPAND_DELAY_MS = 500;
@@ -66,12 +67,14 @@ export function fanHoverLineY(
   stageBottom: number,
   cardHeight: number,
   hoverScale: number,
-  anchorY: number | null
+  anchorY: number | null,
+  dropRatio = 0
 ): number {
-  const highest = stageBottom - cardHeight * hoverScale * FAN_HOVER_HIT_RATIO;
+  const hoverHeight = cardHeight * hoverScale;
+  const highest = stageBottom - hoverHeight * FAN_HOVER_HIT_RATIO;
   const lowest = stageBottom - cardHeight * FAN_HOVER_MIN_BAND_RATIO;
   const target = anchorY ?? stageBottom - cardHeight * FAN_HOVER_FALLBACK_RATIO;
-  return Math.min(lowest, Math.max(highest, target));
+  return Math.min(lowest, Math.max(highest, target) + hoverHeight * dropRatio);
 }
 
 function fanMinScaleFor(count: number): number {
