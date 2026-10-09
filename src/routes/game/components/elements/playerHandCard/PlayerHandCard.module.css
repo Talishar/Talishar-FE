@@ -53,10 +53,6 @@
   transition: box-shadow 0.25s, border-color 0.25s;
 }
 
-.unplayable {
-  filter: brightness(0.92) saturate(0.85);
-}
-
 .fanSlot {
   position: absolute;
   left: 50%;

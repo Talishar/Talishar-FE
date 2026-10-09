@@ -25,6 +25,7 @@ export const FAN_UNHOVER_ANCHOR_ATTR = 'data-fan-unhover-anchor';
 export const FAN_HOVER_FALLBACK_RATIO = 0.8;
 export const FAN_HOVER_MIN_BAND_RATIO = 0.6;
 export const FAN_POINT_LIFT_RATIO = 0.12;
+export const FAN_MIN_STEP_RATIO = 0.2;
 export const FAN_EXPAND_DELAY_MS = 500;
 export const FAN_KEYWORD_DELAY_MS = 500;
 export const FAN_LANDING_Z_INDEX = 999;
@@ -73,26 +74,35 @@ export function fanHoverLineY(
   return Math.min(lowest, Math.max(highest, target));
 }
 
-export function fanScaleFor(count: number): number {
+function fanMinScaleFor(count: number): number {
   if (count <= 8) return 1;
   if (count === 9) return 0.95;
   if (count === 10) return 0.9;
   return 0.85;
 }
 
+export function fanScaleFor(count: number, g: FanGeometry): number {
+  const minScale = fanMinScaleFor(count);
+  if (minScale === 1 || g.cardWidth <= 0) return minScale;
+  const fitScale =
+    (g.stageWidth - g.cardWidth * FAN_MIN_STEP_RATIO * (count - 1)) /
+    g.cardWidth;
+  return Math.min(1, Math.max(minScale, fitScale));
+}
+
 export function fanSpacing(count: number, g: FanGeometry): number {
   if (count <= 1) return 0;
-  const scale = fanScaleFor(count);
+  const scale = fanScaleFor(count, g);
   const spacing = Math.min(
     g.cardWidth * 0.9 * scale,
     (g.stageWidth - g.cardWidth * scale) / (count - 1)
   );
-  return Math.max(spacing, g.cardWidth * 0.2);
+  return Math.max(spacing, g.cardWidth * FAN_MIN_STEP_RATIO);
 }
 
 export function computeFanSlots(count: number, g: FanGeometry): FanSlot[] {
   const spacing = fanSpacing(count, g);
-  const scale = fanScaleFor(count);
+  const scale = fanScaleFor(count, g);
   const mid = (count - 1) / 2;
   const maxRotation = Math.min(FAN_MAX_ROTATION_DEG, 2.5 * (count - 1));
   const arcDepth = g.cardHeight * 0.005 * maxRotation;
@@ -145,7 +155,7 @@ export function fanHoverIndexAt(
   expanded = true
 ): number | null {
   const slots = computeFanSlots(count, g);
-  const index = fanIndexAt(slots, x, g.cardWidth * fanScaleFor(count));
+  const index = fanIndexAt(slots, x, g.cardWidth * fanScaleFor(count, g));
   if (index !== null || hoveredIndex === null || !slots[hoveredIndex]) {
     return index;
   }
