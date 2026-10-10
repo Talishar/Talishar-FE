@@ -913,9 +913,11 @@ function PlayerHand() {
     startTime: number;
     moved: boolean;
     pickedUp: boolean;
+    cardId: string;
   } | null>(null);
   const pendingTapClearRef = useRef(false);
   const tapClearTimerRef = useRef<ReturnType<typeof setTimeout>>();
+  const touchLiftTimerRef = useRef<ReturnType<typeof setTimeout>>();
   const swallowClickUntilRef = useRef(0);
   const touchScrubMoveRef = useRef<(event: PointerEvent) => void>(
     () => undefined
@@ -960,6 +962,7 @@ function PlayerHand() {
       window.removeEventListener('pointerdown', resetTouchTap, true);
       window.removeEventListener('click', swallowLookClick, true);
       clearTimeout(tapClearTimerRef.current);
+      clearTimeout(touchLiftTimerRef.current);
     };
   }, []);
 
@@ -968,7 +971,8 @@ function PlayerHand() {
     if (!scrub || scrub.pickedUp || event.pointerId !== scrub.pointerId) {
       return;
     }
-    if (!scrub.moved) {
+    const firstMove = !scrub.moved;
+    if (firstMove) {
       if (
         Math.hypot(event.clientX - scrub.startX, event.clientY - scrub.startY) <
         TOUCH_TAP_SLOP_PX
@@ -976,6 +980,7 @@ function PlayerHand() {
         return;
       }
       scrub.moved = true;
+      clearTimeout(touchLiftTimerRef.current);
     }
     const stage = fanStageRef.current;
     if (!stage) return;
@@ -987,9 +992,10 @@ function PlayerHand() {
       unhoverAnchorY
     );
     if (event.clientY < lineY) {
-      if (hoveredId === null) return;
+      const pickupId = hoveredId ?? (firstMove ? scrub.cardId : null);
+      if (pickupId === null) return;
       scrub.pickedUp = true;
-      dragControlsFor(hoveredId).start(event);
+      dragControlsFor(pickupId).start(event);
       return;
     }
     const target = hoverTargetAt(
@@ -1014,6 +1020,7 @@ function PlayerHand() {
   touchScrubEndRef.current = (event: PointerEvent) => {
     const scrub = touchScrubRef.current;
     if (!scrub || event.pointerId !== scrub.pointerId) return;
+    clearTimeout(touchLiftTimerRef.current);
     touchScrubListeners.remove();
     touchScrubRef.current = null;
     const isTap =
@@ -1040,15 +1047,22 @@ function PlayerHand() {
     (cardId: string, event: PointerEvent) => {
       if (!event.isPrimary) return;
       touchScrubListeners.remove();
-      touchScrubRef.current = {
+      clearTimeout(touchLiftTimerRef.current);
+      const scrub = {
         pointerId: event.pointerId,
         startX: event.clientX,
         startY: event.clientY,
         startTime: performance.now(),
         moved: false,
-        pickedUp: false
+        pickedUp: false,
+        cardId
       };
-      handleHoverChange(cardId, true);
+      touchScrubRef.current = scrub;
+      touchLiftTimerRef.current = setTimeout(() => {
+        if (touchScrubRef.current === scrub && !scrub.moved) {
+          handleHoverChange(cardId, true);
+        }
+      }, LONG_PRESS_TIMER);
       touchScrubListeners.add();
     },
     [touchScrubListeners, handleHoverChange]
