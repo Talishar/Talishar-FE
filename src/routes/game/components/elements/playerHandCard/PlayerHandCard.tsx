@@ -564,7 +564,8 @@ export const PlayerHandCard = React.memo(
       } else {
         const release = classifyDragRelease({
           offsetY: info.offset.y,
-          viewportHeight: window.innerHeight
+          viewportHeight: window.innerHeight,
+          touchPickup: isTouchPickup()
         });
         if (release === 'play' && card.action && playCardFunc()) {
           setSnapback(false);
@@ -637,6 +638,9 @@ export const PlayerHandCard = React.memo(
       onRotationHoldEnd?.();
     };
 
+    const isTouchPickup = () =>
+      !!onTouchScrubStart && lastPointerTypeRef.current === 'touch';
+
     const onDrag = (
       event: MouseEvent | TouchEvent | PointerEvent,
       info: PanInfo
@@ -658,7 +662,9 @@ export const PlayerHandCard = React.memo(
       }
       onHandReorderDragMove?.(cardId ?? '', info);
       setDragPlayState(
-        isAbovePlayLine(info.offset.y, window.innerHeight) ? 'above' : 'below'
+        isAbovePlayLine(info.offset.y, window.innerHeight, isTouchPickup())
+          ? 'above'
+          : 'below'
       );
 
       if (Math.abs(info.offset.x) > 8 || Math.abs(info.offset.y) > 8) {
