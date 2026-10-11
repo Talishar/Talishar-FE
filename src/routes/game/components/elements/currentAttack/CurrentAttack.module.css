@@ -211,3 +211,7 @@
     width: 1.8em;
   }
 }
+
+:global(body.fanLandscapeHand) .currentAttack {
+  width: calc(var(--card-size) + 2vh);
+}

@@ -211,6 +211,22 @@
   }
 }
 
+@media (orientation: landscape) and (max-width: 1199px) {
+  .combatChain {
+    max-width: calc(100% - 2 * (4.5 * clamp(0.7rem, 1.5dvh, 0.95rem) + 0.6dvh));
+  }
+}
+
+:global(body.fanLandscapeHand) .combatChain {
+  --card-size: min(
+    (var(--chain-height) - 2 * var(--chain-padding) - 3.5vh) /
+      (1 + 0.18 * var(--chain-subcard-count)),
+    9dvw
+  );
+  height: 100%;
+  translate: none;
+}
+
 .icon {
   display: flex;
   justify-content: center;
@@ -316,9 +332,4 @@
 }
 .content {
   flex-grow: 1;
-}
-
-:global(body.fanLandscapeHand) .playerPrompt:not(.standalonePlayerPrompt) {
-  left: calc(var(--card-size) * 1.5 + 1dvh);
-  transform: none;
 }

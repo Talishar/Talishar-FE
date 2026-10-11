@@ -89,7 +89,6 @@
 
 body.fanLandscapeHand .centering {
   top: var(--mobile-top-bar-height, 42px);
-  bottom: var(--fan-hand-reserve);
 }
 
 /* Font-size is now fluid via min(dvh, dvw) in the landscape .app rule above.
