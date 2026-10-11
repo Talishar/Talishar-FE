@@ -499,9 +499,10 @@ function PlayerHand() {
         width - (gameZoneBounds?.left ?? 0) - (gameZoneBounds?.right ?? 0)
       ),
       cardHeight,
-      cardWidth: (cardHeight * 2) / 3
+      cardWidth: (cardHeight * 2) / 3,
+      mobile: isMobile
     };
-  }, [width, height, gameZoneBounds]);
+  }, [width, height, gameZoneBounds, isMobile]);
   const fanHoverScale = fanHoverScaleFor(
     hoverImageSize,
     fanGeometry.cardHeight,
