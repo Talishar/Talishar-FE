@@ -479,12 +479,33 @@
   }
 }
 
+:global(body.fanLandscapeHand) {
+  --board-height: calc(
+    100dvh - var(--mobile-top-bar-height, 42px) - 1.5dvh - 1vh
+  );
+  --board-gap: 0.5dvh;
+  --board-bottom-base: calc(
+    var(--fan-hand-reserve) - var(--board-gap) - 1.5dvh - 0.5vh
+  );
+  --side-card-base: min(
+    (var(--board-height) - 5px - 8 * var(--board-gap)) / 6,
+    (100dvw - 10dvh - 1vh - 10px - 10 * var(--board-gap)) / 7
+  );
+  --side-card-size: calc(var(--side-card-base) * min(var(--card-scale), 1));
+  --card-size: calc(
+    min(
+        (
+            var(--board-height) - 15px - 2 * var(--side-card-base) -
+              var(--board-bottom-base) - 11 * var(--board-gap)
+          ) / 3.5,
+        var(--side-card-base)
+      ) * min(var(--card-scale), 1)
+  );
+}
+
 :global(body.fanLandscapeHand) .boardGrid {
   --side-row-step: calc(var(--side-card-size) - var(--card-size));
-  --board-bottom-row: calc(
-    var(--fan-hand-reserve) - var(--card-size) / 2 - var(--board-gap) - 1.5dvh -
-      0.5vh
-  );
+  --board-bottom-row: calc(var(--board-bottom-base) - var(--card-size) / 2);
   --chain-height: calc(
     var(--board-height) - 5px - 2 * var(--card-size) - 2 * var(--side-card-size) -
       var(--board-bottom-row) - 6 * var(--board-gap)
@@ -541,27 +562,14 @@
 }
 
 :global(body.fanLandscapeHand)
-  :is(
-    .pTwoChest,
-    .pTwoHands,
-    .pTwoPitch,
-    .pTwoDeck,
-    .pTwoLegs,
-    .pTwoGraveyard
-  ) {
-  top: var(--side-row-step);
-}
-
+  :is(.pTwoChest, .pTwoHands, .pTwoPitch, .pTwoDeck, .pTwoGraveyard),
+:global(body.fanLandscapeHand)
+  :is(.gameBoardGrid, .MirroredPlayerGameBoardGrid)
+  .pTwoLegs,
 :global(body.fanLandscapeHand)
   :is(.MirroredOpponentGameBoardGrid, .MirroredBothGameBoardGrid)
   .pTwoHead {
   top: var(--side-row-step);
-}
-
-:global(body.fanLandscapeHand)
-  :is(.MirroredOpponentGameBoardGrid, .MirroredBothGameBoardGrid)
-  .pTwoLegs {
-  top: 0;
 }
 
 :global(body.fanLandscapeHand) :is(.pOneHead, .pOneGraveyard) {

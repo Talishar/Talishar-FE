@@ -131,7 +131,7 @@ export function computeFanSlots(count: number, g: FanGeometry): FanSlot[] {
       y: g.cardHeight * FAN_REST_HIDDEN_RATIO + t * t * arcDepth,
       rotate: t * maxRotation,
       scale,
-      zIndex: g.mobile ? 200 + (count - 1 - i) : 200 + i
+      zIndex: 200 + (g.mobile ? count - 1 - i : i)
     });
   }
   return slots;
@@ -140,20 +140,14 @@ export function computeFanSlots(count: number, g: FanGeometry): FanSlot[] {
 export function fanIndexAt(
   slots: FanSlot[],
   x: number,
-  cardWidth: number,
-  leftOnTop = false
+  cardWidth: number
 ): number | null {
-  if (slots.length === 0) return null;
-  if (x < slots[0].x - cardWidth / 2) return null;
-  if (x > slots[slots.length - 1].x + cardWidth / 2) return null;
-  if (leftOnTop) {
-    return slots.findIndex((slot) => x <= slot.x + cardWidth / 2);
+  let top: number | null = null;
+  for (let i = 0; i < slots.length; i++) {
+    if (Math.abs(x - slots[i].x) > cardWidth / 2) continue;
+    if (top === null || slots[i].zIndex > slots[top].zIndex) top = i;
   }
-  let index = 0;
-  slots.forEach((slot, i) => {
-    if (x >= slot.x - cardWidth / 2) index = i;
-  });
-  return index;
+  return top;
 }
 
 export function fanSlotIndexAt(
@@ -176,12 +170,7 @@ export function fanHoverIndexAt(
   expanded = true
 ): number | null {
   const slots = computeFanSlots(count, g);
-  const index = fanIndexAt(
-    slots,
-    x,
-    g.cardWidth * fanScaleFor(count, g),
-    g.mobile
-  );
+  const index = fanIndexAt(slots, x, g.cardWidth * fanScaleFor(count, g));
   if (index !== null || hoveredIndex === null || !slots[hoveredIndex]) {
     return index;
   }

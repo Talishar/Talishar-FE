@@ -57,27 +57,3 @@ body {
     );
   }
 }
-
-body.fanLandscapeHand {
-  --board-height: calc(
-    100vh - var(--mobile-top-bar-height, 42px) - 1.5vh - 1vh
-  );
-  --board-height: calc(
-    100dvh - var(--mobile-top-bar-height, 42px) - 1.5dvh - 1vh
-  );
-  --board-gap: 0.5dvh;
-  --side-card-base: min(
-    (var(--board-height) - 5px - 8 * var(--board-gap)) / 6,
-    (100dvw - 10dvh - 1vh - 10px - 10 * var(--board-gap)) / 7
-  );
-  --side-card-size: calc(var(--side-card-base) * min(var(--card-scale), 1));
-  --card-size: calc(
-    min(
-        (
-            var(--board-height) - 15px - 2 * var(--side-card-base) -
-              var(--fan-hand-reserve) + 1.5dvh + 0.5vh - 10 * var(--board-gap)
-          ) / 3.5,
-        var(--side-card-base)
-      ) * min(var(--card-scale), 1)
-  );
-}

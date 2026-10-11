@@ -620,17 +620,6 @@ export const PlayerHandCard = React.memo(
       onHandReorderDragCancel?.();
     };
 
-    const startPressTimer = () => {
-      isLongPress.current = false;
-      timerRef.current = setTimeout(() => {
-        isLongPress.current = true;
-      }, LONG_PRESS_TIMER);
-    };
-
-    const stopPressTimer = () => {
-      clearTimeout(timerRef.current);
-    };
-
     const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
       startPressTimer();
       lastPointerTypeRef.current = event.pointerType;
@@ -711,6 +700,17 @@ export const PlayerHandCard = React.memo(
       if (pointerType !== 'mouse') return;
 
       onRotate?.(cardId ?? '', event.shiftKey ? -1 : 1);
+    };
+
+    const startPressTimer = () => {
+      isLongPress.current = false;
+      timerRef.current = setTimeout(() => {
+        isLongPress.current = true;
+      }, LONG_PRESS_TIMER);
+    };
+
+    const stopPressTimer = () => {
+      clearTimeout(timerRef.current);
     };
 
     const iconColumn = (

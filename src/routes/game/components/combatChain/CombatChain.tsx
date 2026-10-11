@@ -47,9 +47,12 @@ export default function CombatChain() {
   );
   const showModals = useShowModal();
   const isPortrait = useMediaQuery('(orientation: portrait)');
-  const isMobile = useMediaQuery('(max-width: 1199px)');
-  const defaultOffset =
-    isMobile && !isPortrait ? MOBILE_LANDSCAPE_DEFAULT_Y_OFFSET : 0;
+  const isMobileLandscape = useMediaQuery(
+    '(orientation: landscape) and (max-width: 1199px)'
+  );
+  const defaultOffset = isMobileLandscape
+    ? MOBILE_LANDSCAPE_DEFAULT_Y_OFFSET
+    : 0;
   const storageKey = isPortrait ? PORTRAIT_STORAGE_KEY : STORAGE_KEY;
   const storageKeyRef = React.useRef(storageKey);
   storageKeyRef.current = storageKey;
