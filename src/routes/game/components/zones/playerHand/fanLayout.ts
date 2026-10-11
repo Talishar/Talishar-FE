@@ -17,7 +17,7 @@ export type FanGeometry = {
 
 export const FAN_REST_HIDDEN_RATIO = 0.54;
 export const FAN_MAX_ROTATION_DEG = 12;
-export const FAN_MOBILE_MAX_ROTATION_DEG = 6;
+export const FAN_MOBILE_MAX_ROTATION_DEG = 3;
 export const FAN_HOVER_SCALE = 1.725;
 export const FAN_CARD_ART_ASPECT = 450 / 628;
 export const FAN_MIN_HOVER_HEIGHT_PX = 300;
@@ -31,7 +31,7 @@ export const FAN_POINT_LIFT_RATIO = 0.12;
 export const FAN_MIN_STEP_RATIO = 0.2;
 export const FAN_STEP_RATIO = 0.9;
 export const FAN_MOBILE_STEP_RATIO = 1;
-export const FAN_MOBILE_HOVER_LIFT_RATIO = 0.06;
+export const FAN_MOBILE_HOVER_LIFT_RATIO = 0.12;
 export const FAN_EXPAND_DELAY_MS = 500;
 export const FAN_KEYWORD_DELAY_MS = 500;
 export const FAN_LANDING_Z_INDEX = 999;
