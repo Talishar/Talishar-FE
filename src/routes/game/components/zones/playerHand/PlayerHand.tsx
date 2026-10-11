@@ -1,6 +1,7 @@
 import React, {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState
@@ -36,8 +37,12 @@ import { useTranslation } from 'react-i18next';
 import { useCookieString } from 'utils/cookieStore';
 import {
   ENABLE_FANNED_HAND_COOKIE,
+  FAN_CARD_HEIGHT_RATIO,
   FAN_EXPAND_DELAY_MS,
+  FAN_HAND_RESERVE_VAR,
   FAN_KEYWORD_DELAY_MS,
+  FAN_LANDSCAPE_BODY_CLASS,
+  FAN_LANDSCAPE_CARD_HEIGHT_RATIO,
   FAN_MOUSE_LINE_DROP_RATIO,
   FAN_REST_HIDDEN_RATIO,
   FAN_UNHOVER_ANCHOR_ATTR,
@@ -142,6 +147,8 @@ function PlayerHand() {
   const [width, height] = useWindowDimensions();
   const isMobile = useMediaQuery('(max-width: 1199px)');
   const isPortrait = useMediaQuery('(orientation: portrait)');
+  const isMobilePortrait = isMobile && isPortrait;
+  const isMobileLandscape = isMobile && !isPortrait;
   const canCollapseHand = isMobile || isPortrait;
   const [isHandCollapsed, setIsHandCollapsed] = useState(false);
   const hoverImageSize = useCookieString('hoverImageSize');
@@ -492,7 +499,11 @@ function PlayerHand() {
   ]);
 
   const fanGeometry = useMemo<FanGeometry>(() => {
-    const cardHeight = height * 0.25;
+    const cardHeight =
+      height *
+      (isMobileLandscape
+        ? FAN_LANDSCAPE_CARD_HEIGHT_RATIO
+        : FAN_CARD_HEIGHT_RATIO);
     return {
       stageWidth: Math.max(
         0,
@@ -500,14 +511,27 @@ function PlayerHand() {
       ),
       cardHeight,
       cardWidth: (cardHeight * 2) / 3,
-      mobile: isMobile
+      mobile: isMobilePortrait
     };
-  }, [width, height, gameZoneBounds, isMobile]);
+  }, [width, height, gameZoneBounds, isMobilePortrait, isMobileLandscape]);
   const fanHoverScale = fanHoverScaleFor(
     hoverImageSize,
     fanGeometry.cardHeight,
     height
   );
+
+  const showsLandscapeFan = isMobileLandscape && playerID !== 3 && !isReplay;
+  const handReserve = fanGeometry.cardHeight * (1 - FAN_REST_HIDDEN_RATIO);
+  useLayoutEffect(() => {
+    if (!showsLandscapeFan) return;
+    const body = document.body;
+    body.classList.add(FAN_LANDSCAPE_BODY_CLASS);
+    body.style.setProperty(FAN_HAND_RESERVE_VAR, `${handReserve}px`);
+    return () => {
+      body.classList.remove(FAN_LANDSCAPE_BODY_CLASS);
+      body.style.removeProperty(FAN_HAND_RESERVE_VAR);
+    };
+  }, [showsLandscapeFan, handReserve]);
 
   const isDragActive = dragPlayState !== 'idle' || dragStartOrderIds !== null;
   const activeHoveredCardId = isDragActive ? null : hoveredCardId;

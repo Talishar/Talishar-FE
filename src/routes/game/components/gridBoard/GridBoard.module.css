@@ -478,3 +478,14 @@
     bottom: 4px;
   }
 }
+
+:global(body.fanLandscapeHand) .boardGrid {
+  grid-template-columns:
+    5px var(--card-size) var(--card-size) calc(var(--card-size) * 0.5)
+    var(--card-size) var(--card-size) var(--card-size)
+    calc(var(--card-size) * 0.5) var(--card-size) var(--card-size) 5px;
+  justify-content: center;
+  gap: 0.5dvh;
+  padding: 0.5vh;
+  height: 100%;
+}

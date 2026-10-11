@@ -317,3 +317,8 @@
 .content {
   flex-grow: 1;
 }
+
+:global(body.fanLandscapeHand) .playerPrompt:not(.standalonePlayerPrompt) {
+  left: calc(var(--card-size) * 1.5 + 1dvh);
+  transform: none;
+}

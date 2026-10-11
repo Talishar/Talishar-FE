@@ -57,3 +57,41 @@ body {
     );
   }
 }
+
+body.fanLandscapeHand {
+  --card-size: calc(
+    min(
+        (
+            100vh - var(--mobile-top-bar-height, 42px) - var(--fan-hand-reserve) -
+              20px - 8vh
+          ) / 6,
+        7.8vw
+      ) * min(var(--card-scale), 1)
+  );
+  --card-size: calc(
+    min(
+        (
+            100dvh - var(--mobile-top-bar-height, 42px) -
+              var(--fan-hand-reserve) - 20px - 8dvh
+          ) / 6,
+        7.8dvw
+      ) * min(var(--card-scale), 1)
+  );
+}
+
+@media (max-aspect-ratio: 3/2) {
+  body.fanLandscapeHand {
+    --card-size: calc(
+      (
+          100vh - var(--mobile-top-bar-height, 42px) - var(--fan-hand-reserve) -
+            20px - 8vh
+        ) / 6 * min(var(--card-scale), 1)
+    );
+    --card-size: calc(
+      (
+          100dvh - var(--mobile-top-bar-height, 42px) - var(--fan-hand-reserve) -
+            20px - 8dvh
+        ) / 6 * min(var(--card-scale), 1)
+    );
+  }
+}

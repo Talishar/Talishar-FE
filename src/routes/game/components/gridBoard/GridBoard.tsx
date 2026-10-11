@@ -65,7 +65,7 @@ const GridBoard = () => {
     (playerID === 3 || isReplay) && spectatorCameraView === 2;
   const gridBoardClass = useMemo(
     () =>
-      classNames({
+      classNames(styles.boardGrid, {
         [styles.SwappedGameBoardGrid]:
           isSpectatorViewingPlayer2 && !isMirroredOpponent && !isMirroredPlayer,
         [styles.SwappedMirroredOpponentGameBoardGrid]:
