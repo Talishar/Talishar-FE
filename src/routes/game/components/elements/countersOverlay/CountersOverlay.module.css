@@ -40,6 +40,15 @@
   }
 }
 
+:global(body.fanLandscapeHand) .label.label {
+  font-size: calc(var(--card-size) * 0.14);
+  white-space: nowrap;
+  padding: 1px 2px;
+  bottom: 2px;
+  left: 2px;
+  right: 2px;
+}
+
 .countersCover.countersCover {
   position: absolute;
   display: flex;

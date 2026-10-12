@@ -855,3 +855,7 @@
   width: auto;
   margin: 0;
 }
+
+:global(body.fanLandscapeHand) :is(.optionsContainer, .optOptionsContainer) {
+  --card-size: var(--side-card-size);
+}
