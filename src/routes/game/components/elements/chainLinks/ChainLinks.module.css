@@ -40,6 +40,10 @@
   width: 100%;
 }
 
+.chainLinksSpacer {
+  height: 3vh;
+}
+
 .chainLinkSummary {
   display: flex;
   flex-direction: row;
@@ -120,4 +124,42 @@
   .draconicChainLinkSymbol {
     max-height: 3em;
   }
+}
+
+:global(body.fanLandscapeHand) .chainLinksSpacer {
+  height: min(6vh, 27px);
+  height: min(6dvh, 27px);
+}
+
+:global(body.fanLandscapeHand) .chainLinksRow {
+  height: min(6vh, 27px);
+  height: min(6dvh, 27px);
+  overflow-x: auto;
+  overflow-y: hidden;
+  flex-shrink: 0;
+  scrollbar-width: none;
+}
+
+:global(body.fanLandscapeHand) .chainLinkSymbol {
+  height: min(4.5vh, 20px);
+  height: min(4.5dvh, 20px);
+}
+
+:global(body.fanLandscapeHand) .breakChain {
+  width: min(6vh, 27px);
+  height: min(6vh, 27px);
+  width: min(6dvh, 27px);
+  height: min(6dvh, 27px);
+}
+
+:global(body.fanLandscapeHand) :is(.chainLinkSummary, .breakChain) {
+  flex-shrink: 0;
+}
+
+:global(body.fanLandscapeHand) .chainLinksRow::-webkit-scrollbar {
+  display: none;
+}
+
+:global(body.fanLandscapeHand) .draconicChainLinkContainer {
+  inset: -16%;
 }

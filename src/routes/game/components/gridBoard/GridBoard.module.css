@@ -495,9 +495,9 @@
   --card-size: calc(
     min(
         (
-            var(--board-height) - 15px - 2 * var(--side-card-base) -
+            var(--board-height) - 15px - 2.5 * var(--side-card-base) -
               var(--board-bottom-base) - 11 * var(--board-gap)
-          ) / 3.5,
+          ) / 3,
         var(--side-card-base)
       ) * min(var(--card-scale), 1)
   );
@@ -505,9 +505,14 @@
 
 :global(body.fanLandscapeHand) .boardGrid {
   --side-row-step: calc(var(--side-card-size) - var(--card-size));
-  --board-bottom-row: calc(var(--board-bottom-base) - var(--card-size) / 2);
+  --board-bottom-row: calc(
+    var(--board-bottom-base) - var(--side-card-size) / 2
+  );
+  --board-centre-shift: calc(
+    (var(--board-bottom-row) + var(--side-row-step)) / 2
+  );
   --chain-height: calc(
-    var(--board-height) - 5px - 2 * var(--card-size) - 2 * var(--side-card-size) -
+    var(--board-height) - 5px - var(--card-size) - 3 * var(--side-card-size) -
       var(--board-bottom-row) - 6 * var(--board-gap)
   );
   grid-template-columns:
@@ -516,7 +521,7 @@
     var(--side-card-size) 5px;
   grid-template-rows:
     5px var(--card-size) var(--side-card-size) var(--card-size) 1fr 5px 5px 1fr
-    var(--card-size) var(--side-card-size) var(--card-size)
+    var(--card-size) var(--side-card-size) var(--side-card-size)
     var(--board-bottom-row);
   gap: var(--board-gap);
   padding: 0.5vh;
@@ -556,7 +561,9 @@
     .pTwoWeaponRZone,
     .pOneWeaponLZone,
     .pOneHero,
-    .pOneWeaponRZone
+    .pOneWeaponRZone,
+    .pTwoArsenal,
+    .pOneArsenal
   ) {
   --card-size: var(--side-card-size);
 }
@@ -573,7 +580,7 @@
 }
 
 :global(body.fanLandscapeHand) :is(.pOneHead, .pOneGraveyard) {
-  top: calc(var(--board-bottom-row) - var(--side-row-step) * 2);
+  top: calc(var(--board-bottom-row) - var(--side-row-step));
 }
 
 :global(body.fanLandscapeHand)
@@ -586,7 +593,7 @@
     .pOneCount,
     .pOneBanish
   ) {
-  top: calc(var(--board-bottom-row) - var(--side-row-step));
+  top: var(--board-bottom-row);
 }
 
 :global(body.fanLandscapeHand)
@@ -601,6 +608,6 @@
 
 :global(body.fanLandscapeHand) .healthWidget {
   position: relative;
-  top: calc(var(--board-bottom-row) / 2);
+  top: var(--board-centre-shift);
   z-index: 6;
 }

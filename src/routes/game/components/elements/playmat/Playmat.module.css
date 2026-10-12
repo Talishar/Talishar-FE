@@ -21,3 +21,13 @@
   z-index: 0 !important;
   border-radius: 5px;
 }
+
+:global(body.fanLandscapeHand) .playerTwo {
+  height: auto;
+  margin-bottom: calc(-1 * var(--board-centre-shift));
+}
+
+:global(body.fanLandscapeHand) .playerOne {
+  height: auto;
+  margin-top: var(--board-centre-shift);
+}

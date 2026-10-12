@@ -48,7 +48,7 @@ export default function ChainLinks() {
   };
 
   if (oldCombatChain === undefined || oldCombatChain.length === 0) {
-    return <div style={{ height: '3vh' }} />;
+    return <div className={styles.chainLinksSpacer} />;
   }
 
   return (

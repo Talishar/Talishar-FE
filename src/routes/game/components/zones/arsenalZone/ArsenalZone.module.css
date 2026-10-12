@@ -138,3 +138,11 @@
   transform: translate(-50%, -50%);
   pointer-events: none;
 }
+
+:global(body.fanLandscapeHand) :is(.cardWrapper, .arsenalDestroySlot) {
+  height: 100%;
+}
+
+:global(body.fanLandscapeHand) :is(.cardWrapper, .arsenalDestroySlot) img {
+  width: 100%;
+}
