@@ -77,7 +77,13 @@ const CardOrdering = ({
   };
 
   return (
-    <div className={classNames(styles.newOptForm, styles.optFormContainer)}>
+    <div
+      className={classNames(
+        styles.newOptForm,
+        styles.optFormContainer,
+        styles.cardOrderForm
+      )}
+    >
       <div
         className={classNames(
           styles.newOptForm,

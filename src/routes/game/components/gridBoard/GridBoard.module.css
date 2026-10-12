@@ -604,10 +604,39 @@
 :global(body.fanLandscapeHand) .combatChain {
   grid-row: 4 / 10;
   inset: 0;
+  padding: 0 calc(32px - 2 * var(--board-gap)) 0 calc(16px - var(--board-gap));
+}
+
+:global(body.fanLandscapeHand) .fanWidgets > .combatChain {
+  padding-right: calc(var(--side-card-size) + 28px - 2 * var(--board-gap));
+}
+
+:global(body.fanLandscapeHand)
+  .fanWidgets
+  > :is(.pTwoPermanents, .pOnePermanents) {
+  right: calc(var(--side-card-size) + 28px - 2 * var(--board-gap));
+  width: auto;
 }
 
 :global(body.fanLandscapeHand) .healthWidget {
   position: relative;
   top: var(--board-centre-shift);
   z-index: 6;
+}
+
+:global(body.fanLandscapeHand) .fanWidgets > :is(.healthWidget, .fanVitals) {
+  position: absolute;
+  left: 0;
+  top: calc(var(--side-row-step) - var(--board-gap) + 16px);
+  height: calc(
+    var(--chain-height) + 2 * var(--board-gap) + var(--board-bottom-row) -
+      var(--side-row-step) - 32px
+  );
+  z-index: 6;
+}
+
+:global(body.fanLandscapeHand) .fanWidgets > .fanVitals {
+  grid-column: 9 / 10;
+  grid-row: 4 / 10;
+  left: calc(var(--board-gap) - 12px - var(--side-card-size));
 }

@@ -52,3 +52,8 @@
       center / auto 140% no-repeat,
     linear-gradient(to bottom, #7a261d 0%, #38100c 100%);
 }
+
+:global(body.fanLandscapeHand) .actionPointCounter {
+  padding: 0.5em 0.3em;
+  letter-spacing: 0.02em;
+}
