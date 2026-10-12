@@ -35,6 +35,11 @@ export const FAN_MOBILE_HOVER_LIFT_RATIO = 0.12;
 export const FAN_EXPAND_DELAY_MS = 500;
 export const FAN_KEYWORD_DELAY_MS = 500;
 export const FAN_LANDING_Z_INDEX = 999;
+export const FAN_CARD_HEIGHT_RATIO = 0.25;
+export const FAN_LANDSCAPE_CARD_HEIGHT_RATIO = 0.35;
+export const FAN_LANDSCAPE_BODY_CLASS = 'fanLandscapeHand';
+export const FAN_HAND_RESERVE_VAR = '--fan-hand-reserve';
+export const FAN_SIDE_COLUMN_ATTR = 'data-fan-side-column';
 
 export const FAN_DROP_RATE = 32;
 export const FAN_DROP_DURATION_S = 0.22;
@@ -126,7 +131,7 @@ export function computeFanSlots(count: number, g: FanGeometry): FanSlot[] {
       y: g.cardHeight * FAN_REST_HIDDEN_RATIO + t * t * arcDepth,
       rotate: t * maxRotation,
       scale,
-      zIndex: 200 + i
+      zIndex: 200 + (g.mobile ? count - 1 - i : i)
     });
   }
   return slots;
@@ -137,14 +142,12 @@ export function fanIndexAt(
   x: number,
   cardWidth: number
 ): number | null {
-  if (slots.length === 0) return null;
-  if (x < slots[0].x - cardWidth / 2) return null;
-  if (x > slots[slots.length - 1].x + cardWidth / 2) return null;
-  let index = 0;
-  slots.forEach((slot, i) => {
-    if (x >= slot.x - cardWidth / 2) index = i;
-  });
-  return index;
+  let top: number | null = null;
+  for (let i = 0; i < slots.length; i++) {
+    if (Math.abs(x - slots[i].x) > cardWidth / 2) continue;
+    if (top === null || slots[i].zIndex > slots[top].zIndex) top = i;
+  }
+  return top;
 }
 
 export function fanSlotIndexAt(

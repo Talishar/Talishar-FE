@@ -122,3 +122,11 @@
   gap: 1vh;
   height: 100%;
 }
+
+:global(body.fanLandscapeHand) .reactionWrapper {
+  height: calc(var(--card-size) + 4px);
+}
+
+:global(body.fanLandscapeHand) .cardContainer {
+  height: var(--card-size);
+}

@@ -65,7 +65,7 @@ const GridBoard = () => {
     (playerID === 3 || isReplay) && spectatorCameraView === 2;
   const gridBoardClass = useMemo(
     () =>
-      classNames({
+      classNames(styles.boardGrid, {
         [styles.SwappedGameBoardGrid]:
           isSpectatorViewingPlayer2 && !isMirroredOpponent && !isMirroredPlayer,
         [styles.SwappedMirroredOpponentGameBoardGrid]:
@@ -146,7 +146,7 @@ const GridBoard = () => {
         <div className={styles.pOneDeck}>
           <DeckZone isPlayer={true} />
         </div>
-        <div className={styles.pOnePitch}>
+        <div className={styles.pOnePitch} data-fan-side-column="">
           <PitchZone isPlayer={true} />
         </div>
         <div className={styles.pOneWeaponRZone}>
@@ -158,7 +158,7 @@ const GridBoard = () => {
         <div className={styles.pOneWeaponLZone}>
           <WeaponLZone isPlayer={true} />
         </div>
-        <div className={styles.pOneHands}>
+        <div className={styles.pOneHands} data-fan-side-column="">
           <ArmsEqZone isPlayer={true} />
         </div>
         <div className={styles.pOneChest}>

@@ -478,3 +478,129 @@
     bottom: 4px;
   }
 }
+
+:global(body.fanLandscapeHand) {
+  --board-height: calc(
+    100dvh - var(--mobile-top-bar-height, 42px) - 1.5dvh - 1vh
+  );
+  --board-gap: 0.5dvh;
+  --board-bottom-base: calc(
+    var(--fan-hand-reserve) - var(--board-gap) - 1.5dvh - 0.5vh
+  );
+  --side-card-base: min(
+    (var(--board-height) - 5px - 8 * var(--board-gap)) / 6,
+    (100dvw - 10dvh - 1vh - 10px - 10 * var(--board-gap)) / 7
+  );
+  --side-card-size: calc(var(--side-card-base) * min(var(--card-scale), 1));
+  --card-size: calc(
+    min(
+        (
+            var(--board-height) - 15px - 2 * var(--side-card-base) -
+              var(--board-bottom-base) - 11 * var(--board-gap)
+          ) / 3.5,
+        var(--side-card-base)
+      ) * min(var(--card-scale), 1)
+  );
+}
+
+:global(body.fanLandscapeHand) .boardGrid {
+  --side-row-step: calc(var(--side-card-size) - var(--card-size));
+  --board-bottom-row: calc(var(--board-bottom-base) - var(--card-size) / 2);
+  --chain-height: calc(
+    var(--board-height) - 5px - 2 * var(--card-size) - 2 * var(--side-card-size) -
+      var(--board-bottom-row) - 6 * var(--board-gap)
+  );
+  grid-template-columns:
+    5px var(--side-card-size) var(--side-card-size) 1fr var(--side-card-size)
+    var(--side-card-size) var(--side-card-size) 1fr var(--side-card-size)
+    var(--side-card-size) 5px;
+  grid-template-rows:
+    5px var(--card-size) var(--side-card-size) var(--card-size) 1fr 5px 5px 1fr
+    var(--card-size) var(--side-card-size) var(--card-size)
+    var(--board-bottom-row);
+  gap: var(--board-gap);
+  padding: 0.5vh;
+  height: 100%;
+}
+
+:global(body.fanLandscapeHand)
+  :is(
+    .pTwoHead,
+    .pTwoChest,
+    .pTwoHands,
+    .pTwoLegs,
+    .pTwoGraveyard,
+    .pTwoPitch,
+    .pTwoDeck,
+    .pTwoCount,
+    .pTwoBanish,
+    .pOneHead,
+    .pOneChest,
+    .pOneHands,
+    .pOneLegs,
+    .pOneGraveyard,
+    .pOnePitch,
+    .pOneDeck,
+    .pOneCount,
+    .pOneBanish
+  ) {
+  --card-size: var(--side-card-size);
+  position: relative;
+  height: var(--side-card-size);
+}
+
+:global(body.fanLandscapeHand)
+  :is(
+    .pTwoWeaponLZone,
+    .pTwoHero,
+    .pTwoWeaponRZone,
+    .pOneWeaponLZone,
+    .pOneHero,
+    .pOneWeaponRZone
+  ) {
+  --card-size: var(--side-card-size);
+}
+
+:global(body.fanLandscapeHand)
+  :is(.pTwoChest, .pTwoHands, .pTwoPitch, .pTwoDeck, .pTwoGraveyard),
+:global(body.fanLandscapeHand)
+  :is(.gameBoardGrid, .MirroredPlayerGameBoardGrid)
+  .pTwoLegs,
+:global(body.fanLandscapeHand)
+  :is(.MirroredOpponentGameBoardGrid, .MirroredBothGameBoardGrid)
+  .pTwoHead {
+  top: var(--side-row-step);
+}
+
+:global(body.fanLandscapeHand) :is(.pOneHead, .pOneGraveyard) {
+  top: calc(var(--board-bottom-row) - var(--side-row-step) * 2);
+}
+
+:global(body.fanLandscapeHand)
+  :is(
+    .pOneChest,
+    .pOneHands,
+    .pOnePitch,
+    .pOneDeck,
+    .pOneLegs,
+    .pOneCount,
+    .pOneBanish
+  ) {
+  top: calc(var(--board-bottom-row) - var(--side-row-step));
+}
+
+:global(body.fanLandscapeHand)
+  :is(.pTwoPermanents, .pOnePermanents, .combatChain) {
+  grid-column: 4 / 9;
+}
+
+:global(body.fanLandscapeHand) .combatChain {
+  grid-row: 4 / 10;
+  inset: 0;
+}
+
+:global(body.fanLandscapeHand) .healthWidget {
+  position: relative;
+  top: calc(var(--board-bottom-row) / 2);
+  z-index: 6;
+}

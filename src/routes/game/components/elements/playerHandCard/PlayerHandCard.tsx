@@ -621,6 +621,7 @@ export const PlayerHandCard = React.memo(
     };
 
     const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+      startPressTimer();
       lastPointerTypeRef.current = event.pointerType;
       dragArmedRef.current = false;
       if (event.pointerType === 'mouse' && event.button === 0) {
@@ -635,6 +636,7 @@ export const PlayerHandCard = React.memo(
     };
 
     const handlePointerUp = () => {
+      stopPressTimer();
       onRotationHoldEnd?.();
     };
 
@@ -810,8 +812,6 @@ export const PlayerHandCard = React.memo(
               : {})
           }}
           onContextMenu={handleContextMenu}
-          onTapStart={startPressTimer}
-          onTap={stopPressTimer}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
           onDrag={onDrag}

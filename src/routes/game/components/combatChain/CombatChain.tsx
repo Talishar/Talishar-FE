@@ -28,9 +28,12 @@ const MAX_Y_OFFSET = 30;
 const MIN_Y_OFFSET = -35;
 const KEYBOARD_Y_STEP = 2;
 const EDGE_MARGIN_PX = 4;
+const MOBILE_LANDSCAPE_DEFAULT_Y_OFFSET = -5;
 
-const readStoredOffset = (key: string) =>
-  parseFloat(localStorage.getItem(key) ?? '') || 0;
+const readStoredOffset = (key: string, fallback: number) => {
+  const stored = parseFloat(localStorage.getItem(key) ?? '');
+  return Number.isNaN(stored) ? fallback : stored;
+};
 
 export default function CombatChain() {
   const { t } = useTranslation();
@@ -44,12 +47,18 @@ export default function CombatChain() {
   );
   const showModals = useShowModal();
   const isPortrait = useMediaQuery('(orientation: portrait)');
+  const isMobileLandscape = useMediaQuery(
+    '(orientation: landscape) and (max-width: 1199px)'
+  );
+  const defaultOffset = isMobileLandscape
+    ? MOBILE_LANDSCAPE_DEFAULT_Y_OFFSET
+    : 0;
   const storageKey = isPortrait ? PORTRAIT_STORAGE_KEY : STORAGE_KEY;
   const storageKeyRef = React.useRef(storageKey);
   storageKeyRef.current = storageKey;
   const storedOffsetRef = React.useRef<number | null>(null);
   if (storedOffsetRef.current === null) {
-    storedOffsetRef.current = readStoredOffset(storageKey);
+    storedOffsetRef.current = readStoredOffset(storageKey, defaultOffset);
   }
   const storedOffset = storedOffsetRef.current;
   const yOffsetMV = useMotionValue(storedOffset);
@@ -176,11 +185,11 @@ export default function CombatChain() {
   );
 
   React.useEffect(() => {
-    const stored = readStoredOffset(storageKey);
+    const stored = readStoredOffset(storageKey, defaultOffset);
     currentDragOffsetRef.current = stored;
     yOffsetMV.set(stored);
     scheduleReclamp();
-  }, [storageKey, yOffsetMV]);
+  }, [storageKey, defaultOffset, yOffsetMV]);
 
   React.useEffect(() => {
     const handleViewportChange = () => scheduleReclamp();
