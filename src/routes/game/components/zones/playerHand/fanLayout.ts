@@ -13,6 +13,7 @@ export type FanGeometry = {
   cardWidth: number;
   cardHeight: number;
   mobile?: boolean;
+  hoverLift?: boolean;
 };
 
 export const FAN_REST_HIDDEN_RATIO = 0.54;
@@ -31,7 +32,7 @@ export const FAN_POINT_LIFT_RATIO = 0.12;
 export const FAN_MIN_STEP_RATIO = 0.2;
 export const FAN_STEP_RATIO = 0.9;
 export const FAN_MOBILE_STEP_RATIO = 1;
-export const FAN_MOBILE_HOVER_LIFT_RATIO = 0.12;
+export const FAN_MOBILE_HOVER_LIFT_RATIO = 0.24;
 export const FAN_EXPAND_DELAY_MS = 500;
 export const FAN_KEYWORD_DELAY_MS = 500;
 export const FAN_LANDING_Z_INDEX = 999;
@@ -193,7 +194,7 @@ export function applyFanHover(
   if (hoveredIndex === null || !slots[hoveredIndex]) return slots;
   const maxX = Math.max(0, (g.stageWidth - g.cardWidth * hoverScale) / 2);
   const artGap = Math.max(0, g.cardHeight - g.cardWidth / FAN_CARD_ART_ASPECT);
-  const lift = g.mobile
+  const lift = g.hoverLift
     ? FAN_MOBILE_HOVER_LIFT_RATIO * hoverScale * g.cardHeight
     : 0;
   return slots.map((slot, i) => {

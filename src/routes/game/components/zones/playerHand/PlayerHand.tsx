@@ -524,9 +524,17 @@ function PlayerHand() {
       ),
       cardHeight,
       cardWidth: (cardHeight * 2) / 3,
-      mobile: isMobilePortrait
+      mobile: isMobilePortrait,
+      hoverLift: isMobile
     };
-  }, [width, height, gameZoneBounds, isMobilePortrait, isMobileLandscape]);
+  }, [
+    width,
+    height,
+    gameZoneBounds,
+    isMobile,
+    isMobilePortrait,
+    isMobileLandscape
+  ]);
   const fanHoverScale = fanHoverScaleFor(
     hoverImageSize,
     fanGeometry.cardHeight,
