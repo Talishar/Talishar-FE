@@ -353,3 +353,14 @@
     transform: scaleX(1);
   }
 }
+
+:global(body.fanLandscapeHand) .passTurnDisplay,
+:global(body.fanLandscapeHand) .passTurnDisplayActive {
+  border-radius: 14px;
+}
+
+:global(body.fanLandscapeHand) .passTurnDisplayActive {
+  border: 1px solid rgba(140, 230, 160, 0.35);
+  font-size: 18px;
+  letter-spacing: 0.06em;
+}
