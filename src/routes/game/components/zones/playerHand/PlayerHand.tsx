@@ -57,6 +57,7 @@ import {
   fanSlotIndexAt
 } from './fanLayout';
 import { useFanHover } from './useFanHover';
+import { useShowsLandscapeFan } from './useShowsLandscapeFan';
 import ClassicPlayerHand from './ClassicPlayerHand';
 
 const CARD_ROTATION_STEP_DEGREES = 90;
@@ -323,7 +324,7 @@ function PlayerHand() {
     right: number;
   } | null>(null);
 
-  const showsLandscapeFan = isMobileLandscape && playerID !== 3 && !isReplay;
+  const showsLandscapeFan = useShowsLandscapeFan();
 
   useEffect(() => {
     if (isMobile && !showsLandscapeFan) {

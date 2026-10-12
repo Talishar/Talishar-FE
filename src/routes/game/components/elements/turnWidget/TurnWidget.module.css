@@ -81,3 +81,18 @@
     transform: translate(calc(-100% - 0.5dvh), -50%);
   }
 }
+
+:global(body.fanLandscapeHand) .widgetContainer {
+  right: calc(8px - var(--board-gap));
+  width: var(--side-card-size);
+  height: 100%;
+}
+
+:global(body.fanLandscapeHand) .widget {
+  width: 100%;
+  grid-template-rows: 1fr;
+}
+
+:global(body.fanLandscapeHand) .vitals {
+  grid-template-rows: 1fr auto 1fr;
+}

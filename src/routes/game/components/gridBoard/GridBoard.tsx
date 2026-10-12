@@ -28,7 +28,10 @@ import AmbientParticles from '../elements/ambientParticles';
 import styles from './GridBoard.module.css';
 import { useCookieString } from 'utils/cookieStore';
 import ExperimentalTurnWidget from '../elements/experimentalTurnWidget';
-import TurnWidget from '../elements/turnWidget/TurnWidget';
+import TurnWidget, {
+  TurnWidgetVitals
+} from '../elements/turnWidget/TurnWidget';
+import { useShowsLandscapeFan } from '../zones/playerHand/useShowsLandscapeFan';
 import ManualModePanel from '../leftColumn/ManualModePanel/ManualModePanel';
 import usePlayerPromptOwner from '../elements/playerPrompt/usePlayerPromptOwner';
 
@@ -41,6 +44,7 @@ const BoardPlayerPromptSlot = () => {
 
 const GridBoard = () => {
   const experimental = useCookieString('experimental');
+  const showsLandscapeFan = useShowsLandscapeFan();
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
   );
@@ -83,9 +87,16 @@ const GridBoard = () => {
         [styles.MirroredPlayerGameBoardGrid]:
           !isSpectatorViewingPlayer2 && isMirroredPlayer && !isMirroredOpponent,
         [styles.MirroredBothGameBoardGrid]:
-          !isSpectatorViewingPlayer2 && isMirroredOpponent && isMirroredPlayer
+          !isSpectatorViewingPlayer2 && isMirroredOpponent && isMirroredPlayer,
+        [styles.fanWidgets]: showsLandscapeFan && !experimental
       }),
-    [isSpectatorViewingPlayer2, isMirroredOpponent, isMirroredPlayer]
+    [
+      isSpectatorViewingPlayer2,
+      isMirroredOpponent,
+      isMirroredPlayer,
+      showsLandscapeFan,
+      experimental
+    ]
   );
 
   return (
@@ -135,8 +146,17 @@ const GridBoard = () => {
           <GraveyardZone isPlayer={false} />
         </div>
         <div className={styles.healthWidget}>
-          {experimental ? <ExperimentalTurnWidget /> : <TurnWidget />}
+          {experimental ? (
+            <ExperimentalTurnWidget />
+          ) : (
+            <TurnWidget passOnly={showsLandscapeFan} />
+          )}
         </div>
+        {showsLandscapeFan && !experimental && (
+          <div className={styles.fanVitals}>
+            <TurnWidgetVitals />
+          </div>
+        )}
         <div className={styles.pOneGraveyard}>
           <GraveyardZone isPlayer={true} />
         </div>

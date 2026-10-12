@@ -832,3 +832,26 @@
 .buttonHint > .buttonHintHidden {
   visibility: hidden;
 }
+
+:global(body.fanLandscapeHand) .cardOrderForm {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5em;
+}
+
+:global(body.fanLandscapeHand) .cardOrderForm .cardsContainer {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+:global(body.fanLandscapeHand) .cardOrderForm .reorderCards {
+  margin-top: 0;
+}
+
+:global(body.fanLandscapeHand) .cardOrderForm .submitButtonDiv {
+  order: 1;
+  flex: 0 0 auto;
+  width: auto;
+  margin: 0;
+}

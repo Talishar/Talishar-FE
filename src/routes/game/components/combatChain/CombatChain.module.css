@@ -223,8 +223,20 @@
       (1 + 0.18 * var(--chain-subcard-count)),
     9dvw
   );
-  height: 100%;
+  height: auto;
   translate: none;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-rows:
+    calc(
+      var(--chain-height) - 2 * var(--chain-padding) -
+        var(--chain-subcard-space) - 2px
+    )
+    var(--chain-subcard-space)
+    auto;
+  width: 100%;
+  max-width: none;
+  padding-bottom: var(--chain-padding);
 }
 
 .icon {
@@ -332,4 +344,35 @@
 }
 .content {
   flex-grow: 1;
+}
+
+:global(body.fanLandscapeHand) .chainCentre {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+:global(body.fanLandscapeHand) .grabbyHandle {
+  grid-column: 3;
+  grid-row: 1 / -1;
+  margin-bottom: calc(-1 * var(--chain-padding));
+}
+
+:global(body.fanLandscapeHand) .combatChain > .playerPrompt {
+  position: static;
+  grid-column: 1 / 3;
+  grid-row: 3;
+  min-width: 0;
+  max-width: none;
+  margin-top: var(--chain-padding);
+  transform: none;
+  flex-wrap: wrap;
+  border-width: 1px 0 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  z-index: auto;
+}
+
+:global(body.fanLandscapeHand) .combatChain > div:not([class]):empty {
+  display: none;
 }

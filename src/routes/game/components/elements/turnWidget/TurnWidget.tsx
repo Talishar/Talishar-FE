@@ -6,7 +6,11 @@ import PassTurnDisplay from '../passTurnDisplay/PassTurnDisplay';
 import styles from './TurnWidget.module.css';
 import classNames from 'classnames';
 
-export default function TurnWidget() {
+export default function TurnWidget({
+  passOnly = false
+}: {
+  passOnly?: boolean;
+}) {
   const canPassPhase = useAppSelector(
     (state: RootState) => state.game.canPassPhase
   );
@@ -18,13 +22,25 @@ export default function TurnWidget() {
   return (
     <div className={styles.widgetContainer}>
       <div className={widgetClass}>
-        <div className={styles.apBadge}>
-          <ActionPointDisplay isPlayer />
-        </div>
-        <HealthDisplay isPlayer={false} />
+        {!passOnly && (
+          <div className={styles.apBadge}>
+            <ActionPointDisplay isPlayer />
+          </div>
+        )}
+        {!passOnly && <HealthDisplay isPlayer={false} />}
         <PassTurnDisplay />
-        <HealthDisplay isPlayer />
+        {!passOnly && <HealthDisplay isPlayer />}
       </div>
+    </div>
+  );
+}
+
+export function TurnWidgetVitals() {
+  return (
+    <div className={classNames(styles.widget, styles.vitals)}>
+      <HealthDisplay isPlayer={false} />
+      <ActionPointDisplay isPlayer />
+      <HealthDisplay isPlayer />
     </div>
   );
 }

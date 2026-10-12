@@ -323,3 +323,7 @@
   font-size: 0.9rem;
   font-style: italic;
 }
+
+:global(body.fanLandscapeHand) .cardListContents {
+  --card-size: var(--side-card-size);
+}
