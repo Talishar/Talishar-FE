@@ -219,7 +219,7 @@
 
 :global(body.fanLandscapeHand) .combatChain {
   --card-size: min(
-    (var(--chain-height) - 2 * var(--chain-padding) - 3.5vh) /
+    (var(--chain-height) - 2 * var(--chain-padding) - min(6dvh, 27px) - 0.5vh) /
       (1 + 0.18 * var(--chain-subcard-count)),
     9dvw
   );

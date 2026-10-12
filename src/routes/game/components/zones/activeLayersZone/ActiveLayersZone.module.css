@@ -402,3 +402,67 @@
     padding: 5px 8px;
   }
 }
+
+:global(body.fanLandscapeHand) .activeLayersBox {
+  --card-size: var(--side-card-size);
+  min-width: 35vh;
+  min-width: 35dvh;
+  max-width: 95vh;
+  max-width: 95dvh;
+  max-height: 45vh;
+  max-height: 45dvh;
+}
+
+:global(body.fanLandscapeHand) .activeLayersInner {
+  padding: 1.5vh;
+  padding: 1.5dvh;
+}
+
+:global(body.fanLandscapeHand)
+  :is(.activeLayersTitle, .activeLayersCallToAction) {
+  font-size: max(11px, min(2.75vh, 16px));
+  font-size: max(11px, min(2.75dvh, 16px));
+  gap: 0.6em;
+  padding-left: 0.5em;
+}
+
+:global(body.fanLandscapeHand) .title {
+  font-size: 1.5em;
+}
+
+:global(body.fanLandscapeHand) .targetContainer {
+  font-size: 1em;
+  gap: 0.25em;
+  padding-top: 0.4em;
+}
+
+:global(body.fanLandscapeHand) .passTurnBox {
+  display: flex;
+  flex-shrink: 0;
+}
+
+:global(body.fanLandscapeHand) .passTurn {
+  position: static;
+  width: auto;
+  margin: 0;
+  padding: 0.35em 0.8em;
+  font-size: 1.25em;
+  line-height: 1.2;
+}
+
+:global(body.fanLandscapeHand) .activeLayersContents > div {
+  width: var(--card-size);
+  margin-right: -3.5vh;
+  margin-right: -3.5dvh;
+}
+
+:global(body.fanLandscapeHand) .buttonDiv {
+  height: 2em;
+  padding: 0 1em;
+  font-size: 1em;
+}
+
+:global(body.fanLandscapeHand) .grabbyHandle {
+  width: max(calc(var(--card-size) * 0.2), 20px);
+  font-size: 8px;
+}

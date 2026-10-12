@@ -81,3 +81,8 @@
     height: 12dvh;
   }
 }
+
+:global(body.fanLandscapeHand) .reorderCards {
+  height: 15vh;
+  height: 15dvh;
+}

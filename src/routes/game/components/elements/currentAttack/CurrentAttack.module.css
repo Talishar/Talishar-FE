@@ -213,5 +213,36 @@
 }
 
 :global(body.fanLandscapeHand) .currentAttack {
-  width: calc(var(--card-size) + 2vh);
+  flex-shrink: 0;
+  width: max-content;
+  min-width: calc(var(--card-size) + 2vh);
+}
+
+:global(body.fanLandscapeHand) .attDefRow {
+  height: min(6vh, 27px);
+  height: min(6dvh, 27px);
+}
+
+:global(body.fanLandscapeHand) :is(.attDiv, .defDiv) {
+  font-size: min(4.5vh, 20px);
+  font-size: min(4.5dvh, 20px);
+}
+
+:global(body.fanLandscapeHand) :is(.attackSymbol, .defSymbol) {
+  width: min(5vh, 22px);
+  height: min(5vh, 22px);
+  width: min(5dvh, 22px);
+  height: min(5dvh, 22px);
+}
+
+:global(body.fanLandscapeHand) .chainSymbols {
+  width: min(4.5vh, 20px);
+  height: min(4.5vh, 20px);
+  width: min(4.5dvh, 20px);
+  height: min(4.5dvh, 20px);
+}
+
+:global(body.fanLandscapeHand) .icon.icon {
+  font-size: min(4vh, 18px);
+  font-size: min(4dvh, 18px);
 }
