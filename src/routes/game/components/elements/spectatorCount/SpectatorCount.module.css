@@ -98,6 +98,12 @@
   box-sizing: border-box;
 }
 
+:global(body.fanLandscapeHand) .spectatorCountCompact {
+  width: var(--rail-btn, 42px);
+  height: var(--rail-btn, 42px);
+  min-width: var(--rail-btn, 42px);
+}
+
 @media (max-width: 600px) {
   .spectatorCountCompact {
     width: clamp(34px, 10.5vw, 42px);

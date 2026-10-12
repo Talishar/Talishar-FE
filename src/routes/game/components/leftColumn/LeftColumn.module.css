@@ -20,6 +20,20 @@
   }
 }
 
+:global(body.fanLandscapeHand) .leftColumn {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: calc(env(safe-area-inset-left, 0px) + var(--fan-rail-width));
+  height: auto;
+  z-index: 10;
+  pointer-events: none;
+}
+
+:global(body.fanLandscapeHand) .leftColumn :is(img, button, input, select) {
+  pointer-events: auto;
+}
+
 @media (orientation: portrait) {
   .leftColumn {
     position: fixed;

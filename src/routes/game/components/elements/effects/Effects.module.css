@@ -92,3 +92,15 @@
     margin-top: 3.35rem;
   }
 }
+
+:global(body.fanLandscapeHand) :is(.isOpponent, .isPlayer) {
+  flex: 0 1 auto;
+  height: auto;
+  max-height: 100%;
+  min-height: 0;
+  margin-top: 0;
+}
+
+:global(body.fanLandscapeHand) :is(.isOpponent, .isPlayer) .img {
+  width: 80%;
+}

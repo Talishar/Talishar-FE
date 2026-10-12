@@ -52,6 +52,20 @@
   }
 }
 
+:global(body.fanLandscapeHand) .playerName:not(.playerTwo) {
+  position: relative;
+  top: auto;
+  left: auto;
+  margin: 0;
+  padding: 0 0.15rem;
+  height: 22px;
+  max-width: 100%;
+}
+
+:global(body.fanLandscapeHand) .playerName:not(.playerTwo) .dropdownButton {
+  font-size: inherit;
+}
+
 .playerName[data-framed] .nameContainer {
   /* Clears the widest compact band (level XV) so the metal never reaches the
      name. */

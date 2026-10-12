@@ -110,6 +110,22 @@
   }
 }
 
+:global(body.fanLandscapeHand) .mobileTopBar {
+  top: 0;
+  bottom: 0;
+  left: env(safe-area-inset-left, 0px);
+  right: auto;
+  width: var(--fan-rail-width);
+  padding-right: 4px;
+  flex-direction: column;
+  justify-content: center;
+}
+
+:global(body.fanLandscapeHand) .mobileTopBarContent {
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+
 .topGroup {
   display: flex;
   flex-direction: column;

@@ -480,27 +480,33 @@
 }
 
 :global(body.fanLandscapeHand) {
-  --board-height: calc(
-    100dvh - var(--mobile-top-bar-height, 42px) - 1.5dvh - 1vh
-  );
   --board-gap: 0.5dvh;
-  --board-bottom-base: calc(
-    var(--fan-hand-reserve) - var(--board-gap) - 1.5dvh - 0.5vh
+  --board-edge: 0px;
+  --board-width: calc(
+    100dvw - var(--fan-rail-width) - env(safe-area-inset-left, 0px) -
+      env(safe-area-inset-right, 0px)
   );
+  --board-bottom-base: calc(var(--fan-hand-reserve) - var(--board-gap));
   --side-card-base: min(
-    (var(--board-height) - 5px - 8 * var(--board-gap)) / 6,
-    (100dvw - 10dvh - 1vh - 10px - 10 * var(--board-gap)) / 7
+    (100dvh - 7 * var(--board-gap)) / 6,
+    (var(--board-width) - 2 * var(--board-edge) - 10 * var(--board-gap)) / 7
   );
   --side-card-size: calc(var(--side-card-base) * min(var(--card-scale), 1));
   --card-size: calc(
     min(
         (
-            var(--board-height) - 15px - 2.5 * var(--side-card-base) -
-              var(--board-bottom-base) - 11 * var(--board-gap)
+            100dvh - var(--board-bottom-base) - 10px - 10 * var(--board-gap) -
+              2.5 * var(--side-card-base)
           ) / 3,
         var(--side-card-base)
       ) * min(var(--card-scale), 1)
   );
+}
+
+@media (min-width: 1025px) {
+  :global(body.fanLandscapeHand) {
+    --board-edge: calc(5px + 0.5vh);
+  }
 }
 
 :global(body.fanLandscapeHand) .boardGrid {
@@ -512,20 +518,44 @@
     (var(--board-bottom-row) + var(--side-row-step)) / 2
   );
   --chain-height: calc(
-    var(--board-height) - 5px - var(--card-size) - 3 * var(--side-card-size) -
-      var(--board-bottom-row) - 6 * var(--board-gap)
+    100dvh - var(--card-size) - 3 * var(--side-card-size) -
+      var(--board-bottom-row) - 5 * var(--board-gap)
   );
   grid-template-columns:
-    5px var(--side-card-size) var(--side-card-size) 1fr var(--side-card-size)
+    0 var(--side-card-size) var(--side-card-size) 1fr var(--side-card-size)
     var(--side-card-size) var(--side-card-size) 1fr var(--side-card-size)
-    var(--side-card-size) 5px;
+    var(--side-card-size) 0;
   grid-template-rows:
-    5px var(--card-size) var(--side-card-size) var(--card-size) 1fr 5px 5px 1fr
+    0 var(--card-size) var(--side-card-size) var(--card-size) 1fr 5px 5px 1fr
     var(--card-size) var(--side-card-size) var(--side-card-size)
     var(--board-bottom-row);
   gap: var(--board-gap);
-  padding: 0.5vh;
-  height: 100%;
+  padding: 0 var(--board-edge);
+  width: 100%;
+  height: calc(100% + var(--board-gap));
+  margin-top: calc(-1 * var(--board-gap));
+}
+
+:global(body.fanLandscapeHand) .fanOpponentName {
+  grid-row: 2;
+  grid-column: 4 / 6;
+  align-self: end;
+  justify-self: start;
+  width: auto;
+  height: auto;
+  min-width: 0;
+  max-width: 100%;
+  z-index: 6;
+}
+
+:global(body.fanLandscapeHand) .fanEffects {
+  grid-column: 3;
+  grid-row: 4 / 10;
+  position: relative;
+  top: var(--side-row-step);
+  height: calc(100% - var(--side-row-step) + var(--board-bottom-row));
+  min-height: 0;
+  z-index: 6;
 }
 
 :global(body.fanLandscapeHand)

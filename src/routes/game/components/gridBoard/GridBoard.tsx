@@ -24,6 +24,8 @@ import CombatChain, {
 } from '../combatChain/CombatChain';
 import Playmat from '../elements/playmat';
 import AmbientParticles from '../elements/ambientParticles';
+import PlayerName from '../elements/playerName/PlayerName';
+import ActiveEffects from '../activeEffects/ActiveEffects';
 
 import styles from './GridBoard.module.css';
 import { useCookieString } from 'utils/cookieStore';
@@ -103,6 +105,16 @@ const GridBoard = () => {
     <>
       <ManualModePanel />
       <div className={gridBoardClass}>
+        {showsLandscapeFan && (
+          <div className={styles.fanOpponentName}>
+            <PlayerName isPlayer={false} />
+          </div>
+        )}
+        {showsLandscapeFan && (
+          <div className={styles.fanEffects}>
+            <ActiveEffects />
+          </div>
+        )}
         <div className={styles.pTwoLegs}>
           <LegsEqZone isPlayer={false} />
         </div>

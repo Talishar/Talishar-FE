@@ -373,6 +373,15 @@
   z-index: auto;
 }
 
+:global(body.fanLandscapeHand) .combatChain > .playerPrompt .content {
+  flex: 1 1 0;
+  min-width: 4em;
+}
+
+:global(body.fanLandscapeHand) .combatChain > .playerPrompt .buttonDiv {
+  padding: 8px;
+}
+
 :global(body.fanLandscapeHand) .combatChain > div:not([class]):empty {
   display: none;
 }
