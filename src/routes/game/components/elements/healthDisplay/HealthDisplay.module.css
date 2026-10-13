@@ -50,3 +50,12 @@
     font-size: clamp(0.6rem, 3.6dvh, 1.5rem);
   }
 }
+
+:global(body.fanLandscapeHand) .health {
+  container-type: size;
+}
+
+:global(body.fanLandscapeHand) .tick {
+  font-size: min(70cqh, 45cqw);
+  line-height: 1;
+}
