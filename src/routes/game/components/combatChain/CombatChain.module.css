@@ -364,6 +364,7 @@
   min-width: 0;
   max-width: none;
   margin-top: var(--chain-padding);
+  margin-bottom: calc(-1 * var(--chain-padding));
   transform: none;
   flex-wrap: wrap;
   border-width: 1px 0 0;

@@ -83,7 +83,7 @@
 }
 
 :global(body.fanLandscapeHand) .widgetContainer {
-  right: calc(8px - var(--board-gap));
+  right: calc(2px - var(--board-gap));
   width: var(--side-card-size);
   height: 100%;
 }
@@ -102,4 +102,14 @@
 
 :global(body.fanLandscapeHand) .vitals {
   grid-template-rows: 1fr auto 1fr;
+  width: 90%;
+  border-radius: 14px;
+}
+
+:global(body.fanLandscapeHand) .vitals > :first-child {
+  border-radius: 11px 11px 5px 5px;
+}
+
+:global(body.fanLandscapeHand) .vitals > :last-child {
+  border-radius: 5px 5px 11px 11px;
 }

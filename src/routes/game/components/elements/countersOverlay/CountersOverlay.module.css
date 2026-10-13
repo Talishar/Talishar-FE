@@ -49,6 +49,13 @@
   right: 2px;
 }
 
+:global(body.fanLandscapeHand) .icon.icon,
+:global(body.fanLandscapeHand) .wateryGraveIcon.wateryGraveIcon {
+  height: auto;
+  aspect-ratio: 1;
+  border-radius: 3px;
+}
+
 .countersCover.countersCover {
   position: absolute;
   display: flex;

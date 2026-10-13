@@ -162,3 +162,7 @@
 .stacked:first-child {
   margin-left: calc(1em + var(--stack-layers, 0) * var(--stack-offset));
 }
+
+:global(body.fanLandscapeHand) .stacked:first-child {
+  margin-left: 0;
+}

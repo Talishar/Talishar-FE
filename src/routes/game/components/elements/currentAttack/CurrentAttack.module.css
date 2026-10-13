@@ -247,4 +247,5 @@
 :global(body.fanLandscapeHand) .icon.icon {
   font-size: min(4vh, 18px);
   font-size: min(4dvh, 18px);
+  border-radius: 3px;
 }

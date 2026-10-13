@@ -25,7 +25,8 @@ import CombatChain, {
 import Playmat from '../elements/playmat';
 import AmbientParticles from '../elements/ambientParticles';
 import PlayerName from '../elements/playerName/PlayerName';
-import ActiveEffects from '../activeEffects/ActiveEffects';
+import Effects from '../elements/effects/Effects';
+import LandmarkZone from '../zones/LandmarkZone';
 
 import styles from './GridBoard.module.css';
 import { useCookieString } from 'utils/cookieStore';
@@ -111,8 +112,18 @@ const GridBoard = () => {
           </div>
         )}
         {showsLandscapeFan && (
-          <div className={styles.fanEffects}>
-            <ActiveEffects />
+          <div className={styles.fanLandmark}>
+            <LandmarkZone />
+          </div>
+        )}
+        {showsLandscapeFan && (
+          <div className={styles.fanOpponentEffects}>
+            <Effects isPlayer={false} />
+          </div>
+        )}
+        {showsLandscapeFan && (
+          <div className={styles.fanPlayerEffects}>
+            <Effects isPlayer />
           </div>
         )}
         <div className={styles.pTwoLegs}>
