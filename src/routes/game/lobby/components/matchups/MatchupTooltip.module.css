@@ -6,6 +6,7 @@
 
 .tooltip {
   position: fixed;
+  box-sizing: border-box;
   background: var(--tooltip-background-color);
   color: var(--tooltip-color);
   padding: 0.75rem;
@@ -18,6 +19,9 @@
   white-space: normal;
   word-wrap: break-word;
   max-width: min(650px, calc(100vw - 16px));
+  max-height: calc(100vh - 16px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   z-index: var(--tooltip-z-index);
   animation: fadeIn 0.2s ease;
   pointer-events: auto;

@@ -93,7 +93,8 @@ const MatchupTooltip: React.FC<MatchupTooltipProps> = ({
       if (triggerRef.current?.contains(e.target as Node)) return;
       setIsVisible(false);
     };
-    const handleScroll = () => {
+    const handleScroll = (e: Event) => {
+      if (tooltipRef.current?.contains(e.target as Node)) return;
       if (openedByTouchRef.current) setIsVisible(false);
     };
 
@@ -133,10 +134,11 @@ const MatchupTooltip: React.FC<MatchupTooltipProps> = ({
         <div
           ref={tooltipRef}
           role="tooltip"
+          tabIndex={0}
           onClick={(e) => {
             e.stopPropagation();
             if ((e.target as Element).closest('a')) return;
-            setIsVisible(false);
+            if (openedByTouchRef.current) setIsVisible(false);
           }}
           className={`${styles.tooltip} ${styles[tooltipPos.position]}`}
           style={{
