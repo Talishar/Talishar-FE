@@ -362,6 +362,7 @@
 }
 
 :global(body.fanLandscapeHand) .passTurnDisplayActive {
+  background: #258040;
   border: 1px solid rgba(140, 230, 160, 0.35);
   font-size: 16px;
   letter-spacing: 0.06em;
