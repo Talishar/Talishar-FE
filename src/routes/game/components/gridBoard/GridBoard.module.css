@@ -657,6 +657,18 @@
 }
 
 :global(body.fanLandscapeHand)
+  :is(.pTwoWeaponLZone, .pTwoHero, .pTwoWeaponRZone) {
+  position: relative;
+  top: calc(var(--side-row-step) + var(--board-bottom-row));
+}
+
+:global(body.fanLandscapeHand) .pTwoArsenal {
+  position: relative;
+  top: var(--board-bottom-row);
+  height: var(--side-card-size);
+}
+
+:global(body.fanLandscapeHand)
   :is(.pTwoChest, .pTwoHands, .pTwoPitch, .pTwoDeck, .pTwoGraveyard),
 :global(body.fanLandscapeHand)
   :is(.gameBoardGrid, .MirroredPlayerGameBoardGrid)
@@ -689,15 +701,16 @@
 }
 
 :global(body.fanLandscapeHand) :is(.pTwoPermanents, .pOnePermanents) {
-  grid-column: 3 / 9;
+  --card-size: var(--side-card-size);
+  grid-column: 3 / 5;
 }
 
 :global(body.fanLandscapeHand) .pTwoPermanents {
-  translate: 0 calc(var(--side-row-step) + 4px - var(--board-gap));
+  translate: 0 calc(2 * var(--side-row-step));
 }
 
 :global(body.fanLandscapeHand) .pOnePermanents {
-  translate: 0 calc(var(--board-bottom-row) - 4px + var(--board-gap));
+  translate: 0 var(--board-bottom-row);
 }
 
 :global(body.fanLandscapeHand) .combatChain {
@@ -715,7 +728,7 @@
 :global(body.fanLandscapeHand)
   .fanWidgets
   > :is(.pTwoPermanents, .pOnePermanents) {
-  right: calc(0.9 * var(--side-card-size) + 12px - 2 * var(--board-gap));
+  right: calc(4px - var(--board-gap));
   width: auto;
 }
 
