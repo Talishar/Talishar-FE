@@ -166,3 +166,7 @@
 :global(body.fanLandscapeHand) .stacked:first-child {
   margin-left: 0;
 }
+
+:global(body.fanLandscapeHand) .permanentsInner {
+  padding-left: calc(8px - var(--board-gap));
+}

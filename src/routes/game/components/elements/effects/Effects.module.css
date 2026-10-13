@@ -98,9 +98,7 @@
   display: grid;
   grid-template-rows: repeat(2, auto);
   grid-auto-flow: column dense;
-  grid-auto-columns: calc(
-    ((var(--side-card-size) - 4px) / 2 - 2px) * 35 / 27 + 2px
-  );
+  grid-auto-columns: calc((var(--fx-row) - 2px) * 35 / 27 + 2px);
   gap: 4px;
   height: auto;
   max-height: none;

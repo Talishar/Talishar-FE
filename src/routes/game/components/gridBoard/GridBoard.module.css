@@ -587,18 +587,24 @@
   flex-direction: column;
   height: var(--side-card-size);
   min-height: 0;
+  padding-inline-start: calc(4px - var(--board-gap));
+  --fx-row: calc((var(--side-card-size) - 12px + var(--board-gap)) / 2);
   z-index: 6;
 }
 
 :global(body.fanLandscapeHand) .fanOpponentEffects {
   grid-row: pTwoArsenal;
   grid-column: pTwoHands;
+  padding-top: 4px;
+  padding-bottom: calc(4px - var(--board-gap));
 }
 
 :global(body.fanLandscapeHand) .fanPlayerEffects {
   grid-row: pOneArsenal;
   grid-column: pOneHands;
   top: var(--board-bottom-row);
+  padding-top: calc(4px - var(--board-gap));
+  padding-bottom: 4px;
 }
 
 :global(body.fanLandscapeHand)
@@ -687,11 +693,11 @@
 }
 
 :global(body.fanLandscapeHand) .pTwoPermanents {
-  translate: 0 var(--side-row-step);
+  translate: 0 calc(var(--side-row-step) + 4px - var(--board-gap));
 }
 
 :global(body.fanLandscapeHand) .pOnePermanents {
-  translate: 0 var(--board-bottom-row);
+  translate: 0 calc(var(--board-bottom-row) - 4px + var(--board-gap));
 }
 
 :global(body.fanLandscapeHand) .combatChain {
