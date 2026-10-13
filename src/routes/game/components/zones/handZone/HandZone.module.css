@@ -72,7 +72,10 @@
 }
 
 :global(body.fanLandscapeHand) .isOpponent {
-  --hand-hidden: calc(-0.6 * var(--card-size));
+  --card-size: var(--side-card-size);
+  --hand-hidden: calc(
+    var(--board-bottom-base) - 0.2 * var(--side-card-size) - var(--card-size)
+  );
   --hand-offset: 0px;
 }
 
