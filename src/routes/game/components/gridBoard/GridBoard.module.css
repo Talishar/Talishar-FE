@@ -740,7 +740,7 @@
 
 :global(body.fanLandscapeHand) .fanWidgets > :is(.healthWidget, .fanVitals) {
   position: absolute;
-  left: 0;
+  left: calc(-2px - 0.95 * var(--side-card-size));
   top: calc(var(--side-row-step) - var(--board-gap) + 16px);
   height: calc(
     var(--chain-height) + 2 * var(--board-gap) + var(--board-bottom-row) -
@@ -752,5 +752,5 @@
 :global(body.fanLandscapeHand) .fanWidgets > .fanVitals {
   grid-column: 9 / 10;
   grid-row: 4 / 10;
-  left: calc(var(--board-gap) - 4px - var(--side-card-size));
+  left: calc(var(--board-gap) - 2px - 0.05 * var(--side-card-size));
 }
