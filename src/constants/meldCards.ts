@@ -6,7 +6,10 @@ export const MELD_CARDS = new Set<string>([
   'comet_storm__shock_red',
   'regrowth__shock_blue',
   'everbloom__life_blue',
-  'consign_to_cosmos__shock_yellow'
+  'consign_to_cosmos__shock_yellow',
+  'null__shock_yellow',
+  'rampant_growth__life_yellow',
+  'vaporize__shock_yellow'
 ]);
 
 export const isMeldCard = (cardNumber?: string): boolean =>
