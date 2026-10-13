@@ -52,6 +52,10 @@
     0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
+:global(body.fanLandscapeHand) .handCollapseButton {
+  right: var(--fan-collapse-right);
+}
+
 .handCollapseButton:active {
   transform: scale(0.96);
 }

@@ -92,3 +92,34 @@
     margin-top: 3.35rem;
   }
 }
+
+:global(body.fanLandscapeHand) :is(.isOpponent, .isPlayer) {
+  flex: none;
+  display: grid;
+  grid-template-rows: repeat(2, auto);
+  grid-auto-flow: column dense;
+  grid-auto-columns: calc((var(--fx-row) - 2px) * 35 / 27 + 2px);
+  gap: 4px;
+  height: auto;
+  max-height: none;
+  margin-top: 0;
+  overflow: visible;
+  font-size: 0.6em;
+}
+
+:global(body.fanLandscapeHand) .isOpponent {
+  margin-top: auto;
+}
+
+:global(body.fanLandscapeHand) .isOpponent > :nth-child(odd) {
+  grid-row: 2;
+}
+
+:global(body.fanLandscapeHand) .isOpponent > :nth-child(even) {
+  grid-row: 1;
+}
+
+:global(body.fanLandscapeHand) :is(.isOpponent, .isPlayer) .img {
+  display: block;
+  width: 100%;
+}

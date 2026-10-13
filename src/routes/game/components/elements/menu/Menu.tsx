@@ -39,6 +39,7 @@ import {
   useHideManualModeToggle
 } from 'hooks/useManualMode';
 import { useMediaQuery } from 'hooks/useMediaQuery';
+import { useShowsLandscapeFan } from '../../zones/playerHand/useShowsLandscapeFan';
 
 function FullScreenButton() {
   const { t } = useTranslation();
@@ -216,6 +217,7 @@ function MobileOverflowMenu({ isSpectator }: { isSpectator: boolean }) {
   const hideManualModeToggle = useHideManualModeToggle();
   const showManualMode =
     !isSpectator && canUseManualMode && !hideManualModeToggle;
+  const inSideRail = useShowsLandscapeFan();
 
   const toggleFullScreen = () => {
     screenfull.toggle();
@@ -225,11 +227,19 @@ function MobileOverflowMenu({ isSpectator }: { isSpectator: boolean }) {
   const handleOpen = () => {
     if (!open && btnRef.current) {
       const rect = btnRef.current.getBoundingClientRect();
-      setPanelStyle({
-        position: 'fixed',
-        top: rect.bottom + 6,
-        right: window.innerWidth - rect.right
-      });
+      setPanelStyle(
+        inSideRail
+          ? {
+              position: 'fixed',
+              left: rect.right + 6,
+              bottom: window.innerHeight - rect.bottom
+            }
+          : {
+              position: 'fixed',
+              top: rect.bottom + 6,
+              right: window.innerWidth - rect.right
+            }
+      );
     }
     setOpen((v) => !v);
   };

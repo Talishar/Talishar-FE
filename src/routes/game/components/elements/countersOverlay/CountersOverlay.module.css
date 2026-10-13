@@ -40,6 +40,22 @@
   }
 }
 
+:global(body.fanLandscapeHand) .label.label {
+  font-size: calc(var(--card-size) * 0.14);
+  white-space: nowrap;
+  padding: 1px 2px;
+  bottom: 2px;
+  left: 2px;
+  right: 2px;
+}
+
+:global(body.fanLandscapeHand) .icon.icon,
+:global(body.fanLandscapeHand) .wateryGraveIcon.wateryGraveIcon {
+  height: auto;
+  aspect-ratio: 1;
+  border-radius: 3px;
+}
+
 .countersCover.countersCover {
   position: absolute;
   display: flex;

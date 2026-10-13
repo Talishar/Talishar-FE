@@ -364,6 +364,7 @@
   min-width: 0;
   max-width: none;
   margin-top: var(--chain-padding);
+  margin-bottom: calc(-1 * var(--chain-padding));
   transform: none;
   flex-wrap: wrap;
   border-width: 1px 0 0;
@@ -371,6 +372,15 @@
   background: none;
   box-shadow: none;
   z-index: auto;
+}
+
+:global(body.fanLandscapeHand) .combatChain > .playerPrompt .content {
+  flex: 1 1 0;
+  min-width: 4em;
+}
+
+:global(body.fanLandscapeHand) .combatChain > .playerPrompt .buttonDiv {
+  padding: 8px;
 }
 
 :global(body.fanLandscapeHand) .combatChain > div:not([class]):empty {

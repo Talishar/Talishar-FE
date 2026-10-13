@@ -31,6 +31,10 @@
   }
 }
 
+:global(body.fanLandscapeHand) .devToolTab {
+  left: calc(env(safe-area-inset-left, 0px) + var(--fan-rail-width));
+}
+
 .devToolPanel {
   position: fixed;
   left: 0;

@@ -216,8 +216,14 @@
   flex-shrink: 0;
   width: max-content;
   min-width: calc(var(--card-size) + 2vh);
+  align-items: flex-start;
+  padding-left: 8px;
   grid-column: 1;
   grid-row: 1;
+}
+
+:global(body.fanLandscapeHand) .attack {
+  justify-content: flex-start;
 }
 
 :global(body.fanLandscapeHand) .attDefRow {
@@ -247,4 +253,5 @@
 :global(body.fanLandscapeHand) .icon.icon {
   font-size: min(4vh, 18px);
   font-size: min(4dvh, 18px);
+  border-radius: 3px;
 }

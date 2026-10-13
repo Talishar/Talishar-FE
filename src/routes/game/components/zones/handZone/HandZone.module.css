@@ -71,6 +71,11 @@
   }
 }
 
+:global(body.fanLandscapeHand) .isOpponent {
+  --hand-hidden: calc(-0.6 * var(--card-size));
+  --hand-offset: 0px;
+}
+
 @media (hover: hover) and (pointer: fine) {
   .isOpponent:hover {
     --hand-reveal: calc(var(--card-size) * 0.26);

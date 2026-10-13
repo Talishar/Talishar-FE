@@ -8,9 +8,11 @@ import styles from './LeftColumn.module.css';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import { useMediaQuery } from 'hooks/useMediaQuery';
+import { useShowsLandscapeFan } from '../zones/playerHand/useShowsLandscapeFan';
 
 function LeftColumn() {
   const isMobile = useMediaQuery('(max-width: 1199px)');
+  const showsLandscapeFan = useShowsLandscapeFan();
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
   );
@@ -20,7 +22,7 @@ function LeftColumn() {
   return (
     <div className={styles.leftColumn}>
       {(!isMobile || isSpectator) && <PlayerName isPlayer={false} />}
-      <ActiveEffects />
+      {!showsLandscapeFan && <ActiveEffects />}
       {(!isMobile || isSpectator) && <PlayerName isPlayer={true} />}
       <ReplayPanel />
       {!isMobile && <SpectatorCameraPanel />}

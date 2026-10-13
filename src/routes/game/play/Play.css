@@ -87,8 +87,18 @@
   }
 }
 
+body.fanLandscapeHand {
+  --fan-rail-width: 50px;
+}
+
 body.fanLandscapeHand .centering {
-  top: var(--mobile-top-bar-height, 42px);
+  top: 0;
+  left: calc(env(safe-area-inset-left, 0px) + var(--fan-rail-width));
+  right: env(safe-area-inset-right, 0px);
+}
+
+body.fanLandscapeHand .gameZone {
+  margin-bottom: 0;
 }
 
 /* Font-size is now fluid via min(dvh, dvw) in the landscape .app rule above.

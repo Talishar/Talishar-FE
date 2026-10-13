@@ -19,6 +19,7 @@ import {
 } from 'config/ads';
 import { setInGameAdGate } from 'utils/adAnalytics';
 import InGameAd from './InGameAd';
+import { useShowsLandscapeFan } from '../zones/playerHand/useShowsLandscapeFan';
 
 const adColumnStyle = {
   '--in-game-ad-size': `${IN_GAME_AD_SIZE}px`
@@ -31,6 +32,7 @@ function RightColumn() {
     (state: RootState) => state.game.gameInfo.playerID
   );
   const isSpectator = playerID === 3;
+  const showsLandscapeFan = useShowsLandscapeFan();
   // Matches the `max-width: 1200px` swap in RightColumn.module.css. Only the
   // branch the CSS would show is mounted; the other used to render in full
   // under `display: none`, duplicating the menu and the whole chat log.
@@ -51,7 +53,7 @@ function RightColumn() {
   if (isNarrow) {
     return (
       <div className={styles.mobileTopBar}>
-        {!isSpectator && (
+        {!isSpectator && !showsLandscapeFan && (
           <div className={styles.mobileTopBarName}>
             <PlayerName isPlayer={false} />
           </div>

@@ -204,6 +204,32 @@
   }
 }
 
+:global(body.fanLandscapeHand) .menuList {
+  --rail-slots: 8;
+  --rail-btn: min(42px, calc((100dvh + 4px) / var(--rail-slots) - 4px));
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+:global(body.fanLandscapeHand) .menuList:has(> :nth-child(9)) {
+  --rail-slots: 9;
+}
+
+:global(body.fanLandscapeHand) .menuList:has(> :nth-child(10)) {
+  --rail-slots: 10;
+}
+
+:global(body.fanLandscapeHand) .menuList:has(> :nth-child(11)) {
+  --rail-slots: 11;
+}
+
+:global(body.fanLandscapeHand) .menuList .btn {
+  width: var(--rail-btn);
+  height: var(--rail-btn);
+  min-width: var(--rail-btn);
+}
+
 /* === Overflow menu === */
 .overflowWrapper {
   position: relative;
