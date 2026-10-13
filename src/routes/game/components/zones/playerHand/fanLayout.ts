@@ -6,6 +6,8 @@ export type FanSlot = {
   rotate: number;
   scale: number;
   zIndex: number;
+  width?: number;
+  height?: number;
 };
 
 export type FanGeometry = {
@@ -21,6 +23,7 @@ export const FAN_MAX_ROTATION_DEG = 12;
 export const FAN_MOBILE_MAX_ROTATION_DEG = 3;
 export const FAN_HOVER_SCALE = 1.725;
 export const FAN_CARD_ART_ASPECT = 450 / 628;
+export const FAN_WIDE_HOVER_RATIO = 1 / FAN_CARD_ART_ASPECT ** 2;
 export const FAN_MIN_HOVER_HEIGHT_PX = 300;
 export const FAN_MAX_HOVER_SCREEN_RATIO = 0.75;
 export const FAN_HOVER_HIT_RATIO = 0.7;
@@ -162,13 +165,25 @@ export function fanSlotIndexAt(
   return Math.min(count - 1, Math.max(0, index));
 }
 
+export function fanHoverWidth(
+  g: FanGeometry,
+  hoverScale: number,
+  wide: boolean
+): number {
+  const width = g.cardWidth * hoverScale;
+  if (!wide) return width;
+  const wideWidth = width * FAN_WIDE_HOVER_RATIO;
+  return g.stageWidth > 0 ? Math.min(wideWidth, g.stageWidth) : wideWidth;
+}
+
 export function fanHoverIndexAt(
   count: number,
   x: number,
   g: FanGeometry,
   hoveredIndex: number | null,
   hoverScale = FAN_HOVER_SCALE,
-  expanded = true
+  expanded = true,
+  wide = false
 ): number | null {
   const slots = computeFanSlots(count, g);
   const index = fanIndexAt(slots, x, g.cardWidth * fanScaleFor(count, g));
@@ -176,10 +191,15 @@ export function fanHoverIndexAt(
     return index;
   }
   if (!expanded) return null;
-  const hovered = applyFanHover(slots, hoveredIndex, g, hoverScale, expanded)[
-    hoveredIndex
-  ];
-  return Math.abs(x - hovered.x) <= (g.cardWidth * hoverScale) / 2
+  const hovered = applyFanHover(
+    slots,
+    hoveredIndex,
+    g,
+    hoverScale,
+    expanded,
+    wide
+  )[hoveredIndex];
+  return Math.abs(x - hovered.x) <= fanHoverWidth(g, hoverScale, wide) / 2
     ? hoveredIndex
     : null;
 }
@@ -189,10 +209,12 @@ export function applyFanHover(
   hoveredIndex: number | null,
   g: FanGeometry,
   hoverScale = FAN_HOVER_SCALE,
-  expanded = true
+  expanded = true,
+  wide = false
 ): FanSlot[] {
   if (hoveredIndex === null || !slots[hoveredIndex]) return slots;
-  const maxX = Math.max(0, (g.stageWidth - g.cardWidth * hoverScale) / 2);
+  const hoverWidth = fanHoverWidth(g, hoverScale, wide);
+  const maxX = Math.max(0, (g.stageWidth - hoverWidth) / 2);
   const artGap = Math.max(0, g.cardHeight - g.cardWidth / FAN_CARD_ART_ASPECT);
   const lift = g.hoverLift
     ? FAN_MOBILE_HOVER_LIFT_RATIO * hoverScale * g.cardHeight
@@ -211,7 +233,11 @@ export function applyFanHover(
       y: (-(hoverScale - 1) * g.cardHeight) / 2 + hoverScale * artGap - lift,
       rotate: 0,
       scale: hoverScale,
-      zIndex: 1000
+      zIndex: 1000,
+      ...(wide && {
+        width: hoverWidth,
+        height: hoverWidth * FAN_CARD_ART_ASPECT + hoverScale * artGap
+      })
     };
   });
 }

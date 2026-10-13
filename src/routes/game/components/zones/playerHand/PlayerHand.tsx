@@ -35,6 +35,7 @@ import drawingCardsSound from 'sounds/drawing_cards.wav';
 import { setHandCardRotationHeld } from 'utils/handCardRotation';
 import { useTranslation } from 'react-i18next';
 import { useCookieString } from 'utils/cookieStore';
+import { isMeldCard } from 'constants/meldCards';
 import {
   ENABLE_FANNED_HAND_COOKIE,
   FAN_CARD_HEIGHT_RATIO,
@@ -611,12 +612,15 @@ function PlayerHand() {
       activeHoveredCardId === null
         ? -1
         : fanItems.findIndex((item) => item.id === activeHoveredCardId);
+    const wide =
+      hoveredIndex !== -1 && isMeldCard(fanItems[hoveredIndex].card.cardNumber);
     const computed = applyFanHover(
       computeFanSlots(fanItems.length, fanGeometry),
       hoveredIndex === -1 ? null : hoveredIndex,
       fanGeometry,
       fanHoverScale,
-      isHoverExpanded
+      isHoverExpanded,
+      wide
     );
     fanItems.forEach((item, index) => slots.set(item.id, computed[index]));
     return slots;
@@ -655,13 +659,16 @@ function PlayerHand() {
         hoveredId === null
           ? -1
           : items.findIndex((item) => item.id === hoveredId);
+      const wide =
+        hoveredIndex !== -1 && isMeldCard(items[hoveredIndex].card.cardNumber);
       const index = fanHoverIndexAt(
         items.length,
         x - (rect.left + rect.width / 2),
         fanGeometry,
         hoveredIndex === -1 ? null : hoveredIndex,
         fanHoverScale,
-        isHoverExpanded
+        isHoverExpanded,
+        wide
       );
       return index === null ? null : items[index].id;
     },

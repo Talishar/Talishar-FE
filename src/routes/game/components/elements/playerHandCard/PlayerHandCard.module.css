@@ -80,12 +80,36 @@
   height: 100%;
 }
 
+.fanMeld {
+  margin-inline: auto;
+}
+
+.fanWide {
+  width: 100%;
+  aspect-ratio: auto;
+}
+
+.fanWide .imgContainer {
+  width: 100%;
+  aspect-ratio: auto;
+}
+
+.fanFullImg {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.fanImgHidden {
+  visibility: hidden;
+}
+
 .fanKeywords {
   position: absolute;
   top: 4%;
   left: calc(100% + 4px);
   width: max-content;
-  max-width: 360px;
+  max-width: min(360px, var(--fan-keyword-room, 360px));
   transform-origin: top left;
   pointer-events: none;
 }

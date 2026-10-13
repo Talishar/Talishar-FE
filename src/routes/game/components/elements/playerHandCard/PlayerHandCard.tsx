@@ -48,6 +48,7 @@ import CardKeywordStrip from '../cardPortal/CardKeywordStrip';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import { formatRestriction } from 'data/keywords';
 import { useTranslation } from 'react-i18next';
+import { isMeldCard } from 'constants/meldCards';
 import {
   buildHandCardSelectionKey,
   clearTapToPreviewSelection,
@@ -294,6 +295,7 @@ export const PlayerHandCard = React.memo(
     const slotY = fanSlot?.y ?? 0;
     const slotRotate = fanSlot?.rotate ?? 0;
     const slotScale = fanSlot?.scale ?? 1;
+    const isWideHover = !!fanCardHeight && fanSlot?.width !== undefined;
 
     useEffect(() => {
       if (!isReturning) return;
@@ -425,6 +427,8 @@ export const PlayerHandCard = React.memo(
       return <div className={styles.handCard}></div>;
     }
 
+    const isFannedMeld = isFanned && isMeldCard(card.cardNumber);
+
     const selectionKey = buildHandCardSelectionKey({
       cardId,
       cardNumber: card.cardNumber,
@@ -439,10 +443,17 @@ export const PlayerHandCard = React.memo(
     });
 
     const src = getCollectionCardImagePath({
-      path: isFanned ? CARD_IMAGES_PATH : CARD_SQUARES_PATH,
+      path: isFanned && !isFannedMeld ? CARD_IMAGES_PATH : CARD_SQUARES_PATH,
       locale: getLanguage(),
       cardNumber: card.cardNumber
     });
+    const fullSrc = isFannedMeld
+      ? getCollectionCardImagePath({
+          path: CARD_IMAGES_PATH,
+          locale: getLanguage(),
+          cardNumber: card.cardNumber
+        })
+      : null;
 
     const isHandZoneCard = !isBanished && !isGraveyard && !isArsenal;
 
@@ -784,7 +795,9 @@ export const PlayerHandCard = React.memo(
               [styles.shuffleAccentA]:
                 shuffleRevision > 0 && shuffleRevision % 2 === 0,
               [styles.shuffleAccentB]: shuffleRevision % 2 === 1,
-              [styles.contentHidden]: isReturning && !isDragging
+              [styles.contentHidden]: isReturning && !isDragging,
+              [styles.fanMeld]: isFannedMeld,
+              [styles.fanWide]: isWideHover
             }
           )}
           style={{
@@ -843,7 +856,22 @@ export const PlayerHandCard = React.memo(
             disableHoverPreview={isFanned}
             onTouchPreview={isFanned ? liftFromTouch : undefined}
           >
-            <CardImage src={src} className={imgStyles} draggable="false" />
+            <CardImage
+              src={src}
+              className={classNames(imgStyles, {
+                [styles.fanImgHidden]: isWideHover
+              })}
+              draggable="false"
+            />
+            {fullSrc && (
+              <CardImage
+                src={fullSrc}
+                className={classNames(imgStyles, styles.fanFullImg, {
+                  [styles.fanImgHidden]: !isWideHover
+                })}
+                draggable="false"
+              />
+            )}
             {iconColumn}
           </CardPopUp>
           {cardLabel}
@@ -901,17 +929,33 @@ export const PlayerHandCard = React.memo(
 
     if (!isFanned) return content;
 
-    const slotWidth = fanCardHeight ? ((fanCardHeight * 2) / 3) * slotScale : 0;
+    const slotWidth = fanCardHeight
+      ? fanSlot?.width ?? ((fanCardHeight * 2) / 3) * slotScale
+      : 0;
     const fanTarget = fanCardHeight
       ? {
           x: slotX,
           y: slotY + ((slotScale - 1) * fanCardHeight) / 2,
           rotate: slotRotate,
           width: slotWidth,
-          height: fanCardHeight * slotScale,
+          height: fanSlot?.height ?? fanCardHeight * slotScale,
           marginLeft: -slotWidth / 2
         }
       : { x: slotX, y: slotY, rotate: slotRotate, scale: slotScale };
+
+    let keywordsLeft = slotX > 0;
+    let keywordRoom: number | null = null;
+    const wideStageRect =
+      isWideHover && showHoverKeywords
+        ? slotRef.current?.parentElement?.getBoundingClientRect()
+        : undefined;
+    if (wideStageRect) {
+      const centre = wideStageRect.left + wideStageRect.width / 2 + slotX;
+      const roomRight = window.innerWidth - centre - slotWidth / 2 - 4;
+      const roomLeft = centre - slotWidth / 2 - 4;
+      keywordsLeft = roomLeft > roomRight;
+      keywordRoom = Math.max(roomLeft, roomRight);
+    }
 
     return (
       <MotionConfig reducedMotion="never">
@@ -936,11 +980,15 @@ export const PlayerHandCard = React.memo(
           {isHovered && showHoverKeywords && !isDragging && (
             <div
               className={classNames(styles.fanKeywords, {
-                [styles.fanKeywordsLeft]: slotX > 0
+                [styles.fanKeywordsLeft]: keywordsLeft
               })}
               style={
                 fanCardHeight
-                  ? undefined
+                  ? keywordRoom === null
+                    ? undefined
+                    : ({
+                        '--fan-keyword-room': `${keywordRoom}px`
+                      } as React.CSSProperties)
                   : { transform: `scale(${1 / fanHoverScale})` }
               }
             >
