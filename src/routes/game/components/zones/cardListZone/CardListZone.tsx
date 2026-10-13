@@ -19,8 +19,6 @@ import { Card, isAllyCard } from 'features/Card';
 import { useTranslation } from 'react-i18next';
 import { MdClose } from 'react-icons/md';
 
-const SORT_PREFERENCE_KEY = 'cardListZone_sortPreference';
-
 const matchesQuery = (card: Card, normalizedQuery: string): boolean =>
   (card.cardName?.toLowerCase().includes(normalizedQuery) ?? false) ||
   (card.sType?.toLowerCase().includes(normalizedQuery) ?? false);
@@ -32,45 +30,12 @@ export const CardListZone = () => {
     (state: RootState) => state.game.cardListFocus
   );
   const dispatch = useAppDispatch();
-  const [lastOpenedName, setLastOpenedName] = React.useState<string | null>(
-    null
-  );
-  const [lastSortState, setLastSortState] = React.useState<boolean | null>(
-    null
-  );
   const [searchQuery, setSearchQuery] = useState<string>('');
 
-  // Apply sort preference when a new card list is opened
+  // Clear the search when a different card list is opened.
   useEffect(() => {
-    if (
-      cardList?.active &&
-      cardList?.name &&
-      cardList?.name !== lastOpenedName &&
-      !cardList?.apiCall
-    ) {
-      const savedSortPreference =
-        localStorage.getItem(SORT_PREFERENCE_KEY) === 'true';
-      if (savedSortPreference && !cardList.isSorted) {
-        dispatch(toggleCardListSort());
-      }
-      setLastOpenedName(cardList.name);
-      setLastSortState(cardList.isSorted ?? false);
-      setSearchQuery(''); // Clear search when opening a new zone
-    } else if (!cardList?.active && lastOpenedName && lastSortState !== null) {
-      // Save sort preference when closing
-      localStorage.setItem(SORT_PREFERENCE_KEY, String(lastSortState));
-      setLastOpenedName(null);
-      setLastSortState(null);
-      setSearchQuery(''); // Clear search when closing
-    }
-  }, [cardList?.active, cardList?.name, lastSortState]);
-
-  // Track sort state changes while open
-  useEffect(() => {
-    if (cardList?.active) {
-      setLastSortState(cardList.isSorted ?? false);
-    }
-  }, [cardList?.isSorted]);
+    setSearchQuery('');
+  }, [cardList?.active, cardList?.name]);
 
   const reversedList = useMemo(() => {
     if (!cardList?.cardList) return null;
@@ -115,7 +80,6 @@ export const CardListZone = () => {
 
   const closeCardList = () => {
     dispatch(clearCardListFocus());
-    setLastOpenedName(null);
     setSearchQuery('');
   };
 
@@ -123,9 +87,6 @@ export const CardListZone = () => {
 
   const handleSort = () => {
     dispatch(toggleCardListSort());
-    // Save the sort preference after toggling
-    const newSortState = !cardList?.isSorted;
-    localStorage.setItem(SORT_PREFERENCE_KEY, String(newSortState));
   };
 
   return (
@@ -167,6 +128,7 @@ export const CardListZone = () => {
               )}
               {showSortAndSearch && (
                 <button
+                  type="button"
                   className={`${styles.button} ${
                     cardList?.isSorted ? styles.active : ''
                   }`}
