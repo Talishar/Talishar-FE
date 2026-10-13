@@ -56,4 +56,5 @@
 :global(body.fanLandscapeHand) .actionPointCounter {
   padding: 0.5em 0.3em;
   letter-spacing: 0.02em;
+  background-size: 100% 100%, auto 100%, auto;
 }
