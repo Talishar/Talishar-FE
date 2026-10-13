@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import CardImage from '../cardImage/CardImage';
 import styles from './CardPortal.module.css';
@@ -19,7 +19,7 @@ import { createPortal } from 'react-dom';
 import { isMeldCard } from 'constants/meldCards';
 import CardKeywordStrip from './CardKeywordStrip';
 import { useTranslation } from 'react-i18next';
-import { MdClose } from 'react-icons/md';
+import { MdArrowBack, MdArrowForward, MdClose } from 'react-icons/md';
 import { useAppSelector } from 'app/Hooks';
 import type { RootState } from 'app/Store';
 import { DISABLE_ALT_ARTS } from 'features/options/constants';
@@ -109,9 +109,97 @@ function getSrcs({
   });
 }
 
+function MobileCardPreview({
+  src,
+  dfcSrc,
+  cardNumber,
+  dfcCardNumber,
+  isOpponent,
+  isMeld
+}: {
+  src: string;
+  dfcSrc?: string;
+  cardNumber: string;
+  dfcCardNumber?: string;
+  isOpponent?: boolean;
+  isMeld: boolean;
+}) {
+  const { t } = useTranslation();
+  const [showOtherFace, setShowOtherFace] = useState(false);
+  const isDFC = dfcSrc != null;
+  const activeSrc = showOtherFace && dfcSrc ? dfcSrc : src;
+  const otherSrc = showOtherFace ? src : dfcSrc;
+  const activeCardNumber =
+    showOtherFace && dfcCardNumber ? dfcCardNumber : cardNumber;
+
+  return (
+    <div
+      className={styles.mobileBackdrop}
+      onClick={(event) => {
+        if (event.target === event.currentTarget) clearCardPreview();
+      }}
+    >
+      <div
+        className={styles.mobileDialog}
+        role="dialog"
+        aria-modal="true"
+        aria-label={t('PLAYER_INPUT.CLOSE_POPUP')}
+      >
+        <button
+          type="button"
+          className={styles.mobileCloseButton}
+          aria-label={t('PLAYER_INPUT.CLOSE_POPUP')}
+          onClick={() => clearCardPreview()}
+        >
+          <MdClose aria-hidden="true" />
+        </button>
+        <div className={styles.mobileCardGroup}>
+          {otherSrc && (
+            <div className={styles.mobileCardBehind} aria-hidden="true">
+              <CardImage
+                src={otherSrc}
+                className={styles.img}
+                isOpponent={isOpponent}
+                preferEnglishArt
+                eager
+              />
+            </div>
+          )}
+          <CardDetails
+            key={activeSrc}
+            src={activeSrc}
+            containerClass={styles.popUp}
+            isOpponent={isOpponent}
+            isMeld={isMeld && !showOtherFace}
+            showKeywords={false}
+          />
+        </div>
+        {isDFC && (
+          <button
+            type="button"
+            className={styles.mobileFaceButton}
+            onClick={() => setShowOtherFace((previous) => !previous)}
+            aria-label={t('CARD_PORTAL.SHOW_OTHER_FACE')}
+          >
+            {showOtherFace ? (
+              <MdArrowBack aria-hidden="true" />
+            ) : (
+              <MdArrowForward aria-hidden="true" />
+            )}
+            <span>{t('CARD_PORTAL.SHOW_OTHER_FACE')}</span>
+            <span className={styles.mobileFaceCount}>
+              {showOtherFace ? '2 / 2' : '1 / 2'}
+            </span>
+          </button>
+        )}
+        <CardKeywordStrip cardNumber={activeCardNumber} />
+      </div>
+    </div>
+  );
+}
+
 export default function CardPortal() {
   const popup = useCardPreview();
-  const { t } = useTranslation();
   const hoverImageSize = Number(useCookieString('hoverImageSize')) || 1;
   const { getLanguage } = useLanguageSelector();
   const [windowWidth, windowHeight] = useWindowDimensions();
@@ -173,50 +261,18 @@ export default function CardPortal() {
 
   if (popup.presentation === 'mobile-modal') {
     return createPortal(
-      <div
-        className={styles.mobileBackdrop}
-        onClick={(event) => {
-          if (event.target === event.currentTarget) clearCardPreview();
-        }}
-      >
-        <div
-          className={classNames(styles.mobileDialog, {
-            [styles.mobileDialogDoubleFaced]: isDFC
-          })}
-          role="dialog"
-          aria-modal="true"
-          aria-label={t('PLAYER_INPUT.CLOSE_POPUP')}
-        >
-          <button
-            type="button"
-            className={styles.mobileCloseButton}
-            aria-label={t('PLAYER_INPUT.CLOSE_POPUP')}
-            onClick={() => clearCardPreview()}
-          >
-            <MdClose aria-hidden="true" />
-          </button>
-          <div className={styles.mobileCardGroup}>
-            {isDFC && (
-              <CardDetails
-                src={dfcSrc}
-                containerClass={classNames(
-                  styles.popUp,
-                  styles.doubleFacedCard
-                )}
-                isOpponent={popup.isOpponent}
-                showKeywords={false}
-              />
-            )}
-            <CardDetails
-              src={src}
-              containerClass={styles.popUp}
-              isOpponent={popup.isOpponent}
-              isMeld={isMeld}
-              cardNumber={cardNumber}
-            />
-          </div>
-        </div>
-      </div>,
+      <MobileCardPreview
+        key={popup.popupCard.cardNumber}
+        src={src}
+        dfcSrc={dfcSrc}
+        cardNumber={popup.popupCard.cardNumber}
+        dfcCardNumber={getDoubleFacedCardNumber(
+          popup.popupCard.cardNumber,
+          originalHeroCardNumber
+        )}
+        isOpponent={popup.isOpponent}
+        isMeld={isMeld}
+      />,
       document.body
     );
   }
@@ -239,7 +295,10 @@ export default function CardPortal() {
         ? popup.xCoord - popUpGap * hoverImageSize - cardWidth
         : popup.xCoord + popUpGap * hoverImageSize * 3.5;
     const minLeft = reverseFaceOffset + viewportPadding;
-    const maxLeft = Math.max(minLeft, windowWidth - cardWidth - viewportPadding);
+    const maxLeft = Math.max(
+      minLeft,
+      windowWidth - cardWidth - viewportPadding
+    );
     const clampedLeft = Math.min(Math.max(preferredLeft, minLeft), maxLeft);
 
     popUpStyle.left = clampedLeft.toString() + 'px';

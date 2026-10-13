@@ -142,6 +142,9 @@
     "MORE_other": "+{{count}} more - see Keywords guide",
     "TITLE": "Card keywords"
   },
+  "CARD_PORTAL": {
+    "SHOW_OTHER_FACE": "Show other face"
+  },
   "CARD_LIST": {
     "ERROR": "Error!",
     "LOADING": "Loading…",

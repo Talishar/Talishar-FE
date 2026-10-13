@@ -142,6 +142,9 @@
     "MORE_other": "",
     "TITLE": ""
   },
+  "CARD_PORTAL": {
+    "SHOW_OTHER_FACE": "显示另一面"
+  },
   "CARD_LIST": {
     "ERROR": "",
     "LOADING": "",
