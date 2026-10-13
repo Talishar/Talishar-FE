@@ -31,6 +31,7 @@ import {
   motion,
   MotionConfig,
   PanInfo,
+  Transition,
   useMotionValue,
   useReducedMotion,
   useSpring,
@@ -157,6 +158,7 @@ export interface HandCard {
   showHoverKeywords?: boolean;
   fanHoverScale?: number;
   fanCardHeight?: number;
+  fanTransition?: Transition;
   isFanLifted?: boolean;
   onHoverChange?: (cardId: string, hovering: boolean) => void;
   onFanPointerEnter?: (clientX: number, clientY: number) => void;
@@ -194,6 +196,7 @@ export const PlayerHandCard = React.memo(
     showHoverKeywords = false,
     fanHoverScale = FAN_HOVER_SCALE,
     fanCardHeight,
+    fanTransition,
     isFanLifted = false,
     onHoverChange,
     onFanPointerEnter,
@@ -973,7 +976,7 @@ export const PlayerHandCard = React.memo(
               ? FAN_RISE_TRANSITION
               : isLanding
               ? FAN_UNHOVER_TRANSITION
-              : FAN_DROP_TRANSITION
+              : fanTransition ?? FAN_DROP_TRANSITION
           }
         >
           <MotionConfig reducedMotion="user">{content}</MotionConfig>

@@ -24,9 +24,13 @@ import useWindowDimensions from 'hooks/useWindowDimensions';
 import { useMediaQuery } from 'hooks/useMediaQuery';
 import {
   AnimatePresence,
+  AnimationPlaybackControls,
   DragControls,
   MotionConfig,
-  PanInfo
+  PanInfo,
+  animate as animateValue,
+  motion,
+  useMotionValue
 } from 'framer-motion';
 import { LONG_PRESS_TIMER } from 'appConstants';
 import { createPortal } from 'react-dom';
@@ -39,12 +43,20 @@ import { isMeldCard } from 'constants/meldCards';
 import {
   ENABLE_FANNED_HAND_COOKIE,
   FAN_CARD_HEIGHT_RATIO,
+  FAN_DOCK_CARD_HEIGHT_RATIO,
+  FAN_DOCK_DURATION_S,
+  FAN_DOCK_EDGE_GAP_PX,
+  FAN_DOCK_HIDDEN_RATIO,
+  FAN_DOCK_OPEN_GUARD_MS,
+  FAN_DOCK_START_ATTR,
   FAN_EXPAND_DELAY_MS,
   FAN_HAND_RESERVE_VAR,
   FAN_KEYWORD_DELAY_MS,
   FAN_LANDSCAPE_BODY_CLASS,
   FAN_LANDSCAPE_CARD_HEIGHT_RATIO,
   FAN_MOUSE_LINE_DROP_RATIO,
+  FAN_OPEN_CARD_HEIGHT_RATIO,
+  FAN_OPEN_HIDDEN_RATIO,
   FAN_REST_HIDDEN_RATIO,
   FAN_SIDE_COLUMN_ATTR,
   FAN_UNHOVER_ANCHOR_ATTR,
@@ -52,12 +64,16 @@ import {
   FanSlot,
   applyFanHover,
   computeFanSlots,
+  fanDockEase,
   fanHoverIndexAt,
   fanHoverLineY,
   fanHoverScaleFor,
-  fanSlotIndexAt
+  fanScaleFor,
+  fanSlotIndexAt,
+  fanSpacing
 } from './fanLayout';
 import { useFanHover } from './useFanHover';
+import { useLandscapeHandMode } from './useLandscapeHandMode';
 import { useShowsLandscapeFan } from './useShowsLandscapeFan';
 import ClassicPlayerHand from './ClassicPlayerHand';
 
@@ -69,6 +85,11 @@ const NUMERIC_RE = /^\d+$/;
 const PITCH_PHASES = new Set(['P', 'CHOOSEHANDCANCEL', 'PAYGOLDORPITCH']);
 const TOUCH_TAP_SLOP_PX = 10;
 const TOUCH_LOOK_CLICK_SWALLOW_MS = 500;
+const FAN_DOCK_TRANSITION = {
+  type: 'tween' as const,
+  duration: FAN_DOCK_DURATION_S,
+  ease: fanDockEase
+};
 const TOUCH_TAP_CLICK_WAIT_MS = 300;
 
 const preventContextMenu = (event: React.MouseEvent) => event.preventDefault();
@@ -152,7 +173,8 @@ function PlayerHand() {
   const isPortrait = useMediaQuery('(orientation: portrait)');
   const isMobilePortrait = isMobile && isPortrait;
   const isMobileLandscape = isMobile && !isPortrait;
-  const canCollapseHand = isMobile || isPortrait;
+  const showsLandscapeFan = useShowsLandscapeFan();
+  const canCollapseHand = (isMobile || isPortrait) && !showsLandscapeFan;
   const [isHandCollapsed, setIsHandCollapsed] = useState(false);
   const hoverImageSize = useCookieString('hoverImageSize');
   const turnPhase = useAppSelector(
@@ -205,6 +227,19 @@ function PlayerHand() {
   } = useFanHover();
   const lastFanSlotsRef = useRef(new Map<string, FanSlot>());
   const fanStageRef = useRef<HTMLDivElement>(null);
+  const { isHandDocked, openHand } = useLandscapeHandMode(
+    showsLandscapeFan,
+    fanStageRef
+  );
+  const isLandscapeDocked = showsLandscapeFan && isHandDocked;
+  const dockedRenderRef = useRef(isLandscapeDocked);
+  const dockTransition =
+    dockedRenderRef.current !== isLandscapeDocked
+      ? FAN_DOCK_TRANSITION
+      : undefined;
+  useEffect(() => {
+    dockedRenderRef.current = isLandscapeDocked;
+  }, [isLandscapeDocked]);
   const lastPointerRef = useRef<{ x: number; y: number; type: string } | null>(
     null
   );
@@ -323,9 +358,8 @@ function PlayerHand() {
   const [gameZoneBounds, setGameZoneBounds] = useState<{
     left: number;
     right: number;
+    dockLeft: number;
   } | null>(null);
-
-  const showsLandscapeFan = useShowsLandscapeFan();
 
   useEffect(() => {
     if (isMobile && !showsLandscapeFan) {
@@ -339,6 +373,9 @@ function PlayerHand() {
       )
     );
     if (elements.length === 0) return;
+    const dockStart = showsLandscapeFan
+      ? document.querySelector<HTMLElement>(`[${FAN_DOCK_START_ATTR}]`)
+      : null;
 
     const update = () => {
       const rects = elements.map((element) => element.getBoundingClientRect());
@@ -350,16 +387,22 @@ function PlayerHand() {
         (showsLandscapeFan
           ? Math.max(...rects.map((rect) => rect.left))
           : rects[0].right);
+      const dockLeft = dockStart
+        ? dockStart.getBoundingClientRect().right + FAN_DOCK_EDGE_GAP_PX
+        : left;
       setGameZoneBounds((previousBounds) =>
-        previousBounds?.left === left && previousBounds.right === right
+        previousBounds?.left === left &&
+        previousBounds.right === right &&
+        previousBounds.dockLeft === dockLeft
           ? previousBounds
-          : { left, right }
+          : { left, right, dockLeft }
       );
     };
 
     update();
     const ro = new ResizeObserver(update);
     elements.forEach((element) => ro.observe(element));
+    if (dockStart) ro.observe(dockStart);
     return () => ro.disconnect();
   }, [isMobile, showsLandscapeFan, width, height]);
 
@@ -513,37 +556,86 @@ function PlayerHand() {
     playableGraveyardCards
   ]);
 
+  const stageBounds =
+    gameZoneBounds && isLandscapeDocked
+      ? {
+          left: gameZoneBounds.dockLeft,
+          right: gameZoneBounds.right + FAN_DOCK_EDGE_GAP_PX
+        }
+      : gameZoneBounds;
+
+  const stageLeft = useMotionValue(0);
+  const stageRight = useMotionValue(0);
+  const stageDockedRef = useRef(isLandscapeDocked);
+  const stageAnimationsRef = useRef<AnimationPlaybackControls[]>([]);
+  useLayoutEffect(() => {
+    const isDockToggle = stageDockedRef.current !== isLandscapeDocked;
+    stageDockedRef.current = isLandscapeDocked;
+    stageAnimationsRef.current.forEach((control) => control.stop());
+    stageAnimationsRef.current = [];
+    const left = stageBounds?.left ?? 0;
+    const right = stageBounds?.right ?? 0;
+    if (isDockToggle && stageBounds) {
+      stageAnimationsRef.current = [
+        animateValue(stageLeft, left, FAN_DOCK_TRANSITION),
+        animateValue(stageRight, right, FAN_DOCK_TRANSITION)
+      ];
+      return;
+    }
+    stageLeft.set(left);
+    stageRight.set(right);
+  }, [stageBounds?.left, stageBounds?.right, isLandscapeDocked]);
+  useEffect(
+    () => () => stageAnimationsRef.current.forEach((control) => control.stop()),
+    []
+  );
+
   const fanGeometry = useMemo<FanGeometry>(() => {
     const cardHeight =
       height *
-      (isMobileLandscape
-        ? FAN_LANDSCAPE_CARD_HEIGHT_RATIO
-        : FAN_CARD_HEIGHT_RATIO);
+      (!isMobileLandscape
+        ? FAN_CARD_HEIGHT_RATIO
+        : isLandscapeDocked
+        ? FAN_DOCK_CARD_HEIGHT_RATIO
+        : FAN_OPEN_CARD_HEIGHT_RATIO);
     return {
       stageWidth: Math.max(
         0,
-        width - (gameZoneBounds?.left ?? 0) - (gameZoneBounds?.right ?? 0)
+        width - (stageBounds?.left ?? 0) - (stageBounds?.right ?? 0)
       ),
       cardHeight,
       cardWidth: (cardHeight * 2) / 3,
       mobile: isMobilePortrait,
-      hoverLift: isMobile
+      hoverLift: isMobile,
+      hiddenRatio: !isMobileLandscape
+        ? undefined
+        : isLandscapeDocked
+        ? FAN_DOCK_HIDDEN_RATIO
+        : FAN_OPEN_HIDDEN_RATIO
     };
   }, [
     width,
     height,
-    gameZoneBounds,
+    stageBounds?.left,
+    stageBounds?.right,
     isMobile,
     isMobilePortrait,
-    isMobileLandscape
+    isMobileLandscape,
+    isLandscapeDocked
   ]);
   const fanHoverScale = fanHoverScaleFor(
     hoverImageSize,
     fanGeometry.cardHeight,
     height
   );
+  const hoverAnchorY = showsLandscapeFan
+    ? height -
+      fanGeometry.cardHeight *
+        (1 - (fanGeometry.hiddenRatio ?? FAN_REST_HIDDEN_RATIO))
+    : unhoverAnchorY;
 
-  const handReserve = fanGeometry.cardHeight * (1 - FAN_REST_HIDDEN_RATIO);
+  const handReserve =
+    height * FAN_LANDSCAPE_CARD_HEIGHT_RATIO * (1 - FAN_REST_HIDDEN_RATIO);
   useLayoutEffect(() => {
     if (!showsLandscapeFan) return;
     const body = document.body;
@@ -562,6 +654,12 @@ function PlayerHand() {
   useEffect(() => {
     if (isDragActive) clearHover();
   }, [isDragActive, clearHover]);
+
+  useEffect(() => {
+    if (!isLandscapeDocked) return;
+    clearHover();
+    clearTapToPreviewSelection();
+  }, [isLandscapeDocked, clearHover]);
 
   const [expandedCardId, setExpandedCardId] = useState<string | null>(null);
   const isHoverExpanded =
@@ -649,7 +747,7 @@ function PlayerHand() {
           rect.bottom,
           fanGeometry.cardHeight,
           fanHoverScale,
-          unhoverAnchorY,
+          hoverAnchorY,
           touch ? 0 : FAN_MOUSE_LINE_DROP_RATIO
         )
       ) {
@@ -672,7 +770,7 @@ function PlayerHand() {
       );
       return index === null ? null : items[index].id;
     },
-    [fanGeometry, fanHoverScale, unhoverAnchorY, isHoverExpanded]
+    [fanGeometry, fanHoverScale, hoverAnchorY, isHoverExpanded]
   );
 
   useEffect(() => {
@@ -766,7 +864,7 @@ function PlayerHand() {
         rect.bottom,
         fanGeometry.cardHeight,
         fanHoverScale,
-        unhoverAnchorY
+        hoverAnchorY
       )
     ) {
       return null;
@@ -971,6 +1069,21 @@ function PlayerHand() {
   const pendingTapClearRef = useRef(false);
   const tapClearTimerRef = useRef<ReturnType<typeof setTimeout>>();
   const touchLiftTimerRef = useRef<ReturnType<typeof setTimeout>>();
+  const [isDockOpenGuarded, setIsDockOpenGuarded] = useState(false);
+
+  useEffect(() => {
+    if (!isDockOpenGuarded) return;
+    const timer = setTimeout(
+      () => setIsDockOpenGuarded(false),
+      FAN_DOCK_OPEN_GUARD_MS
+    );
+    return () => clearTimeout(timer);
+  }, [isDockOpenGuarded]);
+
+  const openFromDock = () => {
+    setIsDockOpenGuarded(true);
+    openHand();
+  };
   const swallowClickUntilRef = useRef(0);
   const touchScrubMoveRef = useRef<(event: PointerEvent) => void>(
     () => undefined
@@ -1042,7 +1155,7 @@ function PlayerHand() {
       stage.getBoundingClientRect().bottom,
       fanGeometry.cardHeight,
       fanHoverScale,
-      unhoverAnchorY
+      hoverAnchorY
     );
     if (event.clientY < lineY) {
       const pickupId = hoveredId ?? (firstMove ? scrub.cardId : null);
@@ -1250,13 +1363,19 @@ function PlayerHand() {
     hasTheirBanishedCards ||
     hasGraveyardCards;
 
-  const stageBoundsStyle = gameZoneBounds
-    ? { left: gameZoneBounds.left, right: gameZoneBounds.right }
+  const stageBoundsStyle = stageBounds
+    ? { left: stageBounds.left, right: stageBounds.right }
     : undefined;
+  const dockSpan =
+    fanSpacing(fanItems.length, fanGeometry) *
+      Math.max(0, fanItems.length - 1) +
+    fanGeometry.cardWidth * fanScaleFor(fanItems.length, fanGeometry);
 
   const restingFanSlot: FanSlot = {
     x: 0,
-    y: fanGeometry.cardHeight * FAN_REST_HIDDEN_RATIO,
+    y:
+      fanGeometry.cardHeight *
+      (fanGeometry.hiddenRatio ?? FAN_REST_HIDDEN_RATIO),
     rotate: 0,
     scale: 1,
     zIndex: 200
@@ -1299,12 +1418,13 @@ function PlayerHand() {
 
   const fanHand = (
     <>
-      <div
+      <motion.div
         ref={fanStageRef}
         className={classNames(styles.fanStage, {
-          [styles.fanStageCollapsed]: isHandCollapsed
+          [styles.fanStageCollapsed]: isHandCollapsed,
+          [styles.fanStageDocked]: isLandscapeDocked
         })}
-        style={stageBoundsStyle}
+        style={{ left: stageLeft, right: stageRight }}
         aria-hidden={isHandCollapsed}
         onContextMenu={preventContextMenu}
         onClick={finishTouchTap}
@@ -1334,6 +1454,7 @@ function PlayerHand() {
                 showHoverKeywords={showHoverKeywords}
                 fanHoverScale={fanHoverScale}
                 fanCardHeight={fanGeometry.cardHeight}
+                fanTransition={dockTransition}
                 isFanLifted={isFanLifted}
                 onHoverChange={handleHoverChange}
                 onFanPointerEnter={handleFanPointerEnter}
@@ -1358,6 +1479,7 @@ function PlayerHand() {
                 showHoverKeywords={showHoverKeywords}
                 fanHoverScale={fanHoverScale}
                 fanCardHeight={fanGeometry.cardHeight}
+                fanTransition={dockTransition}
                 isFanLifted={isFanLifted}
                 onHoverChange={handleHoverChange}
                 onFanPointerEnter={handleFanPointerEnter}
@@ -1368,7 +1490,23 @@ function PlayerHand() {
             )
           )}
         </AnimatePresence>
-      </div>
+      </motion.div>
+      {isLandscapeDocked && hasRowCards && stageBounds && (
+        <button
+          type="button"
+          className={styles.fanDockHit}
+          style={{
+            left: stageBounds.left + (fanGeometry.stageWidth - dockSpan) / 2,
+            width: dockSpan,
+            height: fanGeometry.cardHeight * (1 - FAN_DOCK_HIDDEN_RATIO)
+          }}
+          onClick={openFromDock}
+          aria-label={t('HAND.SHOW_HAND')}
+        />
+      )}
+      {isDockOpenGuarded && (
+        <div className={styles.fanOpenGuard} data-fan-keep-open="" />
+      )}
       {collapseButton && (
         <div className={styles.fanCollapseDock} style={stageBoundsStyle}>
           {collapseButton}

@@ -501,13 +501,6 @@
         var(--side-card-base)
       ) * min(var(--card-scale), 1)
   );
-  --fan-collapse-right: calc(8px - var(--side-card-size) - var(--board-gap));
-}
-
-:global(body.fanLandscapeHand):has(
-    :is(.gameBoardGrid, .MirroredOpponentGameBoardGrid) > .pOneCount > *
-  ) {
-  --fan-collapse-right: 8px;
 }
 
 @media (min-width: 1025px) {
@@ -528,6 +521,8 @@
     100dvh - var(--card-size) - 3 * var(--side-card-size) -
       var(--board-bottom-row) - 5 * var(--board-gap)
   );
+  --hero-group-size: calc(1.25 * var(--side-card-size));
+  --hero-group-grow: calc(var(--hero-group-size) - var(--side-card-size));
   grid-template-columns:
     0 var(--side-card-size) var(--side-card-size) 1fr var(--side-card-size)
     var(--side-card-size) var(--side-card-size) 1fr var(--side-card-size)
@@ -654,6 +649,38 @@
     .pOneArsenal
   ) {
   --card-size: var(--side-card-size);
+}
+
+:global(body.fanLandscapeHand)
+  :is(.pOneWeaponLZone, .pOneHero, .pOneWeaponRZone, .pOneArsenal) {
+  --card-size: var(--hero-group-size);
+  position: relative;
+  align-self: start;
+  height: var(--hero-group-size);
+}
+
+:global(body.fanLandscapeHand)
+  :is(.pOneWeaponLZone, .pOneHero, .pOneWeaponRZone) {
+  width: var(--hero-group-size);
+  justify-self: start;
+  top: calc(var(--board-bottom-row) - 2 * var(--hero-group-grow));
+}
+
+:global(body.fanLandscapeHand) .pOneWeaponLZone {
+  left: calc(-1.5 * var(--hero-group-grow));
+}
+
+:global(body.fanLandscapeHand) .pOneHero {
+  left: calc(-0.5 * var(--hero-group-grow));
+}
+
+:global(body.fanLandscapeHand) .pOneWeaponRZone {
+  left: calc(0.5 * var(--hero-group-grow));
+}
+
+:global(body.fanLandscapeHand) .pOneArsenal {
+  top: calc(var(--board-bottom-row) - var(--hero-group-grow));
+  left: calc(-0.5 * var(--hero-group-grow));
 }
 
 :global(body.fanLandscapeHand)

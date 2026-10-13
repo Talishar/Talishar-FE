@@ -16,6 +16,7 @@ export type FanGeometry = {
   cardHeight: number;
   mobile?: boolean;
   hoverLift?: boolean;
+  hiddenRatio?: number;
 };
 
 export const FAN_REST_HIDDEN_RATIO = 0.54;
@@ -44,6 +45,14 @@ export const FAN_LANDSCAPE_CARD_HEIGHT_RATIO = 0.35;
 export const FAN_LANDSCAPE_BODY_CLASS = 'fanLandscapeHand';
 export const FAN_HAND_RESERVE_VAR = '--fan-hand-reserve';
 export const FAN_SIDE_COLUMN_ATTR = 'data-fan-side-column';
+export const FAN_DOCK_CARD_HEIGHT_RATIO = 0.4;
+export const FAN_DOCK_HIDDEN_RATIO = 0.3;
+export const FAN_OPEN_CARD_HEIGHT_RATIO = 0.42;
+export const FAN_OPEN_HIDDEN_RATIO = 0.14;
+export const FAN_DOCK_EDGE_GAP_PX = 4;
+export const FAN_DOCK_OPEN_GUARD_MS = 300;
+export const FAN_DOCK_START_ATTR = 'data-fan-dock-start';
+export const FAN_KEEP_OPEN_ATTR = 'data-fan-keep-open';
 
 export const FAN_DROP_RATE = 32;
 export const FAN_DROP_DURATION_S = 0.22;
@@ -51,6 +60,8 @@ export const FAN_RISE_RATE = 55;
 export const FAN_RISE_DURATION_S = 0.07;
 export const FAN_UNHOVER_DURATION_S = 0.23;
 export const FAN_LAND_DURATION_S = FAN_UNHOVER_DURATION_S;
+export const FAN_DOCK_RATE = 45;
+export const FAN_DOCK_DURATION_S = 0.18;
 
 function expEaseOut(rate: number, duration: number) {
   const k = rate * duration;
@@ -60,6 +71,7 @@ function expEaseOut(rate: number, duration: number) {
 
 export const fanDropEase = expEaseOut(FAN_DROP_RATE, FAN_DROP_DURATION_S);
 export const fanRiseEase = expEaseOut(FAN_RISE_RATE, FAN_RISE_DURATION_S);
+export const fanDockEase = expEaseOut(FAN_DOCK_RATE, FAN_DOCK_DURATION_S);
 export const fanUnhoverEase = (progress: number) => 1 - (1 - progress) ** 2;
 
 export function fanHoverScaleFor(
@@ -132,7 +144,9 @@ export function computeFanSlots(count: number, g: FanGeometry): FanSlot[] {
     const t = (i - mid) / Math.max(1, mid);
     slots.push({
       x: (i - mid) * spacing,
-      y: g.cardHeight * FAN_REST_HIDDEN_RATIO + t * t * arcDepth,
+      y:
+        g.cardHeight * (g.hiddenRatio ?? FAN_REST_HIDDEN_RATIO) +
+        t * t * arcDepth,
       rotate: t * maxRotation,
       scale,
       zIndex: 200 + (g.mobile ? count - 1 - i : i)
