@@ -10,6 +10,7 @@ export default interface CombatChainLink {
   goAgain?: boolean;
   dominate?: boolean;
   overpower?: boolean;
+  veil?: boolean;
   activeOnHits?: boolean;
   wager?: boolean;
   phantasm?: boolean;

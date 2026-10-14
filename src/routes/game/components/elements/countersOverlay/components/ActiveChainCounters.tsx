@@ -17,7 +17,8 @@ import {
   GiNinjaStar,
   GiWaterSplash,
   GiArmorPunch,
-  GiGuitar
+  GiGuitar,
+  GiCowled
 } from 'react-icons/gi';
 type Props = {
   activeCombatChain?: CombatChainLink;
@@ -48,6 +49,13 @@ export const ActiveCardCounterOverlay = (props: Props) => {
         <KeywordPopover id="overpower">
           <span className={styles.icon}>
             <GiStomp />
+          </span>
+        </KeywordPopover>
+      )}
+      {activeCombatChain.veil && (
+        <KeywordPopover id="veil">
+          <span className={styles.icon}>
+            <GiCowled />
           </span>
         </KeywordPopover>
       )}

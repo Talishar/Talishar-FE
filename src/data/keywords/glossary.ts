@@ -22,6 +22,13 @@ export const GLOSSARY: KeywordEntry[] = [
     category: 'ability'
   },
   {
+    id: 'veil',
+    name: 'Veil',
+    short:
+      'This attack cannot be defended by more than one card of each color.',
+    category: 'ability'
+  },
+  {
     id: 'ward',
     name: 'Ward',
     short:
