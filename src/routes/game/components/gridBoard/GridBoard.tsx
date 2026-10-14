@@ -45,6 +45,13 @@ const BoardPlayerPromptSlot = () => {
   ) : null;
 };
 
+const ChainPromptTopBarSlot = () => {
+  const promptOwner = usePlayerPromptOwner();
+  return promptOwner === 'combatChain' ? (
+    <CombatChainPlayerPrompt topBar />
+  ) : null;
+};
+
 const GridBoard = () => {
   const experimental = useCookieString('experimental');
   const showsLandscapeFan = useShowsLandscapeFan();
@@ -183,7 +190,7 @@ const GridBoard = () => {
         <div className={styles.pOneGraveyard}>
           <GraveyardZone isPlayer={true} />
         </div>
-        <div className={styles.pOneHead}>
+        <div className={styles.pOneHead} data-fan-keep-open="">
           <HeadEqZone isPlayer={true} />
         </div>
         <div className={styles.pOneDeck}>
@@ -192,19 +199,23 @@ const GridBoard = () => {
         <div className={styles.pOnePitch} data-fan-side-column="">
           <PitchZone isPlayer={true} />
         </div>
-        <div className={styles.pOneWeaponRZone}>
+        <div className={styles.pOneWeaponRZone} data-fan-keep-open="">
           <WeaponRZone isPlayer={true} />
         </div>
-        <div className={styles.pOneHero}>
+        <div className={styles.pOneHero} data-fan-dock-start="">
           <HeroZone isPlayer={true} />
         </div>
-        <div className={styles.pOneWeaponLZone}>
+        <div className={styles.pOneWeaponLZone} data-fan-keep-open="">
           <WeaponLZone isPlayer={true} />
         </div>
-        <div className={styles.pOneHands} data-fan-side-column="">
+        <div
+          className={styles.pOneHands}
+          data-fan-side-column=""
+          data-fan-keep-open=""
+        >
           <ArmsEqZone isPlayer={true} />
         </div>
-        <div className={styles.pOneChest}>
+        <div className={styles.pOneChest} data-fan-keep-open="">
           <ChestEqZone isPlayer={true} />
         </div>
         <div className={styles.pOneBanish}>
@@ -219,7 +230,7 @@ const GridBoard = () => {
         <div className={styles.pOnePermanents}>
           <PermanentsZone isPlayer={true} />
         </div>
-        <div className={styles.pOneLegs}>
+        <div className={styles.pOneLegs} data-fan-keep-open="">
           <LegsEqZone isPlayer={true} />
         </div>
         <Playmat isPlayer={false} />
@@ -229,6 +240,7 @@ const GridBoard = () => {
           <CombatChain />
           <BoardPlayerPromptSlot />
         </div>
+        {showsLandscapeFan && <ChainPromptTopBarSlot />}
       </div>
     </>
   );

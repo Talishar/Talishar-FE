@@ -21,6 +21,7 @@ import useShowModal from '../../../../hooks/useShowModals';
 import useOpponentPresencePrompt from '../../../../hooks/useOpponentPresencePrompt';
 import { useMediaQuery } from '../../../../hooks/useMediaQuery';
 import usePlayerPromptOwner from '../elements/playerPrompt/usePlayerPromptOwner';
+import { useShowsLandscapeFan } from '../zones/playerHand/useShowsLandscapeFan';
 
 const STORAGE_KEY = 'combatChainPosition';
 const PORTRAIT_STORAGE_KEY = 'combatChainPositionPortrait';
@@ -73,6 +74,7 @@ export default function CombatChain() {
   const [isDragging, setIsDragging] = React.useState(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
   const promptOwner = usePlayerPromptOwner();
+  const showsLandscapeFan = useShowsLandscapeFan();
   const visibleSubCards = attackSubcards?.some(Boolean) ? 1 : 0;
 
   const persistOffset = (offset: number) => {
@@ -246,7 +248,9 @@ export default function CombatChain() {
               aria-hidden="true"
             />
           </button>
-          {promptOwner === 'combatChain' && <CombatChainPlayerPrompt />}
+          {promptOwner === 'combatChain' && (
+            <CombatChainPlayerPrompt buttonColumn={showsLandscapeFan} />
+          )}
           <div />
           <div />
         </motion.div>
@@ -256,9 +260,13 @@ export default function CombatChain() {
 }
 
 export const CombatChainPlayerPrompt = ({
-  standalone = false
+  standalone = false,
+  buttonColumn = false,
+  topBar = false
 }: {
   standalone?: boolean;
+  buttonColumn?: boolean;
+  topBar?: boolean;
 }) => {
   const playerPrompt = useAppSelector(
     (state: RootState) => state.game.playerPrompt
@@ -269,6 +277,12 @@ export const CombatChainPlayerPrompt = ({
     () => wrapKeywordsInNodes(parseHtmlToReactElements(helpText)),
     [helpText]
   );
+
+  if (topBar) {
+    return helpText ? (
+      <div className={styles.promptTopBar}>{promptContent}</div>
+    ) : null;
+  }
 
   const buttons = playerPrompt?.buttons?.map(
     (button: Button, index: number) => (
@@ -284,13 +298,14 @@ export const CombatChainPlayerPrompt = ({
       </button>
     )
   );
+  const showsButtonColumn = buttonColumn && !!buttons?.length;
 
   return (
     <AnimatePresence>
       <motion.div
         className={`${styles.playerPrompt} ${
           standalone ? styles.standalonePlayerPrompt : ''
-        }`}
+        } ${showsButtonColumn ? styles.promptBesideButtons : ''}`}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -299,8 +314,19 @@ export const CombatChainPlayerPrompt = ({
         <div className={styles.content}>
           <div>{promptContent}</div>
         </div>
-        {buttons}
+        {!buttonColumn && buttons}
       </motion.div>
+      {showsButtonColumn && (
+        <motion.div
+          className={styles.promptButtons}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          key={`buttons-${helpText.substring(0, 10)}`}
+        >
+          {buttons}
+        </motion.div>
+      )}
     </AnimatePresence>
   );
 };

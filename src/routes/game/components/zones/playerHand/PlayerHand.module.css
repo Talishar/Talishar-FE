@@ -12,6 +12,35 @@
   display: none;
 }
 
+.fanStageDocked * {
+  pointer-events: none !important;
+}
+
+.fanDockHit {
+  position: fixed;
+  bottom: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+  z-index: 400;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fanDockHit:is(:hover, :focus, :active) {
+  background: transparent;
+  box-shadow: none;
+  transform: none;
+}
+
+.fanOpenGuard {
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+}
+
 .fanCollapseDock {
   position: fixed;
   bottom: 2vh;
@@ -50,10 +79,6 @@
   transition: color 0.15s, background 0.15s, transform 0.1s;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06),
     0 2px 8px rgba(0, 0, 0, 0.5);
-}
-
-:global(body.fanLandscapeHand) .handCollapseButton {
-  right: var(--fan-collapse-right);
 }
 
 .handCollapseButton:active {

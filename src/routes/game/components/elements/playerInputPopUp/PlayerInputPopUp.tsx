@@ -410,6 +410,7 @@ export default function PlayerInputPopUp() {
       transition={{ type: 'tween', duration: 0.12 }}
       style={{ top: topStyle }}
       key="playerInputPopupBox"
+      data-fan-keep-open=""
       className={classNames(
         inputPopUp.popup?.id === 'NEWOPT'
           ? styles.optOptionsContainer
