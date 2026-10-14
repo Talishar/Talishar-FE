@@ -349,6 +349,7 @@
 :global(body.fanLandscapeHand) .chainCentre {
   grid-column: 2;
   grid-row: 1;
+  padding-left: 0;
 }
 
 :global(body.fanLandscapeHand) .grabbyHandle {
