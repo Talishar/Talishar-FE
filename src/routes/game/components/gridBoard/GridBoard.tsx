@@ -45,6 +45,13 @@ const BoardPlayerPromptSlot = () => {
   ) : null;
 };
 
+const ChainPromptTopBarSlot = () => {
+  const promptOwner = usePlayerPromptOwner();
+  return promptOwner === 'combatChain' ? (
+    <CombatChainPlayerPrompt topBar />
+  ) : null;
+};
+
 const GridBoard = () => {
   const experimental = useCookieString('experimental');
   const showsLandscapeFan = useShowsLandscapeFan();
@@ -233,6 +240,7 @@ const GridBoard = () => {
           <CombatChain />
           <BoardPlayerPromptSlot />
         </div>
+        {showsLandscapeFan && <ChainPromptTopBarSlot />}
       </div>
     </>
   );
