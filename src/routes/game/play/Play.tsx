@@ -42,6 +42,7 @@ import { IN_GAME_ADS_ENABLED } from 'config/ads';
 import {
   CardScaleVariables,
   HeroInfoSync,
+  LandscapeFanFullscreen,
   ReplayAdvanceButton,
   TurnChangeSettingsSync
 } from './PlaySideEffects';
@@ -194,6 +195,7 @@ function Play() {
           <CardScaleVariables />
           <TurnChangeSettingsSync />
           <HeroInfoSync />
+          <LandscapeFanFullscreen />
           <GameStateHandler
             onInitialStateReceived={handleInitialStateReceived}
             onLoadingError={setLoadingError}

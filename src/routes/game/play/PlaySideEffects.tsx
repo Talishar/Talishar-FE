@@ -12,6 +12,7 @@ import {
   SKIP_AR_WINDOW,
   SKIP_DR_WINDOW
 } from 'features/options/constants';
+import { useShowsLandscapeFan } from '../components/zones/playerHand/useShowsLandscapeFan';
 import { useReplayPlayback } from './ReplayPlaybackContext';
 
 export const TurnChangeSettingsSync = () => {
@@ -111,6 +112,51 @@ export const CardScaleVariables = () => {
     );
     root.setProperty('--hover-img-scale', cookies.hoverImageSize || '1');
   }, [cookies.cardSize, cookies.transparencyIntensity, cookies.hoverImageSize]);
+
+  return null;
+};
+
+export const LandscapeFanFullscreen = () => {
+  const showsLandscapeFan = useShowsLandscapeFan();
+  const enteredRef = useRef(false);
+
+  useEffect(() => {
+    const onFullscreenChange = () => {
+      if (!document.fullscreenElement) enteredRef.current = false;
+    };
+    document.addEventListener('fullscreenchange', onFullscreenChange);
+    return () => {
+      document.removeEventListener('fullscreenchange', onFullscreenChange);
+      if (enteredRef.current && document.fullscreenElement) {
+        document.exitFullscreen().catch(() => undefined);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!showsLandscapeFan) {
+      if (enteredRef.current && document.fullscreenElement) {
+        document.exitFullscreen().catch(() => undefined);
+      }
+      return;
+    }
+    if (!document.fullscreenEnabled || document.fullscreenElement) return;
+
+    const enterFullscreen = (event: PointerEvent) => {
+      if (event.pointerType === 'mouse') return;
+      document.removeEventListener('pointerup', enterFullscreen, true);
+      if (document.fullscreenElement) return;
+      document.documentElement
+        .requestFullscreen()
+        .then(() => {
+          enteredRef.current = true;
+        })
+        .catch(() => undefined);
+    };
+    document.addEventListener('pointerup', enterFullscreen, true);
+    return () =>
+      document.removeEventListener('pointerup', enterFullscreen, true);
+  }, [showsLandscapeFan]);
 
   return null;
 };
