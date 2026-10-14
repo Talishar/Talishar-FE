@@ -146,3 +146,13 @@
 :global(body.fanLandscapeHand) :is(.cardWrapper, .arsenalDestroySlot) img {
   width: 100%;
 }
+
+:global(body.fanLandscapeHand) .arsenalZone:has(> .cardWrapper) {
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+  width: var(--card-size);
+}
+
+:global(body.fanLandscapeHand) .cardWrapper {
+  flex-shrink: 0;
+}
