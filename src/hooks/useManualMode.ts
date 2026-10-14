@@ -23,6 +23,9 @@ export function useHideManualModeToggle() {
 }
 
 export function useCanUseManualMode() {
+  const isSpectator = useAppSelector(
+    (state: RootState) => state.game.gameInfo.playerID === 3
+  );
   const isOpponentAI = useAppSelector(
     (state: RootState) => state.game.gameInfo.isOpponentAI ?? false
   );
@@ -37,7 +40,7 @@ export function useCanUseManualMode() {
     FUTURES_FORMATS.includes(state.game.gameInfo.gameFormat ?? '')
   );
 
-  if (isReplay) return false;
+  if (isSpectator || isReplay) return false;
   return (
     isLocalEnvironment ||
     isOpponentAI ||
