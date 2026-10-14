@@ -501,6 +501,13 @@
         var(--side-card-base)
       ) * min(var(--card-scale), 1)
   );
+  --fan-collapse-right: calc(8px - var(--side-card-size) - var(--board-gap));
+}
+
+:global(body.fanLandscapeHand):has(
+    :is(.gameBoardGrid, .MirroredOpponentGameBoardGrid) > .pOneCount > *
+  ) {
+  --fan-collapse-right: 8px;
 }
 
 @media (min-width: 1025px) {

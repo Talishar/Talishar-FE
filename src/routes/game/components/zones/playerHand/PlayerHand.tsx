@@ -175,7 +175,7 @@ function PlayerHand() {
   const isMobilePortrait = isMobile && isPortrait;
   const isMobileLandscape = isMobile && !isPortrait;
   const showsLandscapeFan = useShowsLandscapeFan();
-  const canCollapseHand = (isMobile || isPortrait) && !showsLandscapeFan;
+  const canCollapseHand = isMobile || isPortrait;
   const [isHandCollapsed, setIsHandCollapsed] = useState(false);
   const hoverImageSize = useCookieString('hoverImageSize');
   const turnPhase = useAppSelector(
@@ -1370,8 +1370,8 @@ function PlayerHand() {
     hasTheirBanishedCards ||
     hasGraveyardCards;
 
-  const stageBoundsStyle = stageBounds
-    ? { left: stageBounds.left, right: stageBounds.right }
+  const collapseDockStyle = gameZoneBounds
+    ? { left: gameZoneBounds.left, right: gameZoneBounds.right }
     : undefined;
   const dockSpan =
     fanSpacing(fanItems.length, fanGeometry) *
@@ -1498,7 +1498,7 @@ function PlayerHand() {
           )}
         </AnimatePresence>
       </motion.div>
-      {isLandscapeDocked && hasRowCards && stageBounds && (
+      {isLandscapeDocked && !isHandCollapsed && hasRowCards && stageBounds && (
         <button
           type="button"
           className={styles.fanDockHit}
@@ -1515,7 +1515,7 @@ function PlayerHand() {
         <div className={styles.fanOpenGuard} data-fan-keep-open="" />
       )}
       {collapseButton && (
-        <div className={styles.fanCollapseDock} style={stageBoundsStyle}>
+        <div className={styles.fanCollapseDock} style={collapseDockStyle}>
           {collapseButton}
         </div>
       )}
