@@ -218,84 +218,6 @@ h3 {
   }
 }
 
-@media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
-  .titleContainer {
-    height: 72px;
-    top: -40px;
-  }
-
-  .leftCol {
-    background-position: center 20%;
-    --plate-scale: 1;
-  }
-
-  .rightCol {
-    background-position: center 20%;
-    --plate-scale: 1;
-  }
-
-  .dimPic {
-    padding: 0.4em 0.6em;
-    padding-bottom: 0.3em;
-  }
-
-  .dimPic > h3 {
-    font-size: 0.9em;
-    margin-bottom: 0.1em;
-  }
-
-  .heroName {
-    font-size: 0.78em;
-  }
-
-  .lobbySettingsBar {
-    min-height: 0;
-    padding: 4px 8px;
-    font-size: 11px;
-  }
-
-  .lobbySettingsDescription {
-    display: none;
-  }
-
-  .mobileNav {
-    padding: 0.2rem 0.5rem;
-    overflow-x: auto;
-    overflow-y: hidden;
-  }
-
-  .mobileNav ul {
-    flex-wrap: nowrap;
-    display: flex;
-    gap: 0.25rem;
-    padding: 0;
-    margin: 0;
-    list-style: none;
-  }
-
-  .mobileNav button {
-    font-size: 0.75em;
-    padding: 0.25rem 0.6rem;
-    height: 30px;
-    white-space: nowrap;
-    flex-shrink: 0;
-    width: auto;
-  }
-
-  .contentContainer {
-    padding: 0.5rem;
-    margin: 0;
-  }
-
-  .lobbyChat {
-    padding: 0.5rem;
-  }
-
-  .matchupsContainer {
-    padding: 0.5rem;
-  }
-}
-
 .dimPic {
   /* One size drives the name and the icons beside it, so the row stays
      proportioned when the fluid name size hits its clamp floor. */
@@ -432,6 +354,38 @@ h3 {
 .chatAreaContainer > .desktopLobbySettingsBar,
 .chatAreaContainerRestrained > .desktopLobbySettingsBar {
   flex: 0 0 auto;
+}
+
+.navLobbySettings {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1px;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 100%;
+  color: rgba(var(--theme-on-surface-rgb), 0.7);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  container-type: inline-size;
+}
+
+.navLobbySettings .lobbySelfAlert,
+.navLobbySettings .lobbySettingsDescription {
+  display: none;
+}
+
+.navLobbySettings .lobbySubmitError {
+  font-size: inherit;
+  overflow: hidden;
+}
+
+.navLobbySettings .lobbySubmitError > span {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .lobbySettingsDetails {
@@ -1582,4 +1536,145 @@ button.secondary:hover {
   font-weight: var(--tooltip-font-weight);
   line-height: var(--tooltip-line-height);
   pointer-events: none;
+}
+
+@media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
+  .lobbyClass {
+    --lobby-vh: 100vh;
+    --lobby-head-h: clamp(48px, calc(var(--lobby-vh) * 0.14), 64px);
+    --lobby-nav-h: 36px;
+    --lobby-slot: clamp(28px, calc(var(--lobby-head-h) - 16px), 40px);
+    --lobby-body-h: calc(
+      var(--lobby-vh) - var(--lobby-head-h) - var(--lobby-nav-h) -
+        var(--sticky-footer-height, 44px)
+    );
+    --lobby-eq-card: clamp(56px, calc((var(--lobby-body-h) - 66px) / 2), 140px);
+    --lobby-deck-card: clamp(
+      56px,
+      calc((var(--lobby-body-h) - 58px) / 2),
+      140px
+    );
+  }
+
+  @supports (height: 100svh) {
+    .lobbyClass {
+      --lobby-vh: 100svh;
+    }
+  }
+
+  .titleContainer {
+    height: var(--lobby-head-h);
+    top: 0;
+  }
+
+  .leftCol,
+  .rightCol {
+    background-position: center 22%;
+    --plate-scale: 1;
+  }
+
+  .dimPic {
+    --lobby-name-size: 1rem;
+    padding: 0.25em 0.6em 0.3em;
+  }
+
+  .leftCol .dimPic {
+    padding-right: calc(6 * var(--lobby-slot) + 1.5rem);
+  }
+
+  .rightCol .dimPic {
+    padding-left: calc(6 * var(--lobby-slot) + 1.5rem);
+  }
+
+  .dimPic > h3 {
+    font-size: 0.9em;
+    margin-bottom: 0.1em;
+  }
+
+  .dimPic > h3 .lobbyPlayerName {
+    font-size: var(--lobby-name-size);
+  }
+
+  .heroName {
+    font-size: 0.78em;
+  }
+
+  .kickButton {
+    top: 4px;
+    right: 4px;
+  }
+
+  .lobbySettingsBar {
+    min-height: 0;
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+
+  .lobbySettingsDescription {
+    display: none;
+  }
+
+  .mobileNav {
+    top: var(--lobby-head-h);
+    height: var(--lobby-nav-h);
+    padding: 0 0.5rem;
+    align-items: center;
+    gap: 0.5rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .mobileNav ul {
+    display: flex;
+    flex-wrap: nowrap;
+    flex: none;
+    gap: 0.25rem;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .mobileNav ul:first-of-type,
+  .mobileNav ul:last-of-type {
+    margin: 0;
+  }
+
+  .mobileNav li {
+    padding: 0;
+  }
+
+  .mobileNav ul:first-child,
+  .mobileNav ul:last-child {
+    order: 0;
+  }
+
+  .mobileNav button {
+    font-size: 0.75em;
+    padding: 0.25rem 0.6rem;
+    height: 28px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    width: auto;
+  }
+
+  .mobileBottomActions {
+    display: none;
+  }
+
+  .form {
+    margin-bottom: 0;
+  }
+
+  .contentContainer {
+    padding: 0.5rem;
+    margin: 0;
+  }
+
+  .lobbyChat {
+    padding: 0.5rem;
+  }
+
+  .matchupsContainer {
+    padding: 0.5rem;
+  }
 }

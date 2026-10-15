@@ -343,3 +343,16 @@
 .spacer {
   height: var(--sticky-footer-height, 80px);
 }
+
+@media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
+  .mainRow {
+    min-height: 40px;
+    padding: 0.2rem 0.75rem;
+  }
+
+  .confirmButton,
+  .editButton,
+  .leaveButton {
+    padding: 0.35rem 1.2rem;
+  }
+}

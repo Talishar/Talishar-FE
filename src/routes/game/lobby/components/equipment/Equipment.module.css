@@ -163,3 +163,31 @@
     min-height: 0;
   }
 }
+
+@media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
+  .container {
+    gap: 6px 16px;
+    padding: 6px 10px;
+  }
+
+  .eqCategory > h3 {
+    margin-top: 0;
+    padding-bottom: 4px;
+    font-size: 0.85rem;
+    line-height: 1.2;
+  }
+
+  .cardContainer {
+    width: var(--lobby-eq-card, 100px);
+    height: var(--lobby-eq-card, 100px);
+  }
+
+  .equipmentDropZone .categoryContainer {
+    min-width: var(--lobby-eq-card, 100px);
+    min-height: var(--lobby-eq-card, 100px);
+  }
+
+  .spacerDiv {
+    display: none;
+  }
+}

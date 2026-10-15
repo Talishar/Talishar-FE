@@ -115,6 +115,33 @@
 
 @media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
   .mat {
-    display: none;
+    container-type: normal;
+    --slot-size: var(--lobby-slot, 34px);
+    top: 0;
+    bottom: 0;
+    left: auto;
+    right: 0.5rem;
+    max-width: none;
+    margin: 0;
+    align-items: center;
+    gap: 3px;
+  }
+
+  .matMirrored {
+    left: 0.5rem;
+    right: auto;
+  }
+
+  .rail {
+    display: contents;
+  }
+
+  .slot {
+    flex: 0 0 auto;
+    width: var(--slot-size);
+    height: var(--slot-size);
+    min-width: 0;
+    max-width: none;
+    aspect-ratio: auto;
   }
 }

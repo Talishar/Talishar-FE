@@ -67,6 +67,7 @@ const COMPETITIVE_FORMATS = new Set([
 ]);
 import ChooseFirstTurn from './components/chooseFirstTurn/ChooseFirstTurn';
 import { useWindowWidth } from 'hooks/useWindowDimensions';
+import { useMediaQuery } from 'hooks/useMediaQuery';
 import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
 import { useNavigate } from 'react-router-dom';
 import CardPortal from '../components/elements/cardPortal/CardPortal';
@@ -106,6 +107,8 @@ import {
 } from './deckLinkProviders';
 
 const OPPONENT_UNREADY_MESSAGE_MS = 3000;
+const PHONE_LANDSCAPE_QUERY =
+  '(orientation: landscape) and (max-height: 500px) and (pointer: coarse)';
 
 // FaBrary uses hyphens (e.g. "briar-warden-of-thorns"), Talishar uses underscores.
 const normalizeHeroId = (id: string) => id.toLowerCase().replace(/-/g, '_');
@@ -131,6 +134,7 @@ const Lobby = () => {
   const [unreadChat, setUnreadChat] = useState<boolean>(false);
   const [filtersExpanded, setFiltersExpanded] = useState(false);
   const width = useWindowWidth();
+  const isPhoneLandscape = useMediaQuery(PHONE_LANDSCAPE_QUERY);
   const [isWideScreen, setIsWideScreen] = useState<boolean>(false);
   const { showAds } = useSupporterStatus();
   const showLobbyAd = ADS_ENABLED && showAds && isWideScreen;
@@ -978,6 +982,10 @@ const Lobby = () => {
       data.format === GAME_FORMAT.OPEN);
   // data.format === GAME_FORMAT.OPEN_LL_BLITZ
   //const needToDoDisclaimer = false;
+  const showsSettingsInNav =
+    isPhoneLandscape &&
+    showLobbySettings &&
+    !(gameLobby?.amIChoosingFirstPlayer && !needToDoDisclaimer);
   const leaveLobby = classNames(styles.buttonClass, 'outline');
 
   const handleFormSubmission = async (
@@ -1472,7 +1480,7 @@ const Lobby = () => {
               </CardPopUp>
             </div>
 
-            {!isWideScreen && showLobbySettings && (
+            {!isWideScreen && showLobbySettings && !showsSettingsInNav && (
               <div className={styles.lobbySettingsBar} title={lobbyTooltip}>
                 {lobbySettingsContent}
               </div>
@@ -1496,6 +1504,14 @@ const Lobby = () => {
                         </li>
                       )}
                     </ul>
+                    {showsSettingsInNav && (
+                      <div
+                        className={styles.navLobbySettings}
+                        title={lobbyTooltip}
+                      >
+                        {lobbySettingsContent}
+                      </div>
+                    )}
                     <ul>
                       {shouldShowMatchupsUI && (
                         <li>

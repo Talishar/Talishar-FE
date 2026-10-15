@@ -258,3 +258,41 @@
     display: none;
   }
 }
+
+@media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
+  .sortControls {
+    padding: 4px 8px !important;
+    gap: 6px;
+  }
+
+  .selectionButtons {
+    gap: 6px;
+  }
+
+  .expandButton,
+  .selectionButton,
+  .sortButton {
+    height: 28px;
+    padding: 0 0.7rem;
+    font-size: 0.75em;
+  }
+
+  .container {
+    padding: 6px 8px 8px;
+    gap: 6px;
+  }
+
+  .cardsGroup {
+    gap: 6px;
+  }
+
+  .pitchHeader {
+    padding: 2px 4px;
+    margin-bottom: 4px;
+  }
+
+  .deckCardContainer {
+    width: var(--lobby-deck-card, 100px);
+    height: var(--lobby-deck-card, 100px);
+  }
+}
