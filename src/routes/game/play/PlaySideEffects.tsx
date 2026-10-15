@@ -12,6 +12,10 @@ import {
   SKIP_AR_WINDOW,
   SKIP_DR_WINDOW
 } from 'features/options/constants';
+import {
+  isGameFullscreenTurnedOff,
+  resetGameFullscreenTurnedOff
+} from 'utils/gameFullscreen';
 import { useShowsLandscapeFan } from '../components/zones/playerHand/useShowsLandscapeFan';
 import { useReplayPlayback } from './ReplayPlaybackContext';
 
@@ -119,6 +123,13 @@ export const CardScaleVariables = () => {
 export const LandscapeFanFullscreen = () => {
   const showsLandscapeFan = useShowsLandscapeFan();
   const enteredRef = useRef(false);
+  const gameID = useAppSelector(
+    (state: RootState) => state.game.gameInfo.gameID
+  );
+
+  useEffect(() => {
+    resetGameFullscreenTurnedOff();
+  }, [gameID]);
 
   useEffect(() => {
     const onFullscreenChange = () => {
@@ -140,12 +151,16 @@ export const LandscapeFanFullscreen = () => {
       }
       return;
     }
-    if (!document.fullscreenEnabled || document.fullscreenElement) return;
+    if (!document.fullscreenEnabled) return;
 
     const enterFullscreen = (event: PointerEvent) => {
-      if (event.pointerType === 'mouse') return;
-      document.removeEventListener('pointerup', enterFullscreen, true);
-      if (document.fullscreenElement) return;
+      if (
+        event.pointerType === 'mouse' ||
+        document.fullscreenElement ||
+        isGameFullscreenTurnedOff()
+      ) {
+        return;
+      }
       document.documentElement
         .requestFullscreen()
         .then(() => {

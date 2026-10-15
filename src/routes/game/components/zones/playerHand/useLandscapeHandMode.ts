@@ -37,6 +37,10 @@ export function useLandscapeHandMode(
   const turnPhase = useAppSelector(
     (state: RootState) => state.game.turnPhase?.turnPhase
   );
+  const hasSingleArsenalCard = useAppSelector((state: RootState) => {
+    const hand = state.game.playerOne?.Hand;
+    return hand?.length === 1 && !!hand[0].action;
+  });
   const [isHandDocked, setIsHandDocked] = useState(true);
   const dockedRef = useRef(true);
   const autoOpenedRef = useRef(false);
@@ -52,6 +56,8 @@ export function useLandscapeHandMode(
   const isPayPrompt = isPrompt && HAND_PAY_PHASES.has(turnPhase ?? '');
   const turnKey = turnPlayer === undefined ? null : `${turnNo}-${turnPlayer}`;
   const isMyTurn = Number(turnPlayer) === Number(playerID);
+  const isSingleCardArsenal =
+    hasPriority && turnPhase === 'ARS' && hasSingleArsenalCard;
 
   useLayoutEffect(() => {
     if (turnKey === null) return;
@@ -65,7 +71,7 @@ export function useLandscapeHandMode(
       autoOpenedRef.current = false;
       docked = isMyTurn;
     }
-    if (promptStarted && docked) {
+    if (promptStarted && docked && !isSingleCardArsenal) {
       autoOpenedRef.current = !isPayPrompt;
       docked = false;
     } else if (promptEnded && autoOpenedRef.current) {
@@ -73,7 +79,14 @@ export function useLandscapeHandMode(
       docked = true;
     }
     if (docked !== dockedRef.current) setDocked(docked);
-  }, [turnKey, isPrompt, isPayPrompt, isMyTurn, setDocked]);
+  }, [
+    turnKey,
+    isPrompt,
+    isPayPrompt,
+    isMyTurn,
+    isSingleCardArsenal,
+    setDocked
+  ]);
 
   useEffect(() => {
     if (!enabled || isHandDocked) return;
@@ -99,5 +112,5 @@ export function useLandscapeHandMode(
     setDocked(false);
   }, [setDocked]);
 
-  return { isHandDocked, openHand };
+  return { isHandDocked, openHand, isSingleCardArsenal };
 }

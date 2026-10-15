@@ -127,6 +127,14 @@
   height: calc(var(--card-size) + 4px);
 }
 
+:global(body.fanLandscapeHand) .reactions {
+  top: -4px;
+  bottom: -4px;
+  left: -3px;
+  width: auto;
+  padding: 6px 8px 6px 3px;
+}
+
 :global(body.fanLandscapeHand) .cardContainer {
   height: var(--card-size);
 }
