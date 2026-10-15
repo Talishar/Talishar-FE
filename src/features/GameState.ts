@@ -46,6 +46,7 @@ export default interface GameState {
     popupType?: string;
     isSorted?: boolean;
   };
+  sortedCardListZones?: Record<string, boolean>;
   activeLayers?: {
     active?: boolean;
     cardList?: Card[];

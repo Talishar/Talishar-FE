@@ -37,6 +37,25 @@ import { reportPerformanceMetric } from 'utils/performanceMetrics';
 
 const CHAT_RE = /<span[^>]*>(.*?):\s<\/span>/;
 
+const isPersistentSortZone = (name?: string): name is string =>
+  !!name && /^(Your|Opponent's) (Graveyard|Banish Zone)$/.test(name);
+
+const sortCardList = (cards: Card[]): Card[] => {
+  const isCardBack = (cardNumber: string) =>
+    cardNumber.toLowerCase() === 'cardback';
+  return [...cards].sort((a, b) => {
+    const aBack = isCardBack(a.cardNumber);
+    const bBack = isCardBack(b.cardNumber);
+    if (aBack && bBack) return 0;
+    if (aBack) return 1;
+    if (bBack) return -1;
+    const aAlly = isAllyCard(a);
+    const bAlly = isAllyCard(b);
+    if (aAlly !== bAlly) return aAlly ? 1 : -1;
+    return b.cardNumber.localeCompare(a.cardNumber);
+  });
+};
+
 const processInputParams = (gameInfo: GameStaticInfo): URLSearchParams =>
   new URLSearchParams({
     gameName: String(gameInfo.gameID),
@@ -646,13 +665,19 @@ export const gameSlice = createSlice({
         name?: string;
       }>
     ) => {
+      const isSorted =
+        isPersistentSortZone(action.payload.name) &&
+        !!state.sortedCardListZones?.[action.payload.name];
       state.cardListFocus = {
         active: true,
-        cardList: action.payload.cardList,
+        cardList:
+          isSorted && action.payload.cardList
+            ? sortCardList(action.payload.cardList)
+            : action.payload.cardList,
         originalCardList: action.payload.cardList,
         name: action.payload.name,
         apiCall: false,
-        isSorted: false
+        isSorted
       };
     },
     setCardListLoadFocus: (
@@ -681,29 +706,23 @@ export const gameSlice = createSlice({
         }
 
         const isSorted = state.cardListFocus.isSorted;
+        const zoneName = state.cardListFocus.name;
         if (isSorted) {
           // Revert to original order
           state.cardListFocus.cardList = state.cardListFocus.originalCardList;
           state.cardListFocus.isSorted = false;
+          if (isPersistentSortZone(zoneName)) {
+            delete state.sortedCardListZones?.[zoneName];
+          }
         } else {
           // Sort the cards
-          const isCardBack = (cardNumber: string) =>
-            cardNumber.toLowerCase() === 'cardback';
-          const sortedCardList = [...state.cardListFocus.cardList].sort(
-            (a, b) => {
-              const aBack = isCardBack(a.cardNumber);
-              const bBack = isCardBack(b.cardNumber);
-              if (aBack && bBack) return 0;
-              if (aBack) return 1;
-              if (bBack) return -1;
-              const aAlly = isAllyCard(a);
-              const bAlly = isAllyCard(b);
-              if (aAlly !== bAlly) return aAlly ? 1 : -1;
-              return b.cardNumber.localeCompare(a.cardNumber);
-            }
+          state.cardListFocus.cardList = sortCardList(
+            state.cardListFocus.cardList
           );
-          state.cardListFocus.cardList = sortedCardList;
           state.cardListFocus.isSorted = true;
+          if (isPersistentSortZone(zoneName)) {
+            (state.sortedCardListZones ??= {})[zoneName] = true;
+          }
         }
       }
     },
@@ -832,6 +851,7 @@ export const gameSlice = createSlice({
         state.gameInfo.bazaarDeckId = action.payload.bazaarDeckId ?? undefined;
         // Clear recently played history from previous game
         state.gameDynamicInfo.recentlyPlayed = [];
+        state.sortedCardListZones = undefined;
       }
 
       return state;
@@ -870,6 +890,7 @@ export const gameSlice = createSlice({
       state.gameInfo.playerID = 0;
       state.gameInfo.authKey = '';
       state.gameDynamicInfo.lastUpdate = 0;
+      state.sortedCardListZones = undefined;
       return state;
     },
     setSpectatorCameraView: (state, action: PayloadAction<number>) => {
@@ -1374,11 +1395,7 @@ export const canQueueHandPlay = (game: GameState, card: Card): boolean =>
 
 export const flushHandPlayQueue = (): AppThunk => (dispatch, getState) => {
   const gate = getState().game;
-  if (
-    gate.inFlightPlay ||
-    gate.isAwaitingPlayState ||
-    gate.buttonInput
-  ) {
+  if (gate.inFlightPlay || gate.isAwaitingPlayState || gate.buttonInput) {
     return;
   }
   for (;;) {

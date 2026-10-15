@@ -1,7 +1,10 @@
 import reducer, {
+  clearCardListFocus,
   gameLobby,
+  setCardListFocus,
   setGameStart,
-  submitButton
+  submitButton,
+  toggleCardListSort
 } from 'features/game/GameSlice';
 import GameStaticInfo from 'features/GameStaticInfo';
 
@@ -14,6 +17,60 @@ const game = (
   playerID,
   authKey,
   isPrivateLobby: false
+});
+
+describe('graveyard and banish sorting', () => {
+  const cards = [
+    { cardNumber: 'WTR001' },
+    { cardNumber: 'WTR003' },
+    { cardNumber: 'WTR002' }
+  ];
+
+  it.each([
+    'Your Graveyard',
+    "Opponent's Graveyard",
+    'Your Banish Zone',
+    "Opponent's Banish Zone"
+  ])('keeps %s sorted until its button is clicked again', (name) => {
+    let state = reducer(undefined, setCardListFocus({ name, cardList: cards }));
+    state = reducer(state, toggleCardListSort());
+    expect(state.cardListFocus?.isSorted).toBe(true);
+    expect(
+      state.cardListFocus?.cardList?.map((card) => card.cardNumber)
+    ).toEqual(['WTR003', 'WTR002', 'WTR001']);
+
+    state = reducer(state, clearCardListFocus());
+    state = reducer(state, setCardListFocus({ name, cardList: cards }));
+    expect(state.cardListFocus?.isSorted).toBe(true);
+    expect(
+      state.cardListFocus?.cardList?.map((card) => card.cardNumber)
+    ).toEqual(['WTR003', 'WTR002', 'WTR001']);
+
+    state = reducer(state, toggleCardListSort());
+    expect(state.cardListFocus?.isSorted).toBe(false);
+    expect(state.cardListFocus?.cardList).toEqual(cards);
+
+    state = reducer(state, clearCardListFocus());
+    state = reducer(state, setCardListFocus({ name, cardList: cards }));
+    expect(state.cardListFocus?.isSorted).toBe(false);
+  });
+
+  it('resets zone sort choices when a new game starts', () => {
+    let state = reducer(
+      undefined,
+      setCardListFocus({ name: 'Your Graveyard', cardList: cards })
+    );
+    state = reducer(state, toggleCardListSort());
+    state = reducer(
+      state,
+      setGameStart({ gameID: 101, playerID: 1, authKey: 'key' })
+    );
+    state = reducer(
+      state,
+      setCardListFocus({ name: 'Your Graveyard', cardList: cards })
+    );
+    expect(state.cardListFocus?.isSorted).toBe(false);
+  });
 });
 
 describe('lobby refresh isolation', () => {
