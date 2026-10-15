@@ -54,14 +54,14 @@ export const FAN_DOCK_OPEN_GUARD_MS = 300;
 export const FAN_DOCK_START_ATTR = 'data-fan-dock-start';
 export const FAN_KEEP_OPEN_ATTR = 'data-fan-keep-open';
 
-export const FAN_DROP_RATE = 32;
-export const FAN_DROP_DURATION_S = 0.22;
-export const FAN_RISE_RATE = 55;
-export const FAN_RISE_DURATION_S = 0.07;
-export const FAN_UNHOVER_DURATION_S = 0.23;
+export const FAN_DROP_RATE = 27;
+export const FAN_DROP_DURATION_S = 0.26;
+export const FAN_RISE_RATE = 35;
+export const FAN_RISE_DURATION_S = 0.11;
+export const FAN_UNHOVER_DURATION_S = 0.27;
 export const FAN_LAND_DURATION_S = FAN_UNHOVER_DURATION_S;
-export const FAN_DOCK_RATE = 45;
-export const FAN_DOCK_DURATION_S = 0.18;
+export const FAN_DOCK_RATE = 37;
+export const FAN_DOCK_DURATION_S = 0.22;
 
 function expEaseOut(rate: number, duration: number) {
   const k = rate * duration;
