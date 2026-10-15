@@ -115,25 +115,26 @@
 
 @media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
   .mat {
-    container-type: normal;
-    --slot-size: var(--lobby-slot, 34px);
-    top: 0;
-    bottom: 0;
-    left: auto;
-    right: 0.5rem;
+    container-type: size;
+    --slot-size: clamp(18px, min(36cqw, calc((100cqh - 9px) / 4)), 60px);
+    top: 0.35rem;
+    right: 0.35rem;
+    bottom: 2.1rem;
+    left: 0.35rem;
+    height: auto;
     max-width: none;
     margin: 0;
     align-items: center;
     gap: 3px;
   }
 
-  .matMirrored {
-    left: 0.5rem;
-    right: auto;
-  }
-
   .rail {
-    display: contents;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 3px;
+    height: 100%;
+    pointer-events: none;
   }
 
   .slot {
@@ -143,5 +144,6 @@
     min-width: 0;
     max-width: none;
     aspect-ratio: auto;
+    pointer-events: auto;
   }
 }

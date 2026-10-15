@@ -356,14 +356,14 @@ h3 {
   flex: 0 0 auto;
 }
 
-.navLobbySettings {
+.panelLobbySettings {
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 1px;
-  flex: 1 1 auto;
+  grid-column: 1 / -1;
   min-width: 0;
-  height: 100%;
+  padding: 1px 4px 2px;
   color: rgba(var(--theme-on-surface-rgb), 0.7);
   font-size: 11px;
   font-weight: 500;
@@ -371,17 +371,17 @@ h3 {
   container-type: inline-size;
 }
 
-.navLobbySettings .lobbySelfAlert,
-.navLobbySettings .lobbySettingsDescription {
+.panelLobbySettings .lobbySelfAlert,
+.panelLobbySettings .lobbySettingsDescription {
   display: none;
 }
 
-.navLobbySettings .lobbySubmitError {
+.panelLobbySettings .lobbySubmitError {
   font-size: inherit;
   overflow: hidden;
 }
 
-.navLobbySettings .lobbySubmitError > span {
+.panelLobbySettings .lobbySubmitError > span {
   min-width: 0;
   overflow: hidden;
   white-space: nowrap;
@@ -1541,21 +1541,15 @@ button.secondary:hover {
 @media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
   .lobbyClass {
     --lobby-vh: 100vh;
-    --lobby-head-h: clamp(64px, calc(var(--lobby-vh) * 0.2), 88px);
+    --lobby-panel-w: 34vw;
     --lobby-nav-h: 36px;
-    --lobby-slot: clamp(
-      28px,
-      min(calc(var(--lobby-head-h) - 16px), calc((50vw - 8rem) / 6)),
-      60px
-    );
     --lobby-body-h: calc(
-      var(--lobby-vh) - var(--lobby-head-h) - var(--lobby-nav-h) -
-        var(--sticky-footer-height, 44px)
+      var(--lobby-vh) - var(--lobby-nav-h) - var(--sticky-footer-height, 44px)
     );
     --lobby-eq-card: clamp(56px, calc((var(--lobby-body-h) - 66px) / 2), 140px);
     --lobby-deck-card: clamp(
       56px,
-      calc((var(--lobby-body-h) - 58px) / 2),
+      calc((var(--lobby-body-h) - 64px) / 3),
       140px
     );
   }
@@ -1566,9 +1560,22 @@ button.secondary:hover {
     }
   }
 
+  .gridLayout {
+    padding-left: var(--lobby-panel-w);
+  }
+
   .titleContainer {
-    height: var(--lobby-head-h);
+    position: fixed;
     top: 0;
+    bottom: var(--sticky-footer-height, 44px);
+    left: 0;
+    width: var(--lobby-panel-w);
+    height: auto;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: 3px;
+    padding: 3px;
+    padding-left: max(3px, env(safe-area-inset-left, 0px));
   }
 
   .leftCol,
@@ -1579,15 +1586,7 @@ button.secondary:hover {
 
   .dimPic {
     --lobby-name-size: 1rem;
-    padding: 0.25em 0.6em 0.3em;
-  }
-
-  .leftCol .dimPic {
-    padding-right: calc(6 * var(--lobby-slot) + 1.5rem);
-  }
-
-  .rightCol .dimPic {
-    padding-left: calc(6 * var(--lobby-slot) + 1.5rem);
+    padding: 0.3em 0.5em;
   }
 
   .dimPic > h3 {
@@ -1605,21 +1604,12 @@ button.secondary:hover {
 
   .kickButton {
     top: 4px;
-    right: 4px;
-  }
-
-  .lobbySettingsBar {
-    min-height: 0;
-    padding: 4px 8px;
-    font-size: 11px;
-  }
-
-  .lobbySettingsDescription {
-    display: none;
+    right: auto;
+    left: 4px;
   }
 
   .mobileNav {
-    top: var(--lobby-head-h);
+    top: 0;
     height: var(--lobby-nav-h);
     padding: 0 0.5rem;
     align-items: center;

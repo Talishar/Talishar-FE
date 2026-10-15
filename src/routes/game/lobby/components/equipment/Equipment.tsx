@@ -13,6 +13,8 @@ import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import { CARD_SQUARES_PATH, getCollectionCardImagePath } from 'utils';
 import { useTranslation } from 'react-i18next';
 import { MdOpenWith } from 'react-icons/md';
+import { useMediaQuery } from 'hooks/useMediaQuery';
+import { PHONE_LANDSCAPE_QUERY } from '../../phoneLandscape';
 
 export type EquipFieldName = 'head' | 'chest' | 'arms' | 'legs';
 const EQUIP_FIELDS: EquipFieldName[] = ['head', 'chest', 'arms', 'legs'];
@@ -59,6 +61,81 @@ interface SelectedCard extends DragPayload {
 
 const MODULAR_DRAG_TYPE = 'application/x-talishar-modular-equipment';
 
+const FIT_CARD_MIN = 48;
+const FIT_CARD_MAX = 140;
+
+const useLandscapeCardFit = (
+  containerRef: React.RefObject<HTMLDivElement>,
+  layoutKey: string
+) => {
+  const isPhoneLandscape = useMediaQuery(PHONE_LANDSCAPE_QUERY);
+
+  React.useLayoutEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    if (!isPhoneLandscape) {
+      container.style.removeProperty('--lobby-eq-card');
+      return;
+    }
+
+    const parent = container.parentElement;
+    if (!parent) return;
+
+    let cancelled = false;
+    let fittedFor = '';
+    const fit = (force: boolean) => {
+      if (cancelled) return;
+      const root = document.documentElement;
+      const footerHeight =
+        parseFloat(
+          getComputedStyle(root).getPropertyValue('--sticky-footer-height')
+        ) || 44;
+      const top =
+        container.getBoundingClientRect().top -
+        parent.getBoundingClientRect().top;
+      const fitFor = [
+        top,
+        root.clientWidth,
+        root.clientHeight,
+        footerHeight
+      ].join();
+      if (!force && fitFor === fittedFor) return;
+      fittedFor = fitFor;
+      const available = root.clientHeight - footerHeight - top;
+      let low = FIT_CARD_MIN;
+      let high = FIT_CARD_MAX;
+      let best = FIT_CARD_MIN;
+      while (low <= high) {
+        const size = Math.floor((low + high) / 2);
+        container.style.setProperty('--lobby-eq-card', `${size}px`);
+        const fits =
+          container.scrollHeight <= available &&
+          container.scrollWidth <= container.clientWidth;
+        if (fits) {
+          best = size;
+          low = size + 1;
+        } else {
+          high = size - 1;
+        }
+      }
+      container.style.setProperty('--lobby-eq-card', `${best}px`);
+    };
+
+    const refit = () => fit(false);
+
+    fit(true);
+    window.addEventListener('resize', refit);
+    const observer = new ResizeObserver(refit);
+    observer.observe(parent);
+    document.fonts?.ready.then(() => fit(true));
+    return () => {
+      cancelled = true;
+      window.removeEventListener('resize', refit);
+      observer.disconnect();
+    };
+  }, [containerRef, isPhoneLandscape, layoutKey]);
+};
+
 const Equipment = ({
   baseEquipment,
   hands,
@@ -74,6 +151,23 @@ const Equipment = ({
   const [activeDropTarget, setActiveDropTarget] =
     React.useState<EquipFieldName | null>(null);
   const [selected, setSelected] = React.useState<SelectedCard | null>(null);
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const layoutKey = [
+    hands,
+    baseEquipment.head,
+    baseEquipment.chest,
+    baseEquipment.arms,
+    baseEquipment.legs,
+    baseEquipment.demi,
+    assigned.head,
+    assigned.chest,
+    assigned.arms,
+    assigned.legs,
+    modularState
+  ]
+    .map((list) => list.length)
+    .join();
+  useLandscapeCardFit(containerRef, layoutKey);
   // Initial stuff to allow the lang to change
   const { t } = useTranslation();
 
@@ -364,7 +458,11 @@ const Equipment = ({
   };
 
   return (
-    <div className={styles.container} onContextMenu={(e) => e.preventDefault()}>
+    <div
+      ref={containerRef}
+      className={styles.container}
+      onContextMenu={(e) => e.preventDefault()}
+    >
       <div className={styles.eqCategory}>
         <h3>{t('GAME_LOBBY.WEAPONS')}</h3>
 
