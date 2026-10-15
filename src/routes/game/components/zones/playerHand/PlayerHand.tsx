@@ -47,7 +47,6 @@ import { isMeldCard } from 'constants/meldCards';
 import {
   ENABLE_FANNED_HAND_COOKIE,
   FAN_CARD_HEIGHT_RATIO,
-  FAN_DOCKED_BODY_CLASS,
   FAN_DOCK_CARD_HEIGHT_RATIO,
   FAN_DOCK_DURATION_S,
   FAN_DOCK_EDGE_GAP_PX,
@@ -651,12 +650,6 @@ function PlayerHand() {
       body.style.removeProperty(FAN_HAND_RESERVE_VAR);
     };
   }, [showsLandscapeFan, handReserve]);
-
-  useLayoutEffect(() => {
-    if (!isLandscapeDocked) return;
-    document.body.classList.add(FAN_DOCKED_BODY_CLASS);
-    return () => document.body.classList.remove(FAN_DOCKED_BODY_CLASS);
-  }, [isLandscapeDocked]);
 
   const isDragActive = dragPlayState !== 'idle' || dragStartOrderIds !== null;
   const activeHoveredCardId = isDragActive ? null : hoveredCardId;

@@ -298,14 +298,30 @@ export const CombatChainPlayerPrompt = ({
       </button>
     )
   );
-  const showsButtonColumn = buttonColumn && !!buttons?.length;
+  if (buttonColumn) {
+    return (
+      <AnimatePresence>
+        {!!buttons?.length && (
+          <motion.div
+            className={styles.promptButtons}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            key={`buttons-${helpText.substring(0, 10)}`}
+          >
+            {buttons}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    );
+  }
 
   return (
     <AnimatePresence>
       <motion.div
         className={`${styles.playerPrompt} ${
           standalone ? styles.standalonePlayerPrompt : ''
-        } ${showsButtonColumn ? styles.promptBesideButtons : ''}`}
+        }`}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -314,19 +330,8 @@ export const CombatChainPlayerPrompt = ({
         <div className={styles.content}>
           <div>{promptContent}</div>
         </div>
-        {!buttonColumn && buttons}
+        {buttons}
       </motion.div>
-      {showsButtonColumn && (
-        <motion.div
-          className={styles.promptButtons}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          key={`buttons-${helpText.substring(0, 10)}`}
-        >
-          {buttons}
-        </motion.div>
-      )}
     </AnimatePresence>
   );
 };
