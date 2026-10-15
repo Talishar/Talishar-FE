@@ -4,32 +4,51 @@ import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import styles from './SpectatorCount.module.css';
 import { FaEye } from 'react-icons/fa';
+import { useShowsLandscapeFan } from '../../zones/playerHand/useShowsLandscapeFan';
 
 const emptyArray: string[] = [];
 
 interface TooltipPortalProps {
   anchorRef: React.RefObject<HTMLElement>;
   names: string[];
+  inSideRail?: boolean;
 }
 
 const TOOLTIP_MARGIN = 8;
 
-function TooltipPortal({ anchorRef, names }: TooltipPortalProps) {
-  const [pos, setPos] = useState({ top: 0, left: 0, maxHeight: 0 });
+function TooltipPortal({
+  anchorRef,
+  names,
+  inSideRail = false
+}: TooltipPortalProps) {
+  const [pos, setPos] = useState<{
+    top?: number;
+    bottom?: number;
+    left: number;
+    maxHeight: number;
+  }>({ top: 0, left: 0, maxHeight: 0 });
   const tooltipRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
     if (!anchorRef.current) return;
     const rect = anchorRef.current.getBoundingClientRect();
-    setPos({
-      top: rect.bottom + window.scrollY + 4,
-      left: rect.left + window.scrollX + rect.width / 2,
-      maxHeight: Math.max(
-        window.innerHeight - rect.bottom - 4 - TOOLTIP_MARGIN,
-        0
-      )
-    });
-  }, [anchorRef]);
+    setPos(
+      inSideRail
+        ? {
+            bottom: window.innerHeight - rect.bottom,
+            left: rect.right + 6,
+            maxHeight: Math.max(rect.bottom - TOOLTIP_MARGIN, 0)
+          }
+        : {
+            top: rect.bottom + window.scrollY + 4,
+            left: rect.left + window.scrollX + rect.width / 2,
+            maxHeight: Math.max(
+              window.innerHeight - rect.bottom - 4 - TOOLTIP_MARGIN,
+              0
+            )
+          }
+    );
+  }, [anchorRef, inSideRail]);
 
   useLayoutEffect(() => {
     const tooltip = tooltipRef.current;
@@ -48,11 +67,12 @@ function TooltipPortal({ anchorRef, names }: TooltipPortalProps) {
       ref={tooltipRef}
       className={styles.tooltip}
       style={{
-        position: 'absolute',
+        position: inSideRail ? 'fixed' : 'absolute',
         top: pos.top,
+        bottom: pos.bottom,
         left: pos.left,
         maxHeight: pos.maxHeight || undefined,
-        transform: 'translateX(-50%)'
+        transform: inSideRail ? undefined : 'translateX(-50%)'
       }}
     >
       {names.map((name, i) => (
@@ -77,6 +97,7 @@ export default function SpectatorCount({
   );
   const [showTooltip, setShowTooltip] = useState(false);
   const anchorRef = useRef<HTMLDivElement>(null);
+  const inSideRail = useShowsLandscapeFan();
 
   if (spectatorCount === 0) {
     return null;
@@ -96,7 +117,11 @@ export default function SpectatorCount({
         <FaEye aria-hidden="true" />
         <span className={styles.spectatorCountBadge}>{spectatorCount}</span>
         {showTooltip && spectatorNames.length > 0 && (
-          <TooltipPortal anchorRef={anchorRef} names={spectatorNames} />
+          <TooltipPortal
+            anchorRef={anchorRef}
+            names={spectatorNames}
+            inSideRail={inSideRail}
+          />
         )}
       </div>
     );
