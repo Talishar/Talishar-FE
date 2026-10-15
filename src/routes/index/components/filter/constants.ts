@@ -154,7 +154,19 @@ export const HEROES_OF_RATHE: {
   { value: 'SPW001', label: 'Killjoy, the Crooked Blade', young: true },
   { value: 'SPW003', label: 'Zane, Broadly Beloved', young: true },
   { value: 'MPA002', label: 'Dr. Mortimer, Blight of the Pits' },
-  { value: 'MPA003', label: 'Dr. Mortimer', young: true }
+  { value: 'MPA003', label: 'Dr. Mortimer', young: true },
+  { value: 'OBK001', label: 'Mortimer, Living Virus', young: true },
+  { value: 'OBK006', label: 'Min, Genius' },
+  { value: 'OBK406', label: 'Min, Mad' },
+  { value: 'OBK007', label: 'Min, Half-Genius', young: true },
+  { value: 'OBK407', label: 'Min, Half-Mad', young: true },
+  { value: 'OBK012', label: 'Vyle, Catalyst of Collapse' },
+  { value: 'OBK013', label: 'Vyle', young: true },
+  { value: 'OBK071', label: 'Huxley, Racketeer' },
+  { value: 'OBK072', label: 'Huxley', young: true },
+  { value: 'OBK080', label: 'Azalea, Ace of Spades' },
+  { value: 'OBK081', label: 'Azalea, Lone Vigilante', young: true },
+  { value: 'OBK089', label: 'α-01, First Cogwarden', young: true }
 ];
 
 export const CLASS_OF_RATHE: { label: string }[] = [
