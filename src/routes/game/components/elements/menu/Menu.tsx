@@ -15,6 +15,7 @@ import {
 } from 'react-icons/fa';
 import { toast } from 'react-hot-toast';
 import { parseTextToElements } from 'utils/ParseEscapedString';
+import { toggleGameFullscreen } from 'utils/gameFullscreen';
 import { PuzzleHintResponse } from 'interface/API/DailyPuzzleAPI';
 import styles from './Menu.module.css';
 import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'appConstants';
@@ -44,7 +45,7 @@ import { useShowsLandscapeFan } from '../../zones/playerHand/useShowsLandscapeFa
 function FullScreenButton() {
   const { t } = useTranslation();
   function toggleFullScreen() {
-    screenfull.toggle();
+    toggleGameFullscreen();
   }
 
   if (!screenfull.isEnabled) return null;
@@ -220,7 +221,7 @@ function MobileOverflowMenu({ isSpectator }: { isSpectator: boolean }) {
   const inSideRail = useShowsLandscapeFan();
 
   const toggleFullScreen = () => {
-    screenfull.toggle();
+    toggleGameFullscreen();
     setOpen(false);
   };
 

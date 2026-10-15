@@ -216,14 +216,8 @@
   flex-shrink: 0;
   width: max-content;
   min-width: calc(var(--card-size) + 2vh);
-  align-items: flex-start;
-  padding-left: 8px;
   grid-column: 1;
   grid-row: 1;
-}
-
-:global(body.fanLandscapeHand) .attack {
-  justify-content: flex-start;
 }
 
 :global(body.fanLandscapeHand) .attDefRow {

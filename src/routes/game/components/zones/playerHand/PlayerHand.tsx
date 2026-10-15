@@ -19,7 +19,11 @@ import {
   getTapToPreviewSelectedCardKey
 } from '../../elements/playerHandCard/tapToPreviewPlay';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
-import { flushHandPlayQueue } from 'features/game/GameSlice';
+import {
+  flushHandPlayQueue,
+  playCard,
+  removeHandCard
+} from 'features/game/GameSlice';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { useMediaQuery } from 'hooks/useMediaQuery';
 import {
@@ -175,7 +179,7 @@ function PlayerHand() {
   const isMobilePortrait = isMobile && isPortrait;
   const isMobileLandscape = isMobile && !isPortrait;
   const showsLandscapeFan = useShowsLandscapeFan();
-  const canCollapseHand = (isMobile || isPortrait) && !showsLandscapeFan;
+  const canCollapseHand = isMobile || isPortrait;
   const [isHandCollapsed, setIsHandCollapsed] = useState(false);
   const hoverImageSize = useCookieString('hoverImageSize');
   const turnPhase = useAppSelector(
@@ -228,7 +232,7 @@ function PlayerHand() {
   } = useFanHover();
   const lastFanSlotsRef = useRef(new Map<string, FanSlot>());
   const fanStageRef = useRef<HTMLDivElement>(null);
-  const { isHandDocked, openHand } = useLandscapeHandMode(
+  const { isHandDocked, openHand, isSingleCardArsenal } = useLandscapeHandMode(
     showsLandscapeFan,
     fanStageRef
   );
@@ -1091,6 +1095,24 @@ function PlayerHand() {
     setIsDockOpenGuarded(true);
     openHand();
   };
+  const tapDock = () => {
+    const [only] = fanItems;
+    if (
+      isSingleCardArsenal &&
+      fanItems.length === 1 &&
+      only.zone === 'hand' &&
+      only.card.action
+    ) {
+      if (isPlayInFlight || isAwaitingPlayState || queuedHandPlayCount > 0) {
+        return;
+      }
+      clearTapToPreviewSelection();
+      dispatch(playCard({ cardParams: only.card }));
+      dispatch(removeHandCard({ card: only.card }));
+      return;
+    }
+    openFromDock();
+  };
   const swallowClickUntilRef = useRef(0);
   const touchScrubMoveRef = useRef<(event: PointerEvent) => void>(
     () => undefined
@@ -1370,8 +1392,8 @@ function PlayerHand() {
     hasTheirBanishedCards ||
     hasGraveyardCards;
 
-  const stageBoundsStyle = stageBounds
-    ? { left: stageBounds.left, right: stageBounds.right }
+  const collapseDockStyle = gameZoneBounds
+    ? { left: gameZoneBounds.left, right: gameZoneBounds.right }
     : undefined;
   const dockSpan =
     fanSpacing(fanItems.length, fanGeometry) *
@@ -1498,7 +1520,7 @@ function PlayerHand() {
           )}
         </AnimatePresence>
       </motion.div>
-      {isLandscapeDocked && hasRowCards && stageBounds && (
+      {isLandscapeDocked && !isHandCollapsed && hasRowCards && stageBounds && (
         <button
           type="button"
           className={styles.fanDockHit}
@@ -1507,7 +1529,7 @@ function PlayerHand() {
             width: dockSpan,
             height: fanGeometry.cardHeight * (1 - FAN_DOCK_HIDDEN_RATIO)
           }}
-          onClick={openFromDock}
+          onClick={tapDock}
           aria-label={t('HAND.SHOW_HAND')}
         />
       )}
@@ -1515,7 +1537,7 @@ function PlayerHand() {
         <div className={styles.fanOpenGuard} data-fan-keep-open="" />
       )}
       {collapseButton && (
-        <div className={styles.fanCollapseDock} style={stageBoundsStyle}>
+        <div className={styles.fanCollapseDock} style={collapseDockStyle}>
           {collapseButton}
         </div>
       )}
