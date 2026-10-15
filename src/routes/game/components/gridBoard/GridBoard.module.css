@@ -501,6 +501,13 @@
         var(--side-card-base)
       ) * min(var(--card-scale), 1)
   );
+  --fan-collapse-right: calc(8px - var(--side-card-size) - var(--board-gap));
+}
+
+:global(body.fanLandscapeHand):has(
+    :is(.gameBoardGrid, .MirroredOpponentGameBoardGrid) > .pOneCount > *
+  ) {
+  --fan-collapse-right: 8px;
 }
 
 @media (min-width: 1025px) {
@@ -652,7 +659,15 @@
 }
 
 :global(body.fanLandscapeHand)
-  :is(.pOneWeaponLZone, .pOneHero, .pOneWeaponRZone, .pOneArsenal) {
+  :is(
+    .pOneWeaponLZone,
+    .pOneHero,
+    .pOneWeaponRZone,
+    .pOneArsenal,
+    .pTwoWeaponLZone,
+    .pTwoHero,
+    .pTwoWeaponRZone
+  ) {
   --card-size: var(--hero-group-size);
   position: relative;
   align-self: start;
@@ -666,15 +681,15 @@
   top: calc(var(--board-bottom-row) - 2 * var(--hero-group-grow));
 }
 
-:global(body.fanLandscapeHand) .pOneWeaponLZone {
+:global(body.fanLandscapeHand) :is(.pOneWeaponLZone, .pTwoWeaponLZone) {
   left: calc(-1.5 * var(--hero-group-grow));
 }
 
-:global(body.fanLandscapeHand) .pOneHero {
+:global(body.fanLandscapeHand) :is(.pOneHero, .pTwoHero) {
   left: calc(-0.5 * var(--hero-group-grow));
 }
 
-:global(body.fanLandscapeHand) .pOneWeaponRZone {
+:global(body.fanLandscapeHand) :is(.pOneWeaponRZone, .pTwoWeaponRZone) {
   left: calc(0.5 * var(--hero-group-grow));
 }
 
@@ -685,7 +700,8 @@
 
 :global(body.fanLandscapeHand)
   :is(.pTwoWeaponLZone, .pTwoHero, .pTwoWeaponRZone) {
-  position: relative;
+  width: var(--hero-group-size);
+  justify-self: start;
   top: calc(var(--side-row-step) + var(--board-bottom-row));
 }
 
@@ -757,6 +773,7 @@
   > :is(.pTwoPermanents, .pOnePermanents) {
   right: calc(4px - var(--board-gap));
   width: auto;
+  margin-right: calc(1.5 * var(--hero-group-grow));
 }
 
 :global(body.fanLandscapeHand) .healthWidget {
