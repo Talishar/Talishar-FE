@@ -19,7 +19,11 @@ import {
   getTapToPreviewSelectedCardKey
 } from '../../elements/playerHandCard/tapToPreviewPlay';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
-import { flushHandPlayQueue } from 'features/game/GameSlice';
+import {
+  flushHandPlayQueue,
+  playCard,
+  removeHandCard
+} from 'features/game/GameSlice';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { useMediaQuery } from 'hooks/useMediaQuery';
 import {
@@ -228,7 +232,7 @@ function PlayerHand() {
   } = useFanHover();
   const lastFanSlotsRef = useRef(new Map<string, FanSlot>());
   const fanStageRef = useRef<HTMLDivElement>(null);
-  const { isHandDocked, openHand } = useLandscapeHandMode(
+  const { isHandDocked, openHand, isSingleCardArsenal } = useLandscapeHandMode(
     showsLandscapeFan,
     fanStageRef
   );
@@ -1091,6 +1095,24 @@ function PlayerHand() {
     setIsDockOpenGuarded(true);
     openHand();
   };
+  const tapDock = () => {
+    const [only] = fanItems;
+    if (
+      isSingleCardArsenal &&
+      fanItems.length === 1 &&
+      only.zone === 'hand' &&
+      only.card.action
+    ) {
+      if (isPlayInFlight || isAwaitingPlayState || queuedHandPlayCount > 0) {
+        return;
+      }
+      clearTapToPreviewSelection();
+      dispatch(playCard({ cardParams: only.card }));
+      dispatch(removeHandCard({ card: only.card }));
+      return;
+    }
+    openFromDock();
+  };
   const swallowClickUntilRef = useRef(0);
   const touchScrubMoveRef = useRef<(event: PointerEvent) => void>(
     () => undefined
@@ -1507,7 +1529,7 @@ function PlayerHand() {
             width: dockSpan,
             height: fanGeometry.cardHeight * (1 - FAN_DOCK_HIDDEN_RATIO)
           }}
-          onClick={openFromDock}
+          onClick={tapDock}
           aria-label={t('HAND.SHOW_HAND')}
         />
       )}
