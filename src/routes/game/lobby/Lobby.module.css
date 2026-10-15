@@ -1541,9 +1541,13 @@ button.secondary:hover {
 @media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
   .lobbyClass {
     --lobby-vh: 100vh;
-    --lobby-head-h: clamp(48px, calc(var(--lobby-vh) * 0.14), 64px);
+    --lobby-head-h: clamp(64px, calc(var(--lobby-vh) * 0.2), 88px);
     --lobby-nav-h: 36px;
-    --lobby-slot: clamp(28px, calc(var(--lobby-head-h) - 16px), 40px);
+    --lobby-slot: clamp(
+      28px,
+      min(calc(var(--lobby-head-h) - 16px), calc((50vw - 8rem) / 6)),
+      60px
+    );
     --lobby-body-h: calc(
       var(--lobby-vh) - var(--lobby-head-h) - var(--lobby-nav-h) -
         var(--sticky-footer-height, 44px)
