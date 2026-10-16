@@ -147,3 +147,10 @@
   white-space: nowrap;
   flex-shrink: 0;
 }
+
+@media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
+  .gameItem {
+    margin-bottom: 0.3em;
+    font-size: 0.78rem;
+  }
+}

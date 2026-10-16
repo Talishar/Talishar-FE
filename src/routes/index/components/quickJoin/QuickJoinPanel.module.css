@@ -264,3 +264,38 @@
 .masterySlot {
   min-height: 4rem;
 }
+
+@media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
+  .content {
+    gap: 0.4rem;
+  }
+
+  .tab {
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+    font-size: 0.78rem;
+  }
+
+  .label {
+    gap: 0.15rem;
+    font-size: 0.8rem;
+  }
+
+  .label .textInput {
+    height: 2.15rem;
+    padding-top: 0;
+    padding-bottom: 0;
+    font-size: 0.85rem;
+  }
+
+  .label [role='combobox'] {
+    min-height: 2.15rem;
+    padding-top: 0.15rem;
+    padding-bottom: 0.15rem;
+    font-size: 0.85rem;
+  }
+
+  .toggleLabel {
+    font-size: 0.78rem;
+  }
+}

@@ -105,10 +105,9 @@ import {
   extractBazaarDeckIdFromLink,
   supportsAutomaticMatchups
 } from './deckLinkProviders';
+import { PHONE_LANDSCAPE_QUERY } from './phoneLandscape';
 
 const OPPONENT_UNREADY_MESSAGE_MS = 3000;
-const PHONE_LANDSCAPE_QUERY =
-  '(orientation: landscape) and (max-height: 500px) and (pointer: coarse)';
 
 // FaBrary uses hyphens (e.g. "briar-warden-of-thorns"), Talishar uses underscores.
 const normalizeHeroId = (id: string) => id.toLowerCase().replace(/-/g, '_');
@@ -982,10 +981,7 @@ const Lobby = () => {
       data.format === GAME_FORMAT.OPEN);
   // data.format === GAME_FORMAT.OPEN_LL_BLITZ
   //const needToDoDisclaimer = false;
-  const showsSettingsInNav =
-    isPhoneLandscape &&
-    showLobbySettings &&
-    !(gameLobby?.amIChoosingFirstPlayer && !needToDoDisclaimer);
+  const showsSettingsInPanel = isPhoneLandscape && showLobbySettings;
   const leaveLobby = classNames(styles.buttonClass, 'outline');
 
   const handleFormSubmission = async (
@@ -1478,9 +1474,14 @@ const Lobby = () => {
                   </div>
                 </div>
               </CardPopUp>
+              {showsSettingsInPanel && (
+                <div className={styles.panelLobbySettings} title={lobbyTooltip}>
+                  {lobbySettingsContent}
+                </div>
+              )}
             </div>
 
-            {!isWideScreen && showLobbySettings && !showsSettingsInNav && (
+            {!isWideScreen && showLobbySettings && !showsSettingsInPanel && (
               <div className={styles.lobbySettingsBar} title={lobbyTooltip}>
                 {lobbySettingsContent}
               </div>
@@ -1504,14 +1505,6 @@ const Lobby = () => {
                         </li>
                       )}
                     </ul>
-                    {showsSettingsInNav && (
-                      <div
-                        className={styles.navLobbySettings}
-                        title={lobbyTooltip}
-                      >
-                        {lobbySettingsContent}
-                      </div>
-                    )}
                     <ul>
                       {shouldShowMatchupsUI && (
                         <li>

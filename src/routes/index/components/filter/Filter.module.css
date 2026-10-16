@@ -131,3 +131,12 @@
 .heroCountZero {
   opacity: 0.3;
 }
+
+@media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
+  .inputWrapper .filterInput {
+    height: 2rem;
+    padding-top: 0;
+    padding-bottom: 0;
+    font-size: 0.8rem;
+  }
+}

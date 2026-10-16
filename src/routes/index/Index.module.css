@@ -830,3 +830,35 @@ h3 {
     min-height: calc(720px + 2em);
   }
 }
+
+@media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
+  .bannerSectionCompact .bannerContent {
+    padding: 86px 0 0;
+  }
+
+  .bannerSectionCompact .bannerToggle {
+    display: none;
+  }
+
+  .contentSection {
+    scroll-margin-top: 54px;
+  }
+
+  .gridWrapper {
+    padding: 0 0.5rem 0.5rem;
+  }
+
+  .grid:not(.gridLoggedOut) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    border-radius: 10px;
+    border-left: 1px solid rgba(var(--theme-on-surface-rgb), 0.08);
+    border-right: 1px solid rgba(var(--theme-on-surface-rgb), 0.08);
+  }
+
+  .gameListContainer {
+    position: relative;
+    overflow: hidden;
+    min-height: calc(100vh - 62px);
+    min-height: calc(100svh - 62px);
+  }
+}

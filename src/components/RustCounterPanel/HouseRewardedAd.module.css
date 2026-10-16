@@ -312,3 +312,113 @@
     transition: none;
   }
 }
+
+@media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
+  .backdrop {
+    padding: 0;
+  }
+
+  .dialog {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) fit-content(45%);
+    grid-template-rows: 1fr 1fr auto;
+    grid-template-areas:
+      'banner header'
+      'banner benefits'
+      'banner button';
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right)
+      env(safe-area-inset-bottom) env(safe-area-inset-left);
+    border: 0;
+    border-radius: 0;
+  }
+
+  .closeButton {
+    top: calc(0.4rem + env(safe-area-inset-top));
+    right: calc(0.4rem + env(safe-area-inset-right));
+    width: 2.1rem !important;
+    height: 2.1rem;
+  }
+
+  .bannerLink {
+    position: relative;
+    display: flex;
+    grid-area: banner;
+    align-items: center;
+    margin: 0.5rem 0 0.5rem 0.5rem;
+    overflow: hidden;
+    border-radius: 10px;
+    isolation: isolate;
+  }
+
+  .bannerLink::before {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: url('../../img/Talishar-Banner-Ad-1.webp') right center / cover;
+    content: '';
+    filter: blur(18px) brightness(0.5);
+    transform: scale(1.25);
+  }
+
+  .banner {
+    border-radius: 0;
+    -webkit-mask-image: linear-gradient(
+      transparent,
+      #000 10%,
+      #000 90%,
+      transparent
+    );
+    mask-image: linear-gradient(transparent, #000 10%, #000 90%, transparent);
+  }
+
+  .content {
+    display: contents;
+  }
+
+  .header {
+    grid-area: header;
+    align-self: end;
+    padding: 0 1rem 0 1.25rem;
+    text-align: left;
+  }
+
+  .header h2 {
+    margin: 0;
+    font-size: clamp(1.15rem, 2.9vw, 1.4rem);
+  }
+
+  .benefits {
+    grid-area: benefits;
+    align-self: start;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 0.3rem;
+    margin: 0.4rem 0 0;
+    padding: 0 1rem 0 1.25rem;
+    font-size: 0.88rem;
+  }
+
+  .benefits li {
+    margin: 0;
+    line-height: 1.35;
+  }
+
+  .tiers {
+    display: none;
+  }
+
+  .rewardButton {
+    grid-area: button;
+    width: auto !important;
+    min-height: calc(3.7rem + 2px);
+    margin: 0 0.5rem 0.5rem 1.25rem !important;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    contain: inline-size;
+  }
+}

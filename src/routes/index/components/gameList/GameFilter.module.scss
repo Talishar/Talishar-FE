@@ -294,3 +294,12 @@
 .deselectButton {
   display: none;
 }
+
+@media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
+  .filterButton {
+    height: 2rem;
+    padding-top: 0;
+    padding-bottom: 0;
+    font-size: 0.8rem;
+  }
+}

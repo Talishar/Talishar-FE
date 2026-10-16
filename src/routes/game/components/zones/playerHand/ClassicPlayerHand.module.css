@@ -205,3 +205,10 @@
     border-radius: 5px;
   }
 }
+
+@media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
+  :global(body.endGameOpen) .handScrollContainer,
+  :global(body.endGameOpen) .handScrollContainer * {
+    visibility: hidden !important;
+  }
+}
