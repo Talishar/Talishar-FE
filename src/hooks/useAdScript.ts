@@ -419,7 +419,9 @@ export default function useAdScript(
 
     if (!document.querySelector('script[src="//js.rev.iq/talishar.net"]')) {
       try {
-        (window as any).googletag?.destroySlots?.();
+        const googletag = (window as { googletag?: GoogleTagLike }).googletag;
+        const slots = googletag?.pubads?.().getSlots?.() ?? [];
+        if (slots.length > 0) googletag?.destroySlots?.(slots);
       } catch (_) {
         // The provider may not have initialized Google Publisher Tags.
       }
