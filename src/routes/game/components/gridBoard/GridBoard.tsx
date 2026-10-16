@@ -175,7 +175,7 @@ const GridBoard = () => {
         <div className={styles.pTwoGraveyard}>
           <GraveyardZone isPlayer={false} />
         </div>
-        <div className={styles.healthWidget}>
+        <div className={styles.healthWidget} data-fan-keep-open="">
           {experimental ? (
             <ExperimentalTurnWidget />
           ) : (
