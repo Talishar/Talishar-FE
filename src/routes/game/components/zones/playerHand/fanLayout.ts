@@ -54,10 +54,14 @@ export const FAN_DOCK_OPEN_GUARD_MS = 300;
 export const FAN_DOCK_START_ATTR = 'data-fan-dock-start';
 export const FAN_KEEP_OPEN_ATTR = 'data-fan-keep-open';
 
-export const FAN_DROP_RATE = 27;
-export const FAN_DROP_DURATION_S = 0.26;
-export const FAN_RISE_RATE = 35;
-export const FAN_RISE_DURATION_S = 0.11;
+export const FAN_DROP_FAST_RATE = 160;
+export const FAN_DROP_SLOW_RATE = 21;
+export const FAN_DROP_FAST_SHARE = 0.49;
+export const FAN_DROP_DURATION_S = 0.25;
+export const FAN_RISE_FAST_RATE = 114;
+export const FAN_RISE_SLOW_RATE = 26;
+export const FAN_RISE_FAST_SHARE = 0.63;
+export const FAN_RISE_DURATION_S = 0.16;
 export const FAN_UNHOVER_DURATION_S = 0.27;
 export const FAN_LAND_DURATION_S = FAN_UNHOVER_DURATION_S;
 export const FAN_DOCK_RATE = 37;
@@ -69,8 +73,31 @@ function expEaseOut(rate: number, duration: number) {
     (1 - Math.exp(-k * progress)) / (1 - Math.exp(-k));
 }
 
-export const fanDropEase = expEaseOut(FAN_DROP_RATE, FAN_DROP_DURATION_S);
-export const fanRiseEase = expEaseOut(FAN_RISE_RATE, FAN_RISE_DURATION_S);
+function twoRateEaseOut(
+  fastRate: number,
+  slowRate: number,
+  fastShare: number,
+  duration: number
+) {
+  const at = (t: number) =>
+    fastShare * (1 - Math.exp(-fastRate * t)) +
+    (1 - fastShare) * (1 - Math.exp(-slowRate * t));
+  const end = at(duration);
+  return (progress: number) => at(progress * duration) / end;
+}
+
+export const fanDropEase = twoRateEaseOut(
+  FAN_DROP_FAST_RATE,
+  FAN_DROP_SLOW_RATE,
+  FAN_DROP_FAST_SHARE,
+  FAN_DROP_DURATION_S
+);
+export const fanRiseEase = twoRateEaseOut(
+  FAN_RISE_FAST_RATE,
+  FAN_RISE_SLOW_RATE,
+  FAN_RISE_FAST_SHARE,
+  FAN_RISE_DURATION_S
+);
 export const fanDockEase = expEaseOut(FAN_DOCK_RATE, FAN_DOCK_DURATION_S);
 export const fanUnhoverEase = (progress: number) => 1 - (1 - progress) ** 2;
 
