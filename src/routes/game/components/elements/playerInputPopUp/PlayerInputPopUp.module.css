@@ -331,6 +331,7 @@
   width: var(--card-size);
   flex: 1;
   margin-bottom: 24px;
+  font: inherit;
 }
 
 .optForm.cardDiv {

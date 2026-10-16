@@ -1,5 +1,5 @@
 import { FormProps } from '../playerInputPopupTypes';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styles from '../PlayerInputPopUp.module.css';
 import CardDisplay from '../../../elements/cardDisplay/CardDisplay';
@@ -12,8 +12,6 @@ import { shallowEqual } from 'react-redux';
 import classNames from 'classnames';
 import { prepareCards } from '../prepareCards';
 
-let change = false;
-let buttonClick = false;
 const ReorderOpt = ({
   topCards,
   bottomCards
@@ -37,6 +35,8 @@ const ReorderOpt = ({
   const [cardListBottom, setCardListBottom] = React.useState<Card[]>(() =>
     prepareCards(bottomCards)
   );
+  const submitPending = React.useRef(false);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
   if (topCards !== previousCards.top || bottomCards !== previousCards.bottom) {
     setPreviousCards({ top: topCards, bottom: bottomCards });
     setCardListTop(prepareCards(topCards));
@@ -47,56 +47,42 @@ const ReorderOpt = ({
 
   const changeTopCardOrder = (newOrder: Card[]) => {
     setCardListTop(newOrder);
-    change = true;
   };
 
   const changeBottomCardOrder = (newOrder: Card[]) => {
     setCardListBottom(newOrder);
-    change = true;
   };
 
   const moveCardToBottom = (card: Card, index: number) => {
     setCardListTop((prev) => prev.filter((_, i) => i !== index));
     setCardListBottom((prev) => [...prev, card]);
-    buttonClick = true;
   };
 
   const moveCardToTop = (card: Card, index: number) => {
     setCardListBottom((prev) => prev.filter((_, i) => i !== index));
     setCardListTop((prev) => [...prev, card]);
-    buttonClick = true;
   };
 
-  const submitOptLists = (mode: number) => {
+  const handleSubmit = () => {
+    if (submitPending.current) return;
+    submitPending.current = true;
+    setIsSubmitting(true);
     processInputAPI({
       gameName: gameID,
       playerID: playerID,
       authKey: authKey,
-      mode: mode,
+      mode: 107,
       submission: {
         cardListTop: cardListTop.map((card) => card.cardNumber),
         cardListBottom: cardListBottom.map((card) => card.cardNumber)
       }
-    });
-  };
-
-  useEffect(() => {
-    if (buttonClick) {
-      submitOptLists(106);
-      change = false;
-      buttonClick = false;
-    }
-  }, [cardListTop, cardListBottom]);
-
-  const handleDragEnd = () => {
-    if (change) {
-      submitOptLists(106);
-      change = false;
-    }
-  };
-
-  const handleSubmit = () => {
-    submitOptLists(107);
+    })
+      .unwrap()
+      .catch(() => undefined)
+      .finally(() => {
+        submitPending.current = false;
+        setIsSubmitting(false);
+      });
   };
 
   const cardCounts = new Map<string, number>();
@@ -108,19 +94,18 @@ const ReorderOpt = ({
         styles.cardOrderForm
       )}
     >
-      <div
+      <button
+        type="button"
+        disabled={isSubmitting}
         className={classNames(
           styles.newOptForm,
           styles.buttonDiv,
           styles.submitButtonDiv
         )}
-        onClick={(e) => {
-          e.preventDefault();
-          handleSubmit();
-        }}
+        onClick={handleSubmit}
       >
         {t('PLAYER_INPUT.NEW_OPT_SUBMIT')}
-      </div>
+      </button>
       <div className={classNames(styles.newOptForm, styles.cardsContainer)}>
         <div className={classNames(styles.newOptForm, styles.reorderCards)}>
           <div
@@ -146,7 +131,6 @@ const ReorderOpt = ({
                   key={card.uniqueId}
                   value={card}
                   className={classNames(styles.newOptForm, styles.reorderItem)}
-                  onDragEnd={handleDragEnd}
                 >
                   <div className={styles.cardWrapper}>
                     {showLabels && isFirst && (
@@ -218,7 +202,6 @@ const ReorderOpt = ({
                   key={`${card.cardNumber}${layerCount}`}
                   value={card}
                   className={classNames(styles.newOptForm, styles.reorderItem)}
-                  onDragEnd={handleDragEnd}
                 >
                   <div className={styles.cardWrapper}>
                     {showLabels && isFirst && (

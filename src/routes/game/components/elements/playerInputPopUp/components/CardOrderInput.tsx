@@ -1,5 +1,5 @@
 import { FormProps } from '../playerInputPopupTypes';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styles from '../PlayerInputPopUp.module.css';
 import CardDisplay from '../../cardDisplay/CardDisplay';
@@ -12,8 +12,6 @@ import { shallowEqual } from 'react-redux';
 import classNames from 'classnames';
 import { prepareCards } from '../prepareCards';
 
-let change = false;
-let buttonClick = false;
 const CardOrdering = ({
   topCards,
   submitMode,
@@ -33,6 +31,8 @@ const CardOrdering = ({
   const [cardListTop, setCardListTop] = React.useState<Card[]>(() =>
     prepareCards(topCards)
   );
+  const submitPending = React.useRef(false);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
   if (topCards !== previousTopCards) {
     setPreviousTopCards(topCards);
     setCardListTop(prepareCards(topCards));
@@ -42,11 +42,10 @@ const CardOrdering = ({
 
   const changeTopCardOrder = (newOrder: Card[]) => {
     setCardListTop(newOrder);
-    change = true;
   };
 
   const submitOrder = (mode: number) => {
-    processInputAPI({
+    return processInputAPI({
       gameName: gameID,
       playerID: playerID,
       authKey: authKey,
@@ -57,23 +56,17 @@ const CardOrdering = ({
     });
   };
 
-  useEffect(() => {
-    if (buttonClick) {
-      submitOrder(108);
-      change = false;
-      buttonClick = false;
-    }
-  }, [cardListTop]);
-
-  const handleDragEnd = () => {
-    if (change) {
-      submitOrder(108);
-      change = false;
-    }
-  };
-
   const handleSubmit = () => {
-    submitOrder(submitMode);
+    if (submitPending.current) return;
+    submitPending.current = true;
+    setIsSubmitting(true);
+    submitOrder(submitMode)
+      .unwrap()
+      .catch(() => undefined)
+      .finally(() => {
+        submitPending.current = false;
+        setIsSubmitting(false);
+      });
   };
 
   return (
@@ -84,19 +77,18 @@ const CardOrdering = ({
         styles.cardOrderForm
       )}
     >
-      <div
+      <button
+        type="button"
+        disabled={isSubmitting}
         className={classNames(
           styles.newOptForm,
           styles.buttonDiv,
           styles.submitButtonDiv
         )}
-        onClick={(e) => {
-          e.preventDefault();
-          handleSubmit();
-        }}
+        onClick={handleSubmit}
       >
         {t('PLAYER_INPUT.SUBMIT')}
-      </div>
+      </button>
       <div className={classNames(styles.newOptForm, styles.cardsContainer)}>
         <div className={classNames(styles.newOptForm, styles.reorderCards)}>
           <div
@@ -116,7 +108,6 @@ const CardOrdering = ({
                   key={card.uniqueId}
                   value={card}
                   className={classNames(styles.newOptForm, styles.reorderItem)}
-                  onDragEnd={handleDragEnd}
                 >
                   <CardDisplay card={card} key={ix} />
                 </Reorder.Item>
@@ -129,8 +120,8 @@ const CardOrdering = ({
   );
 };
 
-const cardOrderInput =
-  (submitMode: number, labelKey: string) => (props: FormProps) => {
+const cardOrderInput = (submitMode: number, labelKey: string) =>
+  function CardOrderInput(props: FormProps) {
     const { topCards } = props;
 
     return (
