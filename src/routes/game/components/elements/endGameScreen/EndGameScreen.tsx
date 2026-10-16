@@ -26,6 +26,8 @@ import useAuth from 'hooks/useAuth';
 import MasteryProgressCard from 'features/mastery/MasteryProgressCard';
 import { RootState } from 'app/Store';
 
+const END_GAME_OPEN_BODY_CLASS = 'endGameOpen';
+
 const EndGameScreen = () => {
   const dispatch = useAppDispatch();
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
@@ -69,6 +71,11 @@ const EndGameScreen = () => {
     }
   }, [data, playerID]);
   const showModal = useShowModal();
+  React.useLayoutEffect(() => {
+    if (!showModal || !showStats) return;
+    document.body.classList.add(END_GAME_OPEN_BODY_CLASS);
+    return () => document.body.classList.remove(END_GAME_OPEN_BODY_CLASS);
+  }, [showModal, showStats]);
   const cardListBoxClasses = classNames(styles.cardListBox, {
     [styles.reduced]: !showStats
   });

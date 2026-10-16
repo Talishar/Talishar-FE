@@ -1412,3 +1412,14 @@ input.excludeLastTurnCheckbox:focus-visible {
     font-size: 1.5em;
   }
 }
+
+@media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
+  .chartsGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .outcomeVictory,
+  .outcomeDefeat {
+    font-size: 2em;
+  }
+}

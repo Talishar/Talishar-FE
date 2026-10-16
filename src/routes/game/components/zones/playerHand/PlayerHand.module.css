@@ -102,3 +102,10 @@
   font-weight: 600;
   line-height: 1;
 }
+
+@media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
+  :global(body.endGameOpen)
+    :is(.fanStage, .fanDockHit, .fanOpenGuard, .fanCollapseDock) {
+    display: none;
+  }
+}
