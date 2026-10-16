@@ -297,3 +297,19 @@ h3 {
     height: 3em;
   }
 }
+
+@media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
+  .gameItem {
+    margin-bottom: 0.3em;
+    font-size: 0.78rem;
+  }
+
+  .description {
+    font-size: 1em;
+    line-height: 1.2;
+  }
+
+  .descriptionLong {
+    font-size: 0.9em;
+  }
+}

@@ -130,3 +130,51 @@
     padding: 1.25rem 1rem;
   }
 }
+
+@media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
+  .panel:not(.guestPanel) {
+    gap: 0.4rem;
+    padding: 0.5rem 0.7rem;
+  }
+
+  .panel:not(.guestPanel) .header .title {
+    margin: 0;
+    font-size: 0.95rem;
+  }
+
+  .panel:not(.guestPanel) .toggleButton {
+    padding: 0 0.25rem;
+  }
+
+  .panel:not(.guestPanel) .content {
+    gap: 0.4rem;
+  }
+
+  .panel:not(.guestPanel) .divider {
+    margin: 0.1rem 0;
+  }
+
+  .panel:not(.guestPanel) .createGameSection label {
+    margin-bottom: 0.4rem;
+    font-size: 0.8rem;
+  }
+
+  .panel:not(.guestPanel)
+    .createGameSection
+    label
+    :is(select, input:not([type='checkbox']):not([type='radio'])) {
+    height: 2.15rem;
+    margin-top: 0.15rem;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    font-size: 0.85rem;
+  }
+
+  .panel:not(.guestPanel) .createGameSection form > button {
+    margin-top: 0.3rem;
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
+    font-size: 0.9rem;
+  }
+}

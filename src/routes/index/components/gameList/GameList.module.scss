@@ -438,3 +438,47 @@
   margin-bottom: 0.35rem;
   padding-left: 0.3rem;
 }
+
+@media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
+  .gameList:not(.gameListLoggedOut) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: auto;
+    min-height: 0;
+  }
+
+  .stickyHeader {
+    gap: 0.25rem;
+    padding: 0.5rem 0.7rem 0;
+  }
+
+  .titleDiv .title {
+    margin: 0;
+    font-size: 0.95rem;
+  }
+
+  .reloadButton {
+    font-size: 0.78rem;
+  }
+
+  .tabs {
+    margin-bottom: 0.3rem;
+  }
+
+  .tab {
+    gap: 0.35em;
+    padding: 0.25em 0.2em;
+    font-size: 0.74rem;
+  }
+
+  .tabBadge {
+    font-size: 0.66rem;
+  }
+
+  .scrollableContent {
+    padding: 0.3rem 0.7rem 0.5rem;
+  }
+}

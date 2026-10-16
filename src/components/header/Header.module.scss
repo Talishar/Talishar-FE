@@ -806,3 +806,24 @@
     background: var(--theme-background) !important;
   }
 }
+
+@media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
+  :global(body[data-hero-page]) {
+    .navBar {
+      min-height: 48px;
+      height: 48px;
+
+      .logo {
+        padding: 6px 0;
+
+        img {
+          height: 34px;
+        }
+      }
+    }
+
+    .contentWrapper {
+      padding-top: 48px;
+    }
+  }
+}
