@@ -45,22 +45,59 @@ const ReorderOpt = ({
 
   const [processInputAPI] = useProcessInputAPIMutation();
 
+  // Keep the latest lists in a ref so drag-end handlers never sync a stale order
+  const latestLists = React.useRef({
+    top: cardListTop,
+    bottom: cardListBottom
+  });
+  latestLists.current = { top: cardListTop, bottom: cardListBottom };
+  const orderChanged = React.useRef(false);
+
+  // The server resolves the opt from its own copy of the order when the player
+  // passes instead of clicking submit, so every change has to be synced (mode 106)
+  const syncOrder = (top: Card[], bottom: Card[]) => {
+    orderChanged.current = false;
+    processInputAPI({
+      gameName: gameID,
+      playerID: playerID,
+      authKey: authKey,
+      mode: 106,
+      submission: {
+        cardListTop: top.map((card) => card.cardNumber),
+        cardListBottom: bottom.map((card) => card.cardNumber)
+      }
+    });
+  };
+
+  const handleDragEnd = () => {
+    if (!orderChanged.current) return;
+    syncOrder(latestLists.current.top, latestLists.current.bottom);
+  };
+
   const changeTopCardOrder = (newOrder: Card[]) => {
     setCardListTop(newOrder);
+    orderChanged.current = true;
   };
 
   const changeBottomCardOrder = (newOrder: Card[]) => {
     setCardListBottom(newOrder);
+    orderChanged.current = true;
   };
 
   const moveCardToBottom = (card: Card, index: number) => {
-    setCardListTop((prev) => prev.filter((_, i) => i !== index));
-    setCardListBottom((prev) => [...prev, card]);
+    const newTop = cardListTop.filter((_, i) => i !== index);
+    const newBottom = [...cardListBottom, card];
+    setCardListTop(newTop);
+    setCardListBottom(newBottom);
+    syncOrder(newTop, newBottom);
   };
 
   const moveCardToTop = (card: Card, index: number) => {
-    setCardListBottom((prev) => prev.filter((_, i) => i !== index));
-    setCardListTop((prev) => [...prev, card]);
+    const newBottom = cardListBottom.filter((_, i) => i !== index);
+    const newTop = [...cardListTop, card];
+    setCardListBottom(newBottom);
+    setCardListTop(newTop);
+    syncOrder(newTop, newBottom);
   };
 
   const handleSubmit = () => {
@@ -131,6 +168,7 @@ const ReorderOpt = ({
                   key={card.uniqueId}
                   value={card}
                   className={classNames(styles.newOptForm, styles.reorderItem)}
+                  onDragEnd={handleDragEnd}
                 >
                   <div className={styles.cardWrapper}>
                     {showLabels && isFirst && (
@@ -202,6 +240,7 @@ const ReorderOpt = ({
                   key={`${card.cardNumber}${layerCount}`}
                   value={card}
                   className={classNames(styles.newOptForm, styles.reorderItem)}
+                  onDragEnd={handleDragEnd}
                 >
                   <div className={styles.cardWrapper}>
                     {showLabels && isFirst && (
