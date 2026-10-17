@@ -241,7 +241,14 @@
 
 @media (max-height: 500px) {
   :global(body.fanLandscapeHand) .combatChain {
-    margin-top: calc(var(--fan-pass-top) - min(1.5dvh, 6px));
+    margin-top: calc(
+      var(--fan-pass-top) +
+        min(
+          0px,
+          2 * var(--side-card-size) - var(--hero-group-size) + var(--board-gap) +
+            14px - var(--fan-arsenal-size) - var(--fan-hero-lift)
+        )
+    );
   }
 }
 
