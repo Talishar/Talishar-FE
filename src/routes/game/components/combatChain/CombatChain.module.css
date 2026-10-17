@@ -219,7 +219,7 @@
 
 :global(body.fanLandscapeHand) .combatChain {
   --card-size: min(
-    (var(--fan-pass-height) - 8px - min(6dvh, 27px) - 0.5vh) /
+    (var(--fan-pass-height) - 10px - min(6dvh, 27px) - 0.5vh) /
       (1 + 0.18 * var(--chain-subcard-count)),
     9dvw
   );
@@ -228,12 +228,12 @@
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto auto;
   grid-template-rows:
-    calc(var(--fan-pass-height) - var(--chain-subcard-space) - 8px)
+    calc(var(--fan-pass-height) - var(--chain-subcard-space) - 10px)
     var(--chain-subcard-space)
     auto;
   width: 100%;
   max-width: none;
-  padding-top: 2px;
+  padding-top: 4px;
   padding-bottom: 4px;
   margin: var(--fan-pass-top) 0 0;
   flex-shrink: 0;
@@ -361,7 +361,7 @@
 :global(body.fanLandscapeHand) .grabbyHandle {
   grid-column: 4;
   grid-row: 1 / -1;
-  margin-top: -2px;
+  margin-top: -4px;
   margin-bottom: -4px;
 }
 
