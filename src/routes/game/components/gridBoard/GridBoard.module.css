@@ -707,10 +707,10 @@
 }
 
 :global(body.fanLandscapeHand) :is(.pOneArsenal, .pTwoArsenal) {
-  --card-size: var(--fan-arsenal-size);
+  --card-size: var(--hero-group-size);
   position: relative;
   align-self: start;
-  left: calc((var(--side-card-size) - var(--fan-arsenal-size)) / 2);
+  left: calc(-0.5 * var(--hero-group-grow));
   height: var(--fan-arsenal-size);
 }
 
