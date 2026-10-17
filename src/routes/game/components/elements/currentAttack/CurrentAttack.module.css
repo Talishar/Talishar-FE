@@ -216,6 +216,7 @@
   flex-shrink: 0;
   width: max-content;
   min-width: calc(var(--card-size) + 2vh);
+  padding-left: 3px;
   grid-column: 1;
   grid-row: 1;
 }
