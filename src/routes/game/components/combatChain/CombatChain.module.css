@@ -390,7 +390,13 @@
 :global(body.fanLandscapeHand) .promptTopBar {
   position: fixed;
   top: 0;
-  left: 50%;
+  left: calc(
+    50% +
+      (
+        var(--fan-rail-width) + env(safe-area-inset-left, 0px) -
+          env(safe-area-inset-right, 0px)
+      ) / 2
+  );
   transform: translateX(-50%);
   z-index: 50;
   display: block;
