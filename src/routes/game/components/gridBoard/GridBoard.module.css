@@ -530,6 +530,17 @@
   );
   --hero-group-size: calc(1.25 * var(--side-card-size));
   --hero-group-grow: calc(var(--hero-group-size) - var(--side-card-size));
+  --fan-pass-top: calc(var(--side-row-step) - var(--board-gap) + 16px);
+  --fan-pass-height: calc(
+    var(--chain-height) + 2 * var(--board-gap) + var(--board-bottom-row) -
+      var(--side-row-step) - 32px
+  );
+  --fan-arsenal-size: calc(
+    (
+        100dvh - var(--chain-height) - 2 * var(--hero-group-size) - 4 *
+          var(--board-gap)
+      ) / 2
+  );
   grid-template-columns:
     0 var(--side-card-size) var(--side-card-size) 1fr var(--side-card-size)
     var(--side-card-size) var(--side-card-size) 1fr var(--side-card-size)
@@ -663,7 +674,6 @@
     .pOneWeaponLZone,
     .pOneHero,
     .pOneWeaponRZone,
-    .pOneArsenal,
     .pTwoWeaponLZone,
     .pTwoHero,
     .pTwoWeaponRZone
@@ -678,7 +688,10 @@
   :is(.pOneWeaponLZone, .pOneHero, .pOneWeaponRZone) {
   width: var(--hero-group-size);
   justify-self: start;
-  top: calc(var(--board-bottom-row) - 2 * var(--hero-group-grow));
+  top: calc(
+    var(--board-bottom-row) + var(--board-gap) + var(--side-card-size) -
+      var(--hero-group-grow) - var(--fan-arsenal-size)
+  );
 }
 
 :global(body.fanLandscapeHand) :is(.pOneWeaponLZone, .pTwoWeaponLZone) {
@@ -693,22 +706,32 @@
   left: calc(0.5 * var(--hero-group-grow));
 }
 
-:global(body.fanLandscapeHand) .pOneArsenal {
-  top: calc(var(--board-bottom-row) - var(--hero-group-grow));
+:global(body.fanLandscapeHand) :is(.pOneArsenal, .pTwoArsenal) {
+  --card-size: var(--hero-group-size);
+  position: relative;
+  align-self: start;
   left: calc(-0.5 * var(--hero-group-grow));
+  height: var(--fan-arsenal-size);
+}
+
+:global(body.fanLandscapeHand) .pOneArsenal {
+  top: calc(
+    var(--board-bottom-row) + var(--board-gap) + var(--side-card-size) -
+      var(--fan-arsenal-size)
+  );
+}
+
+:global(body.fanLandscapeHand) .pTwoArsenal {
+  top: 0;
 }
 
 :global(body.fanLandscapeHand)
   :is(.pTwoWeaponLZone, .pTwoHero, .pTwoWeaponRZone) {
   width: var(--hero-group-size);
   justify-self: start;
-  top: calc(var(--side-row-step) + var(--board-bottom-row));
-}
-
-:global(body.fanLandscapeHand) .pTwoArsenal {
-  position: relative;
-  top: var(--board-bottom-row);
-  height: var(--side-card-size);
+  top: calc(
+    var(--fan-arsenal-size) + var(--side-row-step) - var(--side-card-size)
+  );
 }
 
 :global(body.fanLandscapeHand)
@@ -785,11 +808,8 @@
 :global(body.fanLandscapeHand) .fanWidgets > :is(.healthWidget, .fanVitals) {
   position: absolute;
   left: calc(-2px - 0.95 * var(--side-card-size));
-  top: calc(var(--side-row-step) - var(--board-gap) + 16px);
-  height: calc(
-    var(--chain-height) + 2 * var(--board-gap) + var(--board-bottom-row) -
-      var(--side-row-step) - 32px
-  );
+  top: var(--fan-pass-top);
+  height: var(--fan-pass-height);
   z-index: 6;
 }
 

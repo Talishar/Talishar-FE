@@ -145,6 +145,7 @@
 
 :global(body.fanLandscapeHand) :is(.cardWrapper, .arsenalDestroySlot) img {
   width: 100%;
+  object-position: top;
 }
 
 :global(body.fanLandscapeHand) .arsenalZone:has(> .cardWrapper) {

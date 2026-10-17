@@ -1422,4 +1422,11 @@ input.excludeLastTurnCheckbox:focus-visible {
   .outcomeDefeat {
     font-size: 2em;
   }
+
+  .disclaimer {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 0;
+    padding-right: 0;
+  }
 }

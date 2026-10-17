@@ -219,7 +219,7 @@
 
 :global(body.fanLandscapeHand) .combatChain {
   --card-size: min(
-    (var(--chain-height) - 2 * var(--chain-padding) - min(6dvh, 27px) - 0.5vh) /
+    (var(--fan-pass-height) - 6px - min(6dvh, 27px) - 0.5vh) /
       (1 + 0.18 * var(--chain-subcard-count)),
     9dvw
   );
@@ -228,15 +228,15 @@
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto auto;
   grid-template-rows:
-    calc(
-      var(--chain-height) - 2 * var(--chain-padding) -
-        var(--chain-subcard-space) - 2px
-    )
+    calc(var(--fan-pass-height) - var(--chain-subcard-space) - 6px)
     var(--chain-subcard-space)
     auto;
   width: 100%;
   max-width: none;
-  padding-bottom: var(--chain-padding);
+  padding-top: 2px;
+  padding-bottom: 2px;
+  margin: var(--fan-pass-top) 0 0;
+  flex-shrink: 0;
 }
 
 .icon {
@@ -355,7 +355,8 @@
 :global(body.fanLandscapeHand) .grabbyHandle {
   grid-column: 4;
   grid-row: 1 / -1;
-  margin-bottom: calc(-1 * var(--chain-padding));
+  margin-top: -2px;
+  margin-bottom: -2px;
 }
 
 :global(body.fanLandscapeHand) .combatChain > .promptButtons {
@@ -366,7 +367,8 @@
   flex-direction: column;
   justify-content: center;
   gap: 4px;
-  width: 9.4em;
+  width: auto;
+  min-width: 9.4em;
   margin-left: 4px;
   padding: 0 4px 0 6px;
   border-left: 1px solid var(--theme-border, rgba(255, 255, 255, 0.18));
@@ -378,9 +380,22 @@
   margin: 0;
   padding: 5px 4px;
   line-height: 1.15;
-  white-space: normal;
+  white-space: nowrap;
   text-align: center;
-  text-wrap: balance;
+}
+
+@media (max-width: 720px) {
+  :global(body.fanLandscapeHand) .combatChain > .promptButtons {
+    width: 9.4em;
+    min-width: 0;
+    gap: 3px;
+  }
+
+  :global(body.fanLandscapeHand) .combatChain > .promptButtons .buttonDiv {
+    padding: 3px 4px;
+    white-space: normal;
+    text-wrap: balance;
+  }
 }
 
 .promptTopBar {
@@ -390,7 +405,13 @@
 :global(body.fanLandscapeHand) .promptTopBar {
   position: fixed;
   top: 0;
-  left: 50%;
+  left: calc(
+    50% +
+      (
+        var(--fan-rail-width) + env(safe-area-inset-left, 0px) -
+          env(safe-area-inset-right, 0px)
+      ) / 2
+  );
   transform: translateX(-50%);
   z-index: 50;
   display: block;
