@@ -208,7 +208,9 @@
 
 @media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
   :global(body.endGameOpen) .handScrollContainer,
-  :global(body.endGameOpen) .handScrollContainer * {
+  :global(body.endGameOpen) .handScrollContainer *,
+  :global(body.optionsMenuOpen) .handScrollContainer,
+  :global(body.optionsMenuOpen) .handScrollContainer * {
     visibility: hidden !important;
   }
 }

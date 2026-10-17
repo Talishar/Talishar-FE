@@ -395,3 +395,67 @@
     gap: 1rem;
   }
 }
+
+@media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
+  .optionsContainer {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-width: none;
+    padding: 0 env(safe-area-inset-right, 0px) 0 env(safe-area-inset-left, 0px);
+    border: 0;
+    border-radius: 0;
+  }
+
+  .optionsTitleContainer {
+    min-height: 44px;
+    padding: 0 4px 0 16px;
+    gap: 12px;
+  }
+
+  .title {
+    font-size: 16px;
+  }
+
+  .titleSearch {
+    flex: 0 1 14rem;
+    min-width: 8rem;
+    padding-block: 3px !important;
+    font-size: 13px;
+  }
+
+  .optionsContentContainer {
+    padding: 0 16px 12px;
+    gap: 10px;
+  }
+
+  .sectionHeader {
+    padding-bottom: 4px;
+    font-size: 11px;
+  }
+
+  .buttonColumn,
+  .buttonGroup {
+    gap: 6px;
+  }
+
+  .reportButtonGroup {
+    margin-top: 2px;
+    padding-top: 6px;
+  }
+
+  .buttonDiv {
+    min-height: 34px !important;
+    padding: 4px 10px !important;
+    font-size: 12px !important;
+  }
+
+  .signpostNote {
+    font-size: 13px;
+  }
+
+  .cosmeticsSaveButton {
+    top: 35px;
+  }
+}

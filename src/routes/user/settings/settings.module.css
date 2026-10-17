@@ -58,3 +58,18 @@
     flex: 1 1 100%;
   }
 }
+
+@media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
+  .header {
+    margin: 6px 0 4px;
+  }
+
+  .title {
+    font-size: 18px;
+  }
+
+  .search {
+    padding-block: 3px !important;
+    font-size: 13px;
+  }
+}

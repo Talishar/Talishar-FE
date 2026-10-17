@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import { useNavigate } from 'react-router-dom';
@@ -27,6 +27,8 @@ import { CosmeticsSection } from './OptionsSettings/CosmeticsSection';
 import type { Setting } from 'features/options/optionsSlice';
 import * as optConst from 'features/options/constants';
 import { CARD_BACK, PLAYMATS } from 'features/options/cardBacks';
+
+const OPTIONS_MENU_OPEN_BODY_CLASS = 'optionsMenuOpen';
 
 const OptionsContent = ({ searchQuery }: { searchQuery: string }) => {
   const {
@@ -427,14 +429,28 @@ export default function OptionsMenu() {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
+  const isOpen = Boolean(optionsMenu?.active && showModal);
+
+  useLayoutEffect(() => {
+    if (isOpen) document.body.classList.add(OPTIONS_MENU_OPEN_BODY_CLASS);
+  }, [isOpen]);
+
+  useEffect(
+    () => () => document.body.classList.remove(OPTIONS_MENU_OPEN_BODY_CLASS),
+    []
+  );
 
   const closeOptions = () => {
     dispatch(closeOptionsMenu());
   };
 
   return (
-    <AnimatePresence>
-      {optionsMenu?.active && showModal && (
+    <AnimatePresence
+      onExitComplete={() =>
+        document.body.classList.remove(OPTIONS_MENU_OPEN_BODY_CLASS)
+      }
+    >
+      {isOpen && (
         <>
           <div className={styles.optionsBackdrop} onClick={closeOptions} />
           <motion.div
