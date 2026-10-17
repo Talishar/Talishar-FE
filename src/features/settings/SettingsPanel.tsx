@@ -328,9 +328,11 @@ const SettingsPanel = ({
         .filter((entry) => entry.groups.length > 0)
     : [];
 
+  const currentGroups = groupsFor(currentTab, visibleDefs);
+
   const tabBody = (
     <>
-      {groupsFor(currentTab, visibleDefs).map(({ group, defs }) => (
+      {currentGroups.map(({ group, defs }) => (
         <section key={group.id} className={styles.group}>
           <h4 className={styles.groupTitle}>
             {t(group.labelKey)}
@@ -361,7 +363,13 @@ const SettingsPanel = ({
   );
 
   return (
-    <div className={styles.panel}>
+    <div
+      className={
+        context.surface === 'game'
+          ? `${styles.panel} ${styles.gamePanel}`
+          : styles.panel
+      }
+    >
       <div className={styles.toolbar}>
         <div
           className={styles.tabList}
@@ -437,6 +445,8 @@ const SettingsPanel = ({
           className={
             currentTab === 'cosmetics' || showSplit
               ? `${styles.tabPanel} ${styles.wideTabPanel}`
+              : currentGroups.length > 1
+              ? `${styles.tabPanel} ${styles.multiGroupTabPanel}`
               : styles.tabPanel
           }
           role="tabpanel"

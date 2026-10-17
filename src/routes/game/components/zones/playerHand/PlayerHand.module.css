@@ -105,6 +105,8 @@
 
 @media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
   :global(body.endGameOpen)
+    :is(.fanStage, .fanDockHit, .fanOpenGuard, .fanCollapseDock),
+  :global(body.optionsMenuOpen)
     :is(.fanStage, .fanDockHit, .fanOpenGuard, .fanCollapseDock) {
     display: none;
   }

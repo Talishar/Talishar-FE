@@ -492,3 +492,134 @@ input.switch[role='switch']:focus-visible {
     min-width: 5.5rem;
   }
 }
+
+@media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
+  .panel {
+    gap: 8px;
+  }
+
+  .gamePanel .toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    margin: 0 -16px;
+    padding: 0 16px;
+    background: rgba(
+      var(--theme-sunken-rgb),
+      calc(0.8 * var(--theme-sunken-alpha))
+    );
+    backdrop-filter: blur(6px);
+  }
+
+  .tabList {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+
+  .tabList::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tab {
+    min-height: 34px;
+    padding: 0 10px;
+    font-size: 13px;
+  }
+
+  .tabActive::after {
+    bottom: 0;
+  }
+
+  .tabPanel,
+  .splitMain,
+  .splitAside {
+    gap: 10px;
+  }
+
+  .multiGroupTabPanel {
+    display: block;
+    max-width: none;
+    columns: 2;
+    column-gap: 20px;
+  }
+
+  .multiGroupTabPanel > * {
+    margin-bottom: 10px;
+    break-inside: avoid;
+  }
+
+  .multiGroupTabPanel > .resetTab {
+    display: block;
+    column-span: all;
+  }
+
+  .splitTab {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    gap: 20px;
+  }
+
+  .splitAside {
+    order: 0;
+  }
+
+  .groupTitle {
+    margin-bottom: 2px;
+    font-size: 11px;
+  }
+
+  .row {
+    min-height: 36px;
+    padding: 4px 6px;
+    gap: 10px;
+  }
+
+  .rowLabel {
+    font-size: 13px;
+    line-height: 1.25;
+  }
+
+  .segmented {
+    padding: 2px 0 6px;
+    gap: 4px;
+  }
+
+  .segment {
+    min-width: 0;
+    min-height: 32px;
+    padding: 4px 6px;
+    font-size: 12px;
+  }
+
+  .sliderValue {
+    font-size: 12px;
+  }
+
+  .customControl {
+    font-size: 13px;
+  }
+
+  .customControl > * {
+    min-width: 10rem;
+  }
+
+  .customControl > * > button {
+    padding: 5px 10px;
+    font-size: 13px;
+  }
+
+  .customControl ul {
+    max-height: min(12rem, 45vh);
+  }
+
+  .multiGroupTabPanel .customControl ul {
+    left: 0;
+    right: auto;
+  }
+
+  .customControl li {
+    padding: 5px 10px;
+    font-size: 13px;
+  }
+}
