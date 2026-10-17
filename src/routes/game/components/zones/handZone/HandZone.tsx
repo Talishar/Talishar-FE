@@ -1,5 +1,6 @@
 import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
+import { useCookies } from 'react-cookie';
 import styles from './HandZone.module.css';
 import { RootState } from 'app/Store';
 import Player from 'interface/Player';
@@ -7,8 +8,9 @@ import { Card } from 'features/Card';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import { useAppDispatch, useAppSelector, useAppStore } from 'app/Hooks';
 import { setCardListFocus, clearCardListFocus } from 'features/game/GameSlice';
-import { useWindowWidth } from 'hooks/useWindowDimensions';
+import useWindowDimensions from 'hooks/useWindowDimensions';
 import { getCardPreview } from '../../elements/cardPortal/cardPreviewStore';
+import { useShowsLandscapeFan } from '../playerHand/useShowsLandscapeFan';
 
 const CARD_GAP = 5; // matches the flex gap in HandZone.module.css
 const ZONE_MAX_WIDTH = 0.6; // matches max-width: 60% in HandZone.module.css
@@ -68,7 +70,9 @@ const HandZone = React.memo(function HandZone(prop: Player) {
   );
   const store = useAppStore();
 
-  const windowWidth = useWindowWidth();
+  const [windowWidth, windowHeight] = useWindowDimensions();
+  const showsLandscapeFan = useShowsLandscapeFan();
+  const [cookies] = useCookies(['cardSize']);
   const zoneRef = useRef<HTMLDivElement>(null);
   const lastPointerTypeRef = useRef<string | null>(null);
   const [layout, setLayout] = useState<HandLayout>(EMPTY_HAND_LAYOUT);
@@ -83,36 +87,46 @@ const HandZone = React.memo(function HandZone(prop: Player) {
         false));
 
   useLayoutEffect(() => {
-    const zone = zoneRef.current;
-    const firstCard = zone?.querySelector(':scope > div') as HTMLElement | null;
-    const cardWidth = firstCard?.offsetWidth ?? 0;
-    if (!zone || !cardWidth || cardCount === 0) {
+    const measure = () => {
+      const zone = zoneRef.current;
+      const firstCard = zone?.querySelector(
+        ':scope > div'
+      ) as HTMLElement | null;
+      const cardWidth = firstCard?.offsetWidth ?? 0;
+      if (!zone || !cardWidth || cardCount === 0) {
+        setLayout((previous) =>
+          previous.isOverflowing || previous.overlap !== 0
+            ? EMPTY_HAND_LAYOUT
+            : previous
+        );
+        return;
+      }
+      const naturalWidth = cardCount * (cardWidth + CARD_GAP) - CARD_GAP;
+      const zoneMaxWidth = getComputedStyle(zone).maxWidth;
+      const availableWidth = zoneMaxWidth.endsWith('px')
+        ? parseFloat(zoneMaxWidth)
+        : windowWidth * ZONE_MAX_WIDTH;
+      const nextIsOverflowing = naturalWidth > availableWidth;
+      let nextOverlap = 0;
+      if (cardCount > 1) {
+        const idealOverlap =
+          (availableWidth - cardWidth) / (cardCount - 1) - cardWidth - CARD_GAP;
+        nextOverlap = Math.max(
+          Math.min(idealOverlap, 0),
+          -MAX_OVERLAP_RATIO * cardWidth
+        );
+      }
       setLayout((previous) =>
-        previous.isOverflowing || previous.overlap !== 0
-          ? EMPTY_HAND_LAYOUT
-          : previous
+        previous.isOverflowing === nextIsOverflowing &&
+        previous.overlap === nextOverlap
+          ? previous
+          : { isOverflowing: nextIsOverflowing, overlap: nextOverlap }
       );
-      return;
-    }
-    const naturalWidth = cardCount * (cardWidth + CARD_GAP) - CARD_GAP;
-    const availableWidth = windowWidth * ZONE_MAX_WIDTH;
-    const nextIsOverflowing = naturalWidth > availableWidth;
-    let nextOverlap = 0;
-    if (cardCount > 1) {
-      const idealOverlap =
-        (availableWidth - cardWidth) / (cardCount - 1) - cardWidth - CARD_GAP;
-      nextOverlap = Math.max(
-        Math.min(idealOverlap, 0),
-        -MAX_OVERLAP_RATIO * cardWidth
-      );
-    }
-    setLayout((previous) =>
-      previous.isOverflowing === nextIsOverflowing &&
-      previous.overlap === nextOverlap
-        ? previous
-        : { isOverflowing: nextIsOverflowing, overlap: nextOverlap }
-    );
-  }, [cardCount, windowWidth]);
+    };
+    measure();
+    const frame = requestAnimationFrame(measure);
+    return () => cancelAnimationFrame(frame);
+  }, [cardCount, windowWidth, windowHeight, showsLandscapeFan, cookies.cardSize]);
 
   // Backend uniqueIds fall back to '-', so duplicates are deduped by a
   // per-cardNumber occurrence counter rather than by position.

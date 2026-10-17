@@ -77,6 +77,16 @@
     var(--board-bottom-base) - 0.2 * var(--side-card-size) - var(--card-size)
   );
   --hand-offset: 0px;
+  left: calc(
+    env(safe-area-inset-left, 0px) + var(--fan-rail-width) + var(--board-width) /
+      2 + 0.625 * var(--side-card-size) + 4px
+  );
+  justify-content: flex-end;
+  min-width: 0;
+  max-width: calc(
+    var(--board-width) / 2 - var(--board-edge) - 2.625 * var(--side-card-size) -
+      2 * var(--board-gap) - 8px
+  );
 }
 
 @media (hover: hover) and (pointer: fine) {
