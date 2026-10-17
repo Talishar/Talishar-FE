@@ -398,14 +398,10 @@
 
 @media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
   .optionsContainer {
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    max-width: none;
-    padding: 0 env(safe-area-inset-right, 0px) 0 env(safe-area-inset-left, 0px);
-    border: 0;
-    border-radius: 0;
+    top: 5vh;
+    bottom: 5vh;
+    left: max(6vw, env(safe-area-inset-left, 0px));
+    right: max(6vw, env(safe-area-inset-right, 0px));
   }
 
   .optionsTitleContainer {
