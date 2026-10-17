@@ -3,7 +3,8 @@ import React, {
   useState,
   useMemo,
   useEffect,
-  useCallback
+  useCallback,
+  useId
 } from 'react';
 import {
   canQueueHandPlay,
@@ -12,7 +13,10 @@ import {
   queueHandPlay,
   removeHandCard
 } from 'features/game/GameSlice';
-import { clearCardPreview } from '../cardPortal/cardPreviewStore';
+import {
+  clearCardPreview,
+  useOwnsCardPreview
+} from '../cardPortal/cardPreviewStore';
 import {
   GiTombstone,
   GiFluffySwirl,
@@ -144,7 +148,6 @@ export interface HandCard {
   enableLayoutAnimation?: boolean;
   shuffleRevision?: number;
   scrollBlockedRef?: React.RefObject<boolean>;
-  onRotate?: (cardId: string, direction: 1 | -1) => void;
   onRotationHoldStart?: (cardId: string) => void;
   onRotationHoldEnd?: () => void;
   onHandReorderDragStart?: () => void;
@@ -182,7 +185,6 @@ export const PlayerHandCard = React.memo(
     enableLayoutAnimation,
     shuffleRevision = 0,
     scrollBlockedRef,
-    onRotate,
     onRotationHoldStart,
     onRotationHoldEnd,
     onHandReorderDragStart,
@@ -425,6 +427,9 @@ export const PlayerHandCard = React.memo(
         }),
       [card?.borderColor]
     );
+
+    const previewOwner = useId();
+    const ownsPreview = useOwnsCardPreview(previewOwner);
 
     if (card === undefined) {
       return <div className={styles.handCard}></div>;
@@ -703,17 +708,7 @@ export const PlayerHandCard = React.memo(
     const handleContextMenu = (event: React.MouseEvent<HTMLDivElement>) => {
       event.preventDefault();
       event.stopPropagation();
-
-      if (isDragging) {
-        cancelDrag();
-        return;
-      }
-
-      const nativePointerType = (event.nativeEvent as PointerEvent).pointerType;
-      const pointerType = nativePointerType || lastPointerTypeRef.current;
-      if (pointerType !== 'mouse') return;
-
-      onRotate?.(cardId ?? '', event.shiftKey ? -1 : 1);
+      if (isDragging) cancelDrag();
     };
 
     const startPressTimer = () => {
@@ -858,6 +853,8 @@ export const PlayerHandCard = React.memo(
             hoverPreviewDelayMs={150}
             disableHoverPreview={isFanned}
             onTouchPreview={isFanned ? liftFromTouch : undefined}
+            previewOnRightClick={isFanned}
+            previewOwner={previewOwner}
           >
             <CardImage
               src={src}
@@ -980,7 +977,7 @@ export const PlayerHandCard = React.memo(
           }
         >
           <MotionConfig reducedMotion="user">{content}</MotionConfig>
-          {isHovered && showHoverKeywords && !isDragging && (
+          {isHovered && showHoverKeywords && !isDragging && !ownsPreview && (
             <div
               className={classNames(styles.fanKeywords, {
                 [styles.fanKeywordsLeft]: keywordsLeft

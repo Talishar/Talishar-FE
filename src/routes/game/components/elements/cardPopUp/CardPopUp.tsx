@@ -74,6 +74,7 @@ type SurfaceProps = {
   onTouchEnd: (event: React.TouchEvent<HTMLDivElement>) => void;
   onTouchMove: (event: React.TouchEvent<HTMLDivElement>) => void;
   onTouchCancel: () => void;
+  onContextMenu?: (event: React.MouseEvent<HTMLDivElement>) => void;
   onHoverStart?: () => void;
   onHoverEnd?: () => void;
 };
@@ -154,6 +155,8 @@ type CardPopUpProps = {
   hoverPreviewDelayMs?: number;
   disableHoverPreview?: boolean;
   onTouchPreview?: () => void;
+  previewOnRightClick?: boolean;
+  previewOwner?: string;
 };
 
 export default function CardPopUp({
@@ -171,7 +174,9 @@ export default function CardPopUp({
   tapPreviewKey,
   hoverPreviewDelayMs = 0,
   disableHoverPreview = false,
-  onTouchPreview
+  onTouchPreview,
+  previewOnRightClick = false,
+  previewOwner
 }: CardPopUpProps) {
   const ref = useRef<HTMLDivElement>(null);
   const disableCardTilt = useCookieString('disableCardTilt');
@@ -184,7 +189,8 @@ export default function CardPopUp({
   const hoverPreviewTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isHiddenRef = useRef(isHidden);
   isHiddenRef.current = isHidden;
-  const instanceId = useId();
+  const generatedId = useId();
+  const instanceId = previewOwner ?? generatedId;
 
   const selectionKey =
     tapPreviewKey ??
@@ -309,6 +315,21 @@ export default function CardPopUp({
     clearPopUpUnlessSticky();
   };
 
+  const handleContextMenu = (event: React.MouseEvent<HTMLDivElement>) => {
+    const pointerType =
+      (event.nativeEvent as PointerEvent).pointerType ||
+      lastPointerTypeRef.current;
+    if (pointerType !== 'mouse') return;
+    event.preventDefault();
+    cancelHoverPreview();
+    const preview = getCardPreview();
+    if (preview.popupOn && preview.owner === instanceId) {
+      clearCardPreview(instanceId);
+      return;
+    }
+    showPreview();
+  };
+
   const cancelLongPress = () => {
     if (longPressTimer.current) {
       clearTimeout(longPressTimer.current);
@@ -420,6 +441,7 @@ export default function CardPopUp({
       onTouchEnd={handleTouchEnd}
       onTouchMove={handleTouchMove}
       onTouchCancel={handleTouchCancel}
+      onContextMenu={previewOnRightClick ? handleContextMenu : undefined}
       onHoverStart={onHoverStart}
       onHoverEnd={onHoverEnd}
     >

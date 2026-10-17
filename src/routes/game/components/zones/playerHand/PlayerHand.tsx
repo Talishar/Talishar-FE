@@ -81,7 +81,6 @@ import { useLandscapeHandMode } from './useLandscapeHandMode';
 import { useShowsLandscapeFan } from './useShowsLandscapeFan';
 import ClassicPlayerHand from './ClassicPlayerHand';
 
-const CARD_ROTATION_STEP_DEGREES = 90;
 const CARD_ROTATION_KEY_STEP_DEGREES = 3;
 const WHEEL_ROTATION_DEGREES_PER_PIXEL = 0.15;
 const MAX_WHEEL_ROTATION_DEGREES = 15;
@@ -1278,13 +1277,6 @@ function PlayerHand() {
   );
   adjustHandCardRotationRef.current = adjustHandCardRotation;
 
-  const rotateHandCard = useCallback(
-    (cardId: string, direction: 1 | -1) => {
-      adjustHandCardRotation(cardId, direction * CARD_ROTATION_STEP_DEGREES);
-    },
-    [adjustHandCardRotation]
-  );
-
   const startHoldingHandCardForRotation = useCallback((cardId: string) => {
     heldHandCardIdRef.current = cardId || null;
     setHandCardRotationHeld(Boolean(cardId));
@@ -1464,7 +1456,6 @@ function PlayerHand() {
                 onHandReorderDragMove={stableDragMove}
                 onHandReorderDragEnd={stableDragEnd}
                 onHandReorderDragCancel={stableDragCancel}
-                onRotate={rotateHandCard}
                 onRotationHoldStart={startHoldingHandCardForRotation}
                 onRotationHoldEnd={stopHoldingHandCardForRotation}
                 isFanned
