@@ -541,6 +541,7 @@
           var(--board-gap)
       ) / 2
   );
+  --fan-hero-lift: 0px;
   grid-template-columns:
     0 var(--side-card-size) var(--side-card-size) 1fr var(--side-card-size)
     var(--side-card-size) var(--side-card-size) 1fr var(--side-card-size)
@@ -554,6 +555,12 @@
   width: 100%;
   height: calc(100% + var(--board-gap));
   margin-top: calc(-1 * var(--board-gap));
+}
+
+@media (max-height: 500px) {
+  :global(body.fanLandscapeHand) .boardGrid {
+    --fan-hero-lift: calc(2 * var(--board-gap));
+  }
 }
 
 :global(body.fanLandscapeHand) .fanOpponentName {
@@ -690,7 +697,7 @@
   justify-self: start;
   top: calc(
     var(--board-bottom-row) + var(--board-gap) + var(--side-card-size) -
-      var(--hero-group-grow) - var(--fan-arsenal-size)
+      var(--hero-group-grow) - var(--fan-arsenal-size) - var(--fan-hero-lift)
   );
 }
 
@@ -717,8 +724,9 @@
 :global(body.fanLandscapeHand) .pOneArsenal {
   top: calc(
     var(--board-bottom-row) + var(--board-gap) + var(--side-card-size) -
-      var(--fan-arsenal-size)
+      var(--fan-arsenal-size) - var(--fan-hero-lift)
   );
+  height: calc(var(--fan-arsenal-size) + var(--fan-hero-lift));
 }
 
 :global(body.fanLandscapeHand) .pTwoArsenal {
