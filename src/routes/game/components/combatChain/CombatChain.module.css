@@ -219,7 +219,7 @@
 
 :global(body.fanLandscapeHand) .combatChain {
   --card-size: min(
-    (var(--fan-pass-height) - 10px - min(6dvh, 27px) - 0.5vh) /
+    (var(--fan-pass-height) - 13px - 1.1 * min(4.5dvh - 1px, 19px) - 0.5vh) /
       (1 + 0.18 * var(--chain-subcard-count)),
     9dvw
   );
@@ -228,13 +228,13 @@
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto auto;
   grid-template-rows:
-    calc(var(--fan-pass-height) - var(--chain-subcard-space) - 10px)
+    calc(var(--fan-pass-height) - var(--chain-subcard-space) - 13px)
     var(--chain-subcard-space)
     auto;
   width: 100%;
   max-width: none;
-  padding-top: 4px;
-  padding-bottom: 4px;
+  padding-top: 3px;
+  padding-bottom: 8px;
   margin: var(--fan-pass-top) 0 0;
   flex-shrink: 0;
 }
@@ -361,8 +361,8 @@
 :global(body.fanLandscapeHand) .grabbyHandle {
   grid-column: 4;
   grid-row: 1 / -1;
-  margin-top: -4px;
-  margin-bottom: -4px;
+  margin-top: -3px;
+  margin-bottom: -8px;
 }
 
 :global(body.fanLandscapeHand) .combatChain > .promptButtons {

@@ -222,8 +222,7 @@
 }
 
 :global(body.fanLandscapeHand) .attDefRow {
-  height: min(6vh, 27px);
-  height: min(6dvh, 27px);
+  height: 1.1em;
   font-size: min(4.5vh - 1px, 19px);
   font-size: min(4.5dvh - 1px, 19px);
 }

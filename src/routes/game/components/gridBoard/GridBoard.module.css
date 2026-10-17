@@ -559,7 +559,10 @@
 
 @media (max-height: 500px) {
   :global(body.fanLandscapeHand) .boardGrid {
-    --fan-hero-lift: max(0px, var(--hero-group-size) - var(--fan-arsenal-size));
+    --fan-hero-lift: max(
+      0px,
+      var(--hero-group-size) + 4px - var(--fan-arsenal-size)
+    );
   }
 }
 
@@ -726,7 +729,7 @@
     var(--board-bottom-row) + var(--board-gap) + var(--side-card-size) -
       var(--fan-arsenal-size) - var(--fan-hero-lift)
   );
-  height: calc(var(--fan-arsenal-size) + var(--fan-hero-lift));
+  height: calc(var(--fan-arsenal-size) + var(--fan-hero-lift) - 4px);
 }
 
 :global(body.fanLandscapeHand) .pTwoArsenal {
