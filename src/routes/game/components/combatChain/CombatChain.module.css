@@ -219,7 +219,7 @@
 
 :global(body.fanLandscapeHand) .combatChain {
   --card-size: min(
-    (var(--chain-height) - 2 * var(--chain-padding) - min(6dvh, 27px) - 0.5vh) /
+    (var(--fan-pass-height) - var(--chain-padding) - min(6dvh, 27px) - 0.5vh) /
       (1 + 0.18 * var(--chain-subcard-count)),
     9dvw
   );
@@ -229,14 +229,17 @@
   grid-template-columns: auto minmax(0, 1fr) auto auto;
   grid-template-rows:
     calc(
-      var(--chain-height) - 2 * var(--chain-padding) -
-        var(--chain-subcard-space) - 2px
+      var(--fan-pass-height) - var(--chain-padding) - var(--chain-subcard-space) -
+        2px
     )
     var(--chain-subcard-space)
     auto;
   width: 100%;
   max-width: none;
+  padding-top: 0;
   padding-bottom: var(--chain-padding);
+  margin: var(--fan-pass-top) 0 0;
+  flex-shrink: 0;
 }
 
 .icon {
@@ -355,6 +358,7 @@
 :global(body.fanLandscapeHand) .grabbyHandle {
   grid-column: 4;
   grid-row: 1 / -1;
+  margin-top: 0;
   margin-bottom: calc(-1 * var(--chain-padding));
 }
 
@@ -366,7 +370,8 @@
   flex-direction: column;
   justify-content: center;
   gap: 4px;
-  width: 9.4em;
+  width: auto;
+  min-width: 9.4em;
   margin-left: 4px;
   padding: 0 4px 0 6px;
   border-left: 1px solid var(--theme-border, rgba(255, 255, 255, 0.18));
@@ -378,9 +383,22 @@
   margin: 0;
   padding: 5px 4px;
   line-height: 1.15;
-  white-space: normal;
+  white-space: nowrap;
   text-align: center;
-  text-wrap: balance;
+}
+
+@media (max-width: 720px) {
+  :global(body.fanLandscapeHand) .combatChain > .promptButtons {
+    width: 9.4em;
+    min-width: 0;
+    gap: 3px;
+  }
+
+  :global(body.fanLandscapeHand) .combatChain > .promptButtons .buttonDiv {
+    padding: 3px 4px;
+    white-space: normal;
+    text-wrap: balance;
+  }
 }
 
 .promptTopBar {
