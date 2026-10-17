@@ -40,8 +40,14 @@ const CardOrdering = ({
 
   const [processInputAPI] = useProcessInputAPIMutation();
 
+  // Keep the latest list in a ref so drag-end handlers never sync a stale order
+  const latestList = React.useRef(cardListTop);
+  latestList.current = cardListTop;
+  const orderChanged = React.useRef(false);
+
   const changeTopCardOrder = (newOrder: Card[]) => {
     setCardListTop(newOrder);
+    orderChanged.current = true;
   };
 
   const submitOrder = (mode: number) => {
@@ -51,9 +57,16 @@ const CardOrdering = ({
       authKey: authKey,
       mode: mode,
       submission: {
-        cardListTop: cardListTop.map((card) => card.cardNumber)
+        cardListTop: latestList.current.map((card) => card.cardNumber)
       }
     });
+  };
+
+  // Sync the order (mode 108) so passing instead of clicking submit accepts it
+  const handleDragEnd = () => {
+    if (!orderChanged.current) return;
+    orderChanged.current = false;
+    submitOrder(108);
   };
 
   const handleSubmit = () => {
@@ -108,6 +121,7 @@ const CardOrdering = ({
                   key={card.uniqueId}
                   value={card}
                   className={classNames(styles.newOptForm, styles.reorderItem)}
+                  onDragEnd={handleDragEnd}
                 >
                   <CardDisplay card={card} key={ix} />
                 </Reorder.Item>
