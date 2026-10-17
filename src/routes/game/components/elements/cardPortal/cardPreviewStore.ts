@@ -74,6 +74,11 @@ export function useCardPreview(): CardPreviewState {
   return useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
 }
 
+export function useOwnsCardPreview(owner: string): boolean {
+  const getOwned = () => snapshot.popupOn && snapshot.owner === owner;
+  return useSyncExternalStore(subscribe, getOwned, getOwned);
+}
+
 export function getCardPreview(): CardPreviewState {
   return snapshot;
 }
