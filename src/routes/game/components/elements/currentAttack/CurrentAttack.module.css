@@ -224,29 +224,25 @@
 :global(body.fanLandscapeHand) .attDefRow {
   height: min(6vh, 27px);
   height: min(6dvh, 27px);
+  font-size: min(4.5vh - 1px, 19px);
+  font-size: min(4.5dvh - 1px, 19px);
 }
 
 :global(body.fanLandscapeHand) :is(.attDiv, .defDiv) {
-  font-size: min(4.5vh, 20px);
-  font-size: min(4.5dvh, 20px);
+  font-size: 1em;
 }
 
 :global(body.fanLandscapeHand) :is(.attackSymbol, .defSymbol) {
-  width: min(5vh, 22px);
-  height: min(5vh, 22px);
-  width: min(5dvh, 22px);
-  height: min(5dvh, 22px);
+  width: 1.1em;
+  height: 1.1em;
 }
 
 :global(body.fanLandscapeHand) .chainSymbols {
-  width: min(4.5vh, 20px);
-  height: min(4.5vh, 20px);
-  width: min(4.5dvh, 20px);
-  height: min(4.5dvh, 20px);
+  width: 1em;
+  height: 1em;
 }
 
 :global(body.fanLandscapeHand) .icon.icon {
-  font-size: min(4vh, 18px);
-  font-size: min(4dvh, 18px);
+  font-size: 0.9em;
   border-radius: 3px;
 }
