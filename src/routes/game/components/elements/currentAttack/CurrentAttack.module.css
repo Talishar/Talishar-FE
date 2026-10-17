@@ -243,6 +243,15 @@
 }
 
 :global(body.fanLandscapeHand) .icon.icon {
-  font-size: 0.9em;
+  width: 1em;
+  height: 1em;
+  margin: 0.05em;
+  padding: 1px;
+  font-size: 1em;
   border-radius: 3px;
+}
+
+:global(body.fanLandscapeHand) .icon.icon > svg {
+  width: 100%;
+  height: 100%;
 }
