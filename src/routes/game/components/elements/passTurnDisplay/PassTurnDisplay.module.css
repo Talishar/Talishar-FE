@@ -382,3 +382,16 @@
   font-size: 16px;
   letter-spacing: 0.06em;
 }
+
+@media (orientation: landscape) and (min-height: 501px) {
+  :global(body.fanLandscapeHand) .passTurnDisplay,
+  :global(body.fanLandscapeHand) .passTurnDisplayActive {
+    width: 100%;
+    border-radius: calc(14 * var(--fan-px));
+    font-size: calc(14.4 * var(--fan-px));
+  }
+
+  :global(body.fanLandscapeHand) .passTurnDisplayActive {
+    font-size: calc(16 * var(--fan-px));
+  }
+}

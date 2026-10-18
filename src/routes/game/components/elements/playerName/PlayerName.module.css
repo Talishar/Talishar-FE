@@ -267,3 +267,16 @@
     width: 1.8dvh;
   }
 }
+
+@media (orientation: landscape) and (min-height: 501px) {
+  :global(body.fanLandscapeHand) .playerName:not(.playerTwo) {
+    height: calc(22 * var(--fan-px));
+    padding: 0 calc(2.7 * var(--fan-px));
+    font-size: calc(9.9 * var(--fan-px));
+  }
+
+  :global(body.fanLandscapeHand) .playerName:not(.playerTwo) .icon {
+    height: calc(1.8 * var(--fan-vh));
+    width: calc(1.8 * var(--fan-vh));
+  }
+}

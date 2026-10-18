@@ -172,3 +172,82 @@ body.fanLandscapeHand .gameZone {
     transform: translateX(-50%);
   }
 }
+
+@media (orientation: landscape) and (min-height: 501px) {
+  body.fanLandscapeHand {
+    --fan-unit: min(
+      100dvh / 6.2177,
+      (
+          100dvw - env(safe-area-inset-left, 0px) -
+            env(safe-area-inset-right, 0px)
+        ) / 11.564
+    );
+    --fan-px: calc(var(--fan-unit) / 66.4);
+    --fan-vh: calc(var(--fan-unit) * 0.0622);
+    --fan-vw: calc(var(--fan-unit) * 0.1384);
+    --fan-rail-width: calc(50 * var(--fan-px));
+    --board-gap: calc(0.5 * var(--fan-vh)) !important;
+    --board-edge: 0px !important;
+    --side-card-base: var(--fan-unit) !important;
+  }
+
+  body.fanLandscapeHand .app {
+    font-size: max(
+      9 * var(--fan-px),
+      min(
+        1.5 * var(--fan-vh) - 2 * var(--fan-px),
+        0.9 * var(--fan-vw) - var(--fan-px)
+      )
+    );
+  }
+
+  body.fanLandscapeHand [class*='_boardGrid_'] {
+    --fan-hand-top: calc(100dvh - 0.28 * 100 * var(--fan-vh) - 4px);
+    --fan-mid: 50dvh;
+    --fan-pass-height: min(
+      1.65 * var(--side-card-size),
+      2 *
+        (
+          var(--fan-hand-top) - 10 * var(--fan-px) - var(--hero-group-size) -
+            var(--fan-mid)
+        )
+    ) !important;
+    --fan-own-hero-top: calc(
+      var(--fan-mid) + var(--fan-pass-height) / 2 + 6 * var(--fan-px)
+    );
+    --fan-opp-hero-top: calc(
+      var(--fan-mid) - var(--fan-pass-height) / 2 - 6 * var(--fan-px) -
+        var(--hero-group-size)
+    );
+    --fan-arsenal-size: min(
+      var(--hero-group-size),
+      var(--fan-opp-hero-top) - var(--board-gap)
+    ) !important;
+    --fan-opp-shift: calc(
+      var(--fan-opp-hero-top) - var(--fan-arsenal-size) - var(--board-gap)
+    );
+    --fan-hero-lift: calc(
+      100dvh - var(--fan-arsenal-size) - var(--board-gap) -
+        var(--hero-group-size) - var(--fan-own-hero-top)
+    ) !important;
+    --fan-pass-top: calc(
+      var(--fan-mid) - var(--fan-pass-height) / 2 - var(--card-size) -
+        var(--side-card-size) - 2 * var(--board-gap)
+    ) !important;
+  }
+
+  body.fanLandscapeHand
+    [class*='_boardGrid_']
+    > :is(
+      [class*='_pTwoArsenal_'],
+      [class*='_pTwoWeaponLZone_'],
+      [class*='_pTwoHero_'],
+      [class*='_pTwoWeaponRZone_']
+    ) {
+    translate: 0 var(--fan-opp-shift);
+  }
+
+  body.fanLandscapeHand [class*='_boardGrid_'] > [class*='_pOneArsenal_'] {
+    height: var(--fan-arsenal-size) !important;
+  }
+}

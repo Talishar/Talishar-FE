@@ -303,3 +303,13 @@
   bottom: 0;
   z-index: 99998;
 }
+
+@media (orientation: landscape) and (min-height: 501px) {
+  :global(body.fanLandscapeHand) .menuList {
+    --rail-btn: min(
+      42 * var(--fan-px),
+      (100dvh + 4 * var(--fan-px)) / var(--rail-slots) - 4 * var(--fan-px)
+    );
+    gap: calc(4 * var(--fan-px));
+  }
+}

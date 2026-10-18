@@ -102,6 +102,14 @@ export const fanRiseEase = twoRateEaseOut(
 export const fanDockEase = expEaseOut(FAN_DOCK_RATE, FAN_DOCK_DURATION_S);
 export const fanUnhoverEase = (progress: number) => 1 - (1 - progress) ** 2;
 
+export const FAN_TALL_MIN_HEIGHT_PX = 501;
+const FAN_TALL_BOARD_ASPECT = 11.564 / 6.2177;
+
+export function fanLandscapeBoardHeight(width: number, height: number): number {
+  if (height < FAN_TALL_MIN_HEIGHT_PX) return height;
+  return Math.min(height, width / FAN_TALL_BOARD_ASPECT);
+}
+
 export function fanHoverScaleFor(
   raw: string | undefined,
   cardHeight: number,
