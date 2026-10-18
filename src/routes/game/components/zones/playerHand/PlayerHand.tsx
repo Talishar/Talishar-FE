@@ -73,7 +73,6 @@ import {
   fanHoverIndexAt,
   fanHoverLineY,
   fanHoverScaleFor,
-  fanLandscapeBoardHeight,
   fanScaleFor,
   fanSlotIndexAt,
   fanSpacing
@@ -180,6 +179,9 @@ function PlayerHand() {
   const isPortrait = useMediaQuery('(orientation: portrait)');
   const isMobilePortrait = isMobile && isPortrait;
   const isMobileLandscape = isMobile && !isPortrait;
+  const isTallScreen = useMediaQuery('(min-height: 501px)');
+  const isTallLandscape = isMobileLandscape && isTallScreen;
+  const isPhoneLandscape = isMobileLandscape && !isTallScreen;
   const showsLandscapeFan = useShowsLandscapeFan();
   const canCollapseHand = isMobile || isPortrait;
   const [isHandCollapsed, setIsHandCollapsed] = useState(false);
@@ -235,10 +237,11 @@ function PlayerHand() {
   const lastFanSlotsRef = useRef(new Map<string, FanSlot>());
   const fanStageRef = useRef<HTMLDivElement>(null);
   const { isHandDocked, openHand, isSingleCardArsenal } = useLandscapeHandMode(
-    showsLandscapeFan,
+    showsLandscapeFan && !isTallLandscape,
     fanStageRef
   );
-  const isLandscapeDocked = showsLandscapeFan && isHandDocked;
+  const isLandscapeDocked =
+    showsLandscapeFan && !isTallLandscape && isHandDocked;
   const dockedRenderRef = useRef(isLandscapeDocked);
   const dockTransition =
     dockedRenderRef.current !== isLandscapeDocked
@@ -599,10 +602,8 @@ function PlayerHand() {
 
   const fanGeometry = useMemo<FanGeometry>(() => {
     const cardHeight =
-      (isMobileLandscape && isLandscapeDocked
-        ? fanLandscapeBoardHeight(width, height)
-        : height) *
-      (!isMobileLandscape
+      height *
+      (!isPhoneLandscape
         ? FAN_CARD_HEIGHT_RATIO
         : isLandscapeDocked
         ? FAN_DOCK_CARD_HEIGHT_RATIO
@@ -616,7 +617,7 @@ function PlayerHand() {
       cardWidth: (cardHeight * 2) / 3,
       mobile: isMobilePortrait,
       hoverLift: isMobile,
-      hiddenRatio: !isMobileLandscape
+      hiddenRatio: !isPhoneLandscape
         ? undefined
         : isLandscapeDocked
         ? FAN_DOCK_HIDDEN_RATIO
@@ -629,7 +630,7 @@ function PlayerHand() {
     stageBounds?.right,
     isMobile,
     isMobilePortrait,
-    isMobileLandscape,
+    isPhoneLandscape,
     isLandscapeDocked
   ]);
   const fanHoverScale = fanHoverScaleFor(
