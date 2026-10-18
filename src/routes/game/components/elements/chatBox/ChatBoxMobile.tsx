@@ -1,8 +1,16 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import {
+  CSSProperties,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState
+} from 'react';
 import ReactDOM from 'react-dom';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import ChatInput from '../chatInput/ChatInput';
+import { useShowsLandscapeFan } from '../../zones/playerHand/useShowsLandscapeFan';
 import styles from './ChatBox.module.css';
 import GameLogMessages from './GameLogMessages';
 import { useTranslation } from 'react-i18next';
@@ -38,6 +46,9 @@ const storeFilter = (filter: ChatFilter) => {
 
 export default function ChatBox() {
   const { t } = useTranslation();
+  const showsLandscapeFan = useShowsLandscapeFan();
+  const [keyboardInset, setKeyboardInset] = useState(0);
+  const [chatFocused, setChatFocused] = useState(false);
   const amIPlayerOne = useAppSelector((state: RootState) => {
     return state.game.gameInfo.playerID === 1;
   });
@@ -54,7 +65,7 @@ export default function ChatBox() {
     useAppSelector((state: RootState) => state.game.playerTwo.Name) ??
       'your opponent'
   );
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
   const prevChatLengthRef = useRef<number>(0);
   const prevChatFilterRef = useRef<string>('none');
 
@@ -91,7 +102,8 @@ export default function ChatBox() {
   }, [amIPlayerOne, myName, oppName]);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ block: 'end' });
+    const area = scrollAreaRef.current;
+    if (area) area.scrollTop = area.scrollHeight;
   };
 
   // Mount the panel and controls first, then parse the game log when the
@@ -126,8 +138,37 @@ export default function ChatBox() {
     }
   }, [chatLog, chatFilter, logReady]);
 
+  useLayoutEffect(() => {
+    if (logReady) scrollToBottom();
+  }, [keyboardInset]);
+
+  useEffect(() => {
+    const viewport = window.visualViewport;
+    if (!showsLandscapeFan || !chatFocused || !viewport) return;
+    const onViewportChange = () =>
+      setKeyboardInset(
+        Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop)
+      );
+    onViewportChange();
+    viewport.addEventListener('resize', onViewportChange);
+    viewport.addEventListener('scroll', onViewportChange);
+    return () => {
+      viewport.removeEventListener('resize', onViewportChange);
+      viewport.removeEventListener('scroll', onViewportChange);
+      setKeyboardInset(0);
+    };
+  }, [showsLandscapeFan, chatFocused]);
+
   return ReactDOM.createPortal(
-    <div className={styles.chatBoxMobileContainer}>
+    <div
+      className={styles.chatBoxMobileContainer}
+      style={{ '--chat-keyboard-inset': `${keyboardInset}px` } as CSSProperties}
+      onFocus={() => setChatFocused(true)}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null))
+          setChatFocused(false);
+      }}
+    >
       <div className={styles.chatMobileHeader}>
         <div
           role="tablist"
@@ -153,7 +194,7 @@ export default function ChatBox() {
         </div>
       </div>
       {/* Message list */}
-      <div className={styles.chatMobileScrollArea}>
+      <div ref={scrollAreaRef} className={styles.chatMobileScrollArea}>
         {logReady && (
           <>
             {hasEarlierMessages && (
@@ -178,7 +219,6 @@ export default function ChatBox() {
             />
           </>
         )}
-        <div ref={messagesEndRef} />
       </div>
       <ChatInput />
     </div>,
