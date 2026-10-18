@@ -835,6 +835,7 @@
     --fan-side-w: max(
       var(--side-card-size),
       min(
+        1.2 * var(--side-card-size),
         (100dvh - 7 * var(--board-gap)) / 6,
         (
             50dvh - var(--fan-pass-height) / 2 - 6 * var(--fan-px) -
