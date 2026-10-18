@@ -835,7 +835,7 @@
     --fan-side-w: max(
       var(--side-card-size),
       min(
-        1.2 * var(--side-card-size),
+        var(--fan-side-max, 100dvh),
         (100dvh - 7 * var(--board-gap)) / 6,
         (
             50dvh - var(--fan-pass-height) / 2 - 6 * var(--fan-px) -
@@ -984,5 +984,11 @@
     right: calc(
       2 * var(--fan-px) + var(--fan-widget-w) + var(--fan-widget-gap)
     );
+  }
+}
+
+@media (orientation: landscape) and (min-height: 501px) and (max-aspect-ratio: 13/10) {
+  :global(body.fanLandscapeHand) .boardGrid {
+    --fan-side-max: calc(1.2 * var(--side-card-size));
   }
 }
