@@ -44,6 +44,7 @@ export const FAN_CARD_HEIGHT_RATIO = 0.25;
 export const FAN_LANDSCAPE_CARD_HEIGHT_RATIO = 0.35;
 export const FAN_LANDSCAPE_BODY_CLASS = 'fanLandscapeHand';
 export const FAN_HAND_RESERVE_VAR = '--fan-hand-reserve';
+export const FAN_FULLSCREEN_WIDTH_VAR = '--fan-fullscreen-width';
 export const FAN_SIDE_COLUMN_ATTR = 'data-fan-side-column';
 export const FAN_DOCK_CARD_HEIGHT_RATIO = 0.4;
 export const FAN_DOCK_HIDDEN_RATIO = 0.3;

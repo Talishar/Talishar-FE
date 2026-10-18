@@ -89,12 +89,16 @@
 
 body.fanLandscapeHand {
   --fan-rail-width: 50px;
+  --fan-fullscreen-overflow: max(
+    0px,
+    var(--fan-fullscreen-width, 100vw) - 100vw
+  );
 }
 
 body.fanLandscapeHand .centering {
   top: 0;
   left: calc(env(safe-area-inset-left, 0px) + var(--fan-rail-width));
-  right: env(safe-area-inset-right, 0px);
+  right: calc(env(safe-area-inset-right, 0px) - var(--fan-fullscreen-overflow));
 }
 
 body.fanLandscapeHand .gameZone {
