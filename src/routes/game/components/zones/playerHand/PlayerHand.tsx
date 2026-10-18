@@ -72,6 +72,7 @@ import {
   fanHoverIndexAt,
   fanHoverLineY,
   fanHoverScaleFor,
+  fanLandscapeBoardHeight,
   fanScaleFor,
   fanSlotIndexAt,
   fanSpacing
@@ -595,7 +596,9 @@ function PlayerHand() {
 
   const fanGeometry = useMemo<FanGeometry>(() => {
     const cardHeight =
-      height *
+      (isMobileLandscape && isLandscapeDocked
+        ? fanLandscapeBoardHeight(width, height)
+        : height) *
       (!isMobileLandscape
         ? FAN_CARD_HEIGHT_RATIO
         : isLandscapeDocked

@@ -61,3 +61,9 @@
   letter-spacing: 0.02em;
   background-size: 100% 100%, 0 0, auto;
 }
+
+@media (orientation: landscape) and (min-height: 501px) {
+  :global(body.fanLandscapeHand) .actionPointCounter {
+    font-size: calc(12.6 * var(--fan-px));
+  }
+}
