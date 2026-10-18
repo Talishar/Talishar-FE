@@ -202,7 +202,7 @@ body.fanLandscapeHand .gameZone {
   }
 
   body.fanLandscapeHand [class*='_boardGrid_'] {
-    --fan-hand-top: calc(100dvh - 0.28 * 100 * var(--fan-vh) - 4px);
+    --fan-hand-top: calc(100dvh - 0.25 * 0.46 * 100dvh - 4px);
     --fan-mid: 50dvh;
     --fan-pass-height: min(
       1.65 * var(--side-card-size),
