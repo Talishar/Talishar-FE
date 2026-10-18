@@ -56,6 +56,10 @@
   z-index: 401;
 }
 
+:global(body.fanLandscapeHand) :is(.fanStage, .fanCollapseDock) {
+  margin-right: calc(-1 * var(--fan-fullscreen-overflow, 0px));
+}
+
 .handCollapseButton {
   position: absolute;
   top: 0;

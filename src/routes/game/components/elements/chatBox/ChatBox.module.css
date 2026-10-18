@@ -244,6 +244,11 @@
   user-select: text;
 }
 
+:global(body.fanLandscapeHand) .chatBoxMobileContainer {
+  bottom: calc(1dvh + var(--chat-keyboard-inset, 0px));
+  max-height: calc(98dvh - var(--chat-keyboard-inset, 0px));
+}
+
 /* Header bar */
 .chatMobileHeader {
   display: flex;

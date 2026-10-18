@@ -43,6 +43,7 @@ import drawingCardsSound from 'sounds/drawing_cards.wav';
 import { setHandCardRotationHeld } from 'utils/handCardRotation';
 import { useTranslation } from 'react-i18next';
 import { useCookieString } from 'utils/cookieStore';
+import { useFanFullscreenWidth } from 'utils/gameFullscreen';
 import { isMeldCard } from 'constants/meldCards';
 import {
   ENABLE_FANNED_HAND_COOKIE,
@@ -172,6 +173,8 @@ const selectPlayableGraveyardCards = createSelector(
 function PlayerHand() {
   const { t } = useTranslation();
   const [width, height] = useWindowDimensions();
+  const fanFullscreenWidth = useFanFullscreenWidth();
+  const layoutWidth = Math.max(width, fanFullscreenWidth);
   const isMobile = useMediaQuery('(max-width: 1199px)');
   const isPortrait = useMediaQuery('(orientation: portrait)');
   const isMobilePortrait = isMobile && isPortrait;
@@ -386,7 +389,7 @@ function PlayerHand() {
         ? Math.min(...rects.map((rect) => rect.right))
         : rects[0].left;
       const right =
-        window.innerWidth -
+        Math.max(window.innerWidth, fanFullscreenWidth) -
         (showsLandscapeFan
           ? Math.max(...rects.map((rect) => rect.left))
           : rects[0].right);
@@ -407,7 +410,7 @@ function PlayerHand() {
     elements.forEach((element) => ro.observe(element));
     if (dockStart) ro.observe(dockStart);
     return () => ro.disconnect();
-  }, [isMobile, showsLandscapeFan, width, height]);
+  }, [isMobile, showsLandscapeFan, width, height, fanFullscreenWidth]);
 
   const [unhoverAnchorY, setUnhoverAnchorY] = useState<number | null>(null);
 
@@ -604,7 +607,7 @@ function PlayerHand() {
     return {
       stageWidth: Math.max(
         0,
-        width - (stageBounds?.left ?? 0) - (stageBounds?.right ?? 0)
+        layoutWidth - (stageBounds?.left ?? 0) - (stageBounds?.right ?? 0)
       ),
       cardHeight,
       cardWidth: (cardHeight * 2) / 3,
@@ -617,7 +620,7 @@ function PlayerHand() {
         : FAN_OPEN_HIDDEN_RATIO
     };
   }, [
-    width,
+    layoutWidth,
     height,
     stageBounds?.left,
     stageBounds?.right,
