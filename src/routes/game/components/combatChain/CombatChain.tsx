@@ -22,6 +22,7 @@ import useOpponentPresencePrompt from '../../../../hooks/useOpponentPresenceProm
 import { useMediaQuery } from '../../../../hooks/useMediaQuery';
 import usePlayerPromptOwner from '../elements/playerPrompt/usePlayerPromptOwner';
 import { useShowsLandscapeFan } from '../zones/playerHand/useShowsLandscapeFan';
+import { FAN_WINDOW_VH } from '../zones/playerHand/fanLayout';
 
 const STORAGE_KEY = 'combatChainPosition';
 const PORTRAIT_STORAGE_KEY = 'combatChainPositionPortrait';
@@ -70,7 +71,10 @@ export default function CombatChain() {
   }
   const storedOffset = storedOffsetRef.current;
   const yOffsetMV = useMotionValue(storedOffset);
-  const yOffsetDvh = useTransform(yOffsetMV, (value) => `${value}dvh`);
+  const yOffsetDvh = useTransform(
+    yOffsetMV,
+    (value) => `calc(${value} * ${FAN_WINDOW_VH})`
+  );
   const dragStartYRef = React.useRef(0);
   const dragStartOffsetRef = React.useRef(storedOffset);
   const currentDragOffsetRef = React.useRef(storedOffset);

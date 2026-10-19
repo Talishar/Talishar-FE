@@ -224,7 +224,7 @@
 :global(body.fanLandscapeHand) .attDefRow {
   height: 1.1em;
   font-size: min(4.5vh - 1px, 19px);
-  font-size: min(4.5dvh - 1px, 19px);
+  font-size: min(4.5 * var(--fan-window-vh) - 1px, 19px);
 }
 
 :global(body.fanLandscapeHand) :is(.attDiv, .defDiv) {

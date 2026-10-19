@@ -128,12 +128,12 @@
 
 :global(body.fanLandscapeHand) .chainLinksSpacer {
   height: min(6vh, 27px);
-  height: min(6dvh, 27px);
+  height: min(6 * var(--fan-window-vh), 27px);
 }
 
 :global(body.fanLandscapeHand) .chainLinksRow {
   height: min(6vh, 27px);
-  height: min(6dvh, 27px);
+  height: min(6 * var(--fan-window-vh), 27px);
   overflow-x: auto;
   overflow-y: hidden;
   flex-shrink: 0;
@@ -142,14 +142,14 @@
 
 :global(body.fanLandscapeHand) .chainLinkSymbol {
   height: min(4.5vh, 20px);
-  height: min(4.5dvh, 20px);
+  height: min(4.5 * var(--fan-window-vh), 20px);
 }
 
 :global(body.fanLandscapeHand) .breakChain {
   width: min(6vh, 27px);
   height: min(6vh, 27px);
-  width: min(6dvh, 27px);
-  height: min(6dvh, 27px);
+  width: min(6 * var(--fan-window-vh), 27px);
+  height: min(6 * var(--fan-window-vh), 27px);
 }
 
 :global(body.fanLandscapeHand) :is(.chainLinkSummary, .breakChain) {

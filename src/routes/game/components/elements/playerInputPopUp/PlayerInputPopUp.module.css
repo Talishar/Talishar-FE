@@ -26,6 +26,13 @@
   max-height: calc(99dvh - var(--popup-bottom-clearance));
 }
 
+:global(body.fanLandscapeHand) .optionsContainer.cardListPopup {
+  --popup-bottom-clearance: calc(
+    3.5 * var(--fan-window-vh) + 0.5 * var(--card-size)
+  );
+  max-height: calc(99 * var(--fan-window-vh) - var(--popup-bottom-clearance));
+}
+
 .cardListPopup.hasSubmit {
   --card-list-footer: 4.5rem;
 }
@@ -407,6 +414,10 @@
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
 }
 
+:global(body.fanLandscapeHand) .copyCountBadge {
+  font-size: max(12px, calc(1.8 * var(--fan-window-vh)));
+}
+
 .hasPromptCards.contentContainer {
   row-gap: 0.4em;
 }
@@ -702,6 +713,10 @@
   font-size: min(calc(1.5dvh - 2px), calc(0.9dvw - 1px));
 }
 
+:global(body.fanLandscapeHand) .grabbyHandle {
+  font-size: min(calc(1.5 * var(--fan-window-vh) - 2px), calc(0.9dvw - 1px));
+}
+
 @media (orientation: portrait) {
   .grabbyHandle {
     font-size: calc(1.5vw + 3px);
@@ -715,6 +730,10 @@
     font-size: calc(1.5vh - 2px);
     font-size: calc(1.5dvh - 2px);
     width: max(calc(var(--card-size) * 0.32), 24px);
+  }
+
+  :global(body.fanLandscapeHand) .grabbyHandle {
+    font-size: calc(1.5 * var(--fan-window-vh) - 2px);
   }
 }
 

@@ -19,6 +19,10 @@
   user-select: none;
 }
 
+:global(body.fanLandscapeHand) .passTurnDisplay {
+  font-size: clamp(0.8rem, calc(1.7 * var(--fan-window-vh)), 1.05rem);
+}
+
 .spectatorDisplay {
   font-size: clamp(1.05rem, 2.4dvh, 1.55rem);
   line-height: 1;
@@ -184,6 +188,10 @@
   width: max-content;
 }
 
+:global(body.fanLandscapeHand) .modal {
+  left: calc(50% - 5 * var(--fan-window-vh));
+}
+
 .container {
   background: var(--near-black, #0d0d0f);
   border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.18));
@@ -286,6 +294,10 @@
   .passTurnDisplay {
     font-size: clamp(0.55rem, 2.8dvh, 1.05rem);
     letter-spacing: 0.06em;
+  }
+
+  :global(body.fanLandscapeHand) .passTurnDisplay {
+    font-size: clamp(0.55rem, calc(2.8 * var(--fan-window-vh)), 1.05rem);
   }
 
   .spectatorDisplay {

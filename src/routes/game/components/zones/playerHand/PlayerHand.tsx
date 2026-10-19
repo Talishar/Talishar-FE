@@ -65,6 +65,7 @@ import {
   FAN_REST_HIDDEN_RATIO,
   FAN_SIDE_COLUMN_ATTR,
   FAN_UNHOVER_ANCHOR_ATTR,
+  FAN_WINDOW_VH_VAR,
   FanGeometry,
   FanSlot,
   applyFanHover,
@@ -651,11 +652,16 @@ function PlayerHand() {
     const body = document.body;
     body.classList.add(FAN_LANDSCAPE_BODY_CLASS);
     body.style.setProperty(FAN_HAND_RESERVE_VAR, `${handReserve}px`);
+    document.documentElement.style.setProperty(
+      FAN_WINDOW_VH_VAR,
+      `${height / 100}px`
+    );
     return () => {
       body.classList.remove(FAN_LANDSCAPE_BODY_CLASS);
       body.style.removeProperty(FAN_HAND_RESERVE_VAR);
+      document.documentElement.style.removeProperty(FAN_WINDOW_VH_VAR);
     };
-  }, [showsLandscapeFan, handReserve]);
+  }, [showsLandscapeFan, handReserve, height]);
 
   const isDragActive = dragPlayState !== 'idle' || dragStartOrderIds !== null;
   const activeHoveredCardId = isDragActive ? null : hoveredCardId;

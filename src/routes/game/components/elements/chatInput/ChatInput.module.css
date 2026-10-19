@@ -117,6 +117,10 @@
   min-width: 200px;
 }
 
+:global(body.fanLandscapeHand) .popOver {
+  max-height: calc(70 * var(--fan-window-vh));
+}
+
 .popOver button:last-child {
   margin-bottom: 0;
 }

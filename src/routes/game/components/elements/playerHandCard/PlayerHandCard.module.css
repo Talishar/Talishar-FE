@@ -53,6 +53,10 @@
   transition: box-shadow 0.25s, border-color 0.25s;
 }
 
+:global(body.fanLandscapeHand) .img {
+  border-radius: calc(1 * var(--fan-window-vh));
+}
+
 .fanSlot {
   position: absolute;
   left: 50%;
@@ -168,6 +172,12 @@
   align-items: flex-start;
 }
 
+:global(body.fanLandscapeHand) .iconCol {
+  top: calc(3 * var(--fan-window-vh));
+  left: calc(-1.25 * var(--fan-window-vh));
+  height: calc(10 * var(--fan-window-vh));
+}
+
 .icon {
   background-color: var(--near-black);
   border: var(--theme-border) solid 1px;
@@ -249,4 +259,10 @@
   pointer-events: none;
   white-space: nowrap;
   box-shadow: 0 0 8px rgba(255, 255, 0, 0.8);
+}
+
+:global(body.fanLandscapeHand) .label {
+  bottom: calc(3 * var(--fan-window-vh));
+  left: calc(3 * var(--fan-window-vh));
+  right: calc(3 * var(--fan-window-vh));
 }

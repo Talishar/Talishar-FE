@@ -19,6 +19,10 @@
   cursor: pointer;
 }
 
+:global(body.fanLandscapeHand) .card {
+  min-width: calc(12 * var(--fan-window-vh) * var(--card-scale));
+}
+
 .card:hover,
 .card:focus {
   background: transparent;
@@ -64,6 +68,11 @@
   --movement-glow: rgba(var(--theme-on-surface-rgb), 0.12);
   --movement-card-size: clamp(5.5rem, 13dvh, 7.75rem);
   gap: 0.35rem;
+  min-width: var(--movement-card-size);
+}
+
+:global(body.fanLandscapeHand) .movementEvent {
+  --movement-card-size: clamp(5.5rem, calc(13 * var(--fan-window-vh)), 7.75rem);
   min-width: var(--movement-card-size);
 }
 
@@ -131,6 +140,10 @@
 
 @media (hover: none) and (pointer: coarse) {
   .movementEvent {
+    --movement-card-size: clamp(7rem, 30vw, 7.75rem);
+  }
+
+  :global(body.fanLandscapeHand) .movementEvent {
     --movement-card-size: clamp(7rem, 30vw, 7.75rem);
   }
 }
@@ -267,6 +280,10 @@
   animation: addBotDeckSlide 1s ease-in-out;
 }
 
+:global(body.fanLandscapeHand) .addBotDeckCard {
+  min-width: calc(12 * var(--fan-window-vh) * var(--card-scale));
+}
+
 @keyframes addBotDeckSlide {
   0% {
     opacity: 0;
@@ -292,6 +309,10 @@
   border: none;
   background: transparent;
   width: max-content;
+}
+
+:global(body.fanLandscapeHand) .modal {
+  left: calc(50% - 5 * var(--fan-window-vh));
 }
 
 .container {

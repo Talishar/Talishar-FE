@@ -12,11 +12,19 @@
   height: 100vh;
 }
 
+:global(body.fanLandscapeHand) .leftColumn {
+  width: min(calc(10 * var(--fan-window-vh)), 6dvw);
+}
+
 /* Near-square landscape (fold phones): don't cap by vw */
 @media (orientation: landscape) and (max-aspect-ratio: 3/2) {
   .leftColumn {
     width: 10vh;
     width: 10dvh;
+  }
+
+  :global(body.fanLandscapeHand) .leftColumn {
+    width: calc(10 * var(--fan-window-vh));
   }
 }
 

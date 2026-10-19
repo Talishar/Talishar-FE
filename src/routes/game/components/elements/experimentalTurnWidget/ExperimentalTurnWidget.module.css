@@ -54,6 +54,10 @@
   border-width: 2px;
 }
 
+:global(body.fanLandscapeHand) .passTurnDisplay {
+  border-radius: calc(0.5 * var(--fan-window-vh));
+}
+
 .passTurnActive {
   background-image: var(--green-gradient);
   cursor: pointer;
@@ -101,6 +105,10 @@
   border: none;
   background: transparent;
   width: max-content;
+}
+
+:global(body.fanLandscapeHand) .modal {
+  left: calc(50% - 5 * var(--fan-window-vh));
 }
 
 .container {

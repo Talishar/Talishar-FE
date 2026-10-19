@@ -245,8 +245,9 @@
 }
 
 :global(body.fanLandscapeHand) .chatBoxMobileContainer {
-  bottom: calc(1dvh + var(--chat-keyboard-inset, 0px));
-  max-height: calc(98dvh - var(--chat-keyboard-inset, 0px));
+  bottom: calc(1 * var(--fan-window-vh) + var(--chat-keyboard-inset, 0px));
+  right: calc(2 * var(--fan-window-vh));
+  max-height: calc(98 * var(--fan-window-vh) - var(--chat-keyboard-inset, 0px));
 }
 
 /* Header bar */
@@ -330,6 +331,14 @@
   gap: 1px;
   --game-log-accent: #9edfff;
   --game-log-critical: #ffd27a;
+}
+
+:global(body.fanLandscapeHand) .chatMobileScrollArea {
+  height: clamp(
+    calc(28 * var(--fan-window-vh)),
+    calc(38 * var(--fan-window-vh)),
+    calc(48 * var(--fan-window-vh))
+  );
 }
 
 .loadEarlierButton {

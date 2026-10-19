@@ -84,5 +84,5 @@
 
 :global(body.fanLandscapeHand) .reorderCards {
   height: 15vh;
-  height: 15dvh;
+  height: calc(15 * var(--fan-window-vh));
 }

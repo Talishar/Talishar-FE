@@ -206,7 +206,10 @@
 
 :global(body.fanLandscapeHand) .menuList {
   --rail-slots: 8;
-  --rail-btn: min(42px, calc((100dvh + 4px) / var(--rail-slots) - 4px));
+  --rail-btn: min(
+    42px,
+    calc((100 * var(--fan-window-vh) + 4px) / var(--rail-slots) - 4px)
+  );
   flex-direction: column;
   align-items: center;
   gap: 4px;
@@ -308,7 +311,8 @@
   :global(body.fanLandscapeHand) .menuList {
     --rail-btn: min(
       42 * var(--fan-px),
-      (100dvh + 4 * var(--fan-px)) / var(--rail-slots) - 4 * var(--fan-px)
+      (100 * var(--fan-window-vh) + 4 * var(--fan-px)) / var(--rail-slots) - 4 *
+        var(--fan-px)
     );
     gap: calc(4 * var(--fan-px));
   }
