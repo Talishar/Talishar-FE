@@ -176,7 +176,7 @@ body.fanLandscapeHand .gameZone {
 @media (orientation: landscape) and (min-height: 501px) {
   body.fanLandscapeHand {
     --fan-unit: min(
-      100dvh / 6.2177,
+      100 * var(--fan-window-vh) / 6.2177,
       (
           100dvw - env(safe-area-inset-left, 0px) -
             env(safe-area-inset-right, 0px)
@@ -202,8 +202,11 @@ body.fanLandscapeHand .gameZone {
   }
 
   body.fanLandscapeHand [class*='_boardGrid_'] {
-    --fan-hand-top: calc(100dvh - 0.25 * 0.46 * 100dvh - 4px);
-    --fan-mid: 50dvh;
+    --fan-hand-top: calc(
+      100 * var(--fan-window-vh) - 0.25 * 0.46 * 100 * var(--fan-window-vh) -
+        4px
+    );
+    --fan-mid: calc(50 * var(--fan-window-vh));
     --fan-pass-height: min(
       1.65 * var(--side-card-size),
       2 *
@@ -227,7 +230,7 @@ body.fanLandscapeHand .gameZone {
       var(--fan-opp-hero-top) - var(--fan-arsenal-size) - var(--board-gap)
     );
     --fan-hero-lift: calc(
-      100dvh - var(--fan-arsenal-size) - var(--board-gap) -
+      100 * var(--fan-window-vh) - var(--fan-arsenal-size) - var(--board-gap) -
         var(--hero-group-size) - var(--fan-own-hero-top)
     ) !important;
     --fan-pass-top: calc(

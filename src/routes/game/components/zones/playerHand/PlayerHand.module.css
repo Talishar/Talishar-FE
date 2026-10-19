@@ -54,6 +54,8 @@
 
 :global(body.fanLandscapeHand) .fanCollapseDock {
   z-index: 401;
+  bottom: calc(2 * var(--fan-window-vh));
+  height: calc(3 * var(--fan-window-vh));
 }
 
 :global(body.fanLandscapeHand) :is(.fanStage, .fanCollapseDock) {

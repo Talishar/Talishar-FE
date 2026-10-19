@@ -259,12 +259,22 @@
   width: 2.8dvh;
 }
 
+:global(body.fanLandscapeHand) .icon {
+  height: calc(2.8 * var(--fan-window-vh));
+  width: calc(2.8 * var(--fan-window-vh));
+}
+
 @media (max-width: 1200px) {
   .icon {
     height: 1.8rem;
     width: 1.8rem;
     height: 1.8dvh;
     width: 1.8dvh;
+  }
+
+  :global(body.fanLandscapeHand) .icon {
+    height: calc(1.8 * var(--fan-window-vh));
+    width: calc(1.8 * var(--fan-window-vh));
   }
 }
 

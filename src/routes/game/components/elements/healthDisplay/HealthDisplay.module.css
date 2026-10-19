@@ -19,6 +19,10 @@
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.8);
 }
 
+:global(body.fanLandscapeHand) .health {
+  font-size: clamp(1rem, calc(2.3 * var(--fan-window-vh)), 1.5rem);
+}
+
 @media (orientation: portrait) {
   .health {
     font-size: clamp(0.95rem, 4.2vw, 1.4rem);
@@ -48,6 +52,10 @@
 @media (orientation: landscape) and (max-height: 600px) {
   .health {
     font-size: clamp(0.6rem, 3.6dvh, 1.5rem);
+  }
+
+  :global(body.fanLandscapeHand) .health {
+    font-size: clamp(0.6rem, calc(3.6 * var(--fan-window-vh)), 1.5rem);
   }
 }
 

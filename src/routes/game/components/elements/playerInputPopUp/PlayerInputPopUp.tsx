@@ -34,6 +34,7 @@ import { Card } from 'features/Card';
 import { subcardOverflowStyle } from './subcardOverflow';
 import { popupCardDisplayOrder, stackDeckCopies } from './sortPopupCards';
 import { withinGroupLimits } from './groupLimits';
+import { FAN_WINDOW_VH } from '../../zones/playerHand/fanLayout';
 
 type MultiChooseOption = NonNullable<
   NonNullable<GameState['playerInputPopUp']>['multiChooseText']
@@ -219,7 +220,7 @@ export default function PlayerInputPopUp() {
   const topStyle = useTransform(
     [yOffsetMV, popupHeightMV],
     ([offset, height]: number[]) =>
-      `max(1dvh, calc(min(${basePctRef.current}, 100dvh - ${height}px - var(--popup-bottom-clearance, 2dvh)) + ${offset}dvh))`
+      `max(${FAN_WINDOW_VH}, calc(min(${basePctRef.current}, 100 * ${FAN_WINDOW_VH} - ${height}px - var(--popup-bottom-clearance, 2 * ${FAN_WINDOW_VH})) + ${offset} * ${FAN_WINDOW_VH}))`
   );
   const popupId = inputPopUp?.popup?.id || '';
   const popupCards = inputPopUp?.popup?.cards;

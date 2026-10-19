@@ -78,6 +78,10 @@
   touch-action: none;
 }
 
+:global(body.fanLandscapeHand) .grabbyHandle {
+  font-size: min(calc(1.5 * var(--fan-window-vh) - 2px), calc(0.9dvw - 1px));
+}
+
 @media (orientation: portrait) {
   .grabbyHandle {
     font-size: calc(1.5vw + 3px);
@@ -91,6 +95,10 @@
     font-size: calc(1.5vh - 2px);
     font-size: calc(1.5dvh - 2px);
     width: max(calc(var(--card-size) * 0.20), 24px);
+  }
+
+  :global(body.fanLandscapeHand) .grabbyHandle {
+    font-size: calc(1.5 * var(--fan-window-vh) - 2px);
   }
 }
 
@@ -188,6 +196,10 @@
     border-radius: 8px;
   }
 
+  :global(body.fanLandscapeHand) .combatChain {
+    --chain-padding: clamp(3px, calc(1 * var(--fan-window-vh)), 6px);
+  }
+
   .chainCentre {
     min-width: 0;
     padding-left: 4px;
@@ -219,8 +231,10 @@
 
 :global(body.fanLandscapeHand) .combatChain {
   --card-size: min(
-    (var(--fan-pass-height) - 13px - 1.1 * min(4.5dvh - 1px, 19px) - 0.5vh) /
-      (1 + 0.18 * var(--chain-subcard-count)),
+    (
+        var(--fan-pass-height) - 13px - 1.1 *
+          min(4.5 * var(--fan-window-vh) - 1px, 19px) - 0.5vh
+      ) / (1 + 0.18 * var(--chain-subcard-count)),
     9dvw
   );
   height: auto;
@@ -304,6 +318,10 @@
   z-index: 20;
   pointer-events: auto;
   text-align: center;
+}
+
+:global(body.fanLandscapeHand) .standalonePlayerPrompt {
+  top: calc(50% + 0.5 * var(--fan-window-vh));
 }
 
 .standalonePlayerPrompt .content {

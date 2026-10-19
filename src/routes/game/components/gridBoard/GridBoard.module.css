@@ -480,7 +480,7 @@
 }
 
 :global(body.fanLandscapeHand) {
-  --board-gap: 0.5dvh;
+  --board-gap: calc(0.5 * var(--fan-window-vh));
   --board-edge: 0px;
   --board-width: calc(
     100dvw - var(--fan-rail-width) - env(safe-area-inset-left, 0px) -
@@ -488,15 +488,15 @@
   );
   --board-bottom-base: calc(var(--fan-hand-reserve) - var(--board-gap));
   --side-card-base: min(
-    (100dvh - 7 * var(--board-gap)) / 6,
+    (100 * var(--fan-window-vh) - 7 * var(--board-gap)) / 6,
     (var(--board-width) - 2 * var(--board-edge) - 10 * var(--board-gap)) / 7
   );
   --side-card-size: calc(var(--side-card-base) * min(var(--card-scale), 1));
   --card-size: calc(
     min(
         (
-            100dvh - var(--board-bottom-base) - 10px - 10 * var(--board-gap) -
-              2.5 * var(--side-card-base)
+            100 * var(--fan-window-vh) - var(--board-bottom-base) - 10px - 10 *
+              var(--board-gap) - 2.5 * var(--side-card-base)
           ) / 3,
         var(--side-card-base)
       ) * min(var(--card-scale), 1)
@@ -525,7 +525,7 @@
     (var(--board-bottom-row) + var(--side-row-step)) / 2
   );
   --chain-height: calc(
-    100dvh - var(--card-size) - 3 * var(--side-card-size) -
+    100 * var(--fan-window-vh) - var(--card-size) - 3 * var(--side-card-size) -
       var(--board-bottom-row) - 5 * var(--board-gap)
   );
   --hero-group-size: calc(1.25 * var(--side-card-size));
@@ -537,8 +537,8 @@
   );
   --fan-arsenal-size: calc(
     (
-        100dvh - var(--chain-height) - 2 * var(--hero-group-size) - 4 *
-          var(--board-gap)
+        100 * var(--fan-window-vh) - var(--chain-height) - 2 *
+          var(--hero-group-size) - 4 * var(--board-gap)
       ) / 2
   );
   --fan-hero-lift: 0px;
@@ -835,11 +835,11 @@
     --fan-side-w: max(
       var(--side-card-size),
       min(
-        var(--fan-side-max, 100dvh),
-        (100dvh - 7 * var(--board-gap)) / 6,
+        var(--fan-side-max, calc(100 * var(--fan-window-vh))),
+        (100 * var(--fan-window-vh) - 7 * var(--board-gap)) / 6,
         (
-            50dvh - var(--fan-pass-height) / 2 - 6 * var(--fan-px) -
-              var(--board-gap)
+            50 * var(--fan-window-vh) - var(--fan-pass-height) / 2 - 6 *
+              var(--fan-px) - var(--board-gap)
           ) / 2,
         (
             var(--board-width) - 3.8 * var(--side-card-size) - 10 *

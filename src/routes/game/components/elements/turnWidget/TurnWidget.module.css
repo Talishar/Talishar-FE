@@ -29,6 +29,11 @@
   font-family: 'Rajdhani', 'Segoe UI', 'Inter', system-ui, sans-serif;
 }
 
+:global(body.fanLandscapeHand) .widget {
+  gap: calc(0.8 * var(--fan-window-vh));
+  padding: calc(0.9 * var(--fan-window-vh));
+}
+
 .widget > * {
   min-width: 0;
 }
@@ -75,6 +80,11 @@
     width: 100%;
     gap: 0.5dvh;
     padding: 0.5dvh;
+  }
+
+  :global(body.fanLandscapeHand) .widget {
+    gap: calc(0.5 * var(--fan-window-vh));
+    padding: calc(0.5 * var(--fan-window-vh));
   }
 
   .apBadge {
