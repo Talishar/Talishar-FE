@@ -202,7 +202,20 @@ const Header = () => {
                   <ul className={styles.userDropdownMenu}>
                     <li>
                       <Link to="/user" onClick={closeUserDropdown}>
-                        <BsPersonFill /> <span>{t('HEADER.PROFILE')}</span>
+                        <BsPersonFill />
+                        <span>
+                          {t('HEADER.PROFILE')}
+                          {pendingRequestCount > 0 && (
+                            <strong
+                              className={`${styles.notificationBadge} ${styles.inlineNotificationBadge}`}
+                              aria-label={t('HEADER.PENDING_REQUESTS', {
+                                count: pendingRequestCount
+                              })}
+                            >
+                              {pendingRequestCount}
+                            </strong>
+                          )}
+                        </span>
                       </Link>
                     </li>
                     <li>
@@ -312,14 +325,14 @@ const Header = () => {
                 <Link to="/user" onClick={closeMobileMenu}>
                   <BsPersonFill /> <span>{t('HEADER.PROFILE')}</span>
                   {pendingRequestCount > 0 && (
-                    <span
-                      className={styles.notificationBadge}
+                    <strong
+                      className={`${styles.notificationBadge} ${styles.inlineNotificationBadge}`}
                       aria-label={t('HEADER.PENDING_REQUESTS', {
                         count: pendingRequestCount
                       })}
                     >
                       {pendingRequestCount}
-                    </span>
+                    </strong>
                   )}
                 </Link>
               ) : (

@@ -773,18 +773,32 @@
   position: absolute;
   top: 5px;
   right: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  place-items: center;
   min-width: 20px;
   height: 20px;
   padding: 0 6px;
+  box-sizing: border-box;
   background-color: var(--theme-primary, #d4af37);
   color: var(--theme-primary-inverse);
   border-radius: 10px;
   font-size: 11px;
   font-weight: 700;
+  line-height: 1;
+  text-align: center;
   box-shadow: 0 2px 8px color-mix(in srgb, var(--theme-primary) 50%, transparent);
+}
+
+.inlineNotificationBadge {
+  position: static;
+  display: inline-grid;
+  margin-left: 8px;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+.mobileMenu .inlineNotificationBadge {
+  margin-left: auto;
 }
 
 // Ensure Toaster appears above the navbar

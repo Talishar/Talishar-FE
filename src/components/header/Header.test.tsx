@@ -1,5 +1,5 @@
 import React from 'react';
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { vi } from 'vitest';
 import Header from './Header';
@@ -12,11 +12,14 @@ const state = vi.hoisted(() => ({
     currentUserName: null as string | null,
     currentDisplayName: null,
     logOut: vi.fn()
-  }
+  },
+  pendingRequests: [] as { requesterUserId: number }[]
 }));
 vi.mock('hooks/useAuth', () => ({ default: () => state.auth }));
 vi.mock('features/api/apiSlice', () => ({
-  useGetPendingRequestsQuery: () => ({})
+  useGetPendingRequestsQuery: () => ({
+    data: { requests: state.pendingRequests }
+  })
 }));
 vi.mock('components/header/LanguageSelector', () => ({ default: () => null }));
 vi.mock('components/footer/Footer', () => ({ default: () => null }));
@@ -34,6 +37,7 @@ beforeEach(() => {
   state.auth.isLoggedIn = false;
   state.auth.isLoading = true;
   state.auth.currentUserName = null;
+  state.pendingRequests = [];
 });
 afterEach(() => cleanup());
 
@@ -77,4 +81,26 @@ it('removes cached account links when the session has expired', () => {
   expect(
     screen.queryByRole('link', { name: 'Mastery' })
   ).not.toBeInTheDocument();
+});
+
+it('shows pending friend requests on the Profile menu entry', () => {
+  state.auth.isLoggedIn = true;
+  state.auth.isLoading = false;
+  state.auth.currentUserName = 'Player';
+  state.pendingRequests = [
+    { requesterUserId: 1 },
+    { requesterUserId: 2 }
+  ];
+
+  render(
+    <MemoryRouter>
+      <Header />
+    </MemoryRouter>
+  );
+
+  fireEvent.click(screen.getByRole('button', { name: /Player/ }));
+  const profileLink = screen.getByRole('link', { name: /Profile/ });
+  expect(
+    within(profileLink).getByLabelText('2 pending friend requests')
+  ).toHaveTextContent('2');
 });
