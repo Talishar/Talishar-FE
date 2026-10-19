@@ -64,6 +64,7 @@ import {
   FAN_OPEN_HIDDEN_RATIO,
   FAN_REST_HIDDEN_RATIO,
   FAN_SIDE_COLUMN_ATTR,
+  FAN_SPREAD_DURATION_S,
   FAN_UNHOVER_ANCHOR_ATTR,
   FAN_WINDOW_VH_VAR,
   FanGeometry,
@@ -76,7 +77,8 @@ import {
   fanHoverScaleFor,
   fanScaleFor,
   fanSlotIndexAt,
-  fanSpacing
+  fanSpacing,
+  fanSpreadEase
 } from './fanLayout';
 import { useFanHover } from './useFanHover';
 import { useLandscapeHandMode } from './useLandscapeHandMode';
@@ -94,6 +96,11 @@ const FAN_DOCK_TRANSITION = {
   type: 'tween' as const,
   duration: FAN_DOCK_DURATION_S,
   ease: fanDockEase
+};
+const FAN_SPREAD_TRANSITION = {
+  type: 'tween' as const,
+  duration: FAN_SPREAD_DURATION_S,
+  ease: fanSpreadEase
 };
 const TOUCH_TAP_CLICK_WAIT_MS = 300;
 
@@ -231,10 +238,12 @@ function PlayerHand() {
   const {
     hoveredCardId,
     landingCardIds,
+    slowLandingCardIds,
+    hoverSwitched,
     handleHoverChange,
     clearHover,
     getHoveredCardId
-  } = useFanHover();
+  } = useFanHover(!isMobile && !isPitching);
   const lastFanSlotsRef = useRef(new Map<string, FanSlot>());
   const fanStageRef = useRef<HTMLDivElement>(null);
   const { isHandDocked, openHand, isSingleCardArsenal } = useLandscapeHandMode(
@@ -566,6 +575,12 @@ function PlayerHand() {
     playableTheirBanishedCards,
     playableGraveyardCards
   ]);
+  const fanIdsKey = fanItems.map((item) => item.id).join('|');
+  const fanIdsRenderRef = useRef(fanIdsKey);
+  const isFanRelayout = fanIdsRenderRef.current !== fanIdsKey;
+  useEffect(() => {
+    fanIdsRenderRef.current = fanIdsKey;
+  }, [fanIdsKey]);
 
   const stageBounds =
     gameZoneBounds && isLandscapeDocked
@@ -618,6 +633,7 @@ function PlayerHand() {
       cardWidth: (cardHeight * 2) / 3,
       mobile: isMobilePortrait,
       hoverLift: isMobile,
+      spread: !isMobile,
       hiddenRatio: !isPhoneLandscape
         ? undefined
         : isLandscapeDocked
@@ -666,6 +682,15 @@ function PlayerHand() {
   const isDragActive = dragPlayState !== 'idle' || dragStartOrderIds !== null;
   const activeHoveredCardId = isDragActive ? null : hoveredCardId;
   const isFanLifted = activeHoveredCardId !== null;
+  const isSpreadActive =
+    !!fanGeometry.spread &&
+    !isPitching &&
+    !isFanRelayout &&
+    (activeHoveredCardId !== null || landingCardIds.length > 0);
+  const fanSlotTransition =
+    dockTransition ?? (isSpreadActive ? FAN_SPREAD_TRANSITION : undefined);
+  const isFanSwitchActive =
+    !!fanGeometry.spread && !isPitching && !isFanRelayout;
 
   useEffect(() => {
     if (isDragActive) clearHover();
@@ -864,9 +889,12 @@ function PlayerHand() {
       if (!pointer) return;
       const next = fanItems.filter((item) => item.id !== cardId);
       const target = hoverTargetAt(pointer.x, pointer.y, next, null);
-      if (target !== null) handleHoverChange(target, true);
+      if (target !== null) {
+        clearHover();
+        handleHoverChange(target, true);
+      }
     },
-    [fanItems, hoverTargetAt, handleHoverChange]
+    [fanItems, hoverTargetAt, handleHoverChange, clearHover]
   );
 
   const handZoneIndexAt = (x: number, y: number): number | null => {
@@ -1480,7 +1508,13 @@ function PlayerHand() {
                 showHoverKeywords={showHoverKeywords}
                 fanHoverScale={fanHoverScale}
                 fanCardHeight={fanGeometry.cardHeight}
-                fanTransition={dockTransition}
+                fanTransition={fanSlotTransition}
+                isFanSwitch={
+                  isFanSwitchActive &&
+                  (id === activeHoveredCardId
+                    ? hoverSwitched
+                    : slowLandingCardIds.includes(id))
+                }
                 isFanLifted={isFanLifted}
                 onHoverChange={handleHoverChange}
                 onFanPointerEnter={handleFanPointerEnter}
@@ -1505,7 +1539,13 @@ function PlayerHand() {
                 showHoverKeywords={showHoverKeywords}
                 fanHoverScale={fanHoverScale}
                 fanCardHeight={fanGeometry.cardHeight}
-                fanTransition={dockTransition}
+                fanTransition={fanSlotTransition}
+                isFanSwitch={
+                  isFanSwitchActive &&
+                  (id === activeHoveredCardId
+                    ? hoverSwitched
+                    : slowLandingCardIds.includes(id))
+                }
                 isFanLifted={isFanLifted}
                 onHoverChange={handleHoverChange}
                 onFanPointerEnter={handleFanPointerEnter}
