@@ -63,15 +63,15 @@ import {
   FAN_DROP_DURATION_S,
   FAN_HOVER_SCALE,
   FAN_LANDING_Z_INDEX,
+  FAN_MOUSE_RISE_DURATION_S,
+  FAN_MOUSE_SHRINK_DURATION_S,
+  FAN_MOUSE_SINK_DURATION_S,
   FAN_RISE_DURATION_S,
-  FAN_SWITCH_LAND_DURATION_S,
-  FAN_SWITCH_RISE_DURATION_S,
   FAN_UNHOVER_DURATION_S,
   FanSlot,
   fanDropEase,
+  fanMouseSinkEase,
   fanRiseEase,
-  fanSpreadEase,
-  fanSwitchRiseEase,
   fanUnhoverEase
 } from '../../zones/playerHand/fanLayout';
 import {
@@ -108,20 +108,30 @@ const FAN_RISE_TRANSITION = {
   duration: FAN_RISE_DURATION_S,
   ease: fanRiseEase
 };
-const FAN_SWITCH_RISE_TRANSITION = {
-  type: 'tween' as const,
-  duration: FAN_SWITCH_RISE_DURATION_S,
-  ease: fanSwitchRiseEase
-};
-const FAN_SWITCH_LAND_TRANSITION = {
-  type: 'tween' as const,
-  duration: FAN_SWITCH_LAND_DURATION_S,
-  ease: fanSpreadEase
-};
 const FAN_UNHOVER_TRANSITION = {
   type: 'tween' as const,
   duration: FAN_UNHOVER_DURATION_S,
   ease: fanUnhoverEase
+};
+const FAN_MOUSE_RISE_TRANSITION = {
+  type: 'tween' as const,
+  duration: FAN_MOUSE_RISE_DURATION_S,
+  ease: fanRiseEase
+};
+const FAN_MOUSE_SHRINK_TRANSITION = {
+  type: 'tween' as const,
+  duration: FAN_MOUSE_SHRINK_DURATION_S,
+  ease: fanMouseSinkEase
+};
+const FAN_MOUSE_SINK_TRANSITION = {
+  type: 'tween' as const,
+  duration: FAN_MOUSE_SINK_DURATION_S,
+  ease: fanMouseSinkEase,
+  width: FAN_MOUSE_SHRINK_TRANSITION,
+  height: FAN_MOUSE_SHRINK_TRANSITION,
+  marginLeft: FAN_MOUSE_SHRINK_TRANSITION,
+  rotate: FAN_MOUSE_SHRINK_TRANSITION,
+  scale: FAN_MOUSE_SHRINK_TRANSITION
 };
 const FAN_RETURN_TRANSITION = {
   type: 'tween' as const,
@@ -176,7 +186,7 @@ export interface HandCard {
   fanHoverScale?: number;
   fanCardHeight?: number;
   fanTransition?: Transition;
-  isFanSwitch?: boolean;
+  isFanMouse?: boolean;
   isFanLifted?: boolean;
   onHoverChange?: (cardId: string, hovering: boolean) => void;
   onFanPointerEnter?: (clientX: number, clientY: number) => void;
@@ -214,7 +224,7 @@ export const PlayerHandCard = React.memo(
     fanHoverScale = FAN_HOVER_SCALE,
     fanCardHeight,
     fanTransition,
-    isFanSwitch = false,
+    isFanMouse = false,
     isFanLifted = false,
     onHoverChange,
     onFanPointerEnter,
@@ -982,16 +992,19 @@ export const PlayerHandCard = React.memo(
           animate={fanTarget}
           transformTemplate={isHovered ? undefined : withoutGpuLayer}
           style={{
-            zIndex: isLanding ? FAN_LANDING_Z_INDEX : fanSlot?.zIndex ?? zIndex
+            zIndex:
+              isLanding && !isFanMouse
+                ? FAN_LANDING_Z_INDEX
+                : fanSlot?.zIndex ?? zIndex
           }}
           transition={
             isHovered
-              ? isFanSwitch
-                ? FAN_SWITCH_RISE_TRANSITION
+              ? isFanMouse
+                ? FAN_MOUSE_RISE_TRANSITION
                 : FAN_RISE_TRANSITION
               : isLanding
-              ? isFanSwitch
-                ? FAN_SWITCH_LAND_TRANSITION
+              ? isFanMouse
+                ? FAN_MOUSE_SINK_TRANSITION
                 : FAN_UNHOVER_TRANSITION
               : fanTransition ?? FAN_DROP_TRANSITION
           }
