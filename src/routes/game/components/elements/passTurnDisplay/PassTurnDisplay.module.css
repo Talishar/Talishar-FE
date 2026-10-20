@@ -19,6 +19,10 @@
   user-select: none;
 }
 
+:global(body.fanLandscapeHand) .passTurnDisplay {
+  font-size: clamp(0.8rem, calc(1.7 * var(--fan-window-vh)), 1.05rem);
+}
+
 .spectatorDisplay {
   font-size: clamp(1.05rem, 2.4dvh, 1.55rem);
   line-height: 1;
@@ -184,6 +188,10 @@
   width: max-content;
 }
 
+:global(body.fanLandscapeHand) .modal {
+  left: calc(50% - 5 * var(--fan-window-vh));
+}
+
 .container {
   background: var(--near-black, #0d0d0f);
   border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.18));
@@ -288,6 +296,10 @@
     letter-spacing: 0.06em;
   }
 
+  :global(body.fanLandscapeHand) .passTurnDisplay {
+    font-size: clamp(0.55rem, calc(2.8 * var(--fan-window-vh)), 1.05rem);
+  }
+
   .spectatorDisplay {
     font-size: clamp(0.6rem, 3.4dvh, 1.45rem);
     padding: 0.3em 0;
@@ -381,4 +393,17 @@
   border: 1px solid rgba(140, 230, 160, 0.35);
   font-size: 16px;
   letter-spacing: 0.06em;
+}
+
+@media (orientation: landscape) and (min-height: 501px) {
+  :global(body.fanLandscapeHand) .passTurnDisplay,
+  :global(body.fanLandscapeHand) .passTurnDisplayActive {
+    width: 100%;
+    border-radius: calc(14 * var(--fan-px));
+    font-size: calc(14.4 * var(--fan-px));
+  }
+
+  :global(body.fanLandscapeHand) .passTurnDisplayActive {
+    font-size: calc(16 * var(--fan-px));
+  }
 }

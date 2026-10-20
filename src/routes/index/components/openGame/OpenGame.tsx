@@ -10,6 +10,7 @@ import { requestRustPanelAttention } from 'hooks/useRustCounters';
 import { GAME_FORMAT } from '../../../../appConstants';
 import { useTranslation } from 'react-i18next';
 import { CLASS_OF_RATHE } from '../filter/constants';
+import ConfirmModal from 'components/ConfirmModal/ConfirmModal';
 
 const decodeHtmlEntities = (text: string): string => {
   const doc = new DOMParser().parseFromString(text, 'text/html');
@@ -47,6 +48,11 @@ const BROKEN_KEY_MAP: Record<string, string> = {
   'MENU.CREATE_GAME.GAME_DESCRIPTIONS.NOT_SPECIFIC_CLASS':
     'MENU.CREATE_GAME.GAME_DESCRIPTIONS.NOT_SPECIFIC_HERO'
 };
+
+const LEARNING_DESCRIPTION_KEYS = new Set([
+  'MENU.CREATE_GAME.GAME_DESCRIPTIONS.NEW_HERO',
+  'MENU.CREATE_GAME.GAME_DESCRIPTIONS.NEW_PLAYER'
+]);
 
 const CLASS_NAMES = new Set(CLASS_OF_RATHE.map((c) => c.label));
 
@@ -88,13 +94,8 @@ const OpenGame = ({
         )?.imageUrl
       : undefined) ?? UNKNOWN_HERO_URL;
   const isRustLocked = !!quickJoinCtx?.isRustLocked;
-  const handleJoin = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (isRustLocked) {
-      requestRustPanelAttention();
-      return;
-    }
+  const [showLearningWarning, setShowLearningWarning] = useState(false);
+  const joinGame = () => {
     if (hasDeckReady && quickJoinCtx) {
       quickJoinCtx.quickJoin(entry.gameName);
     } else {
@@ -118,6 +119,29 @@ const OpenGame = ({
     }
     return map;
   }, [i18n]);
+
+  const isLearningGame = useMemo(() => {
+    if (!entry.description) return false;
+    const decoded = decodeHtmlEntities(entry.description);
+    const key = decoded.startsWith('MENU.CREATE_GAME.GAME_DESCRIPTIONS.')
+      ? BROKEN_KEY_MAP[decoded] ?? decoded
+      : DESCRIPTION_KEY_MAP[decoded] ?? reverseDescriptionMap[decoded];
+    return LEARNING_DESCRIPTION_KEYS.has(key);
+  }, [entry.description, reverseDescriptionMap]);
+
+  const handleJoin = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (isRustLocked) {
+      requestRustPanelAttention();
+      return;
+    }
+    if (isLearningGame) {
+      setShowLearningWarning(true);
+      return;
+    }
+    joinGame();
+  };
 
   const translateDescription = (description: string | undefined): string => {
     if (!description) return description ?? '';
@@ -247,6 +271,20 @@ const OpenGame = ({
           <span className={styles.joinLabel}>{t('OPEN_GAME.JOIN')}</span>
         </a>
       </div>
+      <ConfirmModal
+        isOpen={showLearningWarning}
+        title={t('OPEN_GAME.LEARNING_WARNING_TITLE')}
+        confirmLabel={t('OPEN_GAME.LEARNING_WARNING_CONFIRM')}
+        cancelLabel={t('OPEN_GAME.LEARNING_WARNING_CANCEL')}
+        onCancel={() => setShowLearningWarning(false)}
+        onConfirm={() => {
+          setShowLearningWarning(false);
+          joinGame();
+        }}
+      >
+        <p>{t('OPEN_GAME.LEARNING_WARNING_BODY')}</p>
+        <p>{t('OPEN_GAME.LEARNING_WARNING_ASK')}</p>
+      </ConfirmModal>
     </div>
   );
 };

@@ -7,6 +7,7 @@ import {
 } from 'features/api/apiSlice';
 import styles from './ChatInput.module.css';
 import { GiChatBubble } from 'react-icons/gi';
+import { MdOutlineSpeakerNotesOff } from 'react-icons/md';
 import classNames from 'classnames';
 import { shallowEqual } from 'react-redux';
 import { getGameInfo, submitButton } from 'features/game/GameSlice';
@@ -45,6 +46,10 @@ export const ChatInput = ({ usePrimary = false }: { usePrimary?: boolean }) => {
   const [chatInput, setChatInput] = useState('');
   const [submitChat] = useSubmitChatMutation();
   const [reportTyping] = useReportTypingMutation();
+  const [submitLobbyInput] = useSubmitLobbyInputMutation();
+  const dispatch = useAppDispatch();
+  const location = useLocation();
+  const { t } = useTranslation();
   // true while we've sent a "typing" signal and haven't sent "stopped" yet
   const isTypingRef = useRef<boolean>(false);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -128,10 +133,36 @@ export const ChatInput = ({ usePrimary = false }: { usePrimary?: boolean }) => {
     }
   };
 
+  const handleDisableChat = async () => {
+    sendStopTyping();
+    try {
+      if (location.pathname.includes('/lobby/')) {
+        await submitLobbyInput({
+          gameName: gameID,
+          playerID: playerID,
+          authKey: authKey,
+          action: 'Disable Chat'
+        });
+      } else {
+        await dispatch(
+          submitButton({ button: { mode: PROCESS_INPUT.DISABLE_CHAT } })
+        );
+      }
+    } catch (err) {
+      console.warn(err);
+      toast.error('There has been an error!');
+    }
+  };
+
   if (chatEnabled) {
+    const isPlayer = playerID === 1 || playerID === 2;
     return (
       <div className={styles.chatInputContainer}>
-        <div className={styles.flexBox}>
+        <div
+          className={classNames(styles.flexBox, {
+            [styles.flexBoxWithOff]: isPlayer
+          })}
+        >
           <input
             className={styles.chatInput}
             value={chatInput}
@@ -156,6 +187,23 @@ export const ChatInput = ({ usePrimary = false }: { usePrimary?: boolean }) => {
               <GiChatBubble />
             </div>
           </button>
+          {isPlayer && (
+            <button
+              className={classNames(styles.buttonDiv, {
+                secondary: !usePrimary
+              })}
+              onClick={(e) => {
+                e.preventDefault();
+                handleDisableChat();
+              }}
+              title={t('CHAT.TURN_OFF')}
+              aria-label={t('CHAT.TURN_OFF')}
+            >
+              <div className={styles.icon}>
+                <MdOutlineSpeakerNotesOff />
+              </div>
+            </button>
+          )}
         </div>
       </div>
     );

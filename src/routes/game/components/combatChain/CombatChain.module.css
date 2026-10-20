@@ -78,6 +78,10 @@
   touch-action: none;
 }
 
+:global(body.fanLandscapeHand) .grabbyHandle {
+  font-size: min(calc(1.5 * var(--fan-window-vh) - 2px), calc(0.9dvw - 1px));
+}
+
 @media (orientation: portrait) {
   .grabbyHandle {
     font-size: calc(1.5vw + 3px);
@@ -91,6 +95,10 @@
     font-size: calc(1.5vh - 2px);
     font-size: calc(1.5dvh - 2px);
     width: max(calc(var(--card-size) * 0.20), 24px);
+  }
+
+  :global(body.fanLandscapeHand) .grabbyHandle {
+    font-size: calc(1.5 * var(--fan-window-vh) - 2px);
   }
 }
 
@@ -188,6 +196,10 @@
     border-radius: 8px;
   }
 
+  :global(body.fanLandscapeHand) .combatChain {
+    --chain-padding: clamp(3px, calc(1 * var(--fan-window-vh)), 6px);
+  }
+
   .chainCentre {
     min-width: 0;
     padding-left: 4px;
@@ -219,8 +231,10 @@
 
 :global(body.fanLandscapeHand) .combatChain {
   --card-size: min(
-    (var(--chain-height) - 2 * var(--chain-padding) - min(6dvh, 27px) - 0.5vh) /
-      (1 + 0.18 * var(--chain-subcard-count)),
+    (
+        var(--fan-pass-height) - 13px - 1.1 *
+          min(4.5 * var(--fan-window-vh) - 1px, 19px) - 0.5vh
+      ) / (1 + 0.18 * var(--chain-subcard-count)),
     9dvw
   );
   height: auto;
@@ -228,15 +242,28 @@
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto auto;
   grid-template-rows:
-    calc(
-      var(--chain-height) - 2 * var(--chain-padding) -
-        var(--chain-subcard-space) - 2px
-    )
+    calc(var(--fan-pass-height) - var(--chain-subcard-space) - 13px)
     var(--chain-subcard-space)
     auto;
   width: 100%;
   max-width: none;
-  padding-bottom: var(--chain-padding);
+  padding-top: 3px;
+  padding-bottom: 8px;
+  margin: var(--fan-pass-top) 0 0;
+  flex-shrink: 0;
+}
+
+@media (max-height: 500px) {
+  :global(body.fanLandscapeHand) .combatChain {
+    margin-top: calc(
+      var(--fan-pass-top) +
+        min(
+          0px,
+          2 * var(--side-card-size) - var(--hero-group-size) + var(--board-gap) +
+            14px - var(--fan-arsenal-size) - var(--fan-hero-lift)
+        )
+    );
+  }
 }
 
 .icon {
@@ -291,6 +318,10 @@
   z-index: 20;
   pointer-events: auto;
   text-align: center;
+}
+
+:global(body.fanLandscapeHand) .standalonePlayerPrompt {
+  top: calc(50% + 0.5 * var(--fan-window-vh));
 }
 
 .standalonePlayerPrompt .content {
@@ -355,7 +386,8 @@
 :global(body.fanLandscapeHand) .grabbyHandle {
   grid-column: 4;
   grid-row: 1 / -1;
-  margin-bottom: calc(-1 * var(--chain-padding));
+  margin-top: -3px;
+  margin-bottom: -8px;
 }
 
 :global(body.fanLandscapeHand) .combatChain > .promptButtons {
@@ -366,7 +398,8 @@
   flex-direction: column;
   justify-content: center;
   gap: 4px;
-  width: 9.4em;
+  width: auto;
+  min-width: 9.4em;
   margin-left: 4px;
   padding: 0 4px 0 6px;
   border-left: 1px solid var(--theme-border, rgba(255, 255, 255, 0.18));
@@ -378,9 +411,22 @@
   margin: 0;
   padding: 5px 4px;
   line-height: 1.15;
-  white-space: normal;
+  white-space: nowrap;
   text-align: center;
-  text-wrap: balance;
+}
+
+@media (max-width: 720px) {
+  :global(body.fanLandscapeHand) .combatChain > .promptButtons {
+    width: 9.4em;
+    min-width: 0;
+    gap: 3px;
+  }
+
+  :global(body.fanLandscapeHand) .combatChain > .promptButtons .buttonDiv {
+    padding: 3px 4px;
+    white-space: normal;
+    text-wrap: balance;
+  }
 }
 
 .promptTopBar {
@@ -390,7 +436,13 @@
 :global(body.fanLandscapeHand) .promptTopBar {
   position: fixed;
   top: 0;
-  left: 50%;
+  left: calc(
+    50% +
+      (
+        var(--fan-rail-width) + env(safe-area-inset-left, 0px) -
+          env(safe-area-inset-right, 0px)
+      ) / 2
+  );
   transform: translateX(-50%);
   z-index: 50;
   display: block;
@@ -413,4 +465,89 @@
 
 :global(body.fanLandscapeHand) .combatChain > div:not([class]):empty {
   display: none;
+}
+
+@media (orientation: landscape) and (min-height: 501px) {
+  :global(body.fanLandscapeHand) .combatChain {
+    --chain-defenders: 0;
+  }
+
+  :global(body.fanLandscapeHand)
+    .combatChain:has([class*='_reactions_'] > :nth-child(1)) {
+    --chain-defenders: 1;
+  }
+
+  :global(body.fanLandscapeHand)
+    .combatChain:has([class*='_reactions_'] > :nth-child(2)) {
+    --chain-defenders: 2;
+  }
+
+  :global(body.fanLandscapeHand)
+    .combatChain:has([class*='_reactions_'] > :nth-child(3)) {
+    --chain-defenders: 3;
+  }
+
+  :global(body.fanLandscapeHand)
+    .combatChain:has([class*='_reactions_'] > :nth-child(4)) {
+    --chain-defenders: 4;
+  }
+
+  :global(body.fanLandscapeHand)
+    .combatChain:has([class*='_reactions_'] > :nth-child(5)) {
+    --chain-defenders: 5;
+  }
+
+  :global(body.fanLandscapeHand)
+    .combatChain:has([class*='_reactions_'] > :nth-child(6)) {
+    --chain-defenders: 6;
+  }
+
+  :global(body.fanLandscapeHand) .combatChain {
+    --card-size: min(
+      (
+          var(--fan-pass-height) - 13 * var(--fan-px) - 1.1 *
+            min(4.5 * var(--fan-vh) - var(--fan-px), 19 * var(--fan-px)) - 0.5 *
+            var(--fan-vh)
+        ) / (1 + 0.18 * var(--chain-subcard-count)),
+      9 * var(--fan-vw),
+      (var(--chain-room) - 2 * var(--fan-vh)) / (1 + var(--chain-defenders)),
+      (var(--chain-room) - 1.3 * var(--side-card-size)) /
+        max(var(--chain-defenders), 0.001)
+    );
+    --chain-room: calc(
+      100cqw - 24px - 13 * var(--fan-px) - var(--chain-defenders) *
+        (3 * var(--fan-px) + var(--fan-vh))
+    );
+    grid-template-rows:
+      calc(
+        var(--fan-pass-height) - var(--chain-subcard-space) - 13 * var(--fan-px)
+      )
+      var(--chain-subcard-space)
+      auto;
+    padding: calc(3 * var(--fan-px)) var(--fan-vh) calc(8 * var(--fan-px));
+    border-radius: calc(8 * var(--fan-px));
+  }
+
+  :global(body.fanLandscapeHand) .grabbyHandle {
+    margin-top: calc(-3 * var(--fan-px));
+    margin-bottom: calc(-8 * var(--fan-px));
+  }
+
+  :global(body.fanLandscapeHand) .combatChain > .promptButtons {
+    gap: calc(4 * var(--fan-px));
+    margin-left: calc(4 * var(--fan-px));
+    padding: 0 calc(4 * var(--fan-px)) 0 calc(6 * var(--fan-px));
+  }
+
+  :global(body.fanLandscapeHand) .combatChain > .promptButtons .buttonDiv {
+    padding: calc(5 * var(--fan-px)) calc(4 * var(--fan-px));
+  }
+
+  :global(body.fanLandscapeHand) .promptTopBar {
+    max-width: calc(100dvw - 2 * var(--fan-rail-width) - 16 * var(--fan-px));
+    padding: calc(4 * var(--fan-px)) calc(12 * var(--fan-px))
+      calc(5 * var(--fan-px));
+    border-radius: 0 0 calc(8 * var(--fan-px)) calc(8 * var(--fan-px));
+    font-size: calc(11 * var(--fan-px));
+  }
 }

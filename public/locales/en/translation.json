@@ -137,6 +137,36 @@
     "LOADING": "Loading…",
     "SEARCH": "Search"
   },
+  "BLOCK_MODAL": {
+    "CONFIRM": "Block",
+    "INTRO": "You will no longer see their games in the lobby. If you like, tell the moderators why. This is optional.",
+    "PRIVACY": "Only moderators can read this. The player is not told.",
+    "TITLE": "Block {{username}}?"
+  },
+  "BLOCK_REPORTS": {
+    "ACTIONS": "Actions",
+    "BANNED": "Banned",
+    "BLOCKS": "Blocks",
+    "BY": "by {{username}}",
+    "DESCRIPTION": "Players blocked by several people, with the reasons and notes they left. Sorted by unkind and insulting reports first.",
+    "EMPTY": "No players match these filters.",
+    "LAST_BLOCKED": "Last blocked",
+    "LAST_DAYS_one": "Last {{count}} day",
+    "LAST_DAYS_other": "Last {{count}} days",
+    "LOADING": "Loading block reports...",
+    "LOAD_FAILED": "Could not load block reports.",
+    "MIN_BLOCKS": "Blocked by at least",
+    "NOTES_one": "{{count}} note",
+    "NOTES_other": "{{count}} notes",
+    "PERIOD": "Period",
+    "PLAYER": "Player",
+    "TITLE": "Block reports",
+    "WARN": "Warn",
+    "WARN_DEFAULT_MESSAGE": "Several players have recently reported or blocked you for unkind behaviour. Please keep chat and play respectful. Further reports may lead to a ban.",
+    "WARN_FAILED": "Could not send the warning",
+    "WARN_PROMPT": "Warning message for {{username}} (shown as a system message for 7 days):",
+    "WARN_SENT": "Warning sent to {{username}}"
+  },
   "CARD_KEYWORD_STRIP": {
     "MORE_one": "+1 more - see Keywords guide",
     "MORE_other": "+{{count}} more - see Keywords guide",
@@ -172,6 +202,7 @@
     "LOG": "Log",
     "QUICK_CHAT": "Quick Chat",
     "RECENT": "⭐ Recent",
+    "TURN_OFF": "Turn chat off",
     "TYPING": "Opponent is typing…"
   },
   "COMBAT_CHAIN": {
@@ -1221,6 +1252,16 @@
     "SKIP_ATTACKS_TOOLTIP": "Skip All Attacks (resets at the start of each turn)",
     "TOGGLE_MAIN_MENU": "Toggle main menu"
   },
+  "MODERATION_NOTE": {
+    "CANCEL": "Cancel",
+    "NOTE_LABEL": "Note for moderators (optional)",
+    "NOTE_PLACEHOLDER": "What happened?",
+    "REASON_INSULTING": "Insults or hate",
+    "REASON_LABEL": "Reason (optional)",
+    "REASON_OTHER": "Other",
+    "REASON_RUDE": "Unkind or rude",
+    "REASON_UNSPORTING": "Unsporting play"
+  },
   "MOD_PAGE": {
     "ADS_BIDDERS_DESCRIPTION": "Header bidding partners. Ads won by Google or direct demand are not listed here.",
     "ADS_BIDDERS_TITLE": "Bidders",
@@ -1630,6 +1671,7 @@
     "TAB_MESSAGES": "Messages",
     "TAB_MODERATION": "Moderation",
     "TAB_PUZZLES": "Puzzles",
+    "TAB_REPORTS": "Reports",
     "TAB_TOOLS": "Tools",
     "TAB_USERNAMES": "Usernames",
     "UNKNOWN_ERROR": "Unknown error",
@@ -1649,7 +1691,12 @@
   "OPEN_GAME": {
     "JOIN": "Join",
     "JOIN_DECK_NOT_READY": "Select a deck in the panel above to join instantly",
-    "JOIN_DECK_READY": "Join using your pre-configured deck"
+    "JOIN_DECK_READY": "Join using your pre-configured deck",
+    "LEARNING_WARNING_ASK": "Are you happy to play a patient, friendly game with them?",
+    "LEARNING_WARNING_BODY": "The player who made this game is learning a new hero or learning the game itself. They may be new to Flesh and Blood, and their turns may take longer than usual.",
+    "LEARNING_WARNING_CANCEL": "Go back",
+    "LEARNING_WARNING_CONFIRM": "Yes, join",
+    "LEARNING_WARNING_TITLE": "This player is learning"
   },
   "OPPONENT_INACTIVE": {
     "CLAIM_VICTORY": "Claim Victory",
@@ -1789,6 +1836,22 @@
     "NOTE_PLACEHOLDER": "Add a personal note about this opponent…",
     "OPEN_PLAYER_OPTIONS": "Open player options",
     "SAVE_NOTE": "Save Note"
+  },
+  "PLAYER_REPORTS": {
+    "DATE": "Date",
+    "DESCRIPTION": "Reports sent from the in-game menu, newest first. The game log for each one is saved in BugReports under the game number.",
+    "EMPTY": "No reports in this period.",
+    "GAME": "Game",
+    "GUEST": "Guest",
+    "LOADING": "Loading reports...",
+    "LOAD_FAILED": "Could not load reports.",
+    "NOTE": "Note",
+    "REASON": "Reason",
+    "REPORTED": "Reported player",
+    "REPORTER": "Reported by",
+    "REPORT_COUNT_one": "{{count}} report",
+    "REPORT_COUNT_other": "{{count}} reports",
+    "TITLE": "Player reports"
   },
   "PREMIUM_PAGE": {
     "BECOME_SUPPORTER": "Become a Supporter",
@@ -2084,6 +2147,13 @@
       "THEIRARS": "their arsenal",
       "THEIRBANISH": "their banish"
     }
+  },
+  "REPORT_MODAL": {
+    "CONFIRM": "Send report",
+    "FAILED": "Your note could not be sent, but the game log was still saved.",
+    "INTRO": "The log of this game will be saved for the moderators. Adding a reason or a note is optional, but it helps them.",
+    "PRIVACY": "Only moderators can read your note.",
+    "TITLE": "Report your opponent"
   },
   "RUST_COUNTER_PANEL": {
     "DEV_MODE_NOTE": "Development mode: rust counters do not block games.",

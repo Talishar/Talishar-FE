@@ -3,7 +3,8 @@ import React, {
   useState,
   useMemo,
   useEffect,
-  useCallback
+  useCallback,
+  useId
 } from 'react';
 import {
   canQueueHandPlay,
@@ -12,7 +13,10 @@ import {
   queueHandPlay,
   removeHandCard
 } from 'features/game/GameSlice';
-import { clearCardPreview } from '../cardPortal/cardPreviewStore';
+import {
+  clearCardPreview,
+  useOwnsCardPreview
+} from '../cardPortal/cardPreviewStore';
 import {
   GiTombstone,
   GiFluffySwirl,
@@ -59,10 +63,14 @@ import {
   FAN_DROP_DURATION_S,
   FAN_HOVER_SCALE,
   FAN_LANDING_Z_INDEX,
+  FAN_MOUSE_RISE_DURATION_S,
+  FAN_MOUSE_SHRINK_DURATION_S,
+  FAN_MOUSE_SINK_DURATION_S,
   FAN_RISE_DURATION_S,
   FAN_UNHOVER_DURATION_S,
   FanSlot,
   fanDropEase,
+  fanMouseSinkEase,
   fanRiseEase,
   fanUnhoverEase
 } from '../../zones/playerHand/fanLayout';
@@ -105,6 +113,26 @@ const FAN_UNHOVER_TRANSITION = {
   duration: FAN_UNHOVER_DURATION_S,
   ease: fanUnhoverEase
 };
+const FAN_MOUSE_RISE_TRANSITION = {
+  type: 'tween' as const,
+  duration: FAN_MOUSE_RISE_DURATION_S,
+  ease: fanRiseEase
+};
+const FAN_MOUSE_SHRINK_TRANSITION = {
+  type: 'tween' as const,
+  duration: FAN_MOUSE_SHRINK_DURATION_S,
+  ease: fanMouseSinkEase
+};
+const FAN_MOUSE_SINK_TRANSITION = {
+  type: 'tween' as const,
+  duration: FAN_MOUSE_SINK_DURATION_S,
+  ease: fanMouseSinkEase,
+  width: FAN_MOUSE_SHRINK_TRANSITION,
+  height: FAN_MOUSE_SHRINK_TRANSITION,
+  marginLeft: FAN_MOUSE_SHRINK_TRANSITION,
+  rotate: FAN_MOUSE_SHRINK_TRANSITION,
+  scale: FAN_MOUSE_SHRINK_TRANSITION
+};
 const FAN_RETURN_TRANSITION = {
   type: 'tween' as const,
   duration: 0.2,
@@ -144,7 +172,6 @@ export interface HandCard {
   enableLayoutAnimation?: boolean;
   shuffleRevision?: number;
   scrollBlockedRef?: React.RefObject<boolean>;
-  onRotate?: (cardId: string, direction: 1 | -1) => void;
   onRotationHoldStart?: (cardId: string) => void;
   onRotationHoldEnd?: () => void;
   onHandReorderDragStart?: () => void;
@@ -159,6 +186,7 @@ export interface HandCard {
   fanHoverScale?: number;
   fanCardHeight?: number;
   fanTransition?: Transition;
+  isFanMouse?: boolean;
   isFanLifted?: boolean;
   onHoverChange?: (cardId: string, hovering: boolean) => void;
   onFanPointerEnter?: (clientX: number, clientY: number) => void;
@@ -182,7 +210,6 @@ export const PlayerHandCard = React.memo(
     enableLayoutAnimation,
     shuffleRevision = 0,
     scrollBlockedRef,
-    onRotate,
     onRotationHoldStart,
     onRotationHoldEnd,
     onHandReorderDragStart,
@@ -197,6 +224,7 @@ export const PlayerHandCard = React.memo(
     fanHoverScale = FAN_HOVER_SCALE,
     fanCardHeight,
     fanTransition,
+    isFanMouse = false,
     isFanLifted = false,
     onHoverChange,
     onFanPointerEnter,
@@ -425,6 +453,9 @@ export const PlayerHandCard = React.memo(
         }),
       [card?.borderColor]
     );
+
+    const previewOwner = useId();
+    const ownsPreview = useOwnsCardPreview(previewOwner);
 
     if (card === undefined) {
       return <div className={styles.handCard}></div>;
@@ -703,17 +734,7 @@ export const PlayerHandCard = React.memo(
     const handleContextMenu = (event: React.MouseEvent<HTMLDivElement>) => {
       event.preventDefault();
       event.stopPropagation();
-
-      if (isDragging) {
-        cancelDrag();
-        return;
-      }
-
-      const nativePointerType = (event.nativeEvent as PointerEvent).pointerType;
-      const pointerType = nativePointerType || lastPointerTypeRef.current;
-      if (pointerType !== 'mouse') return;
-
-      onRotate?.(cardId ?? '', event.shiftKey ? -1 : 1);
+      if (isDragging) cancelDrag();
     };
 
     const startPressTimer = () => {
@@ -858,6 +879,8 @@ export const PlayerHandCard = React.memo(
             hoverPreviewDelayMs={150}
             disableHoverPreview={isFanned}
             onTouchPreview={isFanned ? liftFromTouch : undefined}
+            previewOnRightClick={isFanned}
+            previewOwner={previewOwner}
           >
             <CardImage
               src={src}
@@ -969,18 +992,25 @@ export const PlayerHandCard = React.memo(
           animate={fanTarget}
           transformTemplate={isHovered ? undefined : withoutGpuLayer}
           style={{
-            zIndex: isLanding ? FAN_LANDING_Z_INDEX : fanSlot?.zIndex ?? zIndex
+            zIndex:
+              isLanding && !isFanMouse
+                ? FAN_LANDING_Z_INDEX
+                : fanSlot?.zIndex ?? zIndex
           }}
           transition={
             isHovered
-              ? FAN_RISE_TRANSITION
+              ? isFanMouse
+                ? FAN_MOUSE_RISE_TRANSITION
+                : FAN_RISE_TRANSITION
               : isLanding
-              ? FAN_UNHOVER_TRANSITION
+              ? isFanMouse
+                ? FAN_MOUSE_SINK_TRANSITION
+                : FAN_UNHOVER_TRANSITION
               : fanTransition ?? FAN_DROP_TRANSITION
           }
         >
           <MotionConfig reducedMotion="user">{content}</MotionConfig>
-          {isHovered && showHoverKeywords && !isDragging && (
+          {isHovered && showHoverKeywords && !isDragging && !ownsPreview && (
             <div
               className={classNames(styles.fanKeywords, {
                 [styles.fanKeywordsLeft]: keywordsLeft

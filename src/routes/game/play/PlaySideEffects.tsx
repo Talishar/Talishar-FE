@@ -13,9 +13,12 @@ import {
   SKIP_DR_WINDOW
 } from 'features/options/constants';
 import {
+  getFanFullscreenWidth,
   isGameFullscreenTurnedOff,
-  resetGameFullscreenTurnedOff
+  resetGameFullscreenTurnedOff,
+  setFanFullscreenWidth
 } from 'utils/gameFullscreen';
+import { FAN_FULLSCREEN_WIDTH_VAR } from '../components/zones/playerHand/fanLayout';
 import { useShowsLandscapeFan } from '../components/zones/playerHand/useShowsLandscapeFan';
 import { useReplayPlayback } from './ReplayPlaybackContext';
 
@@ -171,6 +174,37 @@ export const LandscapeFanFullscreen = () => {
     document.addEventListener('pointerup', enterFullscreen, true);
     return () =>
       document.removeEventListener('pointerup', enterFullscreen, true);
+  }, [showsLandscapeFan]);
+
+  useEffect(() => {
+    if (!showsLandscapeFan) return;
+    const bodyStyle = document.body.style;
+    const clear = () => {
+      setFanFullscreenWidth(0);
+      bodyStyle.removeProperty(FAN_FULLSCREEN_WIDTH_VAR);
+    };
+    const update = () => {
+      if (
+        !document.fullscreenElement ||
+        window.screen.orientation?.type !== 'landscape-primary'
+      ) {
+        clear();
+        return;
+      }
+      if (window.innerWidth <= getFanFullscreenWidth()) return;
+      setFanFullscreenWidth(window.innerWidth);
+      bodyStyle.setProperty(FAN_FULLSCREEN_WIDTH_VAR, `${window.innerWidth}px`);
+    };
+    update();
+    document.addEventListener('fullscreenchange', update);
+    window.addEventListener('resize', update);
+    window.screen.orientation?.addEventListener('change', update);
+    return () => {
+      document.removeEventListener('fullscreenchange', update);
+      window.removeEventListener('resize', update);
+      window.screen.orientation?.removeEventListener('change', update);
+      clear();
+    };
   }, [showsLandscapeFan]);
 
   return null;

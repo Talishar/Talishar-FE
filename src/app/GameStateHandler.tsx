@@ -33,6 +33,7 @@ const IS_MOCK_GAME =
   new URLSearchParams(window.location.search).get('mockGame') === '1';
 
 const MAX_RETRIES = 5;
+const SPECTATOR_HIDDEN_GRACE_MS = 10000;
 
 interface SeatLookup {
   gameID: number;
@@ -70,6 +71,7 @@ const GameStateHandler = ({
   const retryCountRef = useRef(0);
   const lastEventTimeRef = useRef(Date.now());
   const retryTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const streamPausedRef = useRef(false);
   const navigateTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [forceRetry, setForceRetry] = useState(0);
   const [seatLookup, setSeatLookup] = useState<SeatLookup | null>(null);
@@ -300,6 +302,57 @@ const GameStateHandler = ({
     };
   }, [dispatch]);
 
+  useEffect(() => {
+    if (IS_MOCK_GAME || gameInfo.playerID !== 3) return;
+
+    let hiddenTimer: ReturnType<typeof setTimeout> | null = null;
+
+    const pauseStream = () => {
+      hiddenTimer = null;
+      const source = sourceRef.current;
+      const stopped = source
+        ? source.readyState === EventSource.CLOSED
+        : retryTimerRef.current === null && gameOverRef.current;
+      if (stopped) return;
+      streamPausedRef.current = true;
+      if (retryTimerRef.current !== null) {
+        clearTimeout(retryTimerRef.current);
+        retryTimerRef.current = null;
+      }
+      if (sourceRef.current) {
+        sourceRef.current.close();
+        sourceRef.current = null;
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        if (!streamPausedRef.current && hiddenTimer === null) {
+          hiddenTimer = setTimeout(pauseStream, SPECTATOR_HIDDEN_GRACE_MS);
+        }
+        return;
+      }
+      if (hiddenTimer !== null) {
+        clearTimeout(hiddenTimer);
+        hiddenTimer = null;
+      }
+      if (!streamPausedRef.current) return;
+      streamPausedRef.current = false;
+      retryCountRef.current = 0;
+      lastEventTimeRef.current = Date.now();
+      setForceRetry((prev) => prev + 1);
+    };
+
+    handleVisibilityChange();
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      if (hiddenTimer !== null) clearTimeout(hiddenTimer);
+      streamPausedRef.current = false;
+    };
+  }, [gameInfo.playerID]);
+
   // SSE connection to game server
   useEffect(() => {
     if (IS_MOCK_GAME) return;
@@ -346,6 +399,7 @@ const GameStateHandler = ({
 
     // Small delay to ensure the page is ready before connecting
     const connectionTimeout = setTimeout(() => {
+      if (streamPausedRef.current) return;
       try {
         const source = new EventSource(
           `${BACKEND_URL}GetUpdateSSE.php?gameName=${currentGameID}&playerID=${currentPlayerID}&authKey=${currentAuthKey}&logDelta=1`,
@@ -545,7 +599,7 @@ const GameStateHandler = ({
     }, 100);
 
     const stalenessWatchdog = setInterval(() => {
-      if (gameOverRef.current) return;
+      if (gameOverRef.current || streamPausedRef.current) return;
       if (Date.now() - lastEventTimeRef.current > 45000) {
         lastEventTimeRef.current = Date.now();
         setForceRetry((prev) => prev + 1);

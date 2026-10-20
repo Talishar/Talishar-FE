@@ -22,9 +22,11 @@ import useOpponentPresencePrompt from '../../../../hooks/useOpponentPresenceProm
 import { useMediaQuery } from '../../../../hooks/useMediaQuery';
 import usePlayerPromptOwner from '../elements/playerPrompt/usePlayerPromptOwner';
 import { useShowsLandscapeFan } from '../zones/playerHand/useShowsLandscapeFan';
+import { FAN_WINDOW_VH } from '../zones/playerHand/fanLayout';
 
 const STORAGE_KEY = 'combatChainPosition';
 const PORTRAIT_STORAGE_KEY = 'combatChainPositionPortrait';
+const FAN_LANDSCAPE_STORAGE_KEY = 'combatChainPositionFanLandscape';
 const MAX_Y_OFFSET = 30;
 const MIN_Y_OFFSET = -35;
 const KEYBOARD_Y_STEP = 2;
@@ -51,10 +53,16 @@ export default function CombatChain() {
   const isMobileLandscape = useMediaQuery(
     '(orientation: landscape) and (max-width: 1199px)'
   );
-  const defaultOffset = isMobileLandscape
-    ? MOBILE_LANDSCAPE_DEFAULT_Y_OFFSET
-    : 0;
-  const storageKey = isPortrait ? PORTRAIT_STORAGE_KEY : STORAGE_KEY;
+  const showsLandscapeFan = useShowsLandscapeFan();
+  const defaultOffset =
+    isMobileLandscape && !showsLandscapeFan
+      ? MOBILE_LANDSCAPE_DEFAULT_Y_OFFSET
+      : 0;
+  const storageKey = isPortrait
+    ? PORTRAIT_STORAGE_KEY
+    : showsLandscapeFan
+    ? FAN_LANDSCAPE_STORAGE_KEY
+    : STORAGE_KEY;
   const storageKeyRef = React.useRef(storageKey);
   storageKeyRef.current = storageKey;
   const storedOffsetRef = React.useRef<number | null>(null);
@@ -63,7 +71,10 @@ export default function CombatChain() {
   }
   const storedOffset = storedOffsetRef.current;
   const yOffsetMV = useMotionValue(storedOffset);
-  const yOffsetDvh = useTransform(yOffsetMV, (value) => `${value}dvh`);
+  const yOffsetDvh = useTransform(
+    yOffsetMV,
+    (value) => `calc(${value} * ${FAN_WINDOW_VH})`
+  );
   const dragStartYRef = React.useRef(0);
   const dragStartOffsetRef = React.useRef(storedOffset);
   const currentDragOffsetRef = React.useRef(storedOffset);
@@ -74,7 +85,6 @@ export default function CombatChain() {
   const [isDragging, setIsDragging] = React.useState(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
   const promptOwner = usePlayerPromptOwner();
-  const showsLandscapeFan = useShowsLandscapeFan();
   const visibleSubCards = attackSubcards?.some(Boolean) ? 1 : 0;
 
   const persistOffset = (offset: number) => {

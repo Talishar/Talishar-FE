@@ -114,7 +114,15 @@ import {
   UsernamesModerationResponse,
   BanOffensiveUsernameRequest
 } from 'interface/API/UsernameModerationAPI';
-import { BlockedUsersAPIResponse } from 'interface/API/BlockedUsersAPI.php';
+import {
+  BlockedUsersAPIResponse,
+  BlockReportsResponse
+} from 'interface/API/BlockedUsersAPI.php';
+import {
+  ModerationReason,
+  PlayerReportsResponse,
+  SubmitPlayerReportRequest
+} from 'interface/API/ModerationAPI';
 import {
   GetSavedReplaysResponse,
   SetReplayFavoriteRequest,
@@ -916,12 +924,18 @@ export const apiSlice = createApi({
 
     blockUser: builder.mutation<
       BlockedUsersAPIResponse,
-      { blockedUsername: string }
+      {
+        blockedUsername: string;
+        reason?: ModerationReason | null;
+        note?: string;
+      }
     >({
-      query: ({ blockedUsername }) =>
+      query: ({ blockedUsername, reason, note }) =>
         postJson(URL_END_POINT.BLOCKED_USERS, {
           action: 'blockUser',
-          blockedUsername: blockedUsername
+          blockedUsername: blockedUsername,
+          reason: reason ?? null,
+          note: note ?? ''
         }),
       // Handle errors gracefully - don't crash if BlockedUsersAPI is unavailable
       async onQueryStarted({ blockedUsername }, { queryFulfilled }) {
@@ -962,6 +976,27 @@ export const apiSlice = createApi({
           }
         }
       }
+    }),
+
+    getBlockReports: builder.query<
+      BlockReportsResponse,
+      { days: number; minBlocks: number }
+    >({
+      query: ({ days, minBlocks }) =>
+        postJson(URL_END_POINT.BLOCK_REPORTS, { days, minBlocks }),
+      keepUnusedDataFor: 0
+    }),
+
+    submitPlayerReport: builder.mutation<
+      { success?: boolean; error?: string },
+      SubmitPlayerReportRequest
+    >({
+      query: (body) => postJson(URL_END_POINT.SUBMIT_PLAYER_REPORT, body)
+    }),
+
+    getPlayerReports: builder.query<PlayerReportsResponse, { days: number }>({
+      query: ({ days }) => postJson(URL_END_POINT.GET_PLAYER_REPORTS, { days }),
+      keepUnusedDataFor: 0
     }),
 
     // Username Moderation endpoints
@@ -1178,6 +1213,9 @@ export const {
   useBlockUserMutation,
   useUnblockUserMutation,
   useGetOffensiveUsernamesQuery,
+  useGetBlockReportsQuery,
+  useSubmitPlayerReportMutation,
+  useGetPlayerReportsQuery,
   useBanOffensiveUsernameMutation,
   useWhitelistOffensiveUsernameMutation,
   useGetSystemMessageQuery,

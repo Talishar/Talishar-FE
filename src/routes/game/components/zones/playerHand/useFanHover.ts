@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { FAN_LAND_DURATION_S } from './fanLayout';
 
-export function useFanHover() {
+export function useFanHover(landDurationS = FAN_LAND_DURATION_S) {
   const [hoveredCardId, setHoveredCardId] = useState<string | null>(null);
   const [landingCardIds, setLandingCardIds] = useState<string[]>([]);
+  const landDurationRef = useRef(landDurationS);
+  landDurationRef.current = landDurationS;
   const hoveredRef = useRef<string | null>(null);
   const landTimersRef = useRef(
     new Map<string, ReturnType<typeof setTimeout>>()
@@ -17,7 +19,7 @@ export function useFanHover() {
       setTimeout(() => {
         timers.delete(cardId);
         setLandingCardIds((ids) => ids.filter((id) => id !== cardId));
-      }, FAN_LAND_DURATION_S * 1000)
+      }, landDurationRef.current * 1000)
     );
     setLandingCardIds((ids) => (ids.includes(cardId) ? ids : [...ids, cardId]));
   }, []);

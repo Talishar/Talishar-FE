@@ -151,6 +151,13 @@
   font-size: max(9px, min(calc(1.5dvh - 2px), calc(0.9dvw - 1px)));
 }
 
+:global(body.fanLandscapeHand) .activeLayersContents > div {
+  font-size: max(
+    9px,
+    min(calc(1.5 * var(--fan-window-vh) - 2px), calc(0.9dvw - 1px))
+  );
+}
+
 @media (orientation: portrait) {
   .activeLayersContents > div {
     font-size: max(9px, calc(1.5vw + 3px));
@@ -162,6 +169,10 @@
   .activeLayersContents > div {
     font-size: max(9px, calc(1.5vh - 2px));
     font-size: max(9px, calc(1.5dvh - 2px));
+  }
+
+  :global(body.fanLandscapeHand) .activeLayersContents > div {
+    font-size: max(9px, calc(1.5 * var(--fan-window-vh) - 2px));
   }
 }
 
@@ -335,6 +346,10 @@
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
 }
 
+:global(body.fanLandscapeHand) .groupedCardCountBadge {
+  font-size: max(12px, calc(1.8 * var(--fan-window-vh)));
+}
+
 @media only screen and (max-width: 768px) {
   .activeLayersBox {
     min-width: min(70dvw, 320px);
@@ -343,6 +358,10 @@
     top: 30dvh;
     left: 50%;
     translate: -50% 0;
+  }
+
+  :global(body.fanLandscapeHand) .activeLayersBox {
+    top: calc(30 * var(--fan-window-vh));
   }
 
   .activeLayersInner {
@@ -406,22 +425,22 @@
 :global(body.fanLandscapeHand) .activeLayersBox {
   --card-size: var(--side-card-size);
   min-width: 35vh;
-  min-width: 35dvh;
+  min-width: calc(35 * var(--fan-window-vh));
   max-width: 95vh;
-  max-width: 95dvh;
+  max-width: calc(95 * var(--fan-window-vh));
   max-height: 45vh;
-  max-height: 45dvh;
+  max-height: calc(45 * var(--fan-window-vh));
 }
 
 :global(body.fanLandscapeHand) .activeLayersInner {
   padding: 1.5vh;
-  padding: 1.5dvh;
+  padding: calc(1.5 * var(--fan-window-vh));
 }
 
 :global(body.fanLandscapeHand)
   :is(.activeLayersTitle, .activeLayersCallToAction) {
   font-size: max(11px, min(2.75vh, 16px));
-  font-size: max(11px, min(2.75dvh, 16px));
+  font-size: max(11px, min(2.75 * var(--fan-window-vh), 16px));
   gap: 0.6em;
   padding-left: 0.5em;
 }
@@ -453,7 +472,7 @@
 :global(body.fanLandscapeHand) .activeLayersContents > div {
   width: var(--card-size);
   margin-right: -3.5vh;
-  margin-right: -3.5dvh;
+  margin-right: calc(-3.5 * var(--fan-window-vh));
 }
 
 :global(body.fanLandscapeHand) .buttonDiv {

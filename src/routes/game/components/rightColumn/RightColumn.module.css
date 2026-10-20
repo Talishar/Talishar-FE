@@ -213,3 +213,9 @@
 .inGameAdSlot iframe {
   pointer-events: auto;
 }
+
+@media (orientation: landscape) and (min-height: 501px) {
+  :global(body.fanLandscapeHand) .mobileTopBar {
+    padding: 0 calc(4 * var(--fan-px));
+  }
+}

@@ -57,3 +57,8 @@ body {
     );
   }
 }
+
+html:has(> body.fanLandscapeHand),
+body.fanLandscapeHand {
+  height: calc(100 * var(--fan-window-vh));
+}

@@ -33,6 +33,7 @@ import { Card } from 'features/Card';
 import { useTranslation } from 'react-i18next';
 import { groupConsecutiveCards } from './groupConsecutiveCards';
 import usePlayerPromptOwner from '../../elements/playerPrompt/usePlayerPromptOwner';
+import { FAN_WINDOW_VH } from '../playerHand/fanLayout';
 
 const GROUPING_THRESHOLD = 1;
 const STORAGE_KEY_Y = 'activeLayersPositionY';
@@ -87,7 +88,10 @@ export default function ActiveLayersZone() {
   const yOffsetMV = useMotionValue(
     parseFloat(localStorage.getItem(STORAGE_KEY_Y) ?? '') || 0
   );
-  const yOffsetDvh = useTransform(yOffsetMV, (v) => `${v}dvh`);
+  const yOffsetDvh = useTransform(
+    yOffsetMV,
+    (v) => `calc(${v} * ${FAN_WINDOW_VH})`
+  );
   const dragStartYRef = useRef(0);
   const dragStartOffsetRef = useRef(yOffsetMV.get());
 

@@ -44,6 +44,9 @@ export const FAN_CARD_HEIGHT_RATIO = 0.25;
 export const FAN_LANDSCAPE_CARD_HEIGHT_RATIO = 0.35;
 export const FAN_LANDSCAPE_BODY_CLASS = 'fanLandscapeHand';
 export const FAN_HAND_RESERVE_VAR = '--fan-hand-reserve';
+export const FAN_FULLSCREEN_WIDTH_VAR = '--fan-fullscreen-width';
+export const FAN_WINDOW_VH_VAR = '--fan-window-vh';
+export const FAN_WINDOW_VH = `var(${FAN_WINDOW_VH_VAR}, 1dvh)`;
 export const FAN_SIDE_COLUMN_ATTR = 'data-fan-side-column';
 export const FAN_DOCK_CARD_HEIGHT_RATIO = 0.4;
 export const FAN_DOCK_HIDDEN_RATIO = 0.3;
@@ -66,6 +69,9 @@ export const FAN_UNHOVER_DURATION_S = 0.27;
 export const FAN_LAND_DURATION_S = FAN_UNHOVER_DURATION_S;
 export const FAN_DOCK_RATE = 37;
 export const FAN_DOCK_DURATION_S = 0.22;
+export const FAN_MOUSE_RISE_DURATION_S = 0.08;
+export const FAN_MOUSE_SINK_DURATION_S = 0.35;
+export const FAN_MOUSE_SHRINK_DURATION_S = FAN_MOUSE_SINK_DURATION_S * 0.45;
 
 function expEaseOut(rate: number, duration: number) {
   const k = rate * duration;
@@ -100,6 +106,7 @@ export const fanRiseEase = twoRateEaseOut(
 );
 export const fanDockEase = expEaseOut(FAN_DOCK_RATE, FAN_DOCK_DURATION_S);
 export const fanUnhoverEase = (progress: number) => 1 - (1 - progress) ** 2;
+export const fanMouseSinkEase = (progress: number) => 1 - (1 - progress) ** 3;
 
 export function fanHoverScaleFor(
   raw: string | undefined,

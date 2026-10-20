@@ -29,6 +29,11 @@
   font-family: 'Rajdhani', 'Segoe UI', 'Inter', system-ui, sans-serif;
 }
 
+:global(body.fanLandscapeHand) .widget {
+  gap: calc(0.8 * var(--fan-window-vh));
+  padding: calc(0.9 * var(--fan-window-vh));
+}
+
 .widget > * {
   min-width: 0;
 }
@@ -77,6 +82,11 @@
     padding: 0.5dvh;
   }
 
+  :global(body.fanLandscapeHand) .widget {
+    gap: calc(0.5 * var(--fan-window-vh));
+    padding: calc(0.5 * var(--fan-window-vh));
+  }
+
   .apBadge {
     transform: translate(calc(-100% - 0.5dvh), -50%);
   }
@@ -112,4 +122,34 @@
 
 :global(body.fanLandscapeHand) .vitals > :last-child {
   border-radius: 5px 5px 11px 11px;
+}
+
+@media (orientation: landscape) and (min-height: 501px) {
+  :global(body.fanLandscapeHand) .widgetContainer {
+    right: 0;
+    width: 100%;
+  }
+
+  :global(body.fanLandscapeHand) .vitals {
+    width: 100%;
+  }
+
+  :global(body.fanLandscapeHand) .widget {
+    gap: calc(0.5 * var(--fan-vh));
+    padding: calc(0.5 * var(--fan-vh));
+  }
+
+  :global(body.fanLandscapeHand) .vitals {
+    border-radius: calc(14 * var(--fan-px));
+  }
+
+  :global(body.fanLandscapeHand) .vitals > :first-child {
+    border-radius: calc(11 * var(--fan-px)) calc(11 * var(--fan-px))
+      calc(5 * var(--fan-px)) calc(5 * var(--fan-px));
+  }
+
+  :global(body.fanLandscapeHand) .vitals > :last-child {
+    border-radius: calc(5 * var(--fan-px)) calc(5 * var(--fan-px))
+      calc(11 * var(--fan-px)) calc(11 * var(--fan-px));
+  }
 }

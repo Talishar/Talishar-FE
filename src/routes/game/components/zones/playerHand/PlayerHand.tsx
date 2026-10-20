@@ -43,6 +43,7 @@ import drawingCardsSound from 'sounds/drawing_cards.wav';
 import { setHandCardRotationHeld } from 'utils/handCardRotation';
 import { useTranslation } from 'react-i18next';
 import { useCookieString } from 'utils/cookieStore';
+import { useFanFullscreenWidth } from 'utils/gameFullscreen';
 import { isMeldCard } from 'constants/meldCards';
 import {
   ENABLE_FANNED_HAND_COOKIE,
@@ -58,12 +59,15 @@ import {
   FAN_KEYWORD_DELAY_MS,
   FAN_LANDSCAPE_BODY_CLASS,
   FAN_LANDSCAPE_CARD_HEIGHT_RATIO,
+  FAN_LAND_DURATION_S,
   FAN_MOUSE_LINE_DROP_RATIO,
+  FAN_MOUSE_SINK_DURATION_S,
   FAN_OPEN_CARD_HEIGHT_RATIO,
   FAN_OPEN_HIDDEN_RATIO,
   FAN_REST_HIDDEN_RATIO,
   FAN_SIDE_COLUMN_ATTR,
   FAN_UNHOVER_ANCHOR_ATTR,
+  FAN_WINDOW_VH_VAR,
   FanGeometry,
   FanSlot,
   applyFanHover,
@@ -81,7 +85,6 @@ import { useLandscapeHandMode } from './useLandscapeHandMode';
 import { useShowsLandscapeFan } from './useShowsLandscapeFan';
 import ClassicPlayerHand from './ClassicPlayerHand';
 
-const CARD_ROTATION_STEP_DEGREES = 90;
 const CARD_ROTATION_KEY_STEP_DEGREES = 3;
 const WHEEL_ROTATION_DEGREES_PER_PIXEL = 0.15;
 const MAX_WHEEL_ROTATION_DEGREES = 15;
@@ -173,10 +176,15 @@ const selectPlayableGraveyardCards = createSelector(
 function PlayerHand() {
   const { t } = useTranslation();
   const [width, height] = useWindowDimensions();
+  const fanFullscreenWidth = useFanFullscreenWidth();
+  const layoutWidth = Math.max(width, fanFullscreenWidth);
   const isMobile = useMediaQuery('(max-width: 1199px)');
   const isPortrait = useMediaQuery('(orientation: portrait)');
   const isMobilePortrait = isMobile && isPortrait;
   const isMobileLandscape = isMobile && !isPortrait;
+  const isTallScreen = useMediaQuery('(min-height: 501px)');
+  const isTallLandscape = isMobileLandscape && isTallScreen;
+  const isPhoneLandscape = isMobileLandscape && !isTallScreen;
   const showsLandscapeFan = useShowsLandscapeFan();
   const canCollapseHand = isMobile || isPortrait;
   const [isHandCollapsed, setIsHandCollapsed] = useState(false);
@@ -228,14 +236,15 @@ function PlayerHand() {
     handleHoverChange,
     clearHover,
     getHoveredCardId
-  } = useFanHover();
+  } = useFanHover(isMobile ? FAN_LAND_DURATION_S : FAN_MOUSE_SINK_DURATION_S);
   const lastFanSlotsRef = useRef(new Map<string, FanSlot>());
   const fanStageRef = useRef<HTMLDivElement>(null);
   const { isHandDocked, openHand, isSingleCardArsenal } = useLandscapeHandMode(
-    showsLandscapeFan,
+    showsLandscapeFan && !isTallLandscape,
     fanStageRef
   );
-  const isLandscapeDocked = showsLandscapeFan && isHandDocked;
+  const isLandscapeDocked =
+    showsLandscapeFan && !isTallLandscape && isHandDocked;
   const dockedRenderRef = useRef(isLandscapeDocked);
   const dockTransition =
     dockedRenderRef.current !== isLandscapeDocked
@@ -387,7 +396,7 @@ function PlayerHand() {
         ? Math.min(...rects.map((rect) => rect.right))
         : rects[0].left;
       const right =
-        window.innerWidth -
+        Math.max(window.innerWidth, fanFullscreenWidth) -
         (showsLandscapeFan
           ? Math.max(...rects.map((rect) => rect.left))
           : rects[0].right);
@@ -408,7 +417,7 @@ function PlayerHand() {
     elements.forEach((element) => ro.observe(element));
     if (dockStart) ro.observe(dockStart);
     return () => ro.disconnect();
-  }, [isMobile, showsLandscapeFan, width, height]);
+  }, [isMobile, showsLandscapeFan, width, height, fanFullscreenWidth]);
 
   const [unhoverAnchorY, setUnhoverAnchorY] = useState<number | null>(null);
 
@@ -597,7 +606,7 @@ function PlayerHand() {
   const fanGeometry = useMemo<FanGeometry>(() => {
     const cardHeight =
       height *
-      (!isMobileLandscape
+      (!isPhoneLandscape
         ? FAN_CARD_HEIGHT_RATIO
         : isLandscapeDocked
         ? FAN_DOCK_CARD_HEIGHT_RATIO
@@ -605,26 +614,26 @@ function PlayerHand() {
     return {
       stageWidth: Math.max(
         0,
-        width - (stageBounds?.left ?? 0) - (stageBounds?.right ?? 0)
+        layoutWidth - (stageBounds?.left ?? 0) - (stageBounds?.right ?? 0)
       ),
       cardHeight,
       cardWidth: (cardHeight * 2) / 3,
       mobile: isMobilePortrait,
       hoverLift: isMobile,
-      hiddenRatio: !isMobileLandscape
+      hiddenRatio: !isPhoneLandscape
         ? undefined
         : isLandscapeDocked
         ? FAN_DOCK_HIDDEN_RATIO
         : FAN_OPEN_HIDDEN_RATIO
     };
   }, [
-    width,
+    layoutWidth,
     height,
     stageBounds?.left,
     stageBounds?.right,
     isMobile,
     isMobilePortrait,
-    isMobileLandscape,
+    isPhoneLandscape,
     isLandscapeDocked
   ]);
   const fanHoverScale = fanHoverScaleFor(
@@ -645,11 +654,16 @@ function PlayerHand() {
     const body = document.body;
     body.classList.add(FAN_LANDSCAPE_BODY_CLASS);
     body.style.setProperty(FAN_HAND_RESERVE_VAR, `${handReserve}px`);
+    document.documentElement.style.setProperty(
+      FAN_WINDOW_VH_VAR,
+      `${height / 100}px`
+    );
     return () => {
       body.classList.remove(FAN_LANDSCAPE_BODY_CLASS);
       body.style.removeProperty(FAN_HAND_RESERVE_VAR);
+      document.documentElement.style.removeProperty(FAN_WINDOW_VH_VAR);
     };
-  }, [showsLandscapeFan, handReserve]);
+  }, [showsLandscapeFan, handReserve, height]);
 
   const isDragActive = dragPlayState !== 'idle' || dragStartOrderIds !== null;
   const activeHoveredCardId = isDragActive ? null : hoveredCardId;
@@ -1278,13 +1292,6 @@ function PlayerHand() {
   );
   adjustHandCardRotationRef.current = adjustHandCardRotation;
 
-  const rotateHandCard = useCallback(
-    (cardId: string, direction: 1 | -1) => {
-      adjustHandCardRotation(cardId, direction * CARD_ROTATION_STEP_DEGREES);
-    },
-    [adjustHandCardRotation]
-  );
-
   const startHoldingHandCardForRotation = useCallback((cardId: string) => {
     heldHandCardIdRef.current = cardId || null;
     setHandCardRotationHeld(Boolean(cardId));
@@ -1464,7 +1471,6 @@ function PlayerHand() {
                 onHandReorderDragMove={stableDragMove}
                 onHandReorderDragEnd={stableDragEnd}
                 onHandReorderDragCancel={stableDragCancel}
-                onRotate={rotateHandCard}
                 onRotationHoldStart={startHoldingHandCardForRotation}
                 onRotationHoldEnd={stopHoldingHandCardForRotation}
                 isFanned
@@ -1477,6 +1483,7 @@ function PlayerHand() {
                 fanHoverScale={fanHoverScale}
                 fanCardHeight={fanGeometry.cardHeight}
                 fanTransition={dockTransition}
+                isFanMouse={!isMobile}
                 isFanLifted={isFanLifted}
                 onHoverChange={handleHoverChange}
                 onFanPointerEnter={handleFanPointerEnter}
@@ -1502,6 +1509,7 @@ function PlayerHand() {
                 fanHoverScale={fanHoverScale}
                 fanCardHeight={fanGeometry.cardHeight}
                 fanTransition={dockTransition}
+                isFanMouse={!isMobile}
                 isFanLifted={isFanLifted}
                 onHoverChange={handleHoverChange}
                 onFanPointerEnter={handleFanPointerEnter}

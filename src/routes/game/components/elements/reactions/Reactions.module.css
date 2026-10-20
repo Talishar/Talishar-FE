@@ -138,3 +138,38 @@
 :global(body.fanLandscapeHand) .cardContainer {
   height: var(--card-size);
 }
+
+@media (orientation: landscape) and (min-height: 501px) {
+  :global(body.fanLandscapeHand) .currentAttack,
+  :global(body.fanLandscapeHand) .attDefRow {
+    gap: calc(0.5 * var(--fan-vh));
+  }
+
+  :global(body.fanLandscapeHand) .cardContainer {
+    padding-left: calc(3 * var(--fan-px));
+  }
+
+  :global(body.fanLandscapeHand) .attack,
+  :global(body.fanLandscapeHand) .chainLinksRow {
+    gap: var(--fan-vh);
+  }
+
+  :global(body.fanLandscapeHand) .reactionWrapper {
+    height: calc(var(--card-size) + 4 * var(--fan-px));
+  }
+
+  :global(body.fanLandscapeHand) .reactions {
+    top: calc(-4 * var(--fan-px));
+    bottom: calc(-4 * var(--fan-px));
+    left: calc(-3 * var(--fan-px));
+    gap: var(--fan-vh);
+    padding: calc(6 * var(--fan-px)) calc(8 * var(--fan-px))
+      calc(6 * var(--fan-px)) calc(3 * var(--fan-px));
+  }
+
+  :global(body.fanLandscapeHand) .chainLinkSummary {
+    padding-left: var(--fan-vh);
+    padding-right: var(--fan-vh);
+    gap: var(--fan-vh);
+  }
+}

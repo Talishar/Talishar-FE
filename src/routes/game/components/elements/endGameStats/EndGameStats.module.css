@@ -1420,6 +1420,84 @@ input.excludeLastTurnCheckbox:focus-visible {
 
   .outcomeVictory,
   .outcomeDefeat {
-    font-size: 2em;
+    font-size: 1.6em;
+  }
+
+  .disclaimer {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .endGameStats {
+    padding: 0.4rem;
+    gap: 0.5rem;
+    font-size: 11px;
+  }
+
+  .statsContent,
+  .statsContainer {
+    gap: 0.5rem;
+  }
+
+  .statsSection,
+  .turnBreakdownSection {
+    padding: 0.5rem;
+    gap: 0.4rem;
+  }
+
+  .keyStats {
+    gap: 1rem;
+    padding: 0.15rem 0.25rem;
+  }
+
+  .keyStat + .keyStat {
+    padding-left: 1rem;
+  }
+
+  .keyStatValue {
+    font-size: 1.6em;
+  }
+
+  .keyStatLabel {
+    font-size: 0.75em;
+  }
+
+  .masteryProgress {
+    zoom: 0.8;
+  }
+
+  .infoBox {
+    padding: 0 0.4rem;
+    gap: 0.15rem;
+  }
+
+  .infoRow {
+    padding: 0.12rem 0;
+  }
+
+  .infoLabel,
+  .infoValue {
+    font-size: 1em;
+  }
+
+  .sectionHeaderContainer {
+    min-height: 0;
+    gap: 0.5rem;
+  }
+
+  .cardTable thead th {
+    padding: 0.3rem 0.25rem;
+    font-size: 1em;
+  }
+
+  .cardTable tbody td {
+    font-size: 1em;
+  }
+
+  .card {
+    width: 42px;
+    height: 34px;
   }
 }

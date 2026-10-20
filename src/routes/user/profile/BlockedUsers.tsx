@@ -10,7 +10,12 @@ import { MdPersonAdd } from 'react-icons/md';
 import { IoMdArrowDropright } from 'react-icons/io';
 import { useTranslation } from 'react-i18next';
 import styles from './BlockedUsers.module.css';
-import { BlockedUser } from 'interface/API/BlockedUsersAPI.php';
+import {
+  BLOCK_NOTE_MAX_LENGTH,
+  BlockedUser
+} from 'interface/API/BlockedUsersAPI.php';
+import { ModerationReason } from 'interface/API/ModerationAPI';
+import ReasonNoteModal from 'components/ReasonNoteModal/ReasonNoteModal';
 import { useUserSearch } from 'hooks/useUserSearch';
 import { UserSearchResults } from './UserSearchResults';
 
@@ -29,6 +34,9 @@ export const BlockedUsers: React.FC<BlockedUsersProps> = ({ className }) => {
     resetSearch
   } = useUserSearch();
   const [isExpanded, setIsExpanded] = useState(true);
+  const [pendingBlockUsername, setPendingBlockUsername] = useState<
+    string | null
+  >(null);
 
   const {
     data: blockedUsersData,
@@ -45,9 +53,14 @@ export const BlockedUsers: React.FC<BlockedUsersProps> = ({ className }) => {
     blockedUsersData?.blockedUsers?.map((user: any) => user.blockedUserId) || []
   );
 
-  const handleBlockUser = async (blockedUsername: string) => {
+  const handleBlockUser = async (
+    blockedUsername: string,
+    reason: ModerationReason | null,
+    note: string
+  ) => {
     try {
-      await blockUser({ blockedUsername }).unwrap();
+      await blockUser({ blockedUsername, reason, note }).unwrap();
+      setPendingBlockUsername(null);
       toast.success(t('PROFILE.USER_BLOCKED', { username: blockedUsername }));
       resetSearch();
       refetchBlockedUsers();
@@ -129,10 +142,26 @@ export const BlockedUsers: React.FC<BlockedUsersProps> = ({ className }) => {
               unavailableActionLabel={t('PROFILE.USER_ALREADY_BLOCKED')}
               actionIcon={<MdPersonAdd />}
               unavailableActionIcon={t('PROFILE.BLOCKED')}
-              onSelect={(user) => handleBlockUser(user.username)}
+              onSelect={(user) => setPendingBlockUsername(user.username)}
               styles={styles}
               actionClassName={styles.blockButton}
               disabledActionClassName={styles.blockButtonDisabled}
+            />
+            <ReasonNoteModal
+              isOpen={pendingBlockUsername !== null}
+              title={t('BLOCK_MODAL.TITLE', {
+                username: pendingBlockUsername ?? ''
+              })}
+              intro={t('BLOCK_MODAL.INTRO')}
+              privacy={t('BLOCK_MODAL.PRIVACY')}
+              confirmLabel={t('BLOCK_MODAL.CONFIRM')}
+              noteMaxLength={BLOCK_NOTE_MAX_LENGTH}
+              isSubmitting={isBlockingUser}
+              onCancel={() => setPendingBlockUsername(null)}
+              onConfirm={(reason, note) =>
+                pendingBlockUsername &&
+                handleBlockUser(pendingBlockUsername, reason, note)
+              }
             />
           </div>
 

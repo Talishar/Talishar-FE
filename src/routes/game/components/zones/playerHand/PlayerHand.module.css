@@ -54,6 +54,12 @@
 
 :global(body.fanLandscapeHand) .fanCollapseDock {
   z-index: 401;
+  bottom: calc(2 * var(--fan-window-vh));
+  height: calc(3 * var(--fan-window-vh));
+}
+
+:global(body.fanLandscapeHand) :is(.fanStage, .fanCollapseDock) {
+  margin-right: calc(-1 * var(--fan-fullscreen-overflow, 0px));
 }
 
 .handCollapseButton {
@@ -109,5 +115,15 @@
   :global(body.optionsMenuOpen)
     :is(.fanStage, .fanDockHit, .fanOpenGuard, .fanCollapseDock) {
     display: none;
+  }
+}
+
+@media (orientation: landscape) and (min-height: 501px) {
+  :global(body.fanLandscapeHand) .handCollapseButton {
+    gap: calc(4 * var(--fan-px));
+    min-width: calc(28 * var(--fan-px));
+    height: calc(28 * var(--fan-px));
+    padding: 0 calc(6 * var(--fan-px));
+    border-radius: calc(5 * var(--fan-px));
   }
 }
