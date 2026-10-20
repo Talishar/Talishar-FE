@@ -26,6 +26,9 @@ import { MdBlock } from 'react-icons/md';
 import { MdNotes } from 'react-icons/md';
 import { IoMdArrowDropdown } from 'react-icons/io';
 import PlayerNoteModal from './PlayerNoteModal';
+import ReasonNoteModal from 'components/ReasonNoteModal/ReasonNoteModal';
+import { BLOCK_NOTE_MAX_LENGTH } from 'interface/API/BlockedUsersAPI.php';
+import { ModerationReason } from 'interface/API/ModerationAPI';
 import UserBadgeIcons from 'components/UserBadgeIcons/UserBadgeIcons';
 import useSetting from 'hooks/useSetting';
 import useAuth from 'hooks/useAuth';
@@ -40,6 +43,7 @@ export default function PlayerName(player: Player) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
+  const [isBlockModalOpen, setIsBlockModalOpen] = useState(false);
   const [playerNote, setPlayerNote] = useState('');
   const [isNoteTooltipOpen, setIsNoteTooltipOpen] = useState(false);
   const [noteTooltipPosition, setNoteTooltipPosition] = useState({
@@ -230,7 +234,7 @@ export default function PlayerName(player: Player) {
   // Friend request and block mutations
   const [addFriend] = useAddFriendMutation();
   const [cancelRequest] = useCancelRequestMutation();
-  const [blockUser] = useBlockUserMutation();
+  const [blockUser, { isLoading: isBlockingUser }] = useBlockUserMutation();
   const [unblockUser] = useUnblockUserMutation();
 
   const shouldLoadRelationships =
@@ -364,9 +368,18 @@ export default function PlayerName(player: Player) {
     }
   };
 
-  const handleBlockUser = async () => {
+  const handleBlockUser = () => {
+    setIsDropdownOpen(false);
+    setIsBlockModalOpen(true);
+  };
+
+  const handleConfirmBlock = async (
+    reason: ModerationReason | null,
+    note: string
+  ) => {
     try {
-      await blockUser({ blockedUsername: playerName! }).unwrap();
+      await blockUser({ blockedUsername: playerName!, reason, note }).unwrap();
+      setIsBlockModalOpen(false);
       toast.success(`${playerName} has been blocked`);
       refetchBlocked();
     } catch (err: any) {
@@ -507,6 +520,20 @@ export default function PlayerName(player: Player) {
           onSave={handleNoteSave}
           initialNote={playerNote}
           playerName={playerName || 'Player'}
+        />
+      )}
+
+      {!player.isPlayer && !isBotOpponent && playerID !== 3 && (
+        <ReasonNoteModal
+          isOpen={isBlockModalOpen}
+          title={t('BLOCK_MODAL.TITLE', { username: playerName || 'Player' })}
+          intro={t('BLOCK_MODAL.INTRO')}
+          privacy={t('BLOCK_MODAL.PRIVACY')}
+          confirmLabel={t('BLOCK_MODAL.CONFIRM')}
+          noteMaxLength={BLOCK_NOTE_MAX_LENGTH}
+          isSubmitting={isBlockingUser}
+          onCancel={() => setIsBlockModalOpen(false)}
+          onConfirm={handleConfirmBlock}
         />
       )}
 

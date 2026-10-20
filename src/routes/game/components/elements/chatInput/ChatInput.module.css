@@ -22,7 +22,12 @@
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 0.25em;
+  align-items: center;
   max-width: 100%;
+}
+
+.flexBoxWithOff {
+  grid-template-columns: 1fr auto auto;
 }
 
 .buttonDiv {
@@ -33,7 +38,7 @@
   align-items: center;
   justify-content: center;
   font-size: max(1em, 14px);
-  margin-right: 0.25rem;
+  margin: 0;
   width: 2rem;
   height: 1.65rem !important;
   border-radius: 0.4em;

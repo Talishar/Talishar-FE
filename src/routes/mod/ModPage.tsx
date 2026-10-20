@@ -19,12 +19,16 @@ import UsernameModeration from './UsernameModeration';
 import DeleteUsernameAutocomplete from './DeleteUsernameAutocomplete';
 import PuzzleCandidates from './PuzzleCandidates';
 import AdStats from './AdStats';
+import BlockReports from './BlockReports';
+import PlayerReports from './PlayerReports';
+import blockStyles from './BlockReports.module.css';
 import { LinkedAccount } from 'interface/API/ModPageAPI';
 
 const MOD_TABS = [
   { id: 'moderation', labelKey: 'MOD_PAGE.TAB_MODERATION' },
   { id: 'messages', labelKey: 'MOD_PAGE.TAB_MESSAGES' },
   { id: 'usernames', labelKey: 'MOD_PAGE.TAB_USERNAMES' },
+  { id: 'reports', labelKey: 'MOD_PAGE.TAB_REPORTS' },
   { id: 'tools', labelKey: 'MOD_PAGE.TAB_TOOLS' },
   { id: 'puzzles', labelKey: 'MOD_PAGE.TAB_PUZZLES' },
   { id: 'ads', labelKey: 'MOD_PAGE.TAB_ADS' }
@@ -754,6 +758,13 @@ const ModPage: React.FC = () => {
           )}
 
           {activeTab === 'usernames' && <UsernameModeration />}
+
+          {activeTab === 'reports' && (
+            <div className={blockStyles.tabStack}>
+              <PlayerReports />
+              <BlockReports />
+            </div>
+          )}
 
           {activeTab === 'tools' && (
             <div className={styles.twoColumn}>

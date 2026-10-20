@@ -19,8 +19,14 @@ import { shallowEqual } from 'react-redux';
 import {
   apiSlice,
   useGetCosmeticsQuery,
-  useSaveDeckCosmeticsMutation
+  useSaveDeckCosmeticsMutation,
+  useSubmitPlayerReportMutation
 } from 'features/api/apiSlice';
+import ReasonNoteModal from 'components/ReasonNoteModal/ReasonNoteModal';
+import {
+  ModerationReason,
+  PLAYER_REPORT_NOTE_MAX_LENGTH
+} from 'interface/API/ModerationAPI';
 import { Trans, useTranslation } from 'react-i18next';
 import { toast } from 'react-hot-toast';
 import { CosmeticsSection } from './OptionsSettings/CosmeticsSection';
@@ -34,6 +40,7 @@ const OptionsContent = ({ searchQuery }: { searchQuery: string }) => {
   const {
     gameID,
     playerID,
+    authKey,
     isReplay,
     deckLink,
     canCustomizeDeck,
@@ -45,6 +52,9 @@ const OptionsContent = ({ searchQuery }: { searchQuery: string }) => {
   const { t } = useTranslation();
   const [allowSpectator, setAllowSpectator] = useState(false);
   const [isSavingSnapshot, setIsSavingSnapshot] = useState(false);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [submitPlayerReport, { isLoading: isSubmittingReport }] =
+    useSubmitPlayerReportMutation();
   const [selectedCardBack, setSelectedCardBack] = useState(
     deckCardBackId ?? '0'
   );
@@ -159,7 +169,26 @@ const OptionsContent = ({ searchQuery }: { searchQuery: string }) => {
   };
 
   const clickReportPlayerHandler = () => {
+    setIsReportModalOpen(true);
+  };
+
+  const handleConfirmReport = async (
+    reason: ModerationReason | null,
+    note: string
+  ) => {
+    try {
+      await submitPlayerReport({
+        gameName: gameID,
+        playerID,
+        authKey,
+        reason,
+        note
+      }).unwrap();
+    } catch (error) {
+      toast.error(t('REPORT_MODAL.FAILED'));
+    }
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.REPORT_PLAYER } }));
+    setIsReportModalOpen(false);
     clickCloseOptionsHandler();
   };
 
@@ -304,6 +333,17 @@ const OptionsContent = ({ searchQuery }: { searchQuery: string }) => {
                 >
                   {t('OPTIONS_MENU.REPORT_PLAYER')}
                 </button>
+                <ReasonNoteModal
+                  isOpen={isReportModalOpen}
+                  title={t('REPORT_MODAL.TITLE')}
+                  intro={t('REPORT_MODAL.INTRO')}
+                  privacy={t('REPORT_MODAL.PRIVACY')}
+                  confirmLabel={t('REPORT_MODAL.CONFIRM')}
+                  noteMaxLength={PLAYER_REPORT_NOTE_MAX_LENGTH}
+                  isSubmitting={isSubmittingReport}
+                  onCancel={() => setIsReportModalOpen(false)}
+                  onConfirm={handleConfirmReport}
+                />
                 {!isReplay && (
                   <button
                     className={styles.buttonDiv}

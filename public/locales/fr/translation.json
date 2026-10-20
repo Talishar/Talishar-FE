@@ -137,6 +137,12 @@
     "LOADING": "Chargement…",
     "SEARCH": "Rechercher"
   },
+  "BLOCK_MODAL": {
+    "CONFIRM": "Bloquer",
+    "INTRO": "Vous ne verrez plus ses parties dans le lobby. Si vous le souhaitez, expliquez pourquoi aux modérateurs. C'est facultatif.",
+    "PRIVACY": "Seuls les modérateurs peuvent la lire. Le joueur n'est pas prévenu.",
+    "TITLE": "Bloquer {{username}} ?"
+  },
   "CARD_KEYWORD_STRIP": {
     "MORE_many": "+{{count}} plus - voir le guide des mots clés",
     "MORE_one": "+1 de plus - voir le guide des mots clés",
@@ -172,6 +178,7 @@
     "LOG": "Enregistrer",
     "QUICK_CHAT": "Discussion rapide",
     "RECENT": "⭐ Récent",
+    "TURN_OFF": "Désactiver le chat",
     "TYPING": "L’adversaire tape…"
   },
   "COMBAT_CHAIN": {
@@ -1063,6 +1070,16 @@
     "SKIP_ATTACKS_TOOLTIP": "Passer toutes les attaques (se réinitialise au début de chaque tour)",
     "TOGGLE_MAIN_MENU": "Basculer le menu principal"
   },
+  "MODERATION_NOTE": {
+    "CANCEL": "Annuler",
+    "NOTE_LABEL": "Note pour les modérateurs (facultatif)",
+    "NOTE_PLACEHOLDER": "Que s'est-il passé ?",
+    "REASON_INSULTING": "Insultes ou propos haineux",
+    "REASON_LABEL": "Raison (facultatif)",
+    "REASON_OTHER": "Autre",
+    "REASON_RUDE": "Désagréable ou impoli",
+    "REASON_UNSPORTING": "Jeu antisportif"
+  },
   "MOD_PAGE": {
     "API_WARNING": "Avertissement API :",
     "ASSOCIATED_EMAIL": "E-mail associé :",
@@ -1149,7 +1166,12 @@
   "OPEN_GAME": {
     "JOIN": "Rejoindre",
     "JOIN_DECK_NOT_READY": "Sélectionnez un deck dans le panneau ci-dessus pour rejoindre instantanément",
-    "JOIN_DECK_READY": "Rejoindre avec votre deck préconfiguré"
+    "JOIN_DECK_READY": "Rejoindre avec votre deck préconfiguré",
+    "LEARNING_WARNING_ASK": "Êtes-vous prêt à jouer une partie patiente et amicale avec ce joueur ?",
+    "LEARNING_WARNING_BODY": "Le joueur qui a créé cette partie apprend un nouveau héros ou découvre le jeu. Il débute peut-être à Flesh and Blood, et ses tours peuvent prendre plus de temps que d'habitude.",
+    "LEARNING_WARNING_CANCEL": "Retour",
+    "LEARNING_WARNING_CONFIRM": "Oui, rejoindre",
+    "LEARNING_WARNING_TITLE": "Ce joueur apprend"
   },
   "OPPONENT_INACTIVE": {
     "CLAIM_VICTORY": "Réclamez la victoire",
@@ -1503,6 +1525,13 @@
     "USER_UNBLOCKED": "{{username}} a été débloqué",
     "VISIT_COMMUNITY": "Visitez la communauté →",
     "YOUR_COMMUNITIES": "Vos communautés :"
+  },
+  "REPORT_MODAL": {
+    "CONFIRM": "Envoyer le signalement",
+    "FAILED": "Votre note n'a pas pu être envoyée, mais le journal de la partie a bien été sauvegardé.",
+    "INTRO": "Le journal de cette partie sera sauvegardé pour les modérateurs. Ajouter une raison ou une note est facultatif, mais cela les aide.",
+    "PRIVACY": "Seuls les modérateurs peuvent lire votre note.",
+    "TITLE": "Signaler votre adversaire"
   },
   "RUST_COUNTER_PANEL": {
     "DEV_MODE_NOTE": "Mode développement : les compteurs rust ne bloquent pas les jeux.",

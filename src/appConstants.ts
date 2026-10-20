@@ -119,7 +119,8 @@ export const PROCESS_INPUT = {
   CONFIRM_CHAIN_LINK_UNDO: 100022,
   SAVE_SNAPSHOT: 100023,
   RESTART_PUZZLE: 100024,
-  PUZZLE_HINT: 100025
+  PUZZLE_HINT: 100025,
+  DISABLE_CHAT: 100026
 };
 
 // Default shortcut inputs
@@ -451,6 +452,9 @@ export const URL_END_POINT = {
   FRIEND_LIST: 'APIs/FriendListAPI.php',
   BLOCKED_USERS: 'APIs/BlockedUsersAPI.php',
   USERNAME_MODERATION: 'APIs/UsernameModeration.php',
+  BLOCK_REPORTS: 'APIs/BlockReports.php',
+  SUBMIT_PLAYER_REPORT: 'APIs/SubmitPlayerReport.php',
+  GET_PLAYER_REPORTS: 'APIs/GetPlayerReports.php',
   SYSTEM_MESSAGE: 'APIs/SystemMessageAPI.php',
   GET_SYSTEM_MESSAGE: 'APIs/GetSystemMessage.php',
   GET_LAST_ACTIVE_GAME: 'APIs/GetLastActiveGame.php',
