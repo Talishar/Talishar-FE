@@ -17,7 +17,6 @@ export type FanGeometry = {
   mobile?: boolean;
   hoverLift?: boolean;
   hiddenRatio?: number;
-  spread?: boolean;
 };
 
 export const FAN_REST_HIDDEN_RATIO = 0.54;
@@ -70,12 +69,9 @@ export const FAN_UNHOVER_DURATION_S = 0.27;
 export const FAN_LAND_DURATION_S = FAN_UNHOVER_DURATION_S;
 export const FAN_DOCK_RATE = 37;
 export const FAN_DOCK_DURATION_S = 0.22;
-export const FAN_SPREAD_RATIOS = [0.4, 0.27, 0.13];
-export const FAN_SPREAD_RATE = 7.4;
-export const FAN_SPREAD_DURATION_S = 0.62;
-export const FAN_SWITCH_RISE_RATE = 18;
-export const FAN_SWITCH_RISE_DURATION_S = 0.26;
-export const FAN_SWITCH_LAND_DURATION_S = FAN_SPREAD_DURATION_S;
+export const FAN_MOUSE_RISE_DURATION_S = 0.08;
+export const FAN_MOUSE_SINK_DURATION_S = 0.35;
+export const FAN_MOUSE_SHRINK_DURATION_S = FAN_MOUSE_SINK_DURATION_S * 0.45;
 
 function expEaseOut(rate: number, duration: number) {
   const k = rate * duration;
@@ -109,12 +105,8 @@ export const fanRiseEase = twoRateEaseOut(
   FAN_RISE_DURATION_S
 );
 export const fanDockEase = expEaseOut(FAN_DOCK_RATE, FAN_DOCK_DURATION_S);
-export const fanSpreadEase = expEaseOut(FAN_SPREAD_RATE, FAN_SPREAD_DURATION_S);
-export const fanSwitchRiseEase = expEaseOut(
-  FAN_SWITCH_RISE_RATE,
-  FAN_SWITCH_RISE_DURATION_S
-);
 export const fanUnhoverEase = (progress: number) => 1 - (1 - progress) ** 2;
+export const fanMouseSinkEase = (progress: number) => 1 - (1 - progress) ** 3;
 
 export function fanHoverScaleFor(
   raw: string | undefined,
@@ -232,27 +224,6 @@ export function fanHoverWidth(
   return g.stageWidth > 0 ? Math.min(wideWidth, g.stageWidth) : wideWidth;
 }
 
-export function fanSpreadSlots(
-  slots: FanSlot[],
-  hoveredIndex: number | null,
-  g: FanGeometry
-): FanSlot[] {
-  if (!g.spread || hoveredIndex === null || !slots[hoveredIndex]) return slots;
-  return slots.map((slot, i) => {
-    if (i === hoveredIndex) return slot;
-    const d = Math.abs(i - hoveredIndex);
-    return {
-      ...slot,
-      x:
-        slot.x +
-        Math.sign(i - hoveredIndex) *
-          (FAN_SPREAD_RATIOS[d - 1] ?? 0) *
-          g.cardWidth *
-          slot.scale
-    };
-  });
-}
-
 export function fanHoverIndexAt(
   count: number,
   x: number,
@@ -263,11 +234,7 @@ export function fanHoverIndexAt(
   wide = false
 ): number | null {
   const slots = computeFanSlots(count, g);
-  const hitSlots =
-    expanded && hoveredIndex !== null && slots[hoveredIndex]
-      ? fanSpreadSlots(slots, hoveredIndex, g)
-      : slots;
-  const index = fanIndexAt(hitSlots, x, g.cardWidth * fanScaleFor(count, g));
+  const index = fanIndexAt(slots, x, g.cardWidth * fanScaleFor(count, g));
   if (index !== null || hoveredIndex === null || !slots[hoveredIndex]) {
     return index;
   }
@@ -300,9 +267,8 @@ export function applyFanHover(
   const lift = g.hoverLift
     ? FAN_MOBILE_HOVER_LIFT_RATIO * hoverScale * g.cardHeight
     : 0;
-  const spread = expanded ? fanSpreadSlots(slots, hoveredIndex, g) : slots;
   return slots.map((slot, i) => {
-    if (i !== hoveredIndex) return spread[i];
+    if (i !== hoveredIndex) return slot;
     if (!expanded) {
       return {
         ...slot,

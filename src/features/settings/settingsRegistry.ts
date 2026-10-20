@@ -307,6 +307,16 @@ export const SETTINGS_DEFS: SettingDef[] = [
     visible: inAMatch
   },
   {
+    kind: 'toggle',
+    key: 'fannedHand',
+    group: 'appearance',
+    labelKey: 'SETTINGS.FANNED_HAND',
+    tooltipKey: 'SETTINGS.FANNED_HAND_TOOLTIP',
+    storage: 'device',
+    name: ENABLE_FANNED_HAND_COOKIE,
+    defaultOn: false
+  },
+  {
     kind: 'custom',
     key: 'theme',
     group: 'appearance',
@@ -399,16 +409,6 @@ export const SETTINGS_DEFS: SettingDef[] = [
     accountName: 'DisableCardTilt',
     invert: true,
     defaultOn: true
-  },
-  {
-    kind: 'toggle',
-    key: 'fannedHand',
-    group: 'cardVisuals',
-    labelKey: 'SETTINGS.FANNED_HAND',
-    tooltipKey: 'SETTINGS.FANNED_HAND_TOOLTIP',
-    storage: 'device',
-    name: ENABLE_FANNED_HAND_COOKIE,
-    defaultOn: false
   },
   {
     kind: 'toggle',

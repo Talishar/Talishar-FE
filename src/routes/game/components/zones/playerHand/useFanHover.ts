@@ -1,19 +1,17 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { FAN_LAND_DURATION_S, FAN_SWITCH_LAND_DURATION_S } from './fanLayout';
+import { FAN_LAND_DURATION_S } from './fanLayout';
 
-export function useFanHover(slowSwitch = false) {
+export function useFanHover(landDurationS = FAN_LAND_DURATION_S) {
   const [hoveredCardId, setHoveredCardId] = useState<string | null>(null);
   const [landingCardIds, setLandingCardIds] = useState<string[]>([]);
-  const [slowLandingCardIds, setSlowLandingCardIds] = useState<string[]>([]);
-  const [hoverSwitched, setHoverSwitched] = useState(false);
-  const slowSwitchRef = useRef(slowSwitch);
-  slowSwitchRef.current = slowSwitch;
+  const landDurationRef = useRef(landDurationS);
+  landDurationRef.current = landDurationS;
   const hoveredRef = useRef<string | null>(null);
   const landTimersRef = useRef(
     new Map<string, ReturnType<typeof setTimeout>>()
   );
 
-  const startLanding = useCallback((cardId: string, slow: boolean) => {
+  const startLanding = useCallback((cardId: string) => {
     const timers = landTimersRef.current;
     clearTimeout(timers.get(cardId));
     timers.set(
@@ -21,17 +19,9 @@ export function useFanHover(slowSwitch = false) {
       setTimeout(() => {
         timers.delete(cardId);
         setLandingCardIds((ids) => ids.filter((id) => id !== cardId));
-        setSlowLandingCardIds((ids) => ids.filter((id) => id !== cardId));
-      }, (slow ? FAN_SWITCH_LAND_DURATION_S : FAN_LAND_DURATION_S) * 1000)
+      }, landDurationRef.current * 1000)
     );
     setLandingCardIds((ids) => (ids.includes(cardId) ? ids : [...ids, cardId]));
-    setSlowLandingCardIds((ids) =>
-      slow
-        ? ids.includes(cardId)
-          ? ids
-          : [...ids, cardId]
-        : ids.filter((id) => id !== cardId)
-    );
   }, []);
 
   const moveHover = useCallback(
@@ -40,11 +30,7 @@ export function useFanHover(slowSwitch = false) {
       if (next === previous) return;
       hoveredRef.current = next;
       setHoveredCardId(next);
-      const switched = previous !== null && next !== null;
-      setHoverSwitched(switched);
-      if (previous !== null) {
-        startLanding(previous, switched && slowSwitchRef.current);
-      }
+      if (previous !== null) startLanding(previous);
     },
     [startLanding]
   );
@@ -68,8 +54,6 @@ export function useFanHover(slowSwitch = false) {
   return {
     hoveredCardId,
     landingCardIds,
-    slowLandingCardIds,
-    hoverSwitched,
     handleHoverChange,
     clearHover,
     getHoveredCardId
