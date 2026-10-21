@@ -798,7 +798,7 @@
 
 :global(body.fanLandscapeHand) .fanWidgets > .combatChain {
   padding-right: calc(
-    0.9 * var(--side-card-size) + 12px - 2 * var(--board-gap)
+    0.63 * var(--side-card-size) + 12px - 2 * var(--board-gap)
   );
 }
 
@@ -818,7 +818,7 @@
 
 :global(body.fanLandscapeHand) .fanWidgets > :is(.healthWidget, .fanVitals) {
   position: absolute;
-  left: calc(-2px - 0.95 * var(--side-card-size));
+  left: calc(-2px - 0.7475 * var(--side-card-size));
   top: var(--fan-pass-top);
   height: var(--fan-pass-height);
   z-index: 6;
