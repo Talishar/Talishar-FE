@@ -26,6 +26,7 @@ import {
 } from 'features/game/GameSlice';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { useMediaQuery } from 'hooks/useMediaQuery';
+import useIsSoundMuted from 'hooks/useIsSoundMuted';
 import {
   AnimatePresence,
   AnimationPlaybackControls,
@@ -264,9 +265,7 @@ function PlayerHand() {
     (state: RootState) => state.game.gameInfo.isReplay
   );
 
-  const isMuted = useAppSelector(
-    (state: RootState) => state.settings.entities['MuteSound']?.value === '1'
-  );
+  const isMuted = useIsSoundMuted();
 
   const [playDrawingCardsSound] = useSound(drawingCardsSound, { volume: 0.5 });
 
