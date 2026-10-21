@@ -123,6 +123,14 @@ export const CardScaleVariables = () => {
   return null;
 };
 
+const isAppleTouchDevice = () => {
+  const { userAgent, maxTouchPoints } = window.navigator;
+  return (
+    /iPad|iPhone|iPod/.test(userAgent) ||
+    (/Macintosh/.test(userAgent) && maxTouchPoints > 1)
+  );
+};
+
 export const LandscapeFanFullscreen = () => {
   const showsLandscapeFan = useShowsLandscapeFan();
   const enteredRef = useRef(false);
@@ -154,7 +162,7 @@ export const LandscapeFanFullscreen = () => {
       }
       return;
     }
-    if (!document.fullscreenEnabled) return;
+    if (!document.fullscreenEnabled || isAppleTouchDevice()) return;
 
     const enterFullscreen = (event: PointerEvent) => {
       if (
