@@ -249,6 +249,7 @@
   max-width: none;
   padding-top: 3px;
   padding-bottom: 8px;
+  padding-left: 8px;
   margin: var(--fan-pass-top) 0 0;
   flex-shrink: 0;
 }
@@ -263,6 +264,10 @@
             14px - var(--fan-arsenal-size) - var(--fan-hero-lift)
         )
     );
+  }
+
+  :global(body.fanLandscapeHand) .combatChain [class*='_countersCover_'] {
+    font-size: 0.8em;
   }
 }
 

@@ -113,6 +113,8 @@
   :global(body.endGameOpen)
     :is(.fanStage, .fanDockHit, .fanOpenGuard, .fanCollapseDock),
   :global(body.optionsMenuOpen)
+    :is(.fanStage, .fanDockHit, .fanOpenGuard, .fanCollapseDock),
+  :global(body.cardListOpen)
     :is(.fanStage, .fanDockHit, .fanOpenGuard, .fanCollapseDock) {
     display: none;
   }
