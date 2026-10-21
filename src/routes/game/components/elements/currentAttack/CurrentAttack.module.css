@@ -258,7 +258,6 @@
 @media (max-height: 500px) {
   :global(body.fanLandscapeHand) .attack {
     justify-content: flex-start;
-    padding-left: 5px;
   }
 }
 
