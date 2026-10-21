@@ -14,10 +14,26 @@
   position: relative;
   margin: auto;
   border-radius: 0.5em;
+  width: 95%;
+}
+
+.playmatFill {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 50%;
+  left: 0;
+  z-index: -1;
+  pointer-events: none;
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-  width: 95%;
+}
+
+@media (orientation: portrait) and (min-aspect-ratio: 3/4) {
+  .playmatFill {
+    bottom: calc(50% + 3dvh);
+  }
 }
 
 .FirstBox {
