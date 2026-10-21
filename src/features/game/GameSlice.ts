@@ -1128,6 +1128,7 @@ export const gameSlice = createSlice({
       state.isFullRematch = false;
       state.hasGameEnded = false;
       state.gameInfo.gameID = action.payload.gameID;
+      state.gameInfo.isReplay = true;
       if (action.payload.replayNumber !== undefined) {
         state.gameInfo.replayNumber = action.payload.replayNumber;
       }
