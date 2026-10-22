@@ -27,49 +27,54 @@ interface DeckPeekCardProps {
   showCountersOnHover?: boolean;
 }
 
-export default function DeckPeekCard({
-  isPlayer,
-  style,
-  showCountersOnHover
-}: DeckPeekCardProps) {
-  const dispatch = useAppDispatch();
+export default function DeckPeekCard(props: DeckPeekCardProps) {
   const peekCard = useAppSelector((state: RootState) =>
-    state.game.deckPeekIsPlayer === isPlayer ? state.game.deckPeekCard : ''
+    state.game.deckPeekIsPlayer === props.isPlayer
+      ? state.game.deckPeekCard
+      : ''
   );
   const peekTrigger = useAppSelector(
     (state: RootState) => state.game.deckPeekTrigger
   );
+
+  if (!peekCard) return null;
+
+  return (
+    <DeckPeekCardView
+      key={`deckPeek-${peekTrigger}`}
+      peekCard={peekCard}
+      {...props}
+    />
+  );
+}
+
+function DeckPeekCardView({
+  peekCard,
+  isPlayer,
+  style,
+  showCountersOnHover
+}: DeckPeekCardProps & { peekCard: string }) {
+  const dispatch = useAppDispatch();
   const actionSignature = useAppSelector(selectActionSignature, shallowEqual);
-  const signatureAtPeek = useRef<unknown[] | null>(null);
+  const signatureAtPeek = useRef(actionSignature);
   const [isClosing, setIsClosing] = useState(false);
   const [timerDone, setTimerDone] = useState(false);
   const [actionTaken, setActionTaken] = useState(false);
 
   useEffect(() => {
-    if (!peekCard) return;
-    signatureAtPeek.current = actionSignature;
-    setIsClosing(false);
-    setTimerDone(false);
-    setActionTaken(false);
     const timer = setTimeout(() => setTimerDone(true), PEEK_DURATION);
     return () => clearTimeout(timer);
-  }, [peekTrigger]);
+  }, []);
 
   useEffect(() => {
-    if (
-      peekCard &&
-      signatureAtPeek.current &&
-      !shallowEqual(signatureAtPeek.current, actionSignature)
-    ) {
+    if (!shallowEqual(signatureAtPeek.current, actionSignature)) {
       setActionTaken(true);
     }
-  }, [actionSignature, peekCard]);
+  }, [actionSignature]);
 
   useEffect(() => {
     if (timerDone && actionTaken) setIsClosing(true);
   }, [timerDone, actionTaken]);
-
-  if (!peekCard) return null;
 
   const dismiss = (event: React.MouseEvent) => {
     event.stopPropagation();
@@ -78,13 +83,11 @@ export default function DeckPeekCard({
 
   const onAnimationEnd = (event: React.AnimationEvent<HTMLDivElement>) => {
     if (event.target !== event.currentTarget || !isClosing) return;
-    signatureAtPeek.current = null;
     dispatch(setDeckPeek({ cardNumber: '' }));
   };
 
   return (
     <div
-      key={`deckPeek-${peekTrigger}`}
       className={classNames(
         styles.deckPeekCard,
         isClosing && styles.deckPeekCardClosing
