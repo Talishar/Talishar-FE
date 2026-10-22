@@ -53,13 +53,7 @@
   :global(body.fanLandscapeHand) .playerTwo,
   :global(body.fanLandscapeHand) .playerOne {
     width: auto;
-    margin-left: calc(
-      -1 * (env(safe-area-inset-left, 0px) + var(--fan-rail-width) +
-            var(--board-edge))
-    );
-    margin-right: calc(
-      var(--fan-fullscreen-overflow) - env(safe-area-inset-right, 0px) -
-        var(--board-edge)
-    );
+    margin-left: calc(-1 * (var(--fan-rail-width) + var(--board-edge)));
+    margin-right: calc(var(--fan-fullscreen-overflow) - var(--board-edge));
   }
 }
