@@ -327,3 +327,54 @@
 :global(body.fanLandscapeHand) .cardListContents {
   --card-size: var(--side-card-size);
 }
+
+@media (orientation: landscape) and (max-height: 500px) {
+  :global(body.fanLandscapeHand) .cardListBox {
+    top: calc(10 * var(--fan-window-vh));
+    bottom: auto;
+    height: calc(80 * var(--fan-window-vh));
+    left: max(10vw, env(safe-area-inset-left, 0px));
+    right: max(10vw, env(safe-area-inset-right, 0px));
+  }
+
+  :global(body.fanLandscapeHand) .cardListTitleContainer {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 52px 8px 12px;
+  }
+
+  :global(body.fanLandscapeHand) .cardListTitle {
+    justify-content: flex-start;
+    text-align: left;
+    padding: 0;
+  }
+
+  :global(body.fanLandscapeHand) .title {
+    white-space: nowrap;
+  }
+
+  :global(body.fanLandscapeHand) .searchInput {
+    width: 180px !important;
+    height: 30px !important;
+    padding: 0 0.75rem;
+    font-size: 1rem;
+  }
+
+  :global(body.fanLandscapeHand) .button {
+    width: auto;
+    height: 30px;
+    min-height: 30px;
+    font-size: 0.9rem;
+  }
+
+  :global(body.fanLandscapeHand) .cardListCloseIcon {
+    top: 5px;
+  }
+
+  :global(body.fanLandscapeHand) .cardListContents {
+    --card-size: calc((80 * var(--fan-window-vh) - 84px) / 3);
+    padding: 8px 10px;
+    gap: 8px;
+  }
+}
