@@ -278,6 +278,10 @@
     margin: 0;
   }
 
+  :global(body.fanLandscapeHand) .movementEventHeading {
+    font-size: 0.65rem;
+  }
+
   :global(body.fanLandscapeHand) .discardEvent .movementEventStage::after {
     box-shadow: calc(0.137 * var(--movement-card-size)) 3px 0 -0.5px rgba(200, 184, 157, 0.48),
       calc(0.339 * var(--movement-card-size)) -1px 0 -0.5px
