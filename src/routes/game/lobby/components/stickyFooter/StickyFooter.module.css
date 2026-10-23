@@ -345,6 +345,11 @@
 }
 
 @media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
+  .stickyFooter {
+    left: env(safe-area-inset-left, 0px);
+    right: env(safe-area-inset-right, 0px);
+  }
+
   .mainRow {
     min-height: 40px;
     padding: 0.2rem 0.75rem;
