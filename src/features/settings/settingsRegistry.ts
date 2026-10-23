@@ -310,6 +310,20 @@ export const SETTINGS_DEFS: SettingDef[] = [
     visible: inAMatch
   },
   {
+    kind: 'custom',
+    key: 'theme',
+    group: 'appearance',
+    labelKey: 'SETTINGS.THEME',
+    render: 'theme'
+  },
+  {
+    kind: 'custom',
+    key: 'cardsLanguage',
+    group: 'appearance',
+    labelKey: 'SETTINGS.CARDS_LANGUAGE',
+    render: 'language'
+  },
+  {
     kind: 'toggle',
     key: 'fannedHandMobile',
     group: 'appearance',
@@ -328,20 +342,6 @@ export const SETTINGS_DEFS: SettingDef[] = [
     storage: 'device',
     name: ENABLE_FANNED_HAND_PC_COOKIE,
     defaultOn: false
-  },
-  {
-    kind: 'custom',
-    key: 'theme',
-    group: 'appearance',
-    labelKey: 'SETTINGS.THEME',
-    render: 'theme'
-  },
-  {
-    kind: 'custom',
-    key: 'cardsLanguage',
-    group: 'appearance',
-    labelKey: 'SETTINGS.CARDS_LANGUAGE',
-    render: 'language'
   },
   {
     kind: 'toggle',
