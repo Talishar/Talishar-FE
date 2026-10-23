@@ -1018,6 +1018,14 @@
     "HIDE_ARENA": "",
     "HOLD_PRIORITY_LABEL": "",
     "LANDSCAPE": "",
+    "LANDSCAPE_TIP": {
+      "CLOSE": "",
+      "GOT_IT": "",
+      "NOT_NOW": "",
+      "ROTATE_HINT": "",
+      "TEXT": "",
+      "TRY_IT_OUT": ""
+    },
     "MANUAL_MODE": "",
     "MANUAL_TARGETING": "",
     "MENU_LABEL": "",

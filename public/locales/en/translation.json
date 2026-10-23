@@ -1237,6 +1237,14 @@
     "HIDE_ARENA": "Hide Arena",
     "HOLD_PRIORITY_LABEL": "Hold Priority",
     "LANDSCAPE": "Landscape",
+    "LANDSCAPE_TIP": {
+      "CLOSE": "Close",
+      "GOT_IT": "Got it",
+      "NOT_NOW": "Not now",
+      "ROTATE_HINT": "Turn your phone sideways to try it.",
+      "TEXT": "We've completely reworked the landscape layout and think it's the best way to play on mobile.",
+      "TRY_IT_OUT": "Try it out"
+    },
     "MANUAL_MODE": "Manual Mode",
     "MANUAL_TARGETING": "Manual Targeting",
     "MENU_LABEL": "Menu",

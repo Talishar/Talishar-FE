@@ -32,6 +32,7 @@ import ShowMobileChat from './ShowMobileChat/ShowMobileChat';
 import FullControlToggle from './FullControlToggle/FullControlToggle';
 import AlwaysPassToggle from './AlwaysPassToggle/AlwaysPassToggle';
 import ManualTargetingToggle from './ManualTargetingToggle/ManualTargetingToggle';
+import LandscapeTip from './LandscapeTip/LandscapeTip';
 import SkipReactionsToggle from '../priorityControl/SkipReactions/SkipReactionsToggle';
 import Inventory from '../inventory/Inventory';
 import SpectatorCount from '../spectatorCount/SpectatorCount';
@@ -280,6 +281,7 @@ function MobileOverflowMenu({ isSpectator }: { isSpectator: boolean }) {
       >
         <FaEllipsisH aria-hidden="true" />
       </button>
+      {!isSpectator && <LandscapeTip anchorRef={btnRef} />}
       {open &&
         ReactDOM.createPortal(
           <>
