@@ -119,6 +119,11 @@ const GridBoard = () => {
           </div>
         )}
         {showsLandscapeFan && (
+          <div className={styles.fanPlayerName}>
+            <PlayerName isPlayer />
+          </div>
+        )}
+        {showsLandscapeFan && (
           <div className={styles.fanLandmark}>
             <LandmarkZone />
           </div>
