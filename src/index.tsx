@@ -15,6 +15,7 @@ import {
 } from 'utils/performanceMetrics';
 import { attemptAssetRecovery } from 'utils/assetRecovery';
 import { installVideoAdTagConfig } from 'utils/videoAds';
+import { migrateFannedHandCookie } from 'routes/game/components/zones/playerHand/migrateFannedHandCookie';
 
 import './i18n';
 import { useTranslation } from 'react-i18next';
@@ -41,6 +42,7 @@ const container = document.getElementById('root')!;
 const root = createRoot(container);
 
 installVideoAdTagConfig();
+migrateFannedHandCookie();
 
 root.render(
   <StrictMode>

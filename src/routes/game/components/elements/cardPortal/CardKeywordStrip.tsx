@@ -4,8 +4,7 @@ import { getKeywordEntry, normalizeKeyword } from 'data/keywords';
 import { useCardKeywords } from 'utils/cardKeywords';
 import styles from './CardPortal.module.css';
 import { useTranslation } from 'react-i18next';
-import { useCookieString } from 'utils/cookieStore';
-import { ENABLE_FANNED_HAND_COOKIE } from 'routes/game/components/zones/playerHand/fanLayout';
+import { useFannedHand } from 'routes/game/components/zones/playerHand/useFannedHand';
 
 const CANONICAL_LABEL_IDS = new Set([
   'specialization',
@@ -23,7 +22,7 @@ export default function CardKeywordStrip({
 }) {
   const { t } = useTranslation();
   const keywordLabels = useCardKeywords(cardNumber);
-  const fitToContent = useCookieString(ENABLE_FANNED_HAND_COOKIE) === 'true';
+  const fitToContent = useFannedHand();
   const entries = keywordLabels?.flatMap((label) => {
     const id = normalizeKeyword(label);
     const entry = id ? getKeywordEntry(id) : undefined;
