@@ -14,6 +14,7 @@ import {
 } from 'features/options/constants';
 import {
   getFanFullscreenWidth,
+  isAppleTouchDevice,
   isGameFullscreenTurnedOff,
   resetGameFullscreenTurnedOff,
   setFanFullscreenWidth
@@ -121,14 +122,6 @@ export const CardScaleVariables = () => {
   }, [cookies.cardSize, cookies.transparencyIntensity, cookies.hoverImageSize]);
 
   return null;
-};
-
-const isAppleTouchDevice = () => {
-  const { userAgent, maxTouchPoints } = window.navigator;
-  return (
-    /iPad|iPhone|iPod/.test(userAgent) ||
-    (/Macintosh/.test(userAgent) && maxTouchPoints > 1)
-  );
 };
 
 export const LandscapeFanFullscreen = () => {
