@@ -840,4 +840,38 @@
       padding-top: 48px;
     }
   }
+
+  :global(body):has(.contentWrapper) {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .navBar {
+    left: env(safe-area-inset-left, 0px);
+    right: env(safe-area-inset-right, 0px);
+    width: auto;
+  }
+
+  .mobileMenu {
+    left: env(safe-area-inset-left, 0px);
+    right: env(safe-area-inset-right, 0px);
+  }
+
+  .contentWrapper {
+    padding-left: env(safe-area-inset-left, 0px);
+    padding-right: env(safe-area-inset-right, 0px);
+
+    &::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 10000;
+      border-left: env(safe-area-inset-left, 0px) solid #000;
+      border-right: env(safe-area-inset-right, 0px) solid #000;
+      pointer-events: none;
+    }
+  }
 }

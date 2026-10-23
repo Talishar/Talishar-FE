@@ -303,3 +303,13 @@
     font-size: 0.8rem;
   }
 }
+
+@media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) and (max-width: 768px) {
+  .dropdown {
+    left: calc(1em + env(safe-area-inset-left, 0px)) !important;
+    right: calc(1em + env(safe-area-inset-right, 0px)) !important;
+    width: auto !important;
+    min-width: 0;
+    max-width: none !important;
+  }
+}

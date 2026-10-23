@@ -1560,7 +1560,23 @@ button.secondary:hover {
     }
   }
 
+  .lobbyClass::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1001;
+    border-left: env(safe-area-inset-left, 0px) solid #000;
+    border-right: env(safe-area-inset-right, 0px) solid #000;
+    pointer-events: none;
+  }
+
   .gridLayout {
+    width: calc(
+      100dvw - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)
+    );
     padding-left: var(--lobby-panel-w);
   }
 
@@ -1568,14 +1584,13 @@ button.secondary:hover {
     position: fixed;
     top: 0;
     bottom: var(--sticky-footer-height, 44px);
-    left: 0;
+    left: env(safe-area-inset-left, 0px);
     width: var(--lobby-panel-w);
     height: auto;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: minmax(0, 1fr) auto;
     gap: 3px;
     padding: 3px;
-    padding-left: max(3px, env(safe-area-inset-left, 0px));
   }
 
   .leftCol,
