@@ -47,7 +47,6 @@ import { useCookieString } from 'utils/cookieStore';
 import { useFanFullscreenWidth } from 'utils/gameFullscreen';
 import { isMeldCard } from 'constants/meldCards';
 import {
-  ENABLE_FANNED_HAND_COOKIE,
   FAN_CARD_HEIGHT_RATIO,
   FAN_DOCK_CARD_HEIGHT_RATIO,
   FAN_DOCK_DURATION_S,
@@ -84,6 +83,7 @@ import {
 import { useFanHover } from './useFanHover';
 import { useLandscapeHandMode } from './useLandscapeHandMode';
 import { useShowsLandscapeFan } from './useShowsLandscapeFan';
+import { useFannedHand } from './useFannedHand';
 import ClassicPlayerHand from './ClassicPlayerHand';
 
 const CARD_ROTATION_KEY_STEP_DEGREES = 3;
@@ -1557,11 +1557,7 @@ function PlayerHand() {
 const FannedPlayerHand = React.memo(PlayerHand);
 
 function PlayerHandForSetting() {
-  return useCookieString(ENABLE_FANNED_HAND_COOKIE) === 'true' ? (
-    <FannedPlayerHand />
-  ) : (
-    <ClassicPlayerHand />
-  );
+  return useFannedHand() ? <FannedPlayerHand /> : <ClassicPlayerHand />;
 }
 
 export default PlayerHandForSetting;

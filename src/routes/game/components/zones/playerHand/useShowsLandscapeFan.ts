@@ -1,11 +1,10 @@
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import { useMediaQuery } from 'hooks/useMediaQuery';
-import { useCookieString } from 'utils/cookieStore';
-import { ENABLE_FANNED_HAND_COOKIE } from './fanLayout';
+import { useFannedHand } from './useFannedHand';
 
 export function useShowsLandscapeFan() {
-  const fannedHand = useCookieString(ENABLE_FANNED_HAND_COOKIE) === 'true';
+  const fannedHand = useFannedHand();
   const isMobile = useMediaQuery('(max-width: 1199px)');
   const isPortrait = useMediaQuery('(orientation: portrait)');
   const playerID = useAppSelector(
