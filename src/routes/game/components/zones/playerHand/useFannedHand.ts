@@ -8,7 +8,8 @@ import {
 
 export function useFannedHand() {
   const isMobile = useMediaQuery(FANNED_HAND_MOBILE_QUERY);
-  const mobileOn = useCookieString(ENABLE_FANNED_HAND_MOBILE_COOKIE) === 'true';
+  const mobileOn =
+    useCookieString(ENABLE_FANNED_HAND_MOBILE_COOKIE) !== 'false';
   const pcOn = useCookieString(ENABLE_FANNED_HAND_PC_COOKIE) === 'true';
   return isMobile ? mobileOn : pcOn;
 }

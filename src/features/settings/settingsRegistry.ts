@@ -331,7 +331,7 @@ export const SETTINGS_DEFS: SettingDef[] = [
     tooltipKey: 'SETTINGS.FANNED_HAND_MOBILE_TOOLTIP',
     storage: 'device',
     name: ENABLE_FANNED_HAND_MOBILE_COOKIE,
-    defaultOn: false
+    defaultOn: true
   },
   {
     kind: 'toggle',
