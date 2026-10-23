@@ -1060,6 +1060,14 @@
     "HIDE_ARENA": "Masquer l'arène",
     "HOLD_PRIORITY_LABEL": "Maintenir la priorité",
     "LANDSCAPE": "Paysage",
+    "LANDSCAPE_TIP": {
+      "CLOSE": "Fermer",
+      "GOT_IT": "Compris",
+      "NOT_NOW": "Pas maintenant",
+      "ROTATE_HINT": "Tournez votre téléphone pour l'essayer.",
+      "TEXT": "Nous avons entièrement repensé l'affichage en paysage et pensons que c'est la meilleure façon de jouer sur mobile.",
+      "TRY_IT_OUT": "Essayer"
+    },
     "MANUAL_MODE": "Mode manuel",
     "MANUAL_TARGETING": "Ciblage manuel",
     "MENU_LABEL": "Menu",
