@@ -407,7 +407,8 @@
     "OPEN_GAMES": "公开游戏",
     "PLEASE_LOGIN": "登录后即可浏览和加入公开大厅，或观战进行中的游戏。",
     "PRIVATE_GAMES_AVAILABLE": "无需账户，您仍可在此创建私人游戏，或通过分享链接加入私人游戏。",
-    "REFRESH": "刷新"
+    "REFRESH": "刷新",
+    "SPECTATE_LOCKED": "您的账户暂时无法观战。请继续游戏，稍后再来。"
   },
   "GAME_LOBBY": {
     "1ST": "",

@@ -538,7 +538,8 @@
     "OPEN_GAMES": "Open Games",
     "PLEASE_LOGIN": "Log in to browse and join open lobbies or spectate games in progress.",
     "PRIVATE_GAMES_AVAILABLE": "You can still create a private game here or join one from a shared link. No account needed.",
-    "REFRESH": "Refresh"
+    "REFRESH": "Refresh",
+    "SPECTATE_LOCKED": "Spectating isn't available for your account yet. Keep playing and check back later."
   },
   "GAME_LOBBY": {
     "1ST": "1st",
@@ -2326,6 +2327,7 @@
   },
   "SPECTATOR": {
     "LOGIN_REQUIRED_ACTION": "Log in",
+    "GAMES_REQUIRED_BODY": "Spectating isn't available for your account yet. Keep playing and check back later.",
     "LOGIN_REQUIRED_BODY": "You need to be logged in to watch a game. Log in and open this link again to start spectating.",
     "LOGIN_REQUIRED_HOME": "Go home",
     "LOGIN_REQUIRED_TITLE": "Log in to spectate"
