@@ -52,9 +52,10 @@
   }
 }
 
-:global(body.fanLandscapeHand) .playerName:not(.playerTwo) {
+:global(body.fanLandscapeHand) .playerName {
   position: relative;
   top: auto;
+  bottom: auto;
   left: auto;
   margin: 0;
   padding: 0 0.15rem;
@@ -279,13 +280,13 @@
 }
 
 @media (orientation: landscape) and (min-height: 501px) {
-  :global(body.fanLandscapeHand) .playerName:not(.playerTwo) {
+  :global(body.fanLandscapeHand) .playerName {
     height: calc(22 * var(--fan-px));
     padding: 0 calc(2.7 * var(--fan-px));
     font-size: calc(9.9 * var(--fan-px));
   }
 
-  :global(body.fanLandscapeHand) .playerName:not(.playerTwo) .icon {
+  :global(body.fanLandscapeHand) .playerName .icon {
     height: calc(1.8 * var(--fan-vh));
     width: calc(1.8 * var(--fan-vh));
   }

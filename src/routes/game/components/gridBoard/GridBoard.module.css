@@ -588,6 +588,30 @@
   grid-column: 4 / 6;
 }
 
+:global(body.fanLandscapeHand) .fanPlayerName {
+  grid-row: 11;
+  grid-column: 3 / 6;
+  position: relative;
+  top: var(--board-bottom-row);
+  align-self: end;
+  margin-bottom: calc(8px - var(--board-gap));
+  margin-left: calc(8px - var(--board-gap));
+  justify-self: start;
+  width: auto;
+  height: auto;
+  min-width: 0;
+  max-width: 100%;
+  z-index: 6;
+}
+
+:global(body.fanLandscapeHand)
+  :is(.MirroredPlayerGameBoardGrid, .MirroredBothGameBoardGrid):has(
+    > .pOneCount > *
+  )
+  .fanPlayerName {
+  grid-column: 4 / 6;
+}
+
 :global(body.fanLandscapeHand) .fanLandmark {
   grid-column: 3;
   grid-row: 4 / 10;
@@ -924,6 +948,11 @@
 
   :global(body.fanLandscapeHand) .fanOpponentName {
     margin-top: calc(8 * var(--fan-px));
+    margin-left: calc(8 * var(--fan-px) - var(--board-gap));
+  }
+
+  :global(body.fanLandscapeHand) .fanPlayerName {
+    margin-bottom: calc(8 * var(--fan-px) - var(--board-gap));
     margin-left: calc(8 * var(--fan-px) - var(--board-gap));
   }
 
