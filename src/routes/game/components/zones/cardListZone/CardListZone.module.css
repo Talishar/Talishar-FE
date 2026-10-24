@@ -25,6 +25,15 @@
   overflow: hidden;
 }
 
+@media (min-width: 813px) and (min-height: 501px) {
+  .cardListBox {
+    top: 8vh;
+    bottom: 14vh;
+    left: 16vw;
+    right: 16vw;
+  }
+}
+
 @media (max-width: 812px) {
   .cardListBox {
     top: 5vh;
