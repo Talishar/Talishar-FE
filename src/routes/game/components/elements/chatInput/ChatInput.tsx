@@ -28,6 +28,7 @@ import { toast } from 'react-hot-toast';
 import useAuth from 'hooks/useAuth';
 import { CHAT_WHEEL } from 'constants/chatMessages';
 import { isHandCardRotationHeld } from 'utils/handCardRotation';
+import { shortcutKey } from 'utils/shortcutKey';
 import { useTranslation } from 'react-i18next';
 import { addQuickChatRecent, getQuickChatRecents } from './quickChatRecents';
 
@@ -233,7 +234,7 @@ const ChatWheel = ({ usePrimary = false }: { usePrimary?: boolean }) => {
   // Press Q to open, Escape closes via FloatingUI dismiss
   React.useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'q' || e.key === 'Q') {
+      if (shortcutKey(e) === 'q') {
         const tag = (e.target as HTMLElement).tagName;
         if (tag === 'INPUT' || tag === 'TEXTAREA') return;
         if (isHandCardRotationHeld()) return;
@@ -370,14 +371,15 @@ const ChatOptions = ({ setModalDisplay }: ChatOptionsProps) => {
 
   React.useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
-      const n = parseInt(e.key);
+      const key = shortcutKey(e);
+      const n = parseInt(key);
       if (n >= 1 && n <= 9) {
         const entry = allEntries[n - 1];
         if (entry) {
           e.preventDefault();
           handleSend(entry[0]);
         }
-      } else if (e.key === '0') {
+      } else if (key === '0') {
         const entry = allEntries[9];
         if (entry) {
           e.preventDefault();

@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { shortcutKey } from 'utils/shortcutKey';
 
 const MOUSE_BUTTON_CODES: Record<string, number> = {
   MiddleClick: 1
@@ -25,9 +26,13 @@ const isTypingTarget = (target: EventTarget | null): boolean => {
 
 const eventMatches = (keyCode: string, event: Event): boolean => {
   const mouseButton = MOUSE_BUTTON_CODES[keyCode];
-  return mouseButton === undefined
-    ? event instanceof KeyboardEvent && event.code === keyCode
-    : event instanceof MouseEvent && event.button === mouseButton;
+  if (mouseButton !== undefined)
+    return event instanceof MouseEvent && event.button === mouseButton;
+  if (!(event instanceof KeyboardEvent)) return false;
+  const letter = /^Key([A-Z])$/.exec(keyCode);
+  return letter
+    ? shortcutKey(event) === letter[1].toLowerCase()
+    : event.code === keyCode;
 };
 
 const registerShortcut = (

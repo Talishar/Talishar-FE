@@ -20,6 +20,7 @@ import { createPortal } from 'react-dom';
 import useSound from 'use-sound';
 import drawingCardsSound from 'sounds/drawing_cards.wav';
 import { setHandCardRotationHeld } from 'utils/handCardRotation';
+import { shortcutKey } from 'utils/shortcutKey';
 import { useTranslation } from 'react-i18next';
 
 const DEFAULT_HAND_REORDER_STEP_PX = 120;
@@ -785,7 +786,7 @@ function PlayerHand() {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      const key = event.key.toLowerCase();
+      const key = shortcutKey(event);
       if (key !== 'q' && key !== 'e') return;
 
       const target = event.target as HTMLElement;
@@ -834,7 +835,7 @@ function PlayerHand() {
   // Shuffle hand randomly with S key; guarantees at least 1 card changes position
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key !== 's' && e.key !== 'S') return;
+      if (shortcutKey(e) !== 's') return;
       const target = e.target as HTMLElement;
       if (
         target.tagName === 'INPUT' ||
