@@ -456,6 +456,17 @@
     max-height: 14vw;
     max-height: 14dvw;
   }
+
+  .optionsContainer.cardListPopup {
+    width: 94dvw;
+    max-width: 94dvw;
+    --card-size: calc((94dvw - 6vh - 42px) / 5);
+  }
+
+  .cardListPopup .cardDiv {
+    max-width: var(--card-size);
+    max-height: var(--card-size);
+  }
 }
 
 @media (orientation: portrait) and (min-width: 601px) {
@@ -464,6 +475,14 @@
     right: 5%;
     translate: none;
     width: auto;
+  }
+}
+
+@media (orientation: portrait) and (min-width: 601px) and (max-width: 1024px) {
+  .optionsContainer.cardListPopup {
+    left: 5%;
+    right: 5%;
+    --card-size: calc((90vw - 7vh - 16px) / 6.4);
   }
 }
 

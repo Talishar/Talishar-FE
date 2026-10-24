@@ -323,8 +323,27 @@
   }
 }
 
+@media (orientation: portrait) and (max-width: 1024px) {
+  .cardListBox {
+    left: 5vw;
+    right: 5vw;
+  }
+
+  .cardListContents {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+@media (orientation: portrait) and (min-width: 601px) and (max-width: 1024px) {
+  .cardListContents {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
 /* ── No-results state ─────────────────────────────────── */
 .noResults {
+  grid-column: 1 / -1;
   padding: 2rem 1rem;
   color: rgba(var(--theme-on-surface-rgb), 0.45);
   text-align: center;

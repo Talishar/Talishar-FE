@@ -1538,6 +1538,13 @@ button.secondary:hover {
   pointer-events: none;
 }
 
+@media (orientation: portrait) and (max-width: 500px) and (pointer: coarse) {
+  .lobbyClass {
+    --lobby-eq-card: min(100px, calc((100vw - 40px) / 4));
+    --lobby-deck-card: min(100px, calc((100vw - 38px) / 4));
+  }
+}
+
 @media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
   .lobbyClass {
     --lobby-vh: 100vh;

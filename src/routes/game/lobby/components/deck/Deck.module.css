@@ -259,6 +259,22 @@
   }
 }
 
+@media (orientation: portrait) and (max-width: 500px) and (pointer: coarse) {
+  .container {
+    gap: 6px;
+    padding: 6px 8px 5em;
+  }
+
+  .cardsGroup {
+    gap: 6px;
+  }
+
+  .deckCardContainer {
+    width: var(--lobby-deck-card, 100px);
+    height: var(--lobby-deck-card, 100px);
+  }
+}
+
 @media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
   .sortControls {
     padding: 4px 8px !important;

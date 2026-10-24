@@ -164,6 +164,34 @@
   }
 }
 
+@media (orientation: portrait) and (max-width: 500px) and (pointer: coarse) {
+  .container {
+    gap: 6px 16px;
+    padding: 6px 10px;
+  }
+
+  .categoryContainer {
+    gap: 6px;
+  }
+
+  .eqCategory > h3 {
+    margin-top: 0.5rem;
+    padding-bottom: 4px;
+    font-size: 0.95rem;
+    line-height: 1.2;
+  }
+
+  .cardContainer {
+    width: var(--lobby-eq-card, 100px);
+    height: var(--lobby-eq-card, 100px);
+  }
+
+  .equipmentDropZone .categoryContainer {
+    min-width: var(--lobby-eq-card, 100px);
+    min-height: var(--lobby-eq-card, 100px);
+  }
+}
+
 @media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
   .container {
     gap: 6px 16px;
