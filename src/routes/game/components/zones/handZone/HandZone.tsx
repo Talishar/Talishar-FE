@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector, useAppStore } from 'app/Hooks';
 import { setCardListFocus, clearCardListFocus } from 'features/game/GameSlice';
 import { useWindowWidth } from 'hooks/useWindowDimensions';
 import { getCardPreview } from '../../elements/cardPortal/cardPreviewStore';
+import { useFannedHand } from '../playerHand/useFannedHand';
 
 const CARD_GAP = 5; // matches the flex gap in HandZone.module.css
 const ZONE_MAX_WIDTH = 0.6; // matches max-width: 60% in HandZone.module.css
@@ -67,6 +68,7 @@ const HandZone = React.memo(function HandZone(prop: Player) {
     (state: RootState) => state.game.gameInfo.isReplay
   );
   const store = useAppStore();
+  const fannedHand = useFannedHand();
 
   const windowWidth = useWindowWidth();
   const zoneRef = useRef<HTMLDivElement>(null);
@@ -134,7 +136,10 @@ const HandZone = React.memo(function HandZone(prop: Player) {
 
   // Empty, but still a fixed card-sized box pinned to the bottom of the
   // viewport, so it must not swallow taps aimed at the board zones under it.
-  if (handCards === undefined || (playerID !== 3 && !isReplay && isPlayer)) {
+  if (
+    handCards === undefined ||
+    (isPlayer && (fannedHand || (playerID !== 3 && !isReplay)))
+  ) {
     return <div className={classNames(displayRow, styles.emptyZone)}></div>;
   }
 
