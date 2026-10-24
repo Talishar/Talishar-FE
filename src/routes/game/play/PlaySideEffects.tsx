@@ -221,8 +221,9 @@ export const ReplayAdvanceButton = () => {
   );
   const { activateReplayControl, isPlaying, useSpaceToAdvanceOneStep } =
     useReplayPlayback();
+  const showsLandscapeFan = useShowsLandscapeFan();
 
-  if (!isReplay || canPassPhase !== true) return null;
+  if (!isReplay || canPassPhase !== true || showsLandscapeFan) return null;
 
   return (
     <button

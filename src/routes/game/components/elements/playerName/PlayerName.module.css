@@ -38,7 +38,9 @@
 
   .playerName.playerTwo {
     top: auto;
-    bottom: env(safe-area-inset-bottom, 0px);
+    bottom: calc(
+      env(safe-area-inset-bottom, 0px) + var(--fan-hand-reserve, 0px)
+    );
   }
 
   .playerName.spectator:not(.playerTwo) {
