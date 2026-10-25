@@ -14,6 +14,7 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
   overflow-y: auto;
   overflow-x: hidden;
+  scrollbar-gutter: stable;
 }
 
 .fullLog {
@@ -27,8 +28,6 @@
 }
 
 .cardListBox.reduced {
-  top: calc(1vh + var(--card-size));
-  top: calc(1dvh + var(--card-size));
   bottom: auto;
   z-index: 10;
 }
@@ -322,6 +321,7 @@
 @media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
   .cardListBox {
     font-size: 12px;
+    scrollbar-gutter: auto;
   }
 
   .cardListBox:not(.reduced) {
