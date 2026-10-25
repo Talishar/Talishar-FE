@@ -13,6 +13,7 @@ import {
   attemptAssetRecovery,
   shouldAttemptAssetRecovery
 } from 'utils/assetRecovery';
+import { frameHost } from 'routes/game/play/forcedLayout/forcedLayout';
 
 const STALE_ASSET_ERROR_PATTERNS = [
   'failed to fetch dynamically imported module',
@@ -140,7 +141,11 @@ export const ErrorPage = () => {
         <button
           onClick={(e) => {
             e.preventDefault();
-            navigate(-1);
+            if (frameHost) {
+              window.parent.history.back();
+            } else {
+              navigate(-1);
+            }
           }}
         >
           {t('JOIN.BACK')}

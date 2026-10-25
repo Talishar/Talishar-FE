@@ -1531,6 +1531,13 @@
     "FANNED_HAND_MOBILE_TOOLTIP": "",
     "FANNED_HAND_PC": "",
     "FANNED_HAND_PC_TOOLTIP": "",
+    "FORCE_MOBILE_LAYOUT": "",
+    "FORCE_MOBILE_LAYOUT_OPTIONS": {
+      "NO": "",
+      "PHONE": "",
+      "TABLET": ""
+    },
+    "FORCE_MOBILE_LAYOUT_TOOLTIP": "",
     "GAME_SETTINGS": "游戏设置",
     "HIDE_HAND_FROM_FRIENDS": "",
     "HIDE_HAND_FROM_FRIENDS_TOOLTIP": "",
