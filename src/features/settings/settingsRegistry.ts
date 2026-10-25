@@ -4,7 +4,10 @@ import {
   ENABLE_FANNED_HAND_MOBILE_COOKIE,
   ENABLE_FANNED_HAND_PC_COOKIE
 } from 'routes/game/components/zones/playerHand/fanLayout';
-import { FORCED_LAYOUT_COOKIE } from 'routes/game/play/forcedLayout/forcedLayout';
+import {
+  FORCED_LAYOUT,
+  FORCED_LAYOUT_COOKIE
+} from 'routes/game/play/forcedLayout/forcedLayout';
 
 export type SettingsSurface = 'account' | 'game';
 
@@ -61,6 +64,7 @@ export interface ToggleDef extends BaseDef {
 
 export interface RadioDef extends BaseDef {
   kind: 'radio';
+  storage?: 'device';
   name: string;
   options: Array<{ value: number; labelKey: string }>;
   defaultValue: number;
@@ -78,24 +82,12 @@ export interface SliderDef extends BaseDef {
   sideEffect?: 'transparency';
 }
 
-export interface ChoiceDef extends BaseDef {
-  kind: 'choice';
-  name: string;
-  options: Array<{ value: string; labelKey: string }>;
-  defaultValue: string;
-}
-
 export interface CustomDef extends BaseDef {
   kind: 'custom';
   render: 'theme' | 'language';
 }
 
-export type SettingDef =
-  | ToggleDef
-  | RadioDef
-  | SliderDef
-  | ChoiceDef
-  | CustomDef;
+export type SettingDef = ToggleDef | RadioDef | SliderDef | CustomDef;
 
 export const SETTINGS_TABS: SettingsTab[] = [
   { id: 'gameplay', labelKey: 'SETTINGS.TABS.GAMEPLAY' },
@@ -139,6 +131,12 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
     id: 'boardLayout',
     tab: 'interface',
     labelKey: 'SETTINGS.GROUPS.BOARD_LAYOUT'
+  },
+  {
+    id: 'forcedMobileLayout',
+    tab: 'interface',
+    labelKey: 'SETTINGS.FORCE_MOBILE_LAYOUT',
+    tooltipKey: 'SETTINGS.FORCE_MOBILE_LAYOUT_TOOLTIP'
   },
   {
     id: 'cardVisuals',
@@ -357,21 +355,24 @@ export const SETTINGS_DEFS: SettingDef[] = [
     defaultOn: false
   },
   {
-    kind: 'choice',
+    kind: 'radio',
     key: 'forcedMobileLayout',
-    group: 'boardLayout',
+    group: 'forcedMobileLayout',
     labelKey: 'SETTINGS.FORCE_MOBILE_LAYOUT',
-    tooltipKey: 'SETTINGS.FORCE_MOBILE_LAYOUT_TOOLTIP',
+    storage: 'device',
     name: FORCED_LAYOUT_COOKIE,
-    defaultValue: 'none',
+    defaultValue: FORCED_LAYOUT.NONE,
     options: [
-      { value: 'none', labelKey: 'SETTINGS.FORCE_MOBILE_LAYOUT_OPTIONS.NO' },
       {
-        value: 'phone',
+        value: FORCED_LAYOUT.NONE,
+        labelKey: 'SETTINGS.FORCE_MOBILE_LAYOUT_OPTIONS.NO'
+      },
+      {
+        value: FORCED_LAYOUT.PHONE,
         labelKey: 'SETTINGS.FORCE_MOBILE_LAYOUT_OPTIONS.PHONE'
       },
       {
-        value: 'tablet',
+        value: FORCED_LAYOUT.TABLET,
         labelKey: 'SETTINGS.FORCE_MOBILE_LAYOUT_OPTIONS.TABLET'
       }
     ]
@@ -622,18 +623,17 @@ export const SETTINGS_DEFS: SettingDef[] = [
 export const DEVICE_SETTING_COOKIES = Array.from(
   new Set(
     SETTINGS_DEFS.filter(
-      (def): def is ToggleDef | SliderDef | ChoiceDef =>
+      (def): def is ToggleDef | SliderDef | RadioDef =>
         def.kind === 'slider' ||
-        def.kind === 'choice' ||
-        (def.kind === 'toggle' && def.storage === 'device')
+        ((def.kind === 'toggle' || def.kind === 'radio') &&
+          def.storage === 'device')
     ).map((def) => def.name)
   )
 );
 
 export const isDeviceScoped = (def: SettingDef) =>
   def.kind === 'slider' ||
-  def.kind === 'choice' ||
-  (def.kind === 'toggle' && def.storage === 'device');
+  ((def.kind === 'toggle' || def.kind === 'radio') && def.storage === 'device');
 
 /** Device settings that mirror to an account row when the player is signed in. */
 export const SYNCED_DEFS = SETTINGS_DEFS.filter(

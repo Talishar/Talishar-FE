@@ -13,7 +13,7 @@ import {
   attemptAssetRecovery,
   shouldAttemptAssetRecovery
 } from 'utils/assetRecovery';
-import { isForcedLayoutFrame } from 'routes/game/play/forcedLayout/forcedLayout';
+import { frameHost } from 'routes/game/play/forcedLayout/forcedLayout';
 
 const STALE_ASSET_ERROR_PATTERNS = [
   'failed to fetch dynamically imported module',
@@ -141,7 +141,7 @@ export const ErrorPage = () => {
         <button
           onClick={(e) => {
             e.preventDefault();
-            if (isForcedLayoutFrame()) {
+            if (frameHost) {
               window.parent.history.back();
             } else {
               navigate(-1);

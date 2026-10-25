@@ -31,10 +31,7 @@ import {
   ForcedLayoutFrameBridge,
   ForcedLayoutGate
 } from 'routes/game/play/forcedLayout/ForcedLayoutFrame';
-import {
-  isForcedLayoutFrame,
-  takeForcedFrameBoot
-} from 'routes/game/play/forcedLayout/forcedLayout';
+import { frameHost } from 'routes/game/play/forcedLayout/forcedLayout';
 const Privacy = lazy(() => import('routes/privacy'));
 const LinkPatreon = lazy(() => import('routes/user/profile/linkpatreon'));
 const LinkMetafy = lazy(
@@ -186,24 +183,19 @@ const DailyPuzzleGuard = ({ children }: { children: JSX.Element }) => {
   return children;
 };
 
-const createForcedLayoutFrameRouter: typeof createBrowserRouter = (
-  routes,
-  opts
-) =>
-  createMemoryRouter(routes, {
-    ...opts,
-    initialEntries: [
-      {
-        pathname: window.location.pathname,
-        search: window.location.search,
-        state: takeForcedFrameBoot().state
-      }
-    ]
-  });
-
-const createRouter = isForcedLayoutFrame()
-  ? createForcedLayoutFrameRouter
-  : createBrowserRouter;
+const createRouter: typeof createBrowserRouter = (routes, opts) =>
+  frameHost
+    ? createMemoryRouter(routes, {
+        ...opts,
+        initialEntries: [
+          {
+            pathname: window.location.pathname,
+            search: window.location.search,
+            state: structuredClone(frameHost.state)
+          }
+        ]
+      })
+    : createBrowserRouter(routes, opts);
 
 export const router = createRouter(
   createRoutesFromElements(
@@ -211,31 +203,19 @@ export const router = createRouter(
       errorElement={<ErrorPage />}
       element={
         <Suspense fallback={<RouteFallback />}>
-          <SyncedSettings />
-          <AdAnalyticsTracker />
           <ForcedLayoutFrameBridge>
+            <SyncedSettings />
+            <AdAnalyticsTracker />
             <Outlet />
           </ForcedLayoutFrameBridge>
         </Suspense>
       }
     >
       <Route element={<Outlet />}>
-        <Route
-          path="game/play/:gameID"
-          element={
-            <ForcedLayoutGate>
-              <Play />
-            </ForcedLayoutGate>
-          }
-        />
-        <Route
-          path="game/play"
-          element={
-            <ForcedLayoutGate>
-              <Play />
-            </ForcedLayoutGate>
-          }
-        />
+        <Route element={<ForcedLayoutGate />}>
+          <Route path="game/play/:gameID" element={<Play />} />
+          <Route path="game/play" element={<Play />} />
+        </Route>
         <Route path="game/lobby/:gameID" element={<Lobby />} />
         <Route
           path="game/MainMenu.php"

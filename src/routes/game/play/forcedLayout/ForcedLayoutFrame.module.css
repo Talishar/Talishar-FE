@@ -5,22 +5,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: env(safe-area-inset-top) env(safe-area-inset-right)
-    env(safe-area-inset-bottom) env(safe-area-inset-left);
   background: #000;
   overflow: hidden;
 }
 
-.stage {
-  position: relative;
-  flex: 0 0 auto;
-}
-
 .frame {
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: block;
+  flex: none;
   border: 0;
-  transform-origin: 0 0;
 }

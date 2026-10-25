@@ -4,22 +4,22 @@ import { ADS_ENABLED } from 'config/ads';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import { beginAdPageView, endAdPageView } from 'utils/adAnalytics';
 import {
-  isForcedLayoutFrame,
+  FORCED_LAYOUT,
   useForcedLayoutFrame
 } from 'routes/game/play/forcedLayout/forcedLayout';
 
 const AdAnalyticsTracker = () => {
   const { pathname } = useLocation();
   const { showAds } = useSupporterStatus();
-  const isPlayPath = pathname.startsWith('/game/play');
-  const framesPlay = useForcedLayoutFrame() !== null && isPlayPath;
-  const skip = framesPlay || (isForcedLayoutFrame() && !isPlayPath);
+  const framesPlay =
+    useForcedLayoutFrame() !== FORCED_LAYOUT.NONE &&
+    pathname.startsWith('/game/play');
 
   useEffect(() => {
-    if (!ADS_ENABLED || !showAds || skip) return;
+    if (!ADS_ENABLED || !showAds || framesPlay) return;
     beginAdPageView(pathname);
     return endAdPageView;
-  }, [pathname, showAds, skip]);
+  }, [pathname, showAds, framesPlay]);
 
   return null;
 };

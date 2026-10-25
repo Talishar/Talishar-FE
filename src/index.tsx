@@ -17,9 +17,8 @@ import { attemptAssetRecovery } from 'utils/assetRecovery';
 import { installVideoAdTagConfig } from 'utils/videoAds';
 import { migrateFannedHandCookie } from 'routes/game/components/zones/playerHand/migrateFannedHandCookie';
 import {
-  installForcedFrameTouchMedia,
-  isForcedLayoutFrame,
-  takeForcedFrameBoot
+  frameHost,
+  installForcedLayoutFrame
 } from 'routes/game/play/forcedLayout/forcedLayout';
 import { restoreGameInfo } from 'features/game/GameSlice';
 
@@ -49,11 +48,10 @@ const root = createRoot(container);
 
 installVideoAdTagConfig();
 migrateFannedHandCookie();
-const forcedFrameGameInfo = isForcedLayoutFrame()
-  ? takeForcedFrameBoot().gameInfo
-  : null;
-if (forcedFrameGameInfo) store.dispatch(restoreGameInfo(forcedFrameGameInfo));
-if (isForcedLayoutFrame()) installForcedFrameTouchMedia();
+if (frameHost) {
+  store.dispatch(restoreGameInfo(structuredClone(frameHost.gameInfo)));
+  installForcedLayoutFrame();
+}
 
 root.render(
   <StrictMode>

@@ -1,236 +1,119 @@
 import GameStaticInfo from 'features/GameStaticInfo';
 import { useMediaQuery } from 'hooks/useMediaQuery';
-import { useCookieString } from 'utils/cookieStore';
-
-export type ForcedLayout = 'none' | 'phone' | 'tablet';
-export type FramedLayout = Exclude<ForcedLayout, 'none'>;
+import { useCookieValue } from 'utils/cookieStore';
 
 export const FORCED_LAYOUT_COOKIE = 'forcedMobileLayout';
+export const FORCED_LAYOUT = { NONE: 0, PHONE: 1, TABLET: 2 } as const;
 export const FORCED_LAYOUT_FRAME_NAME = 'talisharForcedLayout';
-export const FORCED_FRAME_MESSAGE = 'talishar:forcedLayoutFrame';
-const FORCED_FRAME_BOOT_KEY = 'forcedLayoutFrameGameInfo';
 
-export const PHONE_LANDSCAPE_BOARD_QUERY =
-  '(orientation: landscape) and (max-width: 1199px) and (max-height: 500px)';
-export const TABLET_LANDSCAPE_BOARD_QUERY =
+const PHONE_BOARD_QUERY =
+  '(orientation: landscape) and (max-height: 500px) and (pointer: coarse)';
+const TABLET_BOARD_QUERY =
   '(orientation: landscape) and (max-width: 1199px) and (min-height: 501px)';
 
-const PHONE_FRAME_HEIGHT = 413;
-const PHONE_FRAME_MIN_ASPECT = 16 / 9;
-const FRAME_MAX_WIDTH = 1198;
-const TABLET_FRAME_MIN_HEIGHT = 502;
+export interface ForcedLayoutHost {
+  gameInfo: GameStaticInfo;
+  state: unknown;
+  sync: (
+    gameInfo: GameStaticInfo,
+    to?: { path: string; state: unknown }
+  ) => void;
+}
 
-export const readForcedLayout = (raw: unknown): ForcedLayout =>
-  raw === 'phone' || raw === 'tablet' ? raw : 'none';
+declare global {
+  interface Window {
+    forcedLayoutHost?: ForcedLayoutHost;
+  }
+}
 
-export const useForcedLayout = () =>
-  readForcedLayout(useCookieString(FORCED_LAYOUT_COOKIE));
-
-export const isForcedLayoutFrame = () =>
+export const frameHost =
   typeof window !== 'undefined' &&
-  window.parent !== window &&
-  window.name === FORCED_LAYOUT_FRAME_NAME;
+  window.name === FORCED_LAYOUT_FRAME_NAME &&
+  window.parent !== window
+    ? window.parent.forcedLayoutHost
+    : undefined;
 
-export const useForcedBoard = () => {
-  const forced = useForcedLayout();
-  const phoneBoard = useMediaQuery(PHONE_LANDSCAPE_BOARD_QUERY);
-  const tabletBoard = useMediaQuery(TABLET_LANDSCAPE_BOARD_QUERY);
-  return (
-    (forced === 'phone' && phoneBoard) || (forced === 'tablet' && tabletBoard)
-  );
+export const useForcedLayout = (): number => {
+  const value = Number(useCookieValue(FORCED_LAYOUT_COOKIE));
+  return value === FORCED_LAYOUT.PHONE || value === FORCED_LAYOUT.TABLET
+    ? value
+    : FORCED_LAYOUT.NONE;
 };
 
-export const useForcedLayoutFrame = (): FramedLayout | null => {
-  const forced = useForcedLayout();
-  const isPortrait = useMediaQuery('(orientation: portrait)');
-  const forcedBoard = useForcedBoard();
-  if (forced === 'none' || isPortrait || forcedBoard || isForcedLayoutFrame())
-    return null;
-  return forced;
+export const useForcedLayoutFrame = (): number => {
+  const layout = useForcedLayout();
+  const isLandscape = useMediaQuery('(orientation: landscape)');
+  const alreadyShown = useMediaQuery(
+    layout === FORCED_LAYOUT.PHONE ? PHONE_BOARD_QUERY : TABLET_BOARD_QUERY
+  );
+  return frameHost || !isLandscape || alreadyShown
+    ? FORCED_LAYOUT.NONE
+    : layout;
 };
 
 export const forcedFrameSize = (
-  layout: FramedLayout,
+  layout: number,
   width: number,
   height: number
 ) => {
   const aspect = width / height;
-  if (layout === 'phone') {
-    const frameWidth = Math.round(
-      PHONE_FRAME_HEIGHT *
-        Math.min(
-          Math.max(aspect, PHONE_FRAME_MIN_ASPECT),
-          FRAME_MAX_WIDTH / PHONE_FRAME_HEIGHT
-        )
-    );
-    return {
-      width: frameWidth,
-      height: PHONE_FRAME_HEIGHT,
-      scale: Math.min(width / frameWidth, height / PHONE_FRAME_HEIGHT)
-    };
-  }
-  const frameHeight = Math.min(
-    Math.round(
-      FRAME_MAX_WIDTH /
-        Math.min(aspect, FRAME_MAX_WIDTH / TABLET_FRAME_MIN_HEIGHT)
-    ),
-    FRAME_MAX_WIDTH - 1
-  );
+  const frame =
+    layout === FORCED_LAYOUT.PHONE
+      ? {
+          width: Math.min(1198, Math.round(413 * Math.max(aspect, 16 / 9))),
+          height: 413
+        }
+      : {
+          width: 1198,
+          height: Math.min(1197, Math.max(502, Math.round(1198 / aspect)))
+        };
   return {
-    width: FRAME_MAX_WIDTH,
-    height: frameHeight,
-    scale: Math.min(width / FRAME_MAX_WIDTH, height / frameHeight)
+    ...frame,
+    scale: Math.min(width / frame.width, height / frame.height)
   };
 };
 
-const patchTouchMediaRules = (rules: CSSRuleList) => {
+const patchTouchRules = (rules: CSSRuleList) => {
   Array.from(rules).forEach((rule) => {
     if (rule instanceof CSSMediaRule) {
       const { media } = rule;
-      const next = media.mediaText
-        .replace(/\(pointer:\s*coarse\)/g, '(pointer)')
-        .replace(/\(hover:\s*none\)/g, '(hover)');
-      if (next !== media.mediaText) media.mediaText = next;
+      const patched = media.mediaText.replace(
+        /\(pointer: coarse\)/g,
+        '(pointer)'
+      );
+      if (patched !== media.mediaText) media.mediaText = patched;
     }
-    if ('cssRules' in rule)
-      patchTouchMediaRules((rule as CSSGroupingRule).cssRules);
+    if ('cssRules' in rule) patchTouchRules((rule as CSSGroupingRule).cssRules);
   });
 };
 
-const patchTouchMediaSheet = (sheet: CSSStyleSheet | null) => {
-  if (!sheet) return;
-  try {
-    patchTouchMediaRules(sheet.cssRules);
-  } catch {
-    return;
-  }
-};
-
-const watchStylesheetLink = (link: HTMLLinkElement) => {
-  patchTouchMediaSheet(link.sheet);
-  link.addEventListener('load', () => patchTouchMediaSheet(link.sheet));
-};
-
-const patchTouchMediaNode = (node: Node) => {
-  if (node instanceof HTMLStyleElement) patchTouchMediaSheet(node.sheet);
-  else if (node instanceof HTMLLinkElement && node.rel === 'stylesheet')
-    watchStylesheetLink(node);
-};
-
-export const installForcedFrameTouchMedia = () => {
-  Array.from(document.styleSheets).forEach(patchTouchMediaSheet);
-  document
-    .querySelectorAll<HTMLLinkElement>('link[rel="stylesheet"]')
-    .forEach(watchStylesheetLink);
-  new MutationObserver((records) => {
-    records.forEach((record) => {
-      record.addedNodes.forEach(patchTouchMediaNode);
-      const target =
-        record.target instanceof Element
-          ? record.target
-          : record.target.parentElement;
-      if (target instanceof HTMLStyleElement)
-        patchTouchMediaSheet(target.sheet);
-    });
-  }).observe(document.head, {
-    childList: true,
-    subtree: true,
-    characterData: true
+const patchTouchStyleSheets = () => {
+  Array.from(document.styleSheets).forEach((sheet) => {
+    try {
+      patchTouchRules(sheet.cssRules);
+    } catch {
+      return;
+    }
   });
 };
 
-let frameZoomProbe: Promise<boolean> | null = null;
-
-export const frameZoomWorks = (): Promise<boolean> => {
-  if (frameZoomProbe) return frameZoomProbe;
-  frameZoomProbe = new Promise<boolean>((resolve) => {
-    const probe = document.createElement('iframe');
-    probe.setAttribute('aria-hidden', 'true');
-    probe.tabIndex = -1;
-    probe.style.cssText =
-      'position:fixed;left:0;top:0;width:100px;height:50px;zoom:2;border:0;visibility:hidden;pointer-events:none';
-    document.body.appendChild(probe);
-    let done = false;
-    const finish = () => {
-      if (done) return;
-      done = true;
-      const works = probe.contentWindow?.innerWidth === 100;
-      probe.remove();
-      resolve(works);
-    };
-    requestAnimationFrame(() => requestAnimationFrame(finish));
-    setTimeout(finish, 150);
-  });
-  return frameZoomProbe;
-};
-
-type ForcedFrameBoot = { gameInfo: GameStaticInfo | null; state: unknown };
-
-export const writeForcedFrameBoot = (boot: ForcedFrameBoot): void => {
-  try {
-    sessionStorage.setItem(FORCED_FRAME_BOOT_KEY, JSON.stringify(boot));
-  } catch {
-    return;
-  }
-};
-
-let forcedFrameBoot: ForcedFrameBoot | null = null;
-
-export const takeForcedFrameBoot = (): ForcedFrameBoot => {
-  if (forcedFrameBoot) return forcedFrameBoot;
-  let boot: ForcedFrameBoot = { gameInfo: null, state: null };
-  try {
-    const raw = sessionStorage.getItem(FORCED_FRAME_BOOT_KEY);
-    sessionStorage.removeItem(FORCED_FRAME_BOOT_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      boot = {
-        gameInfo: parsed?.gameInfo ?? null,
-        state: parsed?.state ?? null
-      };
-    }
-  } catch {
-    boot = { gameInfo: null, state: null };
-  }
-  forcedFrameBoot = boot;
-  return boot;
-};
-
-export type ForcedFrameMessage =
-  | {
-      type: typeof FORCED_FRAME_MESSAGE;
-      kind: 'layout';
-      gameInfo: GameStaticInfo;
-    }
-  | {
-      type: typeof FORCED_FRAME_MESSAGE;
-      kind: 'navigate';
-      to: string;
-      state: unknown;
-      gameInfo: GameStaticInfo;
-    };
-
-type DistributiveOmit<T, K extends PropertyKey> = T extends unknown
-  ? Omit<T, K>
-  : never;
-
-export const isForcedFrameMessage = (
-  data: unknown
-): data is ForcedFrameMessage => {
-  if (typeof data !== 'object' || data === null) return false;
-  const message = data as Record<string, unknown>;
-  if (message.type !== FORCED_FRAME_MESSAGE) return false;
-  if (typeof message.gameInfo !== 'object' || message.gameInfo === null)
-    return false;
-  if (message.kind === 'layout') return true;
-  return message.kind === 'navigate' && typeof message.to === 'string';
-};
-
-export const postForcedFrameMessage = (
-  message: DistributiveOmit<ForcedFrameMessage, 'type'>
-) => {
-  window.parent.postMessage(
-    { type: FORCED_FRAME_MESSAGE, ...message },
-    window.location.origin
+export const installForcedLayoutFrame = () => {
+  document.addEventListener(
+    'load',
+    (event) => {
+      if (event.target instanceof HTMLLinkElement) patchTouchStyleSheets();
+    },
+    true
   );
+  new MutationObserver(patchTouchStyleSheets).observe(document.head, {
+    childList: true
+  });
+  patchTouchStyleSheets();
+
+  const favicon = document.getElementById('favicon');
+  const parentFavicon = window.parent.document.getElementById('favicon');
+  if (!favicon || !parentFavicon) return;
+  new MutationObserver(() =>
+    parentFavicon.setAttribute('href', favicon.getAttribute('href') ?? '')
+  ).observe(favicon, { attributeFilter: ['href'] });
 };

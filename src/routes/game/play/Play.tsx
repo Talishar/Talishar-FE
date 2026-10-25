@@ -19,13 +19,7 @@ import LoadingScreen from 'components/LoadingScreen/LoadingScreen';
 import SpectatorLoginRequired from 'components/SpectatorLoginRequired';
 import HeroVsHeroIntro from '../components/elements/heroVsHeroIntro/HeroVsHeroIntro';
 import OpponentInactive from '../components/elements/opponentInactive/OpponentInactive';
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState
-} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '../../../app/Hooks';
@@ -36,7 +30,7 @@ import { shallowEqual } from 'react-redux';
 import { PanelProvider } from '../components/leftColumn/PanelContext';
 import usePlayerPresenceReporter from 'hooks/usePlayerPresenceReporter';
 import useSuppressTouchImageMenu from 'hooks/useSuppressTouchImageMenu';
-import useAdScript, { wasAdProviderLoadedInDocument } from 'hooks/useAdScript';
+import useAdScript from 'hooks/useAdScript';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import { IN_GAME_ADS_ENABLED } from 'config/ads';
 import {
@@ -114,15 +108,6 @@ const HeroIntroGate = () => {
 };
 
 function Play() {
-  const needsCleanDocument = useRef(
-    !IN_GAME_ADS_ENABLED && wasAdProviderLoadedInDocument()
-  );
-  useLayoutEffect(() => {
-    if (needsCleanDocument.current) {
-      window.location.reload();
-    }
-  }, []);
-
   const turnPhase = useAppSelector(
     (state: any) => state.game.turnPhase?.turnPhase
   );
@@ -179,10 +164,6 @@ function Play() {
     setLoadedGameID(receivedGameID);
     setLoadingError(null);
   }, []);
-
-  if (needsCleanDocument.current) {
-    return null;
-  }
 
   return (
     <ReplayPlaybackProvider>

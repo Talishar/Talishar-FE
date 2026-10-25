@@ -417,29 +417,6 @@ input.switch[role='switch']:focus-visible {
   flex: 0 0 auto;
 }
 
-.choiceRow {
-  flex-wrap: wrap;
-  cursor: default;
-}
-
-.choiceRow:hover {
-  background: transparent;
-}
-
-.inlineSegmented {
-  display: flex;
-  flex: 0 0 auto;
-  gap: 0.35rem;
-  margin-left: auto;
-}
-
-.inlineSegment {
-  flex: 0 0 auto;
-  min-width: 4.6rem;
-  min-height: 2rem;
-  padding: 0.3rem 0.7rem;
-}
-
 .inlineReset,
 .resetTab {
   width: auto !important;
