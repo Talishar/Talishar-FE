@@ -10,6 +10,7 @@ import {
 import useAuth from 'hooks/useAuth';
 import { useTheme } from 'themes/ThemeContext';
 import {
+  ChoiceDef,
   DEVICE_SETTING_COOKIES,
   RadioDef,
   SettingDef,
@@ -39,6 +40,8 @@ export interface SettingsController {
   setRadio: (def: RadioDef, value: number) => void;
   getSlider: (def: SliderDef) => number;
   setSlider: (def: SliderDef, value: number) => void;
+  getChoice: (def: ChoiceDef) => string;
+  setChoice: (def: ChoiceDef, value: string) => void;
   resetDefs: (defs: SettingDef[]) => void;
   isAtDefault: (def: SettingDef) => boolean;
   isSynced: boolean;
@@ -144,6 +147,23 @@ export const useSettingsController = (
     [setCookie, setTransparency, pushAccountSettings, isSynced]
   );
 
+  const getChoice = useCallback(
+    (def: ChoiceDef) => {
+      const raw = cookies[def.name];
+      return def.options.some((option) => option.value === raw)
+        ? (raw as string)
+        : def.defaultValue;
+    },
+    [cookies]
+  );
+
+  const setChoice = useCallback(
+    (def: ChoiceDef, value: string) => {
+      setCookie(def.name, value, COOKIE_OPTIONS);
+    },
+    [setCookie]
+  );
+
   const isAtDefault = useCallback(
     (def: SettingDef) => {
       switch (def.kind) {
@@ -153,11 +173,13 @@ export const useSettingsController = (
           return getRadio(def) === def.defaultValue;
         case 'slider':
           return Math.abs(getSlider(def) - def.defaultValue) < 0.005;
+        case 'choice':
+          return getChoice(def) === def.defaultValue;
         default:
           return true;
       }
     },
-    [isOn, getRadio, getSlider]
+    [isOn, getRadio, getSlider, getChoice]
   );
 
   const resetDefs = useCallback(
@@ -201,6 +223,8 @@ export const useSettingsController = (
             });
           }
         }
+        if (def.kind === 'choice')
+          setCookie(def.name, def.defaultValue, COOKIE_OPTIONS);
       });
       pushAccountSettings(accountSettings);
     },
@@ -214,6 +238,8 @@ export const useSettingsController = (
     setRadio,
     getSlider,
     setSlider,
+    getChoice,
+    setChoice,
     resetDefs,
     isAtDefault,
     isSynced

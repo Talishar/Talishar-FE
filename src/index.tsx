@@ -16,6 +16,12 @@ import {
 import { attemptAssetRecovery } from 'utils/assetRecovery';
 import { installVideoAdTagConfig } from 'utils/videoAds';
 import { migrateFannedHandCookie } from 'routes/game/components/zones/playerHand/migrateFannedHandCookie';
+import {
+  installForcedFrameTouchMedia,
+  isForcedLayoutFrame,
+  takeForcedFrameBoot
+} from 'routes/game/play/forcedLayout/forcedLayout';
+import { restoreGameInfo } from 'features/game/GameSlice';
 
 import './i18n';
 import { useTranslation } from 'react-i18next';
@@ -43,6 +49,11 @@ const root = createRoot(container);
 
 installVideoAdTagConfig();
 migrateFannedHandCookie();
+const forcedFrameGameInfo = isForcedLayoutFrame()
+  ? takeForcedFrameBoot().gameInfo
+  : null;
+if (forcedFrameGameInfo) store.dispatch(restoreGameInfo(forcedFrameGameInfo));
+if (isForcedLayoutFrame()) installForcedFrameTouchMedia();
 
 root.render(
   <StrictMode>

@@ -6,6 +6,7 @@ import GameStaticInfo from 'features/GameStaticInfo';
 import { HelpTooltip } from 'components/Tooltip/HelpTooltip';
 import styles from './SettingsPanel.module.css';
 import {
+  ChoiceDef,
   CustomDef,
   RadioDef,
   SettingDef,
@@ -133,6 +134,49 @@ const RadioRow = ({
   );
 };
 
+const ChoiceRow = ({
+  def,
+  controller
+}: {
+  def: ChoiceDef;
+  controller: SettingsController;
+}) => {
+  const { t } = useTranslation();
+  const current = controller.getChoice(def);
+  const label = t(def.labelKey);
+  return (
+    <div className={`${styles.row} ${styles.choiceRow}`}>
+      <RowHeader
+        label={label}
+        tooltip={def.tooltipKey ? t(def.tooltipKey) : undefined}
+        showDeviceBadge={!controller.isSynced}
+      />
+      <div
+        className={styles.inlineSegmented}
+        role="radiogroup"
+        aria-label={label}
+      >
+        {def.options.map((option) => (
+          <button
+            key={option.value}
+            type="button"
+            role="radio"
+            aria-checked={current === option.value}
+            className={
+              current === option.value
+                ? `${styles.segment} ${styles.inlineSegment} ${styles.segmentActive}`
+                : `${styles.segment} ${styles.inlineSegment}`
+            }
+            onClick={() => controller.setChoice(def, option.value)}
+          >
+            {t(option.labelKey)}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 const SliderRow = ({
   def,
   controller,
@@ -218,6 +262,8 @@ const SettingRow = ({
       return <RadioRow def={def} controller={controller} />;
     case 'slider':
       return <SliderRow def={def} controller={controller} context={context} />;
+    case 'choice':
+      return <ChoiceRow def={def} controller={controller} />;
     default:
       return <CustomRow def={def} />;
   }
@@ -277,7 +323,7 @@ const SettingsPanel = ({
     const haystack = [
       t(def.labelKey),
       group ? t(group.labelKey) : '',
-      def.kind === 'radio'
+      def.kind === 'radio' || def.kind === 'choice'
         ? def.options.map((option) => t(option.labelKey)).join(' ')
         : ''
     ]
