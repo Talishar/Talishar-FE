@@ -2,7 +2,8 @@
   position: fixed;
   display: flex;
   flex-direction: column;
-  top: 9vh;
+  top: calc(1vh + var(--card-size));
+  top: calc(1dvh + var(--card-size));
   bottom: 10vh;
   left: 8vw;
   right: 12vw;
