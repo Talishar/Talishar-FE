@@ -204,7 +204,11 @@ function PlayerHand() {
   const turnPhase = useAppSelector(
     (state: RootState) => state.game.turnPhase?.turnPhase
   );
-  const isPitching = !!turnPhase && PITCH_PHASES.has(turnPhase);
+  const hasPriority = useAppSelector(
+    (state: RootState) => !!state.game.hasPriority
+  );
+  const isPitching =
+    !isViewer && hasPriority && !!turnPhase && PITCH_PHASES.has(turnPhase);
   const dispatch = useAppDispatch();
   const queuedHandPlayCount = useAppSelector(
     (state: RootState) => state.game.queuedHandPlays?.length ?? 0
