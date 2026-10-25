@@ -161,7 +161,8 @@ export const LandscapeFanFullscreen = () => {
       if (
         event.pointerType === 'mouse' ||
         document.fullscreenElement ||
-        isGameFullscreenTurnedOff()
+        isGameFullscreenTurnedOff() ||
+        window.screen.width <= window.screen.height
       ) {
         return;
       }
