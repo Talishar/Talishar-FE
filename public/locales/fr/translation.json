@@ -1603,6 +1603,13 @@
     "FANNED_HAND_MOBILE_TOOLTIP": "Essayez la nouvelle main sur téléphones et tablettes (écrans de moins de 1200 pixels de large) : cartes en éventail, glisser pour jouer et blocage rapide carte par carte. Désactivé, la main classique est conservée.",
     "FANNED_HAND_PC": "Main en éventail sur PC",
     "FANNED_HAND_PC_TOOLTIP": "Essayez la nouvelle main sur ordinateur (écrans de 1200 pixels de large ou plus) : cartes en éventail, glisser pour jouer et blocage rapide carte par carte. Désactivé, la main classique est conservée.",
+    "FORCE_MOBILE_LAYOUT": "Forcer la disposition mobile",
+    "FORCE_MOBILE_LAYOUT_OPTIONS": {
+      "NO": "Non",
+      "PHONE": "Téléphone",
+      "TABLET": "Tablette"
+    },
+    "FORCE_MOBILE_LAYOUT_TOOLTIP": "Affiche le plateau téléphone ou tablette en paysage, avec la main en éventail, sur tout écran en paysage. Les écrans qui utilisent déjà ce plateau ne changent pas.",
     "GAME_SETTINGS": "Paramètres du jeu",
     "HIDE_GAMES_FROM_FRIENDS": "Cacher vos parties à votre liste d'amis",
     "HIDE_GAMES_FROM_FRIENDS_TOOLTIP": "Vos parties n'apparaissent plus dans les listes de parties ouvertes et de parties en cours de vos amis. Les autres joueurs les voient toujours.",

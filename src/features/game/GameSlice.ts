@@ -1039,6 +1039,9 @@ export const gameSlice = createSlice({
     markHeroIntroAsShown: (state) => {
       state.gameInfo.hasShownHeroIntro = true;
     },
+    restoreGameInfo: (state, action: PayloadAction<GameStaticInfo>) => {
+      state.gameInfo = action.payload;
+    },
     setLobbyAltArts: (state, action: PayloadAction<AltArt[]>) => {
       state.gameInfo.altArts = action.payload;
     },
@@ -1355,6 +1358,7 @@ export const {
   disableModals,
   setHeroInfo,
   markHeroIntroAsShown,
+  restoreGameInfo,
   setLobbyAltArts,
   setDeckCosmetics,
   setShuffling,
