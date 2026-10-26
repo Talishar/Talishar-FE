@@ -70,10 +70,8 @@
   background: var(--theme-primary);
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .moveHandle {
-    display: none;
-  }
+:global(:where(.mouseInput)) .moveHandle {
+  display: none;
 }
 
 .tapTarget {

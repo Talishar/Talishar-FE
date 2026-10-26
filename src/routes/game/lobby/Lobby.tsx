@@ -68,6 +68,7 @@ const COMPETITIVE_FORMATS = new Set([
 import ChooseFirstTurn from './components/chooseFirstTurn/ChooseFirstTurn';
 import { useWindowWidth } from 'hooks/useWindowDimensions';
 import { useMediaQuery } from 'hooks/useMediaQuery';
+import { useHasMouse } from 'hooks/useMouseInput';
 import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
 import { useNavigate } from 'react-router-dom';
 import CardPortal from '../components/elements/cardPortal/CardPortal';
@@ -133,6 +134,7 @@ const Lobby = () => {
   const [unreadChat, setUnreadChat] = useState<boolean>(false);
   const [filtersExpanded, setFiltersExpanded] = useState(false);
   const width = useWindowWidth();
+  const hasMouse = useHasMouse();
   const isPhoneLandscape = useMediaQuery(PHONE_LANDSCAPE_QUERY);
   const [isWideScreen, setIsWideScreen] = useState<boolean>(false);
   const { showAds } = useSupporterStatus();
@@ -466,9 +468,8 @@ const Lobby = () => {
   ]);
 
   useEffect(() => {
-    const hasMousePointer = window.matchMedia('(pointer: fine)').matches;
-    setIsWideScreen(width > BREAKPOINT_EXTRA_LARGE && hasMousePointer);
-  }, [width]);
+    setIsWideScreen(width > BREAKPOINT_EXTRA_LARGE && hasMouse);
+  }, [width, hasMouse]);
 
   useEffect(() => {
     // New lobby/deck context: clear stale selected matchup from previous session.

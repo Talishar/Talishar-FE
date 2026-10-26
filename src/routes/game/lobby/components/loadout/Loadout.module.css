@@ -70,8 +70,7 @@
   object-fit: cover;
 }
 
-@media (min-width: 769px) and (max-width: 1199px) and (min-height: 501px),
-  (min-width: 1200px) and (pointer: coarse) {
+@media (min-width: 769px) and (max-width: 1199px) and (min-height: 501px) {
   .mat {
     --slot-size: clamp(22px, min(22cqw, 46cqh), 44px);
     max-width: 280px;
@@ -85,6 +84,24 @@
   }
 
   .matMirrored .rail {
+    flex-flow: column wrap-reverse;
+  }
+}
+
+@media (min-width: 1200px) and (pointer: coarse) {
+  :global(:where(html:not(.mouseInput))) .mat {
+    --slot-size: clamp(22px, min(22cqw, 46cqh), 44px);
+    max-width: 280px;
+    gap: 0.5rem;
+  }
+
+  :global(:where(html:not(.mouseInput))) .rail {
+    flex-flow: column wrap;
+    align-content: center;
+    gap: 4px;
+  }
+
+  :global(:where(html:not(.mouseInput))) .matMirrored .rail {
     flex-flow: column wrap-reverse;
   }
 }

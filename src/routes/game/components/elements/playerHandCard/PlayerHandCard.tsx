@@ -51,6 +51,7 @@ import {
 } from 'utils';
 import CardKeywordStrip from '../cardPortal/CardKeywordStrip';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
+import { useMouseSeen } from 'hooks/useMouseInput';
 import { formatRestriction } from 'data/keywords';
 import { useTranslation } from 'react-i18next';
 import { isMeldCard } from 'constants/meldCards';
@@ -237,6 +238,7 @@ export const PlayerHandCard = React.memo(
     const [isDragging, setIsDragging] = useState(false);
     const [snapback, setSnapback] = useState<boolean>(true);
     const { getLanguage } = useLanguageSelector();
+    const mouseSeen = useMouseSeen();
     const { t } = useTranslation();
 
     // ref to determine if we have a long press or a short tap.
@@ -863,7 +865,7 @@ export const PlayerHandCard = React.memo(
           animate={CARD_ANIMATE}
           transition={CARD_TRANSITION}
           whileHover={
-            isFanned || isDragging || !supportsHover
+            isFanned || isDragging || !(supportsHover || mouseSeen)
               ? undefined
               : CARD_WHILE_HOVER
           }

@@ -98,13 +98,13 @@ h3 {
   min-height: 0;
 }
 
-@media (min-width: 1200px) and (pointer: fine) {
-  .chatAreaContainerRestrained {
+@media (min-width: 1200px) {
+  :global(:where(.mouseInput)) .chatAreaContainerRestrained {
     grid-area: chat;
     min-height: 0;
   }
 
-  .chatAreaContainer {
+  :global(:where(.mouseInput)) .chatAreaContainer {
     grid-area: chat;
     min-height: 0;
   }
@@ -202,17 +202,17 @@ h3 {
 }
 
 @media (min-width: 1200px) and (pointer: coarse) {
-  .titleContainer {
+  :global(:where(html:not(.mouseInput))) .titleContainer {
     height: 168px;
     top: -136px;
   }
 
-  .leftCol {
+  :global(:where(html:not(.mouseInput))) .leftCol {
     background-position: center 10%;
     --plate-scale: 1.5;
   }
 
-  .rightCol {
+  :global(:where(html:not(.mouseInput))) .rightCol {
     background-position: center 10%;
     --plate-scale: 1.5;
   }
@@ -763,8 +763,8 @@ h3 {
   overflow-y: auto;
 }
 
-@media (min-width: 1200px) and (pointer: fine) {
-  .deckSelectorContainer {
+@media (min-width: 1200px) {
+  :global(:where(.mouseInput)) .deckSelectorContainer {
     grid-area: weapons;
     grid-row: 1 / -1;
     display: flex;
@@ -953,21 +953,21 @@ nav {
   }
 }
 
-@media (min-width: 1200px) and (pointer: fine) {
-  .lobbyClass {
+@media (min-width: 1200px) {
+  :global(:where(.mouseInput)) .lobbyClass {
     position: fixed;
     top: 0px;
     bottom: var(--sticky-footer-height, 60px);
     overflow-y: hidden;
   }
 
-  .form {
+  :global(:where(.mouseInput)) .form {
     min-height: 100%;
     overflow-y: hidden;
     display: flex;
   }
 
-  .gridLayout {
+  :global(:where(.mouseInput)) .gridLayout {
     padding: 0.5em;
     min-height: 100%;
     overflow-y: hidden;
@@ -979,7 +979,7 @@ nav {
       'chat weapons matchups';
   }
 
-  .gridLayoutWithAd {
+  :global(:where(.mouseInput)) .gridLayoutWithAd {
     --matchups-max-width: 300px;
     grid-template-columns: minmax(300px, 0.6fr) 2fr 300px;
     grid-template-rows: 240px 1fr auto;
@@ -989,7 +989,7 @@ nav {
       'chat weapons lobbyad';
   }
 
-  .titleContainer {
+  :global(:where(.mouseInput)) .titleContainer {
     grid-area: hero;
   }
 }
@@ -1078,15 +1078,15 @@ nav {
 }
 
 @media (min-width: 1200px) and (pointer: coarse) {
-  .mobileNav ul:first-child {
+  :global(:where(html:not(.mouseInput))) .mobileNav ul:first-child {
     order: 2;
   }
 
-  .mobileNav ul:last-child {
+  :global(:where(html:not(.mouseInput))) .mobileNav ul:last-child {
     order: 1;
   }
 
-  .mobileNav button {
+  :global(:where(html:not(.mouseInput))) .mobileNav button {
     height: 48px;
     padding: 0.6rem 1rem;
     display: flex;
@@ -1094,7 +1094,7 @@ nav {
     justify-content: center;
   }
 
-  .mobileNav .tabButton {
+  :global(:where(html:not(.mouseInput))) .mobileNav .tabButton {
     height: 48px;
     padding: 0.6rem 1rem;
     background: color-mix(in srgb, var(--theme-text) 4%, transparent);
@@ -1102,7 +1102,7 @@ nav {
     color: var(--theme-text-muted);
   }
 
-  .mobileNav .tabButton:hover {
+  :global(:where(html:not(.mouseInput))) .mobileNav .tabButton:hover {
     background: color-mix(in srgb, var(--theme-text) 8%, transparent);
     color: var(--theme-text-secondary);
     border-color: var(--theme-border);
@@ -1110,7 +1110,7 @@ nav {
     box-shadow: none;
   }
 
-  .mobileNav .tabButton.tabActive {
+  :global(:where(html:not(.mouseInput))) .mobileNav .tabButton.tabActive {
     background: var(--theme-primary-focus);
     color: var(--theme-primary);
     border-color: var(--theme-primary);

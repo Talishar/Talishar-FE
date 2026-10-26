@@ -253,8 +253,8 @@
   font-weight: 600;
 }
 
-@media (min-width: 1200px) and (pointer: fine) {
-  .selectionButtons {
+@media (min-width: 1200px) {
+  :global(:where(.mouseInput)) .selectionButtons {
     display: none;
   }
 }

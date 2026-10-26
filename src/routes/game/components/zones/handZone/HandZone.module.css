@@ -79,10 +79,8 @@
   --hand-offset: 0px;
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .isOpponent:hover {
-    --hand-reveal: calc(var(--card-size) * 0.26);
-  }
+:global(:where(.mouseInput)) .isOpponent:hover {
+  --hand-reveal: calc(var(--card-size) * 0.26);
 }
 
 @media (prefers-reduced-motion: reduce) {

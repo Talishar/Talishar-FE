@@ -23,6 +23,7 @@ import {
 import { createPortal } from 'react-dom';
 import { CARD_SQUARES_PATH, getCollectionCardImagePath } from 'utils';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
+import { useMouseSeen } from 'hooks/useMouseInput';
 import { formatRestriction } from 'data/keywords';
 import { useTranslation } from 'react-i18next';
 import {
@@ -94,6 +95,7 @@ export const PlayerHandCard = React.memo(
     const [isDragging, setIsDragging] = useState(false);
     const [snapback, setSnapback] = useState<boolean>(true);
     const { getLanguage } = useLanguageSelector();
+    const mouseSeen = useMouseSeen();
     const { t } = useTranslation();
 
     // ref to determine if we have a long press or a short tap.
@@ -377,7 +379,9 @@ export const PlayerHandCard = React.memo(
           animate={CARD_ANIMATE}
           transition={CARD_TRANSITION}
           whileHover={
-            isDragging || !supportsHover ? undefined : CARD_WHILE_HOVER
+            isDragging || !(supportsHover || mouseSeen)
+              ? undefined
+              : CARD_WHILE_HOVER
           }
           whileDrag={CARD_WHILE_DRAG}
         >

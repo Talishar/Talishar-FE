@@ -104,28 +104,26 @@
   z-index: 1;
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .btn:hover {
-    background-color: var(--near-black);
-    color: var(--theme-primary);
-    border: 2px solid var(--theme-secondary);
-    cursor: pointer;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3),
-      0 0 8px rgba(255, 215, 0, 0.3);
-    transform: translateY(-1px);
-    z-index: 10;
-  }
+:global(:where(.mouseInput)) .btn:hover {
+  background-color: var(--near-black);
+  color: var(--theme-primary);
+  border: 2px solid var(--theme-secondary);
+  cursor: pointer;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3),
+    0 0 8px rgba(255, 215, 0, 0.3);
+  transform: translateY(-1px);
+  z-index: 10;
+}
 
-  .buttonActive:hover {
-    background-color: #fff;
-    color: var(--alarm);
-    border-color: var(--alarm);
-    box-shadow: 0 3px 6px rgba(220, 20, 60, 0.5), 0 2px 4px rgba(0, 0, 0, 0.3),
-      0 0 10px rgba(220, 20, 60, 0.4);
-    cursor: pointer;
-    transform: translateY(-1px);
-    z-index: 10;
-  }
+:global(:where(.mouseInput)) .buttonActive:hover {
+  background-color: #fff;
+  color: var(--alarm);
+  border-color: var(--alarm);
+  box-shadow: 0 3px 6px rgba(220, 20, 60, 0.5), 0 2px 4px rgba(0, 0, 0, 0.3),
+    0 0 10px rgba(220, 20, 60, 0.4);
+  cursor: pointer;
+  transform: translateY(-1px);
+  z-index: 10;
 }
 
 .buttonActive:active {

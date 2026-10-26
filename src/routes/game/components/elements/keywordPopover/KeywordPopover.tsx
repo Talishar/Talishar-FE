@@ -15,6 +15,7 @@ import {
   useRole
 } from '@floating-ui/react';
 import { getKeywordEntry } from 'data/keywords';
+import { useMouseSeen } from 'hooks/useMouseInput';
 import KeywordDefinitionBody from './KeywordDefinitionBody';
 import styles from './KeywordPopover.module.css';
 
@@ -32,6 +33,7 @@ export default function KeywordPopover({
   const hoverEnabled = useRef(
     typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches
   );
+  const mouseSeen = useMouseSeen();
   const { refs, floatingStyles, context } = useFloating({
     open,
     onOpenChange: setOpen,
@@ -41,7 +43,7 @@ export default function KeywordPopover({
   });
   const { getReferenceProps, getFloatingProps } = useInteractions([
     useHover(context, {
-      enabled: hoverEnabled.current,
+      enabled: hoverEnabled.current || mouseSeen,
       delay: { open: 300, close: 120 },
       handleClose: safePolygon()
     }),

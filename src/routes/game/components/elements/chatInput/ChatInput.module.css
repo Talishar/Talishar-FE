@@ -282,11 +282,9 @@
   margin-left: 0.3em;
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .quickChatToggleButton:hover::after {
-    content: '(Q)';
-    opacity: 0.55;
-  }
+:global(:where(.mouseInput)) .quickChatToggleButton:hover::after {
+  content: '(Q)';
+  opacity: 0.55;
 }
 
 .chatWheelButton:hover,

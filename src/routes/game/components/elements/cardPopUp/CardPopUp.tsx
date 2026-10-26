@@ -8,6 +8,7 @@ import { CARD_BACK } from 'features/options/cardBacks';
 import { useCardTilt } from './useCardTilt';
 import { useCookieString } from 'utils/cookieStore';
 import { useFannedHand } from 'routes/game/components/zones/playerHand/useFannedHand';
+import { hasSeenMouse, useMouseSeen } from 'hooks/useMouseInput';
 import {
   TAP_TO_PREVIEW_PLAY_COOKIE,
   buildBoardCardSelectionKey,
@@ -181,6 +182,7 @@ export default function CardPopUp({
   const ref = useRef<HTMLDivElement>(null);
   const disableCardTilt = useCookieString('disableCardTilt');
   const classicHover = !useFannedHand();
+  const mouseSeen = useMouseSeen();
   const tapToPreviewCookie = useCookieString(TAP_TO_PREVIEW_PLAY_COOKIE);
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const suppressNextClick = useRef(false);
@@ -205,13 +207,14 @@ export default function CardPopUp({
   const isTapToPreviewContext = () =>
     !disableTapToPreview &&
     cookieEnabled &&
-    (lastPointerTypeRef.current === 'touch' || !supportsHover);
+    (lastPointerTypeRef.current === 'touch' ||
+      !(supportsHover || hasSeenMouse()));
 
   const isSelected = useIsTapToPreviewSelected(selectionKey);
   const stickyActive = cookieEnabled && isSelected;
 
   const tiltEnabled =
-    supportsHover &&
+    (supportsHover || mouseSeen) &&
     !prefersReducedMotion &&
     !disableTilt &&
     disableCardTilt !== 'true';
@@ -281,7 +284,7 @@ export default function CardPopUp({
   const showHoverPreview = (pointerKind: 'mouse' | 'pen') => {
     // A stylus hovers on devices whose primary input reports no hover at all,
     // so trust the pen event over the media query.
-    if (pointerKind !== 'pen' && !supportsHover) return;
+    if (pointerKind !== 'pen' && !supportsHover && !hasSeenMouse()) return;
     if (disableHoverPreview) return;
     // A touch emits synthetic mouse events after touchend. Surfaces that opted
     // out of tap-to-preview must not get a preview from that replayed hover.
