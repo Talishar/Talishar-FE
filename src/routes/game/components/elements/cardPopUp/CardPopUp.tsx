@@ -8,6 +8,7 @@ import { CARD_BACK } from 'features/options/cardBacks';
 import { useCardTilt } from './useCardTilt';
 import { useCookieString } from 'utils/cookieStore';
 import { useFannedHand } from 'routes/game/components/zones/playerHand/useFannedHand';
+import { mouseSeen } from 'utils/mouseInput';
 import {
   TAP_TO_PREVIEW_PLAY_COOKIE,
   buildBoardCardSelectionKey,
@@ -21,7 +22,9 @@ import {
 } from '../playerHandCard/tapToPreviewPlay';
 
 const supportsHover =
-  typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches;
+  mouseSeen ||
+  (typeof window !== 'undefined' &&
+    window.matchMedia('(hover: hover)').matches);
 
 const prefersReducedMotion =
   typeof window !== 'undefined' &&
