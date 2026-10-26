@@ -539,7 +539,11 @@
     "PLEASE_LOGIN": "Log in to browse and join open lobbies or spectate games in progress.",
     "PRIVATE_GAMES_AVAILABLE": "You can still create a private game here or join one from a shared link. No account needed.",
     "REFRESH": "Refresh",
-    "SPECTATE_LOCKED": "Spectating isn't available for your account yet. Keep playing and check back later."
+    "SPECTATE_LOCKED": "Spectating unlocks once your account is at least 7 days old and has played 10 public games.",
+    "SPECTATE_PROGRESS_AGE": "Account age",
+    "SPECTATE_PROGRESS_DAYS": "{{value}} / {{total}} days",
+    "SPECTATE_PROGRESS_GAMES": "Public games played",
+    "SPECTATE_PROGRESS_COUNT": "{{value}} / {{total}}"
   },
   "GAME_LOBBY": {
     "1ST": "1st",
@@ -2334,7 +2338,7 @@
   },
   "SPECTATOR": {
     "LOGIN_REQUIRED_ACTION": "Log in",
-    "GAMES_REQUIRED_BODY": "Spectating isn't available for your account yet. Keep playing and check back later.",
+    "GAMES_REQUIRED_BODY": "Spectating unlocks once your account is at least 7 days old and has played 10 public games. Check your progress on the home page.",
     "LOGIN_REQUIRED_BODY": "You need to be logged in to watch a game. Log in and open this link again to start spectating.",
     "LOGIN_REQUIRED_HOME": "Go home",
     "LOGIN_REQUIRED_TITLE": "Log in to spectate"

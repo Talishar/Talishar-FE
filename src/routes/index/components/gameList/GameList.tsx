@@ -48,11 +48,19 @@ export interface IFeaturedGame {
   spectators?: number;
 }
 
+export interface ISpectateProgress {
+  days: number;
+  minDays: number;
+  games: number;
+  minGames: number;
+}
+
 export interface GameListResponse {
   gamesInProgress: IGameInProgress[];
   openGames: IOpenGame[];
   canSeeQueue?: boolean;
   canSpectate?: boolean;
+  spectateProgress?: ISpectateProgress | null;
   gameInProgressCount?: number;
   LastGameName?: number;
   LastPlayerID?: number;
@@ -920,7 +928,41 @@ const GameList = () => {
                   <span className={styles.loginNoticeIcon} aria-hidden="true">
                     {t('OPTIONS_MENU.LOCK_ICON')}
                   </span>
-                  <p>{t('GAME_LIST.SPECTATE_LOCKED')}</p>
+                  <div className={styles.loginNoticeContent}>
+                    <p>{t('GAME_LIST.SPECTATE_LOCKED')}</p>
+                    {data.spectateProgress && (
+                      <dl className={styles.spectateProgress}>
+                        <dt>{t('GAME_LIST.SPECTATE_PROGRESS_AGE')}</dt>
+                        <dd
+                          className={
+                            data.spectateProgress.days >=
+                            data.spectateProgress.minDays
+                              ? styles.spectateProgressMet
+                              : undefined
+                          }
+                        >
+                          {t('GAME_LIST.SPECTATE_PROGRESS_DAYS', {
+                            value: data.spectateProgress.days,
+                            total: data.spectateProgress.minDays
+                          })}
+                        </dd>
+                        <dt>{t('GAME_LIST.SPECTATE_PROGRESS_GAMES')}</dt>
+                        <dd
+                          className={
+                            data.spectateProgress.games >=
+                            data.spectateProgress.minGames
+                              ? styles.spectateProgressMet
+                              : undefined
+                          }
+                        >
+                          {t('GAME_LIST.SPECTATE_PROGRESS_COUNT', {
+                            value: data.spectateProgress.games,
+                            total: data.spectateProgress.minGames
+                          })}
+                        </dd>
+                      </dl>
+                    )}
+                  </div>
                 </div>
               )}
               {featuredGames.length > 0 && (

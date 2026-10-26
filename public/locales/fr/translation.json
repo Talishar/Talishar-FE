@@ -427,7 +427,11 @@
     "PLEASE_LOGIN": "Connectez-vous pour parcourir et rejoindre les salons ouverts ou observer les parties en cours.",
     "PRIVATE_GAMES_AVAILABLE": "Vous pouvez toujours créer une partie privée ici ou en rejoindre une via un lien partagé. Aucun compte requis.",
     "REFRESH": "Actualiser",
-    "SPECTATE_LOCKED": "Le mode spectateur n'est pas encore disponible pour votre compte. Continuez à jouer et revenez plus tard."
+    "SPECTATE_LOCKED": "Le mode spectateur se débloque quand votre compte a au moins 7 jours et a joué 10 parties publiques.",
+    "SPECTATE_PROGRESS_AGE": "Âge du compte",
+    "SPECTATE_PROGRESS_DAYS": "{{value}} / {{total}} jours",
+    "SPECTATE_PROGRESS_GAMES": "Parties publiques jouées",
+    "SPECTATE_PROGRESS_COUNT": "{{value}} / {{total}}"
   },
   "GAME_LOBBY": {
     "1ST": "1er",

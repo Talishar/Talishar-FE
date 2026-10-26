@@ -336,6 +336,28 @@
   }
 }
 
+.spectateProgress {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 0.35rem 1.25rem;
+  margin: 0;
+  font-size: 0.85rem;
+
+  dt {
+    color: var(--theme-text-secondary, #c8c8c8);
+  }
+
+  dd {
+    margin: 0;
+    color: var(--theme-text, #ededed);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.spectateProgressMet::after {
+  content: ' \2713';
+}
+
 .loginNoticeTitle {
   color: var(--theme-text, #ededed);
   font-size: 1rem;
