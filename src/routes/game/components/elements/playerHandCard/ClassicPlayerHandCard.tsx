@@ -23,6 +23,7 @@ import {
 import { createPortal } from 'react-dom';
 import { CARD_SQUARES_PATH, getCollectionCardImagePath } from 'utils';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
+import { mouseSeen } from 'utils/mouseInput';
 import { formatRestriction } from 'data/keywords';
 import { useTranslation } from 'react-i18next';
 import {
@@ -34,7 +35,9 @@ import {
 const ScreenPercentageForCardPlayed = 0.25;
 
 const supportsHover =
-  typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches;
+  mouseSeen ||
+  (typeof window !== 'undefined' &&
+    window.matchMedia('(hover: hover)').matches);
 
 const CARD_INITIAL = { opacity: 0, y: 100 };
 const CARD_ANIMATE = { opacity: 1, y: 0 };
