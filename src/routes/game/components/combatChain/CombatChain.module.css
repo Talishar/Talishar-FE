@@ -264,10 +264,22 @@
             14px - var(--fan-arsenal-size) - var(--fan-hero-lift)
         )
     );
+    align-items: start;
   }
 
   :global(body.fanLandscapeHand) .combatChain [class*='_countersCover_'] {
     font-size: 0.8em;
+  }
+
+  :global(body.fanLandscapeHand) .chainCentre {
+    display: contents;
+  }
+
+  :global(body.fanLandscapeHand) .chainCentre > :last-child {
+    grid-area: 1 / 1 / 2 / 3;
+    width: auto;
+    height: calc(100% - min(6 * var(--fan-window-vh), 27px) - 2px);
+    margin: auto 0 0 calc(var(--card-size) + 8px);
   }
 }
 

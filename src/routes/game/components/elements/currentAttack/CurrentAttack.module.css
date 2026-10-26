@@ -258,6 +258,22 @@
 @media (max-height: 500px) {
   :global(body.fanLandscapeHand) .attack {
     justify-content: flex-start;
+    height: calc(100% - min(6 * var(--fan-window-vh), 27px) - 2px);
+    margin-top: auto;
+  }
+
+  :global(body.fanLandscapeHand) .attack > * {
+    height: var(--card-size);
+  }
+
+  :global(body.fanLandscapeHand) .attDefRow {
+    align-self: flex-start;
+    width: max-content;
+  }
+
+  :global(body.fanLandscapeHand)
+    :is(.attDiv, .defDiv, .attackSymbol, .defSymbol, .icon.icon) {
+    font-size: 0.9em;
   }
 }
 
