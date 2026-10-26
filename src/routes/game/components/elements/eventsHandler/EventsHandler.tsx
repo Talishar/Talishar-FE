@@ -1,5 +1,6 @@
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
+import useIsSoundMuted from 'hooks/useIsSoundMuted';
 import { PROCESS_INPUT } from 'appConstants';
 import { getGameInfo, submitButton } from 'features/game/GameSlice';
 import React, { useEffect, useState } from 'react';
@@ -106,9 +107,7 @@ export const EventsHandler = React.memo(() => {
   const hasPriority = useAppSelector(
     (state: RootState) => state.game.hasPriority
   );
-  const isMuted = useAppSelector(
-    (state: RootState) => state.settings.entities['MuteSound']?.value === '1'
-  );
+  const isMuted = useIsSoundMuted();
   const [playShuffleSound] = useSound(shuffleSound, { volume: 0.5 });
   const [playPrioritySound] = useSound(prioritySound);
   const dispatch = useAppDispatch();

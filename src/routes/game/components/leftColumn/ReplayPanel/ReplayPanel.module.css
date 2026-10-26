@@ -562,3 +562,14 @@
     display: none;
   }
 }
+
+:global(body.fanLandscapeHand) .replayTab {
+  left: env(safe-area-inset-left, 0px);
+  top: calc(50% - 3.5rem);
+  width: var(--fan-rail-width);
+  min-width: 0;
+  height: 7rem;
+  padding: 0 !important;
+  writing-mode: vertical-rl;
+  white-space: nowrap;
+}

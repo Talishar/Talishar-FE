@@ -1,0 +1,15 @@
+.host {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  overflow: hidden;
+}
+
+.frame {
+  flex: none;
+  border: 0;
+}

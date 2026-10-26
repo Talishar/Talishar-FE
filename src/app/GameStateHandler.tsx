@@ -452,6 +452,15 @@ const GameStateHandler = ({
                 return;
               }
 
+              if (errorMsg.includes('not available for this account')) {
+                const message = t('SPECTATOR.GAMES_REQUIRED_BODY');
+                onLoadingErrorRef.current?.(message);
+                toast.error(message);
+                gameOverRef.current = true;
+                source.close();
+                return;
+              }
+
               if (
                 errorMsg.includes('invalid auth') ||
                 errorMsg.includes('authkey')

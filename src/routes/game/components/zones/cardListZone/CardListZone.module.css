@@ -25,6 +25,15 @@
   overflow: hidden;
 }
 
+@media (min-width: 813px) and (min-height: 501px) {
+  .cardListBox {
+    top: 8vh;
+    bottom: 14vh;
+    left: 16vw;
+    right: 16vw;
+  }
+}
+
 @media (max-width: 812px) {
   .cardListBox {
     top: 5vh;
@@ -314,8 +323,27 @@
   }
 }
 
+@media (orientation: portrait) and (max-width: 1024px) {
+  .cardListBox {
+    left: 5vw;
+    right: 5vw;
+  }
+
+  .cardListContents {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+@media (orientation: portrait) and (min-width: 601px) and (max-width: 1024px) {
+  .cardListContents {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
 /* ── No-results state ─────────────────────────────────── */
 .noResults {
+  grid-column: 1 / -1;
   padding: 2rem 1rem;
   color: rgba(var(--theme-on-surface-rgb), 0.45);
   text-align: center;
@@ -326,4 +354,55 @@
 
 :global(body.fanLandscapeHand) .cardListContents {
   --card-size: var(--side-card-size);
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+  :global(body.fanLandscapeHand) .cardListBox {
+    top: calc(10 * var(--fan-window-vh));
+    bottom: auto;
+    height: calc(80 * var(--fan-window-vh));
+    left: max(10vw, env(safe-area-inset-left, 0px));
+    right: max(10vw, env(safe-area-inset-right, 0px));
+  }
+
+  :global(body.fanLandscapeHand) .cardListTitleContainer {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 52px 8px 12px;
+  }
+
+  :global(body.fanLandscapeHand) .cardListTitle {
+    justify-content: flex-start;
+    text-align: left;
+    padding: 0;
+  }
+
+  :global(body.fanLandscapeHand) .title {
+    white-space: nowrap;
+  }
+
+  :global(body.fanLandscapeHand) .searchInput {
+    width: 180px !important;
+    height: 30px !important;
+    padding: 0 0.75rem;
+    font-size: 1rem;
+  }
+
+  :global(body.fanLandscapeHand) .button {
+    width: auto;
+    height: 30px;
+    min-height: 30px;
+    font-size: 0.9rem;
+  }
+
+  :global(body.fanLandscapeHand) .cardListCloseIcon {
+    top: 5px;
+  }
+
+  :global(body.fanLandscapeHand) .cardListContents {
+    --card-size: calc((80 * var(--fan-window-vh) - 84px) / 3);
+    padding: 8px 10px;
+    gap: 8px;
+  }
 }

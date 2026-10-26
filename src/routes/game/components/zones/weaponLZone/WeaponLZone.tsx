@@ -13,11 +13,16 @@ export const WeaponLZone = React.memo((prop: Displayrow) => {
     isPlayer ? state.game.playerOne.WeaponLEq : state.game.playerTwo.WeaponLEq
   );
   const destroy = useEquipDestroy('LWep', isPlayer);
+  const isP2View = useAppSelector(
+    (state: RootState) =>
+      (state.game.gameInfo.playerID === 3 || !!state.game.gameInfo.isReplay) &&
+      state.game.spectatorCameraView === 2
+  );
 
   return (
     <div
       className={styles.weaponLZone}
-      data-fan-unhover-anchor={isPlayer ? '' : undefined}
+      data-fan-unhover-anchor={isPlayer !== isP2View ? '' : undefined}
     >
       <CardDisplay card={cardToDisplay} isPlayer={isPlayer} />
       {destroy && (

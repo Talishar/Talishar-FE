@@ -52,6 +52,7 @@ export interface GameListResponse {
   gamesInProgress: IGameInProgress[];
   openGames: IOpenGame[];
   canSeeQueue?: boolean;
+  canSpectate?: boolean;
   gameInProgressCount?: number;
   LastGameName?: number;
   LastPlayerID?: number;
@@ -914,6 +915,14 @@ const GameList = () => {
             </>
           ) : (
             <div data-testid="games-in-progress" ref={parent}>
+              {data?.canSpectate === false && (
+                <div className={styles.loginNotice}>
+                  <span className={styles.loginNoticeIcon} aria-hidden="true">
+                    {t('OPTIONS_MENU.LOCK_ICON')}
+                  </span>
+                  <p>{t('GAME_LIST.SPECTATE_LOCKED')}</p>
+                </div>
+              )}
               {featuredGames.length > 0 && (
                 <div className={styles.featuredSection}>
                   <div className={styles.featuredHeading}>

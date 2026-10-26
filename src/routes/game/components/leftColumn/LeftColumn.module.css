@@ -57,4 +57,13 @@
     width: 4dvh;
     height: 100vh;
   }
+
+  .overBoard {
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  .overBoard :is(img, button, input, select) {
+    pointer-events: auto;
+  }
 }

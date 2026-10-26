@@ -77,31 +77,31 @@ const GridBoard = () => {
   // For spectators and replay viewers, check if they want to view from player 2's perspective
   const isSpectatorViewingPlayer2 =
     (playerID === 3 || isReplay) && spectatorCameraView === 2;
+  const flipZones = showsLandscapeFan && !!isSpectatorViewingPlayer2;
+  const swapGrid = isSpectatorViewingPlayer2 && !flipZones;
   const gridBoardClass = useMemo(
     () =>
       classNames(styles.boardGrid, {
         [styles.SwappedGameBoardGrid]:
-          isSpectatorViewingPlayer2 && !isMirroredOpponent && !isMirroredPlayer,
+          swapGrid && !isMirroredOpponent && !isMirroredPlayer,
         [styles.SwappedMirroredOpponentGameBoardGrid]:
-          isSpectatorViewingPlayer2 && isMirroredOpponent && !isMirroredPlayer,
+          swapGrid && isMirroredOpponent && !isMirroredPlayer,
         [styles.SwappedMirroredPlayerGameBoardGrid]:
-          isSpectatorViewingPlayer2 && isMirroredPlayer && !isMirroredOpponent,
+          swapGrid && isMirroredPlayer && !isMirroredOpponent,
         [styles.SwappedMirroredBothGameBoardGrid]:
-          isSpectatorViewingPlayer2 && isMirroredOpponent && isMirroredPlayer,
+          swapGrid && isMirroredOpponent && isMirroredPlayer,
         [styles.gameBoardGrid]:
-          !isSpectatorViewingPlayer2 &&
-          !isMirroredOpponent &&
-          !isMirroredPlayer,
+          !swapGrid && !isMirroredOpponent && !isMirroredPlayer,
         [styles.MirroredOpponentGameBoardGrid]:
-          !isSpectatorViewingPlayer2 && isMirroredOpponent && !isMirroredPlayer,
+          !swapGrid && isMirroredOpponent && !isMirroredPlayer,
         [styles.MirroredPlayerGameBoardGrid]:
-          !isSpectatorViewingPlayer2 && isMirroredPlayer && !isMirroredOpponent,
+          !swapGrid && isMirroredPlayer && !isMirroredOpponent,
         [styles.MirroredBothGameBoardGrid]:
-          !isSpectatorViewingPlayer2 && isMirroredOpponent && isMirroredPlayer,
+          !swapGrid && isMirroredOpponent && isMirroredPlayer,
         [styles.fanWidgets]: showsLandscapeFan && !experimental
       }),
     [
-      isSpectatorViewingPlayer2,
+      swapGrid,
       isMirroredOpponent,
       isMirroredPlayer,
       showsLandscapeFan,
@@ -116,6 +116,11 @@ const GridBoard = () => {
         {showsLandscapeFan && (
           <div className={styles.fanOpponentName}>
             <PlayerName isPlayer={false} />
+          </div>
+        )}
+        {showsLandscapeFan && (
+          <div className={styles.fanPlayerName}>
+            <PlayerName isPlayer />
           </div>
         )}
         {showsLandscapeFan && (
@@ -134,46 +139,46 @@ const GridBoard = () => {
           </div>
         )}
         <div className={styles.pTwoLegs}>
-          <LegsEqZone isPlayer={false} />
+          <LegsEqZone isPlayer={flipZones} />
         </div>
         <div className={styles.pTwoPermanents}>
-          <PermanentsZone isPlayer={false} />
+          <PermanentsZone isPlayer={flipZones} />
         </div>
         <div className={styles.pTwoArsenal}>
-          <ArsenalZone isPlayer={false} />
+          <ArsenalZone isPlayer={flipZones} />
         </div>
         <div className={styles.pTwoCount}>
-          <ZoneCounts isPlayer={false} />
+          <ZoneCounts isPlayer={flipZones} />
         </div>
         <div className={styles.pTwoBanish}>
-          <BanishZone isPlayer={false} />
+          <BanishZone isPlayer={flipZones} />
         </div>
         <div className={styles.pTwoChest}>
-          <ChestEqZone isPlayer={false} />
+          <ChestEqZone isPlayer={flipZones} />
         </div>
         <div className={styles.pTwoHands}>
-          <ArmsEqZone isPlayer={false} />
+          <ArmsEqZone isPlayer={flipZones} />
         </div>
         <div className={styles.pTwoWeaponLZone}>
-          <WeaponLZone isPlayer={false} />
+          <WeaponLZone isPlayer={flipZones} />
         </div>
         <div className={styles.pTwoHero}>
-          <HeroZone isPlayer={false} />
+          <HeroZone isPlayer={flipZones} />
         </div>
         <div className={styles.pTwoWeaponRZone}>
-          <WeaponRZone isPlayer={false} />
+          <WeaponRZone isPlayer={flipZones} />
         </div>
         <div className={styles.pTwoPitch}>
-          <PitchZone isPlayer={false} />
+          <PitchZone isPlayer={flipZones} />
         </div>
         <div className={styles.pTwoDeck}>
-          <DeckZone isPlayer={false} />
+          <DeckZone isPlayer={flipZones} />
         </div>
         <div className={styles.pTwoHead}>
-          <HeadEqZone isPlayer={false} />
+          <HeadEqZone isPlayer={flipZones} />
         </div>
         <div className={styles.pTwoGraveyard}>
-          <GraveyardZone isPlayer={false} />
+          <GraveyardZone isPlayer={flipZones} />
         </div>
         <div className={styles.healthWidget} data-fan-keep-open="">
           {experimental ? (
@@ -188,50 +193,50 @@ const GridBoard = () => {
           </div>
         )}
         <div className={styles.pOneGraveyard}>
-          <GraveyardZone isPlayer={true} />
+          <GraveyardZone isPlayer={!flipZones} />
         </div>
         <div className={styles.pOneHead} data-fan-keep-open="">
-          <HeadEqZone isPlayer={true} />
+          <HeadEqZone isPlayer={!flipZones} />
         </div>
         <div className={styles.pOneDeck}>
-          <DeckZone isPlayer={true} />
+          <DeckZone isPlayer={!flipZones} />
         </div>
         <div className={styles.pOnePitch} data-fan-side-column="">
-          <PitchZone isPlayer={true} />
+          <PitchZone isPlayer={!flipZones} />
         </div>
         <div className={styles.pOneWeaponRZone} data-fan-keep-open="">
-          <WeaponRZone isPlayer={true} />
+          <WeaponRZone isPlayer={!flipZones} />
         </div>
         <div className={styles.pOneHero} data-fan-dock-start="">
-          <HeroZone isPlayer={true} />
+          <HeroZone isPlayer={!flipZones} />
         </div>
         <div className={styles.pOneWeaponLZone} data-fan-keep-open="">
-          <WeaponLZone isPlayer={true} />
+          <WeaponLZone isPlayer={!flipZones} />
         </div>
         <div
           className={styles.pOneHands}
           data-fan-side-column=""
           data-fan-keep-open=""
         >
-          <ArmsEqZone isPlayer={true} />
+          <ArmsEqZone isPlayer={!flipZones} />
         </div>
         <div className={styles.pOneChest} data-fan-keep-open="">
-          <ChestEqZone isPlayer={true} />
+          <ChestEqZone isPlayer={!flipZones} />
         </div>
         <div className={styles.pOneBanish}>
-          <BanishZone isPlayer={true} />
+          <BanishZone isPlayer={!flipZones} />
         </div>
         <div className={styles.pOneCount}>
-          <ZoneCounts isPlayer={true} />
+          <ZoneCounts isPlayer={!flipZones} />
         </div>
         <div className={styles.pOneArsenal}>
-          <ArsenalZone isPlayer={true} />
+          <ArsenalZone isPlayer={!flipZones} />
         </div>
         <div className={styles.pOnePermanents}>
-          <PermanentsZone isPlayer={true} />
+          <PermanentsZone isPlayer={!flipZones} />
         </div>
         <div className={styles.pOneLegs} data-fan-keep-open="">
-          <LegsEqZone isPlayer={true} />
+          <LegsEqZone isPlayer={!flipZones} />
         </div>
         <Playmat isPlayer={false} />
         <Playmat isPlayer={true} />

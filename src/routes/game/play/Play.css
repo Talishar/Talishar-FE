@@ -101,6 +101,20 @@ body.fanLandscapeHand .centering {
   right: calc(env(safe-area-inset-right, 0px) - var(--fan-fullscreen-overflow));
 }
 
+@media (orientation: landscape) and (max-height: 500px) and (max-width: 1199px) {
+  body.fanLandscapeHand::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border-left: env(safe-area-inset-left, 0px) solid #000;
+    border-right: env(safe-area-inset-right, 0px) solid #000;
+    pointer-events: none;
+  }
+}
+
 body.fanLandscapeHand .gameZone {
   margin-bottom: 0;
 }

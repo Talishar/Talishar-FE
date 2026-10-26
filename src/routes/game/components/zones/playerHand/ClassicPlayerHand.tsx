@@ -14,11 +14,13 @@ import PlayerHandCard from '../../elements/playerHandCard/ClassicPlayerHandCard'
 import { useAppSelector } from 'app/Hooks';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { useMediaQuery } from 'hooks/useMediaQuery';
+import useIsSoundMuted from 'hooks/useIsSoundMuted';
 import { AnimatePresence, PanInfo } from 'framer-motion';
 import { createPortal } from 'react-dom';
 import useSound from 'use-sound';
 import drawingCardsSound from 'sounds/drawing_cards.wav';
 import { setHandCardRotationHeld } from 'utils/handCardRotation';
+import { shortcutKey } from 'utils/shortcutKey';
 import { useTranslation } from 'react-i18next';
 
 const DEFAULT_HAND_REORDER_STEP_PX = 120;
@@ -74,9 +76,7 @@ function PlayerHand() {
 
   const showArsenal = false;
 
-  const isMuted = useAppSelector(
-    (state: RootState) => state.settings.entities['MuteSound']?.value === '1'
-  );
+  const isMuted = useIsSoundMuted();
 
   const [playDrawingCardsSound] = useSound(drawingCardsSound, { volume: 0.5 });
 
@@ -786,7 +786,7 @@ function PlayerHand() {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      const key = event.key.toLowerCase();
+      const key = shortcutKey(event);
       if (key !== 'q' && key !== 'e') return;
 
       const target = event.target as HTMLElement;
@@ -835,7 +835,7 @@ function PlayerHand() {
   // Shuffle hand randomly with S key; guarantees at least 1 card changes position
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key !== 's' && e.key !== 'S') return;
+      if (shortcutKey(e) !== 's') return;
       const target = e.target as HTMLElement;
       if (
         target.tagName === 'INPUT' ||

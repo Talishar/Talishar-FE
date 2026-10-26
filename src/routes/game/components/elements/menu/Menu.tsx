@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { submitButton, setSpectatorCameraView } from 'features/game/GameSlice';
 import { GiExpand } from 'react-icons/gi';
+import { BsPhone, BsPhoneLandscape } from 'react-icons/bs';
 import {
   FaUndo,
   FaEllipsisH,
@@ -15,7 +16,13 @@ import {
 } from 'react-icons/fa';
 import { toast } from 'react-hot-toast';
 import { parseTextToElements } from 'utils/ParseEscapedString';
-import { toggleGameFullscreen } from 'utils/gameFullscreen';
+import {
+  canLockLandscape,
+  isLandscapeLocked,
+  lockLandscape,
+  toggleGameFullscreen,
+  unlockLandscape
+} from 'utils/gameFullscreen';
 import { PuzzleHintResponse } from 'interface/API/DailyPuzzleAPI';
 import styles from './Menu.module.css';
 import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'appConstants';
@@ -25,6 +32,7 @@ import ShowMobileChat from './ShowMobileChat/ShowMobileChat';
 import FullControlToggle from './FullControlToggle/FullControlToggle';
 import AlwaysPassToggle from './AlwaysPassToggle/AlwaysPassToggle';
 import ManualTargetingToggle from './ManualTargetingToggle/ManualTargetingToggle';
+import LandscapeTip from './LandscapeTip/LandscapeTip';
 import SkipReactionsToggle from '../priorityControl/SkipReactions/SkipReactionsToggle';
 import Inventory from '../inventory/Inventory';
 import SpectatorCount from '../spectatorCount/SpectatorCount';
@@ -219,9 +227,22 @@ function MobileOverflowMenu({ isSpectator }: { isSpectator: boolean }) {
   const showManualMode =
     !isSpectator && canUseManualMode && !hideManualModeToggle;
   const inSideRail = useShowsLandscapeFan();
+  const isPortrait = useMediaQuery('(orientation: portrait)');
+  const landscapeLocked = isLandscapeLocked();
+  const showOrientationItem =
+    canLockLandscape() && (landscapeLocked || isPortrait);
 
   const toggleFullScreen = () => {
     toggleGameFullscreen();
+    setOpen(false);
+  };
+
+  const toggleLandscape = () => {
+    if (landscapeLocked) {
+      unlockLandscape();
+    } else {
+      lockLandscape();
+    }
     setOpen(false);
   };
 
@@ -260,6 +281,7 @@ function MobileOverflowMenu({ isSpectator }: { isSpectator: boolean }) {
       >
         <FaEllipsisH aria-hidden="true" />
       </button>
+      {!isSpectator && <LandscapeTip anchorRef={btnRef} />}
       {open &&
         ReactDOM.createPortal(
           <>
@@ -288,6 +310,19 @@ function MobileOverflowMenu({ isSpectator }: { isSpectator: boolean }) {
                   onClick={toggleFullScreen}
                 >
                   <GiExpand aria-hidden="true" /> {t('MENU.FULLSCREEN')}
+                </button>
+              )}
+              {showOrientationItem && (
+                <button
+                  className={styles.overflowItem}
+                  onClick={toggleLandscape}
+                >
+                  {landscapeLocked ? (
+                    <BsPhone aria-hidden="true" />
+                  ) : (
+                    <BsPhoneLandscape aria-hidden="true" />
+                  )}{' '}
+                  {landscapeLocked ? t('MENU.PORTRAIT') : t('MENU.LANDSCAPE')}
                 </button>
               )}
             </div>

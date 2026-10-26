@@ -260,7 +260,8 @@ export const apiSlice = createApi({
     'SavedReplays',
     'HeroMastery',
     'PuzzleSchedule',
-    'DailyPuzzle'
+    'DailyPuzzle',
+    'PlayerReports'
   ],
   refetchOnFocus: false,
   refetchOnReconnect: false,
@@ -996,7 +997,17 @@ export const apiSlice = createApi({
 
     getPlayerReports: builder.query<PlayerReportsResponse, { days: number }>({
       query: ({ days }) => postJson(URL_END_POINT.GET_PLAYER_REPORTS, { days }),
+      providesTags: ['PlayerReports'],
       keepUnusedDataFor: 0
+    }),
+
+    deletePlayerReport: builder.mutation<
+      { success?: boolean; error?: string },
+      { reportId: number }
+    >({
+      query: ({ reportId }) =>
+        postJson(URL_END_POINT.DELETE_PLAYER_REPORT, { reportId }),
+      invalidatesTags: ['PlayerReports']
     }),
 
     // Username Moderation endpoints
@@ -1216,6 +1227,7 @@ export const {
   useGetBlockReportsQuery,
   useSubmitPlayerReportMutation,
   useGetPlayerReportsQuery,
+  useDeletePlayerReportMutation,
   useBanOffensiveUsernameMutation,
   useWhitelistOffensiveUsernameMutation,
   useGetSystemMessageQuery,

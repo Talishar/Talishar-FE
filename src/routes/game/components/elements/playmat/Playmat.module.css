@@ -31,3 +31,29 @@
   height: auto;
   margin-top: var(--board-centre-shift);
 }
+
+@media (orientation: landscape) and (max-height: 500px) and (max-width: 1199px) {
+  :global(body:not(.fanLandscapeHand)) .playerTwo,
+  :global(body:not(.fanLandscapeHand)) .playerOne {
+    width: auto;
+    height: auto;
+    margin-right: -1vh;
+    margin-left: calc(-1 * (max(10dvh, 6dvw) + 1vh));
+    z-index: -1 !important;
+  }
+
+  :global(body:not(.fanLandscapeHand)) .playerTwo {
+    margin-top: calc(-1 * (1vh + 1.5dvh));
+  }
+
+  :global(body:not(.fanLandscapeHand)) .playerOne {
+    margin-bottom: calc(-1 * (1vh + 1.5dvh));
+  }
+
+  :global(body.fanLandscapeHand) .playerTwo,
+  :global(body.fanLandscapeHand) .playerOne {
+    width: auto;
+    margin-left: calc(-1 * (var(--fan-rail-width) + var(--board-edge)));
+    margin-right: calc(var(--fan-fullscreen-overflow) - var(--board-edge));
+  }
+}

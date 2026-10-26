@@ -38,7 +38,12 @@ export default function BoardGrid({ isPlayer, styles, children }: Props) {
   );
 
   return (
-    <div className={styles.playerPlaymat} style={styleToApply}>
+    <div className={styles.playerPlaymat}>
+      <div
+        className={styles.playmatFill}
+        style={styleToApply}
+        aria-hidden="true"
+      />
       {/* Customise the playmat here */}
       <div className={styles.playerBoard}>
         <HeadEqZone isPlayer={isPlayer} />

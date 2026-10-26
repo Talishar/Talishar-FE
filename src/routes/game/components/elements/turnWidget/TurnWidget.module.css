@@ -112,7 +112,7 @@
 
 :global(body.fanLandscapeHand) .vitals {
   grid-template-rows: repeat(3, minmax(0, 1fr));
-  width: 90%;
+  width: 76.5%;
   border-radius: 14px;
 }
 

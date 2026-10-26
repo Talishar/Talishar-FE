@@ -14,6 +14,7 @@ import {
 } from 'features/options/constants';
 import {
   getFanFullscreenWidth,
+  isAppleTouchDevice,
   isGameFullscreenTurnedOff,
   resetGameFullscreenTurnedOff,
   setFanFullscreenWidth
@@ -154,13 +155,14 @@ export const LandscapeFanFullscreen = () => {
       }
       return;
     }
-    if (!document.fullscreenEnabled) return;
+    if (!document.fullscreenEnabled || isAppleTouchDevice()) return;
 
     const enterFullscreen = (event: PointerEvent) => {
       if (
         event.pointerType === 'mouse' ||
         document.fullscreenElement ||
-        isGameFullscreenTurnedOff()
+        isGameFullscreenTurnedOff() ||
+        window.screen.width <= window.screen.height
       ) {
         return;
       }
@@ -220,8 +222,9 @@ export const ReplayAdvanceButton = () => {
   );
   const { activateReplayControl, isPlaying, useSpaceToAdvanceOneStep } =
     useReplayPlayback();
+  const showsLandscapeFan = useShowsLandscapeFan();
 
-  if (!isReplay || canPassPhase !== true) return null;
+  if (!isReplay || canPassPhase !== true || showsLandscapeFan) return null;
 
   return (
     <button

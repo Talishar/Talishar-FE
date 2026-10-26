@@ -88,3 +88,9 @@
     display: inline-flex;
   }
 }
+
+@media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
+  .dock {
+    margin-right: env(safe-area-inset-right, 0px);
+  }
+}

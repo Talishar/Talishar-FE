@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import CardImage from '../cardImage/CardImage';
 import styles from './CardPortal.module.css';
@@ -25,6 +25,18 @@ import type { RootState } from 'app/Store';
 import { DISABLE_ALT_ARTS } from 'features/options/constants';
 
 const popUpGap = 130;
+const viewportPadding = 12;
+const NO_NUDGE = { x: 0, y: 0 };
+
+// Shift needed to bring [start, end] inside the viewport, keeping the start
+// visible when the preview is larger than the viewport.
+const fitOffset = (start: number, end: number, size: number): number => {
+  if (start < viewportPadding) return viewportPadding - start;
+  if (end > size - viewportPadding) {
+    return Math.max(size - viewportPadding - end, viewportPadding - start);
+  }
+  return 0;
+};
 
 function CardDetails({
   src,
@@ -249,6 +261,47 @@ export default function CardPortal() {
     [cardNumber, getLanguage, originalHeroAltArtPath, originalHeroCardNumber]
   );
 
+  // The anchored position ignores the preview's real size (meld cards, the
+  // keyword strip, hover scale), so measure it and nudge it back on screen.
+  // Portrait previews are centred by CSS instead.
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [nudge, setNudge] = useState(NO_NUDGE);
+  useLayoutEffect(() => {
+    const container = containerRef.current;
+    if (container === null || windowHeight >= windowWidth) {
+      setNudge(NO_NUDGE);
+      return;
+    }
+    const children = Array.from(container.children);
+    const fit = () => {
+      let top = Infinity;
+      let bottom = -Infinity;
+      let left = Infinity;
+      let right = -Infinity;
+      for (const child of children) {
+        const rect = child.getBoundingClientRect();
+        top = Math.min(top, rect.top);
+        bottom = Math.max(bottom, rect.bottom);
+        left = Math.min(left, rect.left);
+        right = Math.max(right, rect.right);
+      }
+      setNudge((previous) => {
+        const x = Math.round(
+          fitOffset(left - previous.x, right - previous.x, windowWidth)
+        );
+        const y = Math.round(
+          fitOffset(top - previous.y, bottom - previous.y, windowHeight)
+        );
+        return x === previous.x && y === previous.y ? previous : { x, y };
+      });
+    };
+    fit();
+    // Images and the keyword strip can finish loading after this render.
+    const observer = new ResizeObserver(fit);
+    for (const child of children) observer.observe(child);
+    return () => observer.disconnect();
+  }, [popup, src, dfcSrc, windowWidth, windowHeight, hoverImageSize]);
+
   if (
     popup === undefined ||
     popup.popupOn === false ||
@@ -289,7 +342,6 @@ export default function CardPortal() {
   if (isDFC) {
     const cardWidth = windowHeight * 0.5 * hoverImageSize * 0.7166;
     const reverseFaceOffset = windowHeight * 0.38 * hoverImageSize;
-    const viewportPadding = 12;
     const preferredLeft =
       popup.xCoord > windowWidth / 2
         ? popup.xCoord - popUpGap * hoverImageSize - cardWidth
@@ -325,7 +377,11 @@ export default function CardPortal() {
   }
 
   return createPortal(
-    <div className={styles.popUpContainer} style={popUpStyle}>
+    <div
+      ref={containerRef}
+      className={styles.popUpContainer}
+      style={{ ...popUpStyle, translate: `${nudge.x}px ${nudge.y}px` }}
+    >
       {isDFC && (
         <CardDetails
           src={dfcSrc}

@@ -109,17 +109,24 @@ export const useSettingsController = (
 
   const getRadio = useCallback(
     (def: RadioDef) => {
-      const raw = settingsData[def.name]?.value;
+      const raw =
+        def.storage === 'device'
+          ? cookies[def.name]
+          : settingsData[def.name]?.value;
       return isUnset(raw) ? def.defaultValue : Number(raw);
     },
-    [settingsData]
+    [settingsData, cookies]
   );
 
   const setRadio = useCallback(
     (def: RadioDef, value: number) => {
+      if (def.storage === 'device') {
+        setCookie(def.name, value, COOKIE_OPTIONS);
+        return;
+      }
       pushAccountSettings([{ name: def.name, value: String(value) }]);
     },
-    [pushAccountSettings]
+    [pushAccountSettings, setCookie]
   );
 
   const getSlider = useCallback(
@@ -184,7 +191,9 @@ export const useSettingsController = (
             });
           }
         }
-        if (def.kind === 'radio') {
+        if (def.kind === 'radio' && def.storage === 'device') {
+          setCookie(def.name, def.defaultValue, COOKIE_OPTIONS);
+        } else if (def.kind === 'radio') {
           accountSettings.push({
             name: def.name,
             value: String(def.defaultValue)

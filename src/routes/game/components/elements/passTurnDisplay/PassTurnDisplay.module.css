@@ -368,7 +368,7 @@
 
 :global(body.fanLandscapeHand) .passTurnDisplay,
 :global(body.fanLandscapeHand) .passTurnDisplayActive {
-  width: 90%;
+  width: 76.5%;
   justify-self: center;
   border-radius: 14px;
 }
@@ -391,7 +391,7 @@
 :global(body.fanLandscapeHand) .passTurnDisplayActive {
   background: #258040;
   border: 1px solid rgba(140, 230, 160, 0.35);
-  font-size: 16px;
+  font-size: min(16px, 0.27 * var(--side-card-size));
   letter-spacing: 0.06em;
 }
 

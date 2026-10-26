@@ -111,6 +111,13 @@
   height: var(--meld-h);
 }
 
+/* Let the keyword strip sit below the card instead of overflowing the fixed
+   height, which pushed the card above the viewport. */
+.popUpContainer .meldWrap {
+  box-sizing: content-box;
+  height: auto;
+}
+
 .meldImg {
   height: var(--meld-h);
   width: calc(var(--meld-h) / 0.7166);

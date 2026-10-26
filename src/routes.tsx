@@ -1,5 +1,6 @@
 import {
   createBrowserRouter,
+  createMemoryRouter,
   createRoutesFromElements,
   createSearchParams,
   Navigate,
@@ -26,6 +27,11 @@ const JoinSnapshot = lazy(() => import('routes/game/shared/JoinSnapshot'));
 const SettingsPage = lazy(() => import('routes/user/settings'));
 import SyncedSettings from 'features/settings/SyncedSettings';
 import AdAnalyticsTracker from 'components/ads/AdAnalyticsTracker';
+import {
+  ForcedLayoutFrameBridge,
+  ForcedLayoutGate
+} from 'routes/game/play/forcedLayout/ForcedLayoutFrame';
+import { frameHost } from 'routes/game/play/forcedLayout/forcedLayout';
 const Privacy = lazy(() => import('routes/privacy'));
 const LinkPatreon = lazy(() => import('routes/user/profile/linkpatreon'));
 const LinkMetafy = lazy(
@@ -177,21 +183,39 @@ const DailyPuzzleGuard = ({ children }: { children: JSX.Element }) => {
   return children;
 };
 
-export const router = createBrowserRouter(
+const createRouter: typeof createBrowserRouter = (routes, opts) =>
+  frameHost
+    ? createMemoryRouter(routes, {
+        ...opts,
+        initialEntries: [
+          {
+            pathname: window.location.pathname,
+            search: window.location.search,
+            state: structuredClone(frameHost.state)
+          }
+        ]
+      })
+    : createBrowserRouter(routes, opts);
+
+export const router = createRouter(
   createRoutesFromElements(
     <Route
       errorElement={<ErrorPage />}
       element={
         <Suspense fallback={<RouteFallback />}>
-          <SyncedSettings />
-          <AdAnalyticsTracker />
-          <Outlet />
+          <ForcedLayoutFrameBridge>
+            <SyncedSettings />
+            <AdAnalyticsTracker />
+            <Outlet />
+          </ForcedLayoutFrameBridge>
         </Suspense>
       }
     >
       <Route element={<Outlet />}>
-        <Route path="game/play/:gameID" element={<Play />} />
-        <Route path="game/play" element={<Play />} />
+        <Route element={<ForcedLayoutGate />}>
+          <Route path="game/play/:gameID" element={<Play />} />
+          <Route path="game/play" element={<Play />} />
+        </Route>
         <Route path="game/lobby/:gameID" element={<Lobby />} />
         <Route
           path="game/MainMenu.php"

@@ -83,6 +83,14 @@ export const LobbyUpdateHandler = React.memo(() => {
         navigate('/user/login');
         return;
       }
+      if (
+        isSpectator &&
+        error.message.toLowerCase().includes('not available for this account')
+      ) {
+        toast.error(t('SPECTATOR.GAMES_REQUIRED_BODY'));
+        navigate('/');
+        return;
+      }
       toast.error(error.message);
       navigate('/');
     };

@@ -15,6 +15,7 @@ import { toast } from 'react-hot-toast';
 import { PROCESS_INPUT } from 'appConstants';
 import { MdClose, MdShare, MdSwapVert } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
+import { useCookies } from 'react-cookie';
 import {
   useGetReplayTurnsQuery,
   useLoadReplayMutation,
@@ -22,6 +23,9 @@ import {
 } from 'features/api/apiSlice';
 import { GameLocationState } from 'interface/GameLocationState';
 import { usePlayerInputInProgress } from 'hooks/usePlayerInputInProgress';
+import { MUTE_REPLAY_SOUNDS_COOKIE } from 'hooks/useIsSoundMuted';
+import { useCookieString } from 'utils/cookieStore';
+import { COOKIE_OPTIONS } from 'features/settings/useSettingsController';
 import {
   REPLAY_PLAYBACK_SPEEDS,
   ReplayPlaybackSpeed,
@@ -128,6 +132,9 @@ function ReplayContent({
   const hideOpponentHand = useAppSelector(
     (state: RootState) => !!state.game.replayHideOpponentHand
   );
+  const muteReplaySounds =
+    useCookieString(MUTE_REPLAY_SOUNDS_COOKIE) === 'true';
+  const [, setCookie] = useCookies([MUTE_REPLAY_SOUNDS_COOKIE]);
   const [shareReplay, { isLoading: isSharing }] = useShareReplayMutation();
   const [reloadReplay, { isLoading: isReloadingReplay }] =
     useLoadReplayMutation();
@@ -386,6 +393,20 @@ function ReplayContent({
               }
             />
             <span>{t('MATCH_REVIEW.HIDE_OPPONENT_HAND')}</span>
+          </label>
+          <label className={styles.stepModeToggle}>
+            <input
+              type="checkbox"
+              checked={muteReplaySounds}
+              onChange={(event) =>
+                setCookie(
+                  MUTE_REPLAY_SOUNDS_COOKIE,
+                  String(event.target.checked),
+                  COOKIE_OPTIONS
+                )
+              }
+            />
+            <span>{t('MATCH_REVIEW.MUTE_SOUNDS')}</span>
           </label>
           <label className={styles.speedControl}>
             <span>{t('MATCH_REVIEW.PLAYBACK_SPEED')}</span>

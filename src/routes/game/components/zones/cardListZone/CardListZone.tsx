@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import {
@@ -19,6 +19,8 @@ import { Card, isAllyCard } from 'features/Card';
 import { useTranslation } from 'react-i18next';
 import { MdClose } from 'react-icons/md';
 
+const CARD_LIST_OPEN_BODY_CLASS = 'cardListOpen';
+
 const matchesQuery = (card: Card, normalizedQuery: string): boolean =>
   (card.cardName?.toLowerCase().includes(normalizedQuery) ?? false) ||
   (card.sType?.toLowerCase().includes(normalizedQuery) ?? false);
@@ -31,6 +33,16 @@ export const CardListZone = () => {
   );
   const dispatch = useAppDispatch();
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const isOpen = Boolean(showModal && cardList?.active);
+
+  useLayoutEffect(() => {
+    if (isOpen) document.body.classList.add(CARD_LIST_OPEN_BODY_CLASS);
+  }, [isOpen]);
+
+  useEffect(
+    () => () => document.body.classList.remove(CARD_LIST_OPEN_BODY_CLASS),
+    []
+  );
 
   // Clear the search when a different card list is opened.
   useEffect(() => {
@@ -90,8 +102,12 @@ export const CardListZone = () => {
   };
 
   return (
-    <AnimatePresence>
-      {showModal && cardList?.active && (
+    <AnimatePresence
+      onExitComplete={() =>
+        document.body.classList.remove(CARD_LIST_OPEN_BODY_CLASS)
+      }
+    >
+      {isOpen && (
         <>
           <div className={styles.emptyOutside} onClick={closeCardList} />
           <motion.div

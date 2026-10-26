@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import { useGetPlayerReportsQuery } from 'features/api/apiSlice';
-import { MODERATION_REASON_LABEL_KEYS } from 'interface/API/ModerationAPI';
+import {
+  useDeletePlayerReportMutation,
+  useGetPlayerReportsQuery
+} from 'features/api/apiSlice';
+import {
+  MODERATION_REASON_LABEL_KEYS,
+  PlayerReport
+} from 'interface/API/ModerationAPI';
 import tableStyles from './ModTable.module.css';
 import styles from './BlockReports.module.css';
 import { DAY_OPTIONS } from './BlockReports';
@@ -14,6 +21,24 @@ const PlayerReports: React.FC = () => {
     days
   });
   const { warn, isWarning } = useWarnPlayer();
+  const [deleteReport, { isLoading: isRemoving }] =
+    useDeletePlayerReportMutation();
+
+  const removeReport = async (report: PlayerReport) => {
+    const confirmed = window.confirm(
+      t('PLAYER_REPORTS.REMOVE_CONFIRM', {
+        reportedName: report.reportedName,
+        gameName: report.gameName
+      })
+    );
+    if (!confirmed) return;
+    try {
+      await deleteReport({ reportId: report.reportId }).unwrap();
+      toast.success(t('PLAYER_REPORTS.REMOVED'));
+    } catch (err: any) {
+      toast.error(err?.data?.error || t('PLAYER_REPORTS.REMOVE_FAILED'));
+    }
+  };
 
   const reports = data?.reports ?? [];
 
@@ -123,17 +148,26 @@ const PlayerReports: React.FC = () => {
                   </td>
                   <td className={styles.nowrap}>{report.gameName}</td>
                   <td>
-                    <button
-                      className={styles.actionButton}
-                      onClick={() => warn(report.reportedName)}
-                      disabled={
-                        isWarning ||
-                        !report.reportedHasAccount ||
-                        report.reportedIsBanned
-                      }
-                    >
-                      {t('BLOCK_REPORTS.WARN')}
-                    </button>
+                    <div className={styles.actions}>
+                      <button
+                        className={styles.actionButton}
+                        onClick={() => warn(report.reportedName)}
+                        disabled={
+                          isWarning ||
+                          !report.reportedHasAccount ||
+                          report.reportedIsBanned
+                        }
+                      >
+                        {t('BLOCK_REPORTS.WARN')}
+                      </button>
+                      <button
+                        className={styles.actionButton}
+                        onClick={() => removeReport(report)}
+                        disabled={isRemoving}
+                      >
+                        {t('PLAYER_REPORTS.REMOVE')}
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

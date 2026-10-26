@@ -4,6 +4,7 @@ import CardDisplay from '../../cardDisplay/CardDisplay';
 import { NAME_A_CARD } from '../constants';
 import { FormProps } from '../playerInputPopupTypes';
 import { promptShortcutKey, shortcutBlockedByFocus } from '../promptShortcuts';
+import { shortcutKey } from 'utils/shortcutKey';
 import { withinGroupLimits } from '../groupLimits';
 import { Card } from 'features/Card';
 import styles from '../PlayerInputPopUp.module.css';
@@ -70,7 +71,7 @@ export const OtherInput = (props: FormProps) => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.repeat || event.isComposing) return;
       if (event.ctrlKey || event.metaKey || event.altKey) return;
-      const button = shortcuts.get(event.key.toLowerCase());
+      const button = shortcuts.get(shortcutKey(event));
       if (!button || shortcutBlockedByFocus(event)) return;
       event.preventDefault();
       onClickButton(button);

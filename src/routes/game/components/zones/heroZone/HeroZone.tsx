@@ -19,6 +19,11 @@ const NO_POPUPS: never[] = [];
 export const HeroZone = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
   const dispatch = useAppDispatch();
+  const isP2View = useAppSelector(
+    (state: RootState) =>
+      (state.game.gameInfo.playerID === 3 || !!state.game.gameInfo.isReplay) &&
+      state.game.spectatorCameraView === 2
+  );
   const previousHealthRef = useRef<number | undefined>();
 
   const cardToDisplay = useAppSelector((state: RootState) =>
@@ -114,7 +119,7 @@ export const HeroZone = React.memo((prop: Displayrow) => {
   return (
     <div
       className={styles.heroZone}
-      data-fan-unhover-anchor={isPlayer ? '' : undefined}
+      data-fan-unhover-anchor={isPlayer !== isP2View ? '' : undefined}
     >
       {transformCard ? (
         <HeroTransformEventCard

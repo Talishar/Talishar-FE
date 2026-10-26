@@ -26,6 +26,7 @@ import {
 } from 'features/game/GameSlice';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { useMediaQuery } from 'hooks/useMediaQuery';
+import useIsSoundMuted from 'hooks/useIsSoundMuted';
 import {
   AnimatePresence,
   AnimationPlaybackControls,
@@ -41,12 +42,12 @@ import { createPortal } from 'react-dom';
 import useSound from 'use-sound';
 import drawingCardsSound from 'sounds/drawing_cards.wav';
 import { setHandCardRotationHeld } from 'utils/handCardRotation';
+import { shortcutKey } from 'utils/shortcutKey';
 import { useTranslation } from 'react-i18next';
 import { useCookieString } from 'utils/cookieStore';
 import { useFanFullscreenWidth } from 'utils/gameFullscreen';
 import { isMeldCard } from 'constants/meldCards';
 import {
-  ENABLE_FANNED_HAND_COOKIE,
   FAN_CARD_HEIGHT_RATIO,
   FAN_DOCK_CARD_HEIGHT_RATIO,
   FAN_DOCK_DURATION_S,
@@ -83,6 +84,7 @@ import {
 import { useFanHover } from './useFanHover';
 import { useLandscapeHandMode } from './useLandscapeHandMode';
 import { useShowsLandscapeFan } from './useShowsLandscapeFan';
+import { useFannedHand } from './useFannedHand';
 import ClassicPlayerHand from './ClassicPlayerHand';
 
 const CARD_ROTATION_KEY_STEP_DEGREES = 3;
@@ -183,16 +185,30 @@ function PlayerHand() {
   const isMobilePortrait = isMobile && isPortrait;
   const isMobileLandscape = isMobile && !isPortrait;
   const isTallScreen = useMediaQuery('(min-height: 501px)');
-  const isTallLandscape = isMobileLandscape && isTallScreen;
   const isPhoneLandscape = isMobileLandscape && !isTallScreen;
   const showsLandscapeFan = useShowsLandscapeFan();
+  const playerID = useAppSelector(
+    (state: RootState) => state.game.gameInfo.playerID
+  );
+  const isReplay = useAppSelector(
+    (state: RootState) => state.game.gameInfo.isReplay
+  );
+  const isViewer = playerID === 3 || !!isReplay;
+  const isCameraP2 = useAppSelector(
+    (state: RootState) => state.game.spectatorCameraView === 2
+  );
+  const hasLandscapeDock = showsLandscapeFan && isPhoneLandscape && !isViewer;
   const canCollapseHand = isMobile || isPortrait;
   const [isHandCollapsed, setIsHandCollapsed] = useState(false);
   const hoverImageSize = useCookieString('hoverImageSize');
   const turnPhase = useAppSelector(
     (state: RootState) => state.game.turnPhase?.turnPhase
   );
-  const isPitching = !!turnPhase && PITCH_PHASES.has(turnPhase);
+  const hasPriority = useAppSelector(
+    (state: RootState) => !!state.game.hasPriority
+  );
+  const isPitching =
+    !isViewer && hasPriority && !!turnPhase && PITCH_PHASES.has(turnPhase);
   const dispatch = useAppDispatch();
   const queuedHandPlayCount = useAppSelector(
     (state: RootState) => state.game.queuedHandPlays?.length ?? 0
@@ -240,11 +256,10 @@ function PlayerHand() {
   const lastFanSlotsRef = useRef(new Map<string, FanSlot>());
   const fanStageRef = useRef<HTMLDivElement>(null);
   const { isHandDocked, openHand, isSingleCardArsenal } = useLandscapeHandMode(
-    showsLandscapeFan && !isTallLandscape,
+    hasLandscapeDock,
     fanStageRef
   );
-  const isLandscapeDocked =
-    showsLandscapeFan && !isTallLandscape && isHandDocked;
+  const isLandscapeDocked = hasLandscapeDock && isHandDocked;
   const dockedRenderRef = useRef(isLandscapeDocked);
   const dockTransition =
     dockedRenderRef.current !== isLandscapeDocked
@@ -257,21 +272,21 @@ function PlayerHand() {
     null
   );
 
-  const playerID = useAppSelector(
-    (state: RootState) => state.game.gameInfo.playerID
-  );
-  const isReplay = useAppSelector(
-    (state: RootState) => state.game.gameInfo.isReplay
-  );
-
-  const isMuted = useAppSelector(
-    (state: RootState) => state.settings.entities['MuteSound']?.value === '1'
-  );
+  const isMuted = useIsSoundMuted();
 
   const [playDrawingCardsSound] = useSound(drawingCardsSound, { volume: 0.5 });
 
-  const handCards = useAppSelector(
-    (state: RootState) => state.game.playerOne.Hand
+  const shownHand = useAppSelector((state: RootState) =>
+    isViewer && isCameraP2
+      ? state.game.playerTwo.Hand
+      : state.game.playerOne.Hand
+  );
+  const handCards = useMemo(
+    () =>
+      isViewer
+        ? shownHand?.map((card: Card) => ({ ...card, action: 0 }))
+        : shownHand,
+    [isViewer, shownHand]
   );
 
   const cardStableListRef = useRef<
@@ -443,7 +458,7 @@ function PlayerHand() {
     const ro = new ResizeObserver(update);
     anchors.forEach((anchor) => ro.observe(anchor));
     return () => ro.disconnect();
-  }, [width, height]);
+  }, [width, height, isViewer, isCameraP2]);
   const playableBanishedCards = useAppSelector(selectPlayableBanishedCards);
   const playableTheirBanishedCards = useAppSelector(
     selectPlayableTheirBanishedCards
@@ -558,15 +573,18 @@ function PlayerHand() {
         items.push({ id: keys[index], card, zone })
       );
     };
-    addZone(playableBanishedCards, 'banished-mine', 'banishedMine');
-    addZone(playableTheirBanishedCards, 'banished-theirs', 'banishedTheirs');
-    addZone(playableGraveyardCards, 'graveyard', 'graveyard');
+    if (!isViewer) {
+      addZone(playableBanishedCards, 'banished-mine', 'banishedMine');
+      addZone(playableTheirBanishedCards, 'banished-theirs', 'banishedTheirs');
+      addZone(playableGraveyardCards, 'graveyard', 'graveyard');
+    }
     return items;
   }, [
     orderedHandCards,
     playableBanishedCards,
     playableTheirBanishedCards,
-    playableGraveyardCards
+    playableGraveyardCards,
+    isViewer
   ]);
 
   const stageBounds =
@@ -606,7 +624,7 @@ function PlayerHand() {
   const fanGeometry = useMemo<FanGeometry>(() => {
     const cardHeight =
       height *
-      (!isPhoneLandscape
+      (!hasLandscapeDock
         ? FAN_CARD_HEIGHT_RATIO
         : isLandscapeDocked
         ? FAN_DOCK_CARD_HEIGHT_RATIO
@@ -620,7 +638,7 @@ function PlayerHand() {
       cardWidth: (cardHeight * 2) / 3,
       mobile: isMobilePortrait,
       hoverLift: isMobile,
-      hiddenRatio: !isPhoneLandscape
+      hiddenRatio: !hasLandscapeDock
         ? undefined
         : isLandscapeDocked
         ? FAN_DOCK_HIDDEN_RATIO
@@ -633,7 +651,7 @@ function PlayerHand() {
     stageBounds?.right,
     isMobile,
     isMobilePortrait,
-    isPhoneLandscape,
+    hasLandscapeDock,
     isLandscapeDocked
   ]);
   const fanHoverScale = fanHoverScaleFor(
@@ -664,6 +682,32 @@ function PlayerHand() {
       document.documentElement.style.removeProperty(FAN_WINDOW_VH_VAR);
     };
   }, [showsLandscapeFan, handReserve, height]);
+
+  useLayoutEffect(() => {
+    if (
+      !isViewer ||
+      !isMobile ||
+      showsLandscapeFan ||
+      isHandCollapsed ||
+      fanItems.length === 0
+    )
+      return;
+    const body = document.body;
+    body.style.setProperty(
+      FAN_HAND_RESERVE_VAR,
+      `${fanGeometry.cardHeight * (1 - FAN_REST_HIDDEN_RATIO)}px`
+    );
+    return () => {
+      body.style.removeProperty(FAN_HAND_RESERVE_VAR);
+    };
+  }, [
+    isViewer,
+    isMobile,
+    showsLandscapeFan,
+    isHandCollapsed,
+    fanItems.length,
+    fanGeometry.cardHeight
+  ]);
 
   const isDragActive = dragPlayState !== 'idle' || dragStartOrderIds !== null;
   const activeHoveredCardId = isDragActive ? null : hoveredCardId;
@@ -1194,6 +1238,7 @@ function PlayerHand() {
       hoverAnchorY
     );
     if (event.clientY < lineY) {
+      if (isViewer) return;
       const pickupId = hoveredId ?? (firstMove ? scrub.cardId : null);
       if (pickupId === null) return;
       scrub.pickedUp = true;
@@ -1309,7 +1354,7 @@ function PlayerHand() {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      const key = event.key.toLowerCase();
+      const key = shortcutKey(event);
       if (key !== 'q' && key !== 'e') return;
 
       const target = event.target as HTMLElement;
@@ -1339,7 +1384,8 @@ function PlayerHand() {
   // Shuffle hand randomly with S key; guarantees at least 1 card changes position
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key !== 's' && e.key !== 'S') return;
+      if (isViewer) return;
+      if (shortcutKey(e) !== 's') return;
       const target = e.target as HTMLElement;
       if (
         target.tagName === 'INPUT' ||
@@ -1375,22 +1421,9 @@ function PlayerHand() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [orderedHandIds.length, isMuted, playDrawingCardsSound]);
+  }, [orderedHandIds.length, isMuted, playDrawingCardsSound, isViewer]);
 
-  if (playerID === 3 || isReplay) {
-    return <></>;
-  }
-
-  const hasHandCards = orderedHandCards.length > 0;
-  const hasBanishedCards = (playableBanishedCards?.length ?? 0) > 0;
-  const hasTheirBanishedCards = (playableTheirBanishedCards?.length ?? 0) > 0;
-  const hasGraveyardCards = (playableGraveyardCards?.length ?? 0) > 0;
-
-  const hasRowCards =
-    hasHandCards ||
-    hasBanishedCards ||
-    hasTheirBanishedCards ||
-    hasGraveyardCards;
+  const hasRowCards = fanItems.length > 0;
 
   const collapseDockStyle = gameZoneBounds
     ? { left: gameZoneBounds.left, right: gameZoneBounds.right }
@@ -1491,6 +1524,7 @@ function PlayerHand() {
                 onDragPlayStateChange={handleDragPlayStateChange}
                 dragControls={dragControlsFor(id)}
                 onTouchScrubStart={isMobile ? handleTouchScrubStart : undefined}
+                disableDrag={isViewer}
               />
             ) : (
               <PlayerHandCard
@@ -1558,11 +1592,7 @@ function PlayerHand() {
 const FannedPlayerHand = React.memo(PlayerHand);
 
 function PlayerHandForSetting() {
-  return useCookieString(ENABLE_FANNED_HAND_COOKIE) === 'true' ? (
-    <FannedPlayerHand />
-  ) : (
-    <ClassicPlayerHand />
-  );
+  return useFannedHand() ? <FannedPlayerHand /> : <ClassicPlayerHand />;
 }
 
 export default PlayerHandForSetting;

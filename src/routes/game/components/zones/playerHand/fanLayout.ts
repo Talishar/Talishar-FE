@@ -1,4 +1,7 @@
-export const ENABLE_FANNED_HAND_COOKIE = 'enableFannedHand';
+export const LEGACY_FANNED_HAND_COOKIE = 'enableFannedHand';
+export const ENABLE_FANNED_HAND_MOBILE_COOKIE = 'enableFannedHandMobile';
+export const ENABLE_FANNED_HAND_PC_COOKIE = 'enableFannedHandPC';
+export const FANNED_HAND_MOBILE_QUERY = '(max-width: 1199px)';
 
 export type FanSlot = {
   x: number;

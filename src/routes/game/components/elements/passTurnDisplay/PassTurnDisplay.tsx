@@ -15,13 +15,11 @@ import { shallowEqual } from 'react-redux';
 import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'appConstants';
 import useShortcut from 'hooks/useShortcut';
 import useSetting from 'hooks/useSetting';
+import useIsSoundMuted from 'hooks/useIsSoundMuted';
 import useSound from 'use-sound';
 import passTurnSound from 'sounds/prioritySound.wav';
 import { createPortal } from 'react-dom';
-import {
-  getSettingsEntity,
-  updateOptions
-} from 'features/options/optionsSlice';
+import { updateOptions } from 'features/options/optionsSlice';
 import {
   AUTO_PASS_TURN,
   DISABLE_HOLD_TO_AUTO_PASS
@@ -124,9 +122,7 @@ export default function PassTurnDisplay() {
   const preventPassPrompt = useAppSelector(
     (state: RootState) => state.game.preventPassPrompt
   );
-  const isMuted = useAppSelector(
-    (state: RootState) => getSettingsEntity(state)['MuteSound']?.value === '1'
-  );
+  const isMuted = useIsSoundMuted();
   // The armed state is one transient server-side flag, scoped to this player and
   // cleared by the server at the start of every turn. It is deliberately not the
   // account's Always Pass Priority preference: writing a long press into that
