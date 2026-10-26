@@ -2,6 +2,7 @@ import reducer, {
   clearCardListFocus,
   gameLobby,
   setCardListFocus,
+  setCardListLoadFocus,
   setGameStart,
   submitButton,
   toggleCardListSort
@@ -19,7 +20,7 @@ const game = (
   isPrivateLobby: false
 });
 
-describe('graveyard and banish sorting', () => {
+describe('zone popup sorting', () => {
   const cards = [
     { cardNumber: 'WTR001' },
     { cardNumber: 'WTR003' },
@@ -30,17 +31,12 @@ describe('graveyard and banish sorting', () => {
     'Your Graveyard',
     "Opponent's Graveyard",
     'Your Banish Zone',
-    "Opponent's Banish Zone"
-  ])('keeps %s sorted until its button is clicked again', (name) => {
+    "Opponent's Banish Zone",
+    'Your Deck',
+    'Your Pitch',
+    "Opponent's Hand"
+  ])('opens %s sorted and keeps it unsorted once toggled', (name) => {
     let state = reducer(undefined, setCardListFocus({ name, cardList: cards }));
-    state = reducer(state, toggleCardListSort());
-    expect(state.cardListFocus?.isSorted).toBe(true);
-    expect(
-      state.cardListFocus?.cardList?.map((card) => card.cardNumber)
-    ).toEqual(['WTR003', 'WTR002', 'WTR001']);
-
-    state = reducer(state, clearCardListFocus());
-    state = reducer(state, setCardListFocus({ name, cardList: cards }));
     expect(state.cardListFocus?.isSorted).toBe(true);
     expect(
       state.cardListFocus?.cardList?.map((card) => card.cardNumber)
@@ -53,6 +49,27 @@ describe('graveyard and banish sorting', () => {
     state = reducer(state, clearCardListFocus());
     state = reducer(state, setCardListFocus({ name, cardList: cards }));
     expect(state.cardListFocus?.isSorted).toBe(false);
+    expect(state.cardListFocus?.cardList).toEqual(cards);
+
+    state = reducer(state, toggleCardListSort());
+    state = reducer(state, clearCardListFocus());
+    state = reducer(state, setCardListFocus({ name, cardList: cards }));
+    expect(state.cardListFocus?.isSorted).toBe(true);
+  });
+
+  it('opens the API-loaded soul popup sorted', () => {
+    let state = reducer(
+      undefined,
+      setCardListLoadFocus({ name: 'Your Soul', query: 'mySoulPopup' })
+    );
+    expect(state.cardListFocus?.isSorted).toBe(true);
+    state = reducer(
+      state,
+      setCardListFocus({ name: 'Your Soul', cardList: cards })
+    );
+    expect(
+      state.cardListFocus?.cardList?.map((card) => card.cardNumber)
+    ).toEqual(['WTR003', 'WTR002', 'WTR001']);
   });
 
   it('resets zone sort choices when a new game starts', () => {
@@ -69,7 +86,7 @@ describe('graveyard and banish sorting', () => {
       state,
       setCardListFocus({ name: 'Your Graveyard', cardList: cards })
     );
-    expect(state.cardListFocus?.isSorted).toBe(false);
+    expect(state.cardListFocus?.isSorted).toBe(true);
   });
 });
 
