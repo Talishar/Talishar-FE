@@ -62,3 +62,7 @@ html:has(> body.fanLandscapeHand),
 body.fanLandscapeHand {
   height: calc(100 * var(--fan-window-vh));
 }
+
+body.fanLandscapeHand {
+  user-select: none;
+}
