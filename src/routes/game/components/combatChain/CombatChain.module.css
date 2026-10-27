@@ -339,6 +339,13 @@
 
 :global(body.fanLandscapeHand) .standalonePlayerPrompt {
   top: calc(50% + 0.5 * var(--fan-window-vh));
+  left: calc(
+    50% +
+      (
+        var(--fan-rail-width) + env(safe-area-inset-left, 0px) -
+          env(safe-area-inset-right, 0px)
+      ) / 2
+  );
 }
 
 .standalonePlayerPrompt .content {

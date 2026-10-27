@@ -79,6 +79,19 @@
   --hand-offset: 0px;
 }
 
+@media (max-height: 500px) {
+  :global(body.fanLandscapeHand) .isOpponent {
+    right: calc(
+      env(safe-area-inset-right, 0px) - var(--fan-fullscreen-overflow, 0px) / 2 +
+        var(--board-width) / 2 + 0.625 * var(--side-card-size) +
+        var(--hand-arsenal-extra, 0) *
+        (1.25 * var(--side-card-size) + var(--fan-window-vh)) + 6px
+    );
+    min-width: 0;
+    justify-content: flex-start;
+  }
+}
+
 @media (hover: hover) and (pointer: fine) {
   .isOpponent:hover {
     --hand-reveal: calc(var(--card-size) * 0.26);

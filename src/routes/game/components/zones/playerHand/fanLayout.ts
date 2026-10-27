@@ -58,6 +58,8 @@ export const FAN_OPEN_HIDDEN_RATIO = 0.14;
 export const FAN_DOCK_EDGE_GAP_PX = 4;
 export const FAN_DOCK_OPEN_GUARD_MS = 300;
 export const FAN_DOCK_START_ATTR = 'data-fan-dock-start';
+export const FAN_OPPONENT_NAME_ATTR = 'data-fan-opponent-name';
+export const FAN_OPPONENT_HAND_GAP_PX = 6;
 export const FAN_KEEP_OPEN_ATTR = 'data-fan-keep-open';
 
 export const FAN_DROP_FAST_RATE = 160;
