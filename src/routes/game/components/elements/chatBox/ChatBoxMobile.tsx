@@ -101,8 +101,8 @@ export default function ChatBox() {
 
     return (message: string) =>
       message
-        .replace(/Player 1/g, playerOneName)
-        .replace(/Player 2/g, playerTwoName);
+        .replace(/Player 1/g, `<b>${playerOneName}</b>`)
+        .replace(/Player 2/g, `<b>${playerTwoName}</b>`);
   }, [amIPlayerOne, myName, oppName]);
 
   const scrollToBottom = () => {
