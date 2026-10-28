@@ -4,6 +4,7 @@ import {
   ENABLE_FANNED_HAND_MOBILE_COOKIE,
   ENABLE_FANNED_HAND_PC_COOKIE
 } from 'routes/game/components/zones/playerHand/fanLayout';
+import { SORT_ZONES_BY_DEFAULT_COOKIE } from 'routes/game/components/zones/cardListZone/zoneSortPreference';
 import {
   FORCED_LAYOUT,
   FORCED_LAYOUT_COOKIE
@@ -402,6 +403,16 @@ export const SETTINGS_DEFS: SettingDef[] = [
     labelKey: 'SETTINGS.ALWAYS_SHOW_COUNTERS_ON_ZONES',
     storage: 'account',
     name: optConst.ALWAYS_SHOW_COUNTERS,
+    defaultOn: false
+  },
+  {
+    kind: 'toggle',
+    key: 'sortZonesByDefault',
+    group: 'boardLayout',
+    labelKey: 'SETTINGS.SORT_ZONES_BY_DEFAULT',
+    tooltipKey: 'SETTINGS.SORT_ZONES_BY_DEFAULT_TOOLTIP',
+    storage: 'device',
+    name: SORT_ZONES_BY_DEFAULT_COOKIE,
     defaultOn: false
   },
   {

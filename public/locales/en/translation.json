@@ -2215,6 +2215,8 @@
     "REQUIRE_YES_NO_ANSWER": "Require an answer on Yes/No prompts",
     "REQUIRE_YES_NO_ANSWER_TOOLTIP": "Pass and Space no longer answer No on Yes/No prompts. You have to click Yes or No.",
     "ALWAYS_SHOW_COUNTERS_ON_ZONES": "Always Show Counters on Zones",
+    "SORT_ZONES_BY_DEFAULT": "Sort zones by default",
+    "SORT_ZONES_BY_DEFAULT_TOOLTIP": "Open your graveyard, banish, deck, soul, pitch and hand already sorted. The Sort button still switches each zone for the rest of the game.",
     "ATTACK_OPTIONS": {
       "NEVER_SKIP": "Never Skip Attacks",
       "SKIP_ALL": "Skip All Attacks",

@@ -34,12 +34,17 @@ import { parseBackendJson } from 'utils/parseBackendResponse';
 import isEqual from 'react-fast-compare';
 import { CardStack } from '../../routes/game/components/zones/permanentsZone/PermanentsZone';
 import { reportPerformanceMetric } from 'utils/performanceMetrics';
+import { areZonesSortedByDefault } from 'routes/game/components/zones/cardListZone/zoneSortPreference';
 
 const CHAT_RE = /<span[^>]*>(.*?):\s<\/span>/;
 
 const isSortableZone = (name?: string): name is string =>
   !!name &&
   /^(Your|Opponent's) (Graveyard|Banish Zone|Deck|Soul|Pitch|Hand)$/.test(name);
+
+const opensSorted = (state: GameState, name?: string): boolean =>
+  isSortableZone(name) &&
+  (state.cardListZoneSortChoices?.[name] ?? areZonesSortedByDefault());
 
 const sortCardList = (cards: Card[]): Card[] => {
   const isCardBack = (cardNumber: string) =>
@@ -666,9 +671,7 @@ export const gameSlice = createSlice({
         name?: string;
       }>
     ) => {
-      const isSorted =
-        isSortableZone(action.payload.name) &&
-        !state.unsortedCardListZones?.[action.payload.name];
+      const isSorted = opensSorted(state, action.payload.name);
       state.cardListFocus = {
         active: true,
         cardList:
@@ -693,9 +696,7 @@ export const gameSlice = createSlice({
         name: action.payload.name,
         apiQuery: action.payload.query,
         apiCall: true,
-        isSorted:
-          isSortableZone(action.payload.name) &&
-          !state.unsortedCardListZones?.[action.payload.name]
+        isSorted: opensSorted(state, action.payload.name)
       };
     },
     clearCardListFocus: (state) => {
@@ -715,7 +716,7 @@ export const gameSlice = createSlice({
           state.cardListFocus.cardList = state.cardListFocus.originalCardList;
           state.cardListFocus.isSorted = false;
           if (isSortableZone(zoneName)) {
-            (state.unsortedCardListZones ??= {})[zoneName] = true;
+            (state.cardListZoneSortChoices ??= {})[zoneName] = false;
           }
         } else {
           // Sort the cards
@@ -724,7 +725,7 @@ export const gameSlice = createSlice({
           );
           state.cardListFocus.isSorted = true;
           if (isSortableZone(zoneName)) {
-            delete state.unsortedCardListZones?.[zoneName];
+            (state.cardListZoneSortChoices ??= {})[zoneName] = true;
           }
         }
       }
@@ -854,7 +855,7 @@ export const gameSlice = createSlice({
         state.gameInfo.bazaarDeckId = action.payload.bazaarDeckId ?? undefined;
         // Clear recently played history from previous game
         state.gameDynamicInfo.recentlyPlayed = [];
-        state.unsortedCardListZones = undefined;
+        state.cardListZoneSortChoices = undefined;
       }
 
       return state;
@@ -893,7 +894,7 @@ export const gameSlice = createSlice({
       state.gameInfo.playerID = 0;
       state.gameInfo.authKey = '';
       state.gameDynamicInfo.lastUpdate = 0;
-      state.unsortedCardListZones = undefined;
+      state.cardListZoneSortChoices = undefined;
       return state;
     },
     setSpectatorCameraView: (state, action: PayloadAction<number>) => {

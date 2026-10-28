@@ -1582,6 +1582,8 @@
     "ACCESSIBILITY_OTHER": "Accessibilité et autres",
     "ALWAYS_ALLOW_UNDO": "Toujours autoriser l'annulation",
     "ALWAYS_SHOW_COUNTERS_ON_ZONES": "Toujours afficher les compteurs sur les zones",
+    "SORT_ZONES_BY_DEFAULT": "Trier les zones par défaut",
+    "SORT_ZONES_BY_DEFAULT_TOOLTIP": "Ouvre le cimetière, le bannissement, le deck, l'âme, la zone de pitch et la main déjà triés. Le bouton Trier change toujours chaque zone pour le reste de la partie.",
     "ATTACK_OPTIONS": {
       "NEVER_SKIP": "Ne sautez jamais les attaques",
       "SKIP_ALL": "Ignorer toutes les attaques",
