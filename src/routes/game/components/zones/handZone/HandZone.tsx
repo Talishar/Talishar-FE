@@ -14,7 +14,8 @@ import { useFannedHand } from '../playerHand/useFannedHand';
 import { useShowsLandscapeFan } from '../playerHand/useShowsLandscapeFan';
 import {
   FAN_OPPONENT_NAME_ATTR,
-  FAN_OPPONENT_HAND_GAP_PX
+  FAN_OPPONENT_HAND_GAP_PX,
+  FAN_OPPONENT_HAND_MIN_STEP_PX
 } from '../playerHand/fanLayout';
 
 const CARD_GAP = 5; // matches the flex gap in HandZone.module.css
@@ -103,9 +104,10 @@ const HandZone = React.memo(function HandZone(prop: Player) {
 
   useLayoutEffect(() => {
     const zone = zoneRef.current;
-    const namePlate = besideArsenal
-      ? document.querySelector(`[${FAN_OPPONENT_NAME_ATTR}] > *`)
+    const nameAnchor = besideArsenal
+      ? document.querySelector(`[${FAN_OPPONENT_NAME_ATTR}]`)
       : null;
+    const namePlate = nameAnchor?.firstElementChild;
     const fit = () => {
       const firstCard = zone?.querySelector(
         ':scope > div'
@@ -135,7 +137,9 @@ const HandZone = React.memo(function HandZone(prop: Player) {
           (availableWidth - cardWidth) / (cardCount - 1) - cardWidth - CARD_GAP;
         nextOverlap = Math.max(
           Math.min(idealOverlap, 0),
-          namePlate ? -cardWidth : -MAX_OVERLAP_RATIO * cardWidth
+          namePlate
+            ? FAN_OPPONENT_HAND_MIN_STEP_PX - cardWidth - CARD_GAP
+            : -MAX_OVERLAP_RATIO * cardWidth
         );
       }
       setLayout((previous) =>
@@ -146,8 +150,9 @@ const HandZone = React.memo(function HandZone(prop: Player) {
       );
     };
     fit();
-    if (!namePlate) return;
+    if (!nameAnchor || !namePlate) return;
     const observer = new ResizeObserver(fit);
+    observer.observe(nameAnchor);
     observer.observe(namePlate);
     return () => observer.disconnect();
   }, [cardCount, windowWidth, windowHeight, besideArsenal, extraArsenalCards]);

@@ -582,6 +582,11 @@
   min-width: 0;
   max-width: 100%;
   z-index: 41;
+  pointer-events: none;
+}
+
+:global(body.fanLandscapeHand) .fanOpponentName > * {
+  pointer-events: auto;
 }
 
 :global(body.fanLandscapeHand)
@@ -590,6 +595,12 @@
   )
   .fanOpponentName {
   grid-column: 4 / 6;
+}
+
+@media (max-height: 500px) {
+  :global(body.fanLandscapeHand) .fanOpponentName {
+    justify-self: stretch;
+  }
 }
 
 :global(body.fanLandscapeHand) .fanPlayerName {
