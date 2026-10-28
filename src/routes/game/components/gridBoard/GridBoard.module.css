@@ -563,9 +563,10 @@
       0px,
       var(--hero-group-size) + 4px - var(--fan-arsenal-size)
     );
-    --fan-pass-top: calc(var(--side-row-step) - var(--board-gap) / 2 + 16px);
+    --fan-pass-top: calc(var(--side-row-step) + 16px);
     --board-centre-shift: calc(
-      (var(--board-bottom-row) + var(--side-row-step) + var(--board-gap)) / 2
+      (var(--board-bottom-row) + var(--side-row-step) + 2 * var(--board-gap)) /
+        2
     );
   }
 }
@@ -841,13 +842,28 @@
       .pTwoDeck,
       .pTwoCount,
       .pTwoBanish,
-      .fanOpponentEffects
+      .fanOpponentEffects,
+      .pOneHead,
+      .pOneChest,
+      .pOneHands,
+      .pOneLegs,
+      .pOneGraveyard,
+      .pOnePitch,
+      .pOneDeck,
+      .pOneCount,
+      .pOneBanish,
+      .fanPlayerEffects,
+      .fanLandmark
     ) {
     translate: 0 var(--board-gap);
   }
 
   :global(body.fanLandscapeHand) .pTwoPermanents {
     translate: 0 calc(2 * var(--side-row-step) + var(--board-gap));
+  }
+
+  :global(body.fanLandscapeHand) .pOnePermanents {
+    translate: 0 calc(var(--board-bottom-row) + var(--board-gap));
   }
 }
 
