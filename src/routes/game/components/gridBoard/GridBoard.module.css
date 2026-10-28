@@ -563,6 +563,10 @@
       0px,
       var(--hero-group-size) + 4px - var(--fan-arsenal-size)
     );
+    --fan-pass-top: calc(var(--side-row-step) - var(--board-gap) / 2 + 16px);
+    --board-centre-shift: calc(
+      (var(--board-bottom-row) + var(--side-row-step) + var(--board-gap)) / 2
+    );
   }
 }
 
@@ -577,7 +581,12 @@
   height: auto;
   min-width: 0;
   max-width: 100%;
-  z-index: 6;
+  z-index: 41;
+  pointer-events: none;
+}
+
+:global(body.fanLandscapeHand) .fanOpponentName > * {
+  pointer-events: auto;
 }
 
 :global(body.fanLandscapeHand)
@@ -586,6 +595,12 @@
   )
   .fanOpponentName {
   grid-column: 4 / 6;
+}
+
+@media (max-height: 500px) {
+  :global(body.fanLandscapeHand) .fanOpponentName {
+    justify-self: stretch;
+  }
 }
 
 :global(body.fanLandscapeHand) .fanPlayerName {
@@ -601,7 +616,7 @@
   height: auto;
   min-width: 0;
   max-width: 100%;
-  z-index: 6;
+  z-index: 7;
 }
 
 :global(body.fanLandscapeHand)
@@ -812,6 +827,28 @@
 
 :global(body.fanLandscapeHand) .pOnePermanents {
   translate: 0 var(--board-bottom-row);
+}
+
+@media (max-height: 500px) {
+  :global(body.fanLandscapeHand)
+    :is(
+      .pTwoHead,
+      .pTwoChest,
+      .pTwoHands,
+      .pTwoLegs,
+      .pTwoGraveyard,
+      .pTwoPitch,
+      .pTwoDeck,
+      .pTwoCount,
+      .pTwoBanish,
+      .fanOpponentEffects
+    ) {
+    translate: 0 var(--board-gap);
+  }
+
+  :global(body.fanLandscapeHand) .pTwoPermanents {
+    translate: 0 calc(2 * var(--side-row-step) + var(--board-gap));
+  }
 }
 
 :global(body.fanLandscapeHand) .combatChain {

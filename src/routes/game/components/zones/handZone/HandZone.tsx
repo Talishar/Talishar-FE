@@ -7,9 +7,16 @@ import { Card } from 'features/Card';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import { useAppDispatch, useAppSelector, useAppStore } from 'app/Hooks';
 import { setCardListFocus, clearCardListFocus } from 'features/game/GameSlice';
-import { useWindowWidth } from 'hooks/useWindowDimensions';
+import useWindowDimensions from 'hooks/useWindowDimensions';
+import { useMediaQuery } from 'hooks/useMediaQuery';
 import { getCardPreview } from '../../elements/cardPortal/cardPreviewStore';
 import { useFannedHand } from '../playerHand/useFannedHand';
+import { useShowsLandscapeFan } from '../playerHand/useShowsLandscapeFan';
+import {
+  FAN_OPPONENT_NAME_ATTR,
+  FAN_OPPONENT_HAND_GAP_PX,
+  FAN_OPPONENT_HAND_MIN_STEP_PX
+} from '../playerHand/fanLayout';
 
 const CARD_GAP = 5; // matches the flex gap in HandZone.module.css
 const ZONE_MAX_WIDTH = 0.6; // matches max-width: 60% in HandZone.module.css
@@ -47,6 +54,14 @@ const HandZone = React.memo(function HandZone(prop: Player) {
       : state.game.playerTwo;
     return handOwner.CardBack?.cardNumber ?? 'CardBack';
   });
+  const extraArsenalCards = useAppSelector((state: RootState) => {
+    const { playerID, isReplay } = state.game.gameInfo;
+    const isP2View =
+      (playerID === 3 || isReplay) && state.game.spectatorCameraView === 2;
+    const handOwner =
+      isPlayer === isP2View ? state.game.playerTwo : state.game.playerOne;
+    return Math.max(0, (handOwner.Arsenal?.length ?? 0) - 1);
+  });
   const handCardBackNumber = handCardBack.toLowerCase();
   const hideHand = useAppSelector(
     (state: RootState) =>
@@ -70,7 +85,10 @@ const HandZone = React.memo(function HandZone(prop: Player) {
   const store = useAppStore();
   const fannedHand = useFannedHand();
 
-  const windowWidth = useWindowWidth();
+  const [windowWidth, windowHeight] = useWindowDimensions();
+  const showsLandscapeFan = useShowsLandscapeFan();
+  const isShortScreen = useMediaQuery('(max-height: 500px)');
+  const besideArsenal = !isPlayer && showsLandscapeFan && isShortScreen;
   const zoneRef = useRef<HTMLDivElement>(null);
   const lastPointerTypeRef = useRef<string | null>(null);
   const [layout, setLayout] = useState<HandLayout>(EMPTY_HAND_LAYOUT);
@@ -86,35 +104,58 @@ const HandZone = React.memo(function HandZone(prop: Player) {
 
   useLayoutEffect(() => {
     const zone = zoneRef.current;
-    const firstCard = zone?.querySelector(':scope > div') as HTMLElement | null;
-    const cardWidth = firstCard?.offsetWidth ?? 0;
-    if (!zone || !cardWidth || cardCount === 0) {
+    const nameAnchor = besideArsenal
+      ? document.querySelector(`[${FAN_OPPONENT_NAME_ATTR}]`)
+      : null;
+    const namePlate = nameAnchor?.firstElementChild;
+    const fit = () => {
+      const firstCard = zone?.querySelector(
+        ':scope > div'
+      ) as HTMLElement | null;
+      const cardWidth =
+        (namePlate
+          ? firstCard?.getBoundingClientRect().width
+          : firstCard?.offsetWidth) ?? 0;
+      if (!zone || !cardWidth || cardCount === 0) {
+        setLayout((previous) =>
+          previous.isOverflowing || previous.overlap !== 0
+            ? EMPTY_HAND_LAYOUT
+            : previous
+        );
+        return;
+      }
+      const naturalWidth = cardCount * (cardWidth + CARD_GAP) - CARD_GAP;
+      const availableWidth = namePlate
+        ? zone.getBoundingClientRect().right -
+          namePlate.getBoundingClientRect().right -
+          FAN_OPPONENT_HAND_GAP_PX
+        : windowWidth * ZONE_MAX_WIDTH;
+      const nextIsOverflowing = naturalWidth > availableWidth;
+      let nextOverlap = 0;
+      if (cardCount > 1) {
+        const idealOverlap =
+          (availableWidth - cardWidth) / (cardCount - 1) - cardWidth - CARD_GAP;
+        nextOverlap = Math.max(
+          Math.min(idealOverlap, 0),
+          namePlate
+            ? FAN_OPPONENT_HAND_MIN_STEP_PX - cardWidth - CARD_GAP
+            : -MAX_OVERLAP_RATIO * cardWidth
+        );
+      }
       setLayout((previous) =>
-        previous.isOverflowing || previous.overlap !== 0
-          ? EMPTY_HAND_LAYOUT
-          : previous
+        previous.isOverflowing === nextIsOverflowing &&
+        previous.overlap === nextOverlap
+          ? previous
+          : { isOverflowing: nextIsOverflowing, overlap: nextOverlap }
       );
-      return;
-    }
-    const naturalWidth = cardCount * (cardWidth + CARD_GAP) - CARD_GAP;
-    const availableWidth = windowWidth * ZONE_MAX_WIDTH;
-    const nextIsOverflowing = naturalWidth > availableWidth;
-    let nextOverlap = 0;
-    if (cardCount > 1) {
-      const idealOverlap =
-        (availableWidth - cardWidth) / (cardCount - 1) - cardWidth - CARD_GAP;
-      nextOverlap = Math.max(
-        Math.min(idealOverlap, 0),
-        -MAX_OVERLAP_RATIO * cardWidth
-      );
-    }
-    setLayout((previous) =>
-      previous.isOverflowing === nextIsOverflowing &&
-      previous.overlap === nextOverlap
-        ? previous
-        : { isOverflowing: nextIsOverflowing, overlap: nextOverlap }
-    );
-  }, [cardCount, windowWidth]);
+    };
+    fit();
+    if (!nameAnchor || !namePlate) return;
+    const observer = new ResizeObserver(fit);
+    observer.observe(nameAnchor);
+    observer.observe(namePlate);
+    return () => observer.disconnect();
+  }, [cardCount, windowWidth, windowHeight, besideArsenal, extraArsenalCards]);
 
   // Backend uniqueIds fall back to '-', so duplicates are deduped by a
   // per-cardNumber occurrence counter rather than by position.
@@ -166,9 +207,10 @@ const HandZone = React.memo(function HandZone(prop: Player) {
       className={classNames(displayRow, { [styles.compact]: compactActive })}
       ref={zoneRef}
       style={
-        compactActive
-          ? ({ '--hand-overlap': `${overlap}px` } as React.CSSProperties)
-          : undefined
+        {
+          '--hand-arsenal-extra': extraArsenalCards,
+          ...(compactActive ? { '--hand-overlap': `${overlap}px` } : {})
+        } as React.CSSProperties
       }
       onPointerDown={(event) => {
         lastPointerTypeRef.current = event.pointerType;
