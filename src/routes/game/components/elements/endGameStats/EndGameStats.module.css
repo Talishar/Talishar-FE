@@ -992,7 +992,7 @@ input.excludeLastTurnCheckbox:focus-visible {
   user-select: none;
 }
 
-.disruptionControl {
+.valueToggleControl {
   display: inline-flex;
   align-items: center;
   gap: 6px;
