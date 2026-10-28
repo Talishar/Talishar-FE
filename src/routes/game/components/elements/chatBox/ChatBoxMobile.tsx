@@ -18,6 +18,7 @@ import { useTranslation } from 'react-i18next';
 const INITIAL_MOBILE_LOG_MESSAGES = 120;
 const MOBILE_LOG_PAGE_SIZE = 200;
 const CHAT_FILTER_STORAGE_KEY = 'mobileChatFilter';
+const SCROLL_PIN_THRESHOLD = 4;
 
 type ChatFilter = 'none' | 'chat' | 'log';
 
@@ -66,6 +67,9 @@ export default function ChatBox() {
       'your opponent'
   );
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const isPinnedToBottomRef = useRef<boolean>(true);
+  const suppressScrollHandlerRef = useRef<boolean>(false);
   const prevChatLengthRef = useRef<number>(0);
   const prevChatFilterRef = useRef<string>('none');
 
@@ -103,8 +107,32 @@ export default function ChatBox() {
 
   const scrollToBottom = () => {
     const area = scrollAreaRef.current;
-    if (area) area.scrollTop = area.scrollHeight;
+    if (!area) return;
+    isPinnedToBottomRef.current = true;
+    suppressScrollHandlerRef.current = true;
+    area.scrollTop = area.scrollHeight;
+    requestAnimationFrame(() => {
+      suppressScrollHandlerRef.current = false;
+    });
   };
+
+  const handleScroll = () => {
+    const area = scrollAreaRef.current;
+    if (!area || suppressScrollHandlerRef.current) return;
+    isPinnedToBottomRef.current =
+      area.scrollHeight - area.scrollTop - area.clientHeight <=
+      SCROLL_PIN_THRESHOLD;
+  };
+
+  useEffect(() => {
+    const content = contentRef.current;
+    if (!content || typeof ResizeObserver === 'undefined') return;
+    const observer = new ResizeObserver(() => {
+      if (isPinnedToBottomRef.current) scrollToBottom();
+    });
+    observer.observe(content);
+    return () => observer.disconnect();
+  }, []);
 
   // Mount the panel and controls first, then parse the game log when the
   // browser is idle. This keeps opening chat responsive on slower phones.
@@ -194,31 +222,38 @@ export default function ChatBox() {
         </div>
       </div>
       {/* Message list */}
-      <div ref={scrollAreaRef} className={styles.chatMobileScrollArea}>
-        {logReady && (
-          <>
-            {hasEarlierMessages && (
-              <button
-                type="button"
-                className={styles.loadEarlierButton}
-                onClick={() =>
-                  setVisibleMessageCount(
-                    (count) => count + MOBILE_LOG_PAGE_SIZE
-                  )
-                }
-              >
-                {t('CHAT.LOAD_EARLIER_MESSAGES')}
-              </button>
-            )}
-            <GameLogMessages
-              chatLog={visibleChatLog}
-              chatFilter={chatFilter}
-              transformMessage={transformMessage}
-              playerNames={playerNames}
-              mobile
-            />
-          </>
-        )}
+      <div
+        ref={scrollAreaRef}
+        className={styles.chatMobileScrollArea}
+        onScroll={handleScroll}
+      >
+        <div ref={contentRef} className={styles.chatMobileContent}>
+          {logReady && (
+            <>
+              {hasEarlierMessages && (
+                <button
+                  type="button"
+                  className={styles.loadEarlierButton}
+                  onClick={() => {
+                    isPinnedToBottomRef.current = false;
+                    setVisibleMessageCount(
+                      (count) => count + MOBILE_LOG_PAGE_SIZE
+                    );
+                  }}
+                >
+                  {t('CHAT.LOAD_EARLIER_MESSAGES')}
+                </button>
+              )}
+              <GameLogMessages
+                chatLog={visibleChatLog}
+                chatFilter={chatFilter}
+                transformMessage={transformMessage}
+                playerNames={playerNames}
+                mobile
+              />
+            </>
+          )}
+        </div>
       </div>
       <ChatInput />
     </div>,

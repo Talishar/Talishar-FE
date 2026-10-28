@@ -326,11 +326,14 @@
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
   padding: 6px 8px;
+  --game-log-accent: #9edfff;
+  --game-log-critical: #ffd27a;
+}
+
+.chatMobileContent {
   display: flex;
   flex-direction: column;
   gap: 1px;
-  --game-log-accent: #9edfff;
-  --game-log-critical: #ffd27a;
 }
 
 :global(body.fanLandscapeHand) .chatMobileScrollArea {
