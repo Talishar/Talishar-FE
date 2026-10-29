@@ -364,3 +364,9 @@
     padding: 0.1rem 0.2rem;
   }
 }
+
+@media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
+  .matchupContainer {
+    grid-template-columns: repeat(var(--matchup-columns, 3), minmax(0, 1fr));
+  }
+}
