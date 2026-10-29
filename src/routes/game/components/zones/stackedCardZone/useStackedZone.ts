@@ -16,8 +16,9 @@ export const useAlwaysShowCounters = () =>
 
 export const useStackedZoneGeometry = (totalCards: number) => {
   const isMobileOrTablet = useMediaQuery('(max-width: 1024px)');
-  const baseOffsetY = totalCards * -0.24;
-  const baseOffsetX = totalCards * 0.24;
+  const stackDepth = Math.max(0, totalCards - 1) * 0.25;
+  const baseOffsetY = stackDepth / -2;
+  const baseOffsetX = stackDepth / 2;
 
   const layerStyles = useMemo(() => {
     if (totalCards <= 1) return [];
