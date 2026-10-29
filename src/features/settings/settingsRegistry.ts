@@ -353,7 +353,7 @@ export const SETTINGS_DEFS: SettingDef[] = [
     tooltipKey: 'SETTINGS.FANNED_HAND_PC_TOOLTIP',
     storage: 'device',
     name: ENABLE_FANNED_HAND_PC_COOKIE,
-    defaultOn: false
+    defaultOn: true
   },
   {
     kind: 'radio',

@@ -1064,6 +1064,11 @@
       },
       "VISIBILITY": "Visibilité"
     },
+    "FANNED_HAND_TIP": {
+      "CLOSE": "Fermer",
+      "GOT_IT": "Compris",
+      "TEXT": "Votre main est maintenant en éventail : l'animation au survol et la position des cartes ont changé ! Vous pouvez revenir à la main classique à tout moment dans Paramètres → Interface."
+    },
     "FULLSCREEN": "Plein écran",
     "HIDE_ARENA": "Masquer l'arène",
     "HOLD_PRIORITY_LABEL": "Maintenir la priorité",
