@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 import { Card } from 'features/Card';
 import styles from './CountersOverlay.module.css';
 import GemSlider from '../gemSlider/GemSlider';
@@ -40,6 +41,7 @@ const INCLUDED_COUNTERS = new Set([
 export interface CountersProp extends Partial<Card> {
   num?: number;
   numDescription?: string;
+  numAsTab?: boolean;
   activeCombatChain?: CombatChainLink;
   excludeFancyCounters?: boolean;
   gemStackIDs?: string[];
@@ -53,6 +55,7 @@ export const CountersOverlay = React.memo(
     cardNumber,
     actionDataOverride,
     num,
+    numAsTab,
     zone,
     activeCombatChain,
     goAgain,
@@ -97,7 +100,11 @@ export const CountersOverlay = React.memo(
           </TooltipWrapper>
         )}
         {!!numTotal && (
-          <div className={styles.number}>
+          <div
+            className={classNames(styles.number, {
+              [styles.numberTab]: numAsTab
+            })}
+          >
             <div className={styles.text}>{numTotal}</div>
           </div>
         )}

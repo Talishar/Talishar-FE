@@ -1,6 +1,7 @@
 import {
   clearCardPreview,
   getCardPreview,
+  isCardDragActive,
   setCardPreview
 } from '../cardPortal/cardPreviewStore';
 import React, { ReactNode, useEffect, useId, useRef } from 'react';
@@ -106,7 +107,13 @@ const CardSurface = ({
     event.currentTarget.contains(event.relatedTarget);
 
   const handleHoverIn = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (event.pointerType === 'touch' || isMoveWithinSurface(event)) return;
+    if (
+      event.pointerType === 'touch' ||
+      isMoveWithinSurface(event) ||
+      isCardDragActive()
+    ) {
+      return;
+    }
     onHoverStart?.();
     if (event.pointerType === 'pen') {
       onPenHover();
@@ -119,6 +126,10 @@ const CardSurface = ({
     onHoverEnd?.();
   };
 
+  const onSurfaceMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (!isCardDragActive()) handleMouseMove(event);
+  };
+
   const onSurfaceMouseLeave = () => {
     if (tiltEnabled) handleMouseLeave();
     onMouseLeave();
@@ -128,7 +139,7 @@ const CardSurface = ({
     <div
       className={className}
       ref={containerRef}
-      onMouseMove={tiltEnabled ? handleMouseMove : undefined}
+      onMouseMove={tiltEnabled ? onSurfaceMouseMove : undefined}
       onMouseLeave={onSurfaceMouseLeave}
       onPointerDown={onPointerDown}
       {...(classicHover
@@ -296,6 +307,7 @@ export default function CardPopUp({
     cancelHoverPreview();
     hoverPreviewTimer.current = setTimeout(() => {
       hoverPreviewTimer.current = null;
+      if (isCardDragActive()) return;
       showPreview();
     }, hoverPreviewDelayMs);
   };

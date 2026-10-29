@@ -1,4 +1,4 @@
-import { useSyncExternalStore } from 'react';
+import { useEffect, useSyncExternalStore } from 'react';
 import { Card } from 'features/Card';
 
 export type CardPreviewState = {
@@ -81,4 +81,22 @@ export function useOwnsCardPreview(owner: string): boolean {
 
 export function getCardPreview(): CardPreviewState {
   return snapshot;
+}
+
+let cardDragActive = false;
+
+export function isCardDragActive(): boolean {
+  return cardDragActive;
+}
+
+// Cards passed over while another card is being dragged must not react as if
+// hovered.
+export function useMarkCardDrag(isDragging: boolean): void {
+  useEffect(() => {
+    if (!isDragging) return;
+    cardDragActive = true;
+    return () => {
+      cardDragActive = false;
+    };
+  }, [isDragging]);
 }

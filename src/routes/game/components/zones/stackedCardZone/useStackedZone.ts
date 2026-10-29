@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { CSSProperties, useMemo } from 'react';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import { useMediaQuery } from 'hooks/useMediaQuery';
@@ -42,11 +42,13 @@ export const useStackedZoneGeometry = (totalCards: number) => {
   const cardWrapperStyle = useMemo(
     () =>
       !isMobileOrTablet
-        ? {
+        ? ({
             transform: `translate3d(${Math.round(baseOffsetX)}px, ${Math.round(
               baseOffsetY
-            )}px, 0)`
-          }
+            )}px, 0)`,
+            '--stack-offset-x': `${Math.round(baseOffsetX)}px`,
+            '--stack-offset-y': `${Math.round(baseOffsetY)}px`
+          } as CSSProperties)
         : undefined,
     [isMobileOrTablet, baseOffsetY, baseOffsetX]
   );

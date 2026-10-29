@@ -1,6 +1,9 @@
 import React, { useRef, useState, useMemo } from 'react';
 import { playCard, removeCardFromHand } from 'features/game/GameSlice';
-import { clearCardPreview } from '../cardPortal/cardPreviewStore';
+import {
+  clearCardPreview,
+  useMarkCardDrag
+} from '../cardPortal/cardPreviewStore';
 import {
   GiTombstone,
   GiFluffySwirl,
@@ -121,6 +124,7 @@ export const PlayerHandCard = React.memo(
     const dragX = useMotionValue(0);
     const dragY = useMotionValue(0);
     const dispatch = useAppDispatch();
+    useMarkCardDrag(isDragging);
 
     const imgStyles = useMemo(
       () =>

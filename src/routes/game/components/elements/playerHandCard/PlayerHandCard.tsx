@@ -15,6 +15,7 @@ import {
 } from 'features/game/GameSlice';
 import {
   clearCardPreview,
+  useMarkCardDrag,
   useOwnsCardPreview
 } from '../cardPortal/cardPreviewStore';
 import {
@@ -439,6 +440,8 @@ export const PlayerHandCard = React.memo(
         );
       };
     }, [isDragging, cancelDrag]);
+
+    useMarkCardDrag(isDragging);
 
     const imgStyles = useMemo(
       () =>
