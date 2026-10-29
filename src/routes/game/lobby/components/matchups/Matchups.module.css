@@ -17,6 +17,31 @@
   z-index: 1001;
 }
 
+@supports selector(::-webkit-scrollbar) {
+  .matchupContainer {
+    scrollbar-width: auto;
+    scrollbar-color: auto;
+  }
+}
+
+.matchupContainer::-webkit-scrollbar {
+  width: 6px;
+}
+
+.matchupContainer::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.matchupContainer::-webkit-scrollbar-thumb {
+  background: rgba(var(--theme-on-surface-rgb), 0.22);
+  border: none;
+  border-radius: 5px;
+}
+
+.matchupContainer::-webkit-scrollbar-thumb:hover {
+  background: rgba(var(--theme-on-surface-rgb), 0.35);
+}
+
 .matchupContainer h4 {
   margin: 0 0 0.5rem 0;
   font-size: 1.1rem;
