@@ -139,7 +139,8 @@ export const CARD_BACK = {
   '138': 'CBOddwillows',
   '139': 'CBShine',
   '140': 'CB_IndyFab',
-  '141': 'CBBashAndFlood'
+  '141': 'CBBashAndFlood',
+  '142': 'WeTakeCandy',
 } as { [key: string]: string };
 
 /* Talishar supporter card back IDs - shown as locked previews to non-supporters */
