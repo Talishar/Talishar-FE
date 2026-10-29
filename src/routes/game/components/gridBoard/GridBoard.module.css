@@ -858,11 +858,11 @@
     translate: 0 var(--board-gap);
   }
 
-  :global(body.fanLandscapeHand) :is(.pTwoPermanents, .pTwoPermanentsRight) {
+  :global(body.fanLandscapeHand) .pTwoPermanents {
     translate: 0 calc(2 * var(--side-row-step) + var(--board-gap));
   }
 
-  :global(body.fanLandscapeHand) :is(.pOnePermanents, .pOnePermanentsRight) {
+  :global(body.fanLandscapeHand) .pOnePermanents {
     translate: 0 calc(var(--board-bottom-row) + var(--board-gap));
   }
 
@@ -874,36 +874,6 @@
     > .pOnePermanents {
     grid-column: 3 / 6;
     margin-right: calc(0.5 * var(--hero-group-grow));
-  }
-
-  :global(body.fanLandscapeHand)
-    .fanWidgets
-    > :is(.pTwoPermanentsRight, .pOnePermanentsRight) {
-    --card-size: var(--side-card-size);
-    position: absolute;
-    grid-column: 7 / 9;
-    left: calc(0.5 * var(--hero-group-grow) + 4px - var(--board-gap));
-    right: calc(0.63 * var(--side-card-size) + 8px - 2 * var(--board-gap));
-    bottom: 0;
-    width: auto;
-    min-height: calc(var(--card-size) + 8px);
-  }
-
-  :global(body.fanLandscapeHand) .fanWidgets > .pTwoPermanentsRight {
-    grid-row: pTwoPermanents;
-  }
-
-  :global(body.fanLandscapeHand) .fanWidgets > .pOnePermanentsRight {
-    grid-row: pOnePermanents;
-  }
-
-  :global(body.fanLandscapeHand)
-    .fanWidgets:has(> .pTwoWeaponRZone img)
-    > .pTwoPermanentsRight,
-  :global(body.fanLandscapeHand)
-    .fanWidgets:has(> .pOneWeaponRZone img)
-    > .pOnePermanentsRight {
-    left: calc(var(--side-card-size) + 1.5 * var(--hero-group-grow) + 4px);
   }
 }
 

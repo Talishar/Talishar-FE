@@ -1,12 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState
-} from 'react';
-import { flushSync } from 'react-dom';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import Displayrow from 'interface/Displayrow';
@@ -27,7 +19,6 @@ const PERMANENT_EXIT = {
   transition: { duration: 0.3, ease: 'easeOut' as const }
 };
 const MAX_STACK_LAYERS = 3;
-const FIT_TOLERANCE_PX = 0.5;
 
 export interface CardStack {
   card: Card;
@@ -36,14 +27,8 @@ export interface CardStack {
   gemStackIDs?: string[];
 }
 
-interface PermanentsZoneProps extends Displayrow {
-  start?: number;
-  end?: number;
-  hideArrows?: boolean;
-}
-
-function PermanentsZone(prop: PermanentsZoneProps) {
-  const { isPlayer, start, end, hideArrows } = prop;
+function PermanentsZone(prop: Displayrow) {
+  const { isPlayer } = prop;
   const { t } = useTranslation();
   const scrollRef = useRef<HTMLDivElement>(null);
   const isDragging = useRef(false);
@@ -55,14 +40,9 @@ function PermanentsZone(prop: PermanentsZoneProps) {
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
 
-  const allPermanents = useAppSelector((state: RootState) =>
+  const permanents = useAppSelector((state: RootState) =>
     selectPermanentsAsStack(state, isPlayer)
   );
-  const permanents = useMemo(
-    () => allPermanents.slice(start, end),
-    [allPermanents, start, end]
-  );
-  const isSplit = start !== undefined || end !== undefined;
   let maxSubcardCount = 1;
   for (const permanent of permanents) {
     const subcards = permanent.card.subcards;
@@ -170,7 +150,7 @@ function PermanentsZone(prop: PermanentsZoneProps) {
 
   return (
     <div className={styles.permanentsWrapper}>
-      {isOverflowing && !hideArrows && (
+      {isOverflowing && (
         <button
           type="button"
           className={classNames(styles.scrollButton, styles.scrollBack)}
@@ -195,7 +175,7 @@ function PermanentsZone(prop: PermanentsZoneProps) {
           layout
           onLayoutAnimationComplete={updateScrollButtons}
         >
-          <AnimatePresence mode={isSplit ? 'popLayout' : undefined}>
+          <AnimatePresence>
             {permanents.map((cardStack) => {
               const stackLayers = Math.min(
                 cardStack.count - 1,
@@ -258,7 +238,7 @@ function PermanentsZone(prop: PermanentsZoneProps) {
           </AnimatePresence>
         </motion.div>
       </div>
-      {isOverflowing && !hideArrows && (
+      {isOverflowing && (
         <button
           type="button"
           className={classNames(styles.scrollButton, styles.scrollForward)}
@@ -273,94 +253,4 @@ function PermanentsZone(prop: PermanentsZoneProps) {
   );
 }
 
-const MemoPermanentsZone = React.memo(PermanentsZone);
-
-interface PermanentsRowProps extends Displayrow {
-  className: string;
-  restClassName?: string;
-}
-
-export function PermanentsRow(prop: PermanentsRowProps) {
-  const { isPlayer, className, restClassName } = prop;
-  const leftRef = useRef<HTMLDivElement>(null);
-  const restRef = useRef<HTMLDivElement>(null);
-  const probeRef = useRef<HTMLDivElement>(null);
-  const count = useAppSelector(
-    (state: RootState) => selectPermanentsAsStack(state, isPlayer).length
-  );
-  const [capacity, setCapacity] = useState<{
-    fits: number;
-    restFits: boolean;
-  }>();
-
-  useLayoutEffect(() => {
-    const left = leftRef.current;
-    const rest = restRef.current;
-    const probe = probeRef.current;
-    if (!restClassName || !left || !rest || !probe) {
-      setCapacity(undefined);
-      return;
-    }
-    const fit = () => {
-      const probeStyle = getComputedStyle(probe);
-      const cardWidth = parseFloat(probeStyle.width);
-      const gap = parseFloat(probeStyle.columnGap) || 0;
-      if (!cardWidth) {
-        setCapacity(undefined);
-        return;
-      }
-      const leftWidth = left.getBoundingClientRect().width;
-      const restWidth = rest.getBoundingClientRect().width;
-      const fits = Math.max(
-        0,
-        Math.floor((leftWidth + gap + FIT_TOLERANCE_PX) / (cardWidth + gap))
-      );
-      const restFits = restWidth + FIT_TOLERANCE_PX >= cardWidth;
-      setCapacity((previous) =>
-        previous && previous.fits === fits && previous.restFits === restFits
-          ? previous
-          : { fits, restFits }
-      );
-    };
-    fit();
-    const observer = new ResizeObserver(() => flushSync(fit));
-    observer.observe(left);
-    observer.observe(rest);
-    return () => observer.disconnect();
-  }, [restClassName]);
-
-  const splitAt =
-    capacity && capacity.restFits && count > capacity.fits
-      ? capacity.fits
-      : undefined;
-
-  return (
-    <>
-      <div className={className} ref={leftRef}>
-        {restClassName ? (
-          <>
-            <div
-              ref={probeRef}
-              className={styles.capacityProbe}
-              aria-hidden="true"
-            />
-            <MemoPermanentsZone
-              isPlayer={isPlayer}
-              end={splitAt ?? count}
-              hideArrows={splitAt !== undefined}
-            />
-          </>
-        ) : (
-          <MemoPermanentsZone isPlayer={isPlayer} />
-        )}
-      </div>
-      {restClassName && (
-        <div className={restClassName} ref={restRef}>
-          <MemoPermanentsZone isPlayer={isPlayer} start={splitAt ?? count} />
-        </div>
-      )}
-    </>
-  );
-}
-
-export default MemoPermanentsZone;
+export default React.memo(PermanentsZone);

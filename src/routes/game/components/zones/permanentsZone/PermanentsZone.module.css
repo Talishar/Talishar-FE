@@ -21,17 +21,6 @@
   min-width: 100%;
 }
 
-.capacityProbe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: var(--card-size);
-  height: 0;
-  gap: 4px;
-  visibility: hidden;
-  pointer-events: none;
-}
-
 .permanentsInner {
   position: relative;
   width: 100%;
@@ -187,7 +176,7 @@
     padding-inline: 0;
   }
 
-  :global(body.fanLandscapeHand) :is(.permanentsZone, .capacityProbe) {
+  :global(body.fanLandscapeHand) .permanentsZone {
     gap: var(--board-gap);
   }
 
