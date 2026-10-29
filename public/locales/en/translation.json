@@ -2241,6 +2241,8 @@
     "FABRARY_STATS": "Share Stats With FaBrary",
     "FANNED_HAND_MOBILE": "Fanned hand on mobile",
     "FANNED_HAND_MOBILE_TOOLTIP": "Try the new hand on phones and tablets (screens under 1200 pixels wide): a fan of cards with drag to play and quick card-by-card blocking. Off keeps the classic hand.",
+    "AUTO_LANDSCAPE_MOBILE": "Auto landscape on mobile",
+    "AUTO_LANDSCAPE_MOBILE_TOOLTIP": "Turns the game sideways on your first tap in portrait. Works with the fanned hand on mobile.",
     "FANNED_HAND_PC": "Fanned hand on PC",
     "FANNED_HAND_PC_TOOLTIP": "Try the new hand on computers (screens 1200 pixels wide or more): a fan of cards with drag to play and quick card-by-card blocking. Off keeps the classic hand.",
     "FORCE_MOBILE_LAYOUT": "Force mobile layout",
