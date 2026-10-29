@@ -1241,6 +1241,11 @@
       },
       "VISIBILITY": "Visibility"
     },
+    "FANNED_HAND_TIP": {
+      "CLOSE": "Close",
+      "GOT_IT": "Got it",
+      "TEXT": "Your hand is now fanned: the hover animation and card positions have changed! You can switch back to the classic hand anytime in Settings → Interface."
+    },
     "FULLSCREEN": "Fullscreen",
     "HIDE_ARENA": "Hide Arena",
     "HOLD_PRIORITY_LABEL": "Hold Priority",
