@@ -14,6 +14,7 @@ interface Props {
   unlocked?: boolean;
   compact?: boolean;
   showPortrait?: boolean;
+  oneLine?: boolean;
 }
 
 const MasteryProgressCard = ({
@@ -24,7 +25,8 @@ const MasteryProgressCard = ({
   gamesToNext,
   unlocked,
   compact,
-  showPortrait
+  showPortrait,
+  oneLine
 }: Props) => {
   const { t } = useTranslation();
   const heroName =
@@ -48,6 +50,40 @@ const MasteryProgressCard = ({
           level: ROMAN_LEVELS[level + 1]
         })
       : t('MASTERY.HIGHEST_REACHED');
+  const masteryTitle =
+    level > 0
+      ? t('MASTERY.LEVEL', { level: ROMAN_LEVELS[level] })
+      : t('MASTERY.TITLE');
+
+  if (oneLine) {
+    return (
+      <aside
+        className={`${styles.oneLine} ${
+          unlocked ? styles.oneLineUnlocked : ''
+        }`}
+      >
+        <MasteryFrame level={level} className={styles.oneLinePortrait}>
+          <img src={heroImage} alt={heroName} className={styles.portrait} />
+        </MasteryFrame>
+        <strong>
+          {unlocked && level > 0
+            ? t('MASTERY.LEVEL_UNLOCKED', { level: ROMAN_LEVELS[level] })
+            : masteryTitle}
+        </strong>
+        <div className={styles.track}>
+          <i style={{ width: `${percent}%` }} />
+        </div>
+        <small>
+          {nextThreshold !== null
+            ? `${games} / ${nextThreshold}`
+            : t('MASTERY.GAME_COUNT', {
+                count: games,
+                formattedCount: games.toLocaleString()
+              })}
+        </small>
+      </aside>
+    );
+  }
 
   return (
     <aside
@@ -67,10 +103,7 @@ const MasteryProgressCard = ({
         <strong>
           {t('MASTERY.HERO_TITLE', {
             hero: heroName,
-            mastery:
-              level > 0
-                ? t('MASTERY.LEVEL', { level: ROMAN_LEVELS[level] })
-                : t('MASTERY.TITLE')
+            mastery: masteryTitle
           })}
         </strong>
         {unlocked && (

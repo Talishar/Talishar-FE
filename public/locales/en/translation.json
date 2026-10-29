@@ -1095,6 +1095,7 @@
     "HERO_TITLE": "{{hero}} - {{mastery}}",
     "HIGHEST_REACHED": "Highest mastery reached",
     "LEVEL": "Mastery {{level}}",
+    "LEVEL_UNLOCKED": "Mastery {{level}} unlocked",
     "LOADING": "Gathering your heroes…",
     "LOAD_ERROR": "Hero Mastery could not be loaded.",
     "MAXIMUM_REACHED": "- Maximum Mastery reached",
