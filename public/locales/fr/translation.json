@@ -1610,6 +1610,8 @@
     "DISABLE_PARTICLE_EFFECTS": "Désactiver les effets de particules",
     "FANNED_HAND_MOBILE": "Main en éventail sur mobile",
     "FANNED_HAND_MOBILE_TOOLTIP": "Essayez la nouvelle main sur téléphones et tablettes (écrans de moins de 1200 pixels de large) : cartes en éventail, glisser pour jouer et blocage rapide carte par carte. Désactivé, la main classique est conservée.",
+    "AUTO_LANDSCAPE_MOBILE": "Paysage automatique sur mobile",
+    "AUTO_LANDSCAPE_MOBILE_TOOLTIP": "Passe la partie en paysage dès votre premier appui en portrait. Fonctionne avec la main en éventail sur mobile.",
     "FANNED_HAND_PC": "Main en éventail sur PC",
     "FANNED_HAND_PC_TOOLTIP": "Essayez la nouvelle main sur ordinateur (écrans de 1200 pixels de large ou plus) : cartes en éventail, glisser pour jouer et blocage rapide carte par carte. Désactivé, la main classique est conservée.",
     "FORCE_MOBILE_LAYOUT": "Forcer la disposition mobile",
