@@ -14,7 +14,7 @@ import GraveyardZone from '../zones/graveyardZone/GraveyardZone';
 import ArmsEqZone from '../zones/armsEqZone/ArmsEqZone';
 import HeadEqZone from '../zones/headEqZone/HeadEqZone';
 import HeroZone from '../zones/heroZone/HeroZone';
-import { PermanentsRow } from '../zones/permanentsZone/PermanentsZone';
+import PermanentsZone from '../zones/permanentsZone/PermanentsZone';
 import PitchZone from '../zones/pitchZone/PitchZone';
 import WeaponLZone from '../zones/weaponLZone/WeaponLZone';
 import WeaponRZone from '../zones/weaponRZone/WeaponRZone';
@@ -30,7 +30,6 @@ import LandmarkZone from '../zones/LandmarkZone';
 
 import styles from './GridBoard.module.css';
 import { useCookieString } from 'utils/cookieStore';
-import { useMediaQuery } from 'hooks/useMediaQuery';
 import ExperimentalTurnWidget from '../elements/experimentalTurnWidget';
 import TurnWidget, {
   TurnWidgetVitals
@@ -56,8 +55,6 @@ const ChainPromptTopBarSlot = () => {
 const GridBoard = () => {
   const experimental = useCookieString('experimental');
   const showsLandscapeFan = useShowsLandscapeFan();
-  const isShortScreen = useMediaQuery('(max-height: 500px)');
-  const splitPermanents = showsLandscapeFan && !experimental && isShortScreen;
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
   );
@@ -144,13 +141,9 @@ const GridBoard = () => {
         <div className={styles.pTwoLegs}>
           <LegsEqZone isPlayer={flipZones} />
         </div>
-        <PermanentsRow
-          isPlayer={flipZones}
-          className={styles.pTwoPermanents}
-          restClassName={
-            splitPermanents ? styles.pTwoPermanentsRight : undefined
-          }
-        />
+        <div className={styles.pTwoPermanents}>
+          <PermanentsZone isPlayer={flipZones} />
+        </div>
         <div className={styles.pTwoArsenal}>
           <ArsenalZone isPlayer={flipZones} />
         </div>
@@ -239,13 +232,9 @@ const GridBoard = () => {
         <div className={styles.pOneArsenal}>
           <ArsenalZone isPlayer={!flipZones} />
         </div>
-        <PermanentsRow
-          isPlayer={!flipZones}
-          className={styles.pOnePermanents}
-          restClassName={
-            splitPermanents ? styles.pOnePermanentsRight : undefined
-          }
-        />
+        <div className={styles.pOnePermanents}>
+          <PermanentsZone isPlayer={!flipZones} />
+        </div>
         <div className={styles.pOneLegs} data-fan-keep-open="">
           <LegsEqZone isPlayer={!flipZones} />
         </div>
