@@ -1585,6 +1585,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
       <div
         ref={statsRef}
         className={styles.endGameStats}
+        data-exporting={isExportingImage || undefined}
         data-testid="test-stats"
       >
         <div className={styles.statsContent}>

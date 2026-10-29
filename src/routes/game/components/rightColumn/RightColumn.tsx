@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import PriorityControl from '../elements/priorityControl/PriorityControl';
 import LastPlayed from '../elements/lastPlayed/LastPlayed';
 import Menu from '../elements/menu/Menu';
@@ -25,6 +25,8 @@ const adColumnStyle = {
   '--in-game-ad-size': `${IN_GAME_AD_SIZE}px`
 } as React.CSSProperties;
 
+const RIGHT_COLUMN_INSET_VAR = '--right-column-inset';
+
 function RightColumn() {
   const isStreamerMode =
     useSetting({ settingName: IS_STREAMER_MODE })?.value === '1';
@@ -50,6 +52,35 @@ function RightColumn() {
     return () => setInGameAdGate(null);
   }, [inGameAdGate, showAds]);
 
+  // Publishes how far the column reaches in from the right edge so fixed
+  // overlays (the end game summary) can stop short of it.
+  const columnRef = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const column = columnRef.current;
+    if (!column) return;
+    const rootStyle = document.documentElement.style;
+    const update = () => {
+      const rect = column.getBoundingClientRect();
+      if (rect.width === 0) {
+        rootStyle.removeProperty(RIGHT_COLUMN_INSET_VAR);
+        return;
+      }
+      rootStyle.setProperty(
+        RIGHT_COLUMN_INSET_VAR,
+        `${document.documentElement.clientWidth - rect.left}px`
+      );
+    };
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(column);
+    window.addEventListener('resize', update);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', update);
+      rootStyle.removeProperty(RIGHT_COLUMN_INSET_VAR);
+    };
+  }, [isNarrow, showInGameAd]);
+
   if (isNarrow) {
     return (
       <div className={styles.mobileTopBar}>
@@ -73,6 +104,7 @@ function RightColumn() {
           : styles.rightColumn
       }
       style={showInGameAd ? adColumnStyle : undefined}
+      ref={columnRef}
     >
       <div className={styles.topGroup}>
         <Menu />
