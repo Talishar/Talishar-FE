@@ -1,6 +1,9 @@
 import React, { useRef, useState, useMemo } from 'react';
 import { playCard, removeCardFromHand } from 'features/game/GameSlice';
-import { clearCardPreview } from '../cardPortal/cardPreviewStore';
+import {
+  clearCardPreview,
+  useMarkCardDrag
+} from '../cardPortal/cardPreviewStore';
 import {
   GiTombstone,
   GiFluffySwirl,
@@ -23,6 +26,7 @@ import {
 import { createPortal } from 'react-dom';
 import { CARD_SQUARES_PATH, getCollectionCardImagePath } from 'utils';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
+import { mouseSeen } from 'utils/mouseInput';
 import { formatRestriction } from 'data/keywords';
 import { useTranslation } from 'react-i18next';
 import {
@@ -34,7 +38,9 @@ import {
 const ScreenPercentageForCardPlayed = 0.25;
 
 const supportsHover =
-  typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches;
+  mouseSeen ||
+  (typeof window !== 'undefined' &&
+    window.matchMedia('(hover: hover)').matches);
 
 const CARD_INITIAL = { opacity: 0, y: 100 };
 const CARD_ANIMATE = { opacity: 1, y: 0 };
@@ -118,6 +124,7 @@ export const PlayerHandCard = React.memo(
     const dragX = useMotionValue(0);
     const dragY = useMotionValue(0);
     const dispatch = useAppDispatch();
+    useMarkCardDrag(isDragging);
 
     const imgStyles = useMemo(
       () =>

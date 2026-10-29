@@ -1,6 +1,7 @@
 import {
   clearCardPreview,
   getCardPreview,
+  isCardDragActive,
   setCardPreview
 } from '../cardPortal/cardPreviewStore';
 import React, { ReactNode, useEffect, useId, useRef } from 'react';
@@ -8,6 +9,7 @@ import { CARD_BACK } from 'features/options/cardBacks';
 import { useCardTilt } from './useCardTilt';
 import { useCookieString } from 'utils/cookieStore';
 import { useFannedHand } from 'routes/game/components/zones/playerHand/useFannedHand';
+import { mouseSeen } from 'utils/mouseInput';
 import {
   TAP_TO_PREVIEW_PLAY_COOKIE,
   buildBoardCardSelectionKey,
@@ -21,7 +23,9 @@ import {
 } from '../playerHandCard/tapToPreviewPlay';
 
 const supportsHover =
-  typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches;
+  mouseSeen ||
+  (typeof window !== 'undefined' &&
+    window.matchMedia('(hover: hover)').matches);
 
 const prefersReducedMotion =
   typeof window !== 'undefined' &&
@@ -103,7 +107,13 @@ const CardSurface = ({
     event.currentTarget.contains(event.relatedTarget);
 
   const handleHoverIn = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (event.pointerType === 'touch' || isMoveWithinSurface(event)) return;
+    if (
+      event.pointerType === 'touch' ||
+      isMoveWithinSurface(event) ||
+      isCardDragActive()
+    ) {
+      return;
+    }
     onHoverStart?.();
     if (event.pointerType === 'pen') {
       onPenHover();
@@ -116,6 +126,10 @@ const CardSurface = ({
     onHoverEnd?.();
   };
 
+  const onSurfaceMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (!isCardDragActive()) handleMouseMove(event);
+  };
+
   const onSurfaceMouseLeave = () => {
     if (tiltEnabled) handleMouseLeave();
     onMouseLeave();
@@ -125,7 +139,7 @@ const CardSurface = ({
     <div
       className={className}
       ref={containerRef}
-      onMouseMove={tiltEnabled ? handleMouseMove : undefined}
+      onMouseMove={tiltEnabled ? onSurfaceMouseMove : undefined}
       onMouseLeave={onSurfaceMouseLeave}
       onPointerDown={onPointerDown}
       {...(classicHover
@@ -293,6 +307,7 @@ export default function CardPopUp({
     cancelHoverPreview();
     hoverPreviewTimer.current = setTimeout(() => {
       hoverPreviewTimer.current = null;
+      if (isCardDragActive()) return;
       showPreview();
     }, hoverPreviewDelayMs);
   };

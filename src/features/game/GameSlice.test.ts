@@ -8,6 +8,7 @@ import reducer, {
   toggleCardListSort
 } from 'features/game/GameSlice';
 import GameStaticInfo from 'features/GameStaticInfo';
+import { SORT_ZONES_BY_DEFAULT_COOKIE } from 'routes/game/components/zones/cardListZone/zoneSortPreference';
 
 const game = (
   gameID: number,
@@ -20,12 +21,37 @@ const game = (
   isPrivateLobby: false
 });
 
+const setZoneSortDefault = (on: boolean) => {
+  document.cookie = `${SORT_ZONES_BY_DEFAULT_COOKIE}=${on}; path=/`;
+};
+
 describe('zone popup sorting', () => {
   const cards = [
     { cardNumber: 'WTR001' },
     { cardNumber: 'WTR003' },
     { cardNumber: 'WTR002' }
   ];
+
+  beforeEach(() => setZoneSortDefault(true));
+  afterAll(() => setZoneSortDefault(false));
+
+  it('opens zones in server order when the setting is off', () => {
+    setZoneSortDefault(false);
+    let state = reducer(
+      undefined,
+      setCardListFocus({ name: 'Your Graveyard', cardList: cards })
+    );
+    expect(state.cardListFocus?.isSorted).toBe(false);
+    expect(state.cardListFocus?.cardList).toEqual(cards);
+
+    state = reducer(state, toggleCardListSort());
+    state = reducer(state, clearCardListFocus());
+    state = reducer(
+      state,
+      setCardListFocus({ name: 'Your Graveyard', cardList: cards })
+    );
+    expect(state.cardListFocus?.isSorted).toBe(true);
+  });
 
   it.each([
     'Your Graveyard',

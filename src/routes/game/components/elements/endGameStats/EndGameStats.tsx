@@ -191,7 +191,10 @@ const AGGREGATE_STAT_KEYS = [
   'averageCombatValuePerTurn',
   'averageValuePerTurn',
   'totalCardsDisrupted',
-  'averageValueWithDisruptionPerTurn'
+  'averageValueWithDisruptionPerTurn',
+  'totalAllyDamagePrevented',
+  'averageValueWithoutAllyPreventedPerTurn',
+  'averageValueWithDisruptionWithoutAllyPreventedPerTurn'
 ] as const;
 
 type AggregateStatKey = (typeof AGGREGATE_STAT_KEYS)[number];
@@ -253,6 +256,7 @@ export interface TurnResult {
   damageDealt: number;
   damageBlocked: number;
   damagePrevented: number;
+  allyDamagePrevented?: number;
   damageTaken: number;
   resourcesUsed: number;
   resourcesLeft: number;
@@ -264,10 +268,18 @@ export interface TurnResult {
   turnNo?: number;
 }
 
-const getTurnValue = (turn: TurnResult, disruptionValue = 0) =>
+const getTurnPrevented = (turn: TurnResult, includeAllyPrevented = true) =>
+  (+turn.damagePrevented || 0) -
+  (includeAllyPrevented ? 0 : +(turn.allyDamagePrevented ?? 0) || 0);
+
+const getTurnValue = (
+  turn: TurnResult,
+  disruptionValue = 0,
+  includeAllyPrevented = true
+) =>
   (+turn.damageThreatened || 0) +
   (+turn.damageBlocked || 0) +
-  (+turn.damagePrevented || 0) +
+  getTurnPrevented(turn, includeAllyPrevented) +
   (+turn.lifeGained || 0) +
   (+turn.lifeLost || 0) +
   disruptionValue * (+(turn.cardsDisrupted ?? 0) || 0);
@@ -657,6 +669,15 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
     const disruptionValue = includeDisruption
       ? data.disruptionValuePerCard ?? 0
       : 0;
+    const [includeImplicitValue, setIncludeImplicitValue] = useState(true);
+    const hasAllyPrevented = useMemo(
+      () =>
+        Object.values(data.turnResults ?? {}).some(
+          (turn) => (+(turn.allyDamagePrevented ?? 0) || 0) > 0
+        ),
+      [data.turnResults]
+    );
+    const includeAllyPrevented = includeImplicitValue || !hasAllyPrevented;
     const [hoveredChartTurn, setHoveredChartTurn] = useState<number | null>(
       null
     );
@@ -748,6 +769,17 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
       [statSuffix, data]
     );
 
+    const avgValuePerTurn = includeAllyPrevented
+      ? includeDisruption
+        ? stats.averageValueWithDisruptionPerTurn
+        : stats.averageValuePerTurn
+      : includeDisruption
+      ? stats.averageValueWithDisruptionWithoutAllyPreventedPerTurn
+      : stats.averageValueWithoutAllyPreventedPerTurn;
+    const totalDamagePrevented =
+      (stats.totalDamagePrevented ?? 0) -
+      (includeAllyPrevented ? 0 : stats.totalAllyDamagePrevented ?? 0);
+
     const chartData = useMemo(() => {
       if (!data.turnResults) return [];
 
@@ -773,7 +805,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
       let opponentLife = opponentStartingLife;
 
       return entries.map(({ turnNo, turn }) => {
-        const turnValue = getTurnValue(turn, disruptionValue);
+        const turnValue = getTurnValue(
+          turn,
+          disruptionValue,
+          includeAllyPrevented
+        );
         const turnDealt = parseInt(String(turn.damageDealt), 10) || 0;
 
         if (turn.lifeAtTurnEnd != null) {
@@ -811,7 +847,8 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
       data.playerID,
       data.bothPlayersData,
       excludeTurnZero,
-      disruptionValue
+      disruptionValue,
+      includeAllyPrevented
     ]);
 
     const filteredChartData = useMemo(() => {
@@ -1399,8 +1436,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
           aValue = a.turnNo;
           bValue = b.turnNo;
         } else if (sortBy === 'totalValue') {
-          aValue = getTurnValue(a, disruptionValue);
-          bValue = getTurnValue(b, disruptionValue);
+          aValue = getTurnValue(a, disruptionValue, includeAllyPrevented);
+          bValue = getTurnValue(b, disruptionValue, includeAllyPrevented);
+        } else if (sortBy === 'damagePrevented') {
+          aValue = getTurnPrevented(a, includeAllyPrevented);
+          bValue = getTurnPrevented(b, includeAllyPrevented);
         } else {
           aValue = a[sortBy] || 0;
           bValue = b[sortBy] || 0;
@@ -1417,19 +1457,19 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
       turnSort.field,
       turnSort.direction,
       excludeTurnZero,
-      disruptionValue
+      disruptionValue,
+      includeAllyPrevented
     ]);
 
     // Helper function to check if columns should be hidden - We hide those 3 collumns for irrelevant heroes
     const shouldHideDamagePrevented = useMemo(() => {
       if (!data.turnResults || Object.keys(data.turnResults).length === 0)
         return true;
-      const hasAnyNonZero = Object.values(data.turnResults).some((turn) => {
-        const value = parseInt(String(turn.damagePrevented), 10) || 0;
-        return value !== 0;
-      });
+      const hasAnyNonZero = Object.values(data.turnResults).some(
+        (turn) => getTurnPrevented(turn, includeAllyPrevented) !== 0
+      );
       return !hasAnyNonZero;
-    }, [data.turnResults]);
+    }, [data.turnResults, includeAllyPrevented]);
 
     const shouldHideLifeGained = useMemo(() => {
       if (!data.turnResults || Object.keys(data.turnResults).length === 0)
@@ -1597,10 +1637,10 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
                     {t('END_GAME.DAMAGE_BLOCKED')}
                   </span>
                 </div>
-                {(stats.totalDamagePrevented ?? 0) > 0 && (
+                {totalDamagePrevented > 0 && (
                   <div className={styles.keyStat}>
                     <span className={styles.keyStatValue}>
-                      {stats.totalDamagePrevented}
+                      {totalDamagePrevented}
                     </span>
                     <span className={styles.keyStatLabel}>
                       {t('END_GAME.DAMAGE_PREVENTED')}
@@ -1643,7 +1683,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
                     </span>
                   </label>
                   {data.disruptionValuePerCard !== undefined && (
-                    <span className={styles.disruptionControl}>
+                    <span className={styles.valueToggleControl}>
                       <label className={styles.excludeLastTurnLabel}>
                         <input
                           type="checkbox"
@@ -1661,6 +1701,27 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
                       />
                     </span>
                   )}
+                  {hasAllyPrevented && (
+                    <span className={styles.valueToggleControl}>
+                      <label className={styles.excludeLastTurnLabel}>
+                        <input
+                          type="checkbox"
+                          checked={includeImplicitValue}
+                          onChange={(e) =>
+                            setIncludeImplicitValue(e.target.checked)
+                          }
+                          className={styles.excludeLastTurnCheckbox}
+                        />
+                        <span className={styles.excludeLastTurnText}>
+                          {t('END_GAME.INCLUDE_IMPLICIT_VALUE')}
+                        </span>
+                      </label>
+                      <HelpTooltip
+                        text={t('END_GAME.INCLUDE_IMPLICIT_VALUE_TOOLTIP')}
+                        placement="bottom"
+                      />
+                    </span>
+                  )}
                 </div>
 
                 {/* Avg Value per Turn - Top Priority */}
@@ -1671,11 +1732,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
                       text={t('END_GAME.AVG_VALUE_PER_TURN_TOOLTIP')}
                     />
                   </span>
-                  <span className={styles.infoValue}>
-                    {includeDisruption
-                      ? stats.averageValueWithDisruptionPerTurn
-                      : stats.averageValuePerTurn}
-                  </span>
+                  <span className={styles.infoValue}>{avgValuePerTurn}</span>
                 </div>
 
                 {includeDisruption && (
@@ -1765,7 +1822,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
                   </span>
                 </div>
 
-                {(stats.totalDamagePrevented ?? 0) > 0 && (
+                {totalDamagePrevented > 0 && (
                   <div className={styles.infoRow}>
                     <span className={styles.infoLabel}>
                       {t('END_GAME.TOTAL_DAMAGE_PREVENTED')}
@@ -1774,7 +1831,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
                       />
                     </span>
                     <span className={styles.infoValue}>
-                      {stats.totalDamagePrevented}
+                      {totalDamagePrevented}
                     </span>
                   </div>
                 )}
@@ -2495,7 +2552,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
                         </td>
                         {!shouldHideDamagePrevented && (
                           <td className={styles.pitched}>
-                            {turnData.damagePrevented}
+                            {getTurnPrevented(turnData, includeAllyPrevented)}
                           </td>
                         )}
                         <td className={styles.pitched}>
@@ -2526,7 +2583,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
                           </td>
                         )}
                         <td className={styles.pitched}>
-                          {getTurnValue(turnData, disruptionValue)}
+                          {getTurnValue(
+                            turnData,
+                            disruptionValue,
+                            includeAllyPrevented
+                          )}
                         </td>
                       </tr>
                     );

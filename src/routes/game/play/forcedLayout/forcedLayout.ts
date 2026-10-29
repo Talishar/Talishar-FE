@@ -1,6 +1,7 @@
 import GameStaticInfo from 'features/GameStaticInfo';
 import { useMediaQuery } from 'hooks/useMediaQuery';
 import { useCookieValue } from 'utils/cookieStore';
+import { patchMediaQueries } from 'utils/patchMediaQueries';
 
 export const FORCED_LAYOUT_COOKIE = 'forcedMobileLayout';
 export const FORCED_LAYOUT = { NONE: 0, PHONE: 1, TABLET: 2 } as const;
@@ -73,42 +74,10 @@ export const forcedFrameSize = (
   };
 };
 
-const patchTouchRules = (rules: CSSRuleList) => {
-  Array.from(rules).forEach((rule) => {
-    if (rule instanceof CSSMediaRule) {
-      const { media } = rule;
-      const patched = media.mediaText.replace(
-        /\(pointer: coarse\)/g,
-        '(pointer)'
-      );
-      if (patched !== media.mediaText) media.mediaText = patched;
-    }
-    if ('cssRules' in rule) patchTouchRules((rule as CSSGroupingRule).cssRules);
-  });
-};
-
-const patchTouchStyleSheets = () => {
-  Array.from(document.styleSheets).forEach((sheet) => {
-    try {
-      patchTouchRules(sheet.cssRules);
-    } catch {
-      return;
-    }
-  });
-};
-
 export const installForcedLayoutFrame = () => {
-  document.addEventListener(
-    'load',
-    (event) => {
-      if (event.target instanceof HTMLLinkElement) patchTouchStyleSheets();
-    },
-    true
+  patchMediaQueries((mediaText) =>
+    mediaText.replace(/\(pointer: coarse\)/g, '(pointer)')
   );
-  new MutationObserver(patchTouchStyleSheets).observe(document.head, {
-    childList: true
-  });
-  patchTouchStyleSheets();
 
   const favicon = document.getElementById('favicon');
   const parentFavicon = window.parent.document.getElementById('favicon');

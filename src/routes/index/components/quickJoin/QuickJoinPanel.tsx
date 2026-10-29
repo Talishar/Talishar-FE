@@ -11,6 +11,7 @@ import styles from './QuickJoinPanel.module.css';
 import { Trans, useTranslation } from 'react-i18next';
 import { getCookie, setCookie } from 'utils/cookies';
 import LoadingSkeleton from 'components/LoadingSkeleton/LoadingSkeleton';
+import { PHONE_LANDSCAPE_QUERY } from 'routes/game/lobby/phoneLandscape';
 
 interface Props {
   embedded?: boolean;
@@ -64,8 +65,11 @@ const QuickJoinPanel = ({ embedded = false, userLayout }: Props) => {
   }, [isExpanded]);
 
   useEffect(() => {
-    if (error && window.innerWidth < 768) {
-      toast.error(error);
+    const isPhoneLandscape = window.matchMedia(PHONE_LANDSCAPE_QUERY).matches;
+    if (error && (window.innerWidth < 768 || isPhoneLandscape)) {
+      toast.error(error, {
+        position: isPhoneLandscape ? 'top-center' : 'top-left'
+      });
       setError(null);
     }
   }, [error, setError]);

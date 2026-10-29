@@ -777,3 +777,33 @@
     border-radius: 5px;
   }
 }
+
+.number.number.numberTab {
+  position: absolute;
+  left: 50%;
+  bottom: 0.3em;
+  transform: translate(
+    calc(-50% - var(--stack-offset-x, 0px)),
+    calc(-1 * var(--stack-offset-y, 0px))
+  );
+  z-index: 3;
+  width: auto;
+  height: 1.8em;
+  min-width: 2.5em;
+  max-width: none;
+  min-height: 0;
+  max-height: none;
+  padding: 0 0.6em;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 0.9em;
+  background: #0e0f12;
+  color: #ecedef;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+  font-size: max(10px, calc(var(--card-size) * 0.105));
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.numberTab .text {
+  color: inherit;
+}

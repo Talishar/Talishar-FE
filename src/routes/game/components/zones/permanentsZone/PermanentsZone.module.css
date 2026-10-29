@@ -170,3 +170,26 @@
 :global(body.fanLandscapeHand) .permanentsInner {
   padding-left: calc(8px - var(--board-gap));
 }
+
+@media (max-height: 500px) {
+  :global(body.fanLandscapeHand) .permanentsInner {
+    padding-inline: 0;
+  }
+
+  :global(body.fanLandscapeHand) .permanentsZone {
+    gap: var(--board-gap);
+  }
+
+  :global(body.fanLandscapeHand) .stacked {
+    margin-left: 0;
+  }
+
+  :global(body.fanLandscapeHand) .stackLayer {
+    display: none;
+  }
+
+  :global(body.fanLandscapeHand) .counter,
+  :global(body.fanLandscapeHand) .counterOpponent {
+    left: 0;
+  }
+}

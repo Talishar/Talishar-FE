@@ -25,6 +25,9 @@ import { useTranslation } from 'react-i18next';
 import useAuth from 'hooks/useAuth';
 import MasteryProgressCard from 'features/mastery/MasteryProgressCard';
 import { RootState } from 'app/Store';
+import { useMediaQuery } from 'hooks/useMediaQuery';
+import { PHONE_LANDSCAPE_QUERY } from 'routes/game/lobby/phoneLandscape';
+import { frameHost } from 'routes/game/play/forcedLayout/forcedLayout';
 
 const END_GAME_OPEN_BODY_CLASS = 'endGameOpen';
 
@@ -71,6 +74,11 @@ const EndGameScreen = () => {
     }
   }, [data, playerID]);
   const showModal = useShowModal();
+  const isPhoneLandscape = useMediaQuery(
+    frameHost
+      ? PHONE_LANDSCAPE_QUERY.replace('(pointer: coarse)', '(pointer)')
+      : PHONE_LANDSCAPE_QUERY
+  );
   React.useLayoutEffect(() => {
     if (!showModal || !showStats) return;
     document.body.classList.add(END_GAME_OPEN_BODY_CLASS);
@@ -121,6 +129,7 @@ const EndGameScreen = () => {
         unlocked={masteryData.gameAward.unlocked}
         compact
         showPortrait
+        oneLine={isPhoneLandscape}
       />
     ) : undefined;
 

@@ -23,10 +23,13 @@ export default function CardKeywordStrip({
   const { t } = useTranslation();
   const keywordLabels = useCardKeywords(cardNumber);
   const fitToContent = useFannedHand();
+  const seenIds = new Set<string>();
   const entries = keywordLabels?.flatMap((label) => {
     const id = normalizeKeyword(label);
     const entry = id ? getKeywordEntry(id) : undefined;
-    return entry ? [{ entry, label }] : [];
+    if (!entry || seenIds.has(entry.id)) return [];
+    seenIds.add(entry.id);
+    return [{ entry, label }];
   });
   if (!entries?.length) return null;
   const visible = entries.slice(0, 4);
@@ -38,7 +41,7 @@ export default function CardKeywordStrip({
       aria-label={t('CARD_KEYWORD_STRIP.TITLE')}
     >
       {visible.map(({ entry, label }) => (
-        <div className={styles.keywordLine} key={`${entry.id}-${label}`}>
+        <div className={styles.keywordLine} key={entry.id}>
           <span className={styles.keywordPill}>
             {entry.parameterized || CANONICAL_LABEL_IDS.has(entry.id)
               ? entry.name

@@ -68,6 +68,7 @@ const COMPETITIVE_FORMATS = new Set([
 import ChooseFirstTurn from './components/chooseFirstTurn/ChooseFirstTurn';
 import { useWindowWidth } from 'hooks/useWindowDimensions';
 import { useMediaQuery } from 'hooks/useMediaQuery';
+import { mouseSeen } from 'utils/mouseInput';
 import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
 import { useNavigate } from 'react-router-dom';
 import CardPortal from '../components/elements/cardPortal/CardPortal';
@@ -466,7 +467,8 @@ const Lobby = () => {
   ]);
 
   useEffect(() => {
-    const hasMousePointer = window.matchMedia('(pointer: fine)').matches;
+    const hasMousePointer =
+      mouseSeen || window.matchMedia('(pointer: fine)').matches;
     setIsWideScreen(width > BREAKPOINT_EXTRA_LARGE && hasMousePointer);
   }, [width]);
 

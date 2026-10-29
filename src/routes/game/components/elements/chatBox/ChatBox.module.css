@@ -1,9 +1,13 @@
+.chatBox,
+.chatMobileScrollArea {
+  --game-log-accent: var(--theme-text);
+  --game-log-critical: #fca52c;
+}
+
 .chatBox {
   overflow-y: auto;
   position: absolute;
   inset: 0;
-  --game-log-accent: var(--theme-text);
-  --game-log-critical: #fca52c;
   contain: paint;
   scrollbar-width: thin;
   scrollbar-color: rgba(var(--theme-on-surface-rgb), 0.22) transparent;
@@ -326,11 +330,12 @@
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
   padding: 6px 8px;
+}
+
+.chatMobileContent {
   display: flex;
   flex-direction: column;
   gap: 1px;
-  --game-log-accent: #9edfff;
-  --game-log-critical: #ffd27a;
 }
 
 :global(body.fanLandscapeHand) .chatMobileScrollArea {

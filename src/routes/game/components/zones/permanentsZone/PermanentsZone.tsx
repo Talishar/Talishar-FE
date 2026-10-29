@@ -77,10 +77,17 @@ function PermanentsZone(prop: Displayrow) {
     updateScrollButtons();
     const resizeObserver = new ResizeObserver(updateScrollButtons);
     resizeObserver.observe(element);
+    const mutationObserver = new MutationObserver(updateScrollButtons);
     const zone = element.firstElementChild;
-    if (zone) resizeObserver.observe(zone);
+    if (zone) {
+      resizeObserver.observe(zone);
+      mutationObserver.observe(zone, { childList: true });
+    }
 
-    return () => resizeObserver.disconnect();
+    return () => {
+      resizeObserver.disconnect();
+      mutationObserver.disconnect();
+    };
   }, [permanents.length, updateScrollButtons]);
 
   const scrollByCard = useCallback((direction: -1 | 1) => {
@@ -163,7 +170,11 @@ function PermanentsZone(prop: Displayrow) {
         onMouseLeave={handleMouseUp}
         onScroll={updateScrollButtons}
       >
-        <motion.div className={styles.permanentsZone} layout>
+        <motion.div
+          className={styles.permanentsZone}
+          layout
+          onLayoutAnimationComplete={updateScrollButtons}
+        >
           <AnimatePresence>
             {permanents.map((cardStack) => {
               const stackLayers = Math.min(
@@ -185,6 +196,8 @@ function PermanentsZone(prop: Displayrow) {
                   animate={PERMANENT_ANIMATE}
                   exit={PERMANENT_EXIT}
                   layout
+                  onAnimationComplete={updateScrollButtons}
+                  onLayoutAnimationComplete={updateScrollButtons}
                   style={
                     stackLayers > 0
                       ? ({

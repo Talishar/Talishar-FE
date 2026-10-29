@@ -184,3 +184,32 @@
     border-radius: calc(5 * var(--fan-px));
   }
 }
+
+@media (max-height: 500px) {
+  :global(body.fanLandscapeHand) .chainLinksRow {
+    grid-area: 1 / 2;
+    margin-top: -2.5px;
+  }
+
+  :global(body.fanLandscapeHand) .chainLinksSpacer {
+    grid-area: 1 / 1 / 2 / 3;
+    justify-self: center;
+    margin-left: calc(var(--card-size) + 8px);
+  }
+
+  :global(body.fanLandscapeHand) .chainLinkSymbol {
+    height: calc(0.9 * min(4.5 * var(--fan-window-vh), 20px));
+  }
+
+  :global(body.fanLandscapeHand) .breakChain {
+    width: calc(0.9 * min(4.5 * var(--fan-window-vh) - 1px, 19px));
+    height: calc(0.9 * min(4.5 * var(--fan-window-vh) - 1px, 19px));
+    border-radius: 3px;
+  }
+
+  :global(body.fanLandscapeHand) .breakChain::after {
+    content: '';
+    position: absolute;
+    inset: -5px;
+  }
+}

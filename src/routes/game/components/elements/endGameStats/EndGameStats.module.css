@@ -992,7 +992,7 @@ input.excludeLastTurnCheckbox:focus-visible {
   user-select: none;
 }
 
-.disruptionControl {
+.valueToggleControl {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -1465,7 +1465,9 @@ input.excludeLastTurnCheckbox:focus-visible {
   }
 
   .masteryProgress {
-    zoom: 0.8;
+    width: 100%;
+    margin: 0;
+    padding: 0;
   }
 
   .infoBox {

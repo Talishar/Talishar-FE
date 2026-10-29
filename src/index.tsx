@@ -21,6 +21,7 @@ import {
   installForcedLayoutFrame
 } from 'routes/game/play/forcedLayout/forcedLayout';
 import { restoreGameInfo } from 'features/game/GameSlice';
+import { installMouseInput } from 'utils/mouseInput';
 
 import './i18n';
 import { useTranslation } from 'react-i18next';
@@ -48,6 +49,7 @@ const root = createRoot(container);
 
 installVideoAdTagConfig();
 migrateFannedHandCookie();
+installMouseInput();
 if (frameHost) {
   store.dispatch(restoreGameInfo(structuredClone(frameHost.gameInfo)));
   installForcedLayoutFrame();

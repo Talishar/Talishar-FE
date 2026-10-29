@@ -270,6 +270,7 @@ export const CardDisplay = (prop: CardProp) => {
         restriction={card.restriction}
         label={countersLabel}
         num={num}
+        numAsTab={num !== undefined}
         activeCombatChain={activeCombatChain}
         goAgain={card.goAgain}
       />

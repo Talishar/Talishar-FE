@@ -15,6 +15,7 @@ import {
 } from 'features/game/GameSlice';
 import {
   clearCardPreview,
+  useMarkCardDrag,
   useOwnsCardPreview
 } from '../cardPortal/cardPreviewStore';
 import {
@@ -51,6 +52,7 @@ import {
 } from 'utils';
 import CardKeywordStrip from '../cardPortal/CardKeywordStrip';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
+import { mouseSeen } from 'utils/mouseInput';
 import { formatRestriction } from 'data/keywords';
 import { useTranslation } from 'react-i18next';
 import { isMeldCard } from 'constants/meldCards';
@@ -81,7 +83,9 @@ import {
 } from '../../zones/playerHand/playLine';
 
 const supportsHover =
-  typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches;
+  mouseSeen ||
+  (typeof window !== 'undefined' &&
+    window.matchMedia('(hover: hover)').matches);
 
 const CARD_INITIAL = { opacity: 0, y: 100 };
 const CARD_ANIMATE = { opacity: 1, y: 0 };
@@ -436,6 +440,8 @@ export const PlayerHandCard = React.memo(
         );
       };
     }, [isDragging, cancelDrag]);
+
+    useMarkCardDrag(isDragging);
 
     const imgStyles = useMemo(
       () =>
