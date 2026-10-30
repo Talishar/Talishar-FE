@@ -1,5 +1,5 @@
 import { Field, useFormikContext } from 'formik';
-import { useState, useMemo } from 'react';
+import { memo, useState, useMemo } from 'react';
 import CardImage from 'routes/game/components/elements/cardImage/CardImage';
 import { DeckResponse, CardData } from 'interface/API/GetLobbyInfo.php';
 import styles from './Deck.module.css';
@@ -21,20 +21,83 @@ type SortMode =
   | 'subtype'
   | 'cost';
 
-const DeckCardCheckbox = ({
+const DeckCardCheckbox = memo(function DeckCardCheckbox({
   card,
   imageSrc
 }: {
   card: string;
   imageSrc: string;
-}) => (
-  <label>
-    <Field type="checkbox" name="deck" value={`${card}`} />
-    <CardPopUp cardNumber={card.split('-')[0]}>
-      <CardImage src={imageSrc} draggable={false} className={styles.card} />
-    </CardPopUp>
-  </label>
-);
+}) {
+  return (
+    <label>
+      <Field type="checkbox" name="deck" value={`${card}`} />
+      <CardPopUp cardNumber={card.split('-')[0]}>
+        <CardImage src={imageSrc} draggable={false} className={styles.card} />
+      </CardPopUp>
+    </label>
+  );
+});
+
+const DeckSelectionButtons = ({
+  deck,
+  filtersExpanded,
+  setFiltersExpanded
+}: {
+  deck: string[];
+  filtersExpanded: boolean;
+  setFiltersExpanded?: (value: boolean) => void;
+}) => {
+  const { t } = useTranslation();
+  const { setFieldValue } = useFormikContext<DeckResponse>();
+
+  const handleSelectAll = () => {
+    setFieldValue('deck', deck);
+  };
+
+  const handleSelectNone = () => {
+    setFieldValue('deck', []);
+  };
+
+  return (
+    <div className={styles.selectionButtons}>
+      <button
+        className={styles.expandButton}
+        onClick={() =>
+          setFiltersExpanded && setFiltersExpanded(!filtersExpanded)
+        }
+        type="button"
+        title={
+          filtersExpanded
+            ? t('GAME_LOBBY.COLLAPSE_FILTERS')
+            : t('GAME_LOBBY.EXPAND_FILTERS')
+        }
+      >
+        {filtersExpanded ? (
+          <MdArrowDropDown size={24} />
+        ) : (
+          <MdArrowRight size={24} />
+        )}
+        {t('GAME_LOBBY.FILTERS')}
+      </button>
+      <button
+        className={styles.selectionButton}
+        onClick={handleSelectAll}
+        type="button"
+        title={t('GAME_LOBBY.SELECT_ALL_TITLE')}
+      >
+        {t('GAME_LOBBY.SELECT_ALL')}
+      </button>
+      <button
+        className={styles.selectionButton}
+        onClick={handleSelectNone}
+        type="button"
+        title={t('GAME_LOBBY.SELECT_NONE_TITLE')}
+      >
+        {t('GAME_LOBBY.SELECT_NONE')}
+      </button>
+    </div>
+  );
+};
 
 type DeckProps = {
   deck: string[];
@@ -57,58 +120,6 @@ const Deck = ({
   const { values } = useFormikContext<DeckResponse>();
   const { getLanguage } = useLanguageSelector();
   const [sortMode, setSortMode] = useState<SortMode>('none');
-
-  const DeckSelectionButtons = () => {
-    const { setFieldValue } = useFormikContext<DeckResponse>();
-
-    const handleSelectAll = () => {
-      setFieldValue('deck', deck);
-    };
-
-    const handleSelectNone = () => {
-      setFieldValue('deck', []);
-    };
-
-    return (
-      <div className={styles.selectionButtons}>
-        <button
-          className={styles.expandButton}
-          onClick={() =>
-            setFiltersExpanded && setFiltersExpanded(!filtersExpanded)
-          }
-          type="button"
-          title={
-            filtersExpanded
-              ? t('GAME_LOBBY.COLLAPSE_FILTERS')
-              : t('GAME_LOBBY.EXPAND_FILTERS')
-          }
-        >
-          {filtersExpanded ? (
-            <MdArrowDropDown size={24} />
-          ) : (
-            <MdArrowRight size={24} />
-          )}
-          {t('GAME_LOBBY.FILTERS')}
-        </button>
-        <button
-          className={styles.selectionButton}
-          onClick={handleSelectAll}
-          type="button"
-          title={t('GAME_LOBBY.SELECT_ALL_TITLE')}
-        >
-          {t('GAME_LOBBY.SELECT_ALL')}
-        </button>
-        <button
-          className={styles.selectionButton}
-          onClick={handleSelectNone}
-          type="button"
-          title={t('GAME_LOBBY.SELECT_NONE_TITLE')}
-        >
-          {t('GAME_LOBBY.SELECT_NONE')}
-        </button>
-      </div>
-    );
-  };
 
   const getImageSrc = (currentCardNumber: string) =>
     getCollectionCardImagePath({
@@ -236,46 +247,6 @@ const Deck = ({
     return map;
   }, [cardDictionary]);
 
-  // Get pitch for a card
-  const getPitch = (cardId: string): number | undefined => {
-    return cardPitchMap.get(cardId);
-  };
-
-  // Get power for a card
-  const getPower = (cardId: string): number | undefined => {
-    return cardPowerMap.get(cardId);
-  };
-
-  // Get block value for a card
-  const getBlockValue = (cardId: string): number | undefined => {
-    return cardBlockValueMap.get(cardId);
-  };
-
-  // Get class for a card
-  const getClass = (cardId: string): string | undefined => {
-    return cardClassMap.get(cardId);
-  };
-
-  // Get talent for a card
-  const getTalent = (cardId: string): string | undefined => {
-    return cardTalentMap.get(cardId);
-  };
-
-  // Get type for a card
-  const getType = (cardId: string): string | undefined => {
-    return cardTypeMap.get(cardId);
-  };
-
-  // Get subtype for a card
-  const getSubtype = (cardId: string): string | undefined => {
-    return cardSubtypeMap.get(cardId);
-  };
-
-  // Get cost for a card
-  const getCost = (cardId: string): number | undefined => {
-    return cardCostMap.get(cardId);
-  };
-
   // Sort and group cards based on sortMode
   const sortedDeck = useMemo(() => {
     if (sortMode === 'none') {
@@ -288,8 +259,8 @@ const Deck = ({
       return deckArray.sort((a, b) => {
         const cardAId = a.split('-')[0];
         const cardBId = b.split('-')[0];
-        const pitchA = getPitch(cardAId);
-        const pitchB = getPitch(cardBId);
+        const pitchA = cardPitchMap.get(cardAId);
+        const pitchB = cardPitchMap.get(cardBId);
 
         // Cards with pitch come first, sorted by pitch value
         // Cards without pitch come last
@@ -310,8 +281,8 @@ const Deck = ({
       return deckArray.sort((a, b) => {
         const cardAId = a.split('-')[0];
         const cardBId = b.split('-')[0];
-        const powerA = getPower(cardAId);
-        const powerB = getPower(cardBId);
+        const powerA = cardPowerMap.get(cardAId);
+        const powerB = cardPowerMap.get(cardBId);
 
         // Higher power first, then cards without power, sorted by name
         if (powerA !== undefined && powerB !== undefined) {
@@ -327,8 +298,8 @@ const Deck = ({
       return deckArray.sort((a, b) => {
         const cardAId = a.split('-')[0];
         const cardBId = b.split('-')[0];
-        const blockA = getBlockValue(cardAId);
-        const blockB = getBlockValue(cardBId);
+        const blockA = cardBlockValueMap.get(cardAId);
+        const blockB = cardBlockValueMap.get(cardBId);
 
         // Higher block value first, then cards without block, sorted by name
         if (blockA !== undefined && blockB !== undefined) {
@@ -344,8 +315,8 @@ const Deck = ({
       return deckArray.sort((a, b) => {
         const cardAId = a.split('-')[0];
         const cardBId = b.split('-')[0];
-        const classA = getClass(cardAId);
-        const classB = getClass(cardBId);
+        const classA = cardClassMap.get(cardAId);
+        const classB = cardClassMap.get(cardBId);
 
         // Sort by class name, then by card ID
         if (classA !== undefined && classB !== undefined) {
@@ -365,8 +336,8 @@ const Deck = ({
       return deckArray.sort((a, b) => {
         const cardAId = a.split('-')[0];
         const cardBId = b.split('-')[0];
-        const talentA = getTalent(cardAId);
-        const talentB = getTalent(cardBId);
+        const talentA = cardTalentMap.get(cardAId);
+        const talentB = cardTalentMap.get(cardBId);
 
         // Sort by talent name, then by card ID
         if (talentA !== undefined && talentB !== undefined) {
@@ -386,8 +357,8 @@ const Deck = ({
       return deckArray.sort((a, b) => {
         const cardAId = a.split('-')[0];
         const cardBId = b.split('-')[0];
-        const typeA = getType(cardAId);
-        const typeB = getType(cardBId);
+        const typeA = cardTypeMap.get(cardAId);
+        const typeB = cardTypeMap.get(cardBId);
 
         // Sort by type name, then by card ID
         if (typeA !== undefined && typeB !== undefined) {
@@ -407,8 +378,8 @@ const Deck = ({
       return deckArray.sort((a, b) => {
         const cardAId = a.split('-')[0];
         const cardBId = b.split('-')[0];
-        const subtypeA = getSubtype(cardAId);
-        const subtypeB = getSubtype(cardBId);
+        const subtypeA = cardSubtypeMap.get(cardAId);
+        const subtypeB = cardSubtypeMap.get(cardBId);
 
         // Sort by subtype name, then by card ID
         if (subtypeA !== undefined && subtypeB !== undefined) {
@@ -428,8 +399,8 @@ const Deck = ({
       return deckArray.sort((a, b) => {
         const cardAId = a.split('-')[0];
         const cardBId = b.split('-')[0];
-        const costA = getCost(cardAId);
-        const costB = getCost(cardBId);
+        const costA = cardCostMap.get(cardAId);
+        const costB = cardCostMap.get(cardBId);
 
         // Lowest cost first, then cards without cost, sorted by name
         if (costA !== undefined && costB !== undefined) {
@@ -452,15 +423,7 @@ const Deck = ({
     cardTalentMap,
     cardTypeMap,
     cardSubtypeMap,
-    cardCostMap,
-    getPitch,
-    getPower,
-    getBlockValue,
-    getClass,
-    getTalent,
-    getType,
-    getSubtype,
-    getCost
+    cardCostMap
   ]);
 
   // Group cards by various attributes
@@ -475,7 +438,7 @@ const Deck = ({
 
       sortedDeck.forEach((card) => {
         const cardId = card.split('-')[0];
-        const pitch = getPitch(cardId);
+        const pitch = cardPitchMap.get(cardId);
 
         if (pitch !== undefined) {
           if (!pitchGroups.has(pitch)) {
@@ -501,7 +464,7 @@ const Deck = ({
 
       sortedDeck.forEach((card) => {
         const cardId = card.split('-')[0];
-        const power = getPower(cardId);
+        const power = cardPowerMap.get(cardId);
 
         if (power !== undefined) {
           if (!powerGroups.has(power)) {
@@ -527,7 +490,7 @@ const Deck = ({
 
       sortedDeck.forEach((card) => {
         const cardId = card.split('-')[0];
-        const block = getBlockValue(cardId);
+        const block = cardBlockValueMap.get(cardId);
 
         if (block !== undefined && block !== -1) {
           if (!blockGroups.has(block)) {
@@ -553,7 +516,7 @@ const Deck = ({
 
       sortedDeck.forEach((card) => {
         const cardId = card.split('-')[0];
-        const cardClass = getClass(cardId);
+        const cardClass = cardClassMap.get(cardId);
 
         if (cardClass !== undefined && cardClass !== '') {
           const key = formatAttributeString(cardClass);
@@ -580,7 +543,7 @@ const Deck = ({
 
       sortedDeck.forEach((card) => {
         const cardId = card.split('-')[0];
-        const talent = getTalent(cardId);
+        const talent = cardTalentMap.get(cardId);
 
         if (talent !== undefined && talent !== '') {
           const key = formatAttributeString(talent);
@@ -607,7 +570,7 @@ const Deck = ({
 
       sortedDeck.forEach((card) => {
         const cardId = card.split('-')[0];
-        const type = getType(cardId);
+        const type = cardTypeMap.get(cardId);
 
         if (type !== undefined && type !== '') {
           const key = formatTypeLabel(type);
@@ -634,7 +597,7 @@ const Deck = ({
 
       sortedDeck.forEach((card) => {
         const cardId = card.split('-')[0];
-        const subtype = getSubtype(cardId);
+        const subtype = cardSubtypeMap.get(cardId);
 
         if (subtype !== undefined && subtype !== '') {
           const key = formatAttributeString(subtype);
@@ -661,7 +624,7 @@ const Deck = ({
 
       sortedDeck.forEach((card) => {
         const cardId = card.split('-')[0];
-        const cost = getCost(cardId);
+        const cost = cardCostMap.get(cardId);
 
         if (cost !== undefined && cost !== -1) {
           if (!costGroups.has(cost)) {
@@ -692,15 +655,7 @@ const Deck = ({
     cardTalentMap,
     cardTypeMap,
     cardSubtypeMap,
-    cardCostMap,
-    getPitch,
-    getPower,
-    getBlockValue,
-    getClass,
-    getTalent,
-    getType,
-    getSubtype,
-    getCost
+    cardCostMap
   ]);
 
   return (
@@ -709,7 +664,11 @@ const Deck = ({
         className={styles.sortControls}
         style={{ padding: isDesktop ? (filtersExpanded ? '15px' : 0) : '15px' }}
       >
-        <DeckSelectionButtons />
+        <DeckSelectionButtons
+          deck={deck}
+          filtersExpanded={filtersExpanded}
+          setFiltersExpanded={setFiltersExpanded}
+        />
         {filtersExpanded && (
           <>
             <button
@@ -835,11 +794,8 @@ const Deck = ({
                       </span>
                     </div>
                     <div className={styles.cardsGroup}>
-                      {cards.map((card: string, ix: number) => (
-                        <div
-                          key={`${key}-${ix}`}
-                          className={styles.deckCardContainer}
-                        >
+                      {cards.map((card: string) => (
+                        <div key={card} className={styles.deckCardContainer}>
                           <DeckCardCheckbox
                             card={card}
                             imageSrc={getImageSrc(card.split('-')[0])}
@@ -869,11 +825,8 @@ const Deck = ({
                   </span>
                 </div>
                 <div className={styles.cardsGroup}>
-                  {groupedCards.noValueCards.map((card: string, ix: number) => (
-                    <div
-                      key={`no-value-${ix}`}
-                      className={styles.deckCardContainer}
-                    >
+                  {groupedCards.noValueCards.map((card: string) => (
+                    <div key={card} className={styles.deckCardContainer}>
                       <DeckCardCheckbox
                         card={card}
                         imageSrc={getImageSrc(card.split('-')[0])}
@@ -887,9 +840,9 @@ const Deck = ({
         ) : (
           // Flat view
           <>
-            {sortedDeck.map((card: string, ix: number) => {
+            {sortedDeck.map((card: string) => {
               return (
-                <div key={`deck${ix}`} className={styles.deckCardContainer}>
+                <div key={card} className={styles.deckCardContainer}>
                   <DeckCardCheckbox
                     card={card}
                     imageSrc={getImageSrc(card.split('-')[0])}
