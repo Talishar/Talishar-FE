@@ -20,9 +20,9 @@ const fetchPreview = async (
     const response = await fetch(
       `${backendUrl}APIs/GetSharedReplayPreview.php?token=${token}`,
       {
-        signal: AbortSignal.timeout(2000),
-        cf: { cacheTtl: 300, cacheEverything: true }
-      } as RequestInit
+        headers: { 'User-Agent': 'Talishar-Preview/1.0' },
+        signal: AbortSignal.timeout(2000)
+      }
     );
     return response.ok ? await response.json() : null;
   } catch {
