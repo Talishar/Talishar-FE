@@ -97,8 +97,8 @@
 }
 
 .border3 {
-  border-color: var(--theme-primary);
-  box-shadow: 0 0 4px 4px var(--theme-primary);
+  border-color: orange;
+  box-shadow: 0 0 4px 4px orange;
 }
 
 .border4 {
