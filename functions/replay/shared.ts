@@ -9,6 +9,18 @@ interface SharedReplayPreview {
   format?: string;
 }
 
+interface RewriterElement {
+  getAttribute(name: string): string | null;
+  setAttribute(name: string, value: string): RewriterElement;
+  setInnerContent(content: string): RewriterElement;
+  append(content: string, options?: { html?: boolean }): RewriterElement;
+}
+
+declare class HTMLRewriter {
+  on(selector: string, handlers: { element(element: RewriterElement): void }): HTMLRewriter;
+  transform(response: Response): Response;
+}
+
 const DEFAULT_BACKEND_URL = 'https://api.talishar.net/game/';
 const TOKEN_PATTERN = /^[0-9a-f]{64}$/i;
 
@@ -47,9 +59,7 @@ export const onRequest = async ({
   if (!preview?.p1HeroName || !preview.p2HeroName) return page;
 
   const title = `${preview.p1HeroName} vs ${preview.p2HeroName}`;
-  const description = `${
-    preview.format || 'Flesh and Blood'
-  } replay. Watch the full game on Talishar.`;
+  const description = `Watch the full game replay on Talishar. Support the platform: https://metafy.gg/@talishar`;
   const image = `${backendUrl}APIs/GetSharedReplayImage.php?token=${token}`;
   const content = new Map([
     ['og:url', url.href],
