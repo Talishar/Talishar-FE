@@ -229,6 +229,8 @@ const VIDEO_AD_INTERACTIVE_SELECTOR =
 const VIDEO_AD_Z_INDEX = '9999';
 // rev.iq's sticky anchor, appended straight to <body>.
 const STICKY_AD_SELECTOR = '[data-reviq-sticky-ad]';
+const REVIQ_CMP_HOST_SELECTOR = '[data-reviq-cmp="host"]';
+const REVIQ_CMP_STYLE_ATTR = 'data-talishar-reviq-cmp';
 
 interface GptSlotLike {
   getSlotElementId(): string;
@@ -269,6 +271,17 @@ function unlockElementTree(el: HTMLElement) {
   el.querySelectorAll<HTMLElement>('*').forEach((child) => {
     child.style.removeProperty('pointer-events');
   });
+}
+
+function addReviqCmpStyle(el: Element) {
+  const root = el.shadowRoot;
+  if (!root || root.querySelector(`style[${REVIQ_CMP_STYLE_ATTR}]`)) return;
+  const style = document.createElement('style');
+  style.setAttribute(REVIQ_CMP_STYLE_ATTR, '');
+  style.textContent =
+    '[hidden]{display:none!important}' +
+    '[data-reviq-cmp="privacy-link"]{display:none!important}';
+  root.appendChild(style);
 }
 
 function raiseVideoAdElement(el: HTMLElement) {
@@ -313,6 +326,11 @@ function lockNonRootBodyChildren() {
     if (el.id === 'root') continue;
     if (isReactPortalEl(el)) continue;
     const h = el as HTMLElement;
+    if (!containedMode && el.matches(REVIQ_CMP_HOST_SELECTOR)) {
+      unlockElementTree(h);
+      addReviqCmpStyle(el);
+      continue;
+    }
     if (isCMPElement(el)) {
       unlockElementTree(h);
       continue;
@@ -383,6 +401,9 @@ export default function useAdScript(
     if (!shouldLoadProvider) {
       removeNavGuard();
       purgeAdElements();
+      document
+        .querySelectorAll(REVIQ_CMP_HOST_SELECTOR)
+        .forEach(addReviqCmpStyle);
 
       const observer = new MutationObserver((mutations) => {
         for (const mutation of mutations) {
@@ -393,6 +414,9 @@ export default function useAdScript(
 
           for (const node of mutation.addedNodes) {
             if (!(node instanceof HTMLElement)) continue;
+            if (node.matches(REVIQ_CMP_HOST_SELECTOR)) {
+              addReviqCmpStyle(node);
+            }
             purgeAdElementOrDescendants(node);
           }
         }
