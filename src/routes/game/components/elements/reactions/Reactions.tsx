@@ -24,7 +24,11 @@ function Reactions() {
           const isPlayer = playerID === card.controller;
           return (
             <div key={ix.toString()} className={styles.cardContainer}>
-              <CardDisplay card={card} isPlayer={isPlayer} />
+              <CardDisplay
+                card={card}
+                isPlayer={isPlayer}
+                playable={!!card.action}
+              />
             </div>
           );
         })}
