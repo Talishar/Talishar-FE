@@ -16,9 +16,9 @@
 /* 15 / 25 games: bronze. */
 [data-mastery-level='3'][data-mastery-level],
 [data-mastery-level='4'][data-mastery-level] {
-  --mastery-color: #c07b28;
-  --mastery-highlight: #f7c682;
-  --mastery-shadow: #4a2a0b;
+  --mastery-color: #a3613a;
+  --mastery-highlight: #e3a483;
+  --mastery-shadow: #3d1d0f;
   --mastery-pad: 5px;
 }
 

@@ -276,6 +276,15 @@ const Mastery = () => {
           </em>
         ) : (
           <div>
+            <div className={styles.detailProgressText}>
+              <em className={styles.milestoneMessage}>
+                {gamesUntilLabel(item)}
+              </em>
+              <span>
+                {item.qualifyingGames.toLocaleString()} /{' '}
+                {item.nextThreshold?.toLocaleString()}
+              </span>
+            </div>
             <div
               className={styles.detailProgress}
               aria-label={t('MASTERY.GAMES_PROGRESS_LABEL', {
@@ -284,17 +293,6 @@ const Mastery = () => {
               })}
             >
               <i style={{ width: `${progressPercent(item, milestones)}%` }} />
-            </div>
-            <div className={styles.detailProgressText}>
-              <em className={styles.milestoneMessage}>
-                {gamesUntilLabel(item)}
-              </em>
-              <span>
-                {t('MASTERY.GAMES_PROGRESS', {
-                  games: item.qualifyingGames.toLocaleString(),
-                  threshold: item.nextThreshold?.toLocaleString()
-                })}
-              </span>
             </div>
           </div>
         )}
@@ -381,7 +379,7 @@ const Mastery = () => {
                         group: group.name
                       })
                     )
-                    .join(' · ')}
+                    .join(', ')}
                 </span>
               </div>
               <div className={styles.stat}>
@@ -400,7 +398,7 @@ const Mastery = () => {
                         group: group.name
                       })
                     )
-                    .join(' · ')}
+                    .join(', ')}
                 </span>
               </div>
               <div className={`${styles.stat} ${styles.highestStat}`}>
