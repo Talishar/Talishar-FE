@@ -320,6 +320,61 @@ function removeStickyAd(el: HTMLElement) {
   el.remove();
 }
 
+const TEXT_FIELD_SELECTOR =
+  'input, textarea, [contenteditable]:not([contenteditable="false"])';
+const TYPING_GRACE_MS = 1000;
+
+let blurredField: HTMLElement | null = null;
+let lastKeyAt = 0;
+let hoverQuery: MediaQueryList | undefined;
+
+function onKeyDown() {
+  lastKeyAt = Date.now();
+}
+
+function onFocusIn(event: FocusEvent) {
+  if (!(event.target instanceof HTMLIFrameElement)) blurredField = null;
+}
+
+function onFocusOut(event: FocusEvent) {
+  const field = event.target;
+  blurredField =
+    field instanceof HTMLElement && field.matches(TEXT_FIELD_SELECTOR)
+      ? field
+      : null;
+}
+
+function restoreField(field: HTMLElement) {
+  const active = document.activeElement;
+  if (!(active instanceof HTMLIFrameElement) || isReactOwned(active)) return;
+  if (!field.isConnected || blurredField !== field) return;
+  hoverQuery ??= window.matchMedia('(hover: hover)');
+  const typing = Date.now() - lastKeyAt < TYPING_GRACE_MS;
+  if (!typing && !(hoverQuery.matches && !active.matches(':hover'))) return;
+  field.focus({ preventScroll: true });
+}
+
+function onWindowBlur() {
+  const field = blurredField;
+  if (!field) return;
+  window.setTimeout(() => window.setTimeout(() => restoreField(field), 0), 0);
+}
+
+function installFocusGuard() {
+  document.addEventListener('keydown', onKeyDown, true);
+  document.addEventListener('focusin', onFocusIn, true);
+  document.addEventListener('focusout', onFocusOut, true);
+  window.addEventListener('blur', onWindowBlur);
+}
+
+function removeFocusGuard() {
+  document.removeEventListener('keydown', onKeyDown, true);
+  document.removeEventListener('focusin', onFocusIn, true);
+  document.removeEventListener('focusout', onFocusOut, true);
+  window.removeEventListener('blur', onWindowBlur);
+  blurredField = null;
+}
+
 function lockNonRootBodyChildren() {
   if (!document.body) return;
   for (const el of Array.from(document.body.children)) {
@@ -440,6 +495,7 @@ export default function useAdScript(
     installNavGuard();
     startAdAnalytics();
     installIframeInsertionGuard();
+    installFocusGuard();
 
     if (!document.querySelector('script[src="//js.rev.iq/talishar.net"]')) {
       try {
@@ -515,6 +571,7 @@ export default function useAdScript(
       domGuard.disconnect();
       iframeGuard.disconnect();
       removeNavGuard();
+      removeFocusGuard();
       insertionGuardActive = false;
       containedMode = false;
     };
