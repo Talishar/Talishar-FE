@@ -281,6 +281,7 @@
     "DISRUPTED_CARD_COUNT_one": "{{count}} carte",
     "DISRUPTED_CARD_COUNT_other": "{{count}} cartes",
     "DISRUPTION_VALUE": "Perturbation",
+    "DRAW": "Match nul",
     "EXCLUDE_LAST_TURN": "Exclure le dernier tour (statistiques et graphiques)",
     "EXCLUDE_TURN_0": "Exclure le tour 0 (statistiques et graphiques)",
     "EXPORT_AS_CSV": "Exporter au format CSV",
@@ -1188,6 +1189,7 @@
     "LEARNING_WARNING_TITLE": "Ce joueur apprend"
   },
   "OPPONENT_INACTIVE": {
+    "CLAIM_DRAW": "Réclamez le match nul",
     "CLAIM_VICTORY": "Réclamez la victoire",
     "HOURGLASS": "⏳",
     "IM_STILL_HERE": "Je suis toujours là",
@@ -1213,6 +1215,7 @@
     "LOCKED_PLAYMAT_TOOLTIP": "Soutenez-nous sur Metafy pour débloquer des tapis de jeu exclusifs Talishar",
     "LOCK_ICON": "🔒",
     "LOGIN_TO_CUSTOMIZE_PLAYMAT": "Connectez-vous pour personnaliser votre tapis de jeu",
+    "OFFER_DRAW": "Proposer le match nul",
     "PLAYMAT": "Tapis de jeu",
     "REPORT_BUG": "Signaler un bug",
     "REPORT_PLAYER": "Lecteur de rapports",

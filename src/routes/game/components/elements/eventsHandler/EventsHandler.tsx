@@ -72,7 +72,8 @@ enum ModalType {
   RequestUndo = 1,
   RequestThisTurnUndo = 2,
   RequestLastTurnUndo = 3,
-  RequestChainLinkUndo = 4
+  RequestChainLinkUndo = 4,
+  RequestDraw = 5
 }
 
 const parseCardEvent = (
@@ -112,15 +113,16 @@ export const EventsHandler = React.memo(() => {
   const [playPrioritySound] = useSound(prioritySound);
   const dispatch = useAppDispatch();
 
-  const isUndoModal = (type: ModalType) =>
+  const isRequestModal = (type: ModalType) =>
     type === ModalType.RequestUndo ||
     type === ModalType.RequestThisTurnUndo ||
     type === ModalType.RequestLastTurnUndo ||
-    type === ModalType.RequestChainLinkUndo;
+    type === ModalType.RequestChainLinkUndo ||
+    type === ModalType.RequestDraw;
 
   useEffect(() => {
     const link = document.getElementById('favicon') as HTMLLinkElement;
-    if (showModal && isUndoModal(modalType)) {
+    if (showModal && isRequestModal(modalType)) {
       if (!isMuted) playPrioritySound();
       if (link) link.href = '/images/priorityGreen.ico';
     } else if (!showModal && link) {
@@ -151,6 +153,8 @@ export const EventsHandler = React.memo(() => {
           button: { mode: PROCESS_INPUT.CONFIRM_CHAIN_LINK_UNDO }
         })
       );
+    else if (modalType == ModalType.RequestDraw)
+      dispatch(submitButton({ button: { mode: PROCESS_INPUT.ACCEPT_DRAW } }));
     else
       dispatch(submitButton({ button: { mode: PROCESS_INPUT.ENABLE_CHAT } }));
   };
@@ -165,6 +169,8 @@ export const EventsHandler = React.memo(() => {
       modalType == ModalType.RequestChainLinkUndo
     )
       dispatch(submitButton({ button: { mode: PROCESS_INPUT.DECLINE_UNDO } }));
+    else if (modalType == ModalType.RequestDraw)
+      dispatch(submitButton({ button: { mode: PROCESS_INPUT.DECLINE_DRAW } }));
     else
       dispatch(submitButton({ button: { mode: PROCESS_INPUT.DECLINE_CHAT } }));
   };
@@ -425,6 +431,18 @@ export const EventsHandler = React.memo(() => {
               setModalType(ModalType.RequestChainLinkUndo);
               setModal(
                 'Do you want to allow the opponent to revert to the start of the chain link?'
+              );
+            }
+            continue;
+          case 'REQUESTDRAW':
+            if (
+              parseInt(event.eventValue ?? '0') !== playerID &&
+              playerID !== 3
+            ) {
+              setShowModal(true);
+              setModalType(ModalType.RequestDraw);
+              setModal(
+                'Your opponent offered a draw. No stats will be reported. Do you accept?'
               );
             }
             continue;

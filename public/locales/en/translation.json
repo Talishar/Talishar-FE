@@ -390,6 +390,7 @@
     "DISRUPTED_CARD_COUNT_one": "{{count}} card",
     "DISRUPTED_CARD_COUNT_other": "{{count}} cards",
     "DISRUPTION_VALUE": "Disruption",
+    "DRAW": "Draw",
     "EXCLUDE_LAST_TURN": "Exclude Last Turn (stats & charts)",
     "EXCLUDE_TURN_0": "Exclude Turn 0 (stats & charts)",
     "EXPORT_AS_CSV": "Export as CSV",
@@ -1773,6 +1774,7 @@
     "LEARNING_WARNING_TITLE": "This player is learning"
   },
   "OPPONENT_INACTIVE": {
+    "CLAIM_DRAW": "Claim Draw",
     "CLAIM_VICTORY": "Claim Victory",
     "COUNTDOWN_OPPONENT": "Waiting on your opponent",
     "COUNTDOWN_PLAYER": "Waiting on {{player}}",
@@ -1808,6 +1810,7 @@
     "LOCKED_PLAYMAT_TOOLTIP": "Support us on Metafy to unlock Talishar-exclusive playmats",
     "LOCK_ICON": "🔒",
     "LOGIN_TO_CUSTOMIZE_PLAYMAT": "Log in to customize your playmat",
+    "OFFER_DRAW": "Offer Draw",
     "PLAYMAT": "Playmat",
     "REPORT_BUG": "Report Bug",
     "REPORT_PLAYER": "Report Player",

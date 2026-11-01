@@ -8,6 +8,7 @@ import { shallowEqual } from 'react-redux';
 import styles from './OpponentInactive.module.css';
 
 const CLAIM_VICTORY_MODE = 100007;
+const CLAIM_DRAW_MODE = 100030;
 const QUICK_CHAT_THINKING = 8;
 const QUICK_CHAT_STILL_HERE = 25;
 /** How much of the timeout is shown as a visible countdown. */
@@ -300,6 +301,11 @@ export default function OpponentInactive() {
     );
   };
 
+  const handleClaimDraw = () => {
+    setDismissed(true);
+    dispatch(submitButton({ button: { mode: CLAIM_DRAW_MODE } }));
+  };
+
   return (
     <div className={styles.overlay}>
       <span className={styles.icon}>{t('OPPONENT_INACTIVE.WARNING')}</span>
@@ -312,6 +318,13 @@ export default function OpponentInactive() {
         disabled={!!isRequestInProgress}
       >
         {t('OPPONENT_INACTIVE.CLAIM_VICTORY')}
+      </button>
+      <button
+        className={styles.claimDrawButton}
+        onClick={handleClaimDraw}
+        disabled={!!isRequestInProgress}
+      >
+        {t('OPPONENT_INACTIVE.CLAIM_DRAW')}
       </button>
     </div>
   );
