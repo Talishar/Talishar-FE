@@ -99,6 +99,8 @@ import {
   CreatePuzzleGameResponse,
   VerifyPuzzleCandidateRequest,
   VerifyPuzzleCandidateResponse,
+  SolvePuzzleCandidatesRequest,
+  SolvePuzzleCandidatesResponse,
   PuzzleKind,
   PuzzleScheduleResponse,
   SchedulePuzzleRequest
@@ -783,6 +785,12 @@ export const apiSlice = createApi({
     >({
       query: (body) => postJson(URL_END_POINT.VERIFY_PUZZLE_CANDIDATES, body)
     }),
+    solvePuzzleCandidates: builder.mutation<
+      SolvePuzzleCandidatesResponse,
+      SolvePuzzleCandidatesRequest
+    >({
+      query: (body) => postJson(URL_END_POINT.SOLVE_PUZZLE_CANDIDATES, body)
+    }),
     resetAllRustCounters: builder.mutation<ResetAllRustCountersResponse, void>({
       query: () => ({
         url: URL_END_POINT.RESET_ALL_RUST_COUNTERS,
@@ -1198,6 +1206,7 @@ export const {
   useGetPuzzleCandidatesQuery,
   useCreatePuzzleGameMutation,
   useVerifyPuzzleCandidateMutation,
+  useSolvePuzzleCandidatesMutation,
   useGetPuzzleScheduleQuery,
   useSchedulePuzzleMutation,
   useGetDailyPuzzleQuery,

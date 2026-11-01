@@ -441,6 +441,7 @@ export const URL_END_POINT = {
   GET_PUZZLE_CANDIDATES: 'APIs/GetPuzzleCandidates.php',
   CREATE_PUZZLE_GAME: 'APIs/CreatePuzzleGame.php',
   VERIFY_PUZZLE_CANDIDATES: 'APIs/VerifyPuzzleCandidates.php',
+  SOLVE_PUZZLE_CANDIDATES: 'APIs/SolvePuzzleCandidates.php',
   SCHEDULE_PUZZLE: 'APIs/SchedulePuzzle.php',
   GET_DAILY_PUZZLE: 'APIs/GetDailyPuzzle.php',
   START_DAILY_PUZZLE: 'APIs/StartDailyPuzzle.php',
