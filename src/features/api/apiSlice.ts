@@ -263,7 +263,8 @@ export const apiSlice = createApi({
     'HeroMastery',
     'PuzzleSchedule',
     'DailyPuzzle',
-    'PlayerReports'
+    'PlayerReports',
+    'BlockReports'
   ],
   refetchOnFocus: false,
   refetchOnReconnect: false,
@@ -818,7 +819,11 @@ export const apiSlice = createApi({
     banPlayerByName: builder.mutation<any, BanPlayerByNameRequest>({
       query: ({ playerToBan }) =>
         postJson(URL_END_POINT.BAN_PLAYER, { playerToBan: playerToBan }),
-      invalidatesTags: [{ type: 'ModPageData', id: 'LIST' }]
+      invalidatesTags: [
+        { type: 'ModPageData', id: 'LIST' },
+        'PlayerReports',
+        'BlockReports'
+      ]
     }),
     deleteUsername: builder.mutation<
       DeleteAccountAPIResponse,
@@ -993,6 +998,7 @@ export const apiSlice = createApi({
     >({
       query: ({ days, minBlocks }) =>
         postJson(URL_END_POINT.BLOCK_REPORTS, { days, minBlocks }),
+      providesTags: ['BlockReports'],
       keepUnusedDataFor: 0
     }),
 
@@ -1053,15 +1059,23 @@ export const apiSlice = createApi({
     }),
     sendSystemMessageToPlayer: builder.mutation<
       any,
-      { username: string; message: string; expiresInHours?: number | null }
+      {
+        username: string;
+        message: string;
+        expiresInHours?: number | null;
+        warning?: boolean;
+      }
     >({
-      query: ({ username, message, expiresInHours }) =>
+      query: ({ username, message, expiresInHours, warning }) =>
         postJson(URL_END_POINT.SYSTEM_MESSAGE, {
           action: 'sendToPlayer',
           username,
           message,
-          expiresInHours
-        })
+          expiresInHours,
+          warning
+        }),
+      invalidatesTags: (_result, error, { warning }) =>
+        warning && !error ? ['PlayerReports', 'BlockReports'] : []
     }),
     sendSystemMessageToAll: builder.mutation<
       any,

@@ -35,6 +35,7 @@ export interface BlockReportPlayer {
   blockCount: number;
   reasonCounts: Record<ModerationReason, number>;
   lastBlockedAt: string;
+  lastWarnedAt: string | null;
   notes: BlockReportNote[];
 }
 

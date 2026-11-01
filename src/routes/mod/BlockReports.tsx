@@ -9,6 +9,7 @@ import {
 import tableStyles from './ModTable.module.css';
 import styles from './BlockReports.module.css';
 import useWarnPlayer from './useWarnPlayer';
+import useBanPlayer from './useBanPlayer';
 
 export const DAY_OPTIONS = [30, 90, 365];
 const MIN_BLOCK_OPTIONS = [1, 2, 3, 5, 10];
@@ -24,6 +25,7 @@ const BlockReports: React.FC = () => {
     minBlocks
   });
   const { warn, isWarning } = useWarnPlayer();
+  const { ban, isBanning } = useBanPlayer();
 
   const players = data?.players ?? [];
 
@@ -108,93 +110,119 @@ const BlockReports: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {players.map((player) => (
-                <React.Fragment key={player.usersId}>
-                  <tr>
-                    <td>
-                      <span className={styles.username}>
-                        {player.displayName}
-                      </span>
-                      {player.displayName !== player.username && (
-                        <span className={tableStyles.muted}>
-                          {' '}
-                          ({player.username})
-                        </span>
-                      )}
-                      {player.isBanned && (
-                        <span className={styles.bannedTag}>
-                          {t('BLOCK_REPORTS.BANNED')}
-                        </span>
-                      )}
-                    </td>
-                    <td className={tableStyles.numeric}>{player.blockCount}</td>
-                    {MODERATION_REASONS.map((reason) => (
-                      <td
-                        key={reason}
-                        className={classNames(tableStyles.numeric, {
-                          [tableStyles.muted]: player.reasonCounts[reason] === 0
-                        })}
-                      >
-                        {player.reasonCounts[reason]}
-                      </td>
-                    ))}
-                    <td className={styles.nowrap}>
-                      {player.lastBlockedAt.slice(0, 10)}
-                    </td>
-                    <td className={styles.actions}>
-                      <button
-                        className={styles.actionButton}
-                        onClick={() => toggleExpanded(player.usersId)}
-                        disabled={player.notes.length === 0}
-                        aria-expanded={expanded.has(player.usersId)}
-                      >
-                        {t('BLOCK_REPORTS.NOTES', {
-                          count: player.notes.length
-                        })}
-                      </button>
-                      <button
-                        className={styles.actionButton}
-                        onClick={() => warn(player.username)}
-                        disabled={isWarning || player.isBanned}
-                      >
-                        {t('BLOCK_REPORTS.WARN')}
-                      </button>
-                    </td>
-                  </tr>
-                  {expanded.has(player.usersId) && (
+              {players.map((player) => {
+                const warned =
+                  player.lastWarnedAt !== null &&
+                  player.lastWarnedAt >= player.lastBlockedAt;
+                return (
+                  <React.Fragment key={player.usersId}>
                     <tr>
-                      <td colSpan={4 + MODERATION_REASONS.length}>
-                        <ul className={styles.notes}>
-                          {player.notes.map((note, ix) => (
-                            <li key={ix} className={styles.note}>
-                              <div className={styles.noteMeta}>
-                                <span>{note.createdAt.slice(0, 10)}</span>
-                                <span>
-                                  {t('BLOCK_REPORTS.BY', {
-                                    username: note.blockedBy
-                                  })}
-                                </span>
-                                {note.reason && (
-                                  <span className={styles.reasonTag}>
-                                    {t(
-                                      MODERATION_REASON_LABEL_KEYS[note.reason]
-                                    )}
-                                  </span>
-                                )}
-                              </div>
-                              {note.note && (
-                                <div className={styles.noteText}>
-                                  {note.note}
-                                </div>
-                              )}
-                            </li>
-                          ))}
-                        </ul>
+                      <td>
+                        <span className={styles.username}>
+                          {player.displayName}
+                        </span>
+                        {player.displayName !== player.username && (
+                          <span className={tableStyles.muted}>
+                            {' '}
+                            ({player.username})
+                          </span>
+                        )}
+                        {player.isBanned && (
+                          <span className={styles.bannedTag}>
+                            {t('BLOCK_REPORTS.BANNED')}
+                          </span>
+                        )}
+                      </td>
+                      <td className={tableStyles.numeric}>
+                        {player.blockCount}
+                      </td>
+                      {MODERATION_REASONS.map((reason) => (
+                        <td
+                          key={reason}
+                          className={classNames(tableStyles.numeric, {
+                            [tableStyles.muted]:
+                              player.reasonCounts[reason] === 0
+                          })}
+                        >
+                          {player.reasonCounts[reason]}
+                        </td>
+                      ))}
+                      <td className={styles.nowrap}>
+                        {player.lastBlockedAt.slice(0, 10)}
+                      </td>
+                      <td className={styles.actions}>
+                        <button
+                          className={styles.actionButton}
+                          onClick={() => toggleExpanded(player.usersId)}
+                          disabled={player.notes.length === 0}
+                          aria-expanded={expanded.has(player.usersId)}
+                        >
+                          {t('BLOCK_REPORTS.NOTES', {
+                            count: player.notes.length
+                          })}
+                        </button>
+                        <button
+                          className={styles.actionButton}
+                          onClick={() => warn(player.username)}
+                          disabled={isWarning || warned || player.isBanned}
+                          title={
+                            warned
+                              ? t('BLOCK_REPORTS.WARNED_ON', {
+                                  date: player.lastWarnedAt?.slice(0, 16)
+                                })
+                              : undefined
+                          }
+                        >
+                          {warned
+                            ? t('BLOCK_REPORTS.WARNED')
+                            : t('BLOCK_REPORTS.WARN')}
+                        </button>
+                        <button
+                          className={styles.actionButton}
+                          onClick={() => ban(player.username)}
+                          disabled={isBanning || player.isBanned}
+                        >
+                          {t('BLOCK_REPORTS.BAN')}
+                        </button>
                       </td>
                     </tr>
-                  )}
-                </React.Fragment>
-              ))}
+                    {expanded.has(player.usersId) && (
+                      <tr>
+                        <td colSpan={4 + MODERATION_REASONS.length}>
+                          <ul className={styles.notes}>
+                            {player.notes.map((note, ix) => (
+                              <li key={ix} className={styles.note}>
+                                <div className={styles.noteMeta}>
+                                  <span>{note.createdAt.slice(0, 10)}</span>
+                                  <span>
+                                    {t('BLOCK_REPORTS.BY', {
+                                      username: note.blockedBy
+                                    })}
+                                  </span>
+                                  {note.reason && (
+                                    <span className={styles.reasonTag}>
+                                      {t(
+                                        MODERATION_REASON_LABEL_KEYS[
+                                          note.reason
+                                        ]
+                                      )}
+                                    </span>
+                                  )}
+                                </div>
+                                {note.note && (
+                                  <div className={styles.noteText}>
+                                    {note.note}
+                                  </div>
+                                )}
+                              </li>
+                            ))}
+                          </ul>
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
+                );
+              })}
             </tbody>
           </table>
         </div>

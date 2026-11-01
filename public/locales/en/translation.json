@@ -145,7 +145,11 @@
   },
   "BLOCK_REPORTS": {
     "ACTIONS": "Actions",
+    "BAN": "Ban",
     "BANNED": "Banned",
+    "BANNED_TOAST": "{{username}} has been banned.",
+    "BAN_CONFIRM": "Ban {{username}}? They will no longer be able to play on Talishar.",
+    "BAN_FAILED": "Could not ban the player.",
     "BLOCKS": "Blocks",
     "BY": "by {{username}}",
     "DESCRIPTION": "Players blocked by several people, with the reasons and notes they left. Sorted by unkind and insulting reports first.",
@@ -165,7 +169,9 @@
     "WARN_DEFAULT_MESSAGE": "Several players have recently reported or blocked you for unkind behaviour. Please keep chat and play respectful. Further reports may lead to a ban.",
     "WARN_FAILED": "Could not send the warning",
     "WARN_PROMPT": "Warning message for {{username}} (shown as a system message for 7 days):",
-    "WARN_SENT": "Warning sent to {{username}}"
+    "WARN_SENT": "Warning sent to {{username}}",
+    "WARNED": "Warned",
+    "WARNED_ON": "Warned on {{date}}"
   },
   "CARD_KEYWORD_STRIP": {
     "MORE_one": "+1 more - see Keywords guide",
@@ -1906,6 +1912,7 @@
     "SAVE_NOTE": "Save Note"
   },
   "PLAYER_REPORTS": {
+    "CHAT": "Chat ({{count}})",
     "DATE": "Date",
     "DESCRIPTION": "Reports sent from the in-game menu, newest first. The game log for each one is saved in BugReports under the game number.",
     "EMPTY": "No reports in this period.",
