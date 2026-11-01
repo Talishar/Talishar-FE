@@ -993,6 +993,8 @@
       "IMPORT_HELP": "牌表链接 - 来自 FaBrary.net 的 URL",
       "IMPORT_TITLE": "来自 FaBrary.net 的链接",
       "LOADING": "",
+      "OPEN_HANDS": "明牌",
+      "OPEN_HANDS_TOOLTIP": "教学模式。双方玩家都能看到对方的手牌和兵工厂。",
       "PRACTICE_DUMMY": "",
       "PRECONSTRUCTED_DECK": "预设套牌",
       "PRIVATE_TITLE": "创建私人游戏",

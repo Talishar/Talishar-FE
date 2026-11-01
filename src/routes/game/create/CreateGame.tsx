@@ -241,7 +241,8 @@ const CreateGame = ({
             )?.key
           : '',
       gameDescription,
-      deckTestDeck: AI_DECK.DUMMY
+      deckTestDeck: AI_DECK.DUMMY,
+      openHands: false
     };
   }, [isSuccess, hasUserLayout]);
 
@@ -297,6 +298,9 @@ const CreateGame = ({
   const formFormat = watch('format');
   const deckTestMode = watch('deckTestMode');
   const deckTestDeck = watch('deckTestDeck');
+  const formVisibility = watch('visibility');
+  const isPrivateGame =
+    !hasUserLayout || formVisibility === GAME_VISIBILITY.PRIVATE;
 
   const aiDeckOptions: ImageSelectOption[] = React.useMemo(
     () =>
@@ -692,6 +696,8 @@ const CreateGame = ({
     try {
       // if you're not logged in you can ONLY make a private game.
       if (!isLoggedIn) values.visibility = GAME_VISIBILITY.PRIVATE;
+      values.openHands =
+        values.visibility === GAME_VISIBILITY.PRIVATE && !!values.openHands;
       values.user = searchParams.get('user') ?? undefined;
 
       // When inside QuickJoinProvider (main menu), use deck from shared context.
@@ -1453,6 +1459,21 @@ const CreateGame = ({
                   />
                   {t('MENU.CREATE_GAME.SINGLE_PLAYER')}
                 </label>
+                {isPrivateGame && (
+                  <label
+                    className={styles.toggleLabel}
+                    title={t('MENU.CREATE_GAME.OPEN_HANDS_TOOLTIP')}
+                  >
+                    <input
+                      type="checkbox"
+                      role="switch"
+                      id="openHands"
+                      aria-label={t('MENU.CREATE_GAME.OPEN_HANDS')}
+                      {...register('openHands')}
+                    />
+                    {t('MENU.CREATE_GAME.OPEN_HANDS')}
+                  </label>
+                )}
                 {hasUserLayout && deckTestMode && (
                   <label>
                     {t('MENU.CREATE_GAME.AI_DECK')}

@@ -993,6 +993,8 @@
       "IMPORT_HELP": "デッキリンク - FaBrary.netのURL",
       "IMPORT_TITLE": "FaBrary.netのURL",
       "LOADING": "",
+      "OPEN_HANDS": "オープンハンド",
+      "OPEN_HANDS_TOOLTIP": "指導モード。両プレイヤーがお互いの手札とアーセナルを見られます。",
       "PRACTICE_DUMMY": "",
       "PRECONSTRUCTED_DECK": "構築済みデッキ",
       "PRIVATE_TITLE": "プライベートゲームを作成",

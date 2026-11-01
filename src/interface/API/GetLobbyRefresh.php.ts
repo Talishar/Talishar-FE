@@ -12,6 +12,7 @@ export interface GetLobbyRefreshResponse {
   firstPlayer?: number;
   isPrivateLobby?: boolean;
   visibility?: 'public' | 'private' | 'friends-only';
+  openHands?: boolean;
   format?: string;
   gameDescription?: string;
   gameLog?: string;

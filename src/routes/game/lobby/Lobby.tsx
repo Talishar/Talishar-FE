@@ -16,7 +16,7 @@ import Equipment from './components/equipment/Equipment';
 import Loadout, { MyLoadout } from './components/loadout/Loadout';
 import classNames from 'classnames';
 import { FaExclamationCircle } from 'react-icons/fa';
-import { LuGlobe, LuUsers } from 'react-icons/lu';
+import { LuEye, LuGlobe, LuUsers } from 'react-icons/lu';
 import { RiSpyLine } from 'react-icons/ri';
 import { GiCapeArmor } from 'react-icons/gi';
 import { SiBookstack } from 'react-icons/si';
@@ -690,6 +690,7 @@ const Lobby = () => {
       : lobbyVisibility === GAME_VISIBILITY.PUBLIC
       ? t('MENU.CREATE_GAME.VISIBILITIES.PUBLIC')
       : '';
+  const isOpenHandsLobby = gameLobby?.openHands === true;
   const isRestrictedLobby =
     lobbyVisibility !== undefined && lobbyVisibility !== GAME_VISIBILITY.PUBLIC;
   const lobbyMetaLine = [lobbyVisibilityLabel, lobbyFormatName]
@@ -703,6 +704,7 @@ const Lobby = () => {
       : lobbyVisibility === GAME_VISIBILITY.PUBLIC
       ? t('MENU.CREATE_GAME.VISIBILITIES.PUBLIC_LOBBY')
       : '',
+    isOpenHandsLobby ? t('MENU.CREATE_GAME.OPEN_HANDS_TOOLTIP') : '',
     lobbyFormatName,
     lobbyDescription
   ].filter(Boolean);
@@ -752,6 +754,17 @@ const Lobby = () => {
             <span className={styles.lobbySettingsItem} title={lobbyFormatName}>
               <span className={styles.lobbySettingsLabel}>
                 {lobbyFormatShortName}
+              </span>
+            </span>
+          )}
+          {isOpenHandsLobby && (
+            <span
+              className={styles.lobbySettingsItem}
+              title={t('MENU.CREATE_GAME.OPEN_HANDS_TOOLTIP')}
+            >
+              <LuEye aria-hidden="true" />
+              <span className={styles.lobbySettingsLabel}>
+                {t('MENU.CREATE_GAME.OPEN_HANDS')}
               </span>
             </span>
           )}

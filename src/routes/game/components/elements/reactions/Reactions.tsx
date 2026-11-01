@@ -12,14 +12,43 @@ function Reactions() {
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
   );
+  const reactionsRef = React.useRef<HTMLDivElement>(null);
+  const [scrollbarHeight, setScrollbarHeight] = React.useState(0);
+  const hasReactions = activeCombatChain !== undefined;
 
-  if (activeCombatChain === undefined) {
+  // The scroller has almost no spare height, so a horizontal scrollbar would
+  // clip the cards. Measure it and let the CSS grow the box by that much.
+  const measureScrollbar = React.useCallback(() => {
+    const element = reactionsRef.current;
+    if (!element) return;
+    setScrollbarHeight(element.offsetHeight - element.clientHeight);
+  }, []);
+
+  React.useLayoutEffect(measureScrollbar);
+
+  React.useEffect(() => {
+    const element = reactionsRef.current;
+    if (!element) return;
+    const resizeObserver = new ResizeObserver(measureScrollbar);
+    resizeObserver.observe(element);
+    return () => resizeObserver.disconnect();
+  }, [hasReactions, measureScrollbar]);
+
+  if (!hasReactions) {
     return <div className={styles.currentAttack}></div>;
   }
 
   return (
     <div className={styles.reactionWrapper}>
-      <div className={styles.reactions}>
+      <div
+        ref={reactionsRef}
+        className={styles.reactions}
+        style={
+          {
+            '--reactions-scrollbar': `${scrollbarHeight}px`
+          } as React.CSSProperties
+        }
+      >
         {activeCombatChain?.map((card: Card, ix: number) => {
           const isPlayer = playerID === card.controller;
           return (

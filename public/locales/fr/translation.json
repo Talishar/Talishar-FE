@@ -1039,6 +1039,8 @@
       "IMPORT_HELP": "Lien du deck — URL de FaBrary.net",
       "IMPORT_TITLE": "URL de FaBrary.net",
       "LOADING": "Chargement…",
+      "OPEN_HANDS": "Mains ouvertes",
+      "OPEN_HANDS_TOOLTIP": "Mode apprentissage. Chaque joueur voit la main et l'arsenal de l'autre.",
       "PRACTICE_DUMMY": "Mannequin d'entraînement",
       "PRECONSTRUCTED_DECK": "Deck préconstruit",
       "PRIVATE_TITLE": "Créer une partie privée",

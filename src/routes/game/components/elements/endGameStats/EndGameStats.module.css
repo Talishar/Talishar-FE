@@ -257,9 +257,13 @@
 .disclaimer {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   flex-wrap: wrap;
   gap: 0.25rem 1rem;
+  width: fit-content;
+  max-width: 100%;
+  margin-inline: auto;
+  box-sizing: border-box;
   font-size: 0.9em;
   color: rgba(var(--theme-on-surface-rgb), 0.5);
   font-style: italic;
@@ -887,6 +891,7 @@
 /* Inline style replacements */
 .sectionHeaderContainer {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
@@ -895,6 +900,7 @@
 
 .statsTabs {
   display: flex;
+  flex-shrink: 0;
   gap: 0.25rem;
   background: rgba(var(--theme-sunken-rgb), calc(0.25 * var(--theme-sunken-alpha)));
   border-radius: 8px;
@@ -992,6 +998,11 @@ input.excludeLastTurnCheckbox:focus-visible {
   user-select: none;
 }
 
+.sectionHeaderContainer .excludeLastTurnLabel {
+  white-space: nowrap;
+  margin-left: auto;
+}
+
 .valueToggleControl {
   display: inline-flex;
   align-items: center;
@@ -1002,7 +1013,7 @@ input.excludeLastTurnCheckbox:focus-visible {
 @media (max-width: 768px) {
   .disclaimer {
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     gap: 0.5rem;
   }
 }

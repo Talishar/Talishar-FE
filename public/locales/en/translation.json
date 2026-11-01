@@ -1265,6 +1265,8 @@
       "IMPORT_HELP": "Deck Link - URL from FaBrary.net",
       "IMPORT_TITLE": "URL from FaBrary.net",
       "LOADING": "Loading…",
+      "OPEN_HANDS": "Open Hands",
+      "OPEN_HANDS_TOOLTIP": "Teaching mode. Both players see each other's hand and arsenal.",
       "PRACTICE_DUMMY": "Practice Dummy",
       "PRECONSTRUCTED_DECK": "Preconstructed deck",
       "PRIVATE_TITLE": "Create Private Game",
