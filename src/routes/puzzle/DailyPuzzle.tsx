@@ -15,7 +15,8 @@ import {
   DailyPuzzleReview
 } from 'interface/API/DailyPuzzleAPI';
 import PageBanner from 'components/PageBanner/PageBanner';
-import AdRailLayout from 'components/ads/AdRailLayout';
+import useAdScript from 'hooks/useAdScript';
+import useSupporterStatus from 'hooks/useSupporterStatus';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { getReadableFormatName } from 'utils/formatUtils';
 import { parseTextToElements } from 'utils/ParseEscapedString';
@@ -350,6 +351,8 @@ const Leaderboard = ({ data }: { data: DailyPuzzleResponse }) => {
 
 const DailyPuzzle: React.FC = () => {
   const { t } = useTranslation();
+  const { showAds } = useSupporterStatus();
+  useAdScript(showAds);
   const navigate = useNavigate();
   const { data, isLoading, isError } = useGetDailyPuzzleQuery(undefined, {
     refetchOnMountOrArgChange: true
@@ -381,116 +384,110 @@ const DailyPuzzle: React.FC = () => {
         title={t('DAILY_PUZZLE.TITLE')}
         subtitle={t('DAILY_PUZZLE.SUBTITLE')}
       />
-      <AdRailLayout contentWidth={900}>
-        <div className={styles.content}>
-          {isLoading ? (
-            <p className={styles.empty}>{t('DAILY_PUZZLE.LOADING')}</p>
-          ) : isError || !data || data.error ? (
-            <p className={styles.empty}>{t('DAILY_PUZZLE.LOAD_FAILED')}</p>
-          ) : !puzzle ? (
-            <p className={styles.empty}>{t('DAILY_PUZZLE.NONE_TODAY')}</p>
-          ) : (
-            <>
-              <section
-                className={styles.panel}
-                aria-labelledby="daily-puzzle-title"
-              >
-                <div className={styles.panelHead}>
-                  <h2 id="daily-puzzle-title" className={styles.panelTitle}>
-                    {t('DAILY_PUZZLE.NUMBER', { number: puzzle.number })}
-                  </h2>
-                  <span className={styles.mode}>
-                    {t(`PUZZLE.MODE.${puzzle.mode}`)}
-                  </span>
-                </div>
-                <div className={styles.matchup}>
-                  <HeroPortrait
-                    hero={puzzle.hero}
-                    name={puzzle.heroName}
-                    label={t('DAILY_PUZZLE.YOU_PLAY')}
-                  />
-                  <span className={styles.versus}>
-                    {t('DAILY_PUZZLE.VERSUS')}
-                  </span>
-                  <HeroPortrait
-                    hero={puzzle.opponentHero}
-                    name={puzzle.opponentHeroName}
-                    label={t('DAILY_PUZZLE.AGAINST')}
-                  />
-                </div>
-                <Goal puzzle={puzzle} />
-                <ul className={styles.facts}>
-                  {puzzle.difficulty && (
-                    <li>
-                      {t(
-                        `DAILY_PUZZLE.DIFFICULTY_${puzzle.difficulty.toUpperCase()}`
-                      )}
-                    </li>
-                  )}
-                  <li>{getReadableFormatName(puzzle.format)}</li>
+      <div className={styles.content}>
+        {isLoading ? (
+          <p className={styles.empty}>{t('DAILY_PUZZLE.LOADING')}</p>
+        ) : isError || !data || data.error ? (
+          <p className={styles.empty}>{t('DAILY_PUZZLE.LOAD_FAILED')}</p>
+        ) : !puzzle ? (
+          <p className={styles.empty}>{t('DAILY_PUZZLE.NONE_TODAY')}</p>
+        ) : (
+          <>
+            <section
+              className={styles.panel}
+              aria-labelledby="daily-puzzle-title"
+            >
+              <div className={styles.panelHead}>
+                <h2 id="daily-puzzle-title" className={styles.panelTitle}>
+                  {t('DAILY_PUZZLE.NUMBER', { number: puzzle.number })}
+                </h2>
+                <span className={styles.mode}>
+                  {t(`PUZZLE.MODE.${puzzle.mode}`)}
+                </span>
+              </div>
+              <div className={styles.matchup}>
+                <HeroPortrait
+                  hero={puzzle.hero}
+                  name={puzzle.heroName}
+                  label={t('DAILY_PUZZLE.YOU_PLAY')}
+                />
+                <span className={styles.versus}>
+                  {t('DAILY_PUZZLE.VERSUS')}
+                </span>
+                <HeroPortrait
+                  hero={puzzle.opponentHero}
+                  name={puzzle.opponentHeroName}
+                  label={t('DAILY_PUZZLE.AGAINST')}
+                />
+              </div>
+              <Goal puzzle={puzzle} />
+              <ul className={styles.facts}>
+                {puzzle.difficulty && (
                   <li>
-                    {t('DAILY_PUZZLE.HINTS_AVAILABLE', {
-                      count: puzzle.hintsTotal
-                    })}
+                    {t(
+                      `DAILY_PUZZLE.DIFFICULTY_${puzzle.difficulty.toUpperCase()}`
+                    )}
                   </li>
-                  {data.stats && data.stats.finished > 0 && (
-                    <li>
-                      {puzzle.mode === 'damage'
-                        ? t('DAILY_PUZZLE.PLAYERS', {
-                            count: data.stats.finished
-                          })
-                        : t('DAILY_PUZZLE.SOLVE_RATE', {
-                            solved: data.stats.solved,
-                            count: data.stats.finished
-                          })}
-                    </li>
-                  )}
-                </ul>
-                {puzzle.mode === 'damage' && !finished && (
-                  <DamageBars puzzle={puzzle} />
                 )}
-                <div className={styles.actions}>
-                  {!data.loggedIn ? (
-                    <Link className={styles.primaryButton} to="/user/login">
-                      {t('DAILY_PUZZLE.LOG_IN')}
-                    </Link>
-                  ) : (
-                    <button
-                      type="button"
-                      className={
-                        finished ? styles.secondaryButton : styles.primaryButton
-                      }
-                      disabled={isStarting}
-                      onClick={start}
-                    >
-                      {isStarting
-                        ? t('DAILY_PUZZLE.STARTING')
-                        : finished
-                        ? t('DAILY_PUZZLE.PRACTICE')
-                        : result
-                        ? t('DAILY_PUZZLE.CONTINUE')
-                        : t('DAILY_PUZZLE.PLAY')}
-                    </button>
-                  )}
-                </div>
-                {!finished && (
-                  <p className={styles.rules}>{t('DAILY_PUZZLE.RULES')}</p>
+                <li>{getReadableFormatName(puzzle.format)}</li>
+                <li>
+                  {t('DAILY_PUZZLE.HINTS_AVAILABLE', {
+                    count: puzzle.hintsTotal
+                  })}
+                </li>
+                {data.stats && data.stats.finished > 0 && (
+                  <li>
+                    {puzzle.mode === 'damage'
+                      ? t('DAILY_PUZZLE.PLAYERS', {
+                          count: data.stats.finished
+                        })
+                      : t('DAILY_PUZZLE.SOLVE_RATE', {
+                          solved: data.stats.solved,
+                          count: data.stats.finished
+                        })}
+                  </li>
                 )}
-              </section>
-              {finished && result && (
-                <ResultPanel data={data} result={result} />
+              </ul>
+              {puzzle.mode === 'damage' && !finished && (
+                <DamageBars puzzle={puzzle} />
               )}
-              {finished && data.review && <ReviewPanel review={data.review} />}
-              {puzzle.mode === 'damage' && <Leaderboard data={data} />}
-            </>
-          )}
-          {data && (
-            <p className={styles.next}>
-              {t('DAILY_PUZZLE.NEXT_IN', countdown)}
-            </p>
-          )}
-        </div>
-      </AdRailLayout>
+              <div className={styles.actions}>
+                {!data.loggedIn ? (
+                  <Link className={styles.primaryButton} to="/user/login">
+                    {t('DAILY_PUZZLE.LOG_IN')}
+                  </Link>
+                ) : (
+                  <button
+                    type="button"
+                    className={
+                      finished ? styles.secondaryButton : styles.primaryButton
+                    }
+                    disabled={isStarting}
+                    onClick={start}
+                  >
+                    {isStarting
+                      ? t('DAILY_PUZZLE.STARTING')
+                      : finished
+                      ? t('DAILY_PUZZLE.PRACTICE')
+                      : result
+                      ? t('DAILY_PUZZLE.CONTINUE')
+                      : t('DAILY_PUZZLE.PLAY')}
+                  </button>
+                )}
+              </div>
+              {!finished && (
+                <p className={styles.rules}>{t('DAILY_PUZZLE.RULES')}</p>
+              )}
+            </section>
+            {finished && result && <ResultPanel data={data} result={result} />}
+            {finished && data.review && <ReviewPanel review={data.review} />}
+            {puzzle.mode === 'damage' && <Leaderboard data={data} />}
+          </>
+        )}
+        {data && (
+          <p className={styles.next}>{t('DAILY_PUZZLE.NEXT_IN', countdown)}</p>
+        )}
+      </div>
     </main>
   );
 };

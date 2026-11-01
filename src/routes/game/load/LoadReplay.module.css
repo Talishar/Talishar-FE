@@ -127,11 +127,6 @@
   font-weight: 600;
 }
 
-.slotMeterBreakdown {
-  color: var(--theme-text-secondary, #c6c6c6);
-  font-size: 0.78rem;
-}
-
 .slotTrack {
   display: flex;
   gap: 0.22rem;
@@ -150,6 +145,32 @@
   background: var(--theme-primary, #f0c94d);
 }
 
+.slotSegmentUsed {
+  background: rgba(var(--theme-on-surface-rgb), 0.38);
+}
+
+.slotLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.1rem;
+  margin-top: 0.55rem;
+  color: var(--theme-text-secondary, #c6c6c6);
+  font-size: 0.76rem;
+}
+
+.slotLegend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.slotLegend i {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 2px;
+  background: rgba(var(--theme-on-surface-rgb), 0.09);
+}
+
 .slotMeterNote {
   margin: 0.55rem 0 0;
   color: var(--theme-text-secondary, #c6c6c6);
@@ -159,6 +180,7 @@
 
 .slotUpgradeLink {
   color: color-mix(in srgb, #bed3e6 55%, var(--theme-text));
+  font-size: 0.78rem;
   text-decoration: underline;
 }
 
@@ -187,7 +209,7 @@
 }
 
 .snapshotInvitePanel {
-  margin-top: 0.75rem;
+  margin: 0 0 1rem;
   padding: 0.75rem 0.85rem;
   border: 1px solid rgba(var(--theme-on-surface-rgb), 0.16);
   border-radius: 5px;
@@ -261,95 +283,362 @@
   }
 }
 
-.replayCard {
+.saveToolbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0 0 0.9rem;
+}
+
+.saveToolbarEnd {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex: 1 1 16rem;
+  justify-content: flex-end;
+}
+
+.segmented {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 0.2rem;
+  margin: 0 !important;
+  padding: 0.18rem;
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.16));
+  border-radius: 5px;
+  background: var(--theme-section-background, rgba(255, 255, 255, 0.025));
+}
+
+.segmented button {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  width: auto !important;
+  min-height: 1.9rem;
+  margin: 0 !important;
+  padding: 0.3rem 0.72rem !important;
+  border: 0 !important;
+  border-radius: 5px;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--theme-text-primary, #fff) !important;
+  font-family: inherit !important;
+  font-size: 0.76rem !important;
+  font-weight: 600 !important;
+  line-height: 1.25 !important;
+}
+
+.segmented button svg {
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
+.segmented button:hover,
+.segmented .activeSegment {
+  background: var(--theme-primary, #d4af37) !important;
+  color: var(--theme-primary-inverse, #000) !important;
+}
+
+.segmentCount {
+  opacity: 0.7;
+  font-weight: 500;
+}
+
+.segmented button:focus-visible,
+.openButton:focus-visible {
+  outline: 2px solid var(--theme-primary, #d4af37);
+  outline-offset: 2px;
+}
+
+.saveSearch {
+  flex: 1 1 auto;
+  width: auto !important;
+  max-width: 16rem;
+  height: 2.35rem !important;
+  margin: 0 !important;
+  padding: 0.3rem 0.7rem 0.3rem 2.3rem !important;
+  border-color: var(--theme-border, rgba(255, 255, 255, 0.16)) !important;
+  border-radius: 5px !important;
+  background-color: var(--theme-section-background, #121416) !important;
+  background-position: center left 0.75rem !important;
+  color: var(--theme-text) !important;
+  font-size: 0.8rem !important;
+}
+
+.saveCard,
+.saveRow {
   --block-spacing-vertical: 0;
   --block-spacing-horizontal: 0;
   position: relative;
   min-width: 0;
   margin: 0 !important;
   padding: 0 !important;
-  border: 0 !important;
-  background: transparent !important;
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.18) !important;
+  border-radius: 5px;
+  background: rgba(var(--theme-on-surface-rgb), 0.035) !important;
   box-shadow: none !important;
+  color: var(--theme-text);
 }
 
-.replayCardMain {
+.saveCard:hover,
+.saveRow:hover {
+  border-color: rgba(190, 211, 230, 0.55) !important;
+}
+
+.saveCard {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.matchupArt {
+  position: relative;
   display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 0.32rem 0.75rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  height: 6.5rem;
+  background: rgba(var(--theme-on-surface-rgb), 0.06);
+}
+
+.matchupArt img {
+  display: block;
   width: 100%;
   height: 100%;
-  min-height: 7rem;
-  padding: 0.85rem;
-  padding-right: 3rem;
-  text-align: left;
-  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.18);
-  border-radius: 5px;
-  background: rgba(var(--theme-on-surface-rgb), 0.035);
+  min-width: 0;
+  margin: 0;
+  object-fit: cover;
+  object-position: center 30%;
+}
+
+.matchupArt img + img {
+  border-left: 1px solid var(--theme-background, #0a0a0a);
+}
+
+.versus {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  translate: -50% -50%;
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.25);
+  border-radius: 50%;
+  background: var(--theme-background, #0a0a0a);
   color: var(--theme-text);
+  font-size: 0.62rem;
+  font-weight: 700;
+}
+
+.saveInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.saveCard .saveInfo {
+  flex: 1 1 auto;
+  padding: 0.75rem 0.85rem 0;
+}
+
+.saveTitleRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 1.8rem;
+}
+
+.saveCard .saveTitleRow .favoriteButton {
+  margin-left: auto !important;
+}
+
+.removedNext {
+  padding: 0.08rem 0.4rem;
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.25);
+  border-radius: 5px;
+  color: var(--theme-text-secondary, #c6c6c6);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.saveActions {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.saveCard .saveActions {
+  padding: 0.75rem 0.85rem 0.85rem;
+}
+
+.openButton {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  flex: 1 1 auto;
+  width: auto !important;
+  height: 2.1rem;
+  margin: 0 !important;
+  padding: 0 0.9rem !important;
+  border: 0 !important;
+  border-radius: 5px;
+  background: var(--theme-primary, #d4af37) !important;
+  color: var(--theme-primary-inverse, #000) !important;
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
   cursor: pointer;
-  margin-bottom: 0;
 }
 
-.replayCardMain:hover:not(:disabled) {
-  border-color: rgba(190, 211, 230, 0.55);
-  background: rgba(190, 211, 230, 0.09);
+.openButton svg {
+  width: 0.65rem;
+  height: 0.65rem;
 }
 
-.replayCardMain:disabled {
+.openButton:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+.openButton:disabled {
   opacity: 0.55;
   cursor: wait;
 }
+
+.saveList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.saveRow {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.65rem 0.75rem !important;
+}
+
+.rowPortraits {
+  display: flex;
+  width: 4.6rem;
+}
+
+.rowPortraits img {
+  width: 2.75rem;
+  height: 2.75rem;
+  margin: 0;
+  border: 2px solid var(--theme-background, #0a0a0a);
+  border-radius: 50%;
+  object-fit: cover;
+  background: rgba(var(--theme-on-surface-rgb), 0.06);
+}
+
+.rowPortraits img + img {
+  margin-left: -0.85rem;
+}
+
+.saveRow .saveInfo {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.1rem 0.75rem;
+}
+
+.saveRow .replaySavedAt {
+  order: 1;
+  white-space: nowrap;
+}
+
+.saveRow .replayPlayers,
+.saveRow .replayHeroes {
+  order: 2;
+  flex: 1 0 100%;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.saveRow .saveTitleRow {
+  min-height: 0;
+}
+
+.saveRow .openButton {
+  flex: 0 0 auto;
+  min-width: 6.5rem;
+}
+
+@media (max-width: 640px) {
+  .saveToolbarEnd {
+    flex-basis: 100%;
+  }
+
+  .saveSearch {
+    max-width: none;
+  }
+
+  .saveRow {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .saveRow .saveActions {
+    grid-column: 1 / -1;
+  }
+
+  .saveRow .openButton {
+    flex: 1 1 auto;
+  }
+}
+
 .replayNumber {
   font-weight: 700;
   color: var(--theme-primary, #f0c94d);
 }
 .replayPlayers {
-  grid-column: 1 / -1;
-  overflow: visible;
-  text-overflow: clip;
-  white-space: normal;
   overflow-wrap: anywhere;
   color: var(--theme-text-secondary, #d3d3d3);
   font-size: 0.83rem;
 }
 .replayHeroes {
-  grid-column: 1 / -1;
-  white-space: normal;
   overflow-wrap: anywhere;
   color: var(--theme-text-secondary, #d3d3d3);
   font-size: 0.76rem;
 }
 .replaySavedAt {
-  grid-column: 1 / -1;
   color: var(--theme-text-secondary, #aaa);
   font-size: 0.7rem;
 }
-.replayLoad {
-  grid-column: 2;
-  grid-row: 1;
-  align-self: center;
-  margin-right: 1.85rem;
-  color: color-mix(in srgb, #bed3e6 55%, var(--theme-text));
-  font-size: 0.76rem;
-  font-weight: 600;
+
+.favoriteButton,
+.shareButton,
+.deleteButton {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 2.1rem !important;
+  height: 2.1rem;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.25);
+  border-radius: 5px;
+  background: rgba(var(--theme-on-surface-rgb), 0.06) !important;
+  cursor: pointer;
+}
+
+.saveCard .saveTitleRow .favoriteButton {
+  width: 1.8rem !important;
+  height: 1.8rem;
 }
 
 .favoriteButton {
-  display: grid;
-  place-items: center;
-  position: absolute;
-  right: 0.45rem;
-  top: 0.35rem;
-  width: 1.8rem;
-  height: 1.8rem;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: rgba(var(--theme-on-surface-rgb), 0.06) !important;
-  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.25);
   color: rgba(var(--theme-on-surface-rgb), 0.5);
-  cursor: pointer;
 }
 
 .favoriteButton:hover:not(:disabled),
@@ -363,31 +652,12 @@
   color: var(--theme-primary, #f0c94d);
 }
 
-.favoriteButton:hover:not(:disabled) svg,
 .favoriteButton svg {
   display: block;
 }
 
-.favoriteButton:disabled {
-  opacity: 0.5;
-  cursor: wait;
-}
-
 .shareButton {
-  display: grid;
-  place-items: center;
-  position: absolute;
-  right: 0.45rem;
-  top: 2.5rem;
-  width: 1.8rem;
-  height: 1.8rem;
-  margin: 0;
-  padding: 0;
-  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.25);
-  border-radius: 5px;
-  background: rgba(var(--theme-on-surface-rgb), 0.06) !important;
   color: rgba(var(--theme-on-surface-rgb), 0.72);
-  cursor: pointer;
 }
 
 .shareButton:hover:not(:disabled) {
@@ -396,26 +666,8 @@
   color: color-mix(in srgb, #bed3e6 55%, var(--theme-text));
 }
 
-.shareButton:disabled {
-  opacity: 0.5;
-  cursor: wait;
-}
-
 .deleteButton {
-  display: grid;
-  place-items: center;
-  position: absolute;
-  right: 0.45rem;
-  top: 4.65rem;
-  width: 1.8rem;
-  height: 1.8rem;
-  margin: 0;
-  padding: 0;
-  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.25);
-  border-radius: 5px;
-  background: rgba(var(--theme-on-surface-rgb), 0.06) !important;
   color: rgba(var(--theme-on-surface-rgb), 0.62);
-  cursor: pointer;
 }
 
 .deleteButton:hover:not(:disabled) {
@@ -424,6 +676,8 @@
   color: #ff9b9b;
 }
 
+.favoriteButton:disabled,
+.shareButton:disabled,
 .deleteButton:disabled {
   opacity: 0.5;
   cursor: wait;

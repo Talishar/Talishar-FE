@@ -8,8 +8,13 @@ import {
   useSetReplayFavoriteMutation,
   useShareReplayMutation
 } from 'features/api/apiSlice';
-import { FaRegStar, FaStar } from 'react-icons/fa';
-import { MdDeleteOutline, MdShare } from 'react-icons/md';
+import { FaPlay, FaRegStar, FaStar } from 'react-icons/fa';
+import {
+  MdDeleteOutline,
+  MdGridView,
+  MdShare,
+  MdViewList
+} from 'react-icons/md';
 import {
   GetSavedReplaysResponse,
   SavedReplay
@@ -23,9 +28,11 @@ import { TALISHAR_DISCORD_URL } from 'constants/socialLinks';
 import styles from './LoadReplay.module.css';
 import { GameLocationState } from 'interface/GameLocationState';
 import PageBanner from 'components/PageBanner/PageBanner';
-import AdRailLayout from 'components/ads/AdRailLayout';
+import useAdScript from 'hooks/useAdScript';
+import useSupporterStatus from 'hooks/useSupporterStatus';
 import { Link } from 'react-router-dom';
 import { Trans, useTranslation } from 'react-i18next';
+import { generateCroppedImageUrl } from 'utils/cropImages';
 
 interface PreparedSnapshot {
   snapshotNumber: number;
@@ -37,46 +44,72 @@ interface PreparedSnapshot {
 
 const LoadReplay = () => {
   const { t } = useTranslation();
+  const { showAds } = useSupporterStatus();
+  useAdScript(showAds);
   return (
     <main className={styles.pageWrapper}>
       <PageBanner
         title={t('PAGES.REPLAY_TOOL')}
         subtitle={t('LOAD_REPLAY.SUBTITLE')}
       />
-      <AdRailLayout>
-        <article className={styles.articleContainer}>
-          <ReplayGame />
-          <div className={styles.betaDisclaimer}>
-            <strong>{t('LOAD_REPLAY.BETA_TITLE')}</strong>
-            <p>
-              <Trans
-                i18nKey="LOAD_REPLAY.BETA_BODY"
-                components={{
-                  2: (
-                    <a
-                      href={TALISHAR_DISCORD_URL}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    />
-                  ),
-                  6: <span className={styles.betaDisclaimerHighlight} />,
-                  10: <span className={styles.betaDisclaimerHighlight} />
-                }}
-              />
-            </p>
-            <p>{t('LOAD_REPLAY.BETA_NOTE')}</p>
-            <p>
-              <Trans
-                i18nKey="LOAD_REPLAY.SUPPORTER_INFO"
-                components={{ 2: <Link to="/premium" /> }}
-              />
-            </p>
-          </div>
-        </article>
-      </AdRailLayout>
+      <article className={styles.articleContainer}>
+        <ReplayGame />
+        <div className={styles.betaDisclaimer}>
+          <strong>{t('LOAD_REPLAY.BETA_TITLE')}</strong>
+          <p>
+            <Trans
+              i18nKey="LOAD_REPLAY.BETA_BODY"
+              components={{
+                2: (
+                  <a
+                    href={TALISHAR_DISCORD_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  />
+                ),
+                6: <span className={styles.betaDisclaimerHighlight} />,
+                10: <span className={styles.betaDisclaimerHighlight} />
+              }}
+            />
+          </p>
+          <p>{t('LOAD_REPLAY.BETA_NOTE')}</p>
+          <p>
+            <Trans
+              i18nKey="LOAD_REPLAY.SUPPORTER_INFO"
+              components={{ 2: <Link to="/premium" /> }}
+            />
+          </p>
+        </div>
+      </article>
     </main>
   );
 };
+
+type SaveFilter = 'all' | 'replays' | 'snapshots' | 'favorites';
+type SaveView = 'cards' | 'list';
+
+const SAVE_VIEW_KEY = 'talishar_replay_view_v1';
+const UNKNOWN_HERO_CROP = generateCroppedImageUrl('UNKNOWNHERO');
+
+const readSaveView = (): SaveView => {
+  try {
+    return localStorage.getItem(SAVE_VIEW_KEY) === 'list' ? 'list' : 'cards';
+  } catch {
+    return 'cards';
+  }
+};
+
+const HeroCrop = ({ heroId }: { heroId: string }) => (
+  <img
+    src={heroId ? generateCroppedImageUrl(heroId) : UNKNOWN_HERO_CROP}
+    alt=""
+    loading="lazy"
+    onError={(event) => {
+      const image = event.currentTarget;
+      if (image.src !== UNKNOWN_HERO_CROP) image.src = UNKNOWN_HERO_CROP;
+    }}
+  />
+);
 
 const ReplaySlotMeter = ({
   savedReplayData
@@ -87,46 +120,61 @@ const ReplaySlotMeter = ({
   const maxSlots = savedReplayData.maxSlots ?? 0;
   if (maxSlots <= 0) return null;
 
-  const favoriteSlots = Math.min(savedReplayData.favoriteSlots ?? 0, maxSlots);
-  const freeSlots = Math.max(maxSlots - favoriteSlots, 0);
+  const usedSlots = Math.min(
+    savedReplayData.usedSlots ?? savedReplayData.replays.length,
+    maxSlots
+  );
+  const favoriteSlots = Math.min(savedReplayData.favoriteSlots ?? 0, usedSlots);
+  const otherSlots = usedSlots - favoriteSlots;
+  const freeSlots = maxSlots - usedSlots;
   const canUpgrade = savedReplayData.nextSlotTier !== null;
+  const usedLabel = t('LOAD_REPLAY.STORAGE_USED', {
+    used: usedSlots,
+    max: maxSlots
+  });
 
   return (
     <div className={styles.slotMeter}>
       <div className={styles.slotMeterHeader}>
-        <span className={styles.slotMeterCount}>
-          {t('LOAD_REPLAY.SLOTS_USED', { used: favoriteSlots, max: maxSlots })}
-        </span>
-        <span className={styles.slotMeterBreakdown}>
-          {t('LOAD_REPLAY.SLOTS_FREE', { count: freeSlots })}
-        </span>
-      </div>
-      <div
-        className={styles.slotTrack}
-        role="img"
-        aria-label={t('LOAD_REPLAY.SLOTS_USED', {
-          used: favoriteSlots,
-          max: maxSlots
-        })}
-      >
-        {Array.from({ length: maxSlots }, (_, index) => (
-          <span
-            key={index}
-            className={`${styles.slotSegment} ${
-              index < favoriteSlots ? styles.slotSegmentFavorite : ''
-            }`}
-          />
-        ))}
-      </div>
-      <p className={styles.slotMeterNote}>
-        {freeSlots === 0
-          ? t('LOAD_REPLAY.SLOTS_FULL')
-          : t('LOAD_REPLAY.SLOTS_AVAILABLE', { count: freeSlots })}{' '}
+        <span className={styles.slotMeterCount}>{usedLabel}</span>
         {canUpgrade && (
           <Link to="/premium" className={styles.slotUpgradeLink}>
             {t('LOAD_REPLAY.SLOTS_UPGRADE')}
           </Link>
         )}
+      </div>
+      <div className={styles.slotTrack} role="img" aria-label={usedLabel}>
+        {Array.from({ length: maxSlots }, (_, index) => (
+          <span
+            key={index}
+            className={`${styles.slotSegment} ${
+              index < favoriteSlots
+                ? styles.slotSegmentFavorite
+                : index < usedSlots
+                ? styles.slotSegmentUsed
+                : ''
+            }`}
+          />
+        ))}
+      </div>
+      <div className={styles.slotLegend}>
+        <span>
+          <i className={styles.slotSegmentFavorite} />
+          {t('LOAD_REPLAY.STORAGE_FAVORITES', { count: favoriteSlots })}
+        </span>
+        <span>
+          <i className={styles.slotSegmentUsed} />
+          {t('LOAD_REPLAY.STORAGE_OTHER', { count: otherSlots })}
+        </span>
+        <span>
+          <i />
+          {t('LOAD_REPLAY.SLOTS_FREE', { count: freeSlots })}
+        </span>
+      </div>
+      <p className={styles.slotMeterNote}>
+        {favoriteSlots === maxSlots
+          ? t('LOAD_REPLAY.STORAGE_ALL_FAVORITES')
+          : t('LOAD_REPLAY.STORAGE_NOTE')}
       </p>
     </div>
   );
@@ -150,6 +198,9 @@ const ReplayGame = () => {
     useState<PreparedSnapshot | null>(null);
   const { data: savedReplayData, isLoading: isLoadingSavedReplays } =
     useGetSavedReplaysQuery();
+  const [saveFilter, setSaveFilter] = useState<SaveFilter>('all');
+  const [saveView, setSaveView] = useState<SaveView>(readSaveView);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const {
     formState: { isSubmitting, errors },
@@ -233,8 +284,61 @@ const ReplayGame = () => {
 
   const isLoadingReplay = isSubmitting || loadReplayResult.isLoading;
   const savedReplays = savedReplayData?.replays ?? [];
-  const snapshots = savedReplays.filter((entry) => entry.type === 'snapshot');
-  const replays = savedReplays.filter((entry) => entry.type !== 'snapshot');
+  const saveCounts: Record<SaveFilter, number> = {
+    all: savedReplays.length,
+    replays: savedReplays.filter((entry) => entry.type !== 'snapshot').length,
+    snapshots: savedReplays.filter((entry) => entry.type === 'snapshot').length,
+    favorites: savedReplays.filter((entry) => entry.favorite).length
+  };
+  const saveFilterLabels: Record<SaveFilter, string> = {
+    all: t('LOAD_REPLAY.FILTER_ALL'),
+    replays: t('LOAD_REPLAY.FILTER_REPLAYS'),
+    snapshots: t('LOAD_REPLAY.FILTER_SNAPSHOTS'),
+    favorites: t('LOAD_REPLAY.FILTER_FAVORITES')
+  };
+  const removedNextNumber =
+    (savedReplayData?.maxSlots ?? 0) > 0
+      ? savedReplays
+          .filter((entry) => !entry.favorite)
+          .reduce<number | null>(
+            (oldest, entry) =>
+              oldest === null || entry.replayNumber < oldest
+                ? entry.replayNumber
+                : oldest,
+            null
+          )
+      : null;
+  const normalizedQuery = searchQuery.trim().toLowerCase();
+  const visibleSaves = savedReplays.filter((entry) => {
+    if (saveFilter === 'replays' && entry.type === 'snapshot') return false;
+    if (saveFilter === 'snapshots' && entry.type !== 'snapshot') return false;
+    if (saveFilter === 'favorites' && !entry.favorite) return false;
+    if (!normalizedQuery) return true;
+    return [
+      entry.p1DisplayName,
+      entry.p2DisplayName,
+      entry.p1HeroName,
+      entry.p2HeroName
+    ].some((value) => value.toLowerCase().includes(normalizedQuery));
+  });
+  const emptySavesMessage =
+    savedReplays.length === 0
+      ? t('LOAD_REPLAY.NO_SAVES')
+      : normalizedQuery
+      ? t('LOAD_REPLAY.NO_MATCHES')
+      : saveFilter === 'replays'
+      ? t('LOAD_REPLAY.NO_SAVED_REPLAYS')
+      : saveFilter === 'snapshots'
+      ? t('LOAD_REPLAY.NO_SNAPSHOTS')
+      : t('LOAD_REPLAY.NO_FAVORITES');
+  const changeSaveView = (view: SaveView) => {
+    setSaveView(view);
+    try {
+      localStorage.setItem(SAVE_VIEW_KEY, view);
+    } catch {
+      // The layout choice is a convenience; it still applies for this visit.
+    }
+  };
   const startSnapshot = async (snapshot: SavedReplay) => {
     if (preparedSnapshot?.snapshotNumber === snapshot.replayNumber) return;
     try {
@@ -388,150 +492,149 @@ const ReplayGame = () => {
     }
   };
 
+  const renderSave = (entry: SavedReplay) => {
+    const isSnapshot = entry.type === 'snapshot';
+    const isList = saveView === 'list';
+    const numberLabel = t(
+      isSnapshot ? 'LOAD_REPLAY.SNAPSHOT_NUMBER' : 'LOAD_REPLAY.REPLAY_NUMBER',
+      { number: entry.replayNumber }
+    );
+    const heroes = heroLabel(entry);
+    const favoriteButton = (
+      <button
+        type="button"
+        className={`${styles.favoriteButton} ${
+          entry.favorite ? styles.favoriteActive : ''
+        }`}
+        onClick={() => toggleFavorite(entry)}
+        disabled={isUpdatingFavorite}
+        aria-label={`${entry.favorite ? 'Remove' : 'Add'} ${numberLabel} ${
+          entry.favorite ? 'from' : 'to'
+        } favorites`}
+        aria-pressed={entry.favorite}
+        title={
+          entry.favorite
+            ? 'Remove from favorites'
+            : isSnapshot
+            ? 'Keep this snapshot'
+            : 'Keep this replay'
+        }
+      >
+        {entry.favorite ? <FaStar /> : <FaRegStar />}
+      </button>
+    );
+
+    return (
+      <article
+        key={entry.replayNumber}
+        className={isList ? styles.saveRow : styles.saveCard}
+      >
+        {isList ? (
+          <div className={styles.rowPortraits} aria-hidden="true">
+            <HeroCrop heroId={entry.p1HeroCardId} />
+            <HeroCrop heroId={entry.p2HeroCardId} />
+          </div>
+        ) : (
+          <div className={styles.matchupArt} aria-hidden="true">
+            <HeroCrop heroId={entry.p1HeroCardId} />
+            <HeroCrop heroId={entry.p2HeroCardId} />
+            <span className={styles.versus}>VS</span>
+          </div>
+        )}
+        <div className={styles.saveInfo}>
+          <div className={styles.saveTitleRow}>
+            <span className={styles.replayNumber}>{numberLabel}</span>
+            {entry.replayNumber === removedNextNumber && (
+              <span className={styles.removedNext}>
+                {t('LOAD_REPLAY.REMOVED_NEXT')}
+              </span>
+            )}
+            {!isList && favoriteButton}
+          </div>
+          <span className={styles.replayPlayers} title={replayLabel(entry)}>
+            {replayLabel(entry)}
+          </span>
+          {heroes && (
+            <span className={styles.replayHeroes} title={heroes}>
+              {heroes}
+            </span>
+          )}
+          <span className={styles.replaySavedAt}>{savedAtLabel(entry)}</span>
+        </div>
+        <div className={styles.saveActions}>
+          <button
+            type="button"
+            className={styles.openButton}
+            onClick={() =>
+              isSnapshot
+                ? startSnapshot(entry)
+                : onSubmit({ replayNumber: entry.replayNumber })
+            }
+            disabled={isSnapshot ? isStartingSnapshot : isLoadingReplay}
+          >
+            <FaPlay aria-hidden="true" />
+            {isSnapshot ? t('LOAD_REPLAY.START_GAME') : t('LOAD_REPLAY.WATCH')}
+          </button>
+          {isList && favoriteButton}
+          <button
+            type="button"
+            className={styles.shareButton}
+            onClick={() =>
+              isSnapshot ? startSnapshot(entry) : shareSavedReplay(entry)
+            }
+            disabled={isSnapshot ? isStartingSnapshot : isSharing}
+            aria-label={
+              isSnapshot
+                ? t('LOAD_REPLAY.SHARE_SNAPSHOT_ARIA', {
+                    number: entry.replayNumber
+                  })
+                : `Copy a shareable link for Replay #${entry.replayNumber}`
+            }
+            title={
+              isSnapshot
+                ? t('LOAD_REPLAY.SHARE_SNAPSHOT')
+                : t('LOAD_REPLAY.COPY_SHAREABLE_LINK')
+            }
+          >
+            <MdShare />
+          </button>
+          <button
+            type="button"
+            className={styles.deleteButton}
+            onClick={() => deleteSavedReplay(entry)}
+            disabled={deletingReplayNumber !== null}
+            aria-label={
+              isSnapshot
+                ? t('LOAD_REPLAY.DELETE_SNAPSHOT_ARIA', {
+                    number: entry.replayNumber
+                  })
+                : t('LOAD_REPLAY.DELETE_ARIA_LABEL', {
+                    number: entry.replayNumber
+                  })
+            }
+            title={
+              isSnapshot
+                ? t('LOAD_REPLAY.DELETE_SNAPSHOT')
+                : t('LOAD_REPLAY.DELETE_REPLAY')
+            }
+          >
+            <MdDeleteOutline />
+          </button>
+        </div>
+      </article>
+    );
+  };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.replayForm}>
-      <section
-        className={styles.savedReplays}
-        aria-labelledby="saved-snapshots-heading"
-      >
-        <div className={styles.savedReplaysHeader}>
-          <div>
-            <h2 id="saved-snapshots-heading">
-              {t('LOAD_REPLAY.SNAPSHOTS_TITLE')}
-            </h2>
-            <p>{t('LOAD_REPLAY.SNAPSHOTS_SUBTITLE')}</p>
-            <p className={styles.favoriteExplanation}>
-              {t('LOAD_REPLAY.SNAPSHOTS_TWO_TABS')}
-            </p>
-          </div>
-        </div>
-        {savedReplayData?.loggedIn === false ? (
-          <p className={styles.emptyReplays}>
-            {t('LOAD_REPLAY.SIGN_IN_TO_VIEW')}
-          </p>
-        ) : !isLoadingSavedReplays && snapshots.length === 0 ? (
-          <p className={styles.emptyReplays}>{t('LOAD_REPLAY.NO_SNAPSHOTS')}</p>
-        ) : (
-          <div className={styles.replayList}>
-            {snapshots.map((snapshot) => (
-              <article
-                key={snapshot.replayNumber}
-                className={styles.replayCard}
-              >
-                <button
-                  type="button"
-                  className={styles.replayCardMain}
-                  onClick={() => startSnapshot(snapshot)}
-                  disabled={isStartingSnapshot}
-                >
-                  <span className={styles.replayNumber}>
-                    {t('LOAD_REPLAY.SNAPSHOT_NUMBER', {
-                      number: snapshot.replayNumber
-                    })}
-                  </span>
-                  <span className={styles.replayPlayers}>
-                    {replayLabel(snapshot)}
-                  </span>
-                  {heroLabel(snapshot) && (
-                    <span className={styles.replayHeroes}>
-                      {heroLabel(snapshot)}
-                    </span>
-                  )}
-                  <span className={styles.replaySavedAt}>
-                    {savedAtLabel(snapshot)}
-                  </span>
-                </button>
-                <button
-                  type="button"
-                  className={`${styles.favoriteButton} ${
-                    snapshot.favorite ? styles.favoriteActive : ''
-                  }`}
-                  onClick={() => toggleFavorite(snapshot)}
-                  disabled={isUpdatingFavorite}
-                  aria-label={`${
-                    snapshot.favorite ? 'Remove' : 'Add'
-                  } Snapshot #${snapshot.replayNumber} ${
-                    snapshot.favorite ? 'from' : 'to'
-                  } favorites`}
-                  aria-pressed={snapshot.favorite}
-                  title={
-                    snapshot.favorite
-                      ? 'Remove from favorites'
-                      : 'Keep this snapshot'
-                  }
-                >
-                  {snapshot.favorite ? <FaStar /> : <FaRegStar />}
-                </button>
-                <button
-                  type="button"
-                  className={styles.shareButton}
-                  onClick={() => startSnapshot(snapshot)}
-                  disabled={isStartingSnapshot}
-                  aria-label={t('LOAD_REPLAY.SHARE_SNAPSHOT_ARIA', {
-                    number: snapshot.replayNumber
-                  })}
-                  title={t('LOAD_REPLAY.SHARE_SNAPSHOT')}
-                >
-                  <MdShare />
-                </button>
-                <button
-                  type="button"
-                  className={styles.deleteButton}
-                  onClick={() => deleteSavedReplay(snapshot)}
-                  disabled={deletingReplayNumber !== null}
-                  aria-label={t('LOAD_REPLAY.DELETE_SNAPSHOT_ARIA', {
-                    number: snapshot.replayNumber
-                  })}
-                  title={t('LOAD_REPLAY.DELETE_SNAPSHOT')}
-                >
-                  <MdDeleteOutline />
-                </button>
-              </article>
-            ))}
-          </div>
-        )}
-        {preparedSnapshot && (
-          <div className={styles.snapshotInvitePanel} role="status">
-            <h3>
-              {t('LOAD_REPLAY.SNAPSHOT_INVITE_READY', {
-                number: preparedSnapshot.snapshotNumber
-              })}
-            </h3>
-            <p>{t('LOAD_REPLAY.SNAPSHOT_INVITE_HELP')}</p>
-            <div className={styles.snapshotInviteRow}>
-              <input
-                aria-label={t('LOAD_REPLAY.SNAPSHOT_INVITE_LABEL')}
-                value={preparedSnapshot.inviteUrl}
-                readOnly
-                onFocus={(event) => event.currentTarget.select()}
-              />
-              <button
-                type="button"
-                className={styles.snapshotCopyButton}
-                onClick={copySnapshotInvite}
-              >
-                {t('LOAD_REPLAY.SNAPSHOT_COPY_LINK')}
-              </button>
-              <button type="button" onClick={openSnapshotSeat}>
-                {t('LOAD_REPLAY.SNAPSHOT_OPEN_SEAT')}
-              </button>
-            </div>
-          </div>
-        )}
-      </section>
       <section
         className={styles.savedReplays}
         aria-labelledby="saved-replays-heading"
       >
         <div className={styles.savedReplaysHeader}>
           <div>
-            <h2 id="saved-replays-heading">
-              {t('LOAD_REPLAY.SAVED_REPLAYS_TITLE')}
-            </h2>
-            <p>{t('LOAD_REPLAY.SAVED_REPLAYS_SUBTITLE')}</p>
-            <p className={styles.favoriteExplanation}>
-              {t('LOAD_REPLAY.FAVORITES_EXPLANATION')}
-            </p>
+            <h2 id="saved-replays-heading">{t('LOAD_REPLAY.SAVES_TITLE')}</h2>
+            <p>{t('LOAD_REPLAY.SAVES_SUBTITLE')}</p>
           </div>
           {isLoadingSavedReplays && (
             <span className={styles.replaysStatus}>
@@ -539,90 +642,121 @@ const ReplayGame = () => {
             </span>
           )}
         </div>
-        {savedReplayData?.loggedIn && (
-          <ReplaySlotMeter savedReplayData={savedReplayData} />
-        )}
         {savedReplayData?.loggedIn === false ? (
           <p className={styles.emptyReplays}>
             {t('LOAD_REPLAY.SIGN_IN_TO_VIEW')}
           </p>
-        ) : !isLoadingSavedReplays && replays.length === 0 ? (
-          <p className={styles.emptyReplays}>
-            {t('LOAD_REPLAY.NO_SAVED_REPLAYS')}
-          </p>
         ) : (
-          <div className={styles.replayList}>
-            {replays.map((replay: SavedReplay) => (
-              <article key={replay.replayNumber} className={styles.replayCard}>
-                <button
-                  type="button"
-                  className={styles.replayCardMain}
-                  onClick={() =>
-                    onSubmit({ replayNumber: replay.replayNumber })
-                  }
-                  disabled={isLoadingReplay}
-                >
-                  <span className={styles.replayNumber}>
-                    {t('LOAD_REPLAY.REPLAY_NUMBER', {
-                      number: replay.replayNumber
-                    })}
-                  </span>
-                  <span className={styles.replayPlayers}>
-                    {replayLabel(replay)}
-                  </span>
-                  {heroLabel(replay) && (
-                    <span className={styles.replayHeroes}>
-                      {heroLabel(replay)}
-                    </span>
-                  )}
-                  <span className={styles.replaySavedAt}>
-                    {savedAtLabel(replay)}
-                  </span>
-                </button>
-                <button
-                  type="button"
-                  className={`${styles.favoriteButton} ${
-                    replay.favorite ? styles.favoriteActive : ''
-                  }`}
-                  onClick={() => toggleFavorite(replay)}
-                  disabled={isUpdatingFavorite}
-                  aria-label={`${replay.favorite ? 'Remove' : 'Add'} Replay #${
-                    replay.replayNumber
-                  } ${replay.favorite ? 'from' : 'to'} favorites`}
-                  aria-pressed={replay.favorite}
-                  title={
-                    replay.favorite
-                      ? 'Remove from favorites'
-                      : 'Keep this replay'
-                  }
-                >
-                  {replay.favorite ? <FaStar /> : <FaRegStar />}
-                </button>
-                <button
-                  type="button"
-                  className={styles.shareButton}
-                  onClick={() => shareSavedReplay(replay)}
-                  disabled={isSharing}
-                  aria-label={`Copy a shareable link for Replay #${replay.replayNumber}`}
-                  title={t('LOAD_REPLAY.COPY_SHAREABLE_LINK')}
-                >
-                  <MdShare />
-                </button>
-                <button
-                  type="button"
-                  className={styles.deleteButton}
-                  onClick={() => deleteSavedReplay(replay)}
-                  disabled={deletingReplayNumber !== null}
-                  aria-label={t('LOAD_REPLAY.DELETE_ARIA_LABEL', {
-                    number: replay.replayNumber
+          <>
+            {savedReplayData?.loggedIn && (
+              <ReplaySlotMeter savedReplayData={savedReplayData} />
+            )}
+            {preparedSnapshot && (
+              <div className={styles.snapshotInvitePanel} role="status">
+                <h3>
+                  {t('LOAD_REPLAY.SNAPSHOT_INVITE_READY', {
+                    number: preparedSnapshot.snapshotNumber
                   })}
-                  title={t('LOAD_REPLAY.DELETE_REPLAY')}
+                </h3>
+                <p>
+                  {t('LOAD_REPLAY.SNAPSHOT_INVITE_HELP')}{' '}
+                  {t('LOAD_REPLAY.SNAPSHOTS_TWO_TABS')}
+                </p>
+                <div className={styles.snapshotInviteRow}>
+                  <input
+                    aria-label={t('LOAD_REPLAY.SNAPSHOT_INVITE_LABEL')}
+                    value={preparedSnapshot.inviteUrl}
+                    readOnly
+                    onFocus={(event) => event.currentTarget.select()}
+                  />
+                  <button
+                    type="button"
+                    className={styles.snapshotCopyButton}
+                    onClick={copySnapshotInvite}
+                  >
+                    {t('LOAD_REPLAY.SNAPSHOT_COPY_LINK')}
+                  </button>
+                  <button type="button" onClick={openSnapshotSeat}>
+                    {t('LOAD_REPLAY.SNAPSHOT_OPEN_SEAT')}
+                  </button>
+                </div>
+              </div>
+            )}
+            <div className={styles.saveToolbar}>
+              <div
+                className={styles.segmented}
+                role="group"
+                aria-label={t('LOAD_REPLAY.FILTER_LABEL')}
+              >
+                {(
+                  ['all', 'replays', 'snapshots', 'favorites'] as SaveFilter[]
+                ).map((value) => (
+                  <button
+                    key={value}
+                    type="button"
+                    aria-pressed={saveFilter === value}
+                    onClick={() => setSaveFilter(value)}
+                    className={saveFilter === value ? styles.activeSegment : ''}
+                  >
+                    {saveFilterLabels[value]}
+                    <span className={styles.segmentCount}>
+                      {saveCounts[value]}
+                    </span>
+                  </button>
+                ))}
+              </div>
+              <div className={styles.saveToolbarEnd}>
+                <input
+                  type="search"
+                  className={styles.saveSearch}
+                  value={searchQuery}
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') event.preventDefault();
+                  }}
+                  placeholder={t('LOAD_REPLAY.SEARCH_PLACEHOLDER')}
+                  aria-label={t('LOAD_REPLAY.SEARCH_LABEL')}
+                />
+                <div
+                  className={styles.segmented}
+                  role="group"
+                  aria-label={t('LOAD_REPLAY.VIEW_LABEL')}
                 >
-                  <MdDeleteOutline />
-                </button>
-              </article>
-            ))}
-          </div>
+                  <button
+                    type="button"
+                    aria-pressed={saveView === 'cards'}
+                    onClick={() => changeSaveView('cards')}
+                    className={saveView === 'cards' ? styles.activeSegment : ''}
+                    aria-label={t('LOAD_REPLAY.VIEW_CARDS')}
+                    title={t('LOAD_REPLAY.VIEW_CARDS')}
+                  >
+                    <MdGridView aria-hidden="true" />
+                  </button>
+                  <button
+                    type="button"
+                    aria-pressed={saveView === 'list'}
+                    onClick={() => changeSaveView('list')}
+                    className={saveView === 'list' ? styles.activeSegment : ''}
+                    aria-label={t('LOAD_REPLAY.VIEW_LIST')}
+                    title={t('LOAD_REPLAY.VIEW_LIST')}
+                  >
+                    <MdViewList aria-hidden="true" />
+                  </button>
+                </div>
+              </div>
+            </div>
+            {!isLoadingSavedReplays && visibleSaves.length === 0 ? (
+              <p className={styles.emptyReplays}>{emptySavesMessage}</p>
+            ) : (
+              <div
+                className={
+                  saveView === 'list' ? styles.saveList : styles.replayList
+                }
+              >
+                {visibleSaves.map(renderSave)}
+              </div>
+            )}
+          </>
         )}
       </section>
 
