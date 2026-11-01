@@ -4,15 +4,32 @@ import { useTranslation } from 'react-i18next';
 import { useGetBlockReportsQuery } from 'features/api/apiSlice';
 import {
   MODERATION_REASONS,
-  MODERATION_REASON_LABEL_KEYS
+  MODERATION_REASON_LABEL_KEYS,
+  ModerationReason
 } from 'interface/API/ModerationAPI';
+import { BlockReportPlayer } from 'interface/API/BlockedUsersAPI.php';
 import tableStyles from './ModTable.module.css';
 import styles from './BlockReports.module.css';
 import useWarnPlayer from './useWarnPlayer';
 import useBanPlayer from './useBanPlayer';
+import { SortColumn, SortHeader, useTableSort } from './SortableTable';
 
 export const DAY_OPTIONS = [30, 90, 365];
 const MIN_BLOCK_OPTIONS = [1, 2, 3, 5, 10];
+
+type SortKey = 'player' | 'blocks' | ModerationReason | 'lastBlocked';
+
+const SORT_COLUMNS: Record<SortKey, SortColumn<BlockReportPlayer>> = {
+  player: { value: (row) => row.displayName, ascendingFirst: true },
+  blocks: { value: (row) => row.blockCount },
+  rude: { value: (row) => row.reasonCounts.rude },
+  insulting: { value: (row) => row.reasonCounts.insulting },
+  unsporting: { value: (row) => row.reasonCounts.unsporting },
+  other: { value: (row) => row.reasonCounts.other },
+  lastBlocked: { value: (row) => row.lastBlockedAt }
+};
+
+const NO_PLAYERS: BlockReportPlayer[] = [];
 
 const BlockReports: React.FC = () => {
   const { t } = useTranslation();
@@ -27,7 +44,11 @@ const BlockReports: React.FC = () => {
   const { warn, isWarning } = useWarnPlayer();
   const { ban, isBanning } = useBanPlayer();
 
-  const players = data?.players ?? [];
+  const {
+    sortedRows: players,
+    sort,
+    toggleSort
+  } = useTableSort(data?.players ?? NO_PLAYERS, SORT_COLUMNS);
 
   const toggleExpanded = (usersId: number) => {
     const next = new Set(expanded);
@@ -96,16 +117,26 @@ const BlockReports: React.FC = () => {
           <table className={tableStyles.table}>
             <thead>
               <tr>
-                <th>{t('BLOCK_REPORTS.PLAYER')}</th>
-                <th className={tableStyles.numeric}>
+                <SortHeader id="player" sort={sort} onSort={toggleSort}>
+                  {t('BLOCK_REPORTS.PLAYER')}
+                </SortHeader>
+                <SortHeader id="blocks" sort={sort} onSort={toggleSort} numeric>
                   {t('BLOCK_REPORTS.BLOCKS')}
-                </th>
+                </SortHeader>
                 {MODERATION_REASONS.map((reason) => (
-                  <th key={reason} className={tableStyles.numeric}>
+                  <SortHeader
+                    key={reason}
+                    id={reason}
+                    sort={sort}
+                    onSort={toggleSort}
+                    numeric
+                  >
                     {t(MODERATION_REASON_LABEL_KEYS[reason])}
-                  </th>
+                  </SortHeader>
                 ))}
-                <th>{t('BLOCK_REPORTS.LAST_BLOCKED')}</th>
+                <SortHeader id="lastBlocked" sort={sort} onSort={toggleSort}>
+                  {t('BLOCK_REPORTS.LAST_BLOCKED')}
+                </SortHeader>
                 <th>{t('BLOCK_REPORTS.ACTIONS')}</th>
               </tr>
             </thead>

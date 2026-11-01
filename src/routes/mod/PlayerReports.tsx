@@ -7,6 +7,7 @@ import {
   useGetPlayerReportsQuery
 } from 'features/api/apiSlice';
 import {
+  MODERATION_REASONS,
   MODERATION_REASON_LABEL_KEYS,
   PlayerReport
 } from 'interface/API/ModerationAPI';
@@ -15,6 +16,23 @@ import styles from './BlockReports.module.css';
 import { DAY_OPTIONS } from './BlockReports';
 import useWarnPlayer from './useWarnPlayer';
 import useBanPlayer from './useBanPlayer';
+import { SortColumn, SortHeader, useTableSort } from './SortableTable';
+
+type SortKey = 'date' | 'reported' | 'reporter' | 'reason' | 'game';
+
+const SORT_COLUMNS: Record<SortKey, SortColumn<PlayerReport>> = {
+  date: { value: (row) => row.createdAt },
+  reported: { value: (row) => row.reportedName, ascendingFirst: true },
+  reporter: { value: (row) => row.reporterName, ascendingFirst: true },
+  reason: {
+    value: (row) =>
+      row.reason ? MODERATION_REASONS.indexOf(row.reason) : null,
+    ascendingFirst: true
+  },
+  game: { value: (row) => Number(row.gameName) }
+};
+
+const NO_REPORTS: PlayerReport[] = [];
 
 const PlayerReports: React.FC = () => {
   const { t } = useTranslation();
@@ -51,7 +69,11 @@ const PlayerReports: React.FC = () => {
     }
   };
 
-  const reports = data?.reports ?? [];
+  const {
+    sortedRows: reports,
+    sort,
+    toggleSort
+  } = useTableSort(data?.reports ?? NO_REPORTS, SORT_COLUMNS);
 
   return (
     <section className={tableStyles.panel}>
@@ -99,12 +121,22 @@ const PlayerReports: React.FC = () => {
           <table className={tableStyles.table}>
             <thead>
               <tr>
-                <th>{t('PLAYER_REPORTS.DATE')}</th>
-                <th>{t('PLAYER_REPORTS.REPORTED')}</th>
-                <th>{t('PLAYER_REPORTS.REPORTER')}</th>
-                <th>{t('PLAYER_REPORTS.REASON')}</th>
+                <SortHeader id="date" sort={sort} onSort={toggleSort}>
+                  {t('PLAYER_REPORTS.DATE')}
+                </SortHeader>
+                <SortHeader id="reported" sort={sort} onSort={toggleSort}>
+                  {t('PLAYER_REPORTS.REPORTED')}
+                </SortHeader>
+                <SortHeader id="reporter" sort={sort} onSort={toggleSort}>
+                  {t('PLAYER_REPORTS.REPORTER')}
+                </SortHeader>
+                <SortHeader id="reason" sort={sort} onSort={toggleSort}>
+                  {t('PLAYER_REPORTS.REASON')}
+                </SortHeader>
                 <th>{t('PLAYER_REPORTS.NOTE')}</th>
-                <th>{t('PLAYER_REPORTS.GAME')}</th>
+                <SortHeader id="game" sort={sort} onSort={toggleSort}>
+                  {t('PLAYER_REPORTS.GAME')}
+                </SortHeader>
                 <th>{t('BLOCK_REPORTS.ACTIONS')}</th>
               </tr>
             </thead>
