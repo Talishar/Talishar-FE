@@ -54,32 +54,6 @@ const LoadReplay = () => {
       />
       <article className={styles.articleContainer}>
         <ReplayGame />
-        <div className={styles.betaDisclaimer}>
-          <strong>{t('LOAD_REPLAY.BETA_TITLE')}</strong>
-          <p>
-            <Trans
-              i18nKey="LOAD_REPLAY.BETA_BODY"
-              components={{
-                2: (
-                  <a
-                    href={TALISHAR_DISCORD_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  />
-                ),
-                6: <span className={styles.betaDisclaimerHighlight} />,
-                10: <span className={styles.betaDisclaimerHighlight} />
-              }}
-            />
-          </p>
-          <p>{t('LOAD_REPLAY.BETA_NOTE')}</p>
-          <p>
-            <Trans
-              i18nKey="LOAD_REPLAY.SUPPORTER_INFO"
-              components={{ 2: <Link to="/premium" /> }}
-            />
-          </p>
-        </div>
       </article>
     </main>
   );

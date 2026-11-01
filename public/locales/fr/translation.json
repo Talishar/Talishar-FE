@@ -818,9 +818,6 @@
     "NETWORK_ERROR": "Erreur réseau de connexion Patreon :\n{{error}}"
   },
   "LOAD_REPLAY": {
-    "BETA_BODY": "L'outil Replay est actuellement en version bêta.  <2>#rapports-de-bugs</2> chaîne avec votre <6>Nom d'utilisateur Talishar</6> et <10>numéro de rediffusion</10>.",
-    "BETA_NOTE": "Remarque : les rediffusions que vous enregistrez peuvent cesser de fonctionner de manière aléatoire à mesure que des modifications du moteur sont apportées au cours du développement.",
-    "BETA_TITLE": "⚠️ L'outil Replay est actuellement en version bêta",
     "COPY_SHAREABLE_LINK": "Copier le lien partageable",
     "ENSURE_FILES": "Assurez-vous que les deux fichiers requis existent :",
     "ERROR_LOADING_REPLAY": "⚠️ Erreur lors du chargement de la relecture",
