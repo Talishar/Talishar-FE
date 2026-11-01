@@ -512,7 +512,6 @@ const ReplayGame = () => {
           <div className={styles.matchupArt} aria-hidden="true">
             <HeroCrop heroId={entry.p1HeroCardId} />
             <HeroCrop heroId={entry.p2HeroCardId} />
-            <span className={styles.versus}>VS</span>
           </div>
         )}
         <div className={styles.saveInfo}>
