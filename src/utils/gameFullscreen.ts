@@ -1,7 +1,10 @@
 import { useSyncExternalStore } from 'react';
 import screenfull from 'screenfull';
 
+export const AUTO_LANDSCAPE_COOKIE = 'autoLandscapeMobile';
+
 let gameFullscreenTurnedOff = false;
+let autoLandscapeTurnedOff = false;
 
 export const toggleGameFullscreen = () => {
   gameFullscreenTurnedOff = screenfull.isFullscreen;
@@ -10,8 +13,12 @@ export const toggleGameFullscreen = () => {
 
 export const isGameFullscreenTurnedOff = () => gameFullscreenTurnedOff;
 
+export const isAutoLandscapeTurnedOff = () =>
+  gameFullscreenTurnedOff || autoLandscapeTurnedOff;
+
 export const resetGameFullscreenTurnedOff = () => {
   gameFullscreenTurnedOff = false;
+  autoLandscapeTurnedOff = false;
 };
 
 export const isAppleTouchDevice = () => {
@@ -27,6 +34,7 @@ type LockableScreenOrientation = ScreenOrientation & {
 };
 
 let landscapeLocked = false;
+let landscapeLockPending = false;
 let landscapeLockEnteredFullscreen = false;
 
 const clearLandscapeLock = () => {
@@ -46,6 +54,8 @@ export const canLockLandscape = () =>
 export const isLandscapeLocked = () => landscapeLocked;
 
 export const lockLandscape = async () => {
+  if (landscapeLockPending) return;
+  landscapeLockPending = true;
   const enterFullscreen = !document.fullscreenElement;
   try {
     if (enterFullscreen) await document.documentElement.requestFullscreen();
@@ -56,13 +66,15 @@ export const lockLandscape = async () => {
     landscapeLockEnteredFullscreen = enterFullscreen;
     document.addEventListener('fullscreenchange', clearLandscapeLock);
   } catch {
+    autoLandscapeTurnedOff = true;
     if (enterFullscreen && document.fullscreenElement) {
       document.exitFullscreen().catch(() => undefined);
     }
   }
+  landscapeLockPending = false;
 };
 
-export const unlockLandscape = () => {
+export const releaseLandscapeLock = () => {
   window.screen.orientation.unlock();
   if (landscapeLockEnteredFullscreen) {
     document.exitFullscreen().catch(() => undefined);
@@ -70,6 +82,11 @@ export const unlockLandscape = () => {
   }
   landscapeLocked = false;
   document.removeEventListener('fullscreenchange', clearLandscapeLock);
+};
+
+export const unlockLandscape = () => {
+  autoLandscapeTurnedOff = true;
+  releaseLandscapeLock();
 };
 
 let fanFullscreenWidth = 0;

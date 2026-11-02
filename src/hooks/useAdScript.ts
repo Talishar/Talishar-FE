@@ -229,6 +229,8 @@ const VIDEO_AD_INTERACTIVE_SELECTOR =
 const VIDEO_AD_Z_INDEX = '9999';
 // rev.iq's sticky anchor, appended straight to <body>.
 const STICKY_AD_SELECTOR = '[data-reviq-sticky-ad]';
+const REVIQ_CMP_HOST_SELECTOR = '[data-reviq-cmp="host"]';
+const REVIQ_CMP_STYLE_ATTR = 'data-talishar-reviq-cmp';
 
 interface GptSlotLike {
   getSlotElementId(): string;
@@ -271,6 +273,17 @@ function unlockElementTree(el: HTMLElement) {
   });
 }
 
+function addReviqCmpStyle(el: Element) {
+  const root = el.shadowRoot;
+  if (!root || root.querySelector(`style[${REVIQ_CMP_STYLE_ATTR}]`)) return;
+  const style = document.createElement('style');
+  style.setAttribute(REVIQ_CMP_STYLE_ATTR, '');
+  style.textContent =
+    '[hidden]{display:none!important}' +
+    '[data-reviq-cmp="privacy-link"]{display:none!important}';
+  root.appendChild(style);
+}
+
 function raiseVideoAdElement(el: HTMLElement) {
   // Provider wrappers can cover most or all of the viewport on mobile even
   // when only a small floating player is visible. Keep those transparent
@@ -307,12 +320,72 @@ function removeStickyAd(el: HTMLElement) {
   el.remove();
 }
 
+const TEXT_FIELD_SELECTOR =
+  'input, textarea, [contenteditable]:not([contenteditable="false"])';
+const TYPING_GRACE_MS = 1000;
+
+let blurredField: HTMLElement | null = null;
+let lastKeyAt = 0;
+let hoverQuery: MediaQueryList | undefined;
+
+function onKeyDown() {
+  lastKeyAt = Date.now();
+}
+
+function onFocusIn(event: FocusEvent) {
+  if (!(event.target instanceof HTMLIFrameElement)) blurredField = null;
+}
+
+function onFocusOut(event: FocusEvent) {
+  const field = event.target;
+  blurredField =
+    field instanceof HTMLElement && field.matches(TEXT_FIELD_SELECTOR)
+      ? field
+      : null;
+}
+
+function restoreField(field: HTMLElement) {
+  const active = document.activeElement;
+  if (!(active instanceof HTMLIFrameElement) || isReactOwned(active)) return;
+  if (!field.isConnected || blurredField !== field) return;
+  hoverQuery ??= window.matchMedia('(hover: hover)');
+  const typing = Date.now() - lastKeyAt < TYPING_GRACE_MS;
+  if (!typing && !(hoverQuery.matches && !active.matches(':hover'))) return;
+  field.focus({ preventScroll: true });
+}
+
+function onWindowBlur() {
+  const field = blurredField;
+  if (!field) return;
+  window.setTimeout(() => window.setTimeout(() => restoreField(field), 0), 0);
+}
+
+function installFocusGuard() {
+  document.addEventListener('keydown', onKeyDown, true);
+  document.addEventListener('focusin', onFocusIn, true);
+  document.addEventListener('focusout', onFocusOut, true);
+  window.addEventListener('blur', onWindowBlur);
+}
+
+function removeFocusGuard() {
+  document.removeEventListener('keydown', onKeyDown, true);
+  document.removeEventListener('focusin', onFocusIn, true);
+  document.removeEventListener('focusout', onFocusOut, true);
+  window.removeEventListener('blur', onWindowBlur);
+  blurredField = null;
+}
+
 function lockNonRootBodyChildren() {
   if (!document.body) return;
   for (const el of Array.from(document.body.children)) {
     if (el.id === 'root') continue;
     if (isReactPortalEl(el)) continue;
     const h = el as HTMLElement;
+    if (!containedMode && el.matches(REVIQ_CMP_HOST_SELECTOR)) {
+      unlockElementTree(h);
+      addReviqCmpStyle(el);
+      continue;
+    }
     if (isCMPElement(el)) {
       unlockElementTree(h);
       continue;
@@ -383,6 +456,9 @@ export default function useAdScript(
     if (!shouldLoadProvider) {
       removeNavGuard();
       purgeAdElements();
+      document
+        .querySelectorAll(REVIQ_CMP_HOST_SELECTOR)
+        .forEach(addReviqCmpStyle);
 
       const observer = new MutationObserver((mutations) => {
         for (const mutation of mutations) {
@@ -393,6 +469,9 @@ export default function useAdScript(
 
           for (const node of mutation.addedNodes) {
             if (!(node instanceof HTMLElement)) continue;
+            if (node.matches(REVIQ_CMP_HOST_SELECTOR)) {
+              addReviqCmpStyle(node);
+            }
             purgeAdElementOrDescendants(node);
           }
         }
@@ -416,6 +495,7 @@ export default function useAdScript(
     installNavGuard();
     startAdAnalytics();
     installIframeInsertionGuard();
+    installFocusGuard();
 
     if (!document.querySelector('script[src="//js.rev.iq/talishar.net"]')) {
       try {
@@ -491,6 +571,7 @@ export default function useAdScript(
       domGuard.disconnect();
       iframeGuard.disconnect();
       removeNavGuard();
+      removeFocusGuard();
       insertionGuardActive = false;
       containedMode = false;
     };

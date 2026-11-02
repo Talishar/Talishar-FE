@@ -19,7 +19,8 @@ export default function useWarnPlayer() {
       await sendToPlayer({
         username,
         message: message.trim(),
-        expiresInHours: WARNING_EXPIRY_HOURS
+        expiresInHours: WARNING_EXPIRY_HOURS,
+        warning: true
       }).unwrap();
       toast.success(t('BLOCK_REPORTS.WARN_SENT', { username }));
     } catch (err: any) {

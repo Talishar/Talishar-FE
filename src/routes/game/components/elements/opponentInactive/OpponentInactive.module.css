@@ -121,7 +121,8 @@
   cursor: not-allowed;
 }
 
-.stillHereButton {
+.stillHereButton,
+.claimDrawButton {
   width: 100%;
   padding: 0.5rem 1rem;
   background-color: rgba(var(--theme-on-surface-rgb), 0.07);
@@ -138,14 +139,16 @@
   margin-bottom: 0.25rem;
 }
 
-.stillHereButton:hover {
+.stillHereButton:hover,
+.claimDrawButton:hover {
   background-color: rgba(var(--theme-on-surface-rgb), 0.15);
   color: var(--theme-text);
   border-color: rgba(var(--theme-on-surface-rgb), 0.3);
   cursor: pointer;
 }
 
-.stillHereButton:disabled {
+.stillHereButton:disabled,
+.claimDrawButton:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }

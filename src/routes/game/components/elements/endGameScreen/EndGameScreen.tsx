@@ -30,6 +30,8 @@ import { PHONE_LANDSCAPE_QUERY } from 'routes/game/lobby/phoneLandscape';
 import { frameHost } from 'routes/game/play/forcedLayout/forcedLayout';
 
 const END_GAME_OPEN_BODY_CLASS = 'endGameOpen';
+const SUMMARY_REM_PER_EM = 1.25;
+const MIN_SUMMARY_ZOOM = 0.6;
 
 const EndGameScreen = () => {
   const dispatch = useAppDispatch();
@@ -84,7 +86,33 @@ const EndGameScreen = () => {
     document.body.classList.add(END_GAME_OPEN_BODY_CLASS);
     return () => document.body.classList.remove(END_GAME_OPEN_BODY_CLASS);
   }, [showModal, showStats]);
-  const cardListBoxClasses = classNames(styles.cardListBox, {
+  const isNarrow = useMediaQuery('(max-width: 1200px)');
+  const boxRef = useRef<HTMLDivElement>(null);
+  const [summaryZoom, setSummaryZoom] = useState(1);
+  React.useLayoutEffect(() => {
+    const box = boxRef.current;
+    if (!box || isNarrow || isPhoneLandscape) {
+      setSummaryZoom(1);
+      return;
+    }
+    const update = () => {
+      const em = parseFloat(getComputedStyle(box).fontSize);
+      const rem = parseFloat(
+        getComputedStyle(document.documentElement).fontSize
+      );
+      setSummaryZoom(
+        Math.min(1, Math.max(MIN_SUMMARY_ZOOM, (em * SUMMARY_REM_PER_EM) / rem))
+      );
+    };
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(box);
+    return () => observer.disconnect();
+  }, [showModal, isNarrow, isPhoneLandscape]);
+  const cardListBoxStyle =
+    summaryZoom < 1
+      ? ({ '--summary-zoom': summaryZoom } as React.CSSProperties)
+      : undefined;  const cardListBoxClasses = classNames(styles.cardListBox, {
     [styles.reduced]: !showStats
   });
   // Extract heroes from API data first (most reliable source)
@@ -188,7 +216,7 @@ const EndGameScreen = () => {
   };
 
   return (
-    <div className={cardListBoxClasses}>
+    <div className={cardListBoxClasses} style={cardListBoxStyle} ref={boxRef}>
       {showStats && (
         <>
           <div className={styles.cardListTitleContainer}>
@@ -283,7 +311,7 @@ const EndGameScreen = () => {
               </a>
             </div>
           )}
-          {content}
+          <div className={styles.scaled}>{content}</div>
         </>
       )}
       {!showStats && (

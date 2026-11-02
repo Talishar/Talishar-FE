@@ -82,6 +82,7 @@ export interface CardProp {
   showCountersOnHover?: boolean;
   disableTilt?: boolean;
   highlightSubtype?: boolean; // draws a subtype outline (used to pick Allies out of a graveyard list)
+  playable?: boolean; // hover lift and chartreuse glow regardless of border color
   previewYOffset?: number;
   gemStackIDs?: string[]; // every identical permanent in this stack, so the gem toggles all of them
   children?: React.ReactNode;
@@ -98,6 +99,7 @@ export const CardDisplay = (prop: CardProp) => {
     showCountersOnHover,
     disableTilt,
     highlightSubtype,
+    playable,
     previewYOffset,
     containerClassName,
     gemStackIDs,
@@ -180,7 +182,7 @@ export const CardDisplay = (prop: CardProp) => {
     {
       [styles.biggerSize]: prop.makeMeBigger,
       [styles.showCountersOnHover]: showCountersOnHover,
-      [styles.playable]: card.borderColor == '6'
+      [styles.playable]: playable || card.borderColor == '6'
     }
   );
 

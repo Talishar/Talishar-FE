@@ -120,7 +120,11 @@ export const PROCESS_INPUT = {
   SAVE_SNAPSHOT: 100023,
   RESTART_PUZZLE: 100024,
   PUZZLE_HINT: 100025,
-  DISABLE_CHAT: 100026
+  DISABLE_CHAT: 100026,
+  OFFER_DRAW: 100027,
+  ACCEPT_DRAW: 100028,
+  DECLINE_DRAW: 100029,
+  CLAIM_DRAW_OVER_INACTIVE_OPPONENT: 100030
 };
 
 // Default shortcut inputs
@@ -446,6 +450,7 @@ export const URL_END_POINT = {
   GET_PUZZLE_CANDIDATES: 'APIs/GetPuzzleCandidates.php',
   CREATE_PUZZLE_GAME: 'APIs/CreatePuzzleGame.php',
   VERIFY_PUZZLE_CANDIDATES: 'APIs/VerifyPuzzleCandidates.php',
+  SOLVE_PUZZLE_CANDIDATES: 'APIs/SolvePuzzleCandidates.php',
   SCHEDULE_PUZZLE: 'APIs/SchedulePuzzle.php',
   GET_DAILY_PUZZLE: 'APIs/GetDailyPuzzle.php',
   START_DAILY_PUZZLE: 'APIs/StartDailyPuzzle.php',

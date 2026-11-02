@@ -446,6 +446,12 @@ const GameList = () => {
     () => new Set(friendsData?.friends?.map((f: Friend) => f.username) || []),
     [friendsData?.friends]
   );
+  const getFriendName = (game: IGameInProgress) =>
+    game.gameCreator && friendUsernames.has(game.gameCreator)
+      ? game.gameCreator
+      : game.p2Username && friendUsernames.has(game.p2Username)
+      ? game.p2Username
+      : undefined;
   const blockedUsernames = useMemo(() => new Set(blockedUsers), [blockedUsers]);
   const selectedHeroes = useMemo(() => new Set(heroFilter), [heroFilter]);
 
@@ -973,44 +979,30 @@ const GameList = () => {
                       defaultValue: 'Featured match'
                     })}
                   </div>
-                  {featuredGames.map(({ game, masteryLevel }) => (
-                    <InProgressGame
-                      entry={game}
-                      key={game.gameName}
-                      isFeatured
-                      masteryLevel={masteryLevel}
-                      isFriendsGame={
-                        !!(
-                          (game.gameCreator &&
-                            friendUsernames.has(game.gameCreator)) ||
-                          (game.p2Username &&
-                            friendUsernames.has(game.p2Username))
-                        )
-                      }
-                      formatLabel={getFormatLabel(game.format)}
-                    />
-                  ))}
+                  {featuredGames.map(({ game, masteryLevel }) => {
+                    const friendName = getFriendName(game);
+                    return (
+                      <InProgressGame
+                        entry={game}
+                        key={game.gameName}
+                        isFeatured
+                        masteryLevel={masteryLevel}
+                        isFriendsGame={!!friendName}
+                        friendName={friendName}
+                        formatLabel={getFormatLabel(game.format)}
+                      />
+                    );
+                  })}
                 </div>
               )}
               {[...friendGamesInProgress, ...otherGamesInProgress].map(
                 (entry) => {
-                  const isFriendsGame = !!(
-                    (entry.gameCreator &&
-                      friendUsernames.has(entry.gameCreator)) ||
-                    (entry.p2Username && friendUsernames.has(entry.p2Username))
-                  );
-                  const friendName =
-                    entry.gameCreator && friendUsernames.has(entry.gameCreator)
-                      ? entry.gameCreator
-                      : entry.p2Username &&
-                        friendUsernames.has(entry.p2Username)
-                      ? entry.p2Username
-                      : undefined;
+                  const friendName = getFriendName(entry);
                   return (
                     <InProgressGame
                       entry={entry}
                       key={entry.gameName}
-                      isFriendsGame={isFriendsGame}
+                      isFriendsGame={!!friendName}
                       friendName={friendName}
                       formatLabel={getFormatLabel(entry.format)}
                     />

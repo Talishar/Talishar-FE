@@ -16,7 +16,7 @@ import Equipment from './components/equipment/Equipment';
 import Loadout, { MyLoadout } from './components/loadout/Loadout';
 import classNames from 'classnames';
 import { FaExclamationCircle } from 'react-icons/fa';
-import { LuGlobe, LuUsers } from 'react-icons/lu';
+import { LuEye, LuGlobe, LuUsers } from 'react-icons/lu';
 import { RiSpyLine } from 'react-icons/ri';
 import { GiCapeArmor } from 'react-icons/gi';
 import { SiBookstack } from 'react-icons/si';
@@ -626,12 +626,23 @@ const Lobby = () => {
     }
   }, [gameLobby?.wasKicked, navigate, playerID]);
 
-  const deckClone = [...data.deck.cards];
-  const deckSBClone = [...data.deck.cardsSB];
-  const deckIndexed = deckClone.sort().map((card, ix) => `${card}-${ix}`);
-  const deckSBIndexed = deckSBClone
-    .sort()
-    .map((card, ix) => `${card}-${ix + deckIndexed.length}`);
+  const deckCards = data.deck.cards;
+  const deckSBCards = data.deck.cardsSB;
+  const deckIndexed = useMemo(
+    () => [...deckCards].sort().map((card, ix) => `${card}-${ix}`),
+    [deckCards]
+  );
+  const deckSBIndexed = useMemo(
+    () =>
+      [...deckSBCards]
+        .sort()
+        .map((card, ix) => `${card}-${ix + deckIndexed.length}`),
+    [deckSBCards, deckIndexed.length]
+  );
+  const deckPool = useMemo(
+    () => [...deckIndexed, ...deckSBIndexed],
+    [deckIndexed, deckSBIndexed]
+  );
   const headClone = [...(data?.deck?.head ?? [])];
   const headSBClone = [...(data?.deck?.headSB ?? [])];
   const legsClone = [...(data?.deck?.legs ?? [])];
@@ -679,6 +690,7 @@ const Lobby = () => {
       : lobbyVisibility === GAME_VISIBILITY.PUBLIC
       ? t('MENU.CREATE_GAME.VISIBILITIES.PUBLIC')
       : '';
+  const isOpenHandsLobby = gameLobby?.openHands === true;
   const isRestrictedLobby =
     lobbyVisibility !== undefined && lobbyVisibility !== GAME_VISIBILITY.PUBLIC;
   const lobbyMetaLine = [lobbyVisibilityLabel, lobbyFormatName]
@@ -692,6 +704,7 @@ const Lobby = () => {
       : lobbyVisibility === GAME_VISIBILITY.PUBLIC
       ? t('MENU.CREATE_GAME.VISIBILITIES.PUBLIC_LOBBY')
       : '',
+    isOpenHandsLobby ? t('MENU.CREATE_GAME.OPEN_HANDS_TOOLTIP') : '',
     lobbyFormatName,
     lobbyDescription
   ].filter(Boolean);
@@ -741,6 +754,17 @@ const Lobby = () => {
             <span className={styles.lobbySettingsItem} title={lobbyFormatName}>
               <span className={styles.lobbySettingsLabel}>
                 {lobbyFormatShortName}
+              </span>
+            </span>
+          )}
+          {isOpenHandsLobby && (
+            <span
+              className={styles.lobbySettingsItem}
+              title={t('MENU.CREATE_GAME.OPEN_HANDS_TOOLTIP')}
+            >
+              <LuEye aria-hidden="true" />
+              <span className={styles.lobbySettingsLabel}>
+                {t('MENU.CREATE_GAME.OPEN_HANDS')}
               </span>
             </span>
           )}
@@ -853,32 +877,44 @@ const Lobby = () => {
     }
   }, [data.format]);
 
-  const weaponsIndexed = [...data.deck.hands].map((card, ix) => {
-    return {
-      id: `${card.id}-${ix}`,
-      is1H: card.is1H,
-      img: `${card.id}`,
-      numHands: card.numHands !== undefined ? card.numHands : card.is1H ? 1 : 2,
-      isQuiver: card.isQuiver ?? false,
-      isOffhand: card.isOffhand ?? false,
-      isCompanion: card.isCompanion ?? false
-    } as Weapon;
-  });
+  const deckHands = data.deck.hands;
+  const deckHandsSB = data.deck.handsSB;
+  const weaponsIndexed = useMemo(
+    () =>
+      [...deckHands].map((card, ix) => {
+        return {
+          id: `${card.id}-${ix}`,
+          is1H: card.is1H,
+          img: `${card.id}`,
+          numHands:
+            card.numHands !== undefined ? card.numHands : card.is1H ? 1 : 2,
+          isQuiver: card.isQuiver ?? false,
+          isOffhand: card.isOffhand ?? false,
+          isCompanion: card.isCompanion ?? false
+        } as Weapon;
+      }),
+    [deckHands]
+  );
 
-  const weaponsSBIndexed = [
-    ...data.deck.handsSB,
-    { id: `NONE00`, is1H: true, img: `NONE00`, numHands: 0 }
-  ].map((card, ix) => {
-    return {
-      id: `${card.id}-${ix + weaponsIndexed.length}`,
-      img: `${card.id}`,
-      is1H: card.is1H,
-      numHands: card.numHands !== undefined ? card.numHands : card.is1H ? 1 : 2,
-      isQuiver: card.isQuiver ?? false,
-      isOffhand: card.isOffhand ?? false,
-      isCompanion: card.isCompanion ?? false
-    } as Weapon;
-  });
+  const weaponsSBIndexed = useMemo(
+    () =>
+      [
+        ...deckHandsSB,
+        { id: `NONE00`, is1H: true, img: `NONE00`, numHands: 0 }
+      ].map((card, ix) => {
+        return {
+          id: `${card.id}-${ix + weaponsIndexed.length}`,
+          img: `${card.id}`,
+          is1H: card.is1H,
+          numHands:
+            card.numHands !== undefined ? card.numHands : card.is1H ? 1 : 2,
+          isQuiver: card.isQuiver ?? false,
+          isOffhand: card.isOffhand ?? false,
+          isCompanion: card.isCompanion ?? false
+        } as Weapon;
+      }),
+    [deckHandsSB, weaponsIndexed.length]
+  );
 
   const hasModular = (data.deck.modular?.length ?? 0) > 0;
   // Only auto-select from what was actually equipped on the mainboard
@@ -1618,7 +1654,7 @@ const Lobby = () => {
                 )}
                 {buildTab === 'deck' && (
                   <Deck
-                    deck={[...deckIndexed, ...deckSBIndexed]}
+                    deck={deckPool}
                     cardDictionary={data?.deck?.cardDictionary}
                     filtersExpanded={filtersExpanded}
                     setFiltersExpanded={setFiltersExpanded}
@@ -1643,7 +1679,7 @@ const Lobby = () => {
                 )}
                 {effectiveTab === 'deck' && (
                   <Deck
-                    deck={[...deckIndexed, ...deckSBIndexed]}
+                    deck={deckPool}
                     cardDictionary={data?.deck?.cardDictionary}
                     filtersExpanded={filtersExpanded}
                     setFiltersExpanded={setFiltersExpanded}

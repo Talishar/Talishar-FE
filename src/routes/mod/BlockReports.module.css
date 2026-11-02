@@ -94,3 +94,29 @@
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
+
+.chatLog {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  font-size: 0.8rem;
+}
+
+.chatLine {
+  list-style: none;
+  margin: 0 !important;
+  color: var(--theme-text-secondary);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.chatLineReported {
+  color: var(--theme-text);
+}
+
+.chatName {
+  font-weight: 600;
+}

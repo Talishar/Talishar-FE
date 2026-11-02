@@ -5,10 +5,12 @@ import {
   useCreatePuzzleGameMutation,
   useGetPuzzleCandidatesQuery,
   useSchedulePuzzleMutation,
+  useSolvePuzzleCandidatesMutation,
   useVerifyPuzzleCandidateMutation
 } from 'features/api/apiSlice';
 import {
   CreatePuzzleGameResponse,
+  SolvePuzzleCandidatesResponse,
   PuzzleBot,
   PuzzleCandidate,
   PuzzleCard,
@@ -44,7 +46,8 @@ const GOOD_FLAGS = [
   'ALL_CARDS',
   'HIGH_PRESSURE',
   'NEEDS_TEXT',
-  'BOT_FAILS'
+  'BOT_FAILS',
+  'SOLVER_BITS'
 ];
 const BAD_FLAGS = [
   'BASELINE_STALLED',
@@ -55,7 +58,9 @@ const BAD_FLAGS = [
   'PLAIN_STATS',
   'PLAIN_BLOCKS',
   'NO_TACTIC',
-  'BOT_SOLVES'
+  'BOT_SOLVES',
+  'SOLVER_UNSOUND',
+  'SOLVER_TRUNCATED'
 ];
 const PROOF_FILTERS: ProofFilter[] = ['all', 'proven'];
 
@@ -71,7 +76,8 @@ const realTurnValues = (row: PuzzleCandidate): Record<string, number> => ({
   overkill: row.realTurn?.overkill ?? 0
 });
 
-const isProven = (row: PuzzleCandidate) => row.proof?.status === 'proven';
+const isProven = (row: PuzzleCandidate) =>
+  row.solve?.status === 'sound' || row.proof?.status === 'proven';
 
 const needsCheck = (row: PuzzleCandidate) =>
   row.hasLine && (!row.proof || (isProven(row) && !row.bot));
@@ -568,6 +574,10 @@ const PuzzleCandidates: React.FC = () => {
     useGetPuzzleCandidatesQuery(kind);
   const [createPuzzleGame] = useCreatePuzzleGameMutation();
   const [verifyPuzzleCandidate] = useVerifyPuzzleCandidateMutation();
+  const [solvePuzzleCandidates, { isLoading: isSolving }] =
+    useSolvePuzzleCandidatesMutation();
+  const [solveResult, setSolveResult] =
+    useState<SolvePuzzleCandidatesResponse | null>(null);
   const [checkingId, setCheckingId] = useState<number | null>(null);
 
   const candidates = useMemo(() => data?.candidates ?? [], [data]);
@@ -637,6 +647,16 @@ const PuzzleCandidates: React.FC = () => {
       // Error will be shown via toast from RTK Query error handler
     } finally {
       setCheckingId(null);
+    }
+  };
+
+  const solveNext = async () => {
+    setSolveResult(null);
+    try {
+      setSolveResult(await solvePuzzleCandidates({}).unwrap());
+      await refetch();
+    } catch {
+      // Error will be shown via toast from RTK Query error handler
     }
   };
 
@@ -797,7 +817,34 @@ const PuzzleCandidates: React.FC = () => {
             count: filteredCount
           })}
         </label>
+        <button
+          type="button"
+          className={`${styles.button} ${styles.primary}`}
+          disabled={isSolving}
+          onClick={solveNext}
+        >
+          {isSolving
+            ? t('MOD_PAGE.PUZZLES_SOLVING')
+            : t('MOD_PAGE.PUZZLES_SOLVE_NEXT')}
+        </button>
       </div>
+
+      {solveResult && (
+        <p className={tableStyles.summary} role="status">
+          {t('MOD_PAGE.PUZZLES_SOLVE_RESULT', {
+            count: solveResult.solved.length,
+            sound: solveResult.solved.filter((row) => row.status === 'sound')
+              .length,
+            unsound: solveResult.solved.filter(
+              (row) => row.status === 'unsound'
+            ).length,
+            truncated: solveResult.solved.filter(
+              (row) => row.status === 'truncated'
+            ).length,
+            remaining: solveResult.remaining ?? 0
+          })}
+        </p>
+      )}
 
       {ready && (
         <div className={styles.ready} role="status">

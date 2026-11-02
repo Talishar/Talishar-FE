@@ -181,7 +181,6 @@
   contain: strict;
   isolation: isolate;
   border-radius: 5px;
-  background-color: rgba(var(--theme-on-surface-rgb), 0.04);
 }
 
 .inGameAdBox[data-fits-ad] {
@@ -198,6 +197,7 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
+  object-position: top;
 }
 
 /* Click-through until a creative iframe lands, so the CTA stays clickable. */

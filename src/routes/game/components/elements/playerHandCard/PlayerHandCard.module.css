@@ -148,7 +148,7 @@
 }
 
 .ghostReady .img {
-  box-shadow: 0 0 0 3px var(--theme-primary), 0 0 18px 6px var(--theme-primary);
+  box-shadow: 0 0 0 3px orange, 0 0 18px 6px orange;
 }
 
 .imgContainer {
@@ -201,8 +201,8 @@
 }
 
 .border3 {
-  border-color: var(--theme-primary);
-  box-shadow: 0 0 0 2px var(--theme-primary), 0 0 10px 2px var(--theme-primary);
+  border-color: orange;
+  box-shadow: 0 0 0 2px orange, 0 0 10px 2px orange;
 }
 
 .border4 {

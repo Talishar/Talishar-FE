@@ -1122,7 +1122,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
             playerData.playerID
           ) {
             resultLabel =
-              data.winner === playerData.playerID ? 'Winner' : 'Loser';
+              data.winner === 0
+                ? 'Draw'
+                : data.winner === playerData.playerID
+                ? 'Winner'
+                : 'Loser';
           }
           content += `Result,${resultLabel}\n`;
           content += `Turns,${playerData.turns || 'N/A'}\n`;
@@ -1585,6 +1589,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
       <div
         ref={statsRef}
         className={styles.endGameStats}
+        data-exporting={isExportingImage || undefined}
         data-testid="test-stats"
       >
         <div className={styles.statsContent}>
@@ -1603,10 +1608,12 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
                   >
                     {data.winner === data.playerID ? (
                       <ConfettiSvg />
-                    ) : (
+                    ) : data.winner !== 0 ? (
                       <RainSvg />
-                    )}
-                    {data.winner === data.playerID
+                    ) : null}
+                    {data.winner === 0
+                      ? t('END_GAME.DRAW')
+                      : data.winner === data.playerID
                       ? t('END_GAME.VICTORY')
                       : t('END_GAME.DEFEAT')}
                   </div>
@@ -1951,7 +1958,8 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
                           </div>
                         )}
                         {data.winner !== data.playerID &&
-                          data.winner !== undefined && (
+                          data.winner !== undefined &&
+                          data.winner !== 0 && (
                             <div className={styles.winnerBadge}>
                               {t('END_GAME.WINNER')}
                             </div>

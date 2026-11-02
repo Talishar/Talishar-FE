@@ -12,6 +12,7 @@ export interface CreateGameAPI {
   gameDescription?: string; //Just a string with the game description
   user?: string; // User ID for external site like fabrary
   deckTestDeck?: string; //Deck of the deck test opponent (AI)
+  openHands?: boolean; // Private games only: both players see each other's hand and arsenal
 }
 
 export type CreateGameFormik = GameEntryFormik;

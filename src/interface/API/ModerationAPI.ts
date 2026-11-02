@@ -28,13 +28,22 @@ export interface PlayerReport {
   reportId: number;
   gameName: string;
   reporterName: string | null;
+  reporterPlayerID: number;
   reportedName: string;
   reportedHasAccount: boolean;
   reportedIsBanned: boolean;
   reason: ModerationReason | null;
   note: string | null;
+  chatLog: ReportChatLine[] | null;
   createdAt: string;
   reportCount: number;
+  lastWarnedAt: string | null;
+}
+
+export interface ReportChatLine {
+  playerID: number;
+  name: string;
+  text: string;
 }
 
 export interface PlayerReportsResponse {

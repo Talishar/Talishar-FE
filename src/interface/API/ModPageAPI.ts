@@ -212,6 +212,29 @@ export interface PuzzleCandidate {
   rubric: PuzzleRubric;
   difficulty: PuzzleDifficulty;
   flags: PuzzleFlag[];
+  solve: PuzzleSolve | null;
+}
+
+export interface PuzzleSolve {
+  status: 'sound' | 'unsound' | 'truncated';
+  kind: PuzzleKind;
+  realLife: number;
+  life?: number;
+  bits?: number;
+  randomWin?: number;
+  decisions?: number;
+  nodes?: number;
+  seconds: number;
+}
+
+export interface SolvePuzzleCandidatesRequest {
+  candidateId?: number;
+}
+
+export interface SolvePuzzleCandidatesResponse {
+  solved: (PuzzleSolve & { id: number })[];
+  remaining: number | null;
+  error?: string;
 }
 
 export interface PuzzleCandidatesResponse {

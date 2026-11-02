@@ -121,6 +121,11 @@ const OptionsContent = ({ searchQuery }: { searchQuery: string }) => {
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.CONCEDE_GAME } }));
   };
 
+  const clickOfferDrawHandler = () => {
+    dispatch(submitButton({ button: { mode: PROCESS_INPUT.OFFER_DRAW } }));
+    clickCloseOptionsHandler();
+  };
+
   // going to main menu means you concede the game
   const handleClickMainMenuButton = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -312,6 +317,14 @@ const OptionsContent = ({ searchQuery }: { searchQuery: string }) => {
                   onClick={clickConcedeGameHandler}
                 >
                   {t('OPTIONS_MENU.CONCEDE')}
+                </button>
+              )}
+              {playerID !== 3 && !isReplay && (
+                <button
+                  className={styles.buttonDiv}
+                  onClick={clickOfferDrawHandler}
+                >
+                  {t('OPTIONS_MENU.OFFER_DRAW')}
                 </button>
               )}
             </div>

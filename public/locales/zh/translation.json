@@ -852,11 +852,9 @@
     "WRENCH_POWER_ARIA": ""
   },
   "MASTERY": {
-    "BETA_NOTICE": "",
     "CARD_MAXIMUM_one": "",
     "CARD_MAXIMUM_other": "",
     "CARD_PROGRESS": "",
-    "COLLECTION_SUMMARY": "",
     "EMPTY": "",
     "FILTER": {
       "ALL": "",
@@ -995,6 +993,8 @@
       "IMPORT_HELP": "牌表链接 - 来自 FaBrary.net 的 URL",
       "IMPORT_TITLE": "来自 FaBrary.net 的链接",
       "LOADING": "",
+      "OPEN_HANDS": "明牌",
+      "OPEN_HANDS_TOOLTIP": "教学模式。双方玩家都能看到对方的手牌和兵工厂。",
       "PRACTICE_DUMMY": "",
       "PRECONSTRUCTED_DECK": "预设套牌",
       "PRIVATE_TITLE": "创建私人游戏",
@@ -1530,6 +1530,8 @@
     "DISABLE_PARTICLE_EFFECTS": "",
     "FANNED_HAND_MOBILE": "",
     "FANNED_HAND_MOBILE_TOOLTIP": "",
+    "AUTO_LANDSCAPE_MOBILE": "",
+    "AUTO_LANDSCAPE_MOBILE_TOOLTIP": "",
     "FANNED_HAND_PC": "",
     "FANNED_HAND_PC_TOOLTIP": "",
     "FORCE_MOBILE_LAYOUT": "",

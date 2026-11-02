@@ -281,6 +281,7 @@
     "DISRUPTED_CARD_COUNT_one": "{{count}} carte",
     "DISRUPTED_CARD_COUNT_other": "{{count}} cartes",
     "DISRUPTION_VALUE": "Perturbation",
+    "DRAW": "Match nul",
     "EXCLUDE_LAST_TURN": "Exclure le dernier tour (statistiques et graphiques)",
     "EXCLUDE_TURN_0": "Exclure le tour 0 (statistiques et graphiques)",
     "EXPORT_AS_CSV": "Exporter au format CSV",
@@ -818,9 +819,6 @@
     "NETWORK_ERROR": "Erreur réseau de connexion Patreon :\n{{error}}"
   },
   "LOAD_REPLAY": {
-    "BETA_BODY": "L'outil Replay est actuellement en version bêta.  <2>#rapports-de-bugs</2> chaîne avec votre <6>Nom d'utilisateur Talishar</6> et <10>numéro de rediffusion</10>.",
-    "BETA_NOTE": "Remarque : les rediffusions que vous enregistrez peuvent cesser de fonctionner de manière aléatoire à mesure que des modifications du moteur sont apportées au cours du développement.",
-    "BETA_TITLE": "⚠️ L'outil Replay est actuellement en version bêta",
     "COPY_SHAREABLE_LINK": "Copier le lien partageable",
     "ENSURE_FILES": "Assurez-vous que les deux fichiers requis existent :",
     "ERROR_LOADING_REPLAY": "⚠️ Erreur lors du chargement de la relecture",
@@ -892,11 +890,9 @@
     "WRENCH_POWER_ARIA": "Puissance clé-tastique"
   },
   "MASTERY": {
-    "BETA_NOTICE": "",
     "CARD_MAXIMUM_one": "",
     "CARD_MAXIMUM_other": "",
     "CARD_PROGRESS": "",
-    "COLLECTION_SUMMARY": "",
     "EMPTY": "",
     "FILTER": {
       "ALL": "",
@@ -1043,6 +1039,8 @@
       "IMPORT_HELP": "Lien du deck — URL de FaBrary.net",
       "IMPORT_TITLE": "URL de FaBrary.net",
       "LOADING": "Chargement…",
+      "OPEN_HANDS": "Mains ouvertes",
+      "OPEN_HANDS_TOOLTIP": "Mode apprentissage. Chaque joueur voit la main et l'arsenal de l'autre.",
       "PRACTICE_DUMMY": "Mannequin d'entraînement",
       "PRECONSTRUCTED_DECK": "Deck préconstruit",
       "PRIVATE_TITLE": "Créer une partie privée",
@@ -1193,6 +1191,7 @@
     "LEARNING_WARNING_TITLE": "Ce joueur apprend"
   },
   "OPPONENT_INACTIVE": {
+    "CLAIM_DRAW": "Réclamez le match nul",
     "CLAIM_VICTORY": "Réclamez la victoire",
     "HOURGLASS": "⏳",
     "IM_STILL_HERE": "Je suis toujours là",
@@ -1218,6 +1217,7 @@
     "LOCKED_PLAYMAT_TOOLTIP": "Soutenez-nous sur Metafy pour débloquer des tapis de jeu exclusifs Talishar",
     "LOCK_ICON": "🔒",
     "LOGIN_TO_CUSTOMIZE_PLAYMAT": "Connectez-vous pour personnaliser votre tapis de jeu",
+    "OFFER_DRAW": "Proposer le match nul",
     "PLAYMAT": "Tapis de jeu",
     "REPORT_BUG": "Signaler un bug",
     "REPORT_PLAYER": "Lecteur de rapports",
@@ -1610,6 +1610,8 @@
     "DISABLE_PARTICLE_EFFECTS": "Désactiver les effets de particules",
     "FANNED_HAND_MOBILE": "Main en éventail sur mobile",
     "FANNED_HAND_MOBILE_TOOLTIP": "Essayez la nouvelle main sur téléphones et tablettes (écrans de moins de 1200 pixels de large) : cartes en éventail, glisser pour jouer et blocage rapide carte par carte. Désactivé, la main classique est conservée.",
+    "AUTO_LANDSCAPE_MOBILE": "Paysage automatique sur mobile",
+    "AUTO_LANDSCAPE_MOBILE_TOOLTIP": "Passe la partie en paysage dès votre premier appui en portrait. Fonctionne avec la main en éventail sur mobile.",
     "FANNED_HAND_PC": "Main en éventail sur PC",
     "FANNED_HAND_PC_TOOLTIP": "Essayez la nouvelle main sur ordinateur (écrans de 1200 pixels de large ou plus) : cartes en éventail, glisser pour jouer et blocage rapide carte par carte. Désactivé, la main classique est conservée.",
     "FORCE_MOBILE_LAYOUT": "Forcer la disposition mobile",

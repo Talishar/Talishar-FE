@@ -4,6 +4,7 @@
   gap: 0.9rem;
   min-width: 0;
   color: var(--theme-text);
+  margin-bottom: 0 !important;
 }
 
 .header {
@@ -22,7 +23,6 @@
 
 .description {
   margin: 0;
-  max-width: 46rem;
   font-size: 0.85rem;
   line-height: 1.45;
   color: var(--theme-text-secondary);

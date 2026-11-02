@@ -12,14 +12,22 @@ import {
   SKIP_AR_WINDOW,
   SKIP_DR_WINDOW
 } from 'features/options/constants';
+import { useCookieString } from 'utils/cookieStore';
 import {
+  AUTO_LANDSCAPE_COOKIE,
+  canLockLandscape,
   getFanFullscreenWidth,
   isAppleTouchDevice,
+  isAutoLandscapeTurnedOff,
   isGameFullscreenTurnedOff,
+  isLandscapeLocked,
+  lockLandscape,
+  releaseLandscapeLock,
   resetGameFullscreenTurnedOff,
   setFanFullscreenWidth
 } from 'utils/gameFullscreen';
 import { FAN_FULLSCREEN_WIDTH_VAR } from '../components/zones/playerHand/fanLayout';
+import { useFannedHand } from '../components/zones/playerHand/useFannedHand';
 import { useShowsLandscapeFan } from '../components/zones/playerHand/useShowsLandscapeFan';
 import { useReplayPlayback } from './ReplayPlaybackContext';
 
@@ -126,6 +134,11 @@ export const CardScaleVariables = () => {
 
 export const LandscapeFanFullscreen = () => {
   const showsLandscapeFan = useShowsLandscapeFan();
+  const fannedHand = useFannedHand();
+  const autoLandscape =
+    useCookieString(AUTO_LANDSCAPE_COOKIE) === 'true' &&
+    fannedHand &&
+    canLockLandscape();
   const enteredRef = useRef(false);
   const gameID = useAppSelector(
     (state: RootState) => state.game.gameInfo.gameID
@@ -162,6 +175,7 @@ export const LandscapeFanFullscreen = () => {
         event.pointerType === 'mouse' ||
         document.fullscreenElement ||
         isGameFullscreenTurnedOff() ||
+        (autoLandscape && !isAutoLandscapeTurnedOff()) ||
         window.screen.width <= window.screen.height
       ) {
         return;
@@ -176,7 +190,30 @@ export const LandscapeFanFullscreen = () => {
     document.addEventListener('pointerup', enterFullscreen, true);
     return () =>
       document.removeEventListener('pointerup', enterFullscreen, true);
-  }, [showsLandscapeFan]);
+  }, [showsLandscapeFan, autoLandscape]);
+
+  useEffect(() => {
+    if (!autoLandscape) return;
+    let active = true;
+    const lock = (event: PointerEvent) => {
+      if (
+        event.pointerType === 'mouse' ||
+        isAutoLandscapeTurnedOff() ||
+        isLandscapeLocked()
+      ) {
+        return;
+      }
+      lockLandscape().then(() => {
+        if (!active && isLandscapeLocked()) releaseLandscapeLock();
+      });
+    };
+    document.addEventListener('pointerup', lock, true);
+    return () => {
+      active = false;
+      document.removeEventListener('pointerup', lock, true);
+      if (isLandscapeLocked()) releaseLandscapeLock();
+    };
+  }, [autoLandscape]);
 
   useEffect(() => {
     if (!showsLandscapeFan) return;

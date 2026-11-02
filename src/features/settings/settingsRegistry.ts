@@ -9,6 +9,7 @@ import {
   FORCED_LAYOUT,
   FORCED_LAYOUT_COOKIE
 } from 'routes/game/play/forcedLayout/forcedLayout';
+import { AUTO_LANDSCAPE_COOKIE, canLockLandscape } from 'utils/gameFullscreen';
 
 export type SettingsSurface = 'account' | 'game';
 
@@ -344,6 +345,17 @@ export const SETTINGS_DEFS: SettingDef[] = [
     storage: 'device',
     name: ENABLE_FANNED_HAND_MOBILE_COOKIE,
     defaultOn: true
+  },
+  {
+    kind: 'toggle',
+    key: 'autoLandscapeMobile',
+    group: 'appearance',
+    labelKey: 'SETTINGS.AUTO_LANDSCAPE_MOBILE',
+    tooltipKey: 'SETTINGS.AUTO_LANDSCAPE_MOBILE_TOOLTIP',
+    storage: 'device',
+    name: AUTO_LANDSCAPE_COOKIE,
+    defaultOn: false,
+    visible: () => canLockLandscape()
   },
   {
     kind: 'toggle',
