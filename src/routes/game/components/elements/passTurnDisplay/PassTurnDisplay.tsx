@@ -122,6 +122,9 @@ export default function PassTurnDisplay() {
   const preventPassPrompt = useAppSelector(
     (state: RootState) => state.game.preventPassPrompt
   );
+  const isButtonInputInFlight = useAppSelector(
+    (state: RootState) => state.game.buttonInput === 'inflight'
+  );
   const isMuted = useIsSoundMuted();
   // The armed state is one transient server-side flag, scoped to this player and
   // cleared by the server at the start of every turn. It is deliberately not the
@@ -165,6 +168,23 @@ export default function PassTurnDisplay() {
     []
   );
 
+  const startPassDebounce = useCallback(() => {
+    setIsPassClickDebounced(true);
+    if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+    debounceTimerRef.current = setTimeout(() => {
+      setIsPassClickDebounced(false);
+      debounceTimerRef.current = null;
+    }, 500);
+  }, []);
+
+  const wasButtonInputInFlightRef = useRef(isButtonInputInFlight);
+  useEffect(() => {
+    if (wasButtonInputInFlightRef.current && !isButtonInputInFlight) {
+      startPassDebounce();
+    }
+    wasButtonInputInFlightRef.current = isButtonInputInFlight;
+  }, [isButtonInputInFlight, startPassDebounce]);
+
   const onPassTurn = useCallback(
     (event?: KeyboardEvent | MouseEvent) => {
       if (isReplay) {
@@ -173,14 +193,9 @@ export default function PassTurnDisplay() {
         return;
       }
 
-      if (isPassClickDebounced) return;
+      if (isPassClickDebounced || isButtonInputInFlight) return;
 
-      setIsPassClickDebounced(true);
-      if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
-      debounceTimerRef.current = setTimeout(() => {
-        setIsPassClickDebounced(false);
-        debounceTimerRef.current = null;
-      }, 500);
+      startPassDebounce();
 
       if (preventPassPrompt) {
         if (showAreYouSureModal) {
@@ -200,6 +215,8 @@ export default function PassTurnDisplay() {
       showAreYouSureModal,
       dispatch,
       isPassClickDebounced,
+      isButtonInputInFlight,
+      startPassDebounce,
       isReplay,
       activateReplayControl
     ]
