@@ -1,39 +1,10 @@
 import React from 'react';
-import { useAppSelector } from 'app/Hooks';
-import { RootState } from 'app/Store';
 import Displayrow from 'interface/Displayrow';
-import CardDisplay from '../../elements/cardDisplay/CardDisplay';
-import DestroyAnimation from '../../elements/destroyAnimation/DestroyAnimation';
-import { useEquipDestroy } from '../../elements/destroyAnimation/useEquipDestroy';
+import WeaponZone from '../weaponZone/WeaponZone';
 import styles from './WeaponLZone.module.css';
 
-export const WeaponLZone = React.memo((prop: Displayrow) => {
-  const { isPlayer } = prop;
-  const cardToDisplay = useAppSelector((state: RootState) =>
-    isPlayer ? state.game.playerOne.WeaponLEq : state.game.playerTwo.WeaponLEq
-  );
-  const destroy = useEquipDestroy('LWep', isPlayer);
-  const isP2View = useAppSelector(
-    (state: RootState) =>
-      (state.game.gameInfo.playerID === 3 || !!state.game.gameInfo.isReplay) &&
-      state.game.spectatorCameraView === 2
-  );
-
-  return (
-    <div
-      className={styles.weaponLZone}
-      data-fan-unhover-anchor={isPlayer !== isP2View ? '' : undefined}
-    >
-      <CardDisplay card={cardToDisplay} isPlayer={isPlayer} />
-      {destroy && (
-        <DestroyAnimation
-          key={`equipDestroyAnim-${destroy.id}`}
-          cardNumber={destroy.cardNumber}
-          isPlayer={isPlayer}
-        />
-      )}
-    </div>
-  );
-});
+export const WeaponLZone = (prop: Displayrow) => (
+  <WeaponZone {...prop} side="L" zoneClassName={styles.weaponLZone} />
+);
 
 export default WeaponLZone;

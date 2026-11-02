@@ -7,6 +7,7 @@ import { Card } from 'features/Card';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import { useAppDispatch, useAppSelector, useAppStore } from 'app/Hooks';
 import { setCardListFocus, clearCardListFocus } from 'features/game/GameSlice';
+import { selectSidePlayer } from 'features/game/perspective';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { useMediaQuery } from 'hooks/useMediaQuery';
 import { getCardPreview } from '../../elements/cardPortal/cardPreviewStore';
@@ -29,39 +30,16 @@ const HandZone = React.memo(function HandZone(prop: Player) {
   const { isPlayer } = prop;
   const dispatch = useAppDispatch();
 
-  const revealedHandCards = useAppSelector((state: RootState) => {
-    const { playerID, isReplay } = state.game.gameInfo;
-    const isP2View =
-      (playerID === 3 || isReplay) && state.game.spectatorCameraView === 2;
-    return isPlayer
-      ? isP2View
-        ? state.game.playerTwo.Hand
-        : state.game.playerOne.Hand
-      : isP2View
-      ? state.game.playerOne.Hand
-      : state.game.playerTwo.Hand;
-  });
-  const handCardBack = useAppSelector((state: RootState) => {
-    const { playerID, isReplay } = state.game.gameInfo;
-    const isP2View =
-      (playerID === 3 || isReplay) && state.game.spectatorCameraView === 2;
-    const handOwner = isPlayer
-      ? isP2View
-        ? state.game.playerTwo
-        : state.game.playerOne
-      : isP2View
-      ? state.game.playerOne
-      : state.game.playerTwo;
-    return handOwner.CardBack?.cardNumber ?? 'CardBack';
-  });
-  const extraArsenalCards = useAppSelector((state: RootState) => {
-    const { playerID, isReplay } = state.game.gameInfo;
-    const isP2View =
-      (playerID === 3 || isReplay) && state.game.spectatorCameraView === 2;
-    const handOwner =
-      isPlayer === isP2View ? state.game.playerTwo : state.game.playerOne;
-    return Math.max(0, (handOwner.Arsenal?.length ?? 0) - 1);
-  });
+  const revealedHandCards = useAppSelector(
+    (state: RootState) => selectSidePlayer(state, isPlayer).Hand
+  );
+  const handCardBack = useAppSelector(
+    (state: RootState) =>
+      selectSidePlayer(state, isPlayer).CardBack?.cardNumber ?? 'CardBack'
+  );
+  const extraArsenalCards = useAppSelector((state: RootState) =>
+    Math.max(0, (selectSidePlayer(state, isPlayer).Arsenal?.length ?? 0) - 1)
+  );
   const handCardBackNumber = handCardBack.toLowerCase();
   const hideHand = useAppSelector(
     (state: RootState) =>

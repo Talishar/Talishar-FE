@@ -11,6 +11,7 @@ import {
   addHealingPopup,
   removeHealingPopup
 } from 'features/game/GameSlice';
+import { selectIsP2View } from 'features/game/perspective';
 import HeroTransformEventCard from '../../elements/eventsHandler/HeroTransformEventCard';
 import styles from './HeroZone.module.css';
 
@@ -19,11 +20,7 @@ const NO_POPUPS: never[] = [];
 export const HeroZone = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
   const dispatch = useAppDispatch();
-  const isP2View = useAppSelector(
-    (state: RootState) =>
-      (state.game.gameInfo.playerID === 3 || !!state.game.gameInfo.isReplay) &&
-      state.game.spectatorCameraView === 2
-  );
+  const isP2View = useAppSelector(selectIsP2View);
   const previousHealthRef = useRef<number | undefined>();
 
   const cardToDisplay = useAppSelector((state: RootState) =>

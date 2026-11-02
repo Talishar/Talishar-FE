@@ -1,5 +1,6 @@
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
+import { selectSidePlayer } from 'features/game/perspective';
 import { useCookieString } from 'utils/cookieStore';
 import { useMemo } from 'react';
 
@@ -7,35 +8,9 @@ import styles from './Playmat.module.css';
 export const Playmat = ({ isPlayer }: { isPlayer: boolean }) => {
   const playmatIntensity = useCookieString('playmatIntensity');
 
-  const playerID = useAppSelector(
-    (state: RootState) => state.game.gameInfo.playerID
+  const playmat = useAppSelector(
+    (state: RootState) => selectSidePlayer(state, isPlayer).Playmat
   );
-  const isReplay = useAppSelector(
-    (state: RootState) => state.game.gameInfo.isReplay
-  );
-  const spectatorCameraView = useAppSelector(
-    (state: RootState) => state.game.spectatorCameraView
-  );
-
-  // Get both playmats
-  const playerOnePlaymat = useAppSelector(
-    (state: RootState) => state.game.playerOne.Playmat
-  );
-  const playerTwoPlaymat = useAppSelector(
-    (state: RootState) => state.game.playerTwo.Playmat
-  );
-
-  // Determine which playmat to display
-  let playmat;
-  if (playerID === 3 || isReplay) {
-    if (spectatorCameraView === 2) {
-      playmat = isPlayer ? playerTwoPlaymat : playerOnePlaymat;
-    } else {
-      playmat = isPlayer ? playerOnePlaymat : playerTwoPlaymat;
-    }
-  } else {
-    playmat = isPlayer ? playerOnePlaymat : playerTwoPlaymat;
-  }
 
   const styleToApply = useMemo(() => {
     const parsed = Number(playmatIntensity);

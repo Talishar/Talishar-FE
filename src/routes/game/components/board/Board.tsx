@@ -11,8 +11,7 @@ import ExperimentalTurnWidget from '../elements/experimentalTurnWidget';
 import TurnWidget from '../elements/turnWidget/TurnWidget';
 import ManualModePanel from '../leftColumn/ManualModePanel/ManualModePanel';
 import { useAppSelector } from 'app/Hooks';
-import { getGameInfo } from 'features/game/GameSlice';
-import { RootState } from 'app/Store';
+import { selectIsP2View } from 'features/game/perspective';
 import AmbientParticles from '../elements/ambientParticles';
 
 export interface playAreaDimensions {
@@ -22,13 +21,7 @@ export interface playAreaDimensions {
 export const Board = React.memo(function Board() {
   const useOldScreen = useMediaQuery('(orientation: portrait)');
   const experimental = useCookieString('experimental');
-  const { playerID, isReplay } = useAppSelector(getGameInfo);
-  const spectatorCameraView = useAppSelector(
-    (state: RootState) => state.game.spectatorCameraView
-  );
-
-  const isSpectatorViewingPlayer2 =
-    (playerID === 3 || isReplay) && spectatorCameraView === 2;
+  const isSpectatorViewingPlayer2 = useAppSelector(selectIsP2View);
 
   if (useOldScreen) {
     return (

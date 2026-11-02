@@ -7,6 +7,7 @@ import CardPopUp from '../cardPopUp/CardPopUp';
 import CardImage from '../cardImage/CardImage';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import CountersOverlay from '../countersOverlay/CountersOverlay';
+import { selectSidePlayer } from 'features/game/perspective';
 
 export const PHONE_PORTRAIT_QUERY =
   '(orientation: portrait) and (max-width: 600px)';
@@ -55,18 +56,9 @@ export default function Effects(props: Player & { underEquipment?: boolean }) {
     : styles.isOpponent;
 
   const isPlayer = props.isPlayer;
-  const effects = useAppSelector((state: RootState) => {
-    const { playerID, isReplay } = state.game.gameInfo;
-    const isP2View =
-      (playerID === 3 || isReplay) && state.game.spectatorCameraView === 2;
-    return isPlayer
-      ? isP2View
-        ? state.game.playerTwo.Effects
-        : state.game.playerOne.Effects
-      : isP2View
-      ? state.game.playerOne.Effects
-      : state.game.playerTwo.Effects;
-  });
+  const effects = useAppSelector(
+    (state: RootState) => selectSidePlayer(state, isPlayer).Effects
+  );
 
   if (effects === undefined) {
     return <div className={classCSS}></div>;
