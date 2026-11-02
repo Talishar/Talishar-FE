@@ -92,12 +92,7 @@ const CardListCards = ({
   const piles = useMemo(() => groupIntoPiles(cards), [cards]);
 
   const renderCard = (card: Card, key: string) => (
-    <CardDisplay
-      card={card}
-      key={key}
-      isPlayer={!isOpponentZone}
-      highlightSubtype={isAllyCard(card)}
-    />
+    <CardDisplay card={card} key={key} isPlayer={!isOpponentZone} />
   );
 
   if (cards.length === 0) {

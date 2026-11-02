@@ -81,7 +81,6 @@ export interface CardProp {
   isShuffling?: boolean;
   showCountersOnHover?: boolean;
   disableTilt?: boolean;
-  highlightSubtype?: boolean; // draws a subtype outline (used to pick Allies out of a graveyard list)
   playable?: boolean; // hover lift and chartreuse glow regardless of border color
   previewYOffset?: number;
   gemStackIDs?: string[]; // every identical permanent in this stack, so the gem toggles all of them
@@ -98,7 +97,6 @@ export const CardDisplay = (prop: CardProp) => {
     isShuffling,
     showCountersOnHover,
     disableTilt,
-    highlightSubtype,
     playable,
     previewYOffset,
     containerClassName,
@@ -232,8 +230,7 @@ export const CardDisplay = (prop: CardProp) => {
         src={imageSrc}
         alt={card?.cardName ?? prop.name ?? ''}
         className={classNames(styles.img, borderClassFor(card.borderColor), {
-          [styles.tapped]: card.tapped,
-          [styles.subtypeHighlight]: highlightSubtype
+          [styles.tapped]: card.tapped
         })}
         isShuffling={isShuffling}
         isOpponent={isOpponentCard}
