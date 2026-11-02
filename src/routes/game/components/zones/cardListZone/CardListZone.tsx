@@ -4,6 +4,7 @@ import { RootState } from 'app/Store';
 import {
   clearCardListFocus,
   setCardListFocus,
+  setCardListLoadFocus,
   toggleCardListSort,
   getGameInfo
 } from 'features/game/GameSlice';
@@ -24,6 +25,128 @@ const CARD_LIST_OPEN_BODY_CLASS = 'cardListOpen';
 const matchesQuery = (card: Card, normalizedQuery: string): boolean =>
   (card.cardName?.toLowerCase().includes(normalizedQuery) ?? false) ||
   (card.sType?.toLowerCase().includes(normalizedQuery) ?? false);
+
+const PILE_ORDER = [
+  'INT',
+  'PLAY',
+  'PLAYNEXT',
+  'TRAPDOOR',
+  'POWER6',
+  'BLOODDEBT',
+  'EARTH',
+  'ALLY'
+];
+const KNOWN_PILES = new Set([...PILE_ORDER, 'DOWN']);
+const NAMED_PILE_RANK = PILE_ORDER.indexOf('TRAPDOOR') + 0.5;
+
+const pileRank = (pile: string): number => {
+  if (pile === 'DOWN') return PILE_ORDER.length + 1;
+  if (pile === '') return PILE_ORDER.length;
+  const rank = PILE_ORDER.indexOf(pile);
+  return rank === -1 ? NAMED_PILE_RANK : rank;
+};
+
+const cardPile = (card: Card): string =>
+  card.pile ?? (isAllyCard(card) ? 'ALLY' : '');
+
+const ZONE_SWITCH = /^(Your|Opponent's) (Graveyard|Banish Zone|Soul)$/;
+const SWITCH_ZONES = [
+  { zone: 'Graveyard', label: 'ZONES.GRAVEYARD' },
+  { zone: 'Banish Zone', label: 'ZONES.BANISH' },
+  { zone: 'Soul', label: 'ZONES.SOUL' }
+] as const;
+const EMPTY_CARDS: Card[] = [];
+
+interface Pile {
+  pile: string;
+  cards: Card[];
+}
+
+const groupIntoPiles = (cards: Card[]): Pile[] | null => {
+  const piles = new Map<string, Card[]>();
+  for (const card of cards) {
+    const pile = cardPile(card);
+    const pileCards = piles.get(pile);
+    if (pileCards) pileCards.push(card);
+    else piles.set(pile, [card]);
+  }
+  if (piles.size < 2) return null;
+  return Array.from(piles, ([pile, pileCards]) => ({
+    pile,
+    cards: pileCards
+  })).sort((a, b) => pileRank(a.pile) - pileRank(b.pile));
+};
+
+interface CardListCardsProps {
+  cards: Card[];
+  searchQuery: string;
+  isOpponentZone?: boolean;
+}
+
+const CardListCards = ({
+  cards,
+  searchQuery,
+  isOpponentZone
+}: CardListCardsProps) => {
+  const { t } = useTranslation();
+  const piles = useMemo(() => groupIntoPiles(cards), [cards]);
+
+  const renderCard = (card: Card, key: string) => (
+    <CardDisplay
+      card={card}
+      key={key}
+      isPlayer={!isOpponentZone}
+      highlightSubtype={isAllyCard(card)}
+    />
+  );
+
+  if (cards.length === 0) {
+    return (
+      <div className={styles.cardListContents}>
+        <div className={styles.noResults}>
+          {searchQuery
+            ? t('CARD_LIST.NO_CARDS_FOUND', { searchQuery })
+            : t('CARD_LIST.NO_CARDS_IN_ZONE')}
+        </div>
+      </div>
+    );
+  }
+
+  if (!piles) {
+    return (
+      <div className={styles.cardListContents}>
+        {cards.map((card, ix) => renderCard(card, `${card.cardNumber}_${ix}`))}
+      </div>
+    );
+  }
+
+  return (
+    <div className={`${styles.cardListContents} ${styles.pileList}`}>
+      {piles.map(({ pile, cards: pileCards }) => {
+        const name = KNOWN_PILES.has(pile)
+          ? t(`CARD_LIST.PILE.${pile}`)
+          : pile || t('CARD_LIST.PILE.OTHER');
+        return (
+          <div
+            key={`pile_${pile}`}
+            role="group"
+            aria-label={name}
+            className={styles.pile}
+          >
+            <h4 className={styles.pileTitle}>
+              {name} ({pileCards.length})
+            </h4>
+            <div className={styles.pileCards}>
+              {pileCards.map((card, ix) =>
+                renderCard(card, `${pile}_${card.cardNumber}_${ix}`)
+              )}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
 
 export const CardListZone = () => {
   const showModal = useShowModal();
@@ -65,6 +188,40 @@ export const CardListZone = () => {
   }, [cardList?.cardList]);
 
   const isOpponentZone = cardList?.name?.includes("Opponent's") ?? false;
+
+  const zoneSwitch = cardList?.name ? ZONE_SWITCH.exec(cardList.name) : null;
+  const switchOwnerIsPlayer = zoneSwitch?.[1] === 'Your';
+  const switchZoneCards = useAppSelector((state: RootState) => {
+    if (!zoneSwitch) return undefined;
+    const owner = switchOwnerIsPlayer
+      ? state.game.playerOne
+      : state.game.playerTwo;
+    return {
+      Graveyard: owner.Graveyard,
+      'Banish Zone': owner.Banish,
+      soulCount: owner.SoulCount
+    };
+  }, shallowEqual);
+
+  const zoneCount = (zone: (typeof SWITCH_ZONES)[number]['zone']): number =>
+    zone === 'Soul'
+      ? switchZoneCards?.soulCount ?? 0
+      : switchZoneCards?.[zone]?.length ?? 0;
+
+  const switchZone = (zone: (typeof SWITCH_ZONES)[number]['zone']) => {
+    if (!zoneSwitch) return;
+    const name = `${zoneSwitch[1]} ${zone}`;
+    if (zone === 'Soul') {
+      dispatch(
+        setCardListLoadFocus({
+          query: switchOwnerIsPlayer ? 'mySoulPopup' : 'theirSoulPopup',
+          name
+        })
+      );
+    } else {
+      dispatch(setCardListFocus({ cardList: switchZoneCards?.[zone], name }));
+    }
+  };
 
   const showSortAndSearch = !!(
     cardList?.name &&
@@ -131,6 +288,21 @@ export const CardListZone = () => {
               <div className={styles.cardListTitle}>
                 <h3 className={styles.title}>{cardList?.name}</h3>
               </div>
+              {zoneSwitch &&
+                SWITCH_ZONES.map(({ zone, label }) => {
+                  const count = zoneCount(zone);
+                  if (zone === zoneSwitch[2] || count <= 0) return null;
+                  return (
+                    <button
+                      key={zone}
+                      type="button"
+                      className={`${styles.button} ${styles.zoneSwitchButton}`}
+                      onClick={() => switchZone(zone)}
+                    >
+                      {t(label)} ({count})
+                    </button>
+                  );
+                })}
               {showSortAndSearch && (
                 <input
                   type="text"
@@ -162,26 +334,11 @@ export const CardListZone = () => {
                 isOpponentZone={cardList?.name?.includes("Opponent's") ?? false}
               />
             ) : (
-              <div className={styles.cardListContents}>
-                {filteredList && filteredList.length > 0 ? (
-                  filteredList.map((card: Card, ix: number) => (
-                    <CardDisplay
-                      card={card}
-                      key={`${card.cardNumber}_${ix}`}
-                      isPlayer={!isOpponentZone}
-                      highlightSubtype={isAllyCard(card)}
-                    />
-                  ))
-                ) : searchQuery ? (
-                  <div className={styles.noResults}>
-                    {t('CARD_LIST.NO_CARDS_FOUND', { searchQuery })}
-                  </div>
-                ) : (
-                  <div className={styles.noResults}>
-                    {t('CARD_LIST.NO_CARDS_IN_ZONE')}
-                  </div>
-                )}
-              </div>
+              <CardListCards
+                cards={filteredList ?? EMPTY_CARDS}
+                searchQuery={searchQuery}
+                isOpponentZone={isOpponentZone}
+              />
             )}
           </motion.div>
         </>
@@ -254,28 +411,11 @@ const CardListZoneAPI = ({
   }
   if (filteredCards != undefined) {
     content = (
-      <div className={styles.cardListContents}>
-        {filteredCards.length > 0 ? (
-          filteredCards.map((card: Card, ix: number) => {
-            return (
-              <CardDisplay
-                card={card}
-                key={`${card.cardNumber}_${ix}`}
-                isPlayer={!isOpponentZone}
-                highlightSubtype={isAllyCard(card)}
-              />
-            );
-          })
-        ) : searchQuery ? (
-          <div className={styles.noResults}>
-            {t('CARD_LIST.NO_CARDS_FOUND', { searchQuery })}
-          </div>
-        ) : (
-          <div className={styles.noResults}>
-            {t('CARD_LIST.NO_CARDS_IN_ZONE')}
-          </div>
-        )}
-      </div>
+      <CardListCards
+        cards={filteredCards}
+        searchQuery={searchQuery}
+        isOpponentZone={isOpponentZone}
+      />
     );
   }
 

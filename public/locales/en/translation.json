@@ -186,6 +186,18 @@
     "LOADING": "Loading…",
     "NO_CARDS_FOUND": "No cards found matching \"{{searchQuery}}\"",
     "NO_CARDS_IN_ZONE": "No cards in this zone",
+    "PILE": {
+      "ALLY": "Allies",
+      "BLOODDEBT": "Blood Debt",
+      "DOWN": "Face down",
+      "EARTH": "Earth",
+      "INT": "Intimidated",
+      "OTHER": "Other",
+      "PLAY": "May play",
+      "PLAYNEXT": "May play next turn",
+      "POWER6": "6+ power",
+      "TRAPDOOR": "Trap Door"
+    },
     "SORT": "Sort"
   },
   "CHAIN_LINK_SUMMARY": {

@@ -82,6 +82,7 @@ function ParseCard(input: any) {
   card.uniqueId = input.uniqueID ? String(input.uniqueID) : '-';
   card.holoCounters = input.holoCounters ? Boolean(input.holoCounters) : false;
   if (input.goAgain) card.goAgain = true;
+  if (input.pile) card.pile = String(input.pile);
   return card;
 }
 

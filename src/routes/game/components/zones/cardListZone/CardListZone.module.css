@@ -177,6 +177,17 @@
   box-sizing: border-box;
 }
 
+.button:focus,
+.button:active {
+  --background-color: color-mix(
+    in srgb,
+    var(--theme-tertiary) 72%,
+    transparent
+  );
+  --border-color: var(--theme-border, rgba(255, 255, 255, 0.15));
+  --color: var(--theme-text, #f4eded);
+}
+
 .button:hover {
   --background-color: color-mix(
     in srgb,
@@ -223,6 +234,10 @@
     font-size: 0.9rem;
     display: flex;
   }
+}
+
+.zoneSwitchButton {
+  order: 2;
 }
 
 /* ── Close icon - visually rightmost ──────────────────── */
@@ -338,6 +353,81 @@
 @media (orientation: portrait) and (min-width: 601px) and (max-width: 1024px) {
   .cardListContents {
     grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+/* ── Pile headings ────────────────────────────────────── */
+.cardListContents.pileList {
+  display: flex;
+  align-items: stretch;
+  column-gap: 24px;
+  row-gap: 16px;
+}
+
+.pile {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 8px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.pileCards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.pileCards > * {
+  flex: 0 0 auto;
+  width: var(--card-size);
+}
+
+.pileTitle {
+  margin: 0;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--theme-border, rgba(255, 255, 255, 0.12));
+  color: rgba(var(--theme-on-surface-rgb), 0.7);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  width: 0;
+  min-width: 100%;
+}
+
+@media (max-width: 812px) {
+  .cardListContents.pileList {
+    column-gap: 16px;
+    row-gap: 12px;
+  }
+
+  .pileCards {
+    gap: 8px;
+  }
+}
+
+@media (orientation: portrait) and (max-width: 1024px) {
+  .cardListContents.pileList {
+    container-type: inline-size;
+  }
+
+  .pileCards > * {
+    width: calc((100cqw - 4 * 8px) / 5);
+  }
+
+  .pileTitle {
+    width: auto;
+    min-width: 0;
+    font-size: 0.7rem;
+    white-space: nowrap;
+  }
+}
+
+@media (orientation: portrait) and (min-width: 601px) and (max-width: 1024px) {
+  .pileCards > * {
+    width: calc((100cqw - 5 * 8px) / 6);
   }
 }
 

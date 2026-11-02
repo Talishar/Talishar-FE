@@ -37,6 +37,7 @@ export interface Card {
   goAgain?: boolean; // goAgain = 1 if the card on the layer has go again
   section?: string; // multi-select popups: heading this card is grouped under
   limitGroup?: string; // multi-select popups: key into formOptions.groupLimits
+  pile?: string; // graveyard/banish pile code (INT, PLAY, BLOODDEBT, DOWN, ...) or a source card name
 }
 
 const COMMA = 44;
