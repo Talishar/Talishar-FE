@@ -48,42 +48,24 @@
   flex-shrink: 0;
 }
 
-.portrait {
-  position: relative;
+.versus {
   flex-shrink: 0;
+  opacity: 0.45;
 }
 
-.life {
-  position: absolute;
-  right: -0.4em;
-  bottom: -0.4em;
-  display: flex;
+.score {
+  display: grid;
+  grid-template-columns: 1.4em auto 1.4em;
   align-items: center;
-  justify-content: center;
-  width: 2.1em;
-  height: 2.1em;
-  padding-bottom: 0.14em;
-  box-sizing: border-box;
-  border-radius: 50%;
-  background-color: rgba(10, 10, 12, 0.8);
-  font-size: 0.8em;
-  font-weight: 700;
+  gap: 0.3rem;
+  font-size: 0.85em;
+  font-weight: 600;
   line-height: 1;
   font-variant-numeric: tabular-nums;
-  color: var(--white, #fff);
-  text-shadow: 0 0 2px #000, 0 0 1px #000;
-  isolation: isolate;
+  color: var(--theme-text, #f4eded);
 
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    border-radius: 50%;
-    background-image: url('../../../../img/symbols/symbol-health.png');
-    background-position: center;
-    background-size: contain;
-    opacity: 0.55;
+  > span:first-child {
+    text-align: right;
   }
 }
 

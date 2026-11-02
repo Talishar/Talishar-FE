@@ -253,7 +253,7 @@
   padding: 0 0.6em 0.3em;
   font-size: 0.8em;
   color: var(--theme-text-muted, rgba(255, 255, 255, 0.55));
-  text-align: left;
+  text-align: center;
   white-space: nowrap;
 }
 
@@ -266,7 +266,8 @@
 }
 
 .cell {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
   gap: 0.5em;
   align-self: stretch;
@@ -275,6 +276,10 @@
   cursor: pointer;
   user-select: none;
   transition: background-color 0.12s ease;
+
+  &::before {
+    content: '';
+  }
 
   &:hover {
     background-color: rgba(var(--theme-on-surface-rgb), 0.05);

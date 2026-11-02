@@ -11,35 +11,18 @@ const HERO_NAMES = new Map(
   HEROES_OF_RATHE.map((hero) => [hero.value, hero.label])
 );
 
-const HeroPortrait = ({
-  hero,
-  life,
-  lifeLabel
-}: {
-  hero?: string;
-  life?: number;
-  lifeLabel: string;
-}) => {
+const HeroPortrait = ({ hero }: { hero?: string }) => {
   const name = hero ? HERO_NAMES.get(hero) ?? hero : '';
-  return (
-    <div className={styles.portrait}>
-      {hero ? (
-        <img
-          className={styles.heroImg}
-          src={generateCroppedImageUrl(hero)}
-          alt={name}
-          title={name}
-          loading="lazy"
-        />
-      ) : (
-        <div className={styles.heroImg} />
-      )}
-      {life !== undefined && (
-        <span className={styles.life} title={lifeLabel}>
-          {life}
-        </span>
-      )}
-    </div>
+  return hero ? (
+    <img
+      className={styles.heroImg}
+      src={generateCroppedImageUrl(hero)}
+      alt={name}
+      title={name}
+      loading="lazy"
+    />
+  ) : (
+    <div className={styles.heroImg} />
   );
 };
 
@@ -72,17 +55,17 @@ export const InProgressGame = ({
   return (
     <div key={entry.gameName} className={gameItemClass}>
       <div className={styles.heroRow}>
-        <HeroPortrait
-          hero={entry.p1Hero}
-          life={hasLife ? entry.p1Life : undefined}
-          lifeLabel={t('IN_PROGRESS_GAME.LIFE')}
-        />
-        <RiSwordLine />
-        <HeroPortrait
-          hero={entry.p2Hero}
-          life={hasLife ? entry.p2Life : undefined}
-          lifeLabel={t('IN_PROGRESS_GAME.LIFE')}
-        />
+        <HeroPortrait hero={entry.p1Hero} />
+        {hasLife ? (
+          <span className={styles.score} title={t('IN_PROGRESS_GAME.LIFE')}>
+            <span>{entry.p1Life}</span>
+            <RiSwordLine className={styles.versus} aria-hidden="true" />
+            <span>{entry.p2Life}</span>
+          </span>
+        ) : (
+          <RiSwordLine className={styles.versus} />
+        )}
+        <HeroPortrait hero={entry.p2Hero} />
       </div>
       <div className={styles.info}>
         {formatLabel && (
