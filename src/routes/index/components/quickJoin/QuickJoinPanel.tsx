@@ -98,22 +98,23 @@ const QuickJoinPanel = ({ embedded = false, userLayout }: Props) => {
         />
       </label>
 
-      {selectedFavoriteDeck && (
-        <div className={styles.masterySlot}>
-          {isFavoritesLoading ? (
-            <LoadingSkeleton label={t('BASE.LOADING')} rows={1} />
-          ) : selectedFavoriteDeckHero && selectedMasteryProgress ? (
-            <MasteryProgressCard
-              heroId={selectedFavoriteDeckHero}
-              games={selectedMasteryProgress.qualifyingGames}
-              level={selectedMasteryProgress.level}
-              nextThreshold={selectedMasteryProgress.nextThreshold}
-              gamesToNext={selectedMasteryProgress.gamesToNext}
-              compact
-            />
-          ) : null}
-        </div>
-      )}
+      {selectedFavoriteDeck &&
+        (isFavoritesLoading || selectedFavoriteDeckHero) && (
+          <div className={styles.masterySlot}>
+            {isFavoritesLoading ? (
+              <LoadingSkeleton label={t('BASE.LOADING')} rows={1} />
+            ) : selectedFavoriteDeckHero && selectedMasteryProgress ? (
+              <MasteryProgressCard
+                heroId={selectedFavoriteDeckHero}
+                games={selectedMasteryProgress.qualifyingGames}
+                level={selectedMasteryProgress.level}
+                nextThreshold={selectedMasteryProgress.nextThreshold}
+                gamesToNext={selectedMasteryProgress.gamesToNext}
+                compact
+              />
+            ) : null}
+          </div>
+        )}
 
       <label className={styles.label}>
         <span className={styles.labelText}>

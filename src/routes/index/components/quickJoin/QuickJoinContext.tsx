@@ -264,6 +264,18 @@ export const QuickJoinProvider = ({
     setImportDeckError(null);
   }, []);
 
+  useEffect(() => {
+    const decks = favoritesData?.favoriteDecks;
+    if (!selectedFavoriteDeck || !decks) return;
+    if (decks.some((deck: FavoriteDeck) => deck.key === selectedFavoriteDeck))
+      return;
+    setSelectedFavoriteDeck(decks.length ? decks[decks.length - 1].key : '');
+  }, [
+    favoritesData?.favoriteDecks,
+    selectedFavoriteDeck,
+    setSelectedFavoriteDeck
+  ]);
+
   const setSaveDeck = useCallback((v: boolean) => {
     setSaveDeckState(v);
     localStorage.setItem(LS_SAVE_DECK_KEY, String(v));
