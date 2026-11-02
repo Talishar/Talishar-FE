@@ -1,0 +1,33 @@
+.cardId,
+.phase {
+  padding: 0;
+  background: transparent;
+  color: var(--theme-text-secondary);
+  font-size: 0.72rem;
+  word-break: break-all;
+}
+
+.phase {
+  color: var(--theme-text);
+  font-size: 0.78rem;
+}
+
+.modeLabel {
+  display: block;
+  margin-top: 0.15rem;
+  color: var(--theme-text-secondary);
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.contextList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 12rem;
+  font-size: 0.8rem;
+}
+
+.contextItem {
+  white-space: nowrap;
+}

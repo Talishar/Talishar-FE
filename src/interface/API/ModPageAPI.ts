@@ -373,3 +373,52 @@ export interface AdReportResponse {
   daily: AdDailyStat[];
   error?: string;
 }
+
+export type GameHealthRange = 1 | 7 | 30 | 90;
+
+export interface MisclickContext {
+  context: string;
+  contextName: string;
+  isCard: boolean;
+  inputs: number;
+  undos: number;
+  fastUndos: number;
+}
+
+export interface MisclickStat {
+  phase: string;
+  mode: number;
+  inputs: number;
+  undos: number;
+  fastUndos: number;
+  avgUndoMs: number;
+  score: number;
+  contexts: MisclickContext[];
+}
+
+export interface SuspectCardStat {
+  cardID: string;
+  cardName: string;
+  games: number;
+  fixGames: number;
+  score: number;
+  life: number;
+  ap: number;
+  resources: number;
+  draws: number;
+  cards: number;
+  arsenal: number;
+  bugs: number;
+}
+
+export interface GameHealthReportResponse {
+  days: GameHealthRange;
+  since: string;
+  games: number;
+  inputs: number;
+  undos: number;
+  fastUndos: number;
+  misclicks: MisclickStat[];
+  cards: SuspectCardStat[];
+  error?: string;
+}

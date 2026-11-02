@@ -19,6 +19,7 @@ import UsernameModeration from './UsernameModeration';
 import DeleteUsernameAutocomplete from './DeleteUsernameAutocomplete';
 import PuzzleCandidates from './PuzzleCandidates';
 import AdStats from './AdStats';
+import GameHealth from './GameHealth';
 import BlockReports from './BlockReports';
 import PlayerReports from './PlayerReports';
 import blockStyles from './BlockReports.module.css';
@@ -31,6 +32,7 @@ const MOD_TABS = [
   { id: 'reports', labelKey: 'MOD_PAGE.TAB_REPORTS' },
   { id: 'tools', labelKey: 'MOD_PAGE.TAB_TOOLS' },
   { id: 'puzzles', labelKey: 'MOD_PAGE.TAB_PUZZLES' },
+  { id: 'health', labelKey: 'MOD_PAGE.TAB_HEALTH' },
   { id: 'ads', labelKey: 'MOD_PAGE.TAB_ADS' }
 ] as const;
 
@@ -1014,6 +1016,8 @@ const ModPage: React.FC = () => {
 
 
           {activeTab === 'puzzles' && <PuzzleCandidates />}
+
+          {activeTab === 'health' && <GameHealth />}
 
           {activeTab === 'ads' && <AdStats />}
         </div>

@@ -94,6 +94,8 @@ import {
   SearchUsernamesResponse,
   AdReportRange,
   AdReportResponse,
+  GameHealthRange,
+  GameHealthReportResponse,
   PuzzleCandidatesResponse,
   CreatePuzzleGameRequest,
   CreatePuzzleGameResponse,
@@ -729,6 +731,17 @@ export const apiSlice = createApi({
         responseHandler: parseResponse
       })
     }),
+    getGameHealthReport: builder.query<
+      GameHealthReportResponse,
+      GameHealthRange
+    >({
+      query: (days) => ({
+        url: URL_END_POINT.GET_GAME_HEALTH_REPORT,
+        method: 'GET',
+        params: { days },
+        responseHandler: parseResponse
+      })
+    }),
     getPuzzleCandidates: builder.query<
       PuzzleCandidatesResponse,
       PuzzleKind | void
@@ -1217,6 +1230,7 @@ export const {
   useKickPlayerMutation,
   useGetModPageDataQuery,
   useGetAdReportQuery,
+  useGetGameHealthReportQuery,
   useGetPuzzleCandidatesQuery,
   useCreatePuzzleGameMutation,
   useVerifyPuzzleCandidateMutation,
