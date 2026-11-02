@@ -32,7 +32,12 @@ import classNames from 'classnames';
 import GameState from 'features/GameState';
 import { Card } from 'features/Card';
 import { subcardOverflowStyle } from './subcardOverflow';
-import { popupCardDisplayOrder, stackDeckCopies } from './sortPopupCards';
+import {
+  orderLinkedCopies,
+  popupCardDisplayOrder,
+  stackDeckCopies
+} from './sortPopupCards';
+import { selectObjectLinks } from 'features/game/objectLinks';
 import { withinGroupLimits } from './groupLimits';
 import { FAN_WINDOW_VH } from '../../zones/playerHand/fanLayout';
 
@@ -68,6 +73,7 @@ export default function PlayerInputPopUp() {
   const turnPhase = useAppSelector(
     (state: RootState) => state.game.turnPhase?.turnPhase ?? ''
   );
+  const objectLinks = useAppSelector(selectObjectLinks);
 
   const [checkedState, setCheckedState] = useState(
     new Array(inputPopUp?.multiChooseText?.length).fill(false)
@@ -252,10 +258,14 @@ export default function PlayerInputPopUp() {
     () =>
       stackDeckCopies(
         popupCards,
-        popupCardDisplayOrder(popupCards, turnPhase),
+        orderLinkedCopies(
+          popupCards,
+          popupCardDisplayOrder(popupCards, turnPhase),
+          objectLinks
+        ),
         turnPhase
       ),
-    [popupCards, turnPhase]
+    [popupCards, turnPhase, objectLinks]
   );
   const filteredCardEntries = useMemo(() => {
     const cards: Card[] = [];

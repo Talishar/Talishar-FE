@@ -6,6 +6,7 @@ export const prepareCards = (cards: Card[]): Card[] =>
       ({
         ...card,
         borderColor: '8',
-        uniqueId: `${card.cardNumber}-${index}`
+        uniqueId: `${card.cardNumber}-${index}`,
+        linkUid: card.linkUid ?? card.uniqueId
       } as Card)
   );

@@ -376,3 +376,33 @@
   --counters-opacity: 1;
   --counters-pointer-events: auto;
 }
+
+.objectLink {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: 7%;
+  pointer-events: none;
+  transition: box-shadow 0.15s ease;
+}
+
+.objectLink:global(.objectLinkActive) {
+  box-shadow: 0 0 0 2px var(--theme-text), 0 0 14px 2px rgba(255, 255, 255, 0.45);
+}
+
+.objectLinkNumber {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  padding: 0 0.4em;
+  min-width: 1.5em;
+  font-size: clamp(11px, calc(var(--card-size) * 0.14), 16px);
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: center;
+  white-space: nowrap;
+  color: var(--theme-text);
+  background-color: var(--near-black);
+  border: 1px solid var(--theme-border);
+  border-radius: 999px;
+}

@@ -9,9 +9,21 @@ import CardPopUp from '../cardPopUp/CardPopUp';
 import CombatChainLink from 'features/CombatChainLink';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
-import React, { useState, useCallback, useMemo } from 'react';
+import React, {
+  useState,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef
+} from 'react';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import { CARD_SQUARES_PATH, getCollectionCardImagePath } from 'utils';
+import {
+  highlightLinkedObjects,
+  linkKeyOf,
+  objectLinkLabel,
+  selectObjectLinks
+} from 'features/game/objectLinks';
 
 const subCardProps = new Map<string, Card>();
 const getSubCardProp = (cardNumber: string): Card => {
@@ -84,6 +96,7 @@ export interface CardProp {
   playable?: boolean; // hover lift and chartreuse glow regardless of border color
   previewYOffset?: number;
   gemStackIDs?: string[]; // every identical permanent in this stack, so the gem toggles all of them
+  linkKeys?: string[]; // every object in this stack that a prompt or the stack can point at
   children?: React.ReactNode;
 }
 
@@ -101,6 +114,7 @@ export const CardDisplay = (prop: CardProp) => {
     previewYOffset,
     containerClassName,
     gemStackIDs,
+    linkKeys,
     children
   } = prop;
   const dispatch = useAppDispatch();
@@ -123,8 +137,32 @@ export const CardDisplay = (prop: CardProp) => {
   ) ?? { cardNumber: '' };
   const { getLanguage } = useLanguageSelector();
   const [showSubCards, setShowSubCards] = useState(false);
-  const handleHoverStart = useCallback(() => setShowSubCards(true), []);
-  const handleHoverEnd = useCallback(() => setShowSubCards(false), []);
+  const ownLinkKey = linkKeyOf(card);
+  const objectLinkKeys = linkKeys ?? (ownLinkKey ? [ownLinkKey] : undefined);
+  const objectLink = useAppSelector((state: RootState) =>
+    objectLinkKeys
+      ? objectLinkLabel(selectObjectLinks(state), objectLinkKeys)
+      : undefined
+  );
+  const objectLinkAttr =
+    objectLink !== undefined ? objectLinkKeys?.join(' ') : undefined;
+  const highlightedLink = useRef<string>();
+  const setLinkHighlight = useCallback((keys: string | undefined) => {
+    highlightedLink.current
+      ?.split(' ')
+      .forEach((key) => highlightLinkedObjects(key, false));
+    highlightedLink.current = keys;
+    keys?.split(' ').forEach((key) => highlightLinkedObjects(key, true));
+  }, []);
+  useEffect(() => () => setLinkHighlight(undefined), [setLinkHighlight]);
+  const handleHoverStart = useCallback(() => {
+    setShowSubCards(true);
+    setLinkHighlight(objectLinkAttr);
+  }, [objectLinkAttr, setLinkHighlight]);
+  const handleHoverEnd = useCallback(() => {
+    setShowSubCards(false);
+    setLinkHighlight(undefined);
+  }, [setLinkHighlight]);
   const subCardsToShow = useMemo(() => {
     const subcards = card?.subcards;
     if (!subcards || subcards.length === 0) return EMPTY_SUBCARDS;
@@ -273,6 +311,13 @@ export const CardDisplay = (prop: CardProp) => {
         activeCombatChain={activeCombatChain}
         goAgain={card.goAgain}
       />
+      {objectLinkAttr !== undefined && (
+        <div className={styles.objectLink} data-object-link={objectLinkAttr}>
+          {objectLink ? (
+            <span className={styles.objectLinkNumber}>{objectLink}</span>
+          ) : null}
+        </div>
+      )}
       {children}
     </CardPopUp>
   );

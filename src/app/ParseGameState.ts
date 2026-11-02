@@ -478,6 +478,13 @@ export default function ParseGameState(input: any) {
     result.turnPhase = input.turnPhase;
   }
 
+  const popup = input.playerInputPopUp?.popup;
+  for (const cards of [popup?.cards, popup?.topCards, popup?.bottomCards]) {
+    if (!Array.isArray(cards)) continue;
+    for (const card of cards) {
+      if (card?.uniqueID != null) card.uniqueId = String(card.uniqueID);
+    }
+  }
   result.playerInputPopUp = input.playerInputPopUp;
 
   // if it's the first turn of the game add these details:

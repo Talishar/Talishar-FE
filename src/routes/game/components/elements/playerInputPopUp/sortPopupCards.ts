@@ -1,4 +1,5 @@
 import { Card } from 'features/Card';
+import { linkKeyOf } from 'features/game/objectLinks';
 
 const MIN_SORTED_CARDS = 8;
 
@@ -74,6 +75,38 @@ export const popupCardDisplayOrder = (
     start = end;
   }
   return order;
+};
+
+// Copies of one card that link to board objects follow their board numbers.
+export const orderLinkedCopies = (
+  cards: Card[] | undefined,
+  order: number[],
+  links: Map<string, number>
+): number[] => {
+  if (!cards || links.size === 0) return order;
+  const linkNumber = (cardIndex: number) => {
+    const key = linkKeyOf(cards[cardIndex]);
+    return key ? links.get(key) ?? 0 : 0;
+  };
+  const positions = new Map<string, number[]>();
+  order.forEach((cardIndex, position) => {
+    if (!linkNumber(cardIndex)) return;
+    const cardNumber = cards[cardIndex].cardNumber;
+    const list = positions.get(cardNumber);
+    if (list) list.push(position);
+    else positions.set(cardNumber, [position]);
+  });
+
+  let result = order;
+  for (const list of positions.values()) {
+    if (list.length < 2) continue;
+    const sorted = list
+      .map((position) => order[position])
+      .sort((a, b) => linkNumber(a) - linkNumber(b));
+    if (result === order) result = order.slice();
+    list.forEach((position, ix) => (result[position] = sorted[ix]));
+  }
+  return result;
 };
 
 const deckPickZone = (card: Card, phase: string) => {

@@ -14,6 +14,7 @@ import {
 import InitialGameState from './InitialGameState';
 import GameStaticInfo, { AltArt } from '../GameStaticInfo';
 import { Card, isAllyCard } from '../Card';
+import { linkKeyOf } from './objectLinks';
 import { BACKEND_URL, PROCESS_INPUT, URL_END_POINT } from 'appConstants';
 import Button from '../Button';
 import GameState, { QueuedHandPlay } from '../GameState';
@@ -1456,7 +1457,7 @@ const stacksTogether = (a: Card, b: Card): boolean => {
   const bKeys = Object.keys(b) as (keyof Card)[];
   let aCount = 0;
   for (const key of aKeys) {
-    if (key === 'actionDataOverride') continue;
+    if (key === 'actionDataOverride' || key === 'uniqueId') continue;
     aCount++;
     if (!(key in b)) return false;
     const aValue = a[key];
@@ -1466,7 +1467,7 @@ const stacksTogether = (a: Card, b: Card): boolean => {
   }
   let bCount = 0;
   for (const key of bKeys) {
-    if (key !== 'actionDataOverride') bCount++;
+    if (key !== 'actionDataOverride' && key !== 'uniqueId') bCount++;
   }
   return aCount === bCount;
 };
@@ -1475,6 +1476,11 @@ const gemStackIDsFor = (card: Card): string[] | undefined =>
   card.gem && card.gem !== 'none' && card.actionDataOverride !== undefined
     ? [card.actionDataOverride]
     : undefined;
+
+const linkKeysFor = (card: Card): string[] | undefined => {
+  const linkKey = linkKeyOf(card);
+  return linkKey ? [linkKey] : undefined;
+};
 
 const buildPermanentsAsStack = (
   permanents: Card[] | undefined
@@ -1495,7 +1501,8 @@ const buildPermanentsAsStack = (
         card: currentCard,
         count: 1,
         id: `${currentCard.cardNumber}-${idIndex++}`,
-        gemStackIDs: gemStackIDsFor(currentCard)
+        gemStackIDs: gemStackIDsFor(currentCard),
+        linkKeys: linkKeysFor(currentCard)
       });
       continue;
     }
@@ -1511,6 +1518,8 @@ const buildPermanentsAsStack = (
           if (stackIDs && currentCard.actionDataOverride !== undefined) {
             stackIDs.push(currentCard.actionDataOverride);
           }
+          const linkKey = linkKeyOf(currentCard);
+          if (linkKey) (result[idx].linkKeys ??= []).push(linkKey);
           matched = true;
           break;
         }
@@ -1528,7 +1537,8 @@ const buildPermanentsAsStack = (
         card: currentCard,
         count: 1,
         id: `${currentCard.cardNumber}-${idIndex++}`,
-        gemStackIDs: gemStackIDsFor(currentCard)
+        gemStackIDs: gemStackIDsFor(currentCard),
+        linkKeys: linkKeysFor(currentCard)
       });
     }
   }

@@ -32,6 +32,7 @@ export interface Card {
   marked?: boolean; // marked = 1 if marked
   tapped?: boolean; // tapped = 1 if tapped
   uniqueId?: string;
+  linkUid?: string; // uniqueId of the board object this copy points at, when uniqueId is reused as a list key
   isOpponent?: boolean; // isOpponent = whether the card belongs to the opponent
   holoCounters?: boolean; // holoCounters = 1 if the card has holographic counters
   goAgain?: boolean; // goAgain = 1 if the card on the layer has go again
