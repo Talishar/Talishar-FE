@@ -154,6 +154,12 @@ h3 {
   border-radius: 8px;
 }
 
+/* The hover wrapper around a portrait: the portrait clips itself, so the
+   wrapper can let the mastery rank tab hang past its bottom edge. */
+.rankHost {
+  overflow: visible;
+}
+
 .opponentLoading {
   position: absolute;
   inset: 0;

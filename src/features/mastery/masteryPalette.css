@@ -11,6 +11,8 @@
   --mastery-highlight: #825b45;
   --mastery-shadow: #1a0e0a;
   --mastery-pad: 4px;
+  --mastery-rank-bg: #4a2b20;
+  --mastery-rank-text: #ecd2c0;
 }
 
 /* 15 / 25 games: bronze. */
@@ -20,6 +22,8 @@
   --mastery-highlight: #e3a483;
   --mastery-shadow: #3d1d0f;
   --mastery-pad: 5px;
+  --mastery-rank-bg: #dc9258;
+  --mastery-rank-text: #3a1b0d;
 }
 
 /* 35 / 50 games: silver. */
@@ -29,6 +33,8 @@
   --mastery-highlight: #eff4f8;
   --mastery-shadow: #414b56;
   --mastery-pad: 5px;
+  --mastery-rank-bg: #dbe3ea;
+  --mastery-rank-text: #38414b;
 }
 
 /* 75 / 100 games: gold. */
@@ -39,6 +45,8 @@
   --mastery-shadow: #68400f;
   --mastery-glow: rgba(255, 195, 53, 0.18);
   --mastery-pad: 6px;
+  --mastery-rank-bg: #f2c443;
+  --mastery-rank-text: #573409;
 }
 
 /* 150 / 200 games: emerald. */
@@ -49,6 +57,8 @@
   --mastery-shadow: #0c3d2f;
   --mastery-glow: rgba(45, 209, 158, 0.2);
   --mastery-pad: 6px;
+  --mastery-rank-bg: #35cc98;
+  --mastery-rank-text: #08372a;
 }
 
 /* 250 / 350 games: diamond. */
@@ -59,6 +69,8 @@
   --mastery-shadow: #14264d;
   --mastery-glow: rgba(88, 156, 255, 0.32);
   --mastery-pad: 7px;
+  --mastery-rank-bg: #5c9df2;
+  --mastery-rank-text: #0c1d42;
 }
 
 /* 500 / 750 games: amethyst. */
@@ -69,6 +81,8 @@
   --mastery-shadow: #2c1552;
   --mastery-glow: rgba(146, 92, 235, 0.3);
   --mastery-pad: 7px;
+  --mastery-rank-bg: #7f52d6;
+  --mastery-rank-text: #f6efff;
 }
 
 /* 1,000 games: crimson. */
@@ -79,6 +93,8 @@
   --mastery-glow: rgba(190, 26, 30, 0.4);
   --mastery-pad: 8px;
   --mastery-gem: 11px;
+  --mastery-rank-bg: #9e1519;
+  --mastery-rank-text: #fff4f2;
 }
 
 [data-mastery-level='12'][data-mastery-level],

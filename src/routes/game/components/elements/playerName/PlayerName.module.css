@@ -21,6 +21,13 @@
   overflow: visible;
 }
 
+/* Room under the bottom plate for the mastery rank tab hanging off it. */
+@media (min-width: 1201px) {
+  .playerName.playerTwo[data-framed] {
+    margin-bottom: 0.7em;
+  }
+}
+
 @media (max-width: 1200px) {
   .playerName {
     position: fixed;

@@ -57,7 +57,7 @@ import {
 import { JUDGE_HUB_DISCORD_URL } from 'constants/socialLinks';
 import { getReadableFormatName, getShortFormatName } from 'utils/formatUtils';
 import { masteryLevelPreview } from 'features/mastery/mastery';
-import MasteryPlate from 'features/mastery/MasteryPlate';
+import MasteryPlate, { MasteryRank } from 'features/mastery/MasteryPlate';
 
 const COMPETITIVE_FORMATS = new Set([
   GAME_FORMAT.COMPETITIVE_CC,
@@ -1397,14 +1397,18 @@ const Lobby = () => {
             <div className={styles.titleContainer}>
               <CardPopUp
                 cardNumber={data.deck.hero}
-                containerClass={styles.leftCol}
+                containerClass={classNames(styles.leftCol, styles.rankHost)}
                 disableTilt
               >
                 <div
                   className={styles.leftCol}
                   style={{ backgroundImage: leftPic }}
                 >
-                  <MasteryPlate level={leftMasteryLevel} variant="inside" />
+                  <MasteryPlate
+                    level={leftMasteryLevel}
+                    variant="inside"
+                    rank="detached"
+                  />
                   <MyLoadout />
                   <div className={styles.dimPic}>
                     <h3 aria-busy={isLoading}>
@@ -1422,17 +1426,22 @@ const Lobby = () => {
                     </h3>
                   </div>
                 </div>
+                <MasteryRank level={leftMasteryLevel} />
               </CardPopUp>
               <CardPopUp
                 cardNumber={gameLobby?.theirHero ?? 'CardBack'}
-                containerClass={styles.rightCol}
+                containerClass={classNames(styles.rightCol, styles.rankHost)}
                 disableTilt
               >
                 <div
                   className={styles.rightCol}
                   style={{ backgroundImage: rightPic }}
                 >
-                  <MasteryPlate level={rightMasteryLevel} variant="inside" />
+                  <MasteryPlate
+                    level={rightMasteryLevel}
+                    variant="inside"
+                    rank="detached"
+                  />
                   {gameLobby?.theirArena && (
                     <Loadout
                       loadout={gameLobby.theirArena}
@@ -1511,6 +1520,7 @@ const Lobby = () => {
                     </div>
                   </div>
                 </div>
+                <MasteryRank level={rightMasteryLevel} />
               </CardPopUp>
               {showsSettingsInPanel && (
                 <div className={styles.panelLobbySettings} title={lobbyTooltip}>

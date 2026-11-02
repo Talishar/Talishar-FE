@@ -414,7 +414,7 @@ export default function PlayerName(player: Player) {
       data-framed={masteryLevel > 0 ? '' : undefined}
       ref={dropdownRef}
     >
-      <MasteryPlate level={masteryLevel} size="compact" />
+      <MasteryPlate level={masteryLevel} size="compact" rank />
       <div className={styles.nameContainer}>
         <div className={styles.nameContent}>
           <UserBadgeIcons

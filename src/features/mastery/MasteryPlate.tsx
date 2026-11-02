@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import { ornamentTier } from './mastery';
+import { ornamentTier, ROMAN_LEVELS } from './mastery';
 import './masteryPalette.css';
 import styles from './MasteryPlate.module.css';
 
@@ -11,6 +11,10 @@ interface Props {
   variant?: 'inside' | 'outside';
   /** `compact` thins the whole frame for boxes only a couple of lines tall. */
   size?: 'compact';
+  /** Centers a roman numeral tab on the bottom band, in place of the bottom
+   *  gem. `detached` only drops the gem, for hosts that clip the plate: they
+   *  render <MasteryRank> outside the clipping box instead. */
+  rank?: boolean | 'detached';
   className?: string;
 }
 
@@ -57,14 +61,31 @@ const EDGES = {
   right: 'edgeRight'
 } as const;
 
+/** Positioned against the same box as the plate it belongs to. */
+export const MasteryRank = ({ level }: { level: number }) =>
+  level < 1 ? null : (
+    <span
+      className={styles.rank}
+      data-mastery-level={level}
+      aria-hidden="true"
+    >
+      {ROMAN_LEVELS[level]}
+    </span>
+  );
+
 const MasteryPlate = ({
   level,
   variant = 'outside',
   size,
+  rank = false,
   className
 }: Props) => {
   if (level < 1) return null;
   const tier = ornamentTier(level);
+  const ornaments = ORNAMENTS.filter(
+    (ornament) =>
+      tier >= ornament.from && !(rank && ornament.key === 'gemBottom')
+  );
   return (
     <span
       className={classNames(
@@ -82,7 +103,7 @@ const MasteryPlate = ({
       <span className={styles.lip} />
       {tier >= 6 && <span className={styles.ring} />}
       {tier >= 6 && <span className={styles.crest} />}
-      {ORNAMENTS.filter((ornament) => tier >= ornament.from).map((ornament) => (
+      {ornaments.map((ornament) => (
         <span
           key={ornament.key}
           className={classNames(
@@ -93,6 +114,7 @@ const MasteryPlate = ({
           style={{ '--orn-pos': ornament.pos } as React.CSSProperties}
         />
       ))}
+      {rank === true && <MasteryRank level={level} />}
     </span>
   );
 };
