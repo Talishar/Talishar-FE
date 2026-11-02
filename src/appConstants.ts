@@ -379,6 +379,11 @@ const PRECON_DECK_DATA = [
     name: 'Malice, Domina of the Dead',
     link: 'https://fabrary.net/decks/01KXQF1YZHCHP2KAMDBS5WC5Q9',
     hero: 'IAR053'
+  },
+  {
+    name: 'Dr. Mortimer, Blight of the Pits',
+    link: 'https://fabrary.net/decks/01M01B0MCJRZHMDRFZNBCT1B1J',
+    hero: 'MPA002'
   }
 ];
 
