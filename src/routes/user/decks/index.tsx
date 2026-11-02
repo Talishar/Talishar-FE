@@ -376,7 +376,12 @@ export const DecksPage = () => {
     setIsAddingDeck(true);
     try {
       const deckPayload: AddFavoriteDeckRequest = { fabdb: newDeckUrl };
-      const addDeckPromise = addFavoriteDeck(deckPayload).unwrap();
+      const addDeckPromise = addFavoriteDeck(deckPayload)
+        .unwrap()
+        .then((response) => {
+          if (!response.success) throw new Error(response.message);
+          return response;
+        });
       toast.promise(
         addDeckPromise,
         {
