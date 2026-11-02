@@ -424,6 +424,24 @@ function hideQueuedHandPlays(state: Draft<GameState>): void {
   }
 }
 
+function syncGraveyardListGems(state: Draft<GameState>): void {
+  const focus = state.cardListFocus;
+  if (focus?.name !== 'Your Graveyard' || !focus.cardList) return;
+  const liveGems = new Map<string, Card['gem']>();
+  for (const card of state.playerOne.Graveyard ?? []) {
+    if (card.zone === 'GY') {
+      liveGems.set(`${card.cardNumber}:${card.actionDataOverride}`, card.gem);
+    }
+  }
+  if (liveGems.size === 0) return;
+  for (const list of [focus.cardList, focus.originalCardList]) {
+    for (const card of list ?? []) {
+      const gem = liveGems.get(`${card.cardNumber}:${card.actionDataOverride}`);
+      if (gem !== undefined && card.gem !== gem) card.gem = gem;
+    }
+  }
+}
+
 function mergeReceivedGameState(
   state: Draft<GameState>,
   prevGame: GameState,
@@ -450,6 +468,7 @@ function mergeReceivedGameState(
   state.playerOne = mergePlayer(prevGame.playerOne, payload.playerOne);
   hideQueuedHandPlays(state);
   state.playerTwo = mergePlayer(prevGame.playerTwo, payload.playerTwo);
+  syncGraveyardListGems(state);
 
   state.activeChainLink = preserveIdentities(
     prevGame.activeChainLink,
