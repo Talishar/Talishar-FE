@@ -380,6 +380,7 @@
     "DISMISS": "Cliquez pour rejeter"
   },
   "FILTER": {
+    "CLEAR": "Effacer le filtre de héros",
     "HERO_FILTER": "Filtre des héros"
   },
   "FOOTER": {
@@ -398,9 +399,16 @@
     "USER_LINKS_LABEL": "Liens utilisateurs"
   },
   "GAME_FILTER": {
+    "CASUAL": "Libre",
+    "COMPETITIVE": "Compétitif",
     "FILTER_GAMES": "Filtrer les jeux",
-    "RESET_FILTER": "Réinitialiser les filtres",
-    "UNCHECK_ALL": "Tout décocher"
+    "FORMATS": "Formats",
+    "SELECT_ALL": "Tous",
+    "SELECT_NONE": "Aucun",
+    "SORT": "Trier",
+    "SORT_FORMAT": "Format",
+    "SORT_LOW_LIFE": "Vie la plus basse",
+    "SORT_NEWEST": "Récentes"
   },
   "GAME_LIST": {
     "DISABLE_EXPERIMENTAL": "Désactiver les fonctionnalités expérimentales",
@@ -623,7 +631,9 @@
     "TITLE": "Inventaire"
   },
   "IN_PROGRESS_GAME": {
-    "SPECTATE": "Observer"
+    "LIFE": "Points de vie",
+    "SPECTATE": "Observer",
+    "TURN": "Tour {{turn}}"
   },
   "JOIN": {
     "BACK": "Retour",

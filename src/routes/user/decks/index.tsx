@@ -42,7 +42,11 @@ import { generateCroppedImageUrl } from 'utils/cropImages';
 import { getReadableFormatName } from 'utils/formatUtils';
 import { HEROES_OF_RATHE } from 'routes/index/components/filter/constants';
 import MasteryFrame from 'features/mastery/MasteryFrame';
-import { DEFAULT_FRAME, ROMAN_LEVELS } from 'features/mastery/mastery';
+import {
+  DEFAULT_FRAME,
+  ROMAN_LEVELS,
+  masteryHeroId
+} from 'features/mastery/mastery';
 import styles from './decks.module.css';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -485,7 +489,7 @@ export const DecksPage = () => {
   const showUpsell = !isSupporter;
 
   const renderMasteryFrames = (heroId: string) => {
-    const progress = masteryByHero.get(heroId);
+    const progress = masteryByHero.get(masteryHeroId(heroId));
     const earned = progress?.level ?? 0;
     const heroName =
       HEROES_OF_RATHE.find((hero) => hero.value === heroId)?.label ?? heroId;

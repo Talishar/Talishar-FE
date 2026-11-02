@@ -4,7 +4,7 @@ import { toast } from 'react-hot-toast';
 import { ImageSelect } from 'components/ImageSelect';
 import { useGetHeroMasteryQuery } from 'features/api/apiSlice';
 import MasteryProgressCard from 'features/mastery/MasteryProgressCard';
-import { emptyMastery } from 'features/mastery/mastery';
+import { emptyMastery, masteryHeroId } from 'features/mastery/mastery';
 import useAuth from 'hooks/useAuth';
 import { useQuickJoin } from './QuickJoinContext';
 import styles from './QuickJoinPanel.module.css';
@@ -55,7 +55,7 @@ const QuickJoinPanel = ({ embedded = false, userLayout }: Props) => {
   });
   const selectedMasteryProgress = selectedFavoriteDeckHero
     ? masteryData?.heroes?.find(
-        (hero) => hero.heroId === selectedFavoriteDeckHero
+        (hero) => hero.heroId === masteryHeroId(selectedFavoriteDeckHero)
       ) ?? emptyMastery(selectedFavoriteDeckHero)
     : null;
   const importDeckInputRef = useRef<HTMLInputElement>(null);

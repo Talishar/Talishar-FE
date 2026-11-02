@@ -1,6 +1,5 @@
-import { useMemo, useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaCheck, FaLock } from 'react-icons/fa';
 import { useGetHeroMasteryQuery } from 'features/api/apiSlice';
 import { HEROES_OF_RATHE } from 'routes/index/components/filter/constants';
 import { generateCroppedImageUrl } from 'utils/cropImages';
@@ -17,12 +16,10 @@ import {
 import { HeroMasteryProgress } from 'interface/API/HeroMastery';
 import styles from './Mastery.module.css';
 
-type Filter = 'all' | 'played' | 'mastered';
 type SortOrder = 'rank' | 'alphabetical';
 type Hero = (typeof HEROES_OF_RATHE)[number];
 
 const UNPLAYED_PREVIEW_COUNT = 8;
-const CLOSEST_COUNT = 4;
 
 const progressPercent = (item: HeroMasteryProgress, milestones: number[]) => {
   const start = progressStart(item.level, milestones);
@@ -37,7 +34,6 @@ const Mastery = () => {
   const { data, isLoading, error } = useGetHeroMasteryQuery();
   const { showAds } = useSupporterStatus();
   useAdScript(showAds);
-  const [filter, setFilter] = useState<Filter>('all');
   const [sortOrder, setSortOrder] = useState<SortOrder>('rank');
   const [activeGroupKey, setActiveGroupKey] = useState('classicConstructed');
   const [query, setQuery] = useState('');
@@ -100,14 +96,6 @@ const Mastery = () => {
           : best,
       null
     );
-    const closest = played
-      .filter((hero) => hero.gamesToNext !== null && heroById.has(hero.heroId))
-      .sort(
-        (left, right) =>
-          (left.gamesToNext ?? 0) - (right.gamesToNext ?? 0) ||
-          right.qualifyingGames - left.qualifyingGames
-      )
-      .slice(0, CLOSEST_COUNT);
     const groupTotals = groups.map((group) => {
       const groupHeroes = group.heroes.map(
         (hero) => progress.get(hero.value) ?? emptyMastery(hero.value)
@@ -125,13 +113,9 @@ const Mastery = () => {
       totalGames: played.reduce((sum, hero) => sum + hero.qualifyingGames, 0),
       heroesPlayed: played.length,
       highest,
-      closest,
       groupTotals
     };
-  }, [data?.heroes, groups, heroById, progress]);
-
-  const groupOf = (heroId: string) =>
-    groups.find((group) => group.heroes.some((hero) => hero.value === heroId));
+  }, [data?.heroes, groups, progress]);
 
   const activeGroup =
     groups.find((group) => group.key === activeGroupKey) ?? groups[0];
@@ -155,17 +139,12 @@ const Mastery = () => {
         !normalizedQuery || hero.label.toLowerCase().includes(normalizedQuery)
     )
   );
-  const playedHeroes = matchingHeroes.filter((hero) => {
-    const item = mastery(hero.value);
-    if (item.qualifyingGames === 0) return false;
-    return filter !== 'mastered' || item.level > 0;
-  });
-  const unplayedHeroes =
-    filter === 'all'
-      ? matchingHeroes.filter(
-          (hero) => mastery(hero.value).qualifyingGames === 0
-        )
-      : [];
+  const playedHeroes = matchingHeroes.filter(
+    (hero) => mastery(hero.value).qualifyingGames > 0
+  );
+  const unplayedHeroes = matchingHeroes.filter(
+    (hero) => mastery(hero.value).qualifyingGames === 0
+  );
   const unplayedOpen = showUnplayed || normalizedQuery !== '';
 
   const selectedId =
@@ -194,12 +173,6 @@ const Mastery = () => {
       count: item.gamesToNext ?? 0,
       mastery: t('MASTERY.LEVEL', { level: ROMAN_LEVELS[item.level + 1] })
     });
-
-  const filterLabels: Record<Filter, string> = {
-    all: t('MASTERY.FILTER.ALL'),
-    played: t('MASTERY.FILTER.PLAYED'),
-    mastered: t('MASTERY.FILTER.MASTERED')
-  };
 
   const renderHero = (hero: Hero) => {
     const item = mastery(hero.value);
@@ -237,11 +210,85 @@ const Mastery = () => {
     );
   };
 
+  const renderTrack = () => {
+    if (!selected) return null;
+    const item = mastery(selected.value);
+    const isMaximum = item.nextThreshold === null;
+    const steps = milestones.length;
+    const reached =
+      item.level === 0
+        ? 0
+        : isMaximum
+        ? steps - 1
+        : item.level - 1 + progressPercent(item, milestones) / 100;
+
+    return (
+      <section className={styles.track} aria-label={t('MASTERY.FRAMES')}>
+        <div className={styles.trackHeader}>
+          <strong>{selected.label}</strong>
+          {isMaximum ? (
+            <em>{t('MASTERY.MAXIMUM_REACHED')}</em>
+          ) : (
+            <>
+              <em>{gamesUntilLabel(item)}</em>
+              <span
+                aria-label={t('MASTERY.GAMES_PROGRESS_LABEL', {
+                  games: item.qualifyingGames,
+                  threshold: item.nextThreshold
+                })}
+              >
+                {item.qualifyingGames.toLocaleString()} /{' '}
+                {item.nextThreshold?.toLocaleString()}
+              </span>
+            </>
+          )}
+        </div>
+        <div className={styles.trackScroll}>
+          <ol
+            className={styles.trackSteps}
+            style={
+              {
+                '--track-inset': `${50 / steps}%`,
+                '--track-fill': `${(reached / steps) * 100}%`
+              } as React.CSSProperties
+            }
+          >
+            {milestones.map((threshold, index) => {
+              const level = index + 1;
+              return (
+                <li
+                  key={level}
+                  data-reached={item.level >= level}
+                  data-mastery-level={level}
+                >
+                  <button
+                    type="button"
+                    aria-pressed={(previewLevel ?? item.level) === level}
+                    aria-label={t('MASTERY.FRAME_OPTION', {
+                      level: ROMAN_LEVELS[level],
+                      count: threshold
+                    })}
+                    onClick={() =>
+                      setPreviewLevel(level === item.level ? null : level)
+                    }
+                  >
+                    <i aria-hidden="true" />
+                    <b>{ROMAN_LEVELS[level]}</b>
+                    <span>{threshold.toLocaleString()}</span>
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
+        </div>
+      </section>
+    );
+  };
+
   const renderDetail = () => {
     if (!selected) return null;
     const item = mastery(selected.value);
     const shownLevel = previewLevel ?? item.level;
-    const isMaximum = item.nextThreshold === null;
     const portrait = generateCroppedImageUrl(selected.value);
 
     return (
@@ -270,81 +317,16 @@ const Mastery = () => {
           </div>
         </div>
 
-        {isMaximum ? (
-          <em className={styles.maximumMessage}>
-            {t('MASTERY.MAXIMUM_REACHED')}
-          </em>
-        ) : (
-          <div>
-            <div className={styles.detailProgressText}>
-              <em className={styles.milestoneMessage}>
-                {gamesUntilLabel(item)}
-              </em>
-              <span>
-                {item.qualifyingGames.toLocaleString()} /{' '}
-                {item.nextThreshold?.toLocaleString()}
-              </span>
-            </div>
-            <div
-              className={styles.detailProgress}
-              aria-label={t('MASTERY.GAMES_PROGRESS_LABEL', {
-                games: item.qualifyingGames,
-                threshold: item.nextThreshold
-              })}
-            >
-              <i style={{ width: `${progressPercent(item, milestones)}%` }} />
-            </div>
-          </div>
-        )}
-
-        <div className={styles.frameLadderHeader}>
-          <h3>{t('MASTERY.FRAMES')}</h3>
-          {previewLevel !== null && previewLevel !== item.level && (
+        {previewLevel !== null && previewLevel !== item.level && (
+          <div className={styles.previewNote}>
+            <span>
+              {t('MASTERY.PREVIEWING', { level: ROMAN_LEVELS[previewLevel] })}
+            </span>
             <button type="button" onClick={() => setPreviewLevel(null)}>
               {t('MASTERY.SHOW_CURRENT')}
             </button>
-          )}
-        </div>
-        <p className={styles.frameHint}>
-          {previewLevel !== null && previewLevel !== item.level
-            ? t('MASTERY.PREVIEWING', { level: ROMAN_LEVELS[previewLevel] })
-            : t('MASTERY.FRAMES_HINT')}
-        </p>
-        <div className={styles.frameLadder}>
-          {milestones.map((threshold, index) => {
-            const level = index + 1;
-            const unlocked = item.level >= level;
-            return (
-              <button
-                type="button"
-                key={level}
-                className={styles.frameOption}
-                data-unlocked={unlocked}
-                aria-pressed={shownLevel === level}
-                aria-label={t('MASTERY.FRAME_OPTION', {
-                  level: ROMAN_LEVELS[level],
-                  count: threshold
-                })}
-                onClick={() =>
-                  setPreviewLevel(level === item.level ? null : level)
-                }
-              >
-                <MasteryFrame level={level} className={styles.previewFrame}>
-                  <img src={portrait} alt="" loading="lazy" />
-                </MasteryFrame>
-                <span className={styles.frameLevel}>{ROMAN_LEVELS[level]}</span>
-                <span className={styles.frameThreshold}>
-                  {unlocked ? (
-                    <FaCheck aria-hidden="true" />
-                  ) : (
-                    <FaLock aria-hidden="true" />
-                  )}
-                  {threshold.toLocaleString()}
-                </span>
-              </button>
-            );
-          })}
-        </div>
+          </div>
+        )}
       </aside>
     );
   };
@@ -450,64 +432,6 @@ const Mastery = () => {
               </div>
             </div>
 
-            {summary.closest.length > 0 && (
-              <div className={styles.closest}>
-                <h2>{t('MASTERY.SUMMARY.CLOSEST_TITLE')}</h2>
-                <div className={styles.closestList}>
-                  {summary.closest.map((item) => {
-                    const hero = heroById.get(item.heroId);
-                    if (!hero) return null;
-                    const group = groupOf(item.heroId);
-                    return (
-                      <button
-                        type="button"
-                        key={item.heroId}
-                        className={styles.closestItem}
-                        onClick={() => {
-                          if (group) changeGroup(group.key);
-                          selectHero(item.heroId);
-                        }}
-                      >
-                        <MasteryFrame
-                          level={item.level}
-                          className={styles.closestFrame}
-                        >
-                          <img
-                            src={generateCroppedImageUrl(item.heroId)}
-                            alt=""
-                            loading="lazy"
-                          />
-                        </MasteryFrame>
-                        <span className={styles.closestText}>
-                          <span className={styles.closestName}>
-                            <strong>{hero.label}</strong>
-                            {group && <small>{group.name}</small>}
-                          </span>
-                          <span
-                            className={styles.detailProgress}
-                            aria-hidden="true"
-                          >
-                            <i
-                              style={{
-                                width: `${progressPercent(item, milestones)}%`
-                              }}
-                            />
-                          </span>
-                          <span className={styles.closestMeta}>
-                            <em>{gamesUntilLabel(item)}</em>
-                            <span>
-                              {item.qualifyingGames.toLocaleString()} /{' '}
-                              {item.nextThreshold?.toLocaleString()}
-                            </span>
-                          </span>
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-
             <div className={styles.toolbar}>
               <div
                 className={styles.formatTabs}
@@ -554,35 +478,19 @@ const Mastery = () => {
                     </option>
                   </select>
                 </label>
-                <div
-                  className={styles.filters}
-                  role="group"
-                  aria-label={t('MASTERY.FILTER.LABEL')}
-                >
-                  {(['all', 'played', 'mastered'] as Filter[]).map((value) => (
-                    <button
-                      key={value}
-                      type="button"
-                      aria-pressed={filter === value}
-                      onClick={() => setFilter(value)}
-                      className={filter === value ? styles.activeFilter : ''}
-                    >
-                      {filterLabels[value]}
-                    </button>
-                  ))}
-                </div>
               </div>
             </div>
 
             <div className={styles.layout}>
               <div className={styles.heroes}>
+                {renderTrack()}
                 {playedHeroes.length > 0 ? (
                   <div className={styles.grid}>
                     {playedHeroes.map(renderHero)}
                   </div>
                 ) : (
                   <p className={styles.empty}>
-                    {normalizedQuery || filter !== 'all'
+                    {normalizedQuery
                       ? t('MASTERY.EMPTY')
                       : t('MASTERY.NONE_PLAYED', {
                           group: activeGroup?.name

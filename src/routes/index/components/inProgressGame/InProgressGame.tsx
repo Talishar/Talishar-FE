@@ -5,6 +5,43 @@ import { RiSwordLine, RiEyeLine } from 'react-icons/ri';
 import { generateCroppedImageUrl } from '../../../../utils/cropImages';
 import FriendBadge from '../gameList/FriendBadge';
 import { useTranslation } from 'react-i18next';
+import { HEROES_OF_RATHE } from '../filter/constants';
+
+const HERO_NAMES = new Map(
+  HEROES_OF_RATHE.map((hero) => [hero.value, hero.label])
+);
+
+const HeroPortrait = ({
+  hero,
+  life,
+  lifeLabel
+}: {
+  hero?: string;
+  life?: number;
+  lifeLabel: string;
+}) => {
+  const name = hero ? HERO_NAMES.get(hero) ?? hero : '';
+  return (
+    <div className={styles.portrait}>
+      {hero ? (
+        <img
+          className={styles.heroImg}
+          src={generateCroppedImageUrl(hero)}
+          alt={name}
+          title={name}
+          loading="lazy"
+        />
+      ) : (
+        <div className={styles.heroImg} />
+      )}
+      {life !== undefined && (
+        <span className={styles.life} title={lifeLabel}>
+          {life}
+        </span>
+      )}
+    </div>
+  );
+};
 
 export const InProgressGame = ({
   entry,
@@ -21,84 +58,70 @@ export const InProgressGame = ({
   isFeatured?: boolean;
   masteryLevel?: number;
 }) => {
-  const hasFormatLabel = !!formatLabel;
   const spectatorCount = entry.spectatorCount ?? 0;
+  const hasLife = entry.p1Life !== undefined && entry.p2Life !== undefined;
   const buttonClass = classNames(styles.button, {
     [styles.buttonFeatured]: isFeatured
   });
   const gameItemClass = classNames(styles.gameItem, {
-    [styles.gameItemNoFormat]: !hasFormatLabel,
     [styles.gameItemFeatured]: isFeatured
-  });
-  const matchupBlockClass = classNames(styles.matchupBlock, {
-    [styles.matchupBlockNoFormat]: !hasFormatLabel
-  });
-  const heroRowClass = classNames(styles.heroRow, {
-    [styles.heroRowNoFormat]: !hasFormatLabel
   });
   // Initial stuff to allow the lang to change
   const { t } = useTranslation();
 
   return (
     <div key={entry.gameName} className={gameItemClass}>
-      <div className={matchupBlockClass}>
-        <div className={heroRowClass}>
-          <div>
-            {!!entry.p1Hero && (
-              <img
-                className={styles.heroImg}
-                src={generateCroppedImageUrl(entry.p1Hero)}
-                alt={entry.p1Hero}
-                loading="lazy"
-              />
-            )}
-          </div>
-          <RiSwordLine />
-          <div>
-            {!!entry.p2Hero && (
-              <img
-                className={styles.heroImg}
-                src={generateCroppedImageUrl(entry.p2Hero)}
-                alt={entry.p2Hero}
-                loading="lazy"
-              />
-            )}
-          </div>
-        </div>
+      <div className={styles.heroRow}>
+        <HeroPortrait
+          hero={entry.p1Hero}
+          life={hasLife ? entry.p1Life : undefined}
+          lifeLabel={t('IN_PROGRESS_GAME.LIFE')}
+        />
+        <RiSwordLine />
+        <HeroPortrait
+          hero={entry.p2Hero}
+          life={hasLife ? entry.p2Life : undefined}
+          lifeLabel={t('IN_PROGRESS_GAME.LIFE')}
+        />
+      </div>
+      <div className={styles.info}>
         {formatLabel && (
           <span className={styles.formatLabel}>{formatLabel}</span>
         )}
-        {isFeatured && spectatorCount > 0 && (
-          <span
-            className={styles.spectatorCount}
-            title={t('IN_PROGRESS_GAME.SPECTATOR_COUNT', {
-              count: spectatorCount
-            })}
-          >
-            <RiEyeLine aria-hidden="true" />
-            {spectatorCount}
-          </span>
-        )}
-        {isFeatured && !!masteryLevel && (
-          <span className={styles.masteryLevel}>
-            {t('IN_PROGRESS_GAME.MASTERY_LEVEL', { level: masteryLevel })}
-          </span>
-        )}
+        <span className={styles.meta}>
+          {entry.turn !== undefined && (
+            <span>{t('IN_PROGRESS_GAME.TURN', { turn: entry.turn })}</span>
+          )}
+          {spectatorCount > 0 && (
+            <span
+              className={styles.spectatorCount}
+              title={t('IN_PROGRESS_GAME.SPECTATOR_COUNT', {
+                count: spectatorCount
+              })}
+            >
+              <RiEyeLine aria-hidden="true" />
+              {spectatorCount}
+            </span>
+          )}
+          {isFeatured && !!masteryLevel && (
+            <span>
+              {t('IN_PROGRESS_GAME.MASTERY_LEVEL', { level: masteryLevel })}
+            </span>
+          )}
+        </span>
       </div>
       <FriendBadge
         isFriendsGame={isFriendsGame}
         friendName={friendName}
         size="small"
       />
-      <div>
-        <a
-          className={buttonClass}
-          href={`/game/play/${entry.gameName}`}
-          role="button"
-        >
-          {t('IN_PROGRESS_GAME.SPECTATE')}
-        </a>
-      </div>
+      <a
+        className={buttonClass}
+        href={`/game/play/${entry.gameName}`}
+        role="button"
+      >
+        {t('IN_PROGRESS_GAME.SPECTATE')}
+      </a>
     </div>
   );
 };

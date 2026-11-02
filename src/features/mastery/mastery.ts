@@ -18,6 +18,15 @@ export const emptyMastery = (heroId: string): HeroMasteryProgress => ({
   gamesToNext: MASTERY_MILESTONES[0]
 });
 
+// Keep in sync with HeroMasteryHeroId() in Talishar/Libraries/HeroMastery.php.
+const MASTERY_HERO_ALIASES: Record<string, string> = {
+  OBK406: 'OBK006',
+  OBK407: 'OBK007'
+};
+
+export const masteryHeroId = (heroId: string) =>
+  MASTERY_HERO_ALIASES[heroId] ?? heroId;
+
 export const DEFAULT_FRAME = 'default';
 
 export const masteryTitle = (level: number) =>

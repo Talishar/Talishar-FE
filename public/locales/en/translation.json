@@ -508,6 +508,7 @@
     "DISMISS": "Click to dismiss"
   },
   "FILTER": {
+    "CLEAR": "Clear hero filter",
     "HERO_FILTER": "Hero Filter"
   },
   "FOOTER": {
@@ -526,9 +527,16 @@
     "USER_LINKS_LABEL": "User links"
   },
   "GAME_FILTER": {
+    "CASUAL": "Casual",
+    "COMPETITIVE": "Competitive",
     "FILTER_GAMES": "Filter Games",
-    "RESET_FILTER": "Reset Filters",
-    "UNCHECK_ALL": "Uncheck All"
+    "FORMATS": "Formats",
+    "SELECT_ALL": "All",
+    "SELECT_NONE": "None",
+    "SORT": "Sort",
+    "SORT_FORMAT": "Format",
+    "SORT_LOW_LIFE": "Lowest life",
+    "SORT_NEWEST": "Newest"
   },
   "GAME_LIST": {
     "DISABLE_EXPERIMENTAL": "Disable experimental features",
@@ -766,10 +774,12 @@
     "VIEW": "View your inventory"
   },
   "IN_PROGRESS_GAME": {
+    "LIFE": "Life",
     "MASTERY_LEVEL": "Mastery {{level}}+",
     "SPECTATE": "Spectate",
     "SPECTATOR_COUNT_one": "{{count}} spectator",
-    "SPECTATOR_COUNT_other": "{{count}} spectators"
+    "SPECTATOR_COUNT_other": "{{count}} spectators",
+    "TURN": "Turn {{turn}}"
   },
   "JOIN": {
     "BACK": "Back",

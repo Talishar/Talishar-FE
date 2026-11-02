@@ -30,6 +30,11 @@
   color: var(--theme-text-muted, rgba(255, 255, 255, 0.35));
 }
 
+.filterInputActive {
+  border-color: rgba(var(--theme-on-surface-rgb), 0.25);
+  color: var(--theme-text, #f4eded);
+}
+
 .filterInput:focus {
   border-color: rgba(var(--theme-on-surface-rgb), 0.25);
   color: var(--theme-text, #f4eded);
@@ -96,10 +101,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.38em 0.75em;
+  padding: 0.3em 0.75em;
   cursor: pointer;
   transition: background-color 0.1s ease;
-  gap: 0.5em;
+  gap: 0.6em;
 }
 
 .dropdownItem:hover {
@@ -128,8 +133,22 @@
   text-align: right;
 }
 
-.heroCountZero {
-  opacity: 0.3;
+.dropdownItemZero .heroLabel,
+.dropdownItemZero .heroCount {
+  opacity: 0.35;
+}
+
+.dropdownItemZero .heroThumb {
+  opacity: 0.4;
+}
+
+.heroThumb {
+  width: 1.6em;
+  height: 1.6em;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: top center;
+  flex-shrink: 0;
 }
 
 @media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {

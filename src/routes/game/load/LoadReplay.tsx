@@ -514,6 +514,7 @@ const ReplayGame = () => {
             <HeroCrop heroId={entry.p2HeroCardId} />
           </div>
         )}
+        {!isList && favoriteButton}
         <div className={styles.saveInfo}>
           <div className={styles.saveTitleRow}>
             <span className={styles.replayNumber}>{numberLabel}</span>
@@ -522,7 +523,6 @@ const ReplayGame = () => {
                 {t('LOAD_REPLAY.REMOVED_NEXT')}
               </span>
             )}
-            {!isList && favoriteButton}
           </div>
           <span className={styles.replayPlayers} title={replayLabel(entry)}>
             {replayLabel(entry)}

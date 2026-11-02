@@ -40,7 +40,32 @@ export interface IGameInProgress {
   p2Username?: string; // Username of player 2
   visibility?: string; // "0" = private, "1" = public, "2" = friends-only
   spectatorCount?: number; // Logged-in spectators seen in the last 45 seconds
+  p1Life?: number;
+  p2Life?: number;
+  turn?: number;
 }
+
+type InProgressSort = 'format' | 'newest' | 'life';
+const IN_PROGRESS_SORTS: InProgressSort[] = ['format', 'newest', 'life'];
+const HERO_FILTER_STORAGE_KEY = 'gameHeroFilter';
+const SORT_STORAGE_KEY = 'gameListSort';
+
+const readStoredString = (key: string) => {
+  try {
+    return localStorage.getItem(key) ?? '';
+  } catch {
+    return '';
+  }
+};
+
+const writeStoredString = (key: string, value: string) => {
+  try {
+    if (value) localStorage.setItem(key, value);
+    else localStorage.removeItem(key);
+  } catch {
+    // Storage can be unavailable in private windows
+  }
+};
 
 export interface IFeaturedGame {
   gameName: string;
@@ -98,7 +123,10 @@ const DEV_FAKE_FEATURED: IGameInProgress[] = [
     format: GAME_FORMAT.COMPETITIVE_CC,
     secondsSinceLastUpdate: 12,
     visibility: '1',
-    spectatorCount: 14
+    spectatorCount: 14,
+    p1Life: 7,
+    p2Life: 12,
+    turn: 9
   },
   {
     gameName: 90998,
@@ -107,7 +135,10 @@ const DEV_FAKE_FEATURED: IGameInProgress[] = [
     format: GAME_FORMAT.BLITZ,
     secondsSinceLastUpdate: 4,
     visibility: '1',
-    spectatorCount: 0
+    spectatorCount: 0,
+    p1Life: 20,
+    p2Life: 20,
+    turn: 1
   },
   {
     gameName: 90997,
@@ -116,7 +147,10 @@ const DEV_FAKE_FEATURED: IGameInProgress[] = [
     format: GAME_FORMAT.COMPETITIVE_CC,
     secondsSinceLastUpdate: 31,
     visibility: '1',
-    spectatorCount: 2
+    spectatorCount: 2,
+    p1Life: 31,
+    p2Life: 18,
+    turn: 4
   }
 ];
 const DEV_FAKE_FEATURED_LEVELS = [8, 6, 5];
@@ -182,7 +216,10 @@ const GameList = () => {
               secondsSinceLastUpdate: Math.floor(Math.random() * 600),
               visibility: '1',
               // Most games draw nobody; a couple pick up a watcher or two.
-              spectatorCount: i % 5 === 0 ? (i % 3) + 1 : 0
+              spectatorCount: i % 5 === 0 ? (i % 3) + 1 : 0,
+              p1Life: 40 - ((i * 7) % 38),
+              p2Life: 40 - ((i * 11) % 39),
+              turn: (i * 3) % 14
             }))
           ]
         : [],
@@ -243,7 +280,22 @@ const GameList = () => {
     }
   }, [friendsData]);
 
-  const [heroFilter, setHeroFilter] = useState<string[]>([]);
+  const [heroLabel, setHeroLabel] = useState(() => {
+    const stored = readStoredString(HERO_FILTER_STORAGE_KEY);
+    return HEROES_OF_RATHE.some((hero) => hero.label === stored) ? stored : '';
+  });
+  const handleHeroLabelChange = (label: string) => {
+    setHeroLabel(label);
+    writeStoredString(HERO_FILTER_STORAGE_KEY, label);
+  };
+  const [inProgressSort, setInProgressSort] = useState<InProgressSort>(() => {
+    const stored = readStoredString(SORT_STORAGE_KEY) as InProgressSort;
+    return IN_PROGRESS_SORTS.includes(stored) ? stored : 'format';
+  });
+  const handleSortChange = (sort: InProgressSort) => {
+    setInProgressSort(sort);
+    writeStoredString(SORT_STORAGE_KEY, sort === 'format' ? '' : sort);
+  };
   const [activeTab, setActiveTab] = useState<'open' | 'inProgress'>('open');
 
   useEffect(() => {
@@ -453,7 +505,17 @@ const GameList = () => {
       ? game.p2Username
       : undefined;
   const blockedUsernames = useMemo(() => new Set(blockedUsers), [blockedUsers]);
-  const selectedHeroes = useMemo(() => new Set(heroFilter), [heroFilter]);
+  const selectedHeroes = useMemo(
+    () =>
+      new Set(
+        heroLabel
+          ? HEROES_OF_RATHE.filter((hero) => hero.label === heroLabel).map(
+              (hero) => hero.value
+            )
+          : []
+      ),
+    [heroLabel]
+  );
 
   // Filter games
   const filteredGamesInProgress = useMemo(
@@ -496,17 +558,24 @@ const GameList = () => {
 
   // Separate friend games from other games
 
-  const sortedInProgressGames = useMemo(
-    () =>
-      [...filteredGamesInProgress].sort((a, b) => {
+  const sortedInProgressGames = useMemo(() => {
+    const lowestLife = (game: IGameInProgress) =>
+      game.p1Life === undefined || game.p2Life === undefined
+        ? Number.MAX_SAFE_INTEGER
+        : Math.min(game.p1Life, game.p2Life);
+    return [...filteredGamesInProgress].sort((a, b) => {
+      if (inProgressSort === 'life') {
+        const cmp = lowestLife(a) - lowestLife(b);
+        if (cmp !== 0) return cmp;
+      } else if (inProgressSort === 'format') {
         const fmtA = normalizeFormat(a.format) ?? a.format;
         const fmtB = normalizeFormat(b.format) ?? b.format;
         const cmp = fmtA.localeCompare(fmtB);
         if (cmp !== 0) return cmp;
-        return b.gameName - a.gameName; // newest first within same format
-      }),
-    [filteredGamesInProgress]
-  );
+      }
+      return b.gameName - a.gameName; // newest first
+    });
+  }, [filteredGamesInProgress, inProgressSort]);
   const displayInProgressGames = sortedInProgressGames;
 
   const { featuredGames, unfeaturedInProgressGames } = useMemo(() => {
@@ -602,6 +671,29 @@ const GameList = () => {
       selectedHeroes
     ]
   );
+
+  const formatCounts = useMemo(() => {
+    const counts = new Map<string, number>();
+    const add = (format: string) =>
+      counts.set(format, (counts.get(format) ?? 0) + 1);
+    if (activeTab === 'open') {
+      data?.openGames?.forEach((game: IOpenGame) => {
+        if (selectedHeroes.size === 0 || selectedHeroes.has(game.p1Hero ?? ''))
+          add(game.format);
+      });
+    } else {
+      data?.gamesInProgress?.forEach((game: IGameInProgress) => {
+        if (game.visibility === '2') return;
+        if (
+          selectedHeroes.size === 0 ||
+          selectedHeroes.has(game.p1Hero ?? '') ||
+          selectedHeroes.has(game.p2Hero ?? '')
+        )
+          add(game.format);
+      });
+    }
+    return counts;
+  }, [activeTab, data?.gamesInProgress, data?.openGames, selectedHeroes]);
 
   const handleReloadClick = () => {
     const now = Date.now();
@@ -839,7 +931,8 @@ const GameList = () => {
             <div className={styles.filterRow}>
               <div className={styles.filterHeroWrapper}>
                 <Filter
-                  setHeroFilter={setHeroFilter}
+                  selectedLabel={heroLabel}
+                  onSelectLabel={handleHeroLabelChange}
                   heroOptions={HEROES_OF_RATHE}
                   heroCounts={heroCounts}
                 />
@@ -848,52 +941,107 @@ const GameList = () => {
                 <GameFilter
                   selectedFormats={inProgressFormatFilters}
                   onFilterChange={handleInProgressFilterChange}
-                  formatOptions={[
+                  formatRows={[
                     {
                       label: t('GAME_LIST.FORMATS.CC'),
-                      value: GAME_FORMAT.CLASSIC_CONSTRUCTED
-                    },
-                    {
-                      label: t('GAME_LIST.FORMATS.COMPETITIVE_CC'),
-                      value: GAME_FORMAT.COMPETITIVE_CC
+                      casual: {
+                        label: t('GAME_LIST.FORMATS.CC'),
+                        value: GAME_FORMAT.CLASSIC_CONSTRUCTED
+                      },
+                      competitive: {
+                        label: t('GAME_LIST.FORMATS.COMPETITIVE_CC'),
+                        value: GAME_FORMAT.COMPETITIVE_CC
+                      }
                     },
                     {
                       label: t('GAME_LIST.FORMATS.LL'),
-                      value: GAME_FORMAT.LLCC
-                    },
-                    {
-                      label: t('GAME_LIST.FORMATS.COMPETITIVE_LL'),
-                      value: GAME_FORMAT.COMPETITIVE_LL
+                      casual: {
+                        label: t('GAME_LIST.FORMATS.LL'),
+                        value: GAME_FORMAT.LLCC
+                      },
+                      competitive: {
+                        label: t('GAME_LIST.FORMATS.COMPETITIVE_LL'),
+                        value: GAME_FORMAT.COMPETITIVE_LL
+                      }
                     },
                     {
                       label: t('GAME_LIST.FORMATS.SAGE'),
-                      value: GAME_FORMAT.SAGE
+                      casual: {
+                        label: t('GAME_LIST.FORMATS.SAGE'),
+                        value: GAME_FORMAT.SAGE
+                      },
+                      competitive: {
+                        label: t('GAME_LIST.FORMATS.COMPETITIVE_SAGE'),
+                        value: GAME_FORMAT.COMPETITIVE_SAGE
+                      }
                     },
                     {
-                      label: t('GAME_LIST.FORMATS.COMPETITIVE_SAGE'),
-                      value: GAME_FORMAT.COMPETITIVE_SAGE
-                    },
-                    {
-                      label: t('GAME_LIST.FORMATS.FUTURE_SAGE'),
-                      value: GAME_FORMAT.OPEN_SAGE
+                      label: t('GAME_LIST.FORMATS.BLITZ'),
+                      casual: {
+                        label: t('GAME_LIST.FORMATS.BLITZ'),
+                        value: GAME_FORMAT.BLITZ
+                      },
+                      competitive: {
+                        label: t('GAME_LIST.FORMATS.COMPETITIVE_BLITZ'),
+                        value: GAME_FORMAT.COMPETITIVE_BLITZ
+                      }
                     },
                     {
                       label: t('GAME_LIST.FORMATS.FUTURE_CC'),
-                      value: GAME_FORMAT.OPEN_CC
+                      casual: {
+                        label: t('GAME_LIST.FORMATS.FUTURE_CC'),
+                        value: GAME_FORMAT.OPEN_CC
+                      }
+                    },
+                    {
+                      label: t('GAME_LIST.FORMATS.FUTURE_SAGE'),
+                      casual: {
+                        label: t('GAME_LIST.FORMATS.FUTURE_SAGE'),
+                        value: GAME_FORMAT.OPEN_SAGE
+                      }
                     },
                     {
                       label: t('GAME_LIST.FORMATS.GAGE'),
-                      value: GAME_FORMAT.GAGE
+                      casual: {
+                        label: t('GAME_LIST.FORMATS.GAGE'),
+                        value: GAME_FORMAT.GAGE
+                      }
                     },
                     {
                       label: t('GAME_LIST.FORMATS.OTHER'),
-                      value: 'otherFormats',
-                      isGroup: true,
-                      groupValues: otherFormats
+                      casual: {
+                        label: t('GAME_LIST.FORMATS.OTHER'),
+                        value: 'otherFormats',
+                        isGroup: true,
+                        groupValues: otherFormats.filter(
+                          (format) =>
+                            format !== GAME_FORMAT.BLITZ &&
+                            format !== GAME_FORMAT.COMPETITIVE_BLITZ
+                        )
+                      }
                     }
                   ]}
                   includeFriendsGames={includeFriendsGames}
                   formatNumberMapping={formatNumberMapping}
+                  formatCounts={formatCounts}
+                  {...(activeTab === 'inProgress' && {
+                    sortOptions: [
+                      {
+                        value: 'format' as const,
+                        label: t('GAME_FILTER.SORT_FORMAT')
+                      },
+                      {
+                        value: 'newest' as const,
+                        label: t('GAME_FILTER.SORT_NEWEST')
+                      },
+                      {
+                        value: 'life' as const,
+                        label: t('GAME_FILTER.SORT_LOW_LIFE')
+                      }
+                    ],
+                    sortValue: inProgressSort,
+                    onSortChange: handleSortChange
+                  })}
                 />
               </div>
             </div>

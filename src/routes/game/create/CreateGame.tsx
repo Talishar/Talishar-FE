@@ -61,7 +61,7 @@ import {
   OscilioVariant
 } from './gameDescription';
 import MasteryProgressCard from 'features/mastery/MasteryProgressCard';
-import { emptyMastery } from 'features/mastery/mastery';
+import { emptyMastery, masteryHeroId } from 'features/mastery/mastery';
 import { getCookie, setCookie } from 'utils/cookies';
 import { formatDeckLabel } from 'utils/formatUtils';
 
@@ -278,7 +278,9 @@ const CreateGame = ({
     (deck: FavoriteDeck) => deck.key === effectiveMasteryDeck
   )?.hero;
   const selectedMasteryProgress = selectedMasteryHero
-    ? masteryData?.heroes?.find((hero) => hero.heroId === selectedMasteryHero)
+    ? masteryData?.heroes?.find(
+        (hero) => hero.heroId === masteryHeroId(selectedMasteryHero)
+      )
     : undefined;
   const [selectedPreconDeck, setSelectedPreconDeck] = React.useState<string>(
     PRECON_DECKS.LINKS[0]

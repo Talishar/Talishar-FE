@@ -2,18 +2,21 @@ import React, { useState, useRef } from 'react';
 import styles from './Filter.module.css';
 import { useTranslation } from 'react-i18next';
 import { useOutsideClick } from 'hooks/useOutsideClick';
+import { generateCroppedImageUrl } from 'utils/cropImages';
 
 const Filter = ({
-  setHeroFilter,
+  selectedLabel,
+  onSelectLabel,
   heroOptions,
   heroCounts
 }: {
-  setHeroFilter: React.Dispatch<React.SetStateAction<string[]>>;
+  selectedLabel: string;
+  onSelectLabel: (label: string) => void;
   heroOptions: { value: string; label: string }[];
   heroCounts?: Map<string, number>;
 }) => {
   const { t } = useTranslation();
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState(selectedLabel);
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -39,32 +42,35 @@ const Filter = ({
 
   const query = inputValue.trim();
   const filteredLabels =
-    query === ''
+    query === '' || query === selectedLabel
       ? allLabels
       : allLabels.filter((label) =>
           label.toLowerCase().includes(query.toLowerCase())
         );
 
-  useOutsideClick(containerRef, () => setIsOpen(false));
+  useOutsideClick(containerRef, () => {
+    setIsOpen(false);
+    setInputValue(selectedLabel);
+  });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setInputValue(val);
     setIsOpen(true);
     if (val.trim() === '') {
-      setHeroFilter([]);
+      onSelectLabel('');
     }
   };
 
   const handleSelectLabel = (label: string) => {
     setInputValue(label);
-    setHeroFilter(heroMap[label]);
+    onSelectLabel(label);
     setIsOpen(false);
   };
 
   const handleClear = () => {
     setInputValue('');
-    setHeroFilter([]);
+    onSelectLabel('');
     setIsOpen(false);
   };
 
@@ -73,17 +79,24 @@ const Filter = ({
       <div className={styles.inputWrapper}>
         <input
           type="text"
-          className={styles.filterInput}
+          className={`${styles.filterInput}${
+            selectedLabel ? ` ${styles.filterInputActive}` : ''
+          }`}
           placeholder={t('FILTER.HERO_FILTER')}
           value={inputValue}
           onChange={handleInputChange}
-          onFocus={() => setIsOpen(true)}
+          onFocus={(e) => {
+            e.target.select();
+            setIsOpen(true);
+          }}
           autoComplete="off"
         />
         {inputValue && (
           <button
+            type="button"
             className={styles.clearButton}
             onMouseDown={handleClear}
+            aria-label={t('FILTER.CLEAR')}
             tabIndex={-1}
           >
             ✕
@@ -97,17 +110,19 @@ const Filter = ({
             return (
               <li
                 key={label}
-                className={styles.dropdownItem}
+                className={`${styles.dropdownItem}${
+                  count === 0 ? ` ${styles.dropdownItemZero}` : ''
+                }`}
                 onMouseDown={() => handleSelectLabel(label)}
               >
+                <img
+                  className={styles.heroThumb}
+                  src={generateCroppedImageUrl(heroMap[label][0])}
+                  alt=""
+                  loading="lazy"
+                />
                 <span className={styles.heroLabel}>{label}</span>
-                <span
-                  className={`${styles.heroCount}${
-                    count === 0 ? ` ${styles.heroCountZero}` : ''
-                  }`}
-                >
-                  {count}
-                </span>
+                <span className={styles.heroCount}>{count}</span>
               </li>
             );
           })}

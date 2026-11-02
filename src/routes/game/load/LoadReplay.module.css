@@ -108,7 +108,7 @@
 .slotMeter {
   margin: 0 0 1.1rem;
   padding: 0.75rem 0.9rem 0.8rem;
-  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.16);
+  border: 1px solid var(--theme-border);
   border-radius: 5px;
   background: rgba(var(--theme-on-surface-rgb), 0.025);
 }
@@ -211,7 +211,7 @@
 .snapshotInvitePanel {
   margin: 0 0 1rem;
   padding: 0.75rem 0.85rem;
-  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.16);
+  border: 1px solid var(--theme-border);
   border-radius: 5px;
   background: rgba(var(--theme-on-surface-rgb), 0.025);
 }
@@ -262,13 +262,12 @@
 }
 
 .snapshotInviteRow .snapshotCopyButton {
-  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.25);
+  border: 1px solid var(--theme-border);
   background: rgba(var(--theme-on-surface-rgb), 0.06);
   color: var(--theme-text);
 }
 
 .snapshotInviteRow .snapshotCopyButton:hover {
-  border-color: #bed3e6;
   background: rgba(190, 211, 230, 0.16);
   color: color-mix(in srgb, #bed3e6 55%, var(--theme-text));
 }
@@ -376,16 +375,11 @@
   min-width: 0;
   margin: 0 !important;
   padding: 0 !important;
-  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.18) !important;
+  border: 1px solid var(--theme-border) !important;
   border-radius: 5px;
   background: rgba(var(--theme-on-surface-rgb), 0.035) !important;
   box-shadow: none !important;
   color: var(--theme-text);
-}
-
-.saveCard:hover,
-.saveRow:hover {
-  border-color: rgba(190, 211, 230, 0.55) !important;
 }
 
 .saveCard {
@@ -453,19 +447,9 @@
   min-height: 1.8rem;
 }
 
-.saveCard .saveTitleRow .favoriteButton {
-  margin-left: auto !important;
-}
-
 .removedNext {
-  padding: 0.08rem 0.4rem;
-  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.25);
-  border-radius: 5px;
-  color: var(--theme-text-secondary, #c6c6c6);
-  font-size: 0.62rem;
-  font-weight: 600;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
+  color: var(--theme-text-muted, #aaa);
+  font-size: 0.7rem;
 }
 
 .saveActions {
@@ -626,29 +610,33 @@
   height: 2.1rem;
   margin: 0 !important;
   padding: 0 !important;
-  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.25);
+  border: 1px solid var(--theme-border);
   border-radius: 5px;
   background: rgba(var(--theme-on-surface-rgb), 0.06) !important;
   cursor: pointer;
 }
 
-.saveCard .saveTitleRow .favoriteButton {
-  width: 1.8rem !important;
-  height: 1.8rem;
+.saveCard .favoriteButton {
+  position: absolute;
+  top: 0.45rem;
+  right: 0.45rem;
+  z-index: 1;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6) !important;
 }
 
 .favoriteButton {
   color: rgba(var(--theme-on-surface-rgb), 0.5);
 }
 
+.saveCard .favoriteButton {
+  color: rgba(255, 255, 255, 0.8);
+}
+
 .favoriteButton:hover:not(:disabled),
-.favoriteActive {
-  background: color-mix(
-    in srgb,
-    var(--theme-primary, #f0c94d) 16%,
-    transparent
-  ) !important;
-  border-color: var(--theme-primary, #f0c94d);
+.favoriteActive,
+.saveCard .favoriteActive {
   color: var(--theme-primary, #f0c94d);
 }
 
@@ -661,7 +649,6 @@
 }
 
 .shareButton:hover:not(:disabled) {
-  border-color: #bed3e6;
   background: rgba(190, 211, 230, 0.16) !important;
   color: color-mix(in srgb, #bed3e6 55%, var(--theme-text));
 }
@@ -672,7 +659,6 @@
 
 .deleteButton:hover:not(:disabled) {
   background: rgba(50, 10, 10, 0.78) !important;
-  border-color: rgba(111, 0, 0, 0.3);
   color: #ff9b9b;
 }
 

@@ -1,6 +1,5 @@
-import { useState, useRef, useEffect } from 'react';
+import { Fragment, useState, useRef, useEffect } from 'react';
 import styles from './GameFilter.module.scss';
-import { IoMdArrowDropright } from 'react-icons/io';
 import { IoFunnel } from 'react-icons/io5';
 import { useTranslation } from 'react-i18next';
 import { useOutsideClick } from 'hooks/useOutsideClick';
@@ -25,25 +24,49 @@ export interface FormatOption {
   groupValues?: string[];
 }
 
-export interface GameFilterProps {
-  selectedFormats: Set<string>;
-  onFilterChange: (formats: Set<string>) => void;
-  formatOptions: Array<FormatOption>;
-  includeFriendsGames: boolean;
-  formatNumberMapping?: { [key: string]: string }; // Map string format to numeric format
+export interface FormatRow {
+  label: string;
+  casual?: FormatOption;
+  competitive?: FormatOption;
 }
 
-const GameFilter = ({
+export interface SortOption<T extends string> {
+  label: string;
+  value: T;
+}
+
+export interface GameFilterProps<T extends string> {
+  selectedFormats: Set<string>;
+  onFilterChange: (formats: Set<string>) => void;
+  formatRows: Array<FormatRow>;
+  includeFriendsGames: boolean;
+  formatNumberMapping?: { [key: string]: string }; // Map string format to numeric format
+  formatCounts?: Map<string, number>;
+  sortOptions?: SortOption<T>[];
+  sortValue?: T;
+  onSortChange?: (value: T) => void;
+}
+
+const GameFilter = <T extends string>({
   selectedFormats,
   onFilterChange,
-  formatOptions,
+  formatRows,
   includeFriendsGames,
-  formatNumberMapping = {}
-}: GameFilterProps) => {
+  formatNumberMapping = {},
+  formatCounts,
+  sortOptions,
+  sortValue,
+  onSortChange
+}: GameFilterProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({});
+  const formatOptions = formatRows.flatMap((row) =>
+    [row.casual, row.competitive].filter(
+      (option): option is FormatOption => !!option
+    )
+  );
 
   // Initial stuff to allow the lang to change
   const { t } = useTranslation();
@@ -68,7 +91,7 @@ const GameFilter = ({
         // On desktop, position dropdown relative to the button
         setDropdownStyle({
           top: `${rect.bottom + 8}px`,
-          left: `${rect.right - 280}px`,
+          left: `${Math.max(16, rect.right - 370)}px`,
           maxWidth: '90vw'
         });
       }
@@ -155,8 +178,7 @@ const GameFilter = ({
     saveFiltersToStorage(newFormats);
   };
 
-  const handleResetFilters = () => {
-    // Select all boxes
+  const handleSelectAll = () => {
     const allFormats = new Set<string>();
     formatOptions.forEach((format) => {
       if (format.isGroup && format.groupValues) {
@@ -179,8 +201,7 @@ const GameFilter = ({
     saveFiltersToStorage(allFormats);
   };
 
-  const handleDeselectAll = () => {
-    // Deselect all boxes
+  const handleSelectNone = () => {
     const emptyFormats = new Set<string>();
     onFilterChange(emptyFormats);
     saveFiltersToStorage(emptyFormats);
@@ -197,17 +218,35 @@ const GameFilter = ({
     });
   };
 
-  const allFormatsSelected = formatOptions.every((format) =>
+  const isFormatSelected = (format: FormatOption) =>
     format.isGroup
       ? isGroupSelected(format.groupValues)
       : selectedFormats.has(format.value) ||
         !!(
           formatNumberMapping[format.value] &&
           selectedFormats.has(formatNumberMapping[format.value])
-        )
-  );
-  const friendsGameEnabled = includeFriendsGames;
-  const hasActiveFilters = !allFormatsSelected || !friendsGameEnabled;
+        );
+
+  const getFormatCount = (format: FormatOption) => {
+    if (!formatCounts) return undefined;
+    const values = format.isGroup ? format.groupValues ?? [] : [format.value];
+    return values.reduce(
+      (sum, val) =>
+        sum +
+        (formatCounts.get(val) ?? 0) +
+        (formatNumberMapping[val]
+          ? formatCounts.get(formatNumberMapping[val]) ?? 0
+          : 0),
+      0
+    );
+  };
+
+  const selectedOptionCount = formatOptions.filter(isFormatSelected).length;
+  const allFormatsSelected = selectedOptionCount === formatOptions.length;
+  const isSortChanged =
+    !!sortOptions?.length && sortValue !== sortOptions[0].value;
+  const hasActiveFilters =
+    !allFormatsSelected || !includeFriendsGames || isSortChanged;
 
   return (
     <div className={styles.filterContainer} ref={dropdownRef}>
@@ -223,17 +262,10 @@ const GameFilter = ({
         aria-expanded={isOpen}
         aria-haspopup="dialog"
       >
-        <span className={styles.filterIcon}>
-          <IoFunnel />
-        </span>
-        <span className={styles.chevron}>
-          <IoMdArrowDropright
-            style={{
-              transform: isOpen ? 'rotate(90deg)' : 'rotate(0deg)',
-              transition: 'transform 0.2s ease'
-            }}
-          />
-        </span>
+        <IoFunnel className={styles.filterIcon} />
+        {!allFormatsSelected && (
+          <span className={styles.filterCount}>{selectedOptionCount}</span>
+        )}
       </button>
 
       {isOpen && (
@@ -245,49 +277,103 @@ const GameFilter = ({
             role="dialog"
             aria-label={t('GAME_FILTER.FILTER_GAMES')}
           >
-            <div className={styles.dropdownHeader}>
-              <h5 className={styles.dropdownTitle}>
-                {t('GAME_FILTER.FILTER_GAMES')}
-              </h5>
-              <div className={styles.headerActions}>
-                <button
-                  className={styles.headerActionBtn}
-                  onClick={handleResetFilters}
-                >
-                  {t('GAME_FILTER.RESET_FILTER')}
-                </button>
-                <button
-                  className={styles.headerActionBtn}
-                  onClick={handleDeselectAll}
-                >
-                  {t('GAME_FILTER.UNCHECK_ALL')}
-                </button>
+            {sortOptions && sortValue !== undefined && onSortChange && (
+              <div className={styles.section}>
+                <div className={styles.sectionHeader}>
+                  <h5 className={styles.sectionTitle}>
+                    {t('GAME_FILTER.SORT')}
+                  </h5>
+                </div>
+                <div className={styles.segmented} role="radiogroup">
+                  {sortOptions.map((option) => (
+                    <button
+                      type="button"
+                      key={option.value}
+                      role="radio"
+                      aria-checked={sortValue === option.value}
+                      className={`${styles.segment}${
+                        sortValue === option.value
+                          ? ` ${styles.segmentActive}`
+                          : ''
+                      }`}
+                      onClick={() => onSortChange(option.value)}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
-            <div className={styles.checklistContainer}>
-              {formatOptions.map((format) => {
-                const isChecked = format.isGroup
-                  ? isGroupSelected(format.groupValues)
-                  : selectedFormats.has(format.value);
-                return (
-                  <label
-                    key={format.value}
-                    className={`${styles.checklistItem}${
-                      isChecked ? ` ${styles.checklistItemChecked}` : ''
-                    }`}
+            <div className={styles.section}>
+              <div className={styles.sectionHeader}>
+                <h5 className={styles.sectionTitle}>
+                  {t('GAME_FILTER.FORMATS')}
+                </h5>
+                <div className={styles.headerActions}>
+                  <button
+                    type="button"
+                    className={styles.headerActionBtn}
+                    onClick={handleSelectAll}
+                    disabled={allFormatsSelected}
                   >
-                    <input
-                      type="checkbox"
-                      checked={isChecked}
-                      onChange={() =>
-                        handleFormatChange(format.value, format.groupValues)
-                      }
-                    />
-                    <span>{format.label}</span>
-                  </label>
-                );
-              })}
+                    {t('GAME_FILTER.SELECT_ALL')}
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.headerActionBtn}
+                    onClick={handleSelectNone}
+                    disabled={selectedOptionCount === 0}
+                  >
+                    {t('GAME_FILTER.SELECT_NONE')}
+                  </button>
+                </div>
+              </div>
+              <div className={styles.formatGrid} role="group">
+                <span />
+                <span className={styles.columnHeader}>
+                  {t('GAME_FILTER.CASUAL')}
+                </span>
+                <span className={styles.columnHeader}>
+                  {t('GAME_FILTER.COMPETITIVE')}
+                </span>
+                {formatRows.map((row) => (
+                  <Fragment key={row.label}>
+                    <span className={styles.rowLabel} title={row.label}>
+                      {row.label}
+                    </span>
+                    {[row.casual, row.competitive].map((format, ix) => {
+                      if (!format) return <span key={ix} />;
+                      const isChecked = isFormatSelected(format);
+                      const count = getFormatCount(format);
+                      return (
+                        <label key={format.value} className={styles.cell}>
+                          <input
+                            type="checkbox"
+                            checked={isChecked}
+                            aria-label={format.label}
+                            onChange={() =>
+                              handleFormatChange(
+                                format.value,
+                                format.groupValues
+                              )
+                            }
+                          />
+                          {count !== undefined && (
+                            <span
+                              className={`${styles.cellCount}${
+                                count === 0 ? ` ${styles.cellCountZero}` : ''
+                              }`}
+                            >
+                              {count}
+                            </span>
+                          )}
+                        </label>
+                      );
+                    })}
+                  </Fragment>
+                ))}
+              </div>
             </div>
           </div>
         </>
