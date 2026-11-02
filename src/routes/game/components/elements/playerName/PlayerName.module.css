@@ -300,3 +300,14 @@
     width: calc(1.8 * var(--fan-vh));
   }
 }
+
+@media (max-width: 1200px) {
+  .playerName[data-framed] {
+    font-size: 0.75rem;
+    min-height: 1.65rem;
+  }
+
+  .playerName[data-framed] .nameContainer {
+    padding: 0 0.4rem;
+  }
+}

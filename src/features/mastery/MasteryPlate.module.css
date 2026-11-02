@@ -90,6 +90,13 @@
   inset: calc(var(--plate-pad) * 0.6);
 }
 
+@media (max-width: 1200px) {
+  .compact {
+    --plate-scale: 0.4;
+    --mastery-rank-size: 0.5rem;
+  }
+}
+
 /* Hosts whose neighbours or clipping leave no room outside the box keep the
    ornaments on the band instead of straddling the edge. */
 .inside .orn {
