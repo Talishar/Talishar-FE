@@ -70,7 +70,7 @@ const groupIntoPiles = (cards: Card[]): Pile[] | null => {
     if (pileCards) pileCards.push(card);
     else piles.set(pile, [card]);
   }
-  if (piles.size < 2) return null;
+  if (piles.size === 0 || (piles.size === 1 && piles.has(''))) return null;
   return Array.from(piles, ([pile, pileCards]) => ({
     pile,
     cards: pileCards
