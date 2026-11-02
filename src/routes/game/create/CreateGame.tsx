@@ -115,7 +115,7 @@ const CreateGame = ({
   const metafyTimestamp = useAppSelector(selectMetafyTimestamp);
   const metafyId = useAppSelector(selectMetafyId);
   const currentUserName = useAppSelector(selectCurrentUserName);
-  const isBazaarEnabled = currentUserName === 'OotTheMonk';
+  const isBazaarEnabled = true;
   const canResolveBazaarAccess =
     !isAuthLoading && (!isLoggedIn || !!currentUserName);
   const [standaloneDeckSource, setStandaloneDeckSourceState] = useState<
