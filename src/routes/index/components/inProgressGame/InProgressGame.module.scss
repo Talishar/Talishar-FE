@@ -2,7 +2,8 @@
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  padding: 0.4rem 0.3rem;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid transparent;
   align-items: center;
   justify-content: space-between;
   position: relative;
@@ -78,7 +79,16 @@
   min-width: 0;
 }
 
+.formatRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  max-width: 100%;
+}
+
 .formatLabel {
+  min-width: 0;
   max-width: 100%;
   font-size: 0.7em;
   color: var(--theme-primary, #d4af37);
@@ -156,8 +166,9 @@
 
 .gameItemFeatured {
   background-color: rgba(var(--theme-on-surface-rgb), 0.03);
-  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.14);
-  padding: 0.55rem 0.5rem;
+  border-color: rgba(var(--theme-on-surface-rgb), 0.14);
+  padding-top: 0.55rem;
+  padding-bottom: 0.55rem;
 
   & + & {
     margin-top: 0.35rem;

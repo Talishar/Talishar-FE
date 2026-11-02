@@ -68,8 +68,17 @@ export const InProgressGame = ({
         <HeroPortrait hero={entry.p2Hero} />
       </div>
       <div className={styles.info}>
-        {formatLabel && (
-          <span className={styles.formatLabel}>{formatLabel}</span>
+        {(formatLabel || isFriendsGame) && (
+          <span className={styles.formatRow}>
+            <FriendBadge
+              isFriendsGame={isFriendsGame}
+              friendName={friendName}
+              size="tab"
+            />
+            {formatLabel && (
+              <span className={styles.formatLabel}>{formatLabel}</span>
+            )}
+          </span>
         )}
         <span className={styles.meta}>
           {entry.turn !== undefined && (
@@ -93,11 +102,6 @@ export const InProgressGame = ({
           )}
         </span>
       </div>
-      <FriendBadge
-        isFriendsGame={isFriendsGame}
-        friendName={friendName}
-        size="small"
-      />
       <a
         className={buttonClass}
         href={`/game/play/${entry.gameName}`}
