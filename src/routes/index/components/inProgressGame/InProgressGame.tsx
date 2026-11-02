@@ -69,7 +69,11 @@ export const InProgressGame = ({
       </div>
       <div className={styles.info}>
         {(formatLabel || isFriendsGame) && (
-          <span className={styles.formatRow}>
+          <span
+            className={classNames(styles.formatRow, {
+              [styles.formatRowFriend]: isFriendsGame
+            })}
+          >
             <FriendBadge
               isFriendsGame={isFriendsGame}
               friendName={friendName}

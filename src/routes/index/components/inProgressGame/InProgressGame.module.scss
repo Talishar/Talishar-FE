@@ -87,6 +87,12 @@
   max-width: 100%;
 }
 
+.formatRowFriend::after {
+  content: '';
+  flex-shrink: 0;
+  width: 18px;
+}
+
 .formatLabel {
   min-width: 0;
   max-width: 100%;
