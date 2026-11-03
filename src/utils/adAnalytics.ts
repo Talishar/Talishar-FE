@@ -76,6 +76,7 @@ const GATE_UNIT_MS = 10 * 1000;
 // Coming back this soon after focus moved into an ad usually means the
 // click was a mistake, or landed on part of the ad that opens nothing.
 const QUICK_RETURN_MS = 5 * 1000;
+const GPT_TIMEOUT_MS = 5 * 1000;
 
 const PAGE_KEYS: Array<[RegExp, string]> = [
   [/^\/$/, 'home'],
@@ -124,6 +125,7 @@ let pageSince = 0;
 let pageVisible = true;
 let providerStarted = false;
 let gptReady = false;
+let gptUnavailable = false;
 let listenersInstalled = false;
 let clickArmed = true;
 let rewardedReadySeen = false;
@@ -620,15 +622,37 @@ function onBidWon(bid: PrebidBid) {
   }
 }
 
+function markSlotFill({ slot, isEmpty }: GptSlotEvent) {
+  document
+    .getElementById(slot.getSlotElementId())
+    ?.closest('[data-ad]')
+    ?.setAttribute('data-ad-fill', isEmpty ? 'empty' : 'filled');
+}
+
+export function markAdSlotIfUnavailable(el: HTMLElement) {
+  if (gptUnavailable && !el.hasAttribute('data-ad-fill'))
+    el.setAttribute('data-ad-fill', 'empty');
+}
+
 export function startAdAnalytics() {
   if (providerStarted) return;
   providerStarted = true;
   const w = window as AdWindow;
 
+  window.setTimeout(() => {
+    if (gptReady) return;
+    gptUnavailable = true;
+    document
+      .querySelectorAll<HTMLElement>('[data-ad]')
+      .forEach(markAdSlotIfUnavailable);
+  }, GPT_TIMEOUT_MS);
+
   w.googletag = w.googletag || { cmd: [] };
   w.googletag.cmd.push(() => {
     gptReady = true;
+    gptUnavailable = false;
     const pubads = w.googletag?.pubads?.();
+    pubads?.addEventListener('slotRenderEnded', markSlotFill);
     pubads?.addEventListener('slotRenderEnded', onSlotRenderEnded);
     pubads?.addEventListener('impressionViewable', onImpressionViewable);
     pubads?.addEventListener('rewardedSlotGranted', onRewardedEvent('granted'));

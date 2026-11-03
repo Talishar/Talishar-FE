@@ -656,6 +656,19 @@ h3 {
   }
 }
 
+/* Collapse the ad row when its visible slot went unfilled */
+@media (min-width: 729px) {
+  .adFooter:has(.desktopAd[data-ad-fill='empty']) {
+    display: none;
+  }
+}
+
+@media (max-width: 728px) {
+  .adFooter:has(.mobileAd[data-ad-fill='empty']) {
+    display: none;
+  }
+}
+
 .newsInner {
   max-width: 1200px;
   margin: 0 auto;

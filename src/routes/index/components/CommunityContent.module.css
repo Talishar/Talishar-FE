@@ -463,6 +463,23 @@
   }
 }
 
+/* Collapse ad slots that went unfilled */
+.communityAdSection:has(.ad-unit[data-ad-fill='empty']) {
+  display: none;
+}
+
+@media (min-width: 729px) {
+  .adFooter:has(.desktopAd[data-ad-fill='empty']) {
+    display: none;
+  }
+}
+
+@media (max-width: 728px) {
+  .adFooter:has(.mobileAd[data-ad-fill='empty']) {
+    display: none;
+  }
+}
+
 @media (max-width: 960px) {
   .heroLayout {
     grid-template-columns: 1fr;
