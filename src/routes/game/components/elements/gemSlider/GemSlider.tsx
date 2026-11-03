@@ -25,7 +25,44 @@ interface GemSlider {
   controller?: number;
 }
 
+const HEAVE_GEM_LABELS: [string, string] = [
+  'GEM_SLIDER.HEAVE_ACTIVE_LABEL',
+  'GEM_SLIDER.HEAVE_INACTIVE_LABEL'
+];
+
+const HEAVE_HEROES = [
+  'betsy',
+  'betsy_skin_in_the_game',
+  'bolfar_bear_hands',
+  'bravo',
+  'bravo_flattering_showman',
+  'bravo_showstopper',
+  'bravo_star_of_the_show',
+  'brevant_civic_protector',
+  'fightmaster_kox',
+  'groundbreaker_crix',
+  'lyath_goldmane',
+  'lyath_goldmane_vile_savant',
+  'oldhim',
+  'oldhim_grandfather_of_eternity',
+  'pleiades',
+  'pleiades_superstar',
+  'reya_the_unyielding',
+  'terra',
+  'valda_brightaxe',
+  'valda_seismic_impact',
+  'victor_goldmane',
+  'victor_goldmane_high_and_mighty',
+  'victor_goldmane_match_fixer',
+  'yoji_royal_protector'
+];
+
 const HERO_GEM_LABELS: Record<string, [string, string]> = {
+  ...Object.fromEntries(HEAVE_HEROES.map((hero) => [hero, HEAVE_GEM_LABELS])),
+  jarl_vetreidi: [
+    'GEM_SLIDER.JARL_ACTIVE_LABEL',
+    'GEM_SLIDER.JARL_INACTIVE_LABEL'
+  ],
   olympia: [
     'GEM_SLIDER.ALWAYS_WAGER_ACTIVE_LABEL',
     'GEM_SLIDER.ALWAYS_WAGER_INACTIVE_LABEL'
