@@ -13,11 +13,7 @@ import { useMediaQuery } from 'hooks/useMediaQuery';
 import { getCardPreview } from '../../elements/cardPortal/cardPreviewStore';
 import { useFannedHand } from '../playerHand/useFannedHand';
 import { useShowsLandscapeFan } from '../playerHand/useShowsLandscapeFan';
-import {
-  FAN_OPPONENT_NAME_ATTR,
-  FAN_OPPONENT_HAND_GAP_PX,
-  FAN_OPPONENT_HAND_MIN_STEP_PX
-} from '../playerHand/fanLayout';
+import { FAN_OPPONENT_HAND_MIN_STEP_PX } from '../playerHand/fanLayout';
 
 const CARD_GAP = 5; // matches the flex gap in HandZone.module.css
 const ZONE_MAX_WIDTH = 0.6; // matches max-width: 60% in HandZone.module.css
@@ -36,9 +32,6 @@ const HandZone = React.memo(function HandZone(prop: Player) {
   const handCardBack = useAppSelector(
     (state: RootState) =>
       selectSidePlayer(state, isPlayer).CardBack?.cardNumber ?? 'CardBack'
-  );
-  const extraArsenalCards = useAppSelector((state: RootState) =>
-    Math.max(0, (selectSidePlayer(state, isPlayer).Arsenal?.length ?? 0) - 1)
   );
   const handCardBackNumber = handCardBack.toLowerCase();
   const hideHand = useAppSelector(
@@ -82,16 +75,12 @@ const HandZone = React.memo(function HandZone(prop: Player) {
 
   useLayoutEffect(() => {
     const zone = zoneRef.current;
-    const nameAnchor = besideArsenal
-      ? document.querySelector(`[${FAN_OPPONENT_NAME_ATTR}]`)
-      : null;
-    const namePlate = nameAnchor?.firstElementChild;
     const fit = () => {
       const firstCard = zone?.querySelector(
         ':scope > div'
       ) as HTMLElement | null;
       const cardWidth =
-        (namePlate
+        (besideArsenal
           ? firstCard?.getBoundingClientRect().width
           : firstCard?.offsetWidth) ?? 0;
       if (!zone || !cardWidth || cardCount === 0) {
@@ -103,10 +92,8 @@ const HandZone = React.memo(function HandZone(prop: Player) {
         return;
       }
       const naturalWidth = cardCount * (cardWidth + CARD_GAP) - CARD_GAP;
-      const availableWidth = namePlate
-        ? zone.getBoundingClientRect().right -
-          namePlate.getBoundingClientRect().right -
-          FAN_OPPONENT_HAND_GAP_PX
+      const availableWidth = besideArsenal
+        ? parseFloat(getComputedStyle(zone).maxWidth)
         : windowWidth * ZONE_MAX_WIDTH;
       const nextIsOverflowing = naturalWidth > availableWidth;
       let nextOverlap = 0;
@@ -115,7 +102,7 @@ const HandZone = React.memo(function HandZone(prop: Player) {
           (availableWidth - cardWidth) / (cardCount - 1) - cardWidth - CARD_GAP;
         nextOverlap = Math.max(
           Math.min(idealOverlap, 0),
-          namePlate
+          besideArsenal
             ? FAN_OPPONENT_HAND_MIN_STEP_PX - cardWidth - CARD_GAP
             : -MAX_OVERLAP_RATIO * cardWidth
         );
@@ -128,12 +115,11 @@ const HandZone = React.memo(function HandZone(prop: Player) {
       );
     };
     fit();
-    if (!nameAnchor || !namePlate) return;
+    if (!besideArsenal || !zone) return;
     const observer = new ResizeObserver(fit);
-    observer.observe(nameAnchor);
-    observer.observe(namePlate);
+    observer.observe(zone);
     return () => observer.disconnect();
-  }, [cardCount, windowWidth, windowHeight, besideArsenal, extraArsenalCards]);
+  }, [cardCount, windowWidth, windowHeight, besideArsenal]);
 
   // Backend uniqueIds fall back to '-', so duplicates are deduped by a
   // per-cardNumber occurrence counter rather than by position.
@@ -185,10 +171,9 @@ const HandZone = React.memo(function HandZone(prop: Player) {
       className={classNames(displayRow, { [styles.compact]: compactActive })}
       ref={zoneRef}
       style={
-        {
-          '--hand-arsenal-extra': extraArsenalCards,
-          ...(compactActive ? { '--hand-overlap': `${overlap}px` } : {})
-        } as React.CSSProperties
+        compactActive
+          ? ({ '--hand-overlap': `${overlap}px` } as React.CSSProperties)
+          : undefined
       }
       onPointerDown={(event) => {
         lastPointerTypeRef.current = event.pointerType;
