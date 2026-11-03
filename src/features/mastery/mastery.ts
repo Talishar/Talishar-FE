@@ -53,7 +53,8 @@ export const masteryLevel = (
 
 export const ornamentTier = (level: number) => {
   if (level >= MASTERY_MILESTONES.length) return 8;
-  return level > 0 && level % 2 === 0 ? level / 2 : 0;
+  if (level % 2 === 0) return level / 2;
+  return level >= 7 ? (level - 1) / 2 : 0;
 };
 
 // Dev-only frame preview, e.g. /game/lobby/123?masteryLevel=9&opponentMasteryLevel=3

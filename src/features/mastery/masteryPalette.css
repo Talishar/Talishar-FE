@@ -98,6 +98,7 @@
 }
 
 [data-mastery-level='12'][data-mastery-level],
+[data-mastery-level='13'][data-mastery-level],
 [data-mastery-level='14'][data-mastery-level] {
   --mastery-gem: 10px;
   --mastery-crest-top: -1.05;

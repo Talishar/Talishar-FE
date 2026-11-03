@@ -248,7 +248,8 @@
   );
 }
 
-.mastery_12 .crest {
+.mastery_12 .crest,
+.mastery_13 .crest {
   opacity: 0.88;
   clip-path: polygon(
     50% 0,
