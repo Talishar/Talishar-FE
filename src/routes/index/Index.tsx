@@ -223,18 +223,7 @@ const Index = () => {
         <section className={styles.newsContainer}>
           <News />
         </section>
-        {showAds && (
-          <div className={styles.adFooter}>
-            {!isSupporter && (
-              <div className={styles.adHeader}>
-                <RemoveAdsLink />
-              </div>
-            )}
-            <AdUnit placement="billboard-1" className={styles.desktopAd} />
-            <AdUnit placement="mobile-unit-1" className={styles.mobileAd} />
-          </div>
-        )}
-        <CommunityContent showAds={showAds} />
+        <CommunityContent />
       </div>
       {systemMessageData?.systemMessage && (
         <SystemMessageModal message={systemMessageData.systemMessage} />

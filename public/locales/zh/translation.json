@@ -540,6 +540,7 @@
     "PROFILE": "个人资料",
     "REPLAYS": "回放",
     "SETTINGS": "设置",
+    "SIGN_UP": "注册",
     "SUPPORT_US": "支持我们！",
     "TALISHAR_LOGO_ALT": "Talishar Logo - 链接至首页"
   },
@@ -1119,6 +1120,17 @@
   },
   "NEWS": {
     "NO_NEWS": "近期无公告。加入我们的 Discord 获取更新！",
+    "READ_MORE": "阅读更多",
+    "SHOW_LESS": "收起",
+    "TOPICS": {
+      "ACCESSIBILITY": "无障碍",
+      "CARDS": "卡牌",
+      "FIX": "修复",
+      "GAMEPLAY": "游戏玩法",
+      "INTERFACE": "界面",
+      "MOBILE": "移动端",
+      "UPDATE": "更新"
+    },
     "TITLE": "Talishar 发布说明",
     "VIEW_ALL": "查看全部 "
   },

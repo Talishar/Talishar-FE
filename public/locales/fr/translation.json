@@ -586,6 +586,7 @@
     "PROFILE": "Profil",
     "REPLAYS": "Rediffusions",
     "SETTINGS": "Paramètres",
+    "SIGN_UP": "S'inscrire",
     "SUPPORT_US": "Supportez-nous!",
     "TALISHAR_LOGO_ALT": "Logo Talishar - lien vers la page d'accueil"
   },
@@ -1187,6 +1188,17 @@
   },
   "NEWS": {
     "NO_NEWS": "Aucune annonce récente. Rejoignez notre Discord pour les mises à jour!",
+    "READ_MORE": "Lire la suite",
+    "SHOW_LESS": "Réduire",
+    "TOPICS": {
+      "ACCESSIBILITY": "Accessibilité",
+      "CARDS": "Cartes",
+      "FIX": "Correctif",
+      "GAMEPLAY": "Jeu",
+      "INTERFACE": "Interface",
+      "MOBILE": "Mobile",
+      "UPDATE": "Mise à jour"
+    },
     "TITLE": "Notes de version de Talishar",
     "VIEW_ALL": "Tout voir "
   },

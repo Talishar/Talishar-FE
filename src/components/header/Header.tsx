@@ -3,23 +3,27 @@ import { useState, useEffect, useRef } from 'react';
 import { Link, NavLink, Outlet } from 'react-router-dom';
 import styles from './Header.module.scss';
 import TalisharLogo from '../../img/CoinLogo.png';
+// Menu icons all come from Bootstrap's outline set so they share one stroke
+// weight and optical size.
 import {
   BsPersonFill,
-  BsShieldFillCheck,
-  BsGearFill,
-  BsFillBookFill,
+  BsPerson,
+  BsPersonPlus,
+  BsShieldCheck,
+  BsGear,
+  BsBook,
   BsList,
   BsX,
   BsCollection,
-  BsCollectionPlayFill,
+  BsCollectionPlay,
   BsChevronDown,
-  BsPlayFill,
-  BsInfoCircleFill,
+  BsPlayCircle,
+  BsInfoCircle,
   BsFullscreen,
   BsFullscreenExit,
-  BsStars
+  BsStars,
+  BsBoxArrowRight
 } from 'react-icons/bs';
-import { IoLogOut } from 'react-icons/io5';
 import LanguageSelector from 'components/header/LanguageSelector';
 import Footer from 'components/footer/Footer';
 import { useGetPendingRequestsQuery } from 'features/api/apiSlice';
@@ -159,7 +163,7 @@ const Header = () => {
           </li>
         </ul>
         <ul className={styles.rightGroup}>
-          {!isLoggedIn && <LanguageSelector hideIcon />}
+          {!isLoggedIn && <LanguageSelector variant="bar" />}
           <li>
             {isLoggedIn ? (
               <div className={styles.userDropdown} ref={userDropdownRef}>
@@ -193,7 +197,7 @@ const Header = () => {
                   <ul className={styles.userDropdownMenu}>
                     <li>
                       <Link to="/user" onClick={closeUserDropdown}>
-                        <BsPersonFill />
+                        <BsPerson />
                         <span>
                           {t('HEADER.PROFILE')}
                           {pendingRequestCount > 0 && (
@@ -216,10 +220,10 @@ const Header = () => {
                     </li>
                     <li>
                       <Link to="/user/settings" onClick={closeUserDropdown}>
-                        <BsGearFill /> <span>{t('HEADER.SETTINGS')}</span>
+                        <BsGear /> <span>{t('HEADER.SETTINGS')}</span>
                       </Link>
                     </li>
-                    <LanguageSelector inDropdown />
+                    <LanguageSelector variant="menu" />
                     {document.fullscreenEnabled && (
                       <li>
                         <button type="button" onClick={handleFullscreenToggle}>
@@ -239,23 +243,27 @@ const Header = () => {
                     {isMod && (
                       <li>
                         <Link to="/mod" onClick={closeUserDropdown}>
-                          <BsShieldFillCheck />{' '}
-                          <span>{t('HEADER.MOD_PAGE')}</span>
+                          <BsShieldCheck /> <span>{t('HEADER.MOD_PAGE')}</span>
                         </Link>
                       </li>
                     )}
                     <li>
                       <button type="button" onClick={handleLogOut}>
-                        <IoLogOut /> <span>{t('HEADER.LOGOUT')}</span>
+                        <BsBoxArrowRight /> <span>{t('HEADER.LOGOUT')}</span>
                       </button>
                     </li>
                   </ul>
                 )}
               </div>
             ) : (
-              <Link to="/user/login" className={styles.login} role="button">
-                {t('HEADER.LOGIN')}
-              </Link>
+              <>
+                <Link to="/user/login/signup" className={styles.signup}>
+                  {t('HEADER.SIGN_UP')}
+                </Link>
+                <Link to="/user/login" className={styles.login} role="button">
+                  {t('HEADER.LOGIN')}
+                </Link>
+              </>
             )}
           </li>
         </ul>
@@ -277,13 +285,13 @@ const Header = () => {
           <ul>
             <li>
               <Link to="/" onClick={closeMobileMenu}>
-                <BsPlayFill /> <span>{t('HEADER.PLAY')}</span>
+                <BsPlayCircle /> <span>{t('HEADER.PLAY')}</span>
               </Link>
             </li>
             {isLoggedIn && (
               <li>
                 <Link to="/game/load" onClick={closeMobileMenu}>
-                  <BsCollectionPlayFill /> <span>{t('HEADER.REPLAYS')}</span>
+                  <BsCollectionPlay /> <span>{t('HEADER.REPLAYS')}</span>
                 </Link>
               </li>
             )}
@@ -296,18 +304,18 @@ const Header = () => {
             )}
             <li>
               <Link to="/learn" onClick={closeMobileMenu}>
-                <BsFillBookFill /> <span>{t('HEADER.LEARN')}</span>
+                <BsBook /> <span>{t('HEADER.LEARN')}</span>
               </Link>
             </li>
             <li>
               <Link to="/about" onClick={closeMobileMenu}>
-                <BsInfoCircleFill /> <span>{t('HEADER.ABOUT')}</span>
+                <BsInfoCircle /> <span>{t('HEADER.ABOUT')}</span>
               </Link>
             </li>
             <li>
               {isLoggedIn ? (
                 <Link to="/user" onClick={closeMobileMenu}>
-                  <BsPersonFill /> <span>{t('HEADER.PROFILE')}</span>
+                  <BsPerson /> <span>{t('HEADER.PROFILE')}</span>
                   {pendingRequestCount > 0 && (
                     <strong
                       className={`${styles.notificationBadge} ${styles.inlineNotificationBadge}`}
@@ -321,10 +329,17 @@ const Header = () => {
                 </Link>
               ) : (
                 <Link to="/user/login" onClick={closeMobileMenu}>
-                  <BsPersonFill /> <span>{t('HEADER.LOGIN')}</span>
+                  <BsPerson /> <span>{t('HEADER.LOGIN')}</span>
                 </Link>
               )}
             </li>
+            {!isLoggedIn && (
+              <li>
+                <Link to="/user/login/signup" onClick={closeMobileMenu}>
+                  <BsPersonPlus /> <span>{t('HEADER.SIGN_UP')}</span>
+                </Link>
+              </li>
+            )}
             {isLoggedIn && (
               <li>
                 <Link to="/user/decks" onClick={closeMobileMenu}>
@@ -335,26 +350,22 @@ const Header = () => {
             {isLoggedIn && (
               <li>
                 <Link to="/user/settings" onClick={closeMobileMenu}>
-                  <BsGearFill /> <span>{t('HEADER.SETTINGS')}</span>
+                  <BsGear /> <span>{t('HEADER.SETTINGS')}</span>
                 </Link>
               </li>
             )}
-            <LanguageSelector />
+            <LanguageSelector variant="mobile" />
             {isLoggedIn && isMod && (
               <li>
                 <Link to="/mod" onClick={closeMobileMenu}>
-                  <BsShieldFillCheck /> <span>{t('HEADER.MOD_PAGE')}</span>
+                  <BsShieldCheck /> <span>{t('HEADER.MOD_PAGE')}</span>
                 </Link>
               </li>
             )}
             {document.fullscreenEnabled && (
               <li>
                 <button type="button" onClick={handleFullscreenToggle}>
-                  {isFullscreen ? (
-                    <BsFullscreenExit className={styles.fullscreenIcon} />
-                  ) : (
-                    <BsFullscreen className={styles.fullscreenIcon} />
-                  )}
+                  {isFullscreen ? <BsFullscreenExit /> : <BsFullscreen />}
                   <span>
                     {isFullscreen
                       ? t('HEADER.EXIT_FULLSCREEN')
@@ -366,7 +377,7 @@ const Header = () => {
             {isLoggedIn && (
               <li>
                 <button type="button" onClick={handleLogOut}>
-                  <IoLogOut /> <span>{t('HEADER.LOGOUT')}</span>
+                  <BsBoxArrowRight /> <span>{t('HEADER.LOGOUT')}</span>
                 </button>
               </li>
             )}

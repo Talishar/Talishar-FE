@@ -246,14 +246,6 @@ const CommunityContent: React.FC<CommunityContentProps> = ({
           <div className={styles.rightColumn}>
             {renderCard(secondary, false)}
 
-            {showAds && (
-              <div className={styles.communityAdSection}>
-                <div className={styles.adHeader}>
-                  <RemoveAdsLink />
-                </div>
-                <AdUnit placement="mobile-unit-3" />
-              </div>
-            )}
           </div>
         </div>
         <ul className={styles.videoList}>
@@ -329,15 +321,6 @@ const CommunityContent: React.FC<CommunityContentProps> = ({
             {t('COMMUNITY_CONTENT.JOIN_DISCORD')}
           </a>
         </div>
-        {showAds && (
-          <div className={styles.adFooter}>
-            <div className={styles.adHeader}>
-              <RemoveAdsLink />
-            </div>
-            <AdUnit placement="billboard-2" className={styles.desktopAd} />
-            <AdUnit placement="mobile-unit-2" className={styles.mobileAd} />
-          </div>
-        )}
       </div>
     </section>
   );

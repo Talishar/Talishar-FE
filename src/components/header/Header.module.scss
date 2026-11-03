@@ -93,11 +93,12 @@
         }
 
         &.login {
-          height: auto;
+          height: 36px;
           min-width: 0;
-          padding: 8px 18px;
+          padding: 0 16px;
           margin: 0 0 0 8px;
           border-radius: 5px;
+          font-size: 15px;
           background-color: var(--theme-primary);
           border: 1px solid var(--theme-primary);
           color: var(--theme-primary-inverse);
@@ -109,6 +110,36 @@
             background-color: var(--theme-primary-hover);
             border-color: var(--theme-primary-hover);
             color: var(--theme-primary-inverse);
+          }
+
+          &::before,
+          &::after {
+            display: none !important;
+          }
+        }
+
+        &.signup {
+          height: 36px;
+          min-width: 0;
+          padding: 0 16px;
+          margin: 0 0 0 8px;
+          border-radius: 5px;
+          font-size: 15px;
+          background-color: transparent;
+          border: 1px solid var(--theme-primary);
+          color: var(--theme-primary);
+          font-weight: 600;
+          line-height: 1;
+          white-space: nowrap;
+
+          &:focus,
+          &:hover {
+            background-color: color-mix(
+              in srgb,
+              var(--theme-primary) 14%,
+              transparent
+            );
+            color: var(--theme-primary);
           }
 
           &::before,
@@ -448,7 +479,7 @@
     svg {
       width: 20px;
       justify-self: center;
-      font-size: 19px !important;
+      font-size: 18px !important;
       flex-shrink: 0;
       opacity: 0.85;
     }
@@ -650,13 +681,9 @@
         }
 
         svg {
-          font-size: 20px;
+          font-size: 18px;
           flex-shrink: 0;
           overflow: visible;
-        }
-
-        svg.fullscreenIcon {
-          transform: scale(0.85);
         }
 
         span {
@@ -703,7 +730,7 @@
           }
 
           svg {
-            font-size: 20px;
+            font-size: 18px;
             flex-shrink: 0;
           }
 

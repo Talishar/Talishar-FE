@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import styles from '../index/Index.module.css';
 import {
   fetchDiscordReleaseNotes,
@@ -11,6 +11,7 @@ import {
 } from 'constants/socialLinks';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 import { useTranslation } from 'react-i18next';
+import { getReleaseNoteTopic, stripLeadingEmoji } from './releaseNoteTopic';
 
 const formatDate = (timestamp: string, locale: string) => {
   const formatted = new Date(timestamp).toLocaleDateString(locale, {
@@ -36,11 +37,94 @@ const formatDate = (timestamp: string, locale: string) => {
   });
 };
 
+const NewsCard = ({ message }: { message: DiscordMessage }) => {
+  const { t, i18n } = useTranslation();
+  const contentRef = useRef<HTMLParagraphElement>(null);
+  const [expanded, setExpanded] = useState(false);
+  const [isClamped, setIsClamped] = useState(false);
+  const topic = getReleaseNoteTopic(message.content);
+  const content = stripLeadingEmoji(message.content);
+  const contentId = `release-note-${message.id}`;
+
+  // Only offer "Read more" when the line clamp actually hides text.
+  useLayoutEffect(() => {
+    const el = contentRef.current;
+    if (!el || expanded) return;
+    const measure = () => setIsClamped(el.scrollHeight > el.clientHeight + 1);
+    measure();
+    if (typeof ResizeObserver === 'undefined') return;
+    const observer = new ResizeObserver(measure);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [content, expanded]);
+
+  return (
+    <div
+      className={`${styles.newsCard} ${
+        expanded ? styles.newsCardExpanded : ''
+      }`}
+    >
+      <span className={styles.newsCardTopic} data-topic={topic}>
+        {t(`NEWS.TOPICS.${topic}`)}
+      </span>
+      <div className={styles.newsCardHeader}>
+        <strong className={styles.newsCardAuthor}>{message.author}</strong>
+        <span className={styles.newsCardDate}>
+          {formatDate(message.timestamp, i18n.language)}
+        </span>
+      </div>
+      {content && (
+        <p
+          id={contentId}
+          ref={contentRef}
+          className={`${styles.newsCardContent} ${
+            expanded ? styles.newsCardContentExpanded : ''
+          }`}
+        >
+          {parseHtmlToReactElements(content)}
+        </p>
+      )}
+      {(isClamped || expanded) && (
+        <button
+          type="button"
+          className={styles.newsCardReadMore}
+          aria-expanded={expanded}
+          aria-controls={contentId}
+          onClick={() => setExpanded(!expanded)}
+        >
+          {expanded ? t('NEWS.SHOW_LESS') : t('NEWS.READ_MORE')}
+        </button>
+      )}
+      {message.reactions && message.reactions.length > 0 && (
+        <div className={styles.newsCardReactions}>
+          {message.reactions.map((reaction: DiscordReaction) => (
+            <span
+              key={reaction.emoji.id ?? reaction.emoji.name}
+              className={styles.newsCardReaction}
+            >
+              {reaction.emoji.id ? (
+                <img
+                  src={`https://cdn.discordapp.com/emojis/${reaction.emoji.id}.webp?size=16`}
+                  alt={reaction.emoji.name}
+                  title={reaction.emoji.name}
+                />
+              ) : (
+                reaction.emoji.name
+              )}
+              {reaction.count}
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
 const News = () => {
   const [discordMessages, setDiscordMessages] = useState<DiscordMessage[]>([]);
   const [loading, setLoading] = useState(true);
   // Initial stuff to allow the lang to change
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const loadContent = async () => {
@@ -91,44 +175,9 @@ const News = () => {
             />
           ))
         ) : discordMessages.length > 0 ? (
-          discordMessages.slice(0, 3).map((message) => (
-            <div key={message.id} className={styles.newsCard}>
-              <div className={styles.newsCardHeader}>
-                <strong className={styles.newsCardAuthor}>
-                  {message.author}
-                </strong>
-                <span className={styles.newsCardDate}>
-                  {formatDate(message.timestamp, i18n.language)}
-                </span>
-              </div>
-              {message.content && (
-                <p className={styles.newsCardContent}>
-                  {parseHtmlToReactElements(message.content)}
-                </p>
-              )}
-              {message.reactions && message.reactions.length > 0 && (
-                <div className={styles.newsCardReactions}>
-                  {message.reactions.map((reaction: DiscordReaction) => (
-                    <span
-                      key={reaction.emoji.id ?? reaction.emoji.name}
-                      className={styles.newsCardReaction}
-                    >
-                      {reaction.emoji.id ? (
-                        <img
-                          src={`https://cdn.discordapp.com/emojis/${reaction.emoji.id}.webp?size=16`}
-                          alt={reaction.emoji.name}
-                          title={reaction.emoji.name}
-                        />
-                      ) : (
-                        reaction.emoji.name
-                      )}
-                      {reaction.count}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))
+          discordMessages
+            .slice(0, 3)
+            .map((message) => <NewsCard key={message.id} message={message} />)
         ) : (
           <p>{t('NEWS.NO_NEWS')}</p>
         )}

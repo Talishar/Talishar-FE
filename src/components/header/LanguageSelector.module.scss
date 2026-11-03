@@ -1,325 +1,203 @@
-.socialDropdown {
+// Shared pieces for all three variants. Buttons reset pico's full-width,
+// filled button styling.
+.languageSelector {
   position: relative;
   display: flex;
   align-items: center;
+  list-style: none;
+}
+
+.trigger {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  width: auto;
+  margin: 0 !important;
+  background: none;
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+  color: var(--snow, #fff);
+  font-family: inherit;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 150ms ease, border-color 150ms ease,
+    background-color 150ms ease;
+
+  &:focus {
+    box-shadow: none;
+  }
+}
+
+.code {
+  letter-spacing: 0.04em;
+}
+
+.chevron {
+  font-size: 12px;
+  transition: transform 200ms ease;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  box-sizing: border-box;
+  min-width: 170px;
+  padding: 6px;
+  background: color-mix(in srgb, var(--near-black) 92%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.08);
+  border-radius: 6px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
+  z-index: 10002;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  margin: 0;
+  padding: 8px 10px;
+  background: none;
+  border: none;
+  border-radius: 5px;
+  box-shadow: none;
+  color: var(--snow, #fff);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+
+  svg {
+    flex-shrink: 0;
+    font-size: 16px;
+    color: var(--theme-primary, #d4af37);
+  }
+
+  &[aria-checked='true'] {
+    color: var(--theme-primary, #d4af37);
+  }
+
+  &:hover,
+  &:focus-visible {
+    outline: none;
+    background-color: var(--theme-form-background, #2a2f35);
+    color: var(--theme-primary, #d4af37);
+  }
+}
+
+// Top bar: a bordered pill the same height as Sign up / Log in.
+.bar {
   height: 100%;
 
-  .dropdownToggle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    min-width: 60px;
+  .trigger {
+    height: 36px;
     padding: 0 10px;
-    background: none;
-    border: none;
-    color: var(--snow);
-    cursor: pointer;
-    transition: color 0.2s ease;
-    flex-direction: column;
-    gap: 2px;
-    position: relative;
-    margin-bottom: 0 !important;
-
-    svg {
-      font-size: 30px;
-    }
-
-    .label {
-      font-weight: 500;
-      white-space: nowrap;
-      font-size: 15px;
-    }
-
-    &:focus,
-    &:hover {
-      color: var(--theme-primary);
-      background-color: color-mix(in srgb, var(--near-black) 10%, transparent);
-
-      &::before {
-        rotate: 225deg;
-      }
-
-      &::before,
-      &::after {
-        transform: scale(1);
-      }
-    }
-
-    &::before,
-    &::after {
-      display: block;
-      content: '';
-      position: absolute;
-      background-color: var(--theme-primary);
-      transition: all 300ms;
-      transform: scale(0);
-      transform-origin: center;
-    }
-
-    &::before {
-      $width: 10px;
-      width: $width;
-      height: $width;
-      bottom: -(calc($width/2) - 1);
-      left: calc(50% - ($width/2));
-      rotate: 45deg;
-    }
-
-    &::after {
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 3px;
-    }
-  }
-
-  .dropdownMenu {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background: var(--theme-section-background);
-    border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
-    border-top: none;
-    border-radius: 0 0 4px 4px;
-    gap: 0;
-    z-index: 10001;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    min-width: max-content;
-
-    .socialLink {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      width: auto;
-      margin: 0;
-      padding: 8px 12px;
-      background: none;
-      border: none;
-      font-family: inherit;
-      font-size: inherit;
-      color: var(--snow);
-      text-decoration: none;
-      border-right: 1px solid var(--theme-border, rgba(255, 255, 255, 0.1));
-      transition: background-color 0.2s ease;
-      white-space: nowrap;
-      cursor: pointer;
-
-      &:last-child {
-        border-right: none;
-      }
-
-      &:hover {
-        background-color: var(--theme-secondary, rgba(255, 255, 255, 0.1));
-      }
-
-      svg {
-        font-size: 16px;
-      }
-
-      span {
-        font-size: 13px;
-      }
-    }
-  }
-}
-
-@media only screen and (max-width: 768px) {
-  .socialDropdown {
-    .dropdownToggle {
-      min-width: 50px;
-      padding: 0 5px;
-
-      .label {
-        display: none;
-      }
-    }
-
-    .dropdownMenu {
-      .socialLink {
-        padding: 6px 8px;
-
-        svg {
-          font-size: 14px;
-        }
-      }
-    }
-  }
-}
-
-@media only screen and (max-width: 400px) {
-  .socialDropdown {
-    .dropdownToggle {
-      min-width: 40px;
-      padding: 0 3px;
-    }
-
-    .dropdownMenu {
-      right: -10px;
-
-      .socialLink {
-        padding: 6px 6px;
-
-        span {
-          display: none;
-        }
-
-        svg {
-          font-size: 16px;
-        }
-      }
-    }
-  }
-}
-
-.inDropdown {
-  height: auto;
-  display: block;
-  position: relative;
-
-  .dropdownMenu {
-    position: absolute;
-    top: 0;
-    right: 100%;
-    left: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    box-sizing: border-box;
-    min-width: 190px;
-    padding: 6px;
-    background: var(--near-black);
-    border: 1px solid rgba(var(--theme-on-surface-rgb), 0.06);
+    border: 1px solid rgba(var(--theme-on-surface-rgb), 0.2);
     border-radius: 5px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
-    z-index: 10002;
-    max-height: 320px;
-    overflow-y: auto;
+    font-size: 15px;
 
-    .socialLink {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      flex-direction: row;
-      min-width: 0;
-      width: 100%;
-      height: auto;
-      box-sizing: border-box;
-      padding: 8px 10px;
-      font-size: 16px;
-      font-weight: 500;
-      color: var(--snow, #fff);
-      text-decoration: none;
-      border-right: none;
-      border-bottom: none;
-      border-radius: 5px;
-      transition: background-color 150ms ease, color 150ms ease;
-      white-space: nowrap;
-
-      &::before,
-      &::after {
-        display: none;
-      }
-
-      &:hover,
-      &:focus-visible {
-        background-color: var(--theme-form-background, #2a2f35);
-        color: var(--theme-primary, #d4af37);
-      }
+    &:hover,
+    &:focus-visible,
+    &[aria-expanded='true'] {
+      outline: none;
+      color: var(--theme-primary, #d4af37);
+      border-color: var(--theme-primary, #d4af37);
     }
+  }
+
+  .globe {
+    font-size: 16px;
+  }
+
+  .panel {
+    position: absolute;
+    top: calc(50% + 24px);
+    right: 0;
   }
 }
 
-// In the burger menu (portrait mobile) the dropdown must expand inline, not float off-screen
-@media (max-width: 768px) and (orientation: portrait) {
-  .socialDropdown {
-    width: 100%;
-    height: auto;
-    display: block;
+// Account dropdown row. The header's dropdown rule lays rows out as a
+// 22px icon + label grid and forces svg/span sizes, hence the !important.
+.menu {
+  width: 100%;
 
-    .dropdownToggle {
-      width: 100%;
-      height: auto;
-      flex-direction: row !important;
-      justify-content: flex-start;
-      gap: 14px;
-      padding: 14px 20px;
-      min-width: unset;
-      font-size: 15px;
-      font-weight: 500;
-      background: none;
-      background-color: transparent;
-      background-image: none;
-      border: none;
-      border-left: 3px solid transparent;
-      outline: none;
-      -webkit-tap-highlight-color: transparent;
-      transition: background-color 150ms ease, color 150ms ease,
-        border-left-color 150ms ease;
+  .trigger {
+    grid-template-columns: 22px 1fr auto auto !important;
+  }
 
-      &:hover,
-      &:focus,
-      &:focus-visible,
-      &:active {
-        background-color: var(--theme-form-background, #2a2f35);
-        background-image: none;
-        color: var(--theme-primary, #d4af37);
-        border-left-color: var(--theme-primary, #d4af37);
-        box-shadow: none;
-      }
+  .trigger .code {
+    font-size: 13px !important;
+    color: rgba(var(--theme-on-surface-rgb), 0.6);
+  }
 
-      svg {
-        font-size: 20px;
-      }
+  // The submenu opens to the left, so the chevron points that way.
+  .trigger .chevron {
+    width: 12px;
+    font-size: 12px !important;
+    transform: rotate(90deg);
+  }
 
-      .label {
-        display: inline !important;
-        font-size: 15px;
-      }
-    }
+  .panel {
+    position: absolute;
+    top: -6px;
+    right: calc(100% + 8px);
+  }
+}
 
-    .dropdownMenu {
-      position: static;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      border: none;
-      border-radius: 0;
-      box-shadow: none;
-      background: color-mix(in srgb, var(--near-black) 45%, transparent);
-      min-width: unset;
+// Burger menu row: the language list expands inline under it.
+.mobile {
+  display: block;
+  width: 100%;
 
-      .socialLink {
-        padding: 12px 20px 12px 54px;
-        background: none;
-        background-color: transparent;
-        background-image: none;
-        border: none;
-        border-bottom: 1px solid rgba(var(--theme-on-surface-rgb), 0.06);
-        outline: none;
-        -webkit-tap-highlight-color: transparent;
-        font-size: 14px;
-        transition: background-color 150ms ease, color 150ms ease;
+  .trigger .label {
+    flex: 1;
+    text-align: left;
+  }
 
-        &:last-child {
-          border-bottom: none;
-        }
+  .trigger .code {
+    font-size: 13px;
+    color: rgba(var(--theme-on-surface-rgb), 0.6);
+  }
 
-        &:hover,
-        &:focus,
-        &:focus-visible,
-        &:active {
-          background-color: var(--theme-form-background, #2a2f35);
-          background-image: none;
-          color: var(--theme-primary, #d4af37);
-          box-shadow: none;
-        }
+  .trigger .chevron {
+    font-size: 14px;
+  }
 
-        span {
-          display: inline !important;
-          font-size: 14px;
-        }
-      }
+  .panel {
+    position: static;
+    min-width: 0;
+    padding: 0;
+    gap: 0;
+    background: color-mix(in srgb, var(--near-black) 45%, transparent);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .option {
+    padding: 13px 20px 13px 57px;
+    border-radius: 0;
+    border-bottom: 1px solid rgba(var(--theme-on-surface-rgb), 0.06);
+
+    &:last-child {
+      border-bottom: none;
     }
   }
 }

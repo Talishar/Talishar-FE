@@ -540,6 +540,7 @@
     "PROFILE": "プロフィール",
     "REPLAYS": "リプレイ",
     "SETTINGS": "設定",
+    "SIGN_UP": "新規登録",
     "SUPPORT_US": "Support Us!",
     "TALISHAR_LOGO_ALT": "Talisharのロゴ - ホームページへのリンク"
   },
@@ -1119,6 +1120,17 @@
   },
   "NEWS": {
     "NO_NEWS": "",
+    "READ_MORE": "続きを読む",
+    "SHOW_LESS": "閉じる",
+    "TOPICS": {
+      "ACCESSIBILITY": "アクセシビリティ",
+      "CARDS": "カード",
+      "FIX": "修正",
+      "GAMEPLAY": "ゲームプレイ",
+      "INTERFACE": "インターフェース",
+      "MOBILE": "モバイル",
+      "UPDATE": "アップデート"
+    },
     "TITLE": "",
     "VIEW_ALL": ""
   },

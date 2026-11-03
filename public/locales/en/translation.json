@@ -669,6 +669,7 @@
     "PROFILE": "Profile",
     "REPLAYS": "Replays",
     "SETTINGS": "Settings",
+    "SIGN_UP": "Sign up",
     "SUPPORT_US": "Support Us!",
     "TALISHAR_LOGO_ALT": "Talishar home"
   },
@@ -1594,6 +1595,17 @@
   "NEWS": {
     "CODED_CARDS": "New Sets: Coded Cards",
     "NO_NEWS": "No recent announcements. Join our Discord for updates!",
+    "READ_MORE": "Read more",
+    "SHOW_LESS": "Show less",
+    "TOPICS": {
+      "ACCESSIBILITY": "Accessibility",
+      "CARDS": "Cards",
+      "FIX": "Fix",
+      "GAMEPLAY": "Gameplay",
+      "INTERFACE": "Interface",
+      "MOBILE": "Mobile",
+      "UPDATE": "Update"
+    },
     "TITLE": "Talishar Release Notes",
     "VIEW_ALL": "View all"
   },
