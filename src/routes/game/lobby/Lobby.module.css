@@ -753,7 +753,7 @@ h3 {
   color: var(--theme-text);
   text-decoration: none;
   border: 1px solid rgba(var(--theme-on-surface-rgb), 0.35);
-  border-radius: 999px;
+  border-radius: 10px;
   padding: 0.3rem 0.6rem;
   background: rgba(var(--theme-sunken-rgb), calc(0.24 * var(--theme-sunken-alpha)));
 }

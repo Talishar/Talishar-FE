@@ -1,7 +1,7 @@
 .particle {
   position: absolute;
   pointer-events: none;
-  border-radius: 999px;
+  border-radius: 10px;
   left: 50%;
   top: 50%;
   margin-left: -3px;

@@ -159,7 +159,7 @@
   height: 4px;
   margin: 0.3rem auto 0;
   overflow: hidden;
-  border-radius: 999px;
+  border-radius: 10px;
   background: rgba(var(--theme-on-surface-rgb), 0.12);
 }
 

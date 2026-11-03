@@ -41,7 +41,7 @@
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.03em;
-  border-radius: 999px;
+  border-radius: 10px;
   padding: 0.15rem 0.5rem;
   white-space: nowrap;
 }
@@ -65,7 +65,7 @@
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.03em;
-  border-radius: 999px;
+  border-radius: 10px;
   padding: 0.15rem 0.5rem;
   white-space: nowrap;
   text-decoration: none;
@@ -96,7 +96,7 @@
   appearance: none;
   width: 34px;
   height: 34px;
-  border-radius: 999px;
+  border-radius: 10px;
   background: var(--lobby-control-background, #1e2329) !important;
   border: 1px solid var(--lobby-control-border, rgba(255, 255, 255, 0.12)) !important;
   color: var(--lobby-control-color, #9aa0a6) !important;

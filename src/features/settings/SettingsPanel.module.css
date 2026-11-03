@@ -215,7 +215,7 @@
 .deviceBadge {
   padding: 0.1rem 0.4rem;
   border: 1px solid rgba(var(--theme-on-surface-rgb), 0.18);
-  border-radius: 999px;
+  border-radius: 10px;
   font-size: 0.65rem;
   font-weight: 600;
   letter-spacing: 0.03em;
@@ -238,7 +238,7 @@ input.switch[role='switch'] {
   margin: 0;
   padding: 0;
   border: 1px solid rgba(var(--theme-on-surface-rgb), 0.18);
-  border-radius: 999px;
+  border-radius: 10px;
   background: rgba(var(--theme-on-surface-rgb), 0.12);
   background-image: none;
   box-shadow: none;
@@ -376,7 +376,7 @@ input.switch[role='switch']:focus-visible {
   cursor: pointer;
   accent-color: var(--theme-primary);
   background: rgba(var(--theme-on-surface-rgb), 0.12);
-  border-radius: 999px;
+  border-radius: 10px;
   outline: none;
 }
 

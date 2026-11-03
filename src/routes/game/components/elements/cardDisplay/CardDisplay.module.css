@@ -405,5 +405,5 @@
   color: var(--theme-text);
   background-color: var(--near-black);
   border: 1px solid var(--theme-border);
-  border-radius: 999px;
+  border-radius: 10px;
 }

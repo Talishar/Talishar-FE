@@ -9,14 +9,16 @@ import {
   isSmallDeckFormat,
   isPreconFormat,
   PRECON_DECKS,
-  FAB_BAZAAR_DECK_URL_BASE
+  FAB_BAZAAR_DECK_URL_BASE,
+  normalizeFormat
 } from 'appConstants';
 import {
   useCreateGameMutation,
   useGetFavoriteDecksQuery,
   useGetHeroMasteryQuery,
   useGetBazaarDecksQuery,
-  useClearRustCountersMutation
+  useClearRustCountersMutation,
+  useGetLegalHeroesQuery
 } from 'features/api/apiSlice';
 import {
   selectMetafyId,
@@ -58,7 +60,8 @@ import {
   formatSelectedHeroes,
   hasOscilioHero,
   OSCILIO_VARIANTS,
-  OscilioVariant
+  OscilioVariant,
+  parseHeroNames
 } from './gameDescription';
 import MasteryProgressCard from 'features/mastery/MasteryProgressCard';
 import { emptyMastery, masteryHeroId } from 'features/mastery/mastery';
@@ -97,6 +100,7 @@ const CreateGame = ({
   });
   const [searchParams] = useSearchParams();
   const [createGame] = useCreateGameMutation();
+  const { data: legalHeroesByFormat } = useGetLegalHeroesQuery();
   const [clearRustCounters] = useClearRustCountersMutation();
   const { canViewRustCounters, rustCounters, isRustLocked } = useRustCounters();
   const showsRustPanel = isLoggedIn && canViewRustCounters && !isEmbedded;
@@ -379,26 +383,33 @@ const CreateGame = ({
     }
   }, [selectedPreconDeck, formFormat, selectedFormat, isInitialized, setValue]);
 
-  // Get unique hero names (no duplicates), filtered by format
+  // Use the same format legality list as the lobby.
   const uniqueHeroes = useMemo(() => {
-    const currentFormat = String(formFormat || selectedFormat);
-    // LL and CC formats should only show non-young heroes
-    const isRestrictedFormat = [
-      GAME_FORMAT.CLASSIC_CONSTRUCTED,
-      GAME_FORMAT.COMPETITIVE_CC,
-      GAME_FORMAT.LLCC,
-      GAME_FORMAT.COMPETITIVE_LL,
-      GAME_FORMAT.OPEN_CC,
-      GAME_FORMAT.OPEN_LL_CC
-    ].includes(currentFormat);
+    const currentFormat = normalizeFormat(formFormat || selectedFormat);
+    return [...(legalHeroesByFormat?.[currentFormat ?? ''] ?? [])].sort();
+  }, [formFormat, selectedFormat, legalHeroesByFormat]);
 
-    const filteredHeroes = isRestrictedFormat
-      ? HEROES_OF_RATHE.filter((hero) => !hero.young)
-      : HEROES_OF_RATHE;
-
-    const heroNames = new Set(filteredHeroes.map((hero) => hero.label));
-    return Array.from(heroNames).sort();
-  }, [formFormat, selectedFormat]);
+  useEffect(() => {
+    if (!legalHeroesByFormat) return;
+    const allowed = new Set(uniqueHeroes);
+    const validHeroes = selectedHeroes.filter((hero) => allowed.has(hero));
+    if (validHeroes.length === selectedHeroes.length) return;
+    setSelectedHeroes(validHeroes);
+    if (!hasOscilioHero(validHeroes)) setOscilioVariant('');
+    if (
+      gameDescription === 'Looking to play against a specific hero' ||
+      gameDescription === 'No interest in playing against specific hero'
+    ) {
+      setValue(
+        'gameDescription',
+        buildHeroGameDescription(
+          validHeroes,
+          gameDescription === 'No interest in playing against specific hero',
+          hasOscilioHero(validHeroes) ? oscilioVariant : ''
+        )
+      );
+    }
+  }, [legalHeroesByFormat, uniqueHeroes, selectedHeroes, gameDescription, oscilioVariant, setValue]);
 
   const uniqueClasses = useMemo(() => {
     const classNames = new Set(
@@ -595,7 +606,8 @@ const CreateGame = ({
           .filter(Boolean);
         const classLabels = new Set(CLASS_OF_RATHE.map((c) => c.label));
         const heroLabels = new Set(HEROES_OF_RATHE.map((h) => h.label));
-        const validHeroes = names.filter((n) => heroLabels.has(n));
+        const parsedHeroes = parseHeroNames(heroMatch[1], [...heroLabels]);
+        const validHeroes = (parsedHeroes ?? []).filter((n) => heroLabels.has(n));
         const validClasses = names.filter((n) => classLabels.has(n));
         if (validClasses.length > 0) {
           setSelectedClasses(validClasses.slice(0, 3));

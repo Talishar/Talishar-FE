@@ -253,6 +253,13 @@ export const apiSlice = createApi({
   refetchOnFocus: false,
   refetchOnReconnect: false,
   endpoints: (builder) => ({
+    getLegalHeroes: builder.query<Record<string, string[]>, void>({
+      query: () => ({
+        url: URL_END_POINT.GET_LEGAL_HEROES,
+        method: 'GET',
+        responseHandler: parseResponse
+      })
+    }),
     getHeroMastery: builder.query<
       HeroMasteryResponse,
       | string
@@ -1102,6 +1109,7 @@ export const apiSlice = createApi({
 
 // Export the auto-generated hook for the `getPosts` query endpoint
 export const {
+  useGetLegalHeroesQuery,
   useGetHeroMasteryQuery,
   useSaveHeroMasteryFrameMutation,
   useGetPopUpContentQuery,

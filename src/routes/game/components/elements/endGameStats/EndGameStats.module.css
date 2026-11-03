@@ -860,7 +860,7 @@
   display: inline-flex;
   align-items: center;
   padding: 0.3rem 0.85rem;
-  border-radius: 999px;
+  border-radius: 10px;
   border: 1px solid rgba(var(--theme-on-surface-rgb), 0.2);
   background: rgba(var(--theme-on-surface-rgb), 0.05);
   color: rgba(var(--theme-on-surface-rgb), 0.65);

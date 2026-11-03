@@ -7,10 +7,12 @@ import { generateCroppedImageUrl } from '../../../../utils/cropImages';
 import FriendBadge from '../gameList/FriendBadge';
 import QuickJoinContext from '../quickJoin/QuickJoinContext';
 import { requestRustPanelAttention } from 'hooks/useRustCounters';
-import { GAME_FORMAT } from '../../../../appConstants';
+import { GAME_FORMAT, normalizeFormat } from '../../../../appConstants';
 import { useTranslation } from 'react-i18next';
-import { CLASS_OF_RATHE } from '../filter/constants';
+import { CLASS_OF_RATHE, HEROES_OF_RATHE } from '../filter/constants';
 import ConfirmModal from 'components/ConfirmModal/ConfirmModal';
+import { useGetLegalHeroesQuery } from 'features/api/apiSlice';
+import { shortenHeroNames } from 'routes/game/create/gameDescription';
 
 const decodeHtmlEntities = (text: string): string => {
   const doc = new DOMParser().parseFromString(text, 'text/html');
@@ -103,6 +105,9 @@ const OpenGame = ({
     }
   };
   const { t, i18n } = useTranslation();
+  const { data: legalHeroesByFormat } = useGetLegalHeroesQuery();
+  const legalHeroNames =
+    legalHeroesByFormat?.[normalizeFormat(entry.format) ?? ''] ?? [];
 
   // This lets us recognize descriptions stored in any language (JP, FR, etc.)
   const reverseDescriptionMap = useMemo(() => {
@@ -170,7 +175,13 @@ const OpenGame = ({
       if (!names || PLACEHOLDER_PREFERENCE_NAMES.has(names.toLowerCase())) {
         return t(descKey);
       }
-      return `${t(descKey)}: ${names}`;
+      return `${t(descKey)}: ${isClassDescription || !legalHeroesByFormat
+        ? names
+        : shortenHeroNames(
+            names,
+            legalHeroNames,
+            [...HEROES_OF_RATHE.map((hero) => hero.label), ...legalHeroNames]
+          )}`;
     }
 
     const notHeroPrefix = 'No interest in playing against ';
@@ -180,7 +191,13 @@ const OpenGame = ({
       if (!names || PLACEHOLDER_PREFERENCE_NAMES.has(names.toLowerCase())) {
         return t(descKey);
       }
-      return `${t(descKey)}: ${names}`;
+      return `${t(descKey)}: ${legalHeroesByFormat
+        ? shortenHeroNames(
+            names,
+            legalHeroNames,
+            [...HEROES_OF_RATHE.map((hero) => hero.label), ...legalHeroNames]
+          )
+        : names}`;
     }
 
     return decoded;
@@ -198,7 +215,7 @@ const OpenGame = ({
     el.style.webkitLineClamp = '';
     const lineHeight = parseFloat(getComputedStyle(el).lineHeight) || 16;
     setIsLongDesc(fullHeight > lineHeight * 2 + 2);
-  }, [entry.description, i18n.language]);
+  }, [entry.description, i18n.language, legalHeroesByFormat]);
 
   const buttonClass = classNames(
     styles.button,

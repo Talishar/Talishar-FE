@@ -30,7 +30,7 @@
   height: 7px;
   margin: 0.55rem 0 0.4rem;
   overflow: hidden;
-  border-radius: 999px;
+  border-radius: 10px;
   background: rgba(var(--theme-on-surface-rgb), 0.1);
 }
 .track i {

@@ -795,7 +795,7 @@
   max-height: none;
   padding: 0 0.6em;
   border: 1px solid rgba(255, 255, 255, 0.24);
-  border-radius: 0.9em;
+  border-radius: 10px;
   background: #0e0f12;
   color: #ecedef;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);

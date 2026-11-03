@@ -262,7 +262,7 @@
 .reason {
   padding: 0.05rem 0.4rem;
   border: 1px solid rgba(var(--theme-on-surface-rgb), 0.28);
-  border-radius: 999px;
+  border-radius: 10px;
   background: rgba(var(--theme-on-surface-rgb), 0.06);
   color: var(--theme-text);
   font-size: 0.68rem;
