@@ -697,7 +697,11 @@
     "ALWAYS_WAGER_ACTIVE_LABEL": "Always wager is on. You wager automatically without being asked. Click to turn it off.",
     "ALWAYS_WAGER_INACTIVE_LABEL": "Always wager is off. You are asked each time. Click to always wager automatically.",
     "ALWAYS_PAY_LIFE_ACTIVE_LABEL": "Always pay life is on. Vynnset pays 1 life automatically without asking. Click to turn it off.",
-    "ALWAYS_PAY_LIFE_INACTIVE_LABEL": "Always pay life is off. You are asked each time. Click to always pay 1 life automatically."
+    "ALWAYS_PAY_LIFE_INACTIVE_LABEL": "Always pay life is off. You are asked each time. Click to always pay 1 life automatically.",
+    "HEAVE_ACTIVE_LABEL": "Heave is on. You will be asked to heave cards during the end step. Click to turn it off.",
+    "HEAVE_INACTIVE_LABEL": "Heave is off. Heave will not trigger during the end step. Click to turn it on.",
+    "JARL_ACTIVE_LABEL": "Frostbite and heave are on. You will be prompted when Jarl's frostbite triggers and asked to heave cards during the end step. Click to turn them off.",
+    "JARL_INACTIVE_LABEL": "Frostbite and heave are off. You will not be prompted for Jarl's frostbite trigger and heave will not trigger during the end step. Click to turn them on."
   },
   "HAND": {
     "SCROLL_LEFT": "Scroll hand left",
