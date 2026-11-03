@@ -6,6 +6,7 @@ import GameStaticInfo from 'features/GameStaticInfo';
 import { HelpTooltip } from 'components/Tooltip/HelpTooltip';
 import styles from './SettingsPanel.module.css';
 import {
+  ColorListDef,
   CustomDef,
   RadioDef,
   SettingDef,
@@ -45,10 +46,10 @@ interface SettingsPanelProps {
   searchQuery?: string;
 }
 
-const DeviceBadge = () => {
+const DeviceBadge = ({ hintKey }: { hintKey: string }) => {
   const { t } = useTranslation();
   return (
-    <span className={styles.deviceBadge} title={t('SETTINGS.DEVICE_ONLY_HINT')}>
+    <span className={styles.deviceBadge} title={t(hintKey)}>
       {t('SETTINGS.DEVICE_ONLY')}
     </span>
   );
@@ -57,16 +58,18 @@ const DeviceBadge = () => {
 const RowHeader = ({
   label,
   tooltip,
-  showDeviceBadge
+  showDeviceBadge,
+  deviceHintKey = 'SETTINGS.DEVICE_ONLY_HINT'
 }: {
   label: string;
   tooltip?: string;
   showDeviceBadge: boolean;
+  deviceHintKey?: string;
 }) => (
   <span className={styles.rowLabel}>
     {label}
     {tooltip && <HelpTooltip text={tooltip} placement="bottom" />}
-    {showDeviceBadge && <DeviceBadge />}
+    {showDeviceBadge && <DeviceBadge hintKey={deviceHintKey} />}
   </span>
 );
 
@@ -190,6 +193,82 @@ const SliderRow = ({
   );
 };
 
+const ColorListRow = ({
+  def,
+  controller
+}: {
+  def: ColorListDef;
+  controller: SettingsController;
+}) => {
+  const { t } = useTranslation();
+  const atDefault = controller.isAtDefault(def);
+  return (
+    <div className={`${styles.row} ${styles.colorListRow}`}>
+      <div className={styles.sliderHeader}>
+        <RowHeader
+          label={t(def.labelKey)}
+          tooltip={def.tooltipKey ? t(def.tooltipKey) : undefined}
+          showDeviceBadge
+          deviceHintKey="SETTINGS.DEVICE_ONLY_LOCAL_HINT"
+        />
+        <button
+          type="button"
+          className={
+            atDefault
+              ? `${styles.inlineReset} ${styles.inlineResetHidden}`
+              : styles.inlineReset
+          }
+          onClick={() => controller.resetDefs([def])}
+          disabled={atDefault}
+          aria-hidden={atDefault}
+          tabIndex={atDefault ? -1 : undefined}
+        >
+          {t('OPTIONS_MENU.RESET')}
+        </button>
+      </div>
+      <div className={styles.colorGrid}>
+        {def.options.map((option) => {
+          const value = controller.getColor(def, option.id);
+          const changed = value !== option.defaultValue;
+          return (
+            <div key={option.id} className={styles.colorOption}>
+              <input
+                type="color"
+                className={styles.colorInput}
+                value={value}
+                aria-label={t(option.labelKey)}
+                onChange={(event) =>
+                  controller.setColor(def, option.id, event.target.value)
+                }
+              />
+              <span className={styles.colorLabel}>{t(option.labelKey)}</span>
+              {changed && (
+                <button
+                  type="button"
+                  className={styles.colorReset}
+                  onClick={() =>
+                    controller.setColor(def, option.id, option.defaultValue)
+                  }
+                  title={t('SETTINGS.RESET_TO', {
+                    value: option.defaultValue,
+                    unit: ''
+                  })}
+                  aria-label={t('SETTINGS.RESET_TO', {
+                    value: option.defaultValue,
+                    unit: ''
+                  })}
+                >
+                  ×
+                </button>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
 const CustomRow = ({ def }: { def: CustomDef }) => {
   const { t } = useTranslation();
   return (
@@ -218,6 +297,8 @@ const SettingRow = ({
       return <RadioRow def={def} controller={controller} />;
     case 'slider':
       return <SliderRow def={def} controller={controller} context={context} />;
+    case 'colorList':
+      return <ColorListRow def={def} controller={controller} />;
     default:
       return <CustomRow def={def} />;
   }
@@ -277,7 +358,7 @@ const SettingsPanel = ({
     const haystack = [
       t(def.labelKey),
       group ? t(group.labelKey) : '',
-      def.kind === 'radio'
+      def.kind === 'radio' || def.kind === 'colorList'
         ? def.options.map((option) => t(option.labelKey)).join(' ')
         : ''
     ]

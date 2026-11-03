@@ -26,6 +26,7 @@ const SharedReplay = lazy(() => import('routes/game/shared/SharedReplay'));
 const JoinSnapshot = lazy(() => import('routes/game/shared/JoinSnapshot'));
 const SettingsPage = lazy(() => import('routes/user/settings'));
 import SyncedSettings from 'features/settings/SyncedSettings';
+import CardBorderColorVars from 'features/settings/CardBorderColorVars';
 import AdAnalyticsTracker from 'components/ads/AdAnalyticsTracker';
 import {
   ForcedLayoutFrameBridge,
@@ -205,6 +206,7 @@ export const router = createRouter(
         <Suspense fallback={<RouteFallback />}>
           <ForcedLayoutFrameBridge>
             <SyncedSettings />
+            <CardBorderColorVars />
             <AdAnalyticsTracker />
             <Outlet />
           </ForcedLayoutFrameBridge>

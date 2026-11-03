@@ -244,53 +244,53 @@
 }
 
 .border1 {
-  border-color: deepskyblue;
-  box-shadow: 0 0 2px 2px deepskyblue;
+  border-color: var(--card-border-1);
+  box-shadow: 0 0 2px 2px var(--card-border-1);
 }
 
 .border2 {
-  border-color: red;
-  box-shadow: 0 0 2px 2px red;
+  border-color: var(--card-border-2);
+  box-shadow: 0 0 2px 2px var(--card-border-2);
 }
 
 .border3 {
-  border-color: orange;
-  box-shadow: 0 0 2px 2px orange;
+  border-color: var(--card-border-3);
+  box-shadow: 0 0 2px 2px var(--card-border-3);
 }
 
 .border4 {
-  border-color: #c5cbcf;
-  box-shadow: 0 0 3px 3px #c5cbcf;
+  border-color: var(--card-border-4);
+  box-shadow: 0 0 3px 3px var(--card-border-4);
 }
 
 .border5 {
-  border-color: tan;
-  box-shadow: 0 0 3px 3px tan;
+  border-color: var(--card-border-5);
+  box-shadow: 0 0 3px 3px var(--card-border-5);
 }
 
 .border6 {
-  border-color: chartreuse;
-  box-shadow: 0 0 3px 3px chartreuse;
+  border-color: var(--card-border-6);
+  box-shadow: 0 0 3px 3px var(--card-border-6);
 }
 
 .border7 {
-  border-color: purple;
-  box-shadow: 0 0 3px 3px purple;
+  border-color: var(--card-border-7);
+  box-shadow: 0 0 3px 3px var(--card-border-7);
 }
 
 .border8 {
-  border-color: #ffd700;
-  box-shadow: 0 0 3px 3px #ffd700;
+  border-color: var(--card-border-8);
+  box-shadow: 0 0 3px 3px var(--card-border-8);
 }
 
 .border9 {
-  border-color: rgb(192, 6, 6);
-  box-shadow: 0 0 3px 3px rgb(192, 6, 6);
+  border-color: var(--card-border-9);
+  box-shadow: 0 0 3px 3px var(--card-border-9);
 }
 
 .border10 {
-  border-color: rgb(21, 155, 25);
-  box-shadow: 0 0 5px 5px rgba(24, 177, 29, 0.5);
+  border-color: var(--card-border-10);
+  box-shadow: 0 0 5px 5px color-mix(in srgb, var(--card-border-10) 50%, transparent);
 }
 
 /* Playable card hover lift; `.playable` is set in CardDisplay to avoid :has(). */
@@ -300,7 +300,7 @@
 }
 
 .card.playable:hover .img.border6 {
-  box-shadow: 0 0 4px 4px chartreuse, 0 4px 4px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 0 4px 4px var(--card-border-6), 0 4px 4px rgba(0, 0, 0, 0.45);
 }
 
 .subCard {
@@ -387,7 +387,8 @@
 }
 
 .objectLink:global(.objectLinkActive) {
-  box-shadow: 0 0 0 2px var(--theme-text), 0 0 14px 2px rgba(255, 255, 255, 0.45);
+  box-shadow: 0 0 0 2px var(--card-border-4),
+    0 0 14px 2px color-mix(in srgb, var(--card-border-4) 45%, transparent);
 }
 
 .objectLinkNumber {

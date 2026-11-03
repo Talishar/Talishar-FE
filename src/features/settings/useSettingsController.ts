@@ -9,7 +9,9 @@ import {
 } from 'features/options/optionsSlice';
 import useAuth from 'hooks/useAuth';
 import { useTheme } from 'themes/ThemeContext';
+import { parseBorderOverrides } from './cardBorderColors';
 import {
+  ColorListDef,
   DEVICE_SETTING_COOKIES,
   RadioDef,
   SettingDef,
@@ -39,6 +41,8 @@ export interface SettingsController {
   setRadio: (def: RadioDef, value: number) => void;
   getSlider: (def: SliderDef) => number;
   setSlider: (def: SliderDef, value: number) => void;
+  getColor: (def: ColorListDef, id: string) => string;
+  setColor: (def: ColorListDef, id: string, value: string) => void;
   resetDefs: (defs: SettingDef[]) => void;
   isAtDefault: (def: SettingDef) => boolean;
   isSynced: boolean;
@@ -56,7 +60,9 @@ export const useSettingsController = (
   const settingsData = useAppSelector(getSettingsEntity);
   const { isLoggedIn } = useAuth();
   const { setTransparency } = useTheme();
-  const [cookies, setCookie] = useCookies(DEVICE_SETTING_COOKIES);
+  const [cookies, setCookie, removeCookie] = useCookies(
+    DEVICE_SETTING_COOKIES
+  );
 
   const isSynced = Boolean(isLoggedIn);
 
@@ -151,6 +157,29 @@ export const useSettingsController = (
     [setCookie, setTransparency, pushAccountSettings, isSynced]
   );
 
+  const getColor = useCallback(
+    (def: ColorListDef, id: string) =>
+      parseBorderOverrides(cookies[def.name])[id] ??
+      def.options.find((option) => option.id === id)?.defaultValue ??
+      '',
+    [cookies]
+  );
+
+  const setColor = useCallback(
+    (def: ColorListDef, id: string, value: string) => {
+      const overrides = parseBorderOverrides(cookies[def.name]);
+      const option = def.options.find((entry) => entry.id === id);
+      if (option?.defaultValue === value.toLowerCase()) delete overrides[id];
+      else overrides[id] = value.toLowerCase();
+      if (Object.keys(overrides).length === 0) {
+        removeCookie(def.name, { path: COOKIE_OPTIONS.path });
+        return;
+      }
+      setCookie(def.name, overrides, COOKIE_OPTIONS);
+    },
+    [cookies, setCookie, removeCookie]
+  );
+
   const isAtDefault = useCallback(
     (def: SettingDef) => {
       switch (def.kind) {
@@ -160,17 +189,24 @@ export const useSettingsController = (
           return getRadio(def) === def.defaultValue;
         case 'slider':
           return Math.abs(getSlider(def) - def.defaultValue) < 0.005;
+        case 'colorList':
+          return def.options.every(
+            (option) => getColor(def, option.id) === option.defaultValue
+          );
         default:
           return true;
       }
     },
-    [isOn, getRadio, getSlider]
+    [isOn, getRadio, getSlider, getColor]
   );
 
   const resetDefs = useCallback(
     (defs: SettingDef[]) => {
       const accountSettings: Setting[] = [];
       defs.forEach((def) => {
+        if (def.kind === 'colorList') {
+          removeCookie(def.name, { path: COOKIE_OPTIONS.path });
+        }
         if (def.kind === 'toggle') {
           if (def.storage === 'account') {
             accountSettings.push({
@@ -213,7 +249,7 @@ export const useSettingsController = (
       });
       pushAccountSettings(accountSettings);
     },
-    [pushAccountSettings, setCookie, setTransparency, isSynced]
+    [pushAccountSettings, setCookie, removeCookie, setTransparency, isSynced]
   );
 
   return {
@@ -223,6 +259,8 @@ export const useSettingsController = (
     setRadio,
     getSlider,
     setSlider,
+    getColor,
+    setColor,
     resetDefs,
     isAtDefault,
     isSynced

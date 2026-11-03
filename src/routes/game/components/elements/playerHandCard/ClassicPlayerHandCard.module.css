@@ -87,48 +87,48 @@
 }
 
 .border1 {
-  border-color: deepskyblue;
-  box-shadow: 0 0 4px 4px deepskyblue;
+  border-color: var(--card-border-1);
+  box-shadow: 0 0 4px 4px var(--card-border-1);
 }
 
 .border2 {
-  border-color: red;
-  box-shadow: 0 0 4px 4px red;
+  border-color: var(--card-border-2);
+  box-shadow: 0 0 4px 4px var(--card-border-2);
 }
 
 .border3 {
-  border-color: orange;
-  box-shadow: 0 0 4px 4px orange;
+  border-color: var(--card-border-3);
+  box-shadow: 0 0 4px 4px var(--card-border-3);
 }
 
 .border4 {
-  border-color: #c5cbcf;
-  box-shadow: 0 0 4px 4px #c5cbcf;
+  border-color: var(--card-border-4);
+  box-shadow: 0 0 4px 4px var(--card-border-4);
 }
 
 .border5 {
-  border-color: tan;
-  box-shadow: 0 0 4px 4px tan;
+  border-color: var(--card-border-5);
+  box-shadow: 0 0 4px 4px var(--card-border-5);
 }
 
 .border6 {
-  border-color: chartreuse;
-  box-shadow: 0 0 4px 4px chartreuse;
+  border-color: var(--card-border-6);
+  box-shadow: 0 0 4px 4px var(--card-border-6);
 }
 
 .border7 {
-  border-color: purple;
-  box-shadow: 0 0 4px 4px purple;
+  border-color: var(--card-border-7);
+  box-shadow: 0 0 4px 4px var(--card-border-7);
 }
 
 .border8 {
-  border-color: #ffd700;
-  box-shadow: 0 0 4px 4px #ffd700;
+  border-color: var(--card-border-8);
+  box-shadow: 0 0 4px 4px var(--card-border-8);
 }
 
 .border9 {
-  border-color: rgb(192, 6, 6);
-  box-shadow: 0 0 4px 4px rgb(192, 6, 6);
+  border-color: var(--card-border-9);
+  box-shadow: 0 0 4px 4px var(--card-border-9);
 }
 
 .label {

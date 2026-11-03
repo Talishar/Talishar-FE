@@ -10,6 +10,10 @@ import {
   FORCED_LAYOUT_COOKIE
 } from 'routes/game/play/forcedLayout/forcedLayout';
 import { AUTO_LANDSCAPE_COOKIE, canLockLandscape } from 'utils/gameFullscreen';
+import {
+  CARD_BORDER_COLORS_COOKIE,
+  defaultBorderColor
+} from './cardBorderColors';
 
 export type SettingsSurface = 'account' | 'game';
 
@@ -89,7 +93,19 @@ export interface CustomDef extends BaseDef {
   render: 'theme' | 'language';
 }
 
-export type SettingDef = ToggleDef | RadioDef | SliderDef | CustomDef;
+export interface ColorListDef extends BaseDef {
+  kind: 'colorList';
+  /** Cookie name. Holds only the colors that differ from their default. */
+  name: string;
+  options: Array<{ id: string; labelKey: string; defaultValue: string }>;
+}
+
+export type SettingDef =
+  | ToggleDef
+  | RadioDef
+  | SliderDef
+  | CustomDef
+  | ColorListDef;
 
 export const SETTINGS_TABS: SettingsTab[] = [
   { id: 'gameplay', labelKey: 'SETTINGS.TABS.GAMEPLAY' },
@@ -159,10 +175,21 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
     tab: 'accessibility',
     labelKey: 'SETTINGS.GROUPS.ACCESSIBILITY'
   },
+  {
+    id: 'cardBorderColors',
+    tab: 'accessibility',
+    labelKey: 'SETTINGS.GROUPS.CARD_BORDER_COLORS'
+  },
   { id: 'sound', tab: 'accessibility', labelKey: 'SETTINGS.GROUPS.SOUND' }
 ];
 
 const inAMatch = (ctx: SettingsContext) => !ctx.isSpectator;
+
+const borderColorOption = (id: string, labelKey: string) => ({
+  id,
+  labelKey: `SETTINGS.CARD_BORDER_COLOR_OPTIONS.${labelKey}`,
+  defaultValue: defaultBorderColor(id)
+});
 
 export const SETTINGS_DEFS: SettingDef[] = [
   {
@@ -632,6 +659,26 @@ export const SETTINGS_DEFS: SettingDef[] = [
     defaultOn: false
   },
   {
+    kind: 'colorList',
+    key: 'cardBorderColors',
+    group: 'cardBorderColors',
+    labelKey: 'SETTINGS.CARD_BORDER_COLORS',
+    tooltipKey: 'SETTINGS.CARD_BORDER_COLORS_TOOLTIP',
+    name: CARD_BORDER_COLORS_COOKIE,
+    options: [
+      borderColorOption('6', 'PLAYABLE'),
+      borderColorOption('8', 'SELECTABLE'),
+      borderColorOption('1', 'YOURS'),
+      borderColorOption('2', 'OPPONENTS'),
+      borderColorOption('3', 'BONUS_ACTIVE'),
+      borderColorOption('7', 'PLAYABLE_FROM_ZONE'),
+      borderColorOption('5', 'BUFFED'),
+      borderColorOption('9', 'DISCARD_DESTROY'),
+      borderColorOption('10', 'HERO_READY'),
+      borderColorOption('4', 'LINKED_OBJECT')
+    ]
+  },
+  {
     kind: 'toggle',
     key: 'gameSounds',
     group: 'sound',
@@ -646,8 +693,9 @@ export const SETTINGS_DEFS: SettingDef[] = [
 export const DEVICE_SETTING_COOKIES = Array.from(
   new Set(
     SETTINGS_DEFS.filter(
-      (def): def is ToggleDef | SliderDef | RadioDef =>
+      (def): def is ToggleDef | SliderDef | RadioDef | ColorListDef =>
         def.kind === 'slider' ||
+        def.kind === 'colorList' ||
         ((def.kind === 'toggle' || def.kind === 'radio') &&
           def.storage === 'device')
     ).map((def) => def.name)
@@ -656,6 +704,7 @@ export const DEVICE_SETTING_COOKIES = Array.from(
 
 export const isDeviceScoped = (def: SettingDef) =>
   def.kind === 'slider' ||
+  def.kind === 'colorList' ||
   ((def.kind === 'toggle' || def.kind === 'radio') && def.storage === 'device');
 
 /** Device settings that mirror to an account row when the player is signed in. */
