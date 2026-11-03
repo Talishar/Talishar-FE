@@ -81,14 +81,17 @@
 
 @media (max-height: 500px) {
   :global(body.fanLandscapeHand) .isOpponent {
-    right: calc(
-      env(safe-area-inset-right, 0px) - var(--fan-fullscreen-overflow, 0px) / 2 +
-        var(--board-width) / 2 + 0.625 * var(--side-card-size) +
-        var(--hand-arsenal-extra, 0) *
-        (1.25 * var(--side-card-size) + var(--fan-window-vh)) + 6px
+    left: calc(
+      env(safe-area-inset-left, 0px) + var(--fan-rail-width) +
+        (var(--board-width) + var(--fan-fullscreen-overflow, 0px)) / 2 + 0.625 *
+        var(--side-card-size) + 6px
+    );
+    max-width: calc(
+      (var(--board-width) + var(--fan-fullscreen-overflow, 0px)) / 2 - 2.625 *
+        var(--side-card-size) - 2 * var(--board-gap) - var(--board-edge) - 12px
     );
     min-width: 0;
-    justify-content: flex-start;
+    justify-content: flex-end;
   }
 }
 
