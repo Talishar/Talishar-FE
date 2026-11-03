@@ -10,12 +10,8 @@ import {
   FaUndo,
   FaEllipsisH,
   FaExchangeAlt,
-  FaWrench,
-  FaRedoAlt,
-  FaLightbulb
+  FaWrench
 } from 'react-icons/fa';
-import { toast } from 'react-hot-toast';
-import { parseTextToElements } from 'utils/ParseEscapedString';
 import {
   canLockLandscape,
   isLandscapeLocked,
@@ -23,7 +19,6 @@ import {
   toggleGameFullscreen,
   unlockLandscape
 } from 'utils/gameFullscreen';
-import { PuzzleHintResponse } from 'interface/API/DailyPuzzleAPI';
 import styles from './Menu.module.css';
 import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'appConstants';
 import HideModalsToggle from './HideModalsToggle/HideModalsToggle';
@@ -100,95 +95,6 @@ function UndoButton() {
         disabled={isDisabled}
       >
         <FaUndo aria-hidden="true" />
-      </button>
-    </div>
-  );
-}
-
-function RestartPuzzleButton() {
-  const { t } = useTranslation();
-  const dispatch = useAppDispatch();
-  const { isDisabled, triggerDisable } = useButtonDisableContext();
-
-  const clickRestart = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    e.currentTarget.blur();
-    triggerDisable();
-    dispatch(submitButton({ button: { mode: PROCESS_INPUT.RESTART_PUZZLE } }));
-  };
-  return (
-    <div>
-      <button
-        className={styles.btn}
-        aria-label={t('MENU.RESTART_PUZZLE')}
-        onClick={clickRestart}
-        data-tooltip={t('MENU.RESTART_PUZZLE')}
-        data-placement="bottom"
-        disabled={isDisabled}
-      >
-        <FaRedoAlt aria-hidden="true" />
-      </button>
-    </div>
-  );
-}
-
-function PuzzleHintButton() {
-  const { t } = useTranslation();
-  const dispatch = useAppDispatch();
-  const puzzle = useAppSelector(
-    (state: RootState) => state.game.gameInfo.puzzle
-  );
-  const [used, setUsed] = useState<number | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  if (!puzzle || puzzle.hintsTotal === 0) return null;
-  const hintsUsed = used ?? puzzle.hintsUsed;
-  const label = t('MENU.PUZZLE_HINT', {
-    used: hintsUsed,
-    total: puzzle.hintsTotal
-  });
-
-  const clickHint = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    e.currentTarget.blur();
-    setIsLoading(true);
-    try {
-      const body = await dispatch(
-        submitButton({ button: { mode: PROCESS_INPUT.PUZZLE_HINT } })
-      ).unwrap();
-      const result = JSON.parse(body || '{}') as PuzzleHintResponse;
-      setUsed(result.index);
-      if (result.hint) {
-        toast(
-          <span>
-            {t('MENU.PUZZLE_HINT_TOAST', {
-              index: result.index,
-              total: result.total
-            })}{' '}
-            {parseTextToElements(result.hint)}
-          </span>,
-          { duration: 10000, icon: '💡' }
-        );
-      } else {
-        toast(t('MENU.PUZZLE_NO_MORE_HINTS'), { icon: '💡' });
-      }
-    } catch {
-      toast.error(t('MENU.PUZZLE_HINT_FAILED'));
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  return (
-    <div>
-      <button
-        className={styles.btn}
-        aria-label={label}
-        onClick={clickHint}
-        data-tooltip={label}
-        data-placement="bottom"
-        disabled={isLoading}
-      >
-        <FaLightbulb aria-hidden="true" />
       </button>
     </div>
   );
@@ -343,9 +249,6 @@ function MenuContent() {
   const isReplay = useAppSelector(
     (state: RootState) => state.game.gameInfo.isReplay
   );
-  const isPuzzle = useAppSelector(
-    (state: RootState) => state.game.gameInfo.isPuzzle
-  );
   const isSpectator = playerID === 3;
 
   // Replay controls are provided by the replay panel and Advance replay button.
@@ -404,8 +307,6 @@ function MenuContent() {
               placement="bottom"
             />
             <UndoButton />
-            {isPuzzle && <RestartPuzzleButton />}
-            {isPuzzle && <PuzzleHintButton />}
             <HideModalsToggle />
             <ShowMobileChat />
             <MobileOverflowMenu isSpectator={false} />
@@ -425,8 +326,6 @@ function MenuContent() {
         </div>
         <div className={styles.menuList}>
           <UndoButton />
-          {isPuzzle && <RestartPuzzleButton />}
-          {isPuzzle && <PuzzleHintButton />}
           <Inventory buttonClassName={styles.btn} />
           <HideModalsToggle />
           <OptionsMenuToggle />

@@ -557,11 +557,6 @@ export default function ParseGameState(input: any) {
     result.gameInfo.isOpponentAI = input.initialLoad.isOpponentAI;
   }
 
-  if (input.initialLoad?.isPuzzle !== undefined) {
-    result.gameInfo.isPuzzle = input.initialLoad.isPuzzle;
-    result.gameInfo.puzzle = input.initialLoad.puzzle ?? null;
-  }
-
   // game format (from initialLoad)
   if (input.initialLoad?.gameFormat) {
     result.gameInfo.gameFormat = input.initialLoad.gameFormat;

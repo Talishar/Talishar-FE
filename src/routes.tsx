@@ -13,7 +13,6 @@ import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
 import { useTranslation } from 'react-i18next';
 import useAuth from 'hooks/useAuth';
 import LoadingScreen from 'components/LoadingScreen/LoadingScreen';
-import { canSeeDailyPuzzle } from 'utils/dailyPuzzleAccess';
 
 const Header = lazy(() => import('components/header/Header'));
 const Index = lazy(() => import('./routes/index/Index'));
@@ -48,7 +47,6 @@ const Learn = lazy(() => import('routes/learn/Learn'));
 const About = lazy(() => import('routes/about/About'));
 const Premium = lazy(() => import('routes/premium/Premium'));
 const Mastery = lazy(() => import('routes/mastery/Mastery'));
-const DailyPuzzle = lazy(() => import('routes/puzzle/DailyPuzzle'));
 const LoginPage = lazy(() =>
   import('routes/user/login').then((module) => ({ default: module.LoginPage }))
 );
@@ -163,27 +161,6 @@ const ModGuard = ({ children }: { children: JSX.Element }) => {
   return children;
 };
 
-const DailyPuzzleGuard = ({ children }: { children: JSX.Element }) => {
-  const { currentUserName, isLoading, error } = useAuth();
-  const { t } = useTranslation();
-
-  // Don't redirect while loading auth status on page refresh
-  if (isLoading) {
-    return (
-      <LoadingScreen
-        message={t('AUTH.LOADING')}
-        detail={error ? t('AUTH.LOADING_ERROR') : undefined}
-      />
-    );
-  }
-
-  if (!canSeeDailyPuzzle(currentUserName)) {
-    return <Navigate to={{ pathname: '/' }} replace={true} />;
-  }
-
-  return children;
-};
-
 const createRouter: typeof createBrowserRouter = (routes, opts) =>
   frameHost
     ? createMemoryRouter(routes, {
@@ -236,14 +213,6 @@ export const router = createRouter(
             />
           </Route>
           <Route path="learn" element={<Learn />} />
-          <Route
-            path="puzzle"
-            element={
-              <DailyPuzzleGuard>
-                <DailyPuzzle />
-              </DailyPuzzleGuard>
-            }
-          />
           <Route path="about" element={<About />} />
           <Route path="premium" element={<Premium />} />
           <Route

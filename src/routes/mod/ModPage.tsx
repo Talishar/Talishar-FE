@@ -17,7 +17,6 @@ import {
 } from 'features/api/apiSlice';
 import UsernameModeration from './UsernameModeration';
 import DeleteUsernameAutocomplete from './DeleteUsernameAutocomplete';
-import PuzzleCandidates from './PuzzleCandidates';
 import AdStats from './AdStats';
 import GameHealth from './GameHealth';
 import BlockReports from './BlockReports';
@@ -31,7 +30,6 @@ const MOD_TABS = [
   { id: 'usernames', labelKey: 'MOD_PAGE.TAB_USERNAMES' },
   { id: 'reports', labelKey: 'MOD_PAGE.TAB_REPORTS' },
   { id: 'tools', labelKey: 'MOD_PAGE.TAB_TOOLS' },
-  { id: 'puzzles', labelKey: 'MOD_PAGE.TAB_PUZZLES' },
   { id: 'health', labelKey: 'MOD_PAGE.TAB_HEALTH' },
   { id: 'ads', labelKey: 'MOD_PAGE.TAB_ADS' }
 ] as const;
@@ -1014,8 +1012,6 @@ const ModPage: React.FC = () => {
             </div>
           )}
 
-
-          {activeTab === 'puzzles' && <PuzzleCandidates />}
 
           {activeTab === 'health' && <GameHealth />}
 

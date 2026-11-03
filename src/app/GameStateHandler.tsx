@@ -77,7 +77,6 @@ const GameStateHandler = ({
   const [seatLookup, setSeatLookup] = useState<SeatLookup | null>(null);
   const seatLookupKeyRef = useRef('');
   const gameOverRef = useRef(false);
-  const isPuzzleRef = useRef(false);
   const onInitialStateReceivedRef = useRef(onInitialStateReceived);
   const onLoadingErrorRef = useRef(onLoadingError);
 
@@ -374,7 +373,6 @@ const GameStateHandler = ({
     if (gameParamsRef.current.gameID !== currentGameID) {
       retryCountRef.current = 0;
       gameOverRef.current = false;
-      isPuzzleRef.current = false;
       gameParamsRef.current = {
         gameID: currentGameID,
         playerID: currentPlayerID,
@@ -507,15 +505,12 @@ const GameStateHandler = ({
             const parsedState = ParseGameState(data);
             const stateParsedAt = performance.now();
 
-            if (parsedState.gameInfo.isPuzzle !== undefined) {
-              isPuzzleRef.current = parsedState.gameInfo.isPuzzle;
-            }
             const phase = parsedState.turnPhase?.turnPhase;
             if (phase === 'OVER') {
               gameOverRef.current = true;
             } else if (
               phase !== undefined &&
-              (phase !== 'YESNO' || isPuzzleRef.current)
+              phase !== 'YESNO'
             ) {
               gameOverRef.current = false;
             }

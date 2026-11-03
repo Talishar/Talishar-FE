@@ -292,8 +292,7 @@ export const submitButton = createAsyncThunk(
       queryParams
     );
     return params.button.mode === PROCESS_INPUT.CREATE_REPLAY ||
-      params.button.mode === PROCESS_INPUT.SAVE_SNAPSHOT ||
-      params.button.mode === PROCESS_INPUT.PUZZLE_HINT
+      params.button.mode === PROCESS_INPUT.SAVE_SNAPSHOT
       ? response
       : undefined;
   }
@@ -330,8 +329,6 @@ const FALLBACK_GAME_INFO_FIELDS = [
   'isPrivate',
   'isReplay',
   'isOpponentAI',
-  'isPuzzle',
-  'puzzle',
   'gameFormat',
   'deckLink',
   'canCustomizeDeck',
@@ -456,12 +453,11 @@ function mergeReceivedGameState(
   releaseLandedPlay(state, payload);
   state.isFullRematch = payload.isFullRematch ?? false;
   const incomingTurnPhase = payload.turnPhase?.turnPhase;
-  const isPuzzle = payload.gameInfo?.isPuzzle ?? state.gameInfo.isPuzzle;
   if (incomingTurnPhase === 'OVER') {
     state.hasGameEnded = true;
   } else if (
     incomingTurnPhase !== undefined &&
-    (incomingTurnPhase !== 'YESNO' || isPuzzle)
+    incomingTurnPhase !== 'YESNO'
   ) {
     state.hasGameEnded = false;
   }

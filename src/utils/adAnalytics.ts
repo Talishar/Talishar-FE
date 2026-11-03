@@ -89,7 +89,6 @@ const PAGE_KEYS: Array<[RegExp, string]> = [
   [/^\/about(?:\/|$)/i, 'about'],
   [/^\/premium(?:\/|$)/i, 'premium'],
   [/^\/mastery(?:\/|$)/i, 'mastery'],
-  [/^\/puzzle(?:\/|$)/i, 'puzzle'],
   [/^\/user\/profile(?:\/|$)/i, 'profile'],
   [/^\/user\/settings(?:\/|$)/i, 'settings'],
   [/^\/user\/decks(?:\/|$)/i, 'decks'],

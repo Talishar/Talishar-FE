@@ -17,8 +17,7 @@ import {
   BsInfoCircleFill,
   BsFullscreen,
   BsFullscreenExit,
-  BsStars,
-  BsPuzzleFill
+  BsStars
 } from 'react-icons/bs';
 import { IoLogOut } from 'react-icons/io5';
 import LanguageSelector from 'components/header/LanguageSelector';
@@ -33,7 +32,6 @@ import { Toaster } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useOutsideClick } from 'hooks/useOutsideClick';
 import { TOAST_OPTIONS } from 'constants/toastOptions';
-import { canSeeDailyPuzzle } from 'utils/dailyPuzzleAccess';
 
 const Header = () => {
   const {
@@ -146,13 +144,6 @@ const Header = () => {
             <li>
               <NavLink to="/mastery" className={navLinkClass}>
                 {t('HEADER.MASTERY')}
-              </NavLink>
-            </li>
-          )}
-          {canSeeDailyPuzzle(navigationUserName) && (
-            <li>
-              <NavLink to="/puzzle" className={navLinkClass}>
-                {t('HEADER.PUZZLE')}
               </NavLink>
             </li>
           )}
@@ -300,13 +291,6 @@ const Header = () => {
               <li>
                 <Link to="/mastery" onClick={closeMobileMenu}>
                   <BsStars /> <span>{t('HEADER.MASTERY')}</span>
-                </Link>
-              </li>
-            )}
-            {canSeeDailyPuzzle(currentUserName) && (
-              <li>
-                <Link to="/puzzle" onClick={closeMobileMenu}>
-                  <BsPuzzleFill /> <span>{t('HEADER.PUZZLE')}</span>
                 </Link>
               </li>
             )}

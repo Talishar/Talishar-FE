@@ -96,23 +96,7 @@ import {
   AdReportResponse,
   GameHealthRange,
   GameHealthReportResponse,
-  PuzzleCandidatesResponse,
-  CreatePuzzleGameRequest,
-  CreatePuzzleGameResponse,
-  VerifyPuzzleCandidateRequest,
-  VerifyPuzzleCandidateResponse,
-  SolvePuzzleCandidatesRequest,
-  SolvePuzzleCandidatesResponse,
-  PuzzleKind,
-  PuzzleScheduleResponse,
-  SchedulePuzzleRequest
 } from 'interface/API/ModPageAPI';
-import {
-  DailyPuzzleResponse,
-  StartDailyPuzzleResponse,
-  RateDailyPuzzleRequest,
-  RateDailyPuzzleResponse
-} from 'interface/API/DailyPuzzleAPI';
 import { FriendListAPIResponse } from 'interface/API/FriendListAPI.php';
 import {
   UsernamesModerationResponse,
@@ -263,8 +247,6 @@ export const apiSlice = createApi({
     'SystemMessage',
     'SavedReplays',
     'HeroMastery',
-    'PuzzleSchedule',
-    'DailyPuzzle',
     'PlayerReports',
     'BlockReports'
   ],
@@ -742,69 +724,6 @@ export const apiSlice = createApi({
         responseHandler: parseResponse
       })
     }),
-    getPuzzleCandidates: builder.query<
-      PuzzleCandidatesResponse,
-      PuzzleKind | void
-    >({
-      query: (kind) => ({
-        url: URL_END_POINT.GET_PUZZLE_CANDIDATES,
-        method: 'GET',
-        params: kind ? { kind } : undefined,
-        responseHandler: parseResponse
-      })
-    }),
-    getPuzzleSchedule: builder.query<PuzzleScheduleResponse, void>({
-      query: () => ({
-        url: URL_END_POINT.SCHEDULE_PUZZLE,
-        method: 'GET',
-        responseHandler: parseResponse
-      }),
-      providesTags: ['PuzzleSchedule']
-    }),
-    schedulePuzzle: builder.mutation<
-      PuzzleScheduleResponse,
-      SchedulePuzzleRequest
-    >({
-      query: (body) => postJson(URL_END_POINT.SCHEDULE_PUZZLE, body),
-      invalidatesTags: ['PuzzleSchedule', 'DailyPuzzle']
-    }),
-    getDailyPuzzle: builder.query<DailyPuzzleResponse, void>({
-      query: () => ({
-        url: URL_END_POINT.GET_DAILY_PUZZLE,
-        method: 'GET',
-        responseHandler: parseResponse
-      }),
-      providesTags: ['DailyPuzzle']
-    }),
-    startDailyPuzzle: builder.mutation<StartDailyPuzzleResponse, void>({
-      query: () => postJson(URL_END_POINT.START_DAILY_PUZZLE),
-      invalidatesTags: ['DailyPuzzle']
-    }),
-    rateDailyPuzzle: builder.mutation<
-      RateDailyPuzzleResponse,
-      RateDailyPuzzleRequest
-    >({
-      query: (body) => postJson(URL_END_POINT.RATE_DAILY_PUZZLE, body),
-      invalidatesTags: ['DailyPuzzle']
-    }),
-    createPuzzleGame: builder.mutation<
-      CreatePuzzleGameResponse,
-      CreatePuzzleGameRequest
-    >({
-      query: (body) => postJson(URL_END_POINT.CREATE_PUZZLE_GAME, body)
-    }),
-    verifyPuzzleCandidate: builder.mutation<
-      VerifyPuzzleCandidateResponse,
-      VerifyPuzzleCandidateRequest
-    >({
-      query: (body) => postJson(URL_END_POINT.VERIFY_PUZZLE_CANDIDATES, body)
-    }),
-    solvePuzzleCandidates: builder.mutation<
-      SolvePuzzleCandidatesResponse,
-      SolvePuzzleCandidatesRequest
-    >({
-      query: (body) => postJson(URL_END_POINT.SOLVE_PUZZLE_CANDIDATES, body)
-    }),
     resetAllRustCounters: builder.mutation<ResetAllRustCountersResponse, void>({
       query: () => ({
         url: URL_END_POINT.RESET_ALL_RUST_COUNTERS,
@@ -1231,15 +1150,6 @@ export const {
   useGetModPageDataQuery,
   useGetAdReportQuery,
   useGetGameHealthReportQuery,
-  useGetPuzzleCandidatesQuery,
-  useCreatePuzzleGameMutation,
-  useVerifyPuzzleCandidateMutation,
-  useSolvePuzzleCandidatesMutation,
-  useGetPuzzleScheduleQuery,
-  useSchedulePuzzleMutation,
-  useGetDailyPuzzleQuery,
-  useStartDailyPuzzleMutation,
-  useRateDailyPuzzleMutation,
   useResetAllRustCountersMutation,
   useBanPlayerByIPMutation,
   useBanIPDirectMutation,
