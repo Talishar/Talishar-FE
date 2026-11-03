@@ -65,6 +65,10 @@
   font-variant-numeric: tabular-nums;
   color: var(--theme-text, #f4eded);
 
+  > span {
+    text-box: trim-both cap alphabetic;
+  }
+
   > span:first-child {
     text-align: right;
   }
