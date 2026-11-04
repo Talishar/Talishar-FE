@@ -2100,6 +2100,18 @@
     "CASTER_MODE": "Caster Mode",
     "CASTER_MODE_TOOLTIP": "Show both players' hands for casting purposes, only if both players have the setting enabled.",
     "COLOR_ACCESSIBILITY_MODE": "Color Accessibility Mode",
+    "COLOR_ACCESSIBILITY_MODE_TOOLTIP": "Any option other than Off hides playmats and switches the end of game charts to colorblind-safe colors. The vision presets also change the card highlight colors, and Highlight Colors below starts from the chosen preset.",
+    "COLOR_ACCESSIBILITY_OPTIONS": {
+      "OFF": "Off",
+      "STANDARD": "On (default highlights)",
+      "DEUTERANOPIA": "Deuteranopia",
+      "PROTANOPIA": "Protanopia",
+      "TRITANOPIA": "Tritanopia"
+    },
+    "REDUCED_MOTION": "Reduce Motion",
+    "REDUCED_MOTION_TOOLTIP": "Skips card flip, slide and destroy animations, the hero intro, particles and card tilt.",
+    "PROMPT_TEXT_SIZE": "Prompt Text",
+    "CHAT_TEXT_SIZE": "Chat & Log Text",
     "DEVICE_ONLY": "This device",
     "DEVICE_ONLY_HINT": "Saved in this browser only. Sign in and it follows your account to every device.",
     "DEVICE_ONLY_LOCAL_HINT": "Saved in this browser only.",
@@ -2137,7 +2149,9 @@
       "SIZING": "Size & Intensity",
       "SOUND": "Sound",
       "STATS_SHARING": "Stats Sharing",
-      "STATS_SHARING_TOOLTIP": "Choose which community sites receive the results of your games."
+      "STATS_SHARING_TOOLTIP": "Choose which community sites receive the results of your games.",
+      "TEXT_SIZE": "Text Size",
+      "TEXT_SIZE_TOOLTIP": "Scales text on top of browser zoom."
     },
     "LAYER_GO_AGAIN_ICON": "Go Again Icon on Layers",
     "LAYER_GO_AGAIN_ICON_TOOLTIP": "Show a go again icon on attacks while they are in the active layers window.",

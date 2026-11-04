@@ -3,6 +3,7 @@ import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import Displayrow from 'interface/Displayrow';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { useReducedMotionSetting } from 'features/settings/accessibility';
 import { useCookieString } from 'utils/cookieStore';
 import ResourcesParticle, {
   PitchColor
@@ -32,7 +33,8 @@ export default function PitchDisplay(prop: Displayrow) {
   const [particles, setParticles] = useState<Particle[]>([]);
   const [pulses, setPulses] = useState<Particle[]>([]);
   const disableParticles = useCookieString('disableParticles');
-  const prefersReducedMotion = useReducedMotion();
+  const reducedMotionSetting = useReducedMotionSetting();
+  const prefersReducedMotion = useReducedMotion() || reducedMotionSetting;
   const particleCounter = useRef(0);
 
   let pitchAmount = useAppSelector((state: RootState) =>

@@ -16,7 +16,7 @@
   justify-content: center;
   align-items: stretch;
   flex-wrap: nowrap;
-  font-size: 1.2em;
+  font-size: calc(1.2em * var(--text-scale-prompt));
   font-weight: 500;
   padding: 2px 4px;
   flex-direction: row;
@@ -82,7 +82,7 @@
 
 @media (orientation: portrait) {
   .playerPrompt {
-    font-size: 1.2em;
+    font-size: calc(1.2em * var(--text-scale-prompt));
     max-height: 100%;
     overflow-x: auto;
     overflow-y: hidden;
@@ -99,7 +99,7 @@
 /* Tablet: single row with proper button height */
 @media (max-width: 1024px) and (min-width: 601px) {
   .playerPrompt {
-    font-size: 1.2em;
+    font-size: calc(1.2em * var(--text-scale-prompt));
     flex-direction: row;
     flex-wrap: nowrap;
     gap: 4px;
@@ -119,7 +119,7 @@
 /* Mobile: single row, shrink to fit */
 @media (max-width: 600px) {
   .playerPrompt {
-    font-size: clamp(11px, 3dvw, 15px);
+    font-size: calc(clamp(11px, 3dvw, 15px) * var(--text-scale-prompt));
     position: absolute;
     left: 0;
     right: 0;

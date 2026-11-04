@@ -9,7 +9,8 @@ import {
 } from 'features/options/optionsSlice';
 import useAuth from 'hooks/useAuth';
 import { useTheme } from 'themes/ThemeContext';
-import { parseBorderOverrides } from './cardBorderColors';
+import { parseBorderOverrides, presetBorderColor } from './cardBorderColors';
+import { useColorblindPreset } from './accessibility';
 import {
   ColorListDef,
   DEVICE_SETTING_COOKIES,
@@ -42,6 +43,7 @@ export interface SettingsController {
   getSlider: (def: SliderDef) => number;
   setSlider: (def: SliderDef, value: number) => void;
   getColor: (def: ColorListDef, id: string) => string;
+  getColorDefault: (def: ColorListDef, id: string) => string;
   setColor: (def: ColorListDef, id: string, value: string) => void;
   resetDefs: (defs: SettingDef[]) => void;
   isAtDefault: (def: SettingDef) => boolean;
@@ -65,6 +67,7 @@ export const useSettingsController = (
   );
 
   const isSynced = Boolean(isLoggedIn);
+  const colorblindPreset = useColorblindPreset();
 
   const pushAccountSettings = useCallback(
     (settings: Setting[]) => {
@@ -157,19 +160,24 @@ export const useSettingsController = (
     [setCookie, setTransparency, pushAccountSettings, isSynced]
   );
 
+  const getColorDefault = useCallback(
+    (def: ColorListDef, id: string) =>
+      (def.options.some((option) => option.id === id)
+        ? presetBorderColor(id, colorblindPreset)
+        : undefined) ?? '',
+    [colorblindPreset]
+  );
+
   const getColor = useCallback(
     (def: ColorListDef, id: string) =>
-      parseBorderOverrides(cookies[def.name])[id] ??
-      def.options.find((option) => option.id === id)?.defaultValue ??
-      '',
-    [cookies]
+      parseBorderOverrides(cookies[def.name])[id] ?? getColorDefault(def, id),
+    [cookies, getColorDefault]
   );
 
   const setColor = useCallback(
     (def: ColorListDef, id: string, value: string) => {
       const overrides = parseBorderOverrides(cookies[def.name]);
-      const option = def.options.find((entry) => entry.id === id);
-      if (option?.defaultValue === value.toLowerCase()) delete overrides[id];
+      if (getColorDefault(def, id) === value.toLowerCase()) delete overrides[id];
       else overrides[id] = value.toLowerCase();
       if (Object.keys(overrides).length === 0) {
         removeCookie(def.name, { path: COOKIE_OPTIONS.path });
@@ -177,7 +185,7 @@ export const useSettingsController = (
       }
       setCookie(def.name, overrides, COOKIE_OPTIONS);
     },
-    [cookies, setCookie, removeCookie]
+    [cookies, setCookie, removeCookie, getColorDefault]
   );
 
   const isAtDefault = useCallback(
@@ -191,13 +199,14 @@ export const useSettingsController = (
           return Math.abs(getSlider(def) - def.defaultValue) < 0.005;
         case 'colorList':
           return def.options.every(
-            (option) => getColor(def, option.id) === option.defaultValue
+            (option) =>
+              getColor(def, option.id) === getColorDefault(def, option.id)
           );
         default:
           return true;
       }
     },
-    [isOn, getRadio, getSlider, getColor]
+    [isOn, getRadio, getSlider, getColor, getColorDefault]
   );
 
   const resetDefs = useCallback(
@@ -260,6 +269,7 @@ export const useSettingsController = (
     getSlider,
     setSlider,
     getColor,
+    getColorDefault,
     setColor,
     resetDefs,
     isAtDefault,

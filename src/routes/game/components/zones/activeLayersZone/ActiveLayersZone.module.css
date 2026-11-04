@@ -247,7 +247,7 @@
   flex-direction: row;
   gap: 10px;
   align-items: center;
-  font-size: 0.8em;
+  font-size: calc(0.8em * var(--text-scale-prompt));
   padding-left: 0.5em;
 }
 

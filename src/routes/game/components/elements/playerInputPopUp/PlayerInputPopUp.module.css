@@ -64,13 +64,13 @@
 }
 
 .title {
-  font-size: 0.9em;
+  font-size: calc(0.9em * var(--text-scale-prompt));
   padding: 0px;
   margin: 0px;
 }
 
 .subtitle {
-  font-size: 0.7em;
+  font-size: calc(0.7em * var(--text-scale-prompt));
   padding: 0px;
   margin: 2px;
   font-weight: normal;
@@ -96,7 +96,8 @@
   align-items: center;
   justify-content: center;
   min-width: calc(6dvw * var(--card-scale));
-  height: 32px;
+  height: calc(32px * max(1, var(--text-scale-prompt)));
+  font-size: calc(100% * var(--text-scale-prompt));
   border-radius: 5px;
   border: 1px solid rgba(var(--theme-on-surface-rgb), 0.15);
   flex-basis: auto;

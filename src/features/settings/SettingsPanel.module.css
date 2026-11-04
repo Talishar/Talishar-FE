@@ -310,11 +310,12 @@ input.switch[role='switch']:focus-visible {
   font-weight: 500;
   line-height: 1.2;
   cursor: pointer;
-  transition: border-color 0.15s ease, color 0.15s ease,
-    background-color 0.15s ease;
+  transition: border-color 0.15s ease;
 }
 
-.segment:hover {
+.segmented .segment:is(:hover, :focus):not(.segmentActive) {
+  --background-color: rgba(var(--theme-on-surface-rgb), 0.08);
+  background: rgba(var(--theme-on-surface-rgb), 0.08);
   color: var(--theme-text);
   border-color: rgba(var(--theme-on-surface-rgb), 0.3);
 }
@@ -324,16 +325,13 @@ input.switch[role='switch']:focus-visible {
   outline-offset: 2px;
 }
 
-.segmentActive {
+.segmented .segmentActive,
+.segmented .segmentActive:is(:hover, :focus, :active) {
+  --background-color: var(--theme-primary);
   background: var(--theme-primary);
   border-color: var(--theme-primary);
   color: var(--theme-primary-inverse);
   font-weight: 600;
-}
-
-.segmentActive:hover {
-  color: var(--theme-primary-inverse);
-  border-color: var(--theme-primary);
 }
 
 .sliderRow {

@@ -1,3 +1,5 @@
+import { ColorblindPreset, presetBorderColors } from './colorblindPresets';
+
 export const CARD_BORDER_COLORS_COOKIE = 'cardBorderColors';
 
 /** Indexed by the borderColor number the backend sends, minus one. */
@@ -20,6 +22,9 @@ const HEX_COLOR = /^#[0-9a-f]{6}$/i;
 
 export const defaultBorderColor = (id: string) =>
   DEFAULT_CARD_BORDER_COLORS[Number(id) - 1];
+
+export const presetBorderColor = (id: string, preset: ColorblindPreset) =>
+  (presetBorderColors(preset) ?? DEFAULT_CARD_BORDER_COLORS)[Number(id) - 1];
 
 export const parseBorderOverrides = (raw: unknown): CardBorderOverrides => {
   let source = raw;

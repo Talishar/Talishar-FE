@@ -26,6 +26,7 @@ const JoinSnapshot = lazy(() => import('routes/game/shared/JoinSnapshot'));
 const SettingsPage = lazy(() => import('routes/user/settings'));
 import SyncedSettings from 'features/settings/SyncedSettings';
 import CardBorderColorVars from 'features/settings/CardBorderColorVars';
+import AccessibilityVars from 'features/settings/AccessibilityVars';
 import AdAnalyticsTracker from 'components/ads/AdAnalyticsTracker';
 import {
   ForcedLayoutFrameBridge,
@@ -185,7 +186,9 @@ export const router = createRouter(
             <SyncedSettings />
             <CardBorderColorVars />
             <AdAnalyticsTracker />
-            <Outlet />
+            <AccessibilityVars>
+              <Outlet />
+            </AccessibilityVars>
           </ForcedLayoutFrameBridge>
         </Suspense>
       }

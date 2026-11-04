@@ -5,6 +5,7 @@
 }
 
 .chatBox {
+  font-size: calc(100% * var(--text-scale-chat));
   overflow-y: auto;
   position: absolute;
   inset: 0;
@@ -360,7 +361,7 @@
 
 /* Individual message */
 .chatMobileMessage {
-  font-size: clamp(12px, 3.2vw, 15px);
+  font-size: calc(clamp(12px, 3.2vw, 15px) * var(--text-scale-chat));
   font-weight: 400;
   line-height: 1.45;
   word-break: break-word;

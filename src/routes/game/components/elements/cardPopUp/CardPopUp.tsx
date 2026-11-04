@@ -8,6 +8,7 @@ import React, { ReactNode, useEffect, useId, useRef } from 'react';
 import { CARD_BACK } from 'features/options/cardBacks';
 import { useCardTilt } from './useCardTilt';
 import { useCookieString } from 'utils/cookieStore';
+import { useReducedMotionSetting } from 'features/settings/accessibility';
 import { useFannedHand } from 'routes/game/components/zones/playerHand/useFannedHand';
 import { mouseSeen } from 'utils/mouseInput';
 import {
@@ -194,6 +195,7 @@ export default function CardPopUp({
 }: CardPopUpProps) {
   const ref = useRef<HTMLDivElement>(null);
   const disableCardTilt = useCookieString('disableCardTilt');
+  const reducedMotionSetting = useReducedMotionSetting();
   const classicHover = !useFannedHand();
   const tapToPreviewCookie = useCookieString(TAP_TO_PREVIEW_PLAY_COOKIE);
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -227,6 +229,7 @@ export default function CardPopUp({
   const tiltEnabled =
     supportsHover &&
     !prefersReducedMotion &&
+    !reducedMotionSetting &&
     !disableTilt &&
     disableCardTilt !== 'true';
 

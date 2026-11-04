@@ -229,7 +229,8 @@ const ColorListRow = ({
       <div className={styles.colorGrid}>
         {def.options.map((option) => {
           const value = controller.getColor(def, option.id);
-          const changed = value !== option.defaultValue;
+          const defaultValue = controller.getColorDefault(def, option.id);
+          const changed = value !== defaultValue;
           return (
             <div key={option.id} className={styles.colorOption}>
               <input
@@ -247,14 +248,14 @@ const ColorListRow = ({
                   type="button"
                   className={styles.colorReset}
                   onClick={() =>
-                    controller.setColor(def, option.id, option.defaultValue)
+                    controller.setColor(def, option.id, defaultValue)
                   }
                   title={t('SETTINGS.RESET_TO', {
-                    value: option.defaultValue,
+                    value: defaultValue,
                     unit: ''
                   })}
                   aria-label={t('SETTINGS.RESET_TO', {
-                    value: option.defaultValue,
+                    value: defaultValue,
                     unit: ''
                   })}
                 >

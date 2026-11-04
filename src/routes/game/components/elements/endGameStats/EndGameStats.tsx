@@ -23,6 +23,10 @@ import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
 import { useTheme } from 'themes/ThemeContext';
 import useSetting from 'hooks/useSetting';
 import { COLORBLIND_MODE } from 'features/options/constants';
+import {
+  parseColorblindPreset,
+  presetChartColors
+} from 'features/settings/colorblindPresets';
 import RemoveAdsLink from 'components/RemoveAdsLink/RemoveAdsLink';
 import {
   ResponsiveContainer,
@@ -476,9 +480,6 @@ const CardThumbnailCell = ({
   </td>
 );
 
-/** Chart palette used when the colorblind accessibility setting is on. */
-const ACCESSIBLE_CHART_COLORS = { you: '#4DA3FF', opponent: '#F0554E' };
-
 type ChartSeries = {
   dataKey: string;
   name: string;
@@ -692,11 +693,13 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
     const themeColor = currentTheme.colors.primary;
 
     const colorblindSetting = useSetting({ settingName: COLORBLIND_MODE });
-    const useAccessibleCharts = String(colorblindSetting?.value) === '1';
+    const accessibleChartColors = presetChartColors(
+      parseColorblindPreset(colorblindSetting?.value)
+    );
 
     const chartColors =
-      useAccessibleCharts && !isExportingImage
-        ? ACCESSIBLE_CHART_COLORS
+      accessibleChartColors && !isExportingImage
+        ? accessibleChartColors
         : { you: themeColor, opponent: '#ef4444' };
 
     const { isSupporter, showAds } = useSupporterStatus();

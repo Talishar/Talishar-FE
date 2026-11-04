@@ -25,6 +25,7 @@ import { METAFY_TIER_MAP, MetafyTierName } from 'utils/patronIcons';
 import { useGetHeroMasteryQuery } from 'features/api/apiSlice';
 import { masteryLevelPreview } from 'features/mastery/mastery';
 import useAuth from 'hooks/useAuth';
+import { useReducedMotionSetting } from 'features/settings/accessibility';
 
 const formatHeroName = (id: string | undefined): string => {
   if (!id) return '';
@@ -323,7 +324,9 @@ const HeroVsHeroIntro = () => {
   const yourMetafyTierName = getBadgeLabel(yourPatronInfo);
   const opponentMetafyTierName = getBadgeLabel(opponentPatronInfo);
 
-  const disableHeroIntro = settingsData['DisableHeroIntro']?.value === '1';
+  const reducedMotion = useReducedMotionSetting();
+  const disableHeroIntro =
+    settingsData['DisableHeroIntro']?.value === '1' || reducedMotion;
   const shouldShowIntro =
     playerID !== 3 &&
     isVisible &&

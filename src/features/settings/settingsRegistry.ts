@@ -14,6 +14,14 @@ import {
   CARD_BORDER_COLORS_COOKIE,
   defaultBorderColor
 } from './cardBorderColors';
+import {
+  CHAT_TEXT_SIZE_COOKIE,
+  PROMPT_TEXT_SIZE_COOKIE,
+  REDUCED_MOTION_COOKIE,
+  TEXT_SCALE_MAX,
+  TEXT_SCALE_MIN
+} from './accessibility';
+import { COLORBLIND_PRESET } from './colorblindPresets';
 
 export type SettingsSurface = 'account' | 'game';
 
@@ -138,7 +146,7 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
   {
     id: 'cardModes',
     tab: 'cardSpecific',
-    labelKey: 'SETTINGS.GROUPS.CARD_MODES',
+    labelKey: 'SETTINGS.GROUPS.CARD_MODES'
   },
   {
     id: 'appearance',
@@ -171,9 +179,21 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
     tooltipKey: 'SETTINGS.GROUPS.STATS_SHARING_TOOLTIP'
   },
   {
+    id: 'colorVision',
+    tab: 'accessibility',
+    labelKey: 'SETTINGS.COLOR_ACCESSIBILITY_MODE',
+    tooltipKey: 'SETTINGS.COLOR_ACCESSIBILITY_MODE_TOOLTIP'
+  },
+  {
     id: 'accessibility',
     tab: 'accessibility',
     labelKey: 'SETTINGS.GROUPS.ACCESSIBILITY'
+  },
+  {
+    id: 'textSize',
+    tab: 'accessibility',
+    labelKey: 'SETTINGS.GROUPS.TEXT_SIZE',
+    tooltipKey: 'SETTINGS.GROUPS.TEXT_SIZE_TOOLTIP'
   },
   {
     id: 'cardBorderColors',
@@ -189,6 +209,23 @@ const borderColorOption = (id: string, labelKey: string) => ({
   id,
   labelKey: `SETTINGS.CARD_BORDER_COLOR_OPTIONS.${labelKey}`,
   defaultValue: defaultBorderColor(id)
+});
+
+const textSizeSlider = (
+  key: string,
+  labelKey: string,
+  name: string,
+  accountName: string
+): SliderDef => ({
+  kind: 'slider',
+  key,
+  group: 'textSize',
+  labelKey: `SETTINGS.${labelKey}_TEXT_SIZE`,
+  name,
+  accountName,
+  min: () => Math.round(TEXT_SCALE_MIN * 100),
+  max: () => Math.round(TEXT_SCALE_MAX * 100),
+  defaultValue: 1
 });
 
 export const SETTINGS_DEFS: SettingDef[] = [
@@ -639,14 +676,53 @@ export const SETTINGS_DEFS: SettingDef[] = [
     defaultOn: true
   },
   {
-    kind: 'toggle',
+    kind: 'radio',
     key: 'colorAccessibilityMode',
-    group: 'accessibility',
+    group: 'colorVision',
     labelKey: 'SETTINGS.COLOR_ACCESSIBILITY_MODE',
-    storage: 'account',
     name: optConst.COLORBLIND_MODE,
+    defaultValue: COLORBLIND_PRESET.OFF,
+    options: [
+      {
+        value: COLORBLIND_PRESET.OFF,
+        labelKey: 'SETTINGS.COLOR_ACCESSIBILITY_OPTIONS.OFF'
+      },
+      {
+        value: COLORBLIND_PRESET.STANDARD,
+        labelKey: 'SETTINGS.COLOR_ACCESSIBILITY_OPTIONS.STANDARD'
+      },
+      {
+        value: COLORBLIND_PRESET.DEUTERANOPIA,
+        labelKey: 'SETTINGS.COLOR_ACCESSIBILITY_OPTIONS.DEUTERANOPIA'
+      },
+      {
+        value: COLORBLIND_PRESET.PROTANOPIA,
+        labelKey: 'SETTINGS.COLOR_ACCESSIBILITY_OPTIONS.PROTANOPIA'
+      },
+      {
+        value: COLORBLIND_PRESET.TRITANOPIA,
+        labelKey: 'SETTINGS.COLOR_ACCESSIBILITY_OPTIONS.TRITANOPIA'
+      }
+    ]
+  },
+  {
+    kind: 'toggle',
+    key: 'reducedMotion',
+    group: 'accessibility',
+    labelKey: 'SETTINGS.REDUCED_MOTION',
+    tooltipKey: 'SETTINGS.REDUCED_MOTION_TOOLTIP',
+    storage: 'device',
+    name: REDUCED_MOTION_COOKIE,
+    accountName: 'ReducedMotion',
     defaultOn: false
   },
+  textSizeSlider(
+    'promptTextSize',
+    'PROMPT',
+    PROMPT_TEXT_SIZE_COOKIE,
+    'PromptTextSize'
+  ),
+  textSizeSlider('chatTextSize', 'CHAT', CHAT_TEXT_SIZE_COOKIE, 'ChatTextSize'),
   {
     kind: 'toggle',
     key: 'holdToAutoPass',

@@ -319,7 +319,7 @@
   border-style: solid;
   padding: 5px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-  font-size: 1.1em;
+  font-size: calc(1.1em * var(--text-scale-prompt));
   gap: 3px;
   z-index: -5;
 }
@@ -427,7 +427,7 @@
   margin-left: 4px;
   padding: 0 4px 0 6px;
   border-left: 1px solid var(--theme-border, rgba(255, 255, 255, 0.18));
-  font-size: 1.1em;
+  font-size: calc(1.1em * var(--text-scale-prompt));
 }
 
 :global(body.fanLandscapeHand) .combatChain > .promptButtons .buttonDiv {
@@ -481,7 +481,7 @@
   background-color: var(--near-black, #0d0d0f);
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
   color: var(--white);
-  font-size: 11px;
+  font-size: calc(11px * var(--text-scale-prompt));
   line-height: 1.2;
   text-align: center;
   pointer-events: auto;
@@ -572,6 +572,6 @@
     padding: calc(4 * var(--fan-px)) calc(12 * var(--fan-px))
       calc(5 * var(--fan-px));
     border-radius: 0 0 calc(8 * var(--fan-px)) calc(8 * var(--fan-px));
-    font-size: calc(11 * var(--fan-px));
+    font-size: calc(11 * var(--fan-px) * var(--text-scale-prompt));
   }
 }
