@@ -50,7 +50,7 @@
     );
   }
 
-  .playerName.spectator:not(.playerTwo) {
+  :global(body:not(.fanLandscapeHand)) .playerName.spectator:not(.playerTwo) {
     top: 3.35rem;
   }
 }
