@@ -2041,6 +2041,27 @@
     "WATCH_AD_TO_CLEAR": "Watch Ad to Clear",
     "WHAT_ARE_RUST_COUNTERS": "What are rust counters?"
   },
+  "SAVE_NOTE": {
+    "ADD_NOTE": "Add a note",
+    "ADD_NOTE_ARIA": "Add a note to {{save}}",
+    "AFTER_REPLAY_INTRO": "Add a note to review later, like a summary or a question. Watch the replay and read the note from the Replay Tool page.",
+    "AFTER_SNAPSHOT_INTRO": "Add a note to review later, like a summary or a question. Start the snapshot and read the note from the Replay Tool page.",
+    "CLOSE": "Close",
+    "ERROR": "Unable to save the note. Please try again.",
+    "LABEL": "Note",
+    "PLACEHOLDER": "A summary of the game, or a question to look at later",
+    "PRIVACY": "Only you can read this note.",
+    "READ_NOTE": "Read note",
+    "READ_NOTE_ARIA": "Read the note on {{save}}",
+    "REMOVED": "Note removed.",
+    "REPLAY_SAVED_TITLE": "Replay #{{number}} saved",
+    "REPLAY_TITLE": "Replay #{{number}} note",
+    "SAVE": "Save note",
+    "SAVED": "Note saved.",
+    "SKIP": "Skip",
+    "SNAPSHOT_SAVED_TITLE": "Snapshot #{{number}} saved",
+    "SNAPSHOT_TITLE": "Snapshot #{{number}} note"
+  },
   "SEARCH_CARD": {
     "FUTURE_QUEUE_NOTICE": "New unreleased cards may not appear in the list until the database is updated. If you cannot find one, enter its exact printed name below.",
     "MANUAL_INPUT_LABEL": "Enter a card name manually",

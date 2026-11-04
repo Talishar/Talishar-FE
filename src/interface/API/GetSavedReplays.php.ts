@@ -9,6 +9,21 @@ export interface SavedReplay {
   p1HeroName: string;
   p2HeroName: string;
   favorite: boolean;
+  note?: string;
+}
+
+export const SAVE_NOTE_MAX_LENGTH = 1000;
+
+export interface SetReplayNoteRequest {
+  replayNumber: number;
+  note: string;
+}
+
+export interface SetReplayNoteResponse {
+  success: boolean;
+  replayNumber: number;
+  note: string;
+  error?: string;
 }
 
 export interface SetReplayFavoriteRequest {

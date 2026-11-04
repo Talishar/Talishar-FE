@@ -12,7 +12,9 @@ import { FaPlay, FaRegStar, FaStar } from 'react-icons/fa';
 import {
   MdDeleteOutline,
   MdGridView,
+  MdOutlineStickyNote2,
   MdShare,
+  MdStickyNote2,
   MdViewList
 } from 'react-icons/md';
 import {
@@ -33,6 +35,7 @@ import useSupporterStatus from 'hooks/useSupporterStatus';
 import { Link } from 'react-router-dom';
 import { Trans, useTranslation } from 'react-i18next';
 import { generateCroppedImageUrl } from 'utils/cropImages';
+import SaveNoteModal from 'components/SaveNoteModal/SaveNoteModal';
 
 interface PreparedSnapshot {
   snapshotNumber: number;
@@ -170,6 +173,7 @@ const ReplayGame = () => {
   >(null);
   const [preparedSnapshot, setPreparedSnapshot] =
     useState<PreparedSnapshot | null>(null);
+  const [noteSave, setNoteSave] = useState<SavedReplay | null>(null);
   const { data: savedReplayData, isLoading: isLoadingSavedReplays } =
     useGetSavedReplaysQuery();
   const [saveFilter, setSaveFilter] = useState<SaveFilter>('all');
@@ -497,6 +501,21 @@ const ReplayGame = () => {
         {entry.favorite ? <FaStar /> : <FaRegStar />}
       </button>
     );
+    const hasNote = Boolean(entry.note);
+    const noteButton = (
+      <button
+        type="button"
+        className={`${styles.noteButton} ${hasNote ? styles.noteActive : ''}`}
+        onClick={() => setNoteSave(entry)}
+        aria-label={t(
+          hasNote ? 'SAVE_NOTE.READ_NOTE_ARIA' : 'SAVE_NOTE.ADD_NOTE_ARIA',
+          { save: numberLabel }
+        )}
+        title={t(hasNote ? 'SAVE_NOTE.READ_NOTE' : 'SAVE_NOTE.ADD_NOTE')}
+      >
+        {hasNote ? <MdStickyNote2 /> : <MdOutlineStickyNote2 />}
+      </button>
+    );
 
     return (
       <article
@@ -514,6 +533,7 @@ const ReplayGame = () => {
             <HeroCrop heroId={entry.p2HeroCardId} />
           </div>
         )}
+        {!isList && noteButton}
         {!isList && favoriteButton}
         <div className={styles.saveInfo}>
           <div className={styles.saveTitleRow}>
@@ -549,6 +569,7 @@ const ReplayGame = () => {
             {isSnapshot ? t('LOAD_REPLAY.START_GAME') : t('LOAD_REPLAY.WATCH')}
           </button>
           {isList && favoriteButton}
+          {isList && noteButton}
           <button
             type="button"
             className={styles.shareButton}
@@ -794,6 +815,31 @@ const ReplayGame = () => {
           {t('LOAD_REPLAY.LOADING_REPLAY')}
         </div>
       )}
+      <SaveNoteModal
+        replayNumber={noteSave?.replayNumber ?? null}
+        title={t(
+          noteSave?.type === 'snapshot'
+            ? 'SAVE_NOTE.SNAPSHOT_TITLE'
+            : 'SAVE_NOTE.REPLAY_TITLE',
+          { number: noteSave?.replayNumber }
+        )}
+        intro={
+          noteSave && (
+            <>
+              {replayLabel(noteSave)}
+              {heroLabel(noteSave) && (
+                <>
+                  <br />
+                  {heroLabel(noteSave)}
+                </>
+              )}
+            </>
+          )
+        }
+        initialNote={noteSave?.note ?? ''}
+        cancelLabel={t('SAVE_NOTE.CLOSE')}
+        onClose={() => setNoteSave(null)}
+      />
     </form>
   );
 };

@@ -114,6 +114,8 @@ import {
 import {
   GetSavedReplaysResponse,
   SetReplayFavoriteRequest,
+  SetReplayNoteRequest,
+  SetReplayNoteResponse,
   DeleteReplayRequest,
   DeleteReplayResponse
 } from 'interface/API/GetSavedReplays.php';
@@ -576,6 +578,18 @@ export const apiSlice = createApi({
     >({
       query: (body) => ({
         url: URL_END_POINT.SET_REPLAY_FAVORITE,
+        method: 'POST',
+        body,
+        responseHandler: parseResponse
+      }),
+      invalidatesTags: ['SavedReplays']
+    }),
+    setReplayNote: builder.mutation<
+      SetReplayNoteResponse,
+      SetReplayNoteRequest
+    >({
+      query: (body) => ({
+        url: URL_END_POINT.SET_REPLAY_NOTE,
         method: 'POST',
         body,
         responseHandler: parseResponse
@@ -1148,6 +1162,7 @@ export const {
   useGetSavedReplaysQuery,
   useGetReplayTurnsQuery,
   useSetReplayFavoriteMutation,
+  useSetReplayNoteMutation,
   useDeleteReplayMutation,
   useShareReplayMutation,
   useLoadSharedReplayMutation,

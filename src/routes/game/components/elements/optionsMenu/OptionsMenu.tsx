@@ -23,6 +23,7 @@ import {
   useSubmitPlayerReportMutation
 } from 'features/api/apiSlice';
 import ReasonNoteModal from 'components/ReasonNoteModal/ReasonNoteModal';
+import SaveNoteModal from 'components/SaveNoteModal/SaveNoteModal';
 import {
   ModerationReason,
   PLAYER_REPORT_NOTE_MAX_LENGTH
@@ -52,6 +53,9 @@ const OptionsContent = ({ searchQuery }: { searchQuery: string }) => {
   const { t } = useTranslation();
   const [allowSpectator, setAllowSpectator] = useState(false);
   const [isSavingSnapshot, setIsSavingSnapshot] = useState(false);
+  const [savedSnapshotNumber, setSavedSnapshotNumber] = useState<number | null>(
+    null
+  );
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [submitPlayerReport, { isLoading: isSubmittingReport }] =
     useSubmitPlayerReportMutation();
@@ -158,6 +162,10 @@ const OptionsContent = ({ searchQuery }: { searchQuery: string }) => {
           result.message || t('OPTIONS_MENU.SNAPSHOT_SAVE_ERROR')
         );
       dispatch(apiSlice.util.invalidateTags(['SavedReplays']));
+      if (typeof result.snapshotNumber === 'number') {
+        setSavedSnapshotNumber(result.snapshotNumber);
+        return;
+      }
       toast.success(
         t('OPTIONS_MENU.SNAPSHOT_SAVED', { number: result.snapshotNumber })
       );
@@ -368,6 +376,18 @@ const OptionsContent = ({ searchQuery }: { searchQuery: string }) => {
                       : t('OPTIONS_MENU.SAVE_SNAPSHOT')}
                   </button>
                 )}
+                <SaveNoteModal
+                  replayNumber={savedSnapshotNumber}
+                  title={t('SAVE_NOTE.SNAPSHOT_SAVED_TITLE', {
+                    number: savedSnapshotNumber
+                  })}
+                  intro={t('SAVE_NOTE.AFTER_SNAPSHOT_INTRO')}
+                  cancelLabel={t('SAVE_NOTE.SKIP')}
+                  onClose={() => {
+                    setSavedSnapshotNumber(null);
+                    clickCloseOptionsHandler();
+                  }}
+                />
                 {snapshotInviteUrl && (
                   <button
                     className={styles.buttonDiv}

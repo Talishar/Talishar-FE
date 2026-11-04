@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { apiSlice } from 'features/api/apiSlice';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-hot-toast';
+import SaveNoteModal from 'components/SaveNoteModal/SaveNoteModal';
 import {
   FaHome,
   FaExchangeAlt,
@@ -24,6 +25,9 @@ const EndGameMenuOptions = ({ onSwitchPlayer }: EndGameMenuOptionsProps) => {
   const { t } = useTranslation();
   const [isSavingReplay, setIsSavingReplay] = useState(false);
   const [isReplaySaved, setIsReplaySaved] = useState(false);
+  const [savedReplayNumber, setSavedReplayNumber] = useState<number | null>(
+    null
+  );
   const handleMainMenu = async () => {
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.MAIN_MENU } }));
     dispatch(
@@ -53,6 +57,10 @@ const EndGameMenuOptions = ({ onSwitchPlayer }: EndGameMenuOptionsProps) => {
 
       setIsReplaySaved(true);
       dispatch(apiSlice.util.invalidateTags(['SavedReplays']));
+      if (typeof result.replayNumber === 'number') {
+        setSavedReplayNumber(result.replayNumber);
+        return;
+      }
       toast.success(
         result.message ||
           t('END_GAME.REPLAY_SAVED_NUMBER', {
@@ -98,6 +106,13 @@ const EndGameMenuOptions = ({ onSwitchPlayer }: EndGameMenuOptionsProps) => {
           {t('END_GAME.SWITCH_PLAYER_STATS')}
         </button>
       )}
+      <SaveNoteModal
+        replayNumber={savedReplayNumber}
+        title={t('SAVE_NOTE.REPLAY_SAVED_TITLE', { number: savedReplayNumber })}
+        intro={t('SAVE_NOTE.AFTER_REPLAY_INTRO')}
+        cancelLabel={t('SAVE_NOTE.SKIP')}
+        onClose={() => setSavedReplayNumber(null)}
+      />
     </div>
   );
 };

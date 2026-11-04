@@ -601,6 +601,7 @@
 }
 
 .favoriteButton,
+.noteButton,
 .shareButton,
 .deleteButton {
   display: grid;
@@ -616,7 +617,8 @@
   cursor: pointer;
 }
 
-.saveCard .favoriteButton {
+.saveCard .favoriteButton,
+.saveCard .noteButton {
   position: absolute;
   top: 0.45rem;
   right: 0.45rem;
@@ -641,6 +643,32 @@
 }
 
 .favoriteButton svg {
+  display: block;
+}
+
+.saveCard .noteButton {
+  right: 2.95rem;
+}
+
+.noteButton {
+  color: rgba(var(--theme-on-surface-rgb), 0.5);
+}
+
+.saveCard .noteButton {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.noteButton:hover:not(:disabled),
+.noteActive {
+  color: rgba(var(--theme-on-surface-rgb), 0.95);
+}
+
+.saveCard .noteButton:hover:not(:disabled),
+.saveCard .noteActive {
+  color: #fff;
+}
+
+.noteButton svg {
   display: block;
 }
 
