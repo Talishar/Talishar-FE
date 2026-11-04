@@ -117,11 +117,11 @@ export type SettingDef =
 
 export const SETTINGS_TABS: SettingsTab[] = [
   { id: 'gameplay', labelKey: 'SETTINGS.TABS.GAMEPLAY' },
-  { id: 'cardSpecific', labelKey: 'SETTINGS.TABS.CARD_SPECIFIC' },
   { id: 'interface', labelKey: 'SETTINGS.TABS.INTERFACE' },
   { id: 'cosmetics', labelKey: 'SETTINGS.TABS.COSMETICS' },
   { id: 'privacy', labelKey: 'SETTINGS.TABS.PRIVACY' },
-  { id: 'accessibility', labelKey: 'SETTINGS.TABS.ACCESSIBILITY' }
+  { id: 'accessibility', labelKey: 'SETTINGS.TABS.ACCESSIBILITY' },
+  { id: 'cardSpecific', labelKey: 'SETTINGS.TABS.CARD_SPECIFIC' }
 ];
 
 export const SETTINGS_GROUPS: SettingsGroup[] = [

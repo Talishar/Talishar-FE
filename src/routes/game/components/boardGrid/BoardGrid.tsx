@@ -1,4 +1,6 @@
 import { useMemo } from 'react';
+import { useColorblindPreset } from 'features/settings/accessibility';
+import { COLORBLIND_PRESET } from 'features/settings/colorblindPresets';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import HeadEqZone from '../zones/headEqZone/HeadEqZone';
@@ -30,7 +32,10 @@ export default function BoardGrid({ isPlayer, styles, children }: Props) {
     (state: RootState) => state.game.playerTwo.Playmat
   );
 
-  const playmat = isPlayer ? p1Playmat ?? 'aria' : p2Playmat ?? 'volcor';
+  const colorblindPreset = useColorblindPreset();
+  const sidePlaymat = isPlayer ? p1Playmat ?? 'aria' : p2Playmat ?? 'volcor';
+  const playmat =
+    colorblindPreset === COLORBLIND_PRESET.OFF ? sidePlaymat : 'Default';
 
   const styleToApply = useMemo(
     () => ({ backgroundImage: `url(/playmats/${playmat}.webp)` }),

@@ -3,14 +3,19 @@ import { RootState } from 'app/Store';
 import { selectSidePlayer } from 'features/game/perspective';
 import { useCookieString } from 'utils/cookieStore';
 import { useMemo } from 'react';
+import { useColorblindPreset } from 'features/settings/accessibility';
+import { COLORBLIND_PRESET } from 'features/settings/colorblindPresets';
 
 import styles from './Playmat.module.css';
 export const Playmat = ({ isPlayer }: { isPlayer: boolean }) => {
   const playmatIntensity = useCookieString('playmatIntensity');
 
-  const playmat = useAppSelector(
+  const sidePlaymat = useAppSelector(
     (state: RootState) => selectSidePlayer(state, isPlayer).Playmat
   );
+  const colorblindPreset = useColorblindPreset();
+  const playmat =
+    colorblindPreset === COLORBLIND_PRESET.OFF ? sidePlaymat : 'Default';
 
   const styleToApply = useMemo(() => {
     const parsed = Number(playmatIntensity);
