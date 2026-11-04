@@ -112,7 +112,7 @@ export const InProgressGame = ({
       </div>
       <a
         className={buttonClass}
-        href={`/game/play/${entry.gameName}`}
+        href={`/spectate/${entry.gameName}`}
         role="button"
       >
         {t('IN_PROGRESS_GAME.SPECTATE')}

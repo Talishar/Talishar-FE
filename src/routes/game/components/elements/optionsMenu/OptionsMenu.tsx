@@ -110,7 +110,7 @@ const OptionsContent = ({ searchQuery }: { searchQuery: string }) => {
     }
   };
 
-  const gameURL = `${window.location.origin}/game/play/${gameID}`;
+  const gameURL = `${window.location.origin}/spectate/${gameID}`;
   const snapshotInviteUrl = sessionStorage.getItem(
     `talishar_snapshot_invite_${gameID}`
   );

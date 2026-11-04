@@ -27,6 +27,7 @@ import { useTranslation } from 'react-i18next';
 import { reportPerformanceMetric } from 'utils/performanceMetrics';
 import useAuth from 'hooks/useAuth';
 import { loadSnapshotInviteSeat } from 'utils/snapshotInviteSeat';
+import { frameHost } from 'routes/game/play/forcedLayout/forcedLayout';
 
 const IS_MOCK_GAME =
   typeof window !== 'undefined' &&
@@ -223,6 +224,19 @@ const GameStateHandler = ({
       currentAuthKey = loadGameAuthKey(currentGameID);
     }
 
+    if (
+      !IS_MOCK_GAME &&
+      currentGameID > 0 &&
+      currentPlayerID === 3 &&
+      !currentAuthKey &&
+      !location.pathname.startsWith('/spectate/')
+    ) {
+      (frameHost ? window.parent : window).location.replace(
+        `/spectate/${currentGameID}`
+      );
+      return;
+    }
+
     const claimedSeatOutOfSync =
       claimedPlayerID &&
       seatLookup.authKey &&
@@ -276,6 +290,7 @@ const GameStateHandler = ({
     gameInfo.playerID,
     gameInfo.authKey,
     locationState?.playerID,
+    location.pathname,
     currentUserName,
     seatLookup,
     dispatch
