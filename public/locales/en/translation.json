@@ -2191,6 +2191,13 @@
     "SKIP_DEFENSE_REACTIONS": "Skip Defense Reactions",
     "SKIP_OVERRIDES": "Skip Overrides",
     "SKIP_OVERRIDES_TOOLTIP": "Resets at the start of each turn.",
+    "SOUND_TOGGLES": {
+      "HAND_REORDER": "Hand Reorder Sound",
+      "PLAYER_JOINED": "Opponent Joined Lobby Sound",
+      "PRIORITY": "Priority Alert Sound",
+      "SHUFFLE": "Shuffle Sound"
+    },
+    "SOUND_VOLUME": "Volume",
     "STREAMER_MODE": "Streamer Mode",
     "TABS": {
       "GAMEPLAY": "Gameplay",

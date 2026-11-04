@@ -85,7 +85,7 @@ import {
   setLobbyAltArts,
   setRecoveredAuthKey
 } from 'features/game/GameSlice';
-import useSound from 'use-sound';
+import useGameSound from 'hooks/useGameSound';
 import playerJoined from 'sounds/playerJoinedSound.mp3';
 import { createPortal } from 'react-dom';
 import { useAppDispatch } from 'app/Hooks';
@@ -193,16 +193,16 @@ const Lobby = () => {
     gameLobby?.myDeckLink
   );
   const shouldShowMatchupsUI = (gameLobby?.matchups?.length ?? 0) > 0;
-  const [playLobbyJoin, { sound: lobbyJoinSound }] = useSound(playerJoined, {
-    volume: 1
-  });
+  const [playLobbyJoin, isMuted, lobbyJoinSound] = useGameSound(
+    playerJoined,
+    'playerJoined'
+  );
   const previousOpponentSeatRef = useRef<{
     gameID: number;
     occupied: boolean;
   }>();
   const pendingJoinAlertRef = useRef<number>();
   const settingsData = useAppSelector(getSettingsEntity);
-  const isMuted = settingsData['MuteSound']?.value === '1';
   const isStreamerMode = String(settingsData['IsStreamerMode']?.value) === '1';
 
   useEffect(() => {

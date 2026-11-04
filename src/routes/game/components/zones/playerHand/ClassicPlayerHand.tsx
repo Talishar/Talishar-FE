@@ -14,10 +14,9 @@ import PlayerHandCard from '../../elements/playerHandCard/ClassicPlayerHandCard'
 import { useAppSelector } from 'app/Hooks';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { useMediaQuery } from 'hooks/useMediaQuery';
-import useIsSoundMuted from 'hooks/useIsSoundMuted';
+import useGameSound from 'hooks/useGameSound';
 import { AnimatePresence, PanInfo } from 'framer-motion';
 import { createPortal } from 'react-dom';
-import useSound from 'use-sound';
 import drawingCardsSound from 'sounds/drawing_cards.wav';
 import { setHandCardRotationHeld } from 'utils/handCardRotation';
 import { shortcutKey } from 'utils/shortcutKey';
@@ -76,9 +75,10 @@ function PlayerHand() {
 
   const showArsenal = false;
 
-  const isMuted = useIsSoundMuted();
-
-  const [playDrawingCardsSound] = useSound(drawingCardsSound, { volume: 0.5 });
+  const [playDrawingCardsSound, isMuted] = useGameSound(
+    drawingCardsSound,
+    'handReorder'
+  );
 
   const handCards = useAppSelector(
     (state: RootState) => state.game.playerOne.Hand

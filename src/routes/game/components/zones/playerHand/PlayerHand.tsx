@@ -26,7 +26,7 @@ import {
 } from 'features/game/GameSlice';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { useMediaQuery } from 'hooks/useMediaQuery';
-import useIsSoundMuted from 'hooks/useIsSoundMuted';
+import useGameSound from 'hooks/useGameSound';
 import {
   AnimatePresence,
   AnimationPlaybackControls,
@@ -39,7 +39,6 @@ import {
 } from 'framer-motion';
 import { LONG_PRESS_TIMER } from 'appConstants';
 import { createPortal } from 'react-dom';
-import useSound from 'use-sound';
 import drawingCardsSound from 'sounds/drawing_cards.wav';
 import { setHandCardRotationHeld } from 'utils/handCardRotation';
 import { shortcutKey } from 'utils/shortcutKey';
@@ -272,9 +271,10 @@ function PlayerHand() {
     null
   );
 
-  const isMuted = useIsSoundMuted();
-
-  const [playDrawingCardsSound] = useSound(drawingCardsSound, { volume: 0.5 });
+  const [playDrawingCardsSound, isMuted] = useGameSound(
+    drawingCardsSound,
+    'handReorder'
+  );
 
   const shownHand = useAppSelector((state: RootState) =>
     isViewer && isCameraP2

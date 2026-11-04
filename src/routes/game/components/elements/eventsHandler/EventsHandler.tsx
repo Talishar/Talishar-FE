@@ -1,12 +1,11 @@
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
-import useIsSoundMuted from 'hooks/useIsSoundMuted';
+import useGameSound from 'hooks/useGameSound';
 import { PROCESS_INPUT } from 'appConstants';
 import { getGameInfo, submitButton } from 'features/game/GameSlice';
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { toast } from 'react-hot-toast';
-import useSound from 'use-sound';
 import shuffleSound from 'sounds/shuffle.m4a';
 import prioritySound from 'sounds/prioritySound.wav';
 import {
@@ -108,9 +107,14 @@ export const EventsHandler = React.memo(() => {
   const hasPriority = useAppSelector(
     (state: RootState) => state.game.hasPriority
   );
-  const isMuted = useIsSoundMuted();
-  const [playShuffleSound] = useSound(shuffleSound, { volume: 0.5 });
-  const [playPrioritySound] = useSound(prioritySound);
+  const [playShuffleSound, isShuffleSoundOff] = useGameSound(
+    shuffleSound,
+    'shuffle'
+  );
+  const [playPrioritySound, isPrioritySoundOff] = useGameSound(
+    prioritySound,
+    'priority'
+  );
   const dispatch = useAppDispatch();
 
   const isRequestModal = (type: ModalType) =>
@@ -123,7 +127,7 @@ export const EventsHandler = React.memo(() => {
   useEffect(() => {
     const link = document.getElementById('favicon') as HTMLLinkElement;
     if (showModal && isRequestModal(modalType)) {
-      if (!isMuted) playPrioritySound();
+      if (!isPrioritySoundOff) playPrioritySound();
       if (link) link.href = '/images/priorityGreen.ico';
     } else if (!showModal && link) {
       // Restore favicon to whatever PassTurnDisplay would show
@@ -132,7 +136,14 @@ export const EventsHandler = React.memo(() => {
           ? '/images/priorityGreen.ico'
           : '/images/priorityGrey.ico';
     }
-  }, [showModal, modalType, isMuted, playPrioritySound, hasPriority, playerID]);
+  }, [
+    showModal,
+    modalType,
+    isPrioritySoundOff,
+    playPrioritySound,
+    hasPriority,
+    playerID
+  ]);
 
   const clickYes = (e: any) => {
     e.preventDefault();
@@ -460,7 +471,7 @@ export const EventsHandler = React.memo(() => {
                 ? parseInt(event.eventValue)
                 : null;
 
-            if (!isMuted) {
+            if (!isShuffleSoundOff) {
               playShuffleSound();
             }
             dispatch(
@@ -500,7 +511,7 @@ export const EventsHandler = React.memo(() => {
         }
       }
     }
-  }, [events, dispatch, playerID, isMuted, playShuffleSound]);
+  }, [events, dispatch, playerID, isShuffleSoundOff, playShuffleSound]);
 
   if (showModal)
     return (

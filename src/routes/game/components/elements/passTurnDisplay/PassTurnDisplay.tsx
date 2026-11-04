@@ -15,8 +15,7 @@ import { shallowEqual } from 'react-redux';
 import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'appConstants';
 import useShortcut from 'hooks/useShortcut';
 import useSetting from 'hooks/useSetting';
-import useIsSoundMuted from 'hooks/useIsSoundMuted';
-import useSound from 'use-sound';
+import useGameSound from 'hooks/useGameSound';
 import passTurnSound from 'sounds/prioritySound.wav';
 import { createPortal } from 'react-dom';
 import { updateOptions } from 'features/options/optionsSlice';
@@ -99,7 +98,7 @@ export default function PassTurnDisplay() {
   const [holdChargeMs, setHoldChargeMs] = useState<number>(
     MOUSE_LONG_PRESS_MS - HOLD_HINT_DELAY_MS
   );
-  const [playPassTurnSound] = useSound(passTurnSound);
+  const [playPassTurnSound, isMuted] = useGameSound(passTurnSound, 'priority');
   const {
     activateReplayControl,
     isPlaying: isReplayPlaying,
@@ -125,7 +124,6 @@ export default function PassTurnDisplay() {
   const isButtonInputInFlight = useAppSelector(
     (state: RootState) => state.game.buttonInput === 'inflight'
   );
-  const isMuted = useIsSoundMuted();
   // The armed state is one transient server-side flag, scoped to this player and
   // cleared by the server at the start of every turn. It is deliberately not the
   // account's Always Pass Priority preference: writing a long press into that

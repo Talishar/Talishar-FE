@@ -12,7 +12,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { shallowEqual } from 'react-redux';
 import { getGameInfo } from 'features/game/GameSlice';
 import { AiOutlinePlus, AiOutlineMinus } from 'react-icons/ai';
-import useSound from 'use-sound';
+import useGameSound from 'hooks/useGameSound';
 import passTurnSound from 'sounds/prioritySound.wav';
 import { createPortal } from 'react-dom';
 import useShortcut from 'hooks/useShortcut';
@@ -210,7 +210,10 @@ export function PassTurnDisplay() {
   );
   const [showAreYouSureModal, setShowAreYouSureModal] =
     useState<boolean>(false);
-  const [playPassTurnSound] = useSound(passTurnSound);
+  const [playPassTurnSound, isPrioritySoundOff] = useGameSound(
+    passTurnSound,
+    'priority'
+  );
   const preventPassPrompt = useAppSelector(
     (state: RootState) => state.game.preventPassPrompt
   );
@@ -221,10 +224,10 @@ export function PassTurnDisplay() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (hasPriority) {
+    if (hasPriority && !isPrioritySoundOff) {
       playPassTurnSound();
     }
-  }, [frameNumber, hasPriority, playPassTurnSound]);
+  }, [frameNumber, hasPriority, isPrioritySoundOff, playPassTurnSound]);
 
   useEffect(() => {
     const link = document.getElementById('favicon') as HTMLLinkElement;

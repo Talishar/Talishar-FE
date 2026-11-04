@@ -22,6 +22,13 @@ import {
   TEXT_SCALE_MIN
 } from './accessibility';
 import { COLORBLIND_PRESET } from './colorblindPresets';
+import {
+  GameSound,
+  SOUND_DISABLE_COOKIES,
+  SOUND_VOLUME_COOKIE,
+  SOUND_VOLUME_MAX,
+  SOUND_VOLUME_MIN
+} from './soundPreferences';
 
 export type SettingsSurface = 'account' | 'game';
 
@@ -226,6 +233,23 @@ const textSizeSlider = (
   min: () => Math.round(TEXT_SCALE_MIN * 100),
   max: () => Math.round(TEXT_SCALE_MAX * 100),
   defaultValue: 1
+});
+
+const soundToggle = (
+  key: string,
+  labelKey: string,
+  sound: GameSound,
+  accountName: string
+): ToggleDef => ({
+  kind: 'toggle',
+  key,
+  group: 'sound',
+  labelKey: `SETTINGS.SOUND_TOGGLES.${labelKey}`,
+  storage: 'device',
+  name: SOUND_DISABLE_COOKIES[sound],
+  accountName,
+  invert: true,
+  defaultOn: true
 });
 
 export const SETTINGS_DEFS: SettingDef[] = [
@@ -763,7 +787,32 @@ export const SETTINGS_DEFS: SettingDef[] = [
     name: optConst.MUTE_SOUND,
     invert: true,
     defaultOn: true
-  }
+  },
+  {
+    kind: 'slider',
+    key: 'soundVolume',
+    group: 'sound',
+    labelKey: 'SETTINGS.SOUND_VOLUME',
+    name: SOUND_VOLUME_COOKIE,
+    accountName: 'SoundVolume',
+    min: () => Math.round(SOUND_VOLUME_MIN * 100),
+    max: () => Math.round(SOUND_VOLUME_MAX * 100),
+    defaultValue: 1
+  },
+  soundToggle('prioritySound', 'PRIORITY', 'priority', 'DisablePrioritySound'),
+  soundToggle('shuffleSound', 'SHUFFLE', 'shuffle', 'DisableShuffleSound'),
+  soundToggle(
+    'handReorderSound',
+    'HAND_REORDER',
+    'handReorder',
+    'DisableHandReorderSound'
+  ),
+  soundToggle(
+    'playerJoinedSound',
+    'PLAYER_JOINED',
+    'playerJoined',
+    'DisablePlayerJoinedSound'
+  )
 ];
 
 export const DEVICE_SETTING_COOKIES = Array.from(
