@@ -3,6 +3,8 @@ import classNames from 'classnames';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 import styles from './ChatBox.module.css';
 import { useTranslation } from 'react-i18next';
+import { HIDE_LOG_NOISE_COOKIE } from 'features/settings/gameLogPreferences';
+import { useCookieString } from 'utils/cookieStore';
 
 export type ChatFilter = 'none' | 'chat' | 'log';
 
@@ -95,14 +97,16 @@ type LogFlags = {
   isPass: boolean;
   isUndo: boolean;
   isUndoLimit: boolean;
+  isNoise: boolean;
 };
 
 const flagsCache = new Map<string, LogFlags>();
 
 function computeFlags(message: string): LogFlags {
   const text = plainText(message);
+  const isChat = CHAT_RE.test(message);
   return {
-    isChat: CHAT_RE.test(message),
+    isChat,
     turnMarker: text.match(TURN_MARKER_RE),
     isCombatStart: COMBAT_START_RE.test(text),
     isCombatEnd: COMBAT_END_RE.test(text),
@@ -110,7 +114,8 @@ function computeFlags(message: string): LogFlags {
     hasCombatSignal: COMBAT_SIGNAL_RE.test(text),
     isPass: PASS_RE.test(text),
     isUndo: UNDO_RE.test(text),
-    isUndoLimit: UNDO_LIMIT_RE.test(text)
+    isUndoLimit: UNDO_LIMIT_RE.test(text),
+    isNoise: !isChat && (PASS_RE.test(text) || MUTED_COMBAT_END_RE.test(text))
   };
 }
 
@@ -232,11 +237,13 @@ function undoLimitSequence(messages: LogMessage[], start: number) {
 function RepeatedMessages({
   entries,
   transformMessage,
-  mobile
+  mobile,
+  hideNoise
 }: {
   entries: LogMessage[];
   transformMessage: (message: string) => string;
   mobile: boolean;
+  hideNoise: boolean;
 }) {
   const output: React.ReactNode[] = [];
 
@@ -268,15 +275,17 @@ function RepeatedMessages({
     const undoEnd = repeatedEventEnd(entries, index, 'isUndo');
     const end = Math.max(passEnd, undoEnd);
 
-    output.push(
-      <Message
-        key={entry.originalIndex}
-        message={entry.message}
-        transformMessage={transformMessage}
-        mobile={mobile}
-        repeatCount={end - index + 1}
-      />
-    );
+    if (!(hideNoise && flagsFor(entry.message).isNoise)) {
+      output.push(
+        <Message
+          key={entry.originalIndex}
+          message={entry.message}
+          transformMessage={transformMessage}
+          mobile={mobile}
+          repeatCount={end - index + 1}
+        />
+      );
+    }
     index = end;
   }
 
@@ -308,9 +317,11 @@ const GameLogMessages = React.memo(function GameLogMessages({
   mobile = false
 }: Props) {
   const { t } = useTranslation();
+  const hideNoise = useCookieString(HIDE_LOG_NOISE_COOKIE) === 'true';
   const outputCacheRef = React.useRef<{
     chatLog: string[] | undefined;
     chatFilter: ChatFilter;
+    hideNoise: boolean;
     transformMessage: Props['transformMessage'];
     playerOneName: string;
     playerTwoName: string;
@@ -336,6 +347,7 @@ const GameLogMessages = React.memo(function GameLogMessages({
     if (
       previous &&
       previous.chatFilter === chatFilter &&
+      previous.hideNoise === hideNoise &&
       previous.transformMessage === transformMessage &&
       previous.playerOneName === playerNames[0] &&
       previous.playerTwoName === playerNames[1] &&
@@ -428,6 +440,7 @@ const GameLogMessages = React.memo(function GameLogMessages({
               entries={messages.slice(index, groupEnd + 1)}
               transformMessage={transformMessage}
               mobile={mobile}
+              hideNoise={hideNoise}
             />
           </section>
         );
@@ -471,15 +484,17 @@ const GameLogMessages = React.memo(function GameLogMessages({
       const passEnd = repeatedEventEnd(messages, index, 'isPass');
       const undoEnd = repeatedEventEnd(messages, index, 'isUndo');
       const end = Math.max(passEnd, undoEnd);
-      nextOutput.push(
-        <Message
-          key={entry.originalIndex}
-          message={entry.message}
-          transformMessage={transformMessage}
-          mobile={mobile}
-          repeatCount={end - index + 1}
-        />
-      );
+      if (!(hideNoise && entryFlags.isNoise)) {
+        nextOutput.push(
+          <Message
+            key={entry.originalIndex}
+            message={entry.message}
+            transformMessage={transformMessage}
+            mobile={mobile}
+            repeatCount={end - index + 1}
+          />
+        );
+      }
       index = end;
       if (entryFlags.closesCombatChain) chainLinkNumber = 0;
       if (entryFlags.isChat || entryFlags.isCombatEnd) {
@@ -497,6 +512,7 @@ const GameLogMessages = React.memo(function GameLogMessages({
     outputCacheRef.current = {
       chatLog,
       chatFilter,
+      hideNoise,
       transformMessage,
       playerOneName: playerNames[0],
       playerTwoName: playerNames[1],
@@ -506,7 +522,15 @@ const GameLogMessages = React.memo(function GameLogMessages({
       checkpoints
     };
     return nextOutput;
-  }, [chatLog, chatFilter, transformMessage, playerNames, mobile, t]);
+  }, [
+    chatLog,
+    chatFilter,
+    hideNoise,
+    transformMessage,
+    playerNames,
+    mobile,
+    t
+  ]);
 
   return <>{output}</>;
 });

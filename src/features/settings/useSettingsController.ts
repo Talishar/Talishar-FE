@@ -1,5 +1,7 @@
 import { useCallback } from 'react';
 import { useCookies } from 'react-cookie';
+import { toast } from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import GameStaticInfo from 'features/GameStaticInfo';
 import {
@@ -11,6 +13,10 @@ import useAuth from 'hooks/useAuth';
 import { useTheme } from 'themes/ThemeContext';
 import { parseBorderOverrides, presetBorderColor } from './cardBorderColors';
 import { useColorblindPreset } from './accessibility';
+import {
+  hasNotificationPermission,
+  requestNotificationPermission
+} from './priorityNotifications';
 import {
   ColorListDef,
   DEVICE_SETTING_COOKIES,
@@ -59,6 +65,7 @@ export const useSettingsController = (
   gameInfo: GameStaticInfo
 ): SettingsController => {
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const settingsData = useAppSelector(getSettingsEntity);
   const { isLoggedIn } = useAuth();
   const { setTransparency } = useTheme();
@@ -91,6 +98,11 @@ export const useSettingsController = (
       if (def.storage === 'account') {
         return toggleFromAccount(settingsData[def.name]?.value, def);
       }
+      if (
+        def.sideEffect === 'notificationPermission' &&
+        !hasNotificationPermission()
+      )
+        return false;
       const account = syncedAccountValue(def);
       if (account !== undefined) return toggleFromAccount(account, def);
       return toggleFromCookie(cookies[def.name], def);
@@ -106,14 +118,24 @@ export const useSettingsController = (
         ]);
         return;
       }
-      setCookie(def.name, toggleToCookie(on, def), COOKIE_OPTIONS);
-      if (isSynced && def.accountName) {
-        pushAccountSettings([
-          { name: def.accountName, value: toggleToAccount(on, def) }
-        ]);
+      const write = () => {
+        setCookie(def.name, toggleToCookie(on, def), COOKIE_OPTIONS);
+        if (isSynced && def.accountName) {
+          pushAccountSettings([
+            { name: def.accountName, value: toggleToAccount(on, def) }
+          ]);
+        }
+      };
+      if (on && def.sideEffect === 'notificationPermission') {
+        requestNotificationPermission().then((granted) => {
+          if (granted) write();
+          else toast.error(t('SETTINGS.PRIORITY_NOTIFICATIONS_BLOCKED'));
+        });
+        return;
       }
+      write();
     },
-    [pushAccountSettings, setCookie, isSynced]
+    [pushAccountSettings, setCookie, isSynced, t]
   );
 
   const getRadio = useCallback(

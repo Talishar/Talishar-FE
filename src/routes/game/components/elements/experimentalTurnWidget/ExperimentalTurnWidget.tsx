@@ -13,6 +13,7 @@ import { shallowEqual } from 'react-redux';
 import { getGameInfo } from 'features/game/GameSlice';
 import { AiOutlinePlus, AiOutlineMinus } from 'react-icons/ai';
 import useGameSound from 'hooks/useGameSound';
+import usePassShortcuts from 'hooks/usePassShortcuts';
 import passTurnSound from 'sounds/prioritySound.wav';
 import { createPortal } from 'react-dom';
 import useShortcut from 'hooks/useShortcut';
@@ -220,6 +221,7 @@ export function PassTurnDisplay() {
   const isReplay = useAppSelector(
     (state: RootState) => state.game.gameInfo.isReplay
   );
+  const { spacePasses, middleClickPasses } = usePassShortcuts();
 
   const dispatch = useAppDispatch();
 
@@ -246,8 +248,12 @@ export function PassTurnDisplay() {
     }
   };
 
-  useShortcut(DEFAULT_SHORTCUTS.PASS_TURN, onPassTurn);
-  useShortcut(DEFAULT_SHORTCUTS.PASS_MIDDLE_CLICK, onPassTurn);
+  useShortcut(DEFAULT_SHORTCUTS.PASS_TURN, onPassTurn, isReplay || spacePasses);
+  useShortcut(
+    DEFAULT_SHORTCUTS.PASS_MIDDLE_CLICK,
+    onPassTurn,
+    isReplay || middleClickPasses
+  );
 
   const clickYes = (e: any) => {
     e.preventDefault();

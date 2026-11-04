@@ -29,6 +29,15 @@ import {
   SOUND_VOLUME_MAX,
   SOUND_VOLUME_MIN
 } from './soundPreferences';
+import {
+  DISABLE_MIDDLE_CLICK_PASS_COOKIE,
+  DISABLE_SPACE_PASS_COOKIE
+} from './passShortcutPreferences';
+import { HIDE_LOG_NOISE_COOKIE } from './gameLogPreferences';
+import {
+  notificationsSupported,
+  PRIORITY_NOTIFICATIONS_COOKIE
+} from './priorityNotifications';
 
 export type SettingsSurface = 'account' | 'game';
 
@@ -81,6 +90,8 @@ export interface ToggleDef extends BaseDef {
   /** The stored value is the opposite of what the label says. */
   invert?: boolean;
   defaultOn: boolean;
+  /** Turning it on first asks the browser for notification permission. */
+  sideEffect?: 'notificationPermission';
 }
 
 export interface RadioDef extends BaseDef {
@@ -151,6 +162,11 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
     labelKey: 'SETTINGS.GROUPS.MATCH_CONTROLS'
   },
   {
+    id: 'shortcuts',
+    tab: 'gameplay',
+    labelKey: 'SETTINGS.GROUPS.SHORTCUTS'
+  },
+  {
     id: 'cardModes',
     tab: 'cardSpecific',
     labelKey: 'SETTINGS.GROUPS.CARD_MODES'
@@ -177,6 +193,7 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
     labelKey: 'SETTINGS.GROUPS.CARD_VISUALS'
   },
   { id: 'sizing', tab: 'interface', labelKey: 'SETTINGS.GROUPS.SIZING' },
+  { id: 'gameLog', tab: 'interface', labelKey: 'SETTINGS.GROUPS.GAME_LOG' },
   { id: 'friends', tab: 'privacy', labelKey: 'SETTINGS.GROUPS.FRIENDS' },
   { id: 'broadcast', tab: 'privacy', labelKey: 'SETTINGS.GROUPS.BROADCAST' },
   {
@@ -207,7 +224,12 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
     tab: 'accessibility',
     labelKey: 'SETTINGS.GROUPS.CARD_BORDER_COLORS'
   },
-  { id: 'sound', tab: 'accessibility', labelKey: 'SETTINGS.GROUPS.SOUND' }
+  { id: 'sound', tab: 'accessibility', labelKey: 'SETTINGS.GROUPS.SOUND' },
+  {
+    id: 'notifications',
+    tab: 'accessibility',
+    labelKey: 'SETTINGS.GROUPS.NOTIFICATIONS'
+  }
 ];
 
 const inAMatch = (ctx: SettingsContext) => !ctx.isSpectator;
@@ -379,6 +401,30 @@ export const SETTINGS_DEFS: SettingDef[] = [
   },
   {
     kind: 'toggle',
+    key: 'spacePasses',
+    group: 'shortcuts',
+    labelKey: 'SETTINGS.SPACE_PASSES',
+    storage: 'device',
+    name: DISABLE_SPACE_PASS_COOKIE,
+    accountName: 'DisableSpacePass',
+    invert: true,
+    defaultOn: true,
+    visible: inAMatch
+  },
+  {
+    kind: 'toggle',
+    key: 'middleClickPasses',
+    group: 'shortcuts',
+    labelKey: 'SETTINGS.MIDDLE_CLICK_PASSES',
+    storage: 'device',
+    name: DISABLE_MIDDLE_CLICK_PASS_COOKIE,
+    accountName: 'DisableMiddleClickPass',
+    invert: true,
+    defaultOn: true,
+    visible: inAMatch
+  },
+  {
+    kind: 'toggle',
     key: 'manualTunic',
     group: 'cardModes',
     labelKey: 'SETTINGS.MANUAL_TUNIC_MODE',
@@ -514,6 +560,29 @@ export const SETTINGS_DEFS: SettingDef[] = [
     storage: 'device',
     name: SORT_ZONES_BY_DEFAULT_COOKIE,
     defaultOn: false
+  },
+  {
+    kind: 'toggle',
+    key: 'hideLogNoise',
+    group: 'gameLog',
+    labelKey: 'SETTINGS.HIDE_LOG_NOISE',
+    tooltipKey: 'SETTINGS.HIDE_LOG_NOISE_TOOLTIP',
+    storage: 'device',
+    name: HIDE_LOG_NOISE_COOKIE,
+    accountName: 'HideLogNoise',
+    defaultOn: false
+  },
+  {
+    kind: 'toggle',
+    key: 'priorityNotifications',
+    group: 'notifications',
+    labelKey: 'SETTINGS.PRIORITY_NOTIFICATIONS',
+    tooltipKey: 'SETTINGS.PRIORITY_NOTIFICATIONS_TOOLTIP',
+    storage: 'device',
+    name: PRIORITY_NOTIFICATIONS_COOKIE,
+    defaultOn: false,
+    sideEffect: 'notificationPermission',
+    visible: () => notificationsSupported()
   },
   {
     kind: 'toggle',

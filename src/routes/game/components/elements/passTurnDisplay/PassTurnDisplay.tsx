@@ -16,6 +16,7 @@ import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'appConstants';
 import useShortcut from 'hooks/useShortcut';
 import useSetting from 'hooks/useSetting';
 import useGameSound from 'hooks/useGameSound';
+import usePassShortcuts from 'hooks/usePassShortcuts';
 import passTurnSound from 'sounds/prioritySound.wav';
 import { createPortal } from 'react-dom';
 import { updateOptions } from 'features/options/optionsSlice';
@@ -99,6 +100,7 @@ export default function PassTurnDisplay() {
     MOUSE_LONG_PRESS_MS - HOLD_HINT_DELAY_MS
   );
   const [playPassTurnSound, isMuted] = useGameSound(passTurnSound, 'priority');
+  const { spacePasses, middleClickPasses } = usePassShortcuts();
   const {
     activateReplayControl,
     isPlaying: isReplayPlaying,
@@ -396,8 +398,16 @@ export default function PassTurnDisplay() {
     }
   }, [isReplay, showAreYouSureModal, dispatch]);
 
-  useShortcut(DEFAULT_SHORTCUTS.PASS_TURN, onPassTurnShortcut);
-  useShortcut(DEFAULT_SHORTCUTS.PASS_MIDDLE_CLICK, onPrimaryPassAction);
+  useShortcut(
+    DEFAULT_SHORTCUTS.PASS_TURN,
+    onPassTurnShortcut,
+    isReplay || spacePasses
+  );
+  useShortcut(
+    DEFAULT_SHORTCUTS.PASS_MIDDLE_CLICK,
+    onPrimaryPassAction,
+    isReplay || middleClickPasses
+  );
   useShortcut(
     DEFAULT_SHORTCUTS.REPLAY_PREVIOUS_STEP,
     stepBackward,

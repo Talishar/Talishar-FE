@@ -1,6 +1,7 @@
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import useGameSound from 'hooks/useGameSound';
+import usePriorityNotification from 'hooks/usePriorityNotification';
 import { PROCESS_INPUT } from 'appConstants';
 import { getGameInfo, submitButton } from 'features/game/GameSlice';
 import React, { useEffect, useState } from 'react';
@@ -115,6 +116,7 @@ export const EventsHandler = React.memo(() => {
     prioritySound,
     'priority'
   );
+  usePriorityNotification();
   const dispatch = useAppDispatch();
 
   const isRequestModal = (type: ModalType) =>
