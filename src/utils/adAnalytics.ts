@@ -80,7 +80,7 @@ const GPT_TIMEOUT_MS = 5 * 1000;
 
 const PAGE_KEYS: Array<[RegExp, string]> = [
   [/^\/$/, 'home'],
-  [/^\/(?:game\/)?play(?:\/|$)/i, 'game'],
+  [/^\/(?:(?:game\/)?play|spectate)(?:\/|$)/i, 'game'],
   [/^\/game\/lobby(?:\/|$)/i, 'lobby'],
   [/^\/game\/join(?:\/|$)/i, 'join'],
   [/^\/game\/create(?:\/|$)/i, 'create'],

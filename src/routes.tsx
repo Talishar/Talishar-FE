@@ -197,6 +197,7 @@ export const router = createRouter(
         <Route element={<ForcedLayoutGate />}>
           <Route path="game/play/:gameID" element={<Play />} />
           <Route path="game/play" element={<Play />} />
+          <Route path="spectate/:gameID" element={<Play />} />
         </Route>
         <Route path="game/lobby/:gameID" element={<Lobby />} />
         <Route

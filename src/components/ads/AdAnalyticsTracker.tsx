@@ -13,7 +13,7 @@ const AdAnalyticsTracker = () => {
   const { showAds } = useSupporterStatus();
   const framesPlay =
     useForcedLayoutFrame() !== FORCED_LAYOUT.NONE &&
-    pathname.startsWith('/game/play');
+    (pathname.startsWith('/game/play') || pathname.startsWith('/spectate/'));
 
   useEffect(() => {
     if (!ADS_ENABLED || !showAds || framesPlay) return;

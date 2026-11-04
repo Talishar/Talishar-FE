@@ -10,7 +10,7 @@ export const IN_GAME_AD_SIZE = 250;
 // chat under the right column's menu with no room for messages.
 export const IN_GAME_AD_MIN_VIEWPORT_HEIGHT = 780;
 
-const AD_FREE_ROUTE_RE = /^\/(?:game\/)?play(?:\/|$)/i;
+const AD_FREE_ROUTE_RE = /^\/(?:(?:game\/)?play|spectate)(?:\/|$)/i;
 
 export const isAdFreeRoute = (pathname: string) =>
   AD_FREE_ROUTE_RE.test(pathname);
