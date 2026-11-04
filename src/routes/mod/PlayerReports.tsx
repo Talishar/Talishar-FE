@@ -13,10 +13,11 @@ import {
 } from 'interface/API/ModerationAPI';
 import tableStyles from './ModTable.module.css';
 import styles from './BlockReports.module.css';
-import { DAY_OPTIONS } from './BlockReports';
 import useWarnPlayer from './useWarnPlayer';
 import useBanPlayer from './useBanPlayer';
 import { SortColumn, SortHeader, useTableSort } from './SortableTable';
+
+const DAY_OPTIONS = [7, 14, 30, 90, 365];
 
 type SortKey = 'date' | 'reported' | 'reporter' | 'reason' | 'game';
 
