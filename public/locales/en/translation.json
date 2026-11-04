@@ -1523,7 +1523,7 @@
     "HEALTH_COL_UNDO_TIME": "Avg time to undo",
     "HEALTH_COL_UNDONE_ON": "Most undone on",
     "HEALTH_COL_UNDOS": "Undos",
-    "HEALTH_CONTEXT_COUNT": "{{undos}} ({{fast}} fast)",
+    "HEALTH_CONTEXT_COUNT": "{{undos}} of {{inputs}} ({{fast}} fast)",
     "HEALTH_LOAD_FAILED": "Game health stats could not be loaded.",
     "HEALTH_MISCLICKS_DESCRIPTION": "Prompt answers that players undid, grouped by the prompt and input type. Turn phase inputs (playing cards, passing, blocking) are left out, and an undo only counts once the game state was reverted. A fast undo comes within 3 seconds of the input, which usually means a misclick. Rows are ranked by fast undo rate, adjusted for how many inputs they have. Counts are added when a game ends.",
     "HEALTH_MISCLICKS_EMPTY": "No undos logged in this range yet.",

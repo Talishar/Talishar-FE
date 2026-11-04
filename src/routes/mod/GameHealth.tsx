@@ -36,12 +36,25 @@ const FIX_COLUMNS: { kind: FixKind; labelKey: string }[] = [
   { kind: 'bugs', labelKey: 'MOD_PAGE.HEALTH_COL_BUGS' }
 ];
 
-const MODE_NAMES = new Map<number, string>(
-  Object.entries(PROCESS_INPUT).map(([name, mode]) => [
+const PROMPT_MODE_NAMES: [number, string][] = [
+  [8, 'Put on top'],
+  [11, 'Choose from deck'],
+  [16, 'Choose'],
+  [106, 'Use floating resources'],
+  [107, 'Submit opt'],
+  [109, 'Submit trigger order'],
+  [110, 'Submit deck order'],
+  [113, 'Prevent runechants'],
+  [115, 'No, stop asking']
+];
+
+const MODE_NAMES = new Map<number, string>([
+  ...Object.entries(PROCESS_INPUT).map(([name, mode]): [number, string] => [
     mode,
     name.charAt(0) + name.slice(1).toLowerCase().replace(/_/g, ' ')
-  ])
-);
+  ]),
+  ...PROMPT_MODE_NAMES
+]);
 
 type MisclickSortKey =
   | 'inputs'
@@ -322,6 +335,7 @@ const GameHealth: React.FC = () => {
                                 <span className={tableStyles.muted}>
                                   {t('MOD_PAGE.HEALTH_CONTEXT_COUNT', {
                                     undos: context.undos,
+                                    inputs: context.inputs.toLocaleString(),
                                     fast: context.fastUndos
                                   })}
                                 </span>
