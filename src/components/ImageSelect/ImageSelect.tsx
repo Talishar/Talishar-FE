@@ -9,6 +9,7 @@ import React, {
 import { createPortal } from 'react-dom';
 import styles from './ImageSelect.module.css';
 import { useOutsideClick } from 'hooks/useOutsideClick';
+import { cropFocusStyle } from 'utils/cropImages';
 
 interface DropdownPosition {
   top: number;
@@ -25,6 +26,7 @@ export interface ImageSelectOption {
   value: string;
   label: string;
   imageUrl?: string;
+  imageFocusX?: string;
 }
 
 interface ImageSelectProps {
@@ -165,6 +167,7 @@ export const ImageSelect: React.FC<ImageSelectProps> = ({
                 src={selectedOption.imageUrl}
                 alt=""
                 className={styles.optionImage}
+                style={cropFocusStyle(selectedOption.imageFocusX)}
               />
             ) : (
               <span className={styles.optionImage} aria-hidden="true" />
@@ -224,6 +227,7 @@ export const ImageSelect: React.FC<ImageSelectProps> = ({
                     src={option.imageUrl}
                     alt=""
                     className={styles.optionImage}
+                    style={cropFocusStyle(option.imageFocusX)}
                   />
                 )}
                 <span>{option.label}</span>

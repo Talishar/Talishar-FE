@@ -230,7 +230,7 @@
   height: 115%;
   top: -15%;
   object-fit: cover;
-  object-position: center top;
+  object-position: var(--hero-focus-x, center) top;
   user-select: none;
   pointer-events: none;
   display: block;

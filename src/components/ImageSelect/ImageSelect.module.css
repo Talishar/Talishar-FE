@@ -91,6 +91,7 @@
   width: 2rem;
   height: 2rem;
   object-fit: cover;
+  object-position: var(--hero-focus-x, center) center;
   border-radius: 0.25rem;
   flex-shrink: 0;
 }

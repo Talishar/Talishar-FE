@@ -50,7 +50,7 @@ import {
   HEROES_OF_RATHE,
   CLASS_OF_RATHE
 } from '../../index/components/filter/constants';
-import { generateCroppedImageUrl } from 'utils/cropImages';
+import { generateCroppedImageUrl, getHeroCropFocusX } from 'utils/cropImages';
 import { ImageSelect, ImageSelectOption } from 'components/ImageSelect';
 import RustCounterPanel from 'components/RustCounterPanel';
 import { useTranslation, Trans } from 'react-i18next';
@@ -152,7 +152,8 @@ const CreateGame = ({
     return bazaarData.decks.map((deck: BazaarDeck) => ({
       value: deck.id ?? deck.deckId ?? '',
       label: formatDeckLabel(deck.name, deck.format ?? null),
-      imageUrl: deck.hero ? generateCroppedImageUrl(deck.hero) : undefined
+      imageUrl: deck.hero ? generateCroppedImageUrl(deck.hero) : undefined,
+      imageFocusX: getHeroCropFocusX(deck.hero)
     }));
   }, [bazaarData?.decks]);
 
@@ -313,7 +314,8 @@ const CreateGame = ({
       AI_DECKS_FOR_FORMAT(formFormat).map((aiDeck) => ({
         value: aiDeck.value,
         label: t(aiDeck.labelKey),
-        imageUrl: generateCroppedImageUrl(aiDeck.hero)
+        imageUrl: generateCroppedImageUrl(aiDeck.hero),
+        imageFocusX: getHeroCropFocusX(aiDeck.hero)
       })),
     [formFormat, t]
   );
@@ -685,7 +687,8 @@ const CreateGame = ({
     return data.favoriteDecks.map((deck: FavoriteDeck) => ({
       value: deck.key,
       label: formatDeckLabel(deck.name, deck.format),
-      imageUrl: generateCroppedImageUrl(deck.hero)
+      imageUrl: generateCroppedImageUrl(deck.hero),
+      imageFocusX: getHeroCropFocusX(deck.hero)
     }));
   }, [data?.favoriteDecks]);
 
@@ -694,7 +697,8 @@ const CreateGame = ({
     return PRECON_DECKS.LINKS.map((link, index) => ({
       value: link,
       label: PRECON_DECKS.NAMES[index],
-      imageUrl: generateCroppedImageUrl(PRECON_DECKS.HEROES[index])
+      imageUrl: generateCroppedImageUrl(PRECON_DECKS.HEROES[index]),
+      imageFocusX: getHeroCropFocusX(PRECON_DECKS.HEROES[index])
     }));
   }, []);
 

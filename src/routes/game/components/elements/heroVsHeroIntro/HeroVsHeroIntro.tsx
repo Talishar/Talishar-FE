@@ -17,7 +17,11 @@ import {
 import { useAppSelector, useAppDispatch } from 'app/Hooks';
 import { shallowEqual } from 'react-redux';
 import { RootState } from 'app/Store';
-import { generateCroppedImageUrl } from 'utils/cropImages';
+import {
+  cropFocusStyle,
+  generateCroppedImageUrl,
+  getHeroCropFocusX
+} from 'utils/cropImages';
 import { markHeroIntroAsShown } from 'features/game/GameSlice';
 import { getSettingsEntity } from 'features/options/optionsSlice';
 import styles from './HeroVsHeroIntro.module.css';
@@ -92,6 +96,7 @@ const Particles: React.FC = () => {
 
 interface HeroCardProps {
   imageUrl: string;
+  focusX?: string;
   heroName: string;
   isPremium: boolean;
   glowActive: boolean;
@@ -101,6 +106,7 @@ interface HeroCardProps {
 
 const HeroCard: React.FC<HeroCardProps> = ({
   imageUrl,
+  focusX,
   heroName,
   isPremium,
   glowActive,
@@ -160,6 +166,7 @@ const HeroCard: React.FC<HeroCardProps> = ({
         <img
           className={styles.heroImg}
           src={imageUrl}
+          style={cropFocusStyle(focusX)}
           alt={heroName}
           draggable={false}
         />
@@ -401,6 +408,7 @@ const HeroVsHeroIntro = () => {
             >
               <HeroCard
                 imageUrl={generateCroppedImageUrl(yourHero)}
+                focusX={getHeroCropFocusX(yourHero)}
                 heroName={displayYourHeroName}
                 isPremium={yourPatronStatus}
                 glowActive={glowActive}
@@ -420,6 +428,7 @@ const HeroVsHeroIntro = () => {
             >
               <HeroCard
                 imageUrl={generateCroppedImageUrl(opponentHero)}
+                focusX={getHeroCropFocusX(opponentHero)}
                 heroName={displayOpponentHeroName}
                 isPremium={opponentPatronStatus}
                 glowActive={glowActive}

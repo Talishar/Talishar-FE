@@ -24,7 +24,7 @@ import useAdScript from 'hooks/useAdScript';
 import { AdUnit } from 'components/ads/AdUnit';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
-import { generateCroppedImageUrl } from 'utils/cropImages';
+import { generateCroppedImageUrl, getHeroCropFocusX } from 'utils/cropImages';
 import { ImageSelect, ImageSelectOption } from 'components/ImageSelect';
 import { isPreconFormat, PRECON_DECKS } from 'appConstants';
 import { formatDeckLabel, getReadableFormatName } from 'utils/formatUtils';
@@ -187,7 +187,8 @@ const JoinGame = () => {
     return filtered.map((deck: FavoriteDeck) => ({
       value: deck.key,
       label: formatDeckLabel(deck.name, deck.format),
-      imageUrl: generateCroppedImageUrl(deck.hero)
+      imageUrl: generateCroppedImageUrl(deck.hero),
+      imageFocusX: getHeroCropFocusX(deck.hero)
     }));
   }, [data?.favoriteDecks, gameFormat]);
 
@@ -196,7 +197,8 @@ const JoinGame = () => {
     return PRECON_DECKS.LINKS.map((link, index) => ({
       value: link,
       label: PRECON_DECKS.NAMES[index],
-      imageUrl: generateCroppedImageUrl(PRECON_DECKS.HEROES[index])
+      imageUrl: generateCroppedImageUrl(PRECON_DECKS.HEROES[index]),
+      imageFocusX: getHeroCropFocusX(PRECON_DECKS.HEROES[index])
     }));
   }, []);
 

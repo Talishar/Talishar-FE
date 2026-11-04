@@ -20,7 +20,7 @@ import {
   selectMetafyHash,
   selectMetafyTimestamp
 } from 'features/auth/authSlice';
-import { generateCroppedImageUrl } from 'utils/cropImages';
+import { generateCroppedImageUrl, getHeroCropFocusX } from 'utils/cropImages';
 import { ImageSelectOption } from 'components/ImageSelect';
 import { formatDeckLabel, getReadableFormatName } from 'utils/formatUtils';
 import { FAB_BAZAAR_DECK_URL_BASE } from 'appConstants';
@@ -169,7 +169,8 @@ export const QuickJoinProvider = ({
       label: formatDeckLabel(deck.name, deck.format, {
         shorten: shortenFormat
       }),
-      imageUrl: generateCroppedImageUrl(deck.hero)
+      imageUrl: generateCroppedImageUrl(deck.hero),
+      imageFocusX: getHeroCropFocusX(deck.hero)
     }));
   }, [favoritesData?.favoriteDecks]);
 
@@ -188,7 +189,8 @@ export const QuickJoinProvider = ({
       label: formatDeckLabel(deck.name, deck.format ?? null, {
         shorten: shortenFormat
       }),
-      imageUrl: deck.hero ? generateCroppedImageUrl(deck.hero) : undefined
+      imageUrl: deck.hero ? generateCroppedImageUrl(deck.hero) : undefined,
+      imageFocusX: getHeroCropFocusX(deck.hero)
     }));
   }, [bazaarData?.decks]);
 

@@ -34,7 +34,7 @@ import useAdScript from 'hooks/useAdScript';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import { Link } from 'react-router-dom';
 import { Trans, useTranslation } from 'react-i18next';
-import { generateCroppedImageUrl } from 'utils/cropImages';
+import { generateCroppedImageUrl, heroCropFocusStyle } from 'utils/cropImages';
 import SaveNoteModal from 'components/SaveNoteModal/SaveNoteModal';
 
 interface PreparedSnapshot {
@@ -79,6 +79,7 @@ const readSaveView = (): SaveView => {
 const HeroCrop = ({ heroId }: { heroId: string }) => (
   <img
     src={heroId ? generateCroppedImageUrl(heroId) : UNKNOWN_HERO_CROP}
+    style={heroCropFocusStyle(heroId)}
     alt=""
     loading="lazy"
     onError={(event) => {

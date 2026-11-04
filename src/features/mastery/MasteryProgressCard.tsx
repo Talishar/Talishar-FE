@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { HEROES_OF_RATHE } from 'routes/index/components/filter/constants';
-import { generateCroppedImageUrl } from 'utils/cropImages';
+import { generateCroppedImageUrl, heroCropFocusStyle } from 'utils/cropImages';
 import MasteryFrame from './MasteryFrame';
 import { progressStart, ROMAN_LEVELS } from './mastery';
 import styles from './MasteryProgressCard.module.css';
@@ -63,7 +63,12 @@ const MasteryProgressCard = ({
         }`}
       >
         <MasteryFrame level={level} className={styles.oneLinePortrait}>
-          <img src={heroImage} alt={heroName} className={styles.portrait} />
+          <img
+            src={heroImage}
+            alt={heroName}
+            className={styles.portrait}
+            style={heroCropFocusStyle(heroId)}
+          />
         </MasteryFrame>
         <strong>
           {unlocked && level > 0
@@ -93,7 +98,12 @@ const MasteryProgressCard = ({
     >
       {showPortrait && (
         <MasteryFrame level={level} className={styles.portraitFrame}>
-          <img src={heroImage} alt={heroName} className={styles.portrait} />
+          <img
+            src={heroImage}
+            alt={heroName}
+            className={styles.portrait}
+            style={heroCropFocusStyle(heroId)}
+          />
         </MasteryFrame>
       )}
       <div className={styles.content}>

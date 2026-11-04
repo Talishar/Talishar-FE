@@ -38,7 +38,7 @@ import {
   getCollectionCardImagePath
 } from 'utils';
 import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
-import { generateCroppedImageUrl } from 'utils/cropImages';
+import { generateCroppedImageUrl, heroCropFocusStyle } from 'utils/cropImages';
 import { getReadableFormatName } from 'utils/formatUtils';
 import { HEROES_OF_RATHE } from 'routes/index/components/filter/constants';
 import MasteryFrame from 'features/mastery/MasteryFrame';
@@ -562,6 +562,7 @@ export const DecksPage = () => {
                 >
                   <img
                     src={generateCroppedImageUrl(heroId)}
+                    style={heroCropFocusStyle(heroId)}
                     alt=""
                     draggable={false}
                     loading="lazy"
@@ -736,6 +737,7 @@ export const DecksPage = () => {
               {!!deck.hero && (
                 <img
                   src={generateCroppedImageUrl(deck.hero)}
+                  style={heroCropFocusStyle(deck.hero)}
                   className={styles.deckHeroImage}
                   alt={deck.hero}
                 />

@@ -2,7 +2,10 @@ import classNames from 'classnames';
 import { IGameInProgress } from '../gameList/GameList';
 import styles from './InProgressGame.module.scss';
 import { RiSwordLine, RiEyeLine } from 'react-icons/ri';
-import { generateCroppedImageUrl } from '../../../../utils/cropImages';
+import {
+  generateCroppedImageUrl,
+  heroCropFocusStyle
+} from '../../../../utils/cropImages';
 import FriendBadge from '../gameList/FriendBadge';
 import { useTranslation } from 'react-i18next';
 import { HEROES_OF_RATHE } from '../filter/constants';
@@ -17,6 +20,7 @@ const HeroPortrait = ({ hero }: { hero?: string }) => {
     <img
       className={styles.heroImg}
       src={generateCroppedImageUrl(hero)}
+      style={heroCropFocusStyle(hero)}
       alt={name}
       title={name}
       loading="lazy"

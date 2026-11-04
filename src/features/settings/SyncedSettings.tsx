@@ -60,7 +60,11 @@ const SyncedSettings = () => {
   useEffect(() => {
     if (!isLoggedIn || activeGameID || prefetchedRef.current) return;
     if (settingsStatus !== QUERY_STATUS.IDLE) return;
-    if (window.location.pathname.startsWith('/game/')) return;
+    if (
+      window.location.pathname.startsWith('/game/') ||
+      window.location.pathname.startsWith('/spectate/')
+    )
+      return;
     prefetchedRef.current = true;
     dispatch(fetchAllSettings({ game: PROFILE_GAME_INFO }));
   }, [isLoggedIn, activeGameID, settingsStatus, dispatch]);

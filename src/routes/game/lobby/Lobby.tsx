@@ -89,7 +89,7 @@ import useGameSound from 'hooks/useGameSound';
 import playerJoined from 'sounds/playerJoinedSound.mp3';
 import { createPortal } from 'react-dom';
 import { useAppDispatch } from 'app/Hooks';
-import { generateCroppedImageUrl } from 'utils/cropImages';
+import { generateCroppedImageUrl, heroCropFocusStyle } from 'utils/cropImages';
 import {
   getSettingsEntity,
   fetchAllSettings,
@@ -1402,7 +1402,10 @@ const Lobby = () => {
               >
                 <div
                   className={styles.leftCol}
-                  style={{ backgroundImage: leftPic }}
+                  style={{
+                    backgroundImage: leftPic,
+                    ...heroCropFocusStyle(leftHero)
+                  }}
                 >
                   <MasteryPlate
                     level={leftMasteryLevel}
@@ -1435,7 +1438,10 @@ const Lobby = () => {
               >
                 <div
                   className={styles.rightCol}
-                  style={{ backgroundImage: rightPic }}
+                  style={{
+                    backgroundImage: rightPic,
+                    ...heroCropFocusStyle(rightHero)
+                  }}
                 >
                   <MasteryPlate
                     level={rightMasteryLevel}

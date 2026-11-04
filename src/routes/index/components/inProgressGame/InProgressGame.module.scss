@@ -36,7 +36,7 @@
   height: 3.6em;
   border-radius: var(--border-radius);
   object-fit: cover;
-  object-position: top center;
+  object-position: var(--hero-focus-x, center) top;
   display: block;
   flex-shrink: 0;
 }

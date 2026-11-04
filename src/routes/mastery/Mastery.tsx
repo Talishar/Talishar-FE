@@ -2,7 +2,7 @@ import React, { useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGetHeroMasteryQuery } from 'features/api/apiSlice';
 import { HEROES_OF_RATHE } from 'routes/index/components/filter/constants';
-import { generateCroppedImageUrl } from 'utils/cropImages';
+import { generateCroppedImageUrl, heroCropFocusStyle } from 'utils/cropImages';
 import MasteryFrame from 'features/mastery/MasteryFrame';
 import PageBanner from 'components/PageBanner/PageBanner';
 import useAdScript from 'hooks/useAdScript';
@@ -190,6 +190,7 @@ const Mastery = () => {
         <MasteryFrame level={item.level} className={styles.portraitFrame}>
           <img
             src={generateCroppedImageUrl(hero.value)}
+            style={heroCropFocusStyle(hero.value)}
             alt=""
             loading="lazy"
           />
@@ -299,7 +300,11 @@ const Mastery = () => {
       >
         <div className={styles.detailHeader}>
           <MasteryFrame level={shownLevel} className={styles.detailPortrait}>
-            <img src={portrait} alt="" />
+            <img
+              src={portrait}
+              style={heroCropFocusStyle(selected.value)}
+              alt=""
+            />
           </MasteryFrame>
           <div className={styles.detailTitle}>
             <h2>{selected.label}</h2>
@@ -392,6 +397,7 @@ const Mastery = () => {
                     >
                       <img
                         src={generateCroppedImageUrl(highestHero.value)}
+                        style={heroCropFocusStyle(highestHero.value)}
                         alt=""
                       />
                     </MasteryFrame>
@@ -533,6 +539,7 @@ const Mastery = () => {
                             <img
                               key={hero.value}
                               src={generateCroppedImageUrl(hero.value)}
+                              style={heroCropFocusStyle(hero.value)}
                               alt=""
                               loading="lazy"
                             />

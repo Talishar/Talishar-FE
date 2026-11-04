@@ -3,7 +3,11 @@ import classNames from 'classnames';
 import { useNavigate } from 'react-router-dom';
 import { IOpenGame } from '../gameList/GameList';
 import styles from './OpenGame.module.css';
-import { generateCroppedImageUrl } from '../../../../utils/cropImages';
+import {
+  cropFocusStyle,
+  generateCroppedImageUrl,
+  heroCropFocusStyle
+} from '../../../../utils/cropImages';
 import FriendBadge from '../gameList/FriendBadge';
 import QuickJoinContext from '../quickJoin/QuickJoinContext';
 import { requestRustPanelAttention } from 'hooks/useRustCounters';
@@ -89,12 +93,13 @@ const OpenGame = ({
   const hasDeckReady = !!quickJoinCtx?.hasDeckConfigured;
   const UNKNOWN_HERO_URL =
     'https://images.talishar.net/public/crops/UNKNOWNHERO_cropped.webp';
+  const selectedFavoriteOption = quickJoinCtx?.selectedFavoriteDeck
+    ? quickJoinCtx.favoriteDeckOptions.find(
+        (o) => o.value === quickJoinCtx.selectedFavoriteDeck
+      )
+    : undefined;
   const selectedHeroImageUrl =
-    (quickJoinCtx?.selectedFavoriteDeck
-      ? quickJoinCtx.favoriteDeckOptions.find(
-          (o) => o.value === quickJoinCtx.selectedFavoriteDeck
-        )?.imageUrl
-      : undefined) ?? UNKNOWN_HERO_URL;
+    selectedFavoriteOption?.imageUrl ?? UNKNOWN_HERO_URL;
   const isRustLocked = !!quickJoinCtx?.isRustLocked;
   const [showLearningWarning, setShowLearningWarning] = useState(false);
   const joinGame = () => {
@@ -233,6 +238,7 @@ const OpenGame = ({
           <img
             className={styles.heroImg}
             src={generateCroppedImageUrl(entry.p1Hero)}
+            style={heroCropFocusStyle(entry.p1Hero)}
             alt={entry.p1Hero}
             loading="lazy"
           />
@@ -283,6 +289,7 @@ const OpenGame = ({
             src={selectedHeroImageUrl}
             alt=""
             className={styles.joinHeroIcon}
+            style={cropFocusStyle(selectedFavoriteOption?.imageFocusX)}
             aria-hidden="true"
           />
           <span className={styles.joinLabel}>{t('OPEN_GAME.JOIN')}</span>

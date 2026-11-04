@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import styles from './Filter.module.css';
 import { useTranslation } from 'react-i18next';
 import { useOutsideClick } from 'hooks/useOutsideClick';
-import { generateCroppedImageUrl } from 'utils/cropImages';
+import { generateCroppedImageUrl, heroCropFocusStyle } from 'utils/cropImages';
 
 const Filter = ({
   selectedLabel,
@@ -118,6 +118,7 @@ const Filter = ({
                 <img
                   className={styles.heroThumb}
                   src={generateCroppedImageUrl(heroMap[label][0])}
+                  style={heroCropFocusStyle(heroMap[label][0])}
                   alt=""
                   loading="lazy"
                 />

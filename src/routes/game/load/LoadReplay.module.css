@@ -403,7 +403,7 @@
   min-width: 0;
   margin: 0;
   object-fit: cover;
-  object-position: center 30%;
+  object-position: var(--hero-focus-x, center) 30%;
 }
 
 .matchupArt img + img {

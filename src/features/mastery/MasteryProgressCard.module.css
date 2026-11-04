@@ -124,6 +124,7 @@
   min-width: 0;
   border-radius: 50%;
   object-fit: cover;
+  object-position: var(--hero-focus-x, center) center;
 }
 
 .oneLine {

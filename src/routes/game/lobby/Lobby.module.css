@@ -119,7 +119,7 @@ h3 {
 .leftCol {
   --plate-scale: 1.7;
   background-size: cover;
-  background-position: center;
+  background-position: var(--hero-focus-x, center);
   height: 100%;
   border: none;
   overflow: hidden;
@@ -145,7 +145,7 @@ h3 {
   --plate-scale: 1.7;
   text-align: right;
   background-size: cover;
-  background-position: center;
+  background-position: var(--hero-focus-x, center);
   height: 100%;
   border: none;
   overflow: hidden;
@@ -214,12 +214,12 @@ h3 {
   }
 
   .leftCol {
-    background-position: center 10%;
+    background-position: var(--hero-focus-x, center) 10%;
     --plate-scale: 1.5;
   }
 
   .rightCol {
-    background-position: center 10%;
+    background-position: var(--hero-focus-x, center) 10%;
     --plate-scale: 1.5;
   }
 }
@@ -859,12 +859,12 @@ nav {
   }
 
   .leftCol {
-    background-position: center 25%;
+    background-position: var(--hero-focus-x, center) 25%;
     --plate-scale: 1.2;
   }
 
   .rightCol {
-    background-position: center 25%;
+    background-position: var(--hero-focus-x, center) 25%;
     --plate-scale: 1.2;
   }
 
@@ -1007,11 +1007,11 @@ nav {
   }
 
   .leftCol {
-    background-position: center 10%;
+    background-position: var(--hero-focus-x, center) 10%;
   }
 
   .rightCol {
-    background-position: center 10%;
+    background-position: var(--hero-focus-x, center) 10%;
   }
 
   .mobileNav {
@@ -1608,7 +1608,7 @@ button.secondary:hover {
 
   .leftCol,
   .rightCol {
-    background-position: center 22%;
+    background-position: var(--hero-focus-x, center) 22%;
     --plate-scale: 1;
   }
 
