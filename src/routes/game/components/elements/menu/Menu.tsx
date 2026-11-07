@@ -28,6 +28,7 @@ import FullControlToggle from './FullControlToggle/FullControlToggle';
 import AlwaysPassToggle from './AlwaysPassToggle/AlwaysPassToggle';
 import ManualTargetingToggle from './ManualTargetingToggle/ManualTargetingToggle';
 import LandscapeTip from './LandscapeTip/LandscapeTip';
+import FannedHandTip from './FannedHandTip/FannedHandTip';
 import SkipReactionsToggle from '../priorityControl/SkipReactions/SkipReactionsToggle';
 import Inventory from '../inventory/Inventory';
 import SpectatorCount from '../spectatorCount/SpectatorCount';
@@ -250,6 +251,7 @@ function MenuContent() {
     (state: RootState) => state.game.gameInfo.isReplay
   );
   const isSpectator = playerID === 3;
+  const settingsBtnRef = useRef<HTMLButtonElement>(null);
 
   // Replay controls are provided by the replay panel and Advance replay button.
   // Normal game controls (including undo) must not alter replay state.
@@ -328,9 +330,10 @@ function MenuContent() {
           <UndoButton />
           <Inventory buttonClassName={styles.btn} />
           <HideModalsToggle />
-          <OptionsMenuToggle />
+          <OptionsMenuToggle buttonRef={settingsBtnRef} />
           <FullScreenButton />
         </div>
+        <FannedHandTip anchorRef={settingsBtnRef} />
       </div>
     </div>
   );

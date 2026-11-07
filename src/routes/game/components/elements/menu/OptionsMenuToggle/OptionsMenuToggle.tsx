@@ -1,3 +1,4 @@
+import { RefObject } from 'react';
 import styles from '../Menu.module.css';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
@@ -13,10 +14,12 @@ import { GiHamburgerMenu } from 'react-icons/gi';
 
 function OptionsMenuToggle({
   btnClass,
-  showLabel
+  showLabel,
+  buttonRef
 }: {
   btnClass?: string;
   showLabel?: boolean;
+  buttonRef?: RefObject<HTMLButtonElement>;
 } = {}) {
   const { t } = useTranslation();
   const optionsMenu = useAppSelector(
@@ -35,6 +38,7 @@ function OptionsMenuToggle({
   return (
     <div>
       <button
+        ref={buttonRef}
         className={btnClass ?? styles.btn}
         aria-label={t('MENU.TOGGLE_MAIN_MENU')}
         onClick={() => toggleMenu()}

@@ -34,6 +34,7 @@ export const AUTO_PASS_TURN = 'AutoPassTurn';
 export const DISABLE_HOLD_TO_AUTO_PASS = 'DisableHoldToAutoPass';
 export const HIDE_LAYER_GO_AGAIN = 'HideLayerGoAgain';
 export const LANDSCAPE_TIP_SEEN = 'LandscapeTipSeen';
+export const FANNED_HAND_TIP_SEEN = 'FannedHandTipSeen';
 
 export enum HOLD_PRIORITY_ENUM {
   AUTO = 0,
