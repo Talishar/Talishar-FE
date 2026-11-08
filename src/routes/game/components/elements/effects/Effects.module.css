@@ -95,11 +95,17 @@
 
 .inBoard {
   --fx-cols: 3;
-  --fx-w: calc(((var(--card-size) * 0.95 - 4px) / 2 - 2px) * 35 / 27 + 2px);
+  --fx-pad: 4px;
+  --fx-w: calc(
+    ((var(--card-size) * 0.95 - 4px - var(--fx-pad) * 2) / 2 - 2px) * 35 / 27 +
+      2px
+  );
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
   gap: 4px;
+  padding: var(--fx-pad);
+  box-sizing: border-box;
   width: 100%;
   height: 100%;
   min-width: 0;
