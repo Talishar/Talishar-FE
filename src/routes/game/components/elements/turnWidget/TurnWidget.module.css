@@ -71,6 +71,44 @@
   }
 }
 
+:global(body.fanPortraitHand) .widget {
+  width: 100%;
+  grid-template-columns: 42% minmax(0, 1fr);
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  gap: 3px;
+  padding: 3px;
+}
+
+:global(body.fanPortraitHand) .apBadge {
+  position: static;
+  transform: none;
+  grid-column: 2;
+  grid-row: 2;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  min-height: 0;
+}
+
+:global(body.fanPortraitHand) .apBadge > * {
+  width: 100%;
+}
+
+:global(body.fanPortraitHand) .apBadge + * {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+:global(body.fanPortraitHand) .widget > :last-child {
+  grid-column: 2;
+  grid-row: 3;
+}
+
+:global(body.fanPortraitHand) .widget > :nth-child(3):not(:last-child) {
+  grid-column: 1;
+  grid-row: 1 / 4;
+}
+
 @media (orientation: landscape) and (max-height: 600px) {
   .widgetContainer {
     height: 30dvh;

@@ -22,9 +22,15 @@ interface Props {
   isPlayer: boolean;
   styles: { readonly [key: string]: string };
   children?: React.ReactNode;
+  inGrid?: React.ReactNode;
 }
 
-export default function BoardGrid({ isPlayer, styles, children }: Props) {
+export default function BoardGrid({
+  isPlayer,
+  styles,
+  children,
+  inGrid
+}: Props) {
   const p1Playmat = useAppSelector(
     (state: RootState) => state.game.playerOne.Playmat
   );
@@ -65,6 +71,7 @@ export default function BoardGrid({ isPlayer, styles, children }: Props) {
         <ArsenalZone isPlayer={isPlayer} />
         <ZoneCounts isPlayer={isPlayer} />
         <BanishZone isPlayer={isPlayer} />
+        {inGrid}
       </div>
       {children}
     </div>
