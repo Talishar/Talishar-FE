@@ -268,3 +268,27 @@ body.fanLandscapeHand .gameZone {
     height: var(--fan-arsenal-size) !important;
   }
 }
+
+body.fanPortraitHand .centering {
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+body.fanPortraitHand .centering::before,
+body.fanPortraitHand .centering::after {
+  content: '';
+}
+
+body.fanPortraitHand .centering::before {
+  flex: 0 1 calc(var(--card-size) * 0.72 + min(6vh, 48px) + 4px);
+  flex: 0 1 calc(var(--card-size) * 0.72 + min(6dvh, 48px) + 4px);
+}
+
+body.fanPortraitHand .centering::after {
+  flex: 1 1 calc(var(--card-size) * 0.72 + min(6vh, 48px) + 4px);
+  flex: 1 1 calc(var(--card-size) * 0.72 + min(6dvh, 48px) + 4px);
+}
+
+body.fanPortraitHand .app {
+  margin-block: 0;
+}

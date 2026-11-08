@@ -64,6 +64,7 @@ import {
   FAN_MOUSE_SINK_DURATION_S,
   FAN_OPEN_CARD_HEIGHT_RATIO,
   FAN_OPEN_HIDDEN_RATIO,
+  FAN_PORTRAIT_BODY_CLASS,
   FAN_REST_HIDDEN_RATIO,
   FAN_SIDE_COLUMN_ATTR,
   FAN_UNHOVER_ANCHOR_ATTR,
@@ -78,11 +79,14 @@ import {
   fanHoverScaleFor,
   fanScaleFor,
   fanSlotIndexAt,
-  fanSpacing
+  fanSpacing,
+  portraitFanFit
 } from './fanLayout';
 import { useFanHover } from './useFanHover';
 import { useLandscapeHandMode } from './useLandscapeHandMode';
 import { useShowsLandscapeFan } from './useShowsLandscapeFan';
+import { useShowsPortraitFan } from './useShowsPortraitFan';
+import { usePortraitBoard } from './usePortraitBoard';
 import { useFannedHand } from './useFannedHand';
 import ClassicPlayerHand from './ClassicPlayerHand';
 
@@ -186,6 +190,18 @@ function PlayerHand() {
   const isTallScreen = useMediaQuery('(min-height: 501px)');
   const isPhoneLandscape = isMobileLandscape && !isTallScreen;
   const showsLandscapeFan = useShowsLandscapeFan();
+  const showsPortraitFan = useShowsPortraitFan();
+  useLayoutEffect(() => {
+    if (!showsPortraitFan) return;
+    const body = document.body;
+    body.classList.add(FAN_PORTRAIT_BODY_CLASS);
+    return () => {
+      body.classList.remove(FAN_PORTRAIT_BODY_CLASS);
+    };
+  }, [showsPortraitFan]);
+  const portraitBoard = usePortraitBoard(showsPortraitFan, width, height);
+  const portraitBoardBottom =
+    showsPortraitFan && portraitBoard ? portraitBoard.boardBottom : null;
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
   );
@@ -267,6 +283,14 @@ function PlayerHand() {
   useEffect(() => {
     dockedRenderRef.current = isLandscapeDocked;
   }, [isLandscapeDocked]);
+  const portraitMeasuredRef = useRef(portraitBoardBottom !== null);
+  const portraitSnap =
+    !portraitMeasuredRef.current && portraitBoardBottom !== null
+      ? { duration: 0 }
+      : undefined;
+  useEffect(() => {
+    portraitMeasuredRef.current = portraitBoardBottom !== null;
+  }, [portraitBoardBottom]);
   const lastPointerRef = useRef<{ x: number; y: number; type: string } | null>(
     null
   );
@@ -622,13 +646,18 @@ function PlayerHand() {
   );
 
   const fanGeometry = useMemo<FanGeometry>(() => {
-    const cardHeight =
-      height *
-      (!hasLandscapeDock
-        ? FAN_CARD_HEIGHT_RATIO
-        : isLandscapeDocked
-        ? FAN_DOCK_CARD_HEIGHT_RATIO
-        : FAN_OPEN_CARD_HEIGHT_RATIO);
+    const portraitFit =
+      portraitBoardBottom !== null
+        ? portraitFanFit(height, portraitBoardBottom)
+        : null;
+    const cardHeight = portraitFit
+      ? portraitFit.cardHeight
+      : height *
+        (!hasLandscapeDock
+          ? FAN_CARD_HEIGHT_RATIO
+          : isLandscapeDocked
+          ? FAN_DOCK_CARD_HEIGHT_RATIO
+          : FAN_OPEN_CARD_HEIGHT_RATIO);
     return {
       stageWidth: Math.max(
         0,
@@ -638,7 +667,9 @@ function PlayerHand() {
       cardWidth: (cardHeight * 2) / 3,
       mobile: isMobilePortrait,
       hoverLift: isMobile,
-      hiddenRatio: !hasLandscapeDock
+      hiddenRatio: portraitFit
+        ? portraitFit.hiddenRatio
+        : !hasLandscapeDock
         ? undefined
         : isLandscapeDocked
         ? FAN_DOCK_HIDDEN_RATIO
@@ -652,7 +683,8 @@ function PlayerHand() {
     isMobile,
     isMobilePortrait,
     hasLandscapeDock,
-    isLandscapeDocked
+    isLandscapeDocked,
+    portraitBoardBottom
   ]);
   const fanHoverScale = fanHoverScaleFor(
     hoverImageSize,
@@ -695,7 +727,10 @@ function PlayerHand() {
     const body = document.body;
     body.style.setProperty(
       FAN_HAND_RESERVE_VAR,
-      `${fanGeometry.cardHeight * (1 - FAN_REST_HIDDEN_RATIO)}px`
+      `${
+        fanGeometry.cardHeight *
+        (1 - (fanGeometry.hiddenRatio ?? FAN_REST_HIDDEN_RATIO))
+      }px`
     );
     return () => {
       body.style.removeProperty(FAN_HAND_RESERVE_VAR);
@@ -706,7 +741,8 @@ function PlayerHand() {
     showsLandscapeFan,
     isHandCollapsed,
     fanItems.length,
-    fanGeometry.cardHeight
+    fanGeometry.cardHeight,
+    fanGeometry.hiddenRatio
   ]);
 
   const isDragActive = dragPlayState !== 'idle' || dragStartOrderIds !== null;
@@ -1425,9 +1461,17 @@ function PlayerHand() {
 
   const hasRowCards = fanItems.length > 0;
 
-  const collapseDockStyle = gameZoneBounds
-    ? { left: gameZoneBounds.left, right: gameZoneBounds.right }
-    : undefined;
+  const collapseDockStyle =
+    showsPortraitFan && portraitBoard
+      ? {
+          left: portraitBoard.arrow.left,
+          top: portraitBoard.arrow.top,
+          width: portraitBoard.arrow.width,
+          height: portraitBoard.arrow.height
+        }
+      : gameZoneBounds
+      ? { left: gameZoneBounds.left, right: gameZoneBounds.right }
+      : undefined;
   const dockSpan =
     fanSpacing(fanItems.length, fanGeometry) *
       Math.max(0, fanItems.length - 1) +
@@ -1515,7 +1559,7 @@ function PlayerHand() {
                 showHoverKeywords={showHoverKeywords}
                 fanHoverScale={fanHoverScale}
                 fanCardHeight={fanGeometry.cardHeight}
-                fanTransition={dockTransition}
+                fanTransition={portraitSnap ?? dockTransition}
                 isFanMouse={!isMobile}
                 isFanLifted={isFanLifted}
                 onHoverChange={handleHoverChange}
@@ -1542,7 +1586,7 @@ function PlayerHand() {
                 showHoverKeywords={showHoverKeywords}
                 fanHoverScale={fanHoverScale}
                 fanCardHeight={fanGeometry.cardHeight}
-                fanTransition={dockTransition}
+                fanTransition={portraitSnap ?? dockTransition}
                 isFanMouse={!isMobile}
                 isFanLifted={isFanLifted}
                 onHoverChange={handleHoverChange}
@@ -1571,7 +1615,7 @@ function PlayerHand() {
       {isDockOpenGuarded && (
         <div className={styles.fanOpenGuard} data-fan-keep-open="" />
       )}
-      {collapseButton && (
+      {collapseButton && !(showsPortraitFan && !portraitBoard) && (
         <div className={styles.fanCollapseDock} style={collapseDockStyle}>
           {collapseButton}
         </div>

@@ -25,7 +25,7 @@ export const Board = React.memo(function Board() {
 
   if (useOldScreen) {
     return (
-      <div className={styles.gameBoard}>
+      <div className={styles.gameBoard} data-fan-portrait-board="">
         <AmbientParticles />
         <ManualModePanel />
         <OpponentBoardGrid swapPlayers={isSpectatorViewingPlayer2} />

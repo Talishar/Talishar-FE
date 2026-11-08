@@ -60,6 +60,13 @@ export const FAN_DOCK_OPEN_GUARD_MS = 300;
 export const FAN_DOCK_START_ATTR = 'data-fan-dock-start';
 export const FAN_OPPONENT_HAND_MIN_STEP_PX = 4;
 export const FAN_KEEP_OPEN_ATTR = 'data-fan-keep-open';
+export const FAN_PORTRAIT_BODY_CLASS = 'fanPortraitHand';
+export const FAN_PORTRAIT_BOARD_ATTR = 'data-fan-portrait-board';
+export const FAN_PORTRAIT_ARROW_ATTR = 'data-fan-portrait-arrow';
+export const FAN_PORTRAIT_SEAM_VAR = '--fan-portrait-seam';
+export const FAN_PORTRAIT_HAND_GAP_PX = 10;
+export const FAN_PORTRAIT_EDGE_PX = 3;
+export const FAN_PORTRAIT_MAX_GROWTH = 1.15;
 
 export const FAN_DROP_FAST_RATE = 160;
 export const FAN_DROP_SLOW_RATE = 21;
@@ -292,4 +299,29 @@ export function applyFanHover(
       })
     };
   });
+}
+
+export function portraitFanFit(
+  screenHeight: number,
+  boardBottom: number
+): { cardHeight: number; hiddenRatio: number } {
+  const base = screenHeight * FAN_CARD_HEIGHT_RATIO;
+  const theta = FAN_MOBILE_MAX_ROTATION_DEG;
+  const drop = 0.005 * theta + Math.sin((theta * Math.PI) / 180) / 3;
+  const wholeRatio = 1 - 2 / 3 / FAN_CARD_ART_ASPECT - drop;
+  const handTop = boardBottom + FAN_PORTRAIT_HAND_GAP_PX;
+  const fit =
+    (screenHeight - FAN_PORTRAIT_EDGE_PX - handTop) / (1 - wholeRatio);
+  const cardHeight = Math.min(
+    base * FAN_PORTRAIT_MAX_GROWTH,
+    Math.max(base, fit)
+  );
+  const y = Math.min(
+    cardHeight * FAN_REST_HIDDEN_RATIO,
+    Math.max(
+      handTop - screenHeight + cardHeight,
+      cardHeight * wholeRatio - FAN_PORTRAIT_EDGE_PX
+    )
+  );
+  return { cardHeight, hiddenRatio: y / cardHeight };
 }

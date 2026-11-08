@@ -8,6 +8,7 @@ import CardImage from '../cardImage/CardImage';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import CountersOverlay from '../countersOverlay/CountersOverlay';
 import { selectSidePlayer } from 'features/game/perspective';
+import classNames from 'classnames';
 
 export const PHONE_PORTRAIT_QUERY =
   '(orientation: portrait) and (max-width: 600px)';
@@ -48,8 +49,12 @@ export function Effect(prop: CardProp) {
   );
 }
 
-export default function Effects(props: Player & { underEquipment?: boolean }) {
-  const classCSS = props.underEquipment
+export default function Effects(
+  props: Player & { underEquipment?: boolean; inBoard?: boolean }
+) {
+  const classCSS = props.inBoard
+    ? classNames(styles.inBoard, { [styles.inBoardOpponent]: !props.isPlayer })
+    : props.underEquipment
     ? styles.underEquipment
     : props.isPlayer
     ? styles.isPlayer
