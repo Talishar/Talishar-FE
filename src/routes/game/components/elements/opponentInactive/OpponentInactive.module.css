@@ -13,6 +13,7 @@
   border-radius: 10px;
   animation: slideIn 0.3s ease-out;
   max-width: 250px;
+  user-select: none;
 }
 
 /* Urgency is conveyed by the icon and red leave button; the frame stays
