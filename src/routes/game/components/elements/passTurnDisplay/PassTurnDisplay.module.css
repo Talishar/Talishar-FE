@@ -407,21 +407,3 @@
     font-size: calc(16 * var(--fan-px));
   }
 }
-
-:global(body.fanPortraitHand) .passTurnDisplay,
-:global(body.fanPortraitHand) .passTurnDisplayActive,
-:global(body.fanPortraitHand) .spectatorDisplay {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
-  padding: 0;
-  font-size: clamp(0.55rem, 2.4vw, 0.95rem);
-  letter-spacing: 0;
-  line-height: 1.1;
-  text-align: center;
-  white-space: normal;
-  overflow-wrap: anywhere;
-}
