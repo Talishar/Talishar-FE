@@ -24,7 +24,8 @@ const UNDO_RE =
   /\b(?:undid (?:their|the) last action|requested to undo the last action)\b/i;
 const UNDO_LIMIT_RE =
   /^Cannot undo further: Please revert to start of this\/previous turn instead\.$/i;
-const DAMAGE_RE = /\b(?:damage|lost life|gained life|won|conceded|forfeit)\b/i;
+const DAMAGE_RE =
+  /\b(?:damage|lost life|gained life|won(?! the roll)|conceded|forfeit)\b/i;
 const ACTION_RE = /^Player [12] (?:played|activated|blocked with)\b/i;
 const IRREVERSIBLE_RE =
   /\b(?:destroyed|banished|discarded|put .*?(?:bottom|top)|added to arsenal|drew|shuffled|revealed)\b/i;
