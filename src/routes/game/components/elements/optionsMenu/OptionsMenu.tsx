@@ -327,14 +327,6 @@ const OptionsContent = ({ searchQuery }: { searchQuery: string }) => {
                   {t('OPTIONS_MENU.CONCEDE')}
                 </button>
               )}
-              {playerID !== 3 && !isReplay && (
-                <button
-                  className={styles.buttonDiv}
-                  onClick={clickOfferDrawHandler}
-                >
-                  {t('OPTIONS_MENU.OFFER_DRAW')}
-                </button>
-              )}
             </div>
 
             {playerID !== 3 && (
@@ -404,6 +396,14 @@ const OptionsContent = ({ searchQuery }: { searchQuery: string }) => {
                     }}
                   >
                     {t('OPTIONS_MENU.COPY_SNAPSHOT_INVITE')}
+                  </button>
+                )}
+                {!isReplay && (
+                  <button
+                    className={styles.buttonDiv}
+                    onClick={clickOfferDrawHandler}
+                  >
+                    {t('OPTIONS_MENU.OFFER_DRAW')}
                   </button>
                 )}
               </div>

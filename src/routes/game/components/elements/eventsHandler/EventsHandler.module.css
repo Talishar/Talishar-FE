@@ -345,6 +345,55 @@
   max-width: 460px;
 }
 
+.dialogTitle {
+  padding: 1rem 1.25rem 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(var(--theme-on-surface-rgb), 0.55);
+}
+
+.drawOffer .container {
+  border-color: rgba(255, 92, 108, 0.7);
+  box-shadow: 0 0 0 1px rgba(255, 92, 108, 0.25),
+    0 0 24px rgba(196, 30, 58, 0.35);
+}
+
+.drawOffer .dialogTitle {
+  font-size: 1.35rem;
+  letter-spacing: 0.06em;
+  color: #ff5c6c;
+}
+
+.dialogFooter button.acceptDraw {
+  background-color: rgba(196, 30, 58, 0.25);
+  border-color: rgba(255, 92, 108, 0.6);
+  color: #ff8a96;
+}
+
+.dialogFooter button.acceptDraw:hover {
+  background-color: rgba(196, 30, 58, 0.4);
+  border-color: rgba(255, 92, 108, 0.85);
+  color: #ffd0d5;
+}
+
+.dialogTitle + .dialogHeader {
+  padding-top: 0.4rem;
+}
+
+@media (max-width: 600px) {
+  .modal,
+  :global(body.fanLandscapeHand) .modal {
+    left: 50%;
+  }
+
+  .container {
+    min-width: 0;
+    max-width: calc(100vw - 32px);
+  }
+}
+
 .dialogHeader {
   padding: 1.1rem 1.25rem;
   font-size: 0.95rem;

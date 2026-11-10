@@ -455,7 +455,7 @@ export const EventsHandler = React.memo(() => {
               setShowModal(true);
               setModalType(ModalType.RequestDraw);
               setModal(
-                'Your opponent offered a draw. No stats will be reported. Do you accept?'
+                'Your opponent is offering to end the game as a draw. No stats will be reported.'
               );
             }
             continue;
@@ -515,18 +515,37 @@ export const EventsHandler = React.memo(() => {
     }
   }, [events, dispatch, playerID, isShuffleSoundOff, playShuffleSound]);
 
-  if (showModal)
+  if (showModal) {
+    const isDrawOffer = modalType === ModalType.RequestDraw;
+    const modalTitle = isDrawOffer
+      ? 'Draw offer'
+      : isRequestModal(modalType)
+      ? 'Undo request'
+      : null;
     return (
       <>
         {createPortal(
-          <dialog open className={styles.modal}>
+          <dialog
+            open
+            className={`${styles.modal} ${isDrawOffer ? styles.drawOffer : ''}`}
+          >
             <div className={styles.container}>
+              {modalTitle && (
+                <div className={styles.dialogTitle}>{modalTitle}</div>
+              )}
               <div className={styles.dialogHeader}>
                 {modal}
               </div>
               <div className={styles.dialogFooter}>
-                <button onClick={clickYes}>{t('GAME_LOBBY.YES')}</button>
-                <button onClick={clickNo}>{t('GAME_LOBBY.NO')}</button>
+                <button
+                  onClick={clickYes}
+                  className={isDrawOffer ? styles.acceptDraw : undefined}
+                >
+                  {isDrawOffer ? 'Accept draw' : t('GAME_LOBBY.YES')}
+                </button>
+                <button onClick={clickNo}>
+                  {isDrawOffer ? 'Decline' : t('GAME_LOBBY.NO')}
+                </button>
               </div>
             </div>
           </dialog>,
@@ -534,6 +553,7 @@ export const EventsHandler = React.memo(() => {
         )}
       </>
     );
+  }
   return null;
 });
 
