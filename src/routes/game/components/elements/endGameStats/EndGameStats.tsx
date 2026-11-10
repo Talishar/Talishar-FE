@@ -61,6 +61,62 @@ const getSortableHeaderProps = (
   }
 });
 
+export interface DiseasesApplied {
+  created?: { [cardId: string]: number };
+  damage?: { [cardId: string]: number };
+}
+
+const DISEASES: { id: string; name: string; harm?: 'DAMAGE' | 'LIFE_LOST' }[] =
+  [
+    { id: 'bloodrot_pox', name: 'Bloodrot Pox', harm: 'DAMAGE' },
+    { id: 'frailty', name: 'Frailty' },
+    { id: 'inertia', name: 'Inertia' },
+    { id: 'exertion', name: 'Exertion', harm: 'LIFE_LOST' }
+  ];
+
+interface DiseaseStatRow {
+  key: string;
+  labelKey: string;
+  name: string;
+  csvLabel: string;
+  value: number;
+}
+
+const diseaseStatRows = (diseases?: DiseasesApplied): DiseaseStatRow[] => {
+  if (!diseases) return [];
+  const rows: DiseaseStatRow[] = [];
+  for (const disease of DISEASES) {
+    const created = diseases.created?.[disease.id] ?? 0;
+    if (created > 0) {
+      rows.push({
+        key: `${disease.id}-created`,
+        labelKey: 'END_GAME.DISEASE_APPLIED',
+        name: disease.name,
+        csvLabel: `${disease.name} Applied`,
+        value: created
+      });
+    }
+  }
+  for (const disease of DISEASES) {
+    if (!disease.harm) continue;
+    const created = diseases.created?.[disease.id] ?? 0;
+    const harm = diseases.damage?.[disease.id] ?? 0;
+    if (created > 0) {
+      const lifeLost = disease.harm === 'LIFE_LOST';
+      rows.push({
+        key: `${disease.id}-harm`,
+        labelKey: lifeLost
+          ? 'END_GAME.DISEASE_LIFE_LOST'
+          : 'END_GAME.DISEASE_DAMAGE',
+        name: disease.name,
+        csvLabel: `${disease.name} ${lifeLost ? 'Life Lost' : 'Damage'}`,
+        value: harm
+      });
+    }
+  }
+  return rows;
+};
+
 type CardSortField =
   | 'played'
   | 'blocked'
@@ -232,6 +288,7 @@ export interface EndGameData extends AggregateStats {
   startingLife?: number;
   opponentStartingLife?: number;
   contractsCompleted?: number;
+  diseasesApplied?: DiseasesApplied;
   disruptionValuePerCard?: number;
 }
 
@@ -1179,6 +1236,14 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
             content += `Contracts Completed,${playerData.contractsCompleted}\n\n`;
           }
 
+          const diseaseRows = diseaseStatRows(playerData.diseasesApplied);
+          if (diseaseRows.length > 0) {
+            for (const row of diseaseRows) {
+              content += `${row.csvLabel},${row.value}\n`;
+            }
+            content += '\n';
+          }
+
           content += 'CARD PLAY STATS\n';
           content += 'Card Name,Played,Blocked,Pitched,Discarded,Times Hit';
 
@@ -1877,6 +1942,15 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
                     </span>
                   </div>
                 )}
+
+                {diseaseStatRows(data.diseasesApplied).map((row) => (
+                  <div className={styles.infoRow} key={row.key}>
+                    <span className={styles.infoLabel}>
+                      {t(row.labelKey, { name: row.name })}
+                    </span>
+                    <span className={styles.infoValue}>{row.value}</span>
+                  </div>
+                ))}
 
                 {/* Time Values */}
                 <div className={styles.infoRow}>
