@@ -13,6 +13,7 @@ import ManualModePanel from '../leftColumn/ManualModePanel/ManualModePanel';
 import { useAppSelector } from 'app/Hooks';
 import { selectIsP2View } from 'features/game/perspective';
 import AmbientParticles from '../elements/ambientParticles';
+import EffectArrivals from '../elements/effects/EffectArrivals';
 
 export interface playAreaDimensions {
   dimension: number;
@@ -26,6 +27,7 @@ export const Board = React.memo(function Board() {
   if (useOldScreen) {
     return (
       <div className={styles.gameBoard} data-fan-portrait-board="">
+        <EffectArrivals />
         <AmbientParticles />
         <ManualModePanel />
         <OpponentBoardGrid swapPlayers={isSpectatorViewingPlayer2} />
@@ -44,5 +46,10 @@ export const Board = React.memo(function Board() {
       </div>
     );
   }
-  return <GridBoard />;
+  return (
+    <>
+      <EffectArrivals />
+      <GridBoard />
+    </>
+  );
 });

@@ -169,3 +169,7 @@
   display: block;
   width: 100%;
 }
+
+.arriving {
+  visibility: hidden;
+}

@@ -1,0 +1,53 @@
+.layer {
+  position: fixed;
+  inset: 0;
+  z-index: 1500;
+  pointer-events: none;
+}
+
+.dim {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+}
+
+.cardPlayer,
+.cardOpponent {
+  position: fixed;
+  overflow: hidden;
+  border-radius: 4.5%;
+  box-sizing: border-box;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  will-change: left, top, width, height, opacity;
+}
+
+.cardPlayer {
+  border: 1px solid deepskyblue;
+}
+
+.cardOpponent {
+  border: 1px solid red;
+}
+
+.holding {
+  pointer-events: auto;
+}
+
+.full,
+.crop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.full {
+  object-fit: cover;
+}
+
+.crop {
+  object-fit: cover;
+  opacity: 0;
+}
