@@ -23,8 +23,8 @@ import styles from './EffectArrivals.module.css';
 const MOBILE_QUERY = '(max-width: 1200px)';
 const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
 const FLY_MS = 420;
-const HOLD_MS = 200;
-const HOLD_QUEUED_MS = 600;
+const HOLD_MS = 1200;
+const HOLD_QUEUED_MS = 1000;
 const SHRINK_MS = 480;
 const CARD_RATIO = 628 / 450;
 
@@ -61,21 +61,7 @@ const bigBox = (): Box => {
   return centeredBox(vw / 2, vh * 0.45, width);
 };
 
-const originBox = (side: EffectSide): Box => {
-  const vw = window.innerWidth;
-  const vh = window.innerHeight;
-  if (side === 'opponent') return centeredBox(vw / 2, -40, 64);
-  const hand = Array.from(
-    document.querySelectorAll<HTMLElement>('[data-hand-card-number]')
-  )
-    .map((el) => el.getBoundingClientRect())
-    .filter((r) => r.width > 0 && r.top < vh);
-  if (hand.length === 0) return centeredBox(vw / 2, vh - 60, 64);
-  const left = Math.min(...hand.map((r) => r.left));
-  const right = Math.max(...hand.map((r) => r.right));
-  const top = Math.min(...hand.map((r) => r.top));
-  return centeredBox((left + right) / 2, top + 50, 64);
-};
+const originBox = (): Box => centeredBox(window.innerWidth / 2, -40, 64);
 
 const findSlot = (side: EffectSide, key: string): Box | null => {
   const candidates = document.querySelectorAll<HTMLElement>(
@@ -135,9 +121,6 @@ export default function EffectArrivals() {
   const reducedMotion = useReducedMotionSetting();
   const enabled = mobile && !reducedMotion && !osReducedMotion;
   const perspective = useAppSelector(selectIsP2View);
-  const playerEffects = useAppSelector(
-    (state) => selectSidePlayer(state, true).Effects
-  );
   const opponentEffects = useAppSelector(
     (state) => selectSidePlayer(state, false).Effects
   );
@@ -155,7 +138,6 @@ export default function EffectArrivals() {
   );
 
   useNewEffects('opponent', opponentEffects, enabled, perspective, enqueue);
-  useNewEffects('player', playerEffects, enabled, perspective, enqueue);
 
   useEffect(() => {
     if (enabled || queueRef.current.length === 0) return;
@@ -235,7 +217,7 @@ function ArrivalCard({
       await preload(fullSrc);
       if (cancelled) return;
 
-      const start = originBox(side);
+      const start = originBox();
       await Promise.all([
         play(
           card,
