@@ -447,9 +447,10 @@
   min-height: 1.8rem;
 }
 
-.removedNext {
-  color: var(--theme-text-muted, #aaa);
-  font-size: 0.7rem;
+.saveTitleIcons {
+  display: flex;
+  gap: 0.3rem;
+  margin-left: auto;
 }
 
 .saveActions {
@@ -619,26 +620,16 @@
 
 .saveCard .favoriteButton,
 .saveCard .noteButton {
-  position: absolute;
-  top: 0.45rem;
-  right: 0.45rem;
-  z-index: 1;
-  border: 0;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.6) !important;
+  width: 1.8rem !important;
+  height: 1.8rem;
 }
 
 .favoriteButton {
   color: rgba(var(--theme-on-surface-rgb), 0.5);
 }
 
-.saveCard .favoriteButton {
-  color: rgba(255, 255, 255, 0.8);
-}
-
 .favoriteButton:hover:not(:disabled),
-.favoriteActive,
-.saveCard .favoriteActive {
+.favoriteActive {
   color: var(--theme-primary, #f0c94d);
 }
 
@@ -646,26 +637,13 @@
   display: block;
 }
 
-.saveCard .noteButton {
-  right: 2.95rem;
-}
-
 .noteButton {
   color: rgba(var(--theme-on-surface-rgb), 0.5);
-}
-
-.saveCard .noteButton {
-  color: rgba(255, 255, 255, 0.8);
 }
 
 .noteButton:hover:not(:disabled),
 .noteActive {
   color: rgba(var(--theme-on-surface-rgb), 0.95);
-}
-
-.saveCard .noteButton:hover:not(:disabled),
-.saveCard .noteActive {
-  color: #fff;
 }
 
 .noteButton svg {

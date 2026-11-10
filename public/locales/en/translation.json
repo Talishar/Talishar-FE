@@ -980,7 +980,6 @@
     "STORAGE_OTHER_other": "{{count}} other saves",
     "STORAGE_NOTE": "Replays and snapshots share these slots. When they are full, a new save removes your oldest non-favorite.",
     "STORAGE_ALL_FAVORITES": "Every slot is a favorite, so new saves will not be kept. Unfavorite one to make room.",
-    "REMOVED_NEXT": "Removed next when full",
     "FILTER_LABEL": "Show",
     "FILTER_ALL": "All",
     "FILTER_REPLAYS": "Replays",

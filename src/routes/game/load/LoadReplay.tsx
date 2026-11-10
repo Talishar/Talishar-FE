@@ -105,7 +105,7 @@ const ReplaySlotMeter = ({
   const favoriteSlots = Math.min(savedReplayData.favoriteSlots ?? 0, usedSlots);
   const otherSlots = usedSlots - favoriteSlots;
   const freeSlots = maxSlots - usedSlots;
-  const canUpgrade = savedReplayData.nextSlotTier !== null;
+  const canUpgrade = savedReplayData.nextSlotTier !== null && freeSlots === 0;
   const usedLabel = t('LOAD_REPLAY.STORAGE_USED', {
     used: usedSlots,
     max: maxSlots
@@ -275,18 +275,6 @@ const ReplayGame = () => {
     snapshots: t('LOAD_REPLAY.FILTER_SNAPSHOTS'),
     favorites: t('LOAD_REPLAY.FILTER_FAVORITES')
   };
-  const removedNextNumber =
-    (savedReplayData?.maxSlots ?? 0) > 0
-      ? savedReplays
-          .filter((entry) => !entry.favorite)
-          .reduce<number | null>(
-            (oldest, entry) =>
-              oldest === null || entry.replayNumber < oldest
-                ? entry.replayNumber
-                : oldest,
-            null
-          )
-      : null;
   const normalizedQuery = searchQuery.trim().toLowerCase();
   const visibleSaves = savedReplays.filter((entry) => {
     if (saveFilter === 'replays' && entry.type === 'snapshot') return false;
@@ -534,15 +522,14 @@ const ReplayGame = () => {
             <HeroCrop heroId={entry.p2HeroCardId} />
           </div>
         )}
-        {!isList && noteButton}
-        {!isList && favoriteButton}
         <div className={styles.saveInfo}>
           <div className={styles.saveTitleRow}>
             <span className={styles.replayNumber}>{numberLabel}</span>
-            {entry.replayNumber === removedNextNumber && (
-              <span className={styles.removedNext}>
-                {t('LOAD_REPLAY.REMOVED_NEXT')}
-              </span>
+            {!isList && (
+              <div className={styles.saveTitleIcons}>
+                {noteButton}
+                {favoriteButton}
+              </div>
             )}
           </div>
           <span className={styles.replayPlayers} title={replayLabel(entry)}>
