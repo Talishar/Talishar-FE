@@ -1016,6 +1016,11 @@
       },
       "VISIBILITY": "可见性"
     },
+    "FANNED_HAND_TIP": {
+      "CLOSE": "",
+      "GOT_IT": "",
+      "TEXT": ""
+    },
     "FULLSCREEN": "",
     "HIDE_ARENA": "",
     "HOLD_PRIORITY_LABEL": "",
