@@ -285,20 +285,6 @@
   z-index: 5;
 }
 
-:is(
-    .gameBoardGrid,
-    .MirroredOpponentGameBoardGrid,
-    .MirroredPlayerGameBoardGrid,
-    .MirroredBothGameBoardGrid,
-    .SwappedGameBoardGrid,
-    .SwappedMirroredOpponentGameBoardGrid,
-    .SwappedMirroredPlayerGameBoardGrid,
-    .SwappedMirroredBothGameBoardGrid
-  )
-  > div:not(.combatChain):hover {
-  z-index: 15;
-}
-
 .pTwoLegs {
   grid-area: pTwoLegs;
   aspect-ratio: 1;
@@ -345,6 +331,10 @@
 .pTwoHero {
   grid-area: pTwoHero;
   aspect-ratio: 1;
+}
+
+.pTwoHero:hover {
+  z-index: 15;
 }
 
 .pTwoWeaponRZone {
@@ -431,6 +421,10 @@
 .pOneHero {
   grid-area: pOneHero;
   aspect-ratio: 1;
+}
+
+.pOneHero:hover {
+  z-index: 15;
 }
 
 .pOneWeaponRZone {
