@@ -104,3 +104,39 @@ export const formatDeckLabel = (
   const availableForName = Math.max(1, maxLength - formatStr.length - 3);
   return `${name.substring(0, availableForName)}...${formatStr}`;
 };
+
+// Base format family, so "Open CC", "Competitive CC" and "Classic Constructed" all match
+export const getBaseFormatType = (format: string | null): string => {
+  if (!format) return '';
+  const readable = getReadableFormatName(format).toLowerCase();
+
+  if (readable.includes('living legend') || readable.includes('ll'))
+    return 'living legend';
+  if (readable.includes('classic constructed') || readable.includes('cc'))
+    return 'classic constructed';
+  if (readable.includes('blitz')) return 'blitz';
+  if (readable.includes('silver age') || readable.includes('sage'))
+    return 'silver age';
+  if (readable.includes('commoner')) return 'commoner';
+  if (readable.includes('clash')) return 'clash';
+  if (readable.includes('sealed')) return 'sealed';
+  if (readable.includes('draft') || readable.includes('limited'))
+    return 'draft / limited';
+  if (readable.includes('precon')) return 'preconstructed decks';
+
+  return readable;
+};
+
+export const filterDecksForFormat = <T extends { format?: string | null }>(
+  decks: T[],
+  gameFormat: string | null
+): T[] => {
+  const isOpenFormat =
+    !!gameFormat &&
+    getReadableFormatName(gameFormat).toLowerCase().includes('open');
+  if (isOpenFormat) return decks;
+  const baseGameFormat = getBaseFormatType(gameFormat);
+  return decks.filter(
+    (deck) => !!deck.format && getBaseFormatType(deck.format) === baseGameFormat
+  );
+};

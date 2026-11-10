@@ -18,6 +18,8 @@ import useShowModal from 'hooks/useShowModals';
 import { FaEye, FaEyeSlash, FaEllipsisH, FaExchangeAlt } from 'react-icons/fa';
 import classNames from 'classnames';
 import { PiFileCsvFill, PiCameraFill } from 'react-icons/pi';
+import { MdSwapHoriz } from 'react-icons/md';
+import { markRematchDeckChange } from 'routes/game/lobby/components/changeDeck/rematchDeckIntent';
 import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import MetafyLogo from 'img/MetafyGradient.svg';
@@ -178,6 +180,12 @@ const EndGameScreen = () => {
     setShowStats(!showStats);
   };
 
+  const handleRematchNewDeck = () => {
+    markRematchDeckChange(gameInfo.gameID);
+    dispatch(submitButton({ button: { mode: PROCESS_INPUT.FULL_REMATCH } }));
+    setMoreOpen(false);
+  };
+
   const handleSwapHeroesRematch = () => {
     dispatch(
       submitButton({ button: { mode: PROCESS_INPUT.SWAP_HEROES_REMATCH } })
@@ -243,6 +251,16 @@ const EndGameScreen = () => {
                         onClick={() => setMoreOpen(false)}
                       />
                       <div className={styles.dropdownMenu} style={menuStyle}>
+                        <button
+                          className={styles.dropdownItem}
+                          onClick={handleRematchNewDeck}
+                        >
+                          <MdSwapHoriz
+                            aria-hidden="true"
+                            className={styles.dropdownIcon}
+                          />{' '}
+                          {t('END_GAME.REMATCH_NEW_DECK')}
+                        </button>
                         <button
                           className={styles.dropdownItem}
                           onClick={handleSwapHeroesRematch}

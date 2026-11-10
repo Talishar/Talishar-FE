@@ -5,7 +5,7 @@ import { DeckResponse } from 'interface/API/GetLobbyInfo.php';
 import styles from './StickyFooter.module.css';
 import classNames from 'classnames';
 import { HiClipboardCopy, HiClipboardCheck } from 'react-icons/hi';
-import { MdGames } from 'react-icons/md';
+import { MdGames, MdSwapHoriz } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 
 export type LobbyPhase = 'equipment' | 'deck' | 'legacy';
@@ -21,6 +21,7 @@ export type DeckSize = {
   handleLeave: (e: React.MouseEvent<HTMLButtonElement>) => void;
   onUnreadySideboard?: () => void;
   onSendInviteClick?: () => void;
+  onChangeDeckClick?: () => void;
   onIsValidChange?: (isValid: boolean) => void;
   phase?: LobbyPhase;
   canSubmitEquipment?: boolean;
@@ -39,6 +40,7 @@ const StickyFooter = ({
   handleLeave,
   onUnreadySideboard,
   onSendInviteClick,
+  onChangeDeckClick,
   onIsValidChange,
   phase = 'legacy',
   canSubmitEquipment = false,
@@ -226,6 +228,17 @@ const StickyFooter = ({
                 aria-label={t('GAME_LOBBY.SEND_INVITE_FRIEND')}
               >
                 <MdGames />
+              </button>
+            )}
+            {onChangeDeckClick && (
+              <button
+                className={styles.iconButton}
+                onClick={onChangeDeckClick}
+                type="button"
+                title={t('GAME_LOBBY.CHANGE_DECK')}
+                aria-label={t('GAME_LOBBY.CHANGE_DECK')}
+              >
+                <MdSwapHoriz />
               </button>
             )}
           </div>

@@ -11,6 +11,8 @@ export interface JoinGameAPI {
   favoriteDecks?: string; //This one is kind of weird. It's the favorite deck index, then the string "<fav>" then the favorite deck link
   gameDescription?: string; //Just a string with the game description
   matchup?: string; //The matchup ID ref
+  changeDeck?: boolean; //Swap a seated player's deck while still in the lobby
+  authKey?: string;
 }
 
 export type JoinGameFormik = GameEntryFormik;

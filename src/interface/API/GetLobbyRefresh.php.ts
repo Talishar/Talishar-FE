@@ -42,6 +42,7 @@ export interface GetLobbyRefreshResponse {
   opponentEquipmentSubmitted?: boolean;
   canSubmitEquipment?: boolean;
   canUnreadyEquipment?: boolean;
+  canChangeDeck?: boolean;
   myDeckLink?: string;
   matchups?: Matchup[];
   legalHeroes?: LegalHero[];

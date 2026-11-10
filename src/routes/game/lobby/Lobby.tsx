@@ -26,6 +26,8 @@ import deckValidation from './validation';
 import StickyFooter, {
   LobbyPhase
 } from './components/stickyFooter/StickyFooter';
+import ChangeDeckModal from './components/changeDeck/ChangeDeckModal';
+import { consumeRematchDeckChange } from './components/changeDeck/rematchDeckIntent';
 import { toast } from 'react-hot-toast';
 import useAuth from 'hooks/useAuth';
 import useAdScript from 'hooks/useAdScript';
@@ -405,6 +407,18 @@ const Lobby = () => {
     useSubmitLobbyInputMutation();
 
   const [kickPlayerMutation] = useKickPlayerMutation();
+
+  const [isChangeDeckOpen, setIsChangeDeckOpen] = useState(false);
+  const canChangeDeck = !!gameLobby?.canChangeDeck && playerID !== 3;
+
+  useEffect(() => {
+    if (!canChangeDeck) {
+      setIsChangeDeckOpen(false);
+      return;
+    }
+    if (gameLobby?.amIChoosingFirstPlayer) return;
+    if (consumeRematchDeckChange(gameID)) setIsChangeDeckOpen(true);
+  }, [canChangeDeck, gameLobby?.amIChoosingFirstPlayer, gameID]);
 
   const handleKickPlayer = async () => {
     try {
@@ -1766,6 +1780,9 @@ const Lobby = () => {
                 )
               }
               onIsValidChange={setIsDeckValid}
+              onChangeDeckClick={
+                canChangeDeck ? () => setIsChangeDeckOpen(true) : undefined
+              }
               phase={lobbyPhase}
               canSubmitEquipment={gameLobby?.canSubmitEquipment ?? false}
               canUnreadyEquipment={gameLobby?.canUnreadyEquipment ?? false}
@@ -1781,6 +1798,15 @@ const Lobby = () => {
       </Formik>
       <CardPortal />
       <ChatCardDetail />
+      <ChangeDeckModal
+        isOpen={isChangeDeckOpen && canChangeDeck}
+        onClose={() => setIsChangeDeckOpen(false)}
+        onChanged={refetch}
+        gameID={gameID}
+        playerID={playerID}
+        authKey={authKey}
+        format={lobbyFormatCode}
+      />
 
       {/* Opponent note tooltip in lobby */}
       {opponentNote &&
