@@ -66,10 +66,24 @@ export interface DiseasesApplied {
   damage?: { [cardId: string]: number };
 }
 
-const DISEASES: { id: string; name: string; harm?: 'DAMAGE' | 'LIFE_LOST' }[] =
+type DiseaseHarm = 'DAMAGE' | 'LIFE_LOST' | 'DAMAGE_PREVENTED';
+
+const DISEASE_HARM_LABELS: Record<
+  DiseaseHarm,
+  { labelKey: string; csvSuffix: string }
+> = {
+  DAMAGE: { labelKey: 'END_GAME.DISEASE_DAMAGE', csvSuffix: 'Damage' },
+  LIFE_LOST: { labelKey: 'END_GAME.DISEASE_LIFE_LOST', csvSuffix: 'Life Lost' },
+  DAMAGE_PREVENTED: {
+    labelKey: 'END_GAME.DISEASE_DAMAGE_PREVENTED',
+    csvSuffix: 'Damage Prevented'
+  }
+};
+
+const DISEASES: { id: string; name: string; harm?: DiseaseHarm }[] =
   [
     { id: 'bloodrot_pox', name: 'Bloodrot Pox', harm: 'DAMAGE' },
-    { id: 'frailty', name: 'Frailty' },
+    { id: 'frailty', name: 'Frailty', harm: 'DAMAGE_PREVENTED' },
     { id: 'inertia', name: 'Inertia' },
     { id: 'exertion', name: 'Exertion', harm: 'LIFE_LOST' }
   ];
@@ -102,14 +116,12 @@ const diseaseStatRows = (diseases?: DiseasesApplied): DiseaseStatRow[] => {
     const created = diseases.created?.[disease.id] ?? 0;
     const harm = diseases.damage?.[disease.id] ?? 0;
     if (created > 0) {
-      const lifeLost = disease.harm === 'LIFE_LOST';
+      const { labelKey, csvSuffix } = DISEASE_HARM_LABELS[disease.harm];
       rows.push({
         key: `${disease.id}-harm`,
-        labelKey: lifeLost
-          ? 'END_GAME.DISEASE_LIFE_LOST'
-          : 'END_GAME.DISEASE_DAMAGE',
+        labelKey,
         name: disease.name,
-        csvLabel: `${disease.name} ${lifeLost ? 'Life Lost' : 'Damage'}`,
+        csvLabel: `${disease.name} ${csvSuffix}`,
         value: harm
       });
     }

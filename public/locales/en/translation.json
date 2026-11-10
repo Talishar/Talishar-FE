@@ -341,6 +341,7 @@
     "DISEASE_APPLIED": "{{name}} Applied:",
     "DISEASE_DAMAGE": "{{name}} Damage:",
     "DISEASE_LIFE_LOST": "{{name}} Life Lost:",
+    "DISEASE_DAMAGE_PREVENTED": "{{name}} Damage Prevented:",
     "DISRUPTED": "Disrupted",
     "DISRUPTED_CARD_COUNT_one": "{{count}} card",
     "DISRUPTED_CARD_COUNT_other": "{{count}} cards",

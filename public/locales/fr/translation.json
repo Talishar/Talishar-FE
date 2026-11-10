@@ -280,6 +280,7 @@
     "DISEASE_APPLIED": "{{name}} appliqués :",
     "DISEASE_DAMAGE": "Dommages de {{name}} :",
     "DISEASE_LIFE_LOST": "Vie perdue à cause de {{name}} :",
+    "DISEASE_DAMAGE_PREVENTED": "Dommages empêchés par {{name}} :",
     "DISRUPTED": "Perturbées",
     "DISRUPTED_CARD_COUNT_one": "{{count}} carte",
     "DISRUPTED_CARD_COUNT_other": "{{count}} cartes",
