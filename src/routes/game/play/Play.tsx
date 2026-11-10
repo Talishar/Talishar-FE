@@ -20,6 +20,7 @@ import SpectatorLoginRequired from 'components/SpectatorLoginRequired';
 import HeroVsHeroIntro from '../components/elements/heroVsHeroIntro/HeroVsHeroIntro';
 import OpponentInactive from '../components/elements/opponentInactive/OpponentInactive';
 import React, { useCallback, useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '../../../app/Hooks';
@@ -76,7 +77,7 @@ const GameOverlays = React.memo(function GameOverlays() {
       <OptionsMenu />
       <InventoryModal />
       <PlayerInputPopUp />
-      <OpponentInactive />
+      {createPortal(<OpponentInactive />, document.body)}
       <CardPortal />
     </>
   );
