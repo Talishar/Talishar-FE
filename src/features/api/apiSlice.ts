@@ -120,6 +120,11 @@ import {
   DeleteReplayResponse
 } from 'interface/API/GetSavedReplays.php';
 import {
+  GetRecentGamesResponse,
+  SaveRecentGameRequest,
+  SaveRecentGameResponse
+} from 'interface/API/GetRecentGames.php';
+import {
   HeroMasteryResponse,
   SaveHeroMasteryFrameRequest,
   SaveHeroMasteryFrameResponse
@@ -248,6 +253,7 @@ export const apiSlice = createApi({
     'Auth',
     'SystemMessage',
     'SavedReplays',
+    'RecentGames',
     'HeroMastery',
     'PlayerReports',
     'BlockReports'
@@ -563,6 +569,25 @@ export const apiSlice = createApi({
       }),
       providesTags: ['SavedReplays']
     }),
+    getRecentGames: builder.query<GetRecentGamesResponse, void>({
+      query: () => ({
+        url: URL_END_POINT.GET_RECENT_GAMES,
+        method: 'GET'
+      }),
+      providesTags: ['RecentGames']
+    }),
+    saveRecentGame: builder.mutation<
+      SaveRecentGameResponse,
+      SaveRecentGameRequest
+    >({
+      query: (body) => ({
+        url: URL_END_POINT.SAVE_RECENT_GAME,
+        method: 'POST',
+        body,
+        responseHandler: parseResponse
+      }),
+      invalidatesTags: ['SavedReplays', 'RecentGames']
+    }),
     getReplayTurns: builder.query<
       { turns: Array<{ player: 1 | 2; number: number }> },
       number
@@ -603,7 +628,7 @@ export const apiSlice = createApi({
         body,
         responseHandler: parseResponse
       }),
-      invalidatesTags: ['SavedReplays']
+      invalidatesTags: ['SavedReplays', 'RecentGames']
     }),
     shareReplay: builder.mutation<ShareReplayResponse, ShareReplayAPI>({
       query: (body) => ({
@@ -1160,6 +1185,8 @@ export const {
   useClearRustCountersMutation,
   useLoadReplayMutation,
   useGetSavedReplaysQuery,
+  useGetRecentGamesQuery,
+  useSaveRecentGameMutation,
   useGetReplayTurnsQuery,
   useSetReplayFavoriteMutation,
   useSetReplayNoteMutation,

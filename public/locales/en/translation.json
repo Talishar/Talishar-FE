@@ -996,6 +996,23 @@
     "NO_MATCHES": "No saves match your search.",
     "NO_FAVORITES": "No favorites yet. Star a save to protect it from cleanup."
   },
+  "RECENT_GAMES": {
+    "TITLE": "Recent games",
+    "SUBTITLE_one": "Your last game stays here for 24 hours, so you can still save the replay after leaving the game.",
+    "SUBTITLE_other": "Your last {{count}} games stay here for 24 hours, so you can still save the replay after leaving the game.",
+    "SLOTS_FULL": "All {{max}} of your replay slots are used. Delete a saved replay to save one of these.",
+    "SLOTS_FULL_FREE": "All {{max}} of your replay slots are used, so only your last game is kept. Delete a saved replay to save it and keep your last 3 games.",
+    "NO_FREE_SLOT": "No free slot",
+    "PLAYED": "Played {{date}}. {{expiry}}",
+    "EXPIRES_IN_one": "Expires in {{count}} hour",
+    "EXPIRES_IN_other": "Expires in {{count}} hours",
+    "UNKNOWN_PLAYERS": "Players unavailable",
+    "SAVE": "Save replay",
+    "SAVING": "Saving…",
+    "SAVED": "Saved as Replay #{{number}}.",
+    "SAVE_ERROR": "Unable to save this replay. Please try again.",
+    "WATCH_SAVED": "Watch #{{number}}"
+  },
   "LOGIN_REQUIRED": "You must be <1>logged in</1> to join public lobbies.",
   "MANUAL_MODE_PANEL": {
     "ACTION_POINTS": "Action Points",

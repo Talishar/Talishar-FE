@@ -407,6 +407,8 @@ export const URL_END_POINT = {
   CREATE_GAME: 'APIs/CreateGame.php',
   REPLAYS: 'APIs/CreateReplayGame.php',
   GET_SAVED_REPLAYS: 'APIs/GetSavedReplays.php',
+  GET_RECENT_GAMES: 'APIs/GetRecentGames.php',
+  SAVE_RECENT_GAME: 'APIs/SaveRecentGame.php',
   GET_REPLAY_TURNS: 'APIs/GetReplayTurns.php',
   SET_REPLAY_FAVORITE: 'APIs/SetReplayFavorite.php',
   SET_REPLAY_NOTE: 'APIs/SetReplayNote.php',
