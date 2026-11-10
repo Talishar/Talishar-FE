@@ -1,8 +1,14 @@
-import { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState
+} from 'react';
 import { useAppSelector } from 'app/Hooks';
 import { Card } from 'features/Card';
 import { selectIsP2View, selectSidePlayer } from 'features/game/perspective';
-import { isReducedMotion } from 'features/settings/accessibility';
+import { useReducedMotionSetting } from 'features/settings/accessibility';
 import { useMediaQuery } from 'hooks/useMediaQuery';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import { CARD_IMAGES_PATH, getCollectionCardImagePath } from 'utils';
@@ -15,6 +21,7 @@ import {
 import styles from './EffectArrivals.module.css';
 
 const MOBILE_QUERY = '(max-width: 1200px)';
+const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
 const FLY_MS = 420;
 const HOLD_MS = 200;
 const HOLD_QUEUED_MS = 600;
@@ -123,7 +130,10 @@ function useNewEffects(
 }
 
 export default function EffectArrivals() {
-  const enabled = useMediaQuery(MOBILE_QUERY);
+  const mobile = useMediaQuery(MOBILE_QUERY);
+  const osReducedMotion = useMediaQuery(REDUCED_MOTION_QUERY);
+  const reducedMotion = useReducedMotionSetting();
+  const enabled = mobile && !reducedMotion && !osReducedMotion;
   const perspective = useAppSelector(selectIsP2View);
   const playerEffects = useAppSelector(
     (state) => selectSidePlayer(state, true).Effects
@@ -133,6 +143,8 @@ export default function EffectArrivals() {
   );
   const [queue, setQueue] = useState<Arrival[]>([]);
   const nextUid = useRef(0);
+  const queueRef = useRef(queue);
+  queueRef.current = queue;
 
   const enqueue = useCallback(
     (side: EffectSide, key: string, cardNumber: string) => {
@@ -145,10 +157,16 @@ export default function EffectArrivals() {
   useNewEffects('opponent', opponentEffects, enabled, perspective, enqueue);
   useNewEffects('player', playerEffects, enabled, perspective, enqueue);
 
+  useEffect(() => {
+    if (enabled || queueRef.current.length === 0) return;
+    queueRef.current.forEach((a) => setEffectArrival(a.side, a.key, null));
+    setQueue([]);
+  }, [enabled]);
+
   const finish = useCallback(() => setQueue((q) => q.slice(1)), []);
 
   const active = queue[0];
-  if (!active) return null;
+  if (!enabled || !active) return null;
   return (
     <ArrivalCard
       key={active.uid}
@@ -208,7 +226,6 @@ function ArrivalCard({
       running.push(a);
       return a.finished.catch(() => undefined);
     };
-    const reduced = isReducedMotion();
     setEffectArrival(side, key, 'arriving');
 
     const run = async () => {
@@ -218,7 +235,7 @@ function ArrivalCard({
       await preload(fullSrc);
       if (cancelled) return;
 
-      const start = reduced ? big : originBox(side);
+      const start = originBox(side);
       await Promise.all([
         play(
           card,
@@ -226,7 +243,7 @@ function ArrivalCard({
             { ...boxFrames(start), opacity: 0 },
             { ...boxFrames(big), opacity: 1 }
           ],
-          reduced ? 200 : FLY_MS,
+          FLY_MS,
           'fx-arrival-fly'
         ),
         play(dim, [{ opacity: 0 }, { opacity: 1 }], FLY_MS, 'fx-arrival-dim')
@@ -247,7 +264,7 @@ function ArrivalCard({
       card.classList.remove(styles.holding);
       if (cancelled) return;
 
-      const slot = reduced ? null : findSlot(side, key);
+      const slot = findSlot(side, key);
       const shrink = slot
         ? [
             play(
