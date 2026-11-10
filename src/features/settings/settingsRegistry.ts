@@ -1,9 +1,6 @@
 import * as optConst from 'features/options/constants';
 import { DISABLE_EQUIPMENT_GEM_BUTTONS_COOKIE } from 'routes/game/components/elements/gemSlider/equipmentGemPreference';
-import {
-  ENABLE_FANNED_HAND_MOBILE_COOKIE,
-  ENABLE_FANNED_HAND_PC_COOKIE
-} from 'routes/game/components/zones/playerHand/fanLayout';
+import { CLASSIC_HAND_COOKIE } from 'routes/game/components/zones/playerHand/fanLayout';
 import { SORT_ZONES_BY_DEFAULT_COOKIE } from 'routes/game/components/zones/cardListZone/zoneSortPreference';
 import {
   FORCED_LAYOUT,
@@ -472,13 +469,13 @@ export const SETTINGS_DEFS: SettingDef[] = [
   },
   {
     kind: 'toggle',
-    key: 'fannedHandMobile',
+    key: 'classicHand',
     group: 'appearance',
-    labelKey: 'SETTINGS.FANNED_HAND_MOBILE',
-    tooltipKey: 'SETTINGS.FANNED_HAND_MOBILE_TOOLTIP',
+    labelKey: 'SETTINGS.CLASSIC_HAND',
+    tooltipKey: 'SETTINGS.CLASSIC_HAND_TOOLTIP',
     storage: 'device',
-    name: ENABLE_FANNED_HAND_MOBILE_COOKIE,
-    defaultOn: true
+    name: CLASSIC_HAND_COOKIE,
+    defaultOn: false
   },
   {
     kind: 'toggle',
@@ -490,16 +487,6 @@ export const SETTINGS_DEFS: SettingDef[] = [
     name: AUTO_LANDSCAPE_COOKIE,
     defaultOn: false,
     visible: () => canLockLandscape()
-  },
-  {
-    kind: 'toggle',
-    key: 'fannedHandPC',
-    group: 'appearance',
-    labelKey: 'SETTINGS.FANNED_HAND_PC',
-    tooltipKey: 'SETTINGS.FANNED_HAND_PC_TOOLTIP',
-    storage: 'device',
-    name: ENABLE_FANNED_HAND_PC_COOKIE,
-    defaultOn: true
   },
   {
     kind: 'radio',

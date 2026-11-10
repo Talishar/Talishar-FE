@@ -26,7 +26,7 @@ import { useMediaQuery } from 'hooks/useMediaQuery';
 import { useCookieValue } from 'utils/cookieStore';
 import { frameHost } from 'routes/game/play/forcedLayout/forcedLayout';
 import {
-  ENABLE_FANNED_HAND_PC_COOKIE,
+  CLASSIC_HAND_COOKIE,
   FANNED_HAND_MOBILE_QUERY
 } from '../../../zones/playerHand/fanLayout';
 import styles from '../LandscapeTip/LandscapeTip.module.css';
@@ -58,7 +58,7 @@ export default function FannedHandTip({
   const flagLoaded = flagEntity !== undefined;
   const seen = flagEntity?.value === '1';
   const isMobile = useMediaQuery(FANNED_HAND_MOBILE_QUERY);
-  const onByDefault = isUnset(useCookieValue(ENABLE_FANNED_HAND_PC_COOKIE));
+  const onByDefault = isUnset(useCookieValue(CLASSIC_HAND_COOKIE));
   const optionsOpen = useAppSelector(
     (state: RootState) => !!state.game.optionsMenu?.active
   );
