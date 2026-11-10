@@ -17,6 +17,7 @@ import useShortcut from 'hooks/useShortcut';
 import useSetting from 'hooks/useSetting';
 import useGameSound from 'hooks/useGameSound';
 import usePassShortcuts from 'hooks/usePassShortcuts';
+import usePromptPassGuard from 'hooks/usePromptPassGuard';
 import passTurnSound from 'sounds/prioritySound.wav';
 import { createPortal } from 'react-dom';
 import { updateOptions } from 'features/options/optionsSlice';
@@ -101,6 +102,7 @@ export default function PassTurnDisplay() {
   );
   const [playPassTurnSound, isMuted] = useGameSound(passTurnSound, 'priority');
   const { spacePasses, middleClickPasses } = usePassShortcuts();
+  const isPromptPassGuarded = usePromptPassGuard();
   const {
     activateReplayControl,
     isPlaying: isReplayPlaying,
@@ -193,7 +195,12 @@ export default function PassTurnDisplay() {
         return;
       }
 
-      if (isPassClickDebounced || isButtonInputInFlight) return;
+      if (
+        isPassClickDebounced ||
+        isButtonInputInFlight ||
+        isPromptPassGuarded()
+      )
+        return;
 
       startPassDebounce();
 
@@ -216,6 +223,7 @@ export default function PassTurnDisplay() {
       dispatch,
       isPassClickDebounced,
       isButtonInputInFlight,
+      isPromptPassGuarded,
       startPassDebounce,
       isReplay,
       activateReplayControl

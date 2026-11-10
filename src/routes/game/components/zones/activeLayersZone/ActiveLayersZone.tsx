@@ -19,6 +19,7 @@ import {
 import ReorderLayers from './ReorderLayers';
 import useShowModal from 'hooks/useShowModals';
 import useOpponentPresencePrompt from 'hooks/useOpponentPresencePrompt';
+import usePromptPassGuard from 'hooks/usePromptPassGuard';
 import { submitButton } from 'features/game/GameSlice';
 import { PROCESS_INPUT } from 'appConstants';
 import {
@@ -63,6 +64,7 @@ export default function ActiveLayersZone() {
   const helpText = useOpponentPresencePrompt(playerPrompt?.helpText);
 
   const dispatch = useAppDispatch();
+  const isPromptPassGuarded = usePromptPassGuard();
 
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
@@ -221,6 +223,7 @@ export default function ActiveLayersZone() {
   }, [isDragging, yOffsetMV, xOffsetMV, xDragEnabled]);
 
   const handlePassTurn = () => {
+    if (isPromptPassGuarded()) return;
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
   };
 

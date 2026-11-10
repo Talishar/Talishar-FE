@@ -14,6 +14,7 @@ import { getGameInfo } from 'features/game/GameSlice';
 import { AiOutlinePlus, AiOutlineMinus } from 'react-icons/ai';
 import useGameSound from 'hooks/useGameSound';
 import usePassShortcuts from 'hooks/usePassShortcuts';
+import usePromptPassGuard from 'hooks/usePromptPassGuard';
 import passTurnSound from 'sounds/prioritySound.wav';
 import { createPortal } from 'react-dom';
 import useShortcut from 'hooks/useShortcut';
@@ -222,6 +223,7 @@ export function PassTurnDisplay() {
     (state: RootState) => state.game.gameInfo.isReplay
   );
   const { spacePasses, middleClickPasses } = usePassShortcuts();
+  const isPromptPassGuarded = usePromptPassGuard();
 
   const dispatch = useAppDispatch();
 
@@ -241,6 +243,7 @@ export function PassTurnDisplay() {
   }, [hasPriority]);
 
   const onPassTurn = () => {
+    if (!isReplay && isPromptPassGuarded()) return;
     if (!isReplay && preventPassPrompt && !showAreYouSureModal) {
       setShowAreYouSureModal(true);
     } else {
