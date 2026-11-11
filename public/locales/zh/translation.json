@@ -1548,7 +1548,7 @@
     "AUTO_LANDSCAPE_MOBILE": "",
     "AUTO_LANDSCAPE_MOBILE_TOOLTIP": "",
     "HIT_PREVIEW_EYE": "Eye of Ophidia",
-    "HIT_PREVIEW_EYE_TOOLTIP": "攻击期间，将鼠标悬停在眼睛上或点击它，即可查看命中后的场地。",
+    "HIT_PREVIEW_EYE_TOOLTIP": "攻击期间，将鼠标悬停在眼睛上或长按它，即可查看命中后的场地。",
     "HIT_PREVIEW_EYE_ARIA": "Eye of Ophidia",
     "FORCE_MOBILE_LAYOUT": "",
     "FORCE_MOBILE_LAYOUT_OPTIONS": {

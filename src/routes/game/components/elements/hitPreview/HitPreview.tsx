@@ -137,11 +137,9 @@ export default function HitPreviewEye() {
   );
   const previewing = useAppSelector(selectIsHitPreviewing);
   const [hoveredAt, setHoveredAt] = useState<number | null>(null);
-  const [pinnedAt, setPinnedAt] = useState<number | null>(null);
   const [fetchPreview] = apiSlice.endpoints.getPopUpContent.useLazyQuery();
   const placement = useEyePlacement(enabled);
-  const pinned = pinnedAt === lastUpdate;
-  const highlighted = isOpen && (pinned || hoveredAt === lastUpdate);
+  const highlighted = isOpen && hoveredAt === lastUpdate;
   const active = enabled && highlighted;
 
   useEffect(() => {
@@ -202,17 +200,19 @@ export default function HitPreviewEye() {
         })}
         style={placement}
         aria-label={t('SETTINGS.HIT_PREVIEW_EYE_ARIA')}
-        aria-pressed={pinned}
         aria-disabled={!isOpen}
+        data-suppress-touch-menu
         onPointerEnter={(event) => {
           if (event.pointerType === 'mouse' && isOpen) setHoveredAt(lastUpdate);
         }}
-        onPointerLeave={(event) => {
-          if (event.pointerType === 'mouse') setHoveredAt(null);
+        onPointerDown={(event) => {
+          if (event.pointerType !== 'mouse' && isOpen) setHoveredAt(lastUpdate);
         }}
-        onClick={() => {
-          if (isOpen) setPinnedAt(pinned ? null : lastUpdate);
+        onPointerLeave={() => setHoveredAt(null)}
+        onPointerUp={(event) => {
+          if (event.pointerType !== 'mouse') setHoveredAt(null);
         }}
+        onPointerCancel={() => setHoveredAt(null)}
       >
         <svg
           viewBox="0 0 100 100"

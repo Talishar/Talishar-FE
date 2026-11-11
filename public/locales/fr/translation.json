@@ -1643,7 +1643,7 @@
     "AUTO_LANDSCAPE_MOBILE": "Paysage automatique sur mobile",
     "AUTO_LANDSCAPE_MOBILE_TOOLTIP": "Passe la partie en paysage dès votre premier appui en portrait. Fonctionne avec la main en éventail sur mobile.",
     "HIT_PREVIEW_EYE": "Œil d'Ophidia",
-    "HIT_PREVIEW_EYE_TOOLTIP": "Pendant une attaque, survolez ou touchez l'œil pour voir le plateau après la touche.",
+    "HIT_PREVIEW_EYE_TOOLTIP": "Pendant une attaque, survolez l'œil ou maintenez le doigt dessus pour voir le plateau après la touche.",
     "HIT_PREVIEW_EYE_ARIA": "Œil d'Ophidia",
     "FORCE_MOBILE_LAYOUT": "Forcer la disposition mobile",
     "FORCE_MOBILE_LAYOUT_OPTIONS": {
