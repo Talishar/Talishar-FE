@@ -1,4 +1,5 @@
-.eye {
+.eye,
+.eye:hover {
   all: unset;
   position: fixed;
   z-index: 60;
@@ -23,13 +24,13 @@
   overflow: visible;
 }
 
-.closed {
+.eye.closed {
   cursor: default;
   filter: saturate(0.55) brightness(0.85)
     drop-shadow(0 1px 2px var(--theme-overlay));
 }
 
-.highlighted {
+.eye.highlighted {
   filter: drop-shadow(0 0 3px var(--theme-primary-hover))
     drop-shadow(0 1px 2px var(--theme-overlay));
 }
