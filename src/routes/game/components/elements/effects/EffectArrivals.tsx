@@ -78,23 +78,33 @@ const findSlot = (side: EffectSide, key: string): Box | null => {
 
 const preload = (src: string) =>
   Promise.race([
-    new Promise<void>((resolve) => {
+    new Promise<boolean>((resolve) => {
       const img = new Image();
-      img.onload = img.onerror = () => resolve();
+      img.onload = () => resolve(true);
+      img.onerror = () => resolve(false);
       img.src = src;
     }),
-    new Promise<void>((resolve) => setTimeout(resolve, 500))
+    new Promise<boolean>((resolve) => setTimeout(() => resolve(true), 500))
   ]);
+
+const ATTACK_TYPES = ['W', 'AA'];
+
+const isAttackSource = (card: Card, attackingCard: string | undefined) =>
+  card.cardNumber === attackingCard ||
+  (card.type ?? '').split(',').some((t) => ATTACK_TYPES.includes(t));
 
 function useNewEffects(
   side: EffectSide,
   effects: Card[] | undefined,
+  attackingCard: string | undefined,
   enabled: boolean,
   perspective: boolean,
   enqueue: (side: EffectSide, key: string, cardNumber: string) => void
 ) {
   const known = useRef<Set<string> | null>(null);
   const lastPerspective = useRef(perspective);
+  const attackingRef = useRef(attackingCard);
+  attackingRef.current = attackingCard;
 
   useLayoutEffect(() => {
     if (effects === undefined) return;
@@ -107,6 +117,7 @@ function useNewEffects(
       const seen = known.current;
       keys.forEach((key, i) => {
         if (seen.has(key)) return;
+        if (isAttackSource(effects[i], attackingRef.current)) return;
         setEffectArrival(side, key, 'arriving');
         enqueue(side, key, effects[i].cardNumber);
       });
@@ -124,6 +135,9 @@ export default function EffectArrivals() {
   const opponentEffects = useAppSelector(
     (state) => selectSidePlayer(state, false).Effects
   );
+  const attackingCard = useAppSelector(
+    (state) => state.game.activeChainLink?.attackingCard?.cardNumber
+  );
   const [queue, setQueue] = useState<Arrival[]>([]);
   const nextUid = useRef(0);
   const queueRef = useRef(queue);
@@ -137,7 +151,14 @@ export default function EffectArrivals() {
     []
   );
 
-  useNewEffects('opponent', opponentEffects, enabled, perspective, enqueue);
+  useNewEffects(
+    'opponent',
+    opponentEffects,
+    attackingCard,
+    enabled,
+    perspective,
+    enqueue
+  );
 
   useEffect(() => {
     if (enabled || queueRef.current.length === 0) return;
@@ -214,8 +235,13 @@ function ArrivalCard({
       const big = bigBox();
       Object.assign(card.style, boxFrames(big));
       card.style.opacity = '0';
-      await preload(fullSrc);
+      const loaded = await preload(fullSrc);
       if (cancelled) return;
+      if (!loaded) {
+        setEffectArrival(side, key, null);
+        onDone();
+        return;
+      }
 
       const start = originBox();
       await Promise.all([
