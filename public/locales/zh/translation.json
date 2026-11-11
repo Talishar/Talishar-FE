@@ -1547,9 +1547,9 @@
     "CLASSIC_HAND_TOOLTIP": "",
     "AUTO_LANDSCAPE_MOBILE": "",
     "AUTO_LANDSCAPE_MOBILE_TOOLTIP": "",
-    "HIT_PREVIEW_EYE": "命中预览之眼",
-    "HIT_PREVIEW_EYE_TOOLTIP": "当战斗链上有攻击时，在场地上显示一只眼睛。将鼠标悬停在上面或点击它，即可查看该攻击命中后的场地。",
-    "HIT_PREVIEW_EYE_ARIA": "预览此攻击命中后的场地",
+    "HIT_PREVIEW_EYE": "Eye of Ophidia",
+    "HIT_PREVIEW_EYE_TOOLTIP": "攻击期间，将鼠标悬停在眼睛上或点击它，即可查看命中后的场地。",
+    "HIT_PREVIEW_EYE_ARIA": "Eye of Ophidia",
     "FORCE_MOBILE_LAYOUT": "",
     "FORCE_MOBILE_LAYOUT_OPTIONS": {
       "NO": "",
