@@ -40,6 +40,34 @@ const BOARD_ZONES = [
   'Soul'
 ] as const;
 
+const USABLE_BORDERS = new Set(['6', '7', '8']);
+const CARD_FIELDS = [
+  ...BOARD_ZONES,
+  'Hand',
+  'Deck',
+  'DeckBack',
+  'Effects'
+] as const;
+
+export const viewOnlyCard = (card: Card): Card => ({
+  ...card,
+  action: undefined,
+  borderColor: USABLE_BORDERS.has(card.borderColor ?? '')
+    ? undefined
+    : card.borderColor
+});
+
+export const viewOnlyPlayer = (player: Player): Player => {
+  const result: Player = { ...player };
+  for (const field of CARD_FIELDS) {
+    const value = player[field];
+    if (Array.isArray(value))
+      (result[field] as Card[]) = value.map(viewOnlyCard);
+    else if (value) (result[field] as Card) = viewOnlyCard(value);
+  }
+  return result;
+};
+
 export const realPlayer = (player: Player): Player =>
   player.hitPreview?.real ?? player;
 

@@ -9,6 +9,10 @@
   pointer-events: auto;
   -webkit-tap-highlight-color: transparent;
   filter: drop-shadow(0 1px 2px var(--theme-overlay));
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 .eye:focus-visible {

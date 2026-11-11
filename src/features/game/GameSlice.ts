@@ -35,7 +35,12 @@ import { parseBackendJson } from 'utils/parseBackendResponse';
 import { CardStack } from '../../routes/game/components/zones/permanentsZone/PermanentsZone';
 import { reportPerformanceMetric } from 'utils/performanceMetrics';
 import { areZonesSortedByDefault } from 'routes/game/components/zones/cardListZone/zoneSortPreference';
-import { HitPreviewChange, hitPreviewPlayer, realPlayer } from './hitPreview';
+import {
+  HitPreviewChange,
+  hitPreviewPlayer,
+  realPlayer,
+  viewOnlyPlayer
+} from './hitPreview';
 
 const CHAT_RE = /<span[^>]*>(.*?):\s<\/span>/;
 
@@ -1215,7 +1220,7 @@ export const gameSlice = createSlice({
       for (const key of ['playerOne', 'playerTwo'] as const) {
         const real = realPlayer(game[key]);
         const merged: Player = {
-          ...preview[key],
+          ...viewOnlyPlayer(preview[key]),
           hitPreview: hitPreviewPlayer(real, changes, key)
         };
         for (const field of [
