@@ -198,6 +198,13 @@ function ArrivalCard({
   const skipHold = useRef<() => void>(() => undefined);
   const hasQueueRef = useRef(hasQueue);
   hasQueueRef.current = hasQueue;
+  const doneRef = useRef(false);
+  const finishOnce = useRef(onDone);
+  finishOnce.current = () => {
+    if (doneRef.current) return;
+    doneRef.current = true;
+    onDone();
+  };
 
   const fullSrc = getCollectionCardImagePath({
     path: CARD_IMAGES_PATH,
@@ -239,7 +246,7 @@ function ArrivalCard({
       if (cancelled) return;
       if (!loaded) {
         setEffectArrival(side, key, null);
-        onDone();
+        finishOnce.current();
         return;
       }
 
@@ -312,7 +319,7 @@ function ArrivalCard({
       if (cancelled) return;
 
       setEffectArrival(side, key, null);
-      onDone();
+      finishOnce.current();
     };
     run();
 
@@ -332,8 +339,20 @@ function ArrivalCard({
         className={side === 'player' ? styles.cardPlayer : styles.cardOpponent}
         onPointerDown={() => skipHold.current()}
       >
-        <img ref={fullRef} className={styles.full} src={fullSrc} alt="" />
-        <img ref={cropRef} className={styles.crop} src={cropSrc} alt="" />
+        <img
+          ref={fullRef}
+          className={styles.full}
+          src={fullSrc}
+          alt=""
+          onError={() => finishOnce.current()}
+        />
+        <img
+          ref={cropRef}
+          className={styles.crop}
+          src={cropSrc}
+          alt=""
+          onError={(e) => (e.currentTarget.style.visibility = 'hidden')}
+        />
       </div>
     </div>
   );
