@@ -26,7 +26,11 @@ export const Board = React.memo(function Board() {
 
   if (useOldScreen) {
     return (
-      <div className={styles.gameBoard} data-fan-portrait-board="">
+      <div
+        className={styles.gameBoard}
+        data-fan-portrait-board=""
+        data-hit-preview="board lock"
+      >
         <EffectArrivals />
         <AmbientParticles />
         <ManualModePanel />

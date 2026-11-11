@@ -550,6 +550,16 @@ export const SETTINGS_DEFS: SettingDef[] = [
   },
   {
     kind: 'toggle',
+    key: 'hitPreviewEye',
+    group: 'boardLayout',
+    labelKey: 'SETTINGS.HIT_PREVIEW_EYE',
+    tooltipKey: 'SETTINGS.HIT_PREVIEW_EYE_TOOLTIP',
+    storage: 'device',
+    name: 'hitPreviewEye',
+    defaultOn: false
+  },
+  {
+    kind: 'toggle',
     key: 'hideLogNoise',
     group: 'gameLog',
     labelKey: 'SETTINGS.HIDE_LOG_NOISE',

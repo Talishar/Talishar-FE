@@ -56,6 +56,7 @@ export default function ManualModePanel() {
     <>
       {!isMobileOrTablet && !hideManualModeToggle && (
         <button
+          data-hit-preview="tab"
           className={`${styles.manualModeTab} ${
             isOpen || isDevToolOpen ? styles.hidden : ''
           }`}

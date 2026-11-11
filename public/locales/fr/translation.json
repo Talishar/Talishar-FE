@@ -1642,6 +1642,9 @@
     "CLASSIC_HAND_TOOLTIP": "Affiche votre main en simple rangée de cartes au lieu de l’éventail, sur tous les appareils.",
     "AUTO_LANDSCAPE_MOBILE": "Paysage automatique sur mobile",
     "AUTO_LANDSCAPE_MOBILE_TOOLTIP": "Passe la partie en paysage dès votre premier appui en portrait. Fonctionne avec la main en éventail sur mobile.",
+    "HIT_PREVIEW_EYE": "Œil d'aperçu de la touche",
+    "HIT_PREVIEW_EYE_TOOLTIP": "Affiche un œil sur le plateau lorsqu'une attaque est sur la chaîne de combat. Survolez-le ou touchez-le pour voir le plateau tel qu'il serait une fois l'attaque touchée.",
+    "HIT_PREVIEW_EYE_ARIA": "Aperçu du plateau si cette attaque touche",
     "FORCE_MOBILE_LAYOUT": "Forcer la disposition mobile",
     "FORCE_MOBILE_LAYOUT_OPTIONS": {
       "NO": "Non",

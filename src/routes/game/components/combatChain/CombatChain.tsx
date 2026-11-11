@@ -234,6 +234,7 @@ export default function CombatChain() {
             } as React.CSSProperties)
           }}
           className={`${styles.combatChain} ${''}`}
+          data-hit-preview="fade"
         >
           <CurrentAttack />
           <div className={styles.chainCentre}>

@@ -31,7 +31,10 @@ export const EquipZone = React.memo(
     const subcardCount = cardToDisplay?.subcards?.length ?? 0;
 
     return (
-      <div className={zoneClassName}>
+      <div
+        className={zoneClassName}
+        data-hit-preview={slot === 'Head' ? 'head' : undefined}
+      >
         {cardToDisplay === undefined ? (
           t(`ZONES.${slot.toUpperCase()}`)
         ) : (

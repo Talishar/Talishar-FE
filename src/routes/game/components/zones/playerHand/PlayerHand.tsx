@@ -43,6 +43,7 @@ import drawingCardsSound from 'sounds/drawing_cards.wav';
 import { setHandCardRotationHeld } from 'utils/handCardRotation';
 import { shortcutKey } from 'utils/shortcutKey';
 import { useTranslation } from 'react-i18next';
+import { hitPreviewHandMarks } from 'features/game/hitPreview';
 import { useCookieString } from 'utils/cookieStore';
 import { useFanFullscreenWidth } from 'utils/gameFullscreen';
 import { isMeldCard } from 'constants/meldCards';
@@ -580,6 +581,21 @@ function PlayerHand() {
     }
     return ordered;
   }, [handCardsWithStableIds, orderedHandIds, previewHandIds]);
+
+  const handChange = useAppSelector(
+    (state: RootState) =>
+      (isViewer && isCameraP2 ? state.game.playerTwo : state.game.playerOne)
+        .hitPreview?.hand
+  );
+  const handMarks = useMemo(
+    () =>
+      hitPreviewHandMarks(
+        handCardsWithStableIds.map((entry) => entry.id),
+        orderedHandCards[orderedHandCards.length - 1]?.id,
+        handChange
+      ),
+    [handCardsWithStableIds, orderedHandCards, handChange]
+  );
 
   const fanItems = useMemo<FanItem[]>(() => {
     const items: FanItem[] = orderedHandCards.map(({ card, id }) => ({
@@ -1526,6 +1542,7 @@ function PlayerHand() {
     <>
       <motion.div
         ref={fanStageRef}
+        data-hit-preview="lock"
         className={classNames(styles.fanStage, {
           [styles.fanStageCollapsed]: isHandCollapsed,
           [styles.fanStageDocked]: isLandscapeDocked
@@ -1543,6 +1560,7 @@ function PlayerHand() {
                 cardId={id}
                 key={`hand-${id}`}
                 rotation={handCardRotations[id]}
+                hitPreview={handMarks.get(id)}
                 shuffleRevision={handShuffleRevision}
                 onHandReorderDragStart={stableDragStart}
                 onHandReorderDragMove={stableDragMove}
