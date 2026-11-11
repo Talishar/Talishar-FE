@@ -1547,9 +1547,9 @@
     "CLASSIC_HAND_TOOLTIP": "",
     "AUTO_LANDSCAPE_MOBILE": "",
     "AUTO_LANDSCAPE_MOBILE_TOOLTIP": "",
-    "HIT_PREVIEW_EYE": "ヒットプレビューの目",
-    "HIT_PREVIEW_EYE_TOOLTIP": "コンバットチェーンに攻撃があるとき、ボード上に目を表示します。カーソルを合わせるかタップすると、その攻撃がヒットした後のボードを確認できます。",
-    "HIT_PREVIEW_EYE_ARIA": "この攻撃がヒットした後のボードをプレビュー",
+    "HIT_PREVIEW_EYE": "Eye of Ophidia",
+    "HIT_PREVIEW_EYE_TOOLTIP": "攻撃中に目にカーソルを合わせるかタップすると、ヒット後のボードを確認できます。",
+    "HIT_PREVIEW_EYE_ARIA": "Eye of Ophidia",
     "FORCE_MOBILE_LAYOUT": "",
     "FORCE_MOBILE_LAYOUT_OPTIONS": {
       "NO": "",
