@@ -14,6 +14,8 @@ import {
   useAlwaysShowCounters,
   useStackedZoneGeometry
 } from '../stackedCardZone/useStackedZone';
+import { hitPreviewDelta } from 'features/game/hitPreview';
+import { hitPreviewBadge } from '../../elements/hitPreview/HitPreview';
 
 export const DeckZone = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
@@ -23,6 +25,12 @@ export const DeckZone = React.memo((prop: Displayrow) => {
 
   const deckCards = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.DeckSize : state.game.playerTwo.DeckSize
+  );
+  const deckDelta = useAppSelector((state: RootState) =>
+    hitPreviewDelta(
+      isPlayer ? state.game.playerOne : state.game.playerTwo,
+      (player) => player.DeckSize
+    )
   );
   const deckBack = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.DeckBack : state.game.playerTwo.DeckBack
@@ -152,7 +160,9 @@ export const DeckZone = React.memo((prop: Displayrow) => {
             isShuffling={shouldAnimateShuffling}
             showCountersOnHover={!alwaysShowCounters}
             disableTilt
-          />
+          >
+            {hitPreviewBadge(deckDelta)}
+          </CardDisplay>
         </div>
         {/* Add card animation */}
         {shouldAnimateAddBotDeck && (

@@ -102,7 +102,7 @@ const GridBoard = () => {
   return (
     <>
       <ManualModePanel />
-      <div className={gridBoardClass}>
+      <div className={gridBoardClass} data-hit-preview="board lock">
         {showsLandscapeFan && (
           <div className={styles.fanOpponentName}>
             <PlayerName isPlayer={false} />

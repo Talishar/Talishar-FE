@@ -12,6 +12,7 @@ import {
   removeHealingPopup
 } from 'features/game/GameSlice';
 import { selectIsP2View } from 'features/game/perspective';
+import { realPlayer } from 'features/game/hitPreview';
 import HeroTransformEventCard from '../../elements/eventsHandler/HeroTransformEventCard';
 import styles from './HeroZone.module.css';
 
@@ -58,8 +59,9 @@ export const HeroZone = React.memo((prop: Displayrow) => {
   );
 
   // Use the same logic as HealthDisplay/TurnWidget - isPlayer determines the health
-  const health = useAppSelector((state: RootState) =>
-    isPlayer ? state.game.playerOne.Health : state.game.playerTwo.Health
+  const health = useAppSelector(
+    (state: RootState) =>
+      realPlayer(isPlayer ? state.game.playerOne : state.game.playerTwo).Health
   );
 
   const damagePopups = useAppSelector((state: RootState) => {

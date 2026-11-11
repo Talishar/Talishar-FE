@@ -24,6 +24,8 @@ import {
   objectLinkLabel,
   selectObjectLinks
 } from 'features/game/objectLinks';
+import { selectHitPreviewCardMark } from 'features/game/hitPreview';
+import { hitPreviewBadge, hitPreviewGlow } from '../hitPreview/HitPreview';
 
 const subCardProps = new Map<string, Card>();
 const getSubCardProp = (cardNumber: string): Card => {
@@ -146,6 +148,9 @@ export const CardDisplay = (prop: CardProp) => {
   );
   const objectLinkAttr =
     objectLink !== undefined ? objectLinkKeys?.join(' ') : undefined;
+  const hitPreviewMark = useAppSelector((state: RootState) =>
+    selectHitPreviewCardMark(state, card?.uniqueId)
+  );
   const highlightedLink = useRef<string>();
   const setLinkHighlight = useCallback((keys: string | undefined) => {
     highlightedLink.current
@@ -215,6 +220,7 @@ export const CardDisplay = (prop: CardProp) => {
     styles.card,
     styles.normalSize,
     containerClassName,
+    hitPreviewGlow(hitPreviewMark?.glow),
     {
       [styles.biggerSize]: prop.makeMeBigger,
       [styles.showCountersOnHover]: showCountersOnHover,
@@ -318,6 +324,7 @@ export const CardDisplay = (prop: CardProp) => {
           ) : null}
         </div>
       )}
+      {hitPreviewBadge(hitPreviewMark?.badge)}
       {children}
     </CardPopUp>
   );

@@ -23,6 +23,7 @@ export default function SpectatorCameraPanel() {
   return (
     <button
       className={styles.cameraTab}
+      data-hit-preview="tab"
       onClick={toggleView}
       title={`Switch to Player ${spectatorCameraView === 1 ? 2 : 1} View`}
       aria-label={`Switch to Player ${spectatorCameraView === 1 ? 2 : 1} View`}

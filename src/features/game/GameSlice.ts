@@ -36,6 +36,7 @@ import isEqual from 'react-fast-compare';
 import { CardStack } from '../../routes/game/components/zones/permanentsZone/PermanentsZone';
 import { reportPerformanceMetric } from 'utils/performanceMetrics';
 import { areZonesSortedByDefault } from 'routes/game/components/zones/cardListZone/zoneSortPreference';
+import { HitPreviewChange, hitPreviewPlayer, realPlayer } from './hitPreview';
 
 const CHAT_RE = /<span[^>]*>(.*?):\s<\/span>/;
 
@@ -336,7 +337,8 @@ const FALLBACK_GAME_INFO_FIELDS = [
   'deckPlaymatId'
 ] as const;
 
-const mergePlayer = (prev: Player, incoming: Player | undefined): Player => {
+const mergePlayer = (shown: Player, incoming: Player | undefined): Player => {
+  const prev = realPlayer(shown);
   const merged = { ...prev, ...incoming };
   for (const field of STICKY_PLAYER_FIELDS) {
     if (prev[field] !== undefined) {
@@ -581,6 +583,7 @@ function mergeReceivedGameState(
   state.gameDeleteDeadline = payload.gameDeleteDeadline;
   state.serverTimeOffset = payload.serverTimeOffset;
   state.preventPassPrompt = payload.preventPassPrompt;
+  state.hitPreviewOpen = payload.hitPreviewOpen;
 }
 
 type PopupStateKey = 'damagePopups' | 'healingPopups' | 'actionPointPopups';
@@ -1201,6 +1204,37 @@ export const gameSlice = createSlice({
       const prevGame = (original(state) ?? current(state)) as GameState;
       mergeReceivedGameState(state, prevGame, action.payload);
       return state;
+    },
+    showHitPreview: (
+      state,
+      action: PayloadAction<{ preview: GameState; changes: HitPreviewChange[] }>
+    ) => {
+      const { preview, changes } = action.payload;
+      const game = original(state) as GameState;
+      const lastUpdate = game.gameDynamicInfo.lastUpdate;
+      if (preview.gameDynamicInfo.lastUpdate !== lastUpdate) return;
+      for (const key of ['playerOne', 'playerTwo'] as const) {
+        const real = realPlayer(game[key]);
+        const merged: Player = {
+          ...preview[key],
+          hitPreview: hitPreviewPlayer(real, changes, key)
+        };
+        for (const field of [
+          ...STICKY_PLAYER_FIELDS,
+          'Playmat',
+          'CardBack'
+        ] as const) {
+          if (real[field] !== undefined) {
+            (merged[field] as Player[typeof field]) = real[field];
+          }
+        }
+        state[key] = preserveIdentities(real, merged);
+      }
+    },
+    hideHitPreview: (state) => {
+      const game = original(state) as GameState;
+      state.playerOne = realPlayer(game.playerOne);
+      state.playerTwo = realPlayer(game.playerTwo);
     }
   },
   // The `extraReducers` field lets the slice handle actions defined elsewhere,
@@ -1401,7 +1435,9 @@ export const {
   removeActionPointPopup,
   setSpectatorCameraView,
   setReplayHideOpponentHand,
-  receiveGameState
+  receiveGameState,
+  showHitPreview,
+  hideHitPreview
 } = actions;
 
 export const isHandPlayBusy = (game: GameState): boolean =>

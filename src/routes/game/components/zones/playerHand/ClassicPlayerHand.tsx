@@ -21,6 +21,7 @@ import drawingCardsSound from 'sounds/drawing_cards.wav';
 import { setHandCardRotationHeld } from 'utils/handCardRotation';
 import { shortcutKey } from 'utils/shortcutKey';
 import { useTranslation } from 'react-i18next';
+import { hitPreviewHandMarks } from 'features/game/hitPreview';
 
 const DEFAULT_HAND_REORDER_STEP_PX = 120;
 const CARD_ROTATION_STEP_DEGREES = 90;
@@ -367,6 +368,19 @@ function PlayerHand() {
     }
     return ordered;
   }, [handCardsWithStableIds, orderedHandIds, previewHandIds]);
+
+  const handChange = useAppSelector(
+    (state: RootState) => state.game.playerOne.hitPreview?.hand
+  );
+  const handMarks = useMemo(
+    () =>
+      hitPreviewHandMarks(
+        handCardsWithStableIds.map((entry) => entry.id),
+        orderedHandCards[orderedHandCards.length - 1]?.id,
+        handChange
+      ),
+    [handCardsWithStableIds, orderedHandCards, handChange]
+  );
 
   const handleHandCardDragStart = () => {
     setDragStartOrderIds(orderedHandIds);
@@ -923,6 +937,7 @@ function PlayerHand() {
       {createPortal(
         <>
           <div
+            data-hit-preview="lock"
             className={styles.handScrollContainer}
             style={
               gameZoneBounds
@@ -992,6 +1007,7 @@ function PlayerHand() {
                             cardId={id}
                             key={`hand-${id}`}
                             rotation={handCardRotations[id]}
+                            hitPreview={handMarks.get(id)}
                             addCardToPlayedCards={addCardToPlayedCards}
                             zIndex={ix + 200}
                             enableLayoutAnimation

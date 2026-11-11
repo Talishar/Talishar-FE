@@ -1,4 +1,5 @@
 import { Card } from './Card';
+import type { HitPreviewPlayer } from './game/hitPreview';
 
 export default interface Player {
   HeadEq?: Card;
@@ -37,4 +38,5 @@ export default interface Player {
   CardBack?: Card;
   earthCount?: number;
   blessingsCount?: number;
+  hitPreview?: HitPreviewPlayer;
 }

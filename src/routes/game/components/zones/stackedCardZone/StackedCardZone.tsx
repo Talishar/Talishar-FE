@@ -8,6 +8,8 @@ import {
   useAlwaysShowCounters,
   useStackedZoneGeometry
 } from './useStackedZone';
+import { hitPreviewDelta } from 'features/game/hitPreview';
+import { hitPreviewGlow } from '../../elements/hitPreview/HitPreview';
 
 interface StackedCardZoneProps {
   isPlayer?: boolean;
@@ -32,6 +34,11 @@ export const StackedCardZone = ({
   const cardListFocus = useAppSelector(
     (state: RootState) => state.game.cardListFocus
   );
+  const pileDelta = useAppSelector((state: RootState) => {
+    const player = isPlayer ? state.game.playerOne : state.game.playerTwo;
+    const zone = player.Graveyard === cards ? 'Graveyard' : 'Banish';
+    return hitPreviewDelta(player, (side) => side[zone]?.length);
+  });
 
   const totalCards = cards?.length ?? 0;
   const { isMobileOrTablet, layerStyles, cardWrapperStyle } =
@@ -83,6 +90,9 @@ export const StackedCardZone = ({
               card={cardToDisplay}
               isPlayer={isPlayer}
               num={faceUpCount}
+              containerClassName={hitPreviewGlow(
+                pileDelta > 0 ? 'gain' : undefined
+              )}
               preventUseOnClick
               showCountersOnHover={!alwaysShowCounters}
               disableTilt

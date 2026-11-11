@@ -26,6 +26,11 @@ import {
 } from 'react-icons/gi';
 import { Card } from 'features/Card';
 import styles from './PlayerHandCard.module.css';
+import {
+  HitPreviewMark,
+  selectHitPreviewCardMark
+} from 'features/game/hitPreview';
+import { hitPreviewBadge, hitPreviewGlow } from '../hitPreview/HitPreview';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { LONG_PRESS_TIMER } from 'appConstants';
 import classNames from 'classnames';
@@ -198,6 +203,7 @@ export interface HandCard {
   dragControls?: DragControls;
   onClickPlay?: (cardId: string) => void;
   onDragPlayStateChange?: (s: DragPlayState) => void;
+  hitPreview?: HitPreviewMark;
 }
 
 export const PlayerHandCard = React.memo(
@@ -235,9 +241,14 @@ export const PlayerHandCard = React.memo(
     onTouchScrubStart,
     dragControls,
     onClickPlay,
-    onDragPlayStateChange
+    onDragPlayStateChange,
+    hitPreview
   }: HandCard) => {
     const [canPopUp, setCanPopup] = useState(true);
+    const newCardGlow = useAppSelector(
+      (state) => selectHitPreviewCardMark(state, card?.uniqueId)?.glow
+    );
+    const previewGlow = hitPreviewGlow(hitPreview?.glow ?? newCardGlow);
     const [isDragging, setIsDragging] = useState(false);
     const [snapback, setSnapback] = useState<boolean>(true);
     const { getLanguage } = useLanguageSelector();
@@ -821,6 +832,7 @@ export const PlayerHandCard = React.memo(
           dragControls={dragControls}
           className={classNames(
             isFanned ? styles.handCardFan : styles.handCard,
+            previewGlow,
             {
               [styles.shuffleAccentA]:
                 shuffleRevision > 0 && shuffleRevision % 2 === 0,
@@ -907,6 +919,7 @@ export const PlayerHandCard = React.memo(
             {iconColumn}
           </CardPopUp>
           {cardLabel}
+          {hitPreviewBadge(hitPreview?.badge)}
         </motion.div>
         {(isDragging || isReturning) &&
           fixedRect &&
