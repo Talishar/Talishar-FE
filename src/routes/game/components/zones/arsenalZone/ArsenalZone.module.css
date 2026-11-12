@@ -25,7 +25,7 @@
 
 .splitArsenal {
   position: relative;
-  left: calc(-0.5 * (var(--card-size) + 1vh));
+  left: var(--arsenal-split-shift, 0px);
 }
 
 :global(body.fanLandscapeHand) .arsenalZone {
