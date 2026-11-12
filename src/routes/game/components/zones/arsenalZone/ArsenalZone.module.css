@@ -23,6 +23,11 @@
   color: var(--white);
 }
 
+.splitArsenal {
+  position: relative;
+  left: calc(-0.5 * (var(--card-size) + 1vh));
+}
+
 :global(body.fanLandscapeHand) .arsenalZone {
   gap: calc(1 * var(--fan-window-vh));
 }
