@@ -1,4 +1,3 @@
-import React from 'react';
 import Displayrow from 'interface/Displayrow';
 import WeaponZone from '../weaponZone/WeaponZone';
 import styles from './WeaponRZone.module.css';

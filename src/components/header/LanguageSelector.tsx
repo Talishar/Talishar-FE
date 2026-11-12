@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { BsCheck2, BsChevronDown, BsGlobe2 } from 'react-icons/bs';
+import { BsCheck2, BsGlobe2 } from 'react-icons/bs';
 import styles from './LanguageSelector.module.scss';
 import { useTranslation } from 'react-i18next';
 import {

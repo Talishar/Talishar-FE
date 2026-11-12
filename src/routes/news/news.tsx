@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import styles from '../index/Index.module.css';
 import {
   fetchDiscordReleaseNotes,

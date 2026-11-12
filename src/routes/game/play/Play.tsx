@@ -51,25 +51,6 @@ const isLoadingErrorPreviewEnabled = () =>
   typeof window !== 'undefined' &&
   new URLSearchParams(window.location.search).get('loadingErrorTest') === '1';
 
-const GameSurface = React.memo(function GameSurface() {
-  return (
-    <div className="app" key="app">
-      <ChatCardDetail />
-      <LeftColumn />
-      <div className="gameZone">
-        <Board />
-        {/* Rendered after Board so the opponent's hand paints over the
-            board zones instead of behind them. */}
-        <HandZone isPlayer={false} />
-        <ChainLinkSummaryContainer />
-        <HandZone isPlayer />
-        <PlayerHand />
-      </div>
-      <RightColumn />
-    </div>
-  );
-});
-
 const GameOverlays = React.memo(function GameOverlays() {
   return (
     <>

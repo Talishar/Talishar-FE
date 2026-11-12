@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import Button from 'features/Button';
 import CardDisplay from '../../cardDisplay/CardDisplay';
 import { NAME_A_CARD } from '../constants';

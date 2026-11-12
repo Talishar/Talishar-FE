@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useRouteError } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import styles from './errorPage.module.css';

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useAppDispatch } from 'app/Hooks';
 import { submitButton } from 'features/game/GameSlice';
 import styles from './EndGameMenuOptions.module.css';

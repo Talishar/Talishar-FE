@@ -1,4 +1,3 @@
-import React from 'react';
 import classNames from 'classnames';
 import { getKeywordEntry, normalizeKeyword } from 'data/keywords';
 import { useCardKeywords } from 'utils/cardKeywords';

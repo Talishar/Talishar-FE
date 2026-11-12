@@ -1,6 +1,6 @@
 import { useAppDispatch } from 'app/Hooks';
 import { clearGameInfo } from 'features/game/GameSlice';
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { usePageTitle } from 'hooks/usePageTitle';
 import GameList from './components/gameList';
@@ -15,12 +15,10 @@ import SystemMessageModal from 'components/SystemMessageModal/SystemMessageModal
 import useAuth from 'hooks/useAuth';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import useAdScript from 'hooks/useAdScript';
-import { AdUnit } from 'components/ads/AdUnit';
 import TalisharLogo from '../../img/TalisharLogo.webp';
 import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
 import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
 import { Link } from 'react-router-dom';
-import RemoveAdsLink from 'components/RemoveAdsLink/RemoveAdsLink';
 
 const LAST_HOME_USER_KEY = 'talishar_home_last_user_v1';
 

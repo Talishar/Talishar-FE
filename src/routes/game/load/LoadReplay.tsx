@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useAppDispatch } from 'app/Hooks';
 import {
   useDeleteReplayMutation,
@@ -29,7 +29,6 @@ import { LoadReplayAPI } from 'interface/API/LoadReplayAPI.php';
 import { setGameStart, setReplayStart } from 'features/game/GameSlice';
 import { useNavigate } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { TALISHAR_DISCORD_URL } from 'constants/socialLinks';
 import styles from './LoadReplay.module.css';
 import { GameLocationState } from 'interface/GameLocationState';
 import PageBanner from 'components/PageBanner/PageBanner';

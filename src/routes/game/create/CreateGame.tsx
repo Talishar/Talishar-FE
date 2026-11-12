@@ -6,7 +6,6 @@ import {
   GAME_VISIBILITY,
   AI_DECK,
   AI_DECKS_FOR_FORMAT,
-  isSmallDeckFormat,
   isPreconFormat,
   PRECON_DECKS,
   FAB_BAZAAR_DECK_URL_BASE,

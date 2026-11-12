@@ -1,4 +1,3 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import RemoveAdsLink from 'components/RemoveAdsLink/RemoveAdsLink';
 import useAdSlotRef from 'hooks/useAdSlotRef';

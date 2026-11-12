@@ -16,45 +16,45 @@ const COUNTDOWN_VISIBLE_MS = 15_000;
 const TICK_MS = 500;
 
 export default function OpponentInactive() {
-  const hasPriority = useAppSelector((state: any) => state.game.hasPriority);
+  const hasPriority = useAppSelector((state) => state.game.hasPriority);
   const priorityPlayer = useAppSelector(
-    (state: any) => state.game.priorityPlayer
+    (state) => state.game.priorityPlayer
   );
   const turnPhase = useAppSelector(
-    (state: any) => state.game.turnPhase?.turnPhase
+    (state) => state.game.turnPhase?.turnPhase
   );
   const isRequestInProgress = useAppSelector(
-    (state: any) => state.game.isUpdateInProgress
+    (state) => state.game.isUpdateInProgress
   );
   // The backend's own verdict. Authoritative once the deadline passes, but it
   // only arrives over SSE, so the countdown below is driven by the deadline.
   const backendInactive = useAppSelector(
-    (state: any) => state.game.opponentInactive ?? false
+    (state) => state.game.opponentInactive ?? false
   );
   const inactivityDeadline = useAppSelector(
-    (state: any) => state.game.inactivityDeadline
+    (state) => state.game.inactivityDeadline
   );
   const gameDeleteDeadline = useAppSelector(
-    (state: any) => state.game.gameDeleteDeadline
+    (state) => state.game.gameDeleteDeadline
   );
   const serverTimeOffset = useAppSelector(
-    (state: any) => state.game.serverTimeOffset ?? 0
+    (state) => state.game.serverTimeOffset ?? 0
   );
   const playerOneName = useAppSelector(
-    (state: any) => state.game.playerOne?.Name
+    (state) => state.game.playerOne?.Name
   );
   const playerTwoName = useAppSelector(
-    (state: any) => state.game.playerTwo?.Name
+    (state) => state.game.playerTwo?.Name
   );
   const { playerID, gameID, authKey, isReplay } = useAppSelector(
     getGameInfo,
     shallowEqual
   );
   const isOpponentAI = useAppSelector(
-    (state: any) => state.game.gameInfo.isOpponentAI ?? false
+    (state) => state.game.gameInfo.isOpponentAI ?? false
   );
   const isPracticeDummy = useAppSelector(
-    (state: any) =>
+    (state) =>
       state.game.playerOne?.Name === 'Practice Dummy' ||
       state.game.playerTwo?.Name === 'Practice Dummy'
   );
