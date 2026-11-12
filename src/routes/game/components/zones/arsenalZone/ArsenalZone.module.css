@@ -23,6 +23,11 @@
   color: var(--white);
 }
 
+.splitArsenal {
+  position: relative;
+  left: var(--arsenal-split-shift, 0px);
+}
+
 :global(body.fanLandscapeHand) .arsenalZone {
   gap: calc(1 * var(--fan-window-vh));
 }
