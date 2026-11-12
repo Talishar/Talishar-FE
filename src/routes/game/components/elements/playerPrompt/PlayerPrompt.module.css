@@ -80,6 +80,10 @@
   cursor: pointer;
 }
 
+.buttonDiv[role='button'] {
+  font-weight: inherit;
+}
+
 @media (orientation: portrait) {
   .playerPrompt {
     font-size: calc(1.2em * var(--text-scale-prompt));
