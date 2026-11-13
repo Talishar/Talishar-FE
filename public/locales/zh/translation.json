@@ -895,6 +895,29 @@
     "UNLOCKED_SUMMARY_one": "",
     "UNLOCKED_SUMMARY_other": ""
   },
+  "MATCH_HISTORY": {
+    "EMPTY": "与其他玩家完成一局对局后，记录会显示在这里。",
+    "FORMATS": {
+      "BRAWL": "乱斗",
+      "CLASH": "交锋",
+      "COMMONER": "平民赛",
+      "OPEN_BLITZ": "开放闪击战",
+      "SEALED": "现开赛"
+    },
+    "HEROES": "{{hero}} 对阵 {{opponentHero}}",
+    "LOSS": "负",
+    "LOSS_LABEL": "失败",
+    "OPPONENT": "对手：{{name}}",
+    "SAVE_REPLAY": "保存回放",
+    "SUBTITLE": "你与其他玩家最近的 {{limit}} 场对局。",
+    "TITLE": "对局记录",
+    "TURNS_other": "{{count}} 回合",
+    "UNKNOWN_OPPONENT": "访客",
+    "WATCH": "观看 #{{number}}",
+    "WATCH_ERROR": "无法加载此回放，请重试。",
+    "WIN": "胜",
+    "WIN_LABEL": "胜利"
+  },
   "MATCH_REVIEW": {
     "CLOSE_MATCH_REVIEW": "",
     "COPY_SHAREABLE_LINK": "",
