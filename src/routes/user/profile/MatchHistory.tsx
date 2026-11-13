@@ -77,8 +77,7 @@ export const MatchHistory: React.FC<MatchHistoryProps> = ({ className }) => {
   const playedLabel = (game: MatchHistoryGame) =>
     [
       new Intl.DateTimeFormat(i18n.resolvedLanguage || i18n.language, {
-        dateStyle: 'medium',
-        timeStyle: 'short'
+        dateStyle: 'medium'
       }).format(new Date(game.endedAt * 1000)),
       formatLabel(game.format),
       game.turns > 0 ? t('MATCH_HISTORY.TURNS', { count: game.turns }) : ''
