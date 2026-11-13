@@ -1,5 +1,5 @@
 /// <reference types="vitest" />
-import { defineConfig, loadEnv } from 'vite';
+import { defineConfig, loadEnv, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import viteTsconfigPaths from 'vite-tsconfig-paths';
 import svgrPlugin from 'vite-plugin-svgr';
@@ -18,8 +18,39 @@ export default ({ mode }: { mode: string }) => {
     ? process.env.VITE_BACKEND_DIRECTORY
     : 'game';
 
+  const buildId = String(Date.now());
+  const backendHost = process.env.VITE_BACKEND_URL;
+
+  const buildVersion: Plugin = {
+    name: 'talishar-build-version',
+    apply: 'build',
+    generateBundle() {
+      this.emitFile({
+        type: 'asset',
+        fileName: 'version.json',
+        source: JSON.stringify({ buildId })
+      });
+    }
+  };
+
+  const backendPreconnect: Plugin = {
+    name: 'talishar-backend-preconnect',
+    apply: 'build',
+    transformIndexHtml() {
+      if (!backendHost || backendHost === 'localhost') return [];
+      return [
+        {
+          tag: 'link',
+          attrs: { rel: 'preconnect', href: `https://${backendHost}` },
+          injectTo: 'head'
+        }
+      ];
+    }
+  };
+
   return defineConfig({
     base: './',
+    define: { __BUILD_ID__: JSON.stringify(buildId) },
     build: { outDir: './build' },
     css: {
       preprocessorOptions: {
@@ -30,7 +61,13 @@ export default ({ mode }: { mode: string }) => {
         }
       }
     },
-    plugins: [react(), viteTsconfigPaths(), svgrPlugin()],
+    plugins: [
+      react(),
+      viteTsconfigPaths(),
+      svgrPlugin(),
+      buildVersion,
+      backendPreconnect
+    ],
     server: {
       proxy: {
         '/api': {

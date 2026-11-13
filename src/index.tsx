@@ -14,6 +14,7 @@ import {
   reportPerformanceMetric
 } from 'utils/performanceMetrics';
 import { attemptAssetRecovery } from 'utils/assetRecovery';
+import { installStaleBuildReload } from 'utils/staleBuildReload';
 import { installVideoAdTagConfig } from 'utils/videoAds';
 import { migrateFannedHandCookie } from 'routes/game/components/zones/playerHand/migrateFannedHandCookie';
 import {
@@ -53,6 +54,8 @@ installMouseInput();
 if (frameHost) {
   store.dispatch(restoreGameInfo(structuredClone(frameHost.gameInfo)));
   installForcedLayoutFrame();
+} else {
+  installStaleBuildReload(router);
 }
 
 root.render(
