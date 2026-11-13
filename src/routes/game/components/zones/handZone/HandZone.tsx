@@ -14,12 +14,6 @@ import { getCardPreview } from '../../elements/cardPortal/cardPreviewStore';
 import { useFannedHand } from '../playerHand/useFannedHand';
 import { useShowsLandscapeFan } from '../playerHand/useShowsLandscapeFan';
 import { FAN_OPPONENT_HAND_MIN_STEP_PX } from '../playerHand/fanLayout';
-import { hitPreviewHandMarks } from 'features/game/hitPreview';
-import {
-  hitPreviewBadge,
-  hitPreviewGlow
-} from '../../elements/hitPreview/HitPreview';
-import previewStyles from '../../elements/hitPreview/HitPreview.module.css';
 
 const CARD_GAP = 5; // matches the flex gap in HandZone.module.css
 const ZONE_MAX_WIDTH = 0.6; // matches max-width: 60% in HandZone.module.css
@@ -40,9 +34,6 @@ const HandZone = React.memo(function HandZone(prop: Player) {
       selectSidePlayer(state, isPlayer).CardBack?.cardNumber ?? 'CardBack'
   );
   const handCardBackNumber = handCardBack.toLowerCase();
-  const handChange = useAppSelector(
-    (state: RootState) => selectSidePlayer(state, isPlayer).hitPreview?.hand
-  );
   const hideHand = useAppSelector(
     (state: RootState) =>
       !isPlayer &&
@@ -174,18 +165,11 @@ const HandZone = React.memo(function HandZone(prop: Player) {
   };
 
   const compactActive = isOverflowing;
-  const handMarks = hitPreviewHandMarks(
-    cardKeys,
-    isPlayer ? cardKeys[0] : cardKeys[cardKeys.length - 1],
-    handChange
-  );
-  const badgeClass = isPlayer ? undefined : previewStyles.flipped;
 
   return (
     <div
       className={classNames(displayRow, { [styles.compact]: compactActive })}
       ref={zoneRef}
-      data-hit-preview="lock"
       style={
         compactActive
           ? ({ '--hand-overlap': `${overlap}px` } as React.CSSProperties)
@@ -200,22 +184,8 @@ const HandZone = React.memo(function HandZone(prop: Player) {
       }
     >
       {handCards.map((card: Card, index: number) => (
-        <CardDisplay
-          card={card}
-          key={cardKeys[index]}
-          isPlayer={isPlayer}
-          containerClassName={hitPreviewGlow(
-            handMarks.get(cardKeys[index])?.glow
-          )}
-        >
-          {hitPreviewBadge(handMarks.get(cardKeys[index])?.badge, badgeClass)}
-        </CardDisplay>
+        <CardDisplay card={card} key={cardKeys[index]} isPlayer={isPlayer} />
       ))}
-      {handCards.length === 0 &&
-        hitPreviewBadge(
-          -(handChange?.lost ?? 0),
-          classNames(previewStyles.emptyHand, badgeClass)
-        )}
     </div>
   );
 });

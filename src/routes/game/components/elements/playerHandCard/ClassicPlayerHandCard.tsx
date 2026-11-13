@@ -12,12 +12,7 @@ import {
 } from 'react-icons/gi';
 import { Card } from 'features/Card';
 import styles from './ClassicPlayerHandCard.module.css';
-import { useAppDispatch, useAppSelector } from 'app/Hooks';
-import {
-  HitPreviewMark,
-  selectHitPreviewCardMark
-} from 'features/game/hitPreview';
-import { hitPreviewBadge, hitPreviewGlow } from '../hitPreview/HitPreview';
+import { useAppDispatch } from 'app/Hooks';
 import { LONG_PRESS_TIMER } from 'appConstants';
 import classNames from 'classnames';
 import CardImage from '../cardImage/CardImage';
@@ -77,7 +72,6 @@ export interface HandCard {
   onHandReorderDragMove?: (cardId: string, info: PanInfo) => void;
   onHandReorderDragEnd?: (cardId: string, info: PanInfo) => boolean;
   onHandReorderDragCancel?: () => void;
-  hitPreview?: HitPreviewMark;
 }
 
 export const PlayerHandCard = React.memo(
@@ -100,14 +94,9 @@ export const PlayerHandCard = React.memo(
     onHandReorderDragStart,
     onHandReorderDragMove,
     onHandReorderDragEnd,
-    onHandReorderDragCancel,
-    hitPreview
+    onHandReorderDragCancel
   }: HandCard) => {
     const [canPopUp, setCanPopup] = useState(true);
-    const newCardGlow = useAppSelector(
-      (state) => selectHitPreviewCardMark(state, card?.uniqueId)?.glow
-    );
-    const previewGlow = hitPreviewGlow(hitPreview?.glow ?? newCardGlow);
     const [isDragging, setIsDragging] = useState(false);
     const [snapback, setSnapback] = useState<boolean>(true);
     const { getLanguage } = useLanguageSelector();
@@ -352,7 +341,7 @@ export const PlayerHandCard = React.memo(
           data-is-dragging={isDragging}
           layout={enableLayoutAnimation && !isDragging ? 'position' : false}
           drag={!disableDrag}
-          className={classNames(styles.handCard, previewGlow, {
+          className={classNames(styles.handCard, {
             [styles.shuffleAccentA]:
               shuffleRevision > 0 && shuffleRevision % 2 === 0,
             [styles.shuffleAccentB]: shuffleRevision % 2 === 1
@@ -411,7 +400,6 @@ export const PlayerHandCard = React.memo(
             {iconColumn}
           </CardPopUp>
           {cardLabel}
-          {hitPreviewBadge(hitPreview?.badge)}
         </motion.div>
         {isDragging &&
           fixedRect &&

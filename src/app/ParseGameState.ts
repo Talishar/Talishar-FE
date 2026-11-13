@@ -533,7 +533,6 @@ export default function ParseGameState(input: any) {
   }
 
   result.preventPassPrompt = input.preventPassPrompt;
-  result.hitPreviewOpen = !!input.hitPreviewOpen;
 
   // playmat
   result.playerOne.Playmat = PLAYMATS[input.MyPlaymat];

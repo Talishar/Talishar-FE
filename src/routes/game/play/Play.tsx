@@ -1,5 +1,4 @@
 import { Board } from '../components/board/Board';
-import HitPreviewEye from '../components/elements/hitPreview/HitPreview';
 import '../GameViewport.css';
 import './Play.css';
 import LeftColumn from '../components/leftColumn/LeftColumn';
@@ -73,7 +72,6 @@ const GameSurfaceInline = () => {
       <LeftColumn />
       <div className="gameZone">
         <Board />
-        <HitPreviewEye />
         <HandZone isPlayer={false} />
         <ChainLinkSummaryContainer />
         <HandZone isPlayer />

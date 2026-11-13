@@ -422,7 +422,6 @@ export default function PlayerInputPopUp() {
       style={{ top: topStyle }}
       key="playerInputPopupBox"
       data-fan-keep-open=""
-      data-hit-preview="fade lock"
       className={classNames(
         inputPopUp.popup?.id === 'NEWOPT'
           ? styles.optOptionsContainer

@@ -11,8 +11,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { selectPermanentsAsStack } from '../../../../../features/game/GameSlice';
 import { HiChevronLeft, HiChevronRight } from 'react-icons/hi';
 import { useTranslation } from 'react-i18next';
-import { hitPreviewBadge } from '../../elements/hitPreview/HitPreview';
-import previewStyles from '../../elements/hitPreview/HitPreview.module.css';
 
 const PERMANENT_INITIAL = { opacity: 0, x: -100 };
 const PERMANENT_ANIMATE = { opacity: 1, x: 0 };
@@ -46,18 +44,6 @@ function PermanentsZone(prop: Displayrow) {
   const permanents = useAppSelector((state: RootState) =>
     selectPermanentsAsStack(state, isPlayer)
   );
-  const hitPreview = useAppSelector((state: RootState) =>
-    isPlayer ? state.game.playerOne.hitPreview : state.game.playerTwo.hitPreview
-  );
-  const maybeTokens = hitPreview?.maybe ?? [];
-  const stackDelta = (index: number) => {
-    const same = (card: Card) =>
-      card.cardNumber === permanents[index].card.cardNumber;
-    const before = hitPreview?.real.Permanents?.filter(same).length;
-    const stacks = before ? permanents.filter((stack) => same(stack.card)) : [];
-    if (!before || stacks[0] !== permanents[index]) return 0;
-    return stacks.reduce((sum, stack) => sum + stack.count, 0) - before;
-  };
   let maxSubcardCount = 1;
   for (const permanent of permanents) {
     const subcards = permanent.card.subcards;
@@ -153,9 +139,9 @@ function PermanentsZone(prop: Displayrow) {
 
   useEffect(() => detachMoveListener, [detachMoveListener]);
 
-  if (!permanents.length && !maybeTokens.length) {
+  if (!permanents.length) {
     return (
-      <div className={styles.permanentsWrapper} data-hit-preview="permanents">
+      <div className={styles.permanentsWrapper}>
         <div className={styles.permanentsText}>
           <div></div>
         </div>
@@ -164,7 +150,7 @@ function PermanentsZone(prop: Displayrow) {
   }
 
   return (
-    <div className={styles.permanentsWrapper} data-hit-preview="permanents">
+    <div className={styles.permanentsWrapper}>
       {isOverflowing && (
         <button
           type="button"
@@ -191,7 +177,7 @@ function PermanentsZone(prop: Displayrow) {
           onLayoutAnimationComplete={updateScrollButtons}
         >
           <AnimatePresence>
-            {permanents.map((cardStack, index) => {
+            {permanents.map((cardStack) => {
               const stackLayers = Math.min(
                 cardStack.count - 1,
                 MAX_STACK_LAYERS
@@ -248,25 +234,10 @@ function PermanentsZone(prop: Displayrow) {
                       }
                     />
                   )}
-                  {hitPreviewBadge(stackDelta(index))}
                 </motion.div>
               );
             })}
           </AnimatePresence>
-          {maybeTokens.map((token) => (
-            <div
-              key={`hit-preview-maybe-${token.source}`}
-              className={classNames(styles.cardContainer, previewStyles.maybe)}
-            >
-              <CardDisplay
-                card={{ cardNumber: token.cardID }}
-                isPlayer={isPlayer}
-                containerClassName={previewStyles.maybeCard}
-                preventUseOnClick
-              />
-              {hitPreviewBadge(token.max > 1 ? `0–${token.max}` : '?')}
-            </div>
-          ))}
         </motion.div>
       </div>
       {isOverflowing && (
