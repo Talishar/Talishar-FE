@@ -8,7 +8,7 @@ export default function ActiveEffects() {
   const isPhonePortrait = useMediaQuery(PHONE_PORTRAIT_QUERY);
   const showsPortraitFan = useShowsPortraitFan();
   return (
-    <div className={styles.activeEffects} data-hit-preview="effects lock">
+    <div className={styles.activeEffects}>
       {showsPortraitFan ? (
         <div className={styles.playerEffectsSpacer} />
       ) : (

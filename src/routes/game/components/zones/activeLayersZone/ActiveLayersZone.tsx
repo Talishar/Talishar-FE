@@ -252,7 +252,6 @@ export default function ActiveLayersZone() {
         <motion.div
           ref={containerRef}
           className={styles.activeLayersBox}
-          data-hit-preview="fade lock"
           style={{ y: yOffsetDvh, x: xOffsetDvw }}
           initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0 }}
           animate={{ opacity: 1 }}

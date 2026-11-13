@@ -8,7 +8,6 @@ import {
   removeActionPointPopup,
   addActionPointPopup
 } from 'features/game/GameSlice';
-import { selectIsHitPreviewing } from 'features/game/hitPreview';
 
 const NO_POPUPS: never[] = [];
 
@@ -27,8 +26,6 @@ export default function ActionPointDisplay(props: ActionPointDisplayProps) {
     )
   );
 
-  const isHitPreviewing = useAppSelector(selectIsHitPreviewing);
-
   const turnPlayer = useAppSelector(
     (state: RootState) => state.game.turnPlayer
   );
@@ -46,7 +43,6 @@ export default function ActionPointDisplay(props: ActionPointDisplayProps) {
 
   // Track AP changes and spawn action point popups for gains only
   useEffect(() => {
-    if (isHitPreviewing) return;
     if (previousAPRef.current !== undefined && APAvailable !== undefined) {
       const apDifference = APAvailable - previousAPRef.current;
       if (apDifference > 0) {
@@ -59,7 +55,7 @@ export default function ActionPointDisplay(props: ActionPointDisplayProps) {
       }
     }
     previousAPRef.current = APAvailable;
-  }, [APAvailable, dispatch, props.isPlayer, isHitPreviewing]);
+  }, [APAvailable, dispatch, props.isPlayer]);
 
   const handleActionPointPopupComplete = useCallback(
     (id: string) => {

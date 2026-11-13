@@ -2168,9 +2168,6 @@
     "CLASSIC_HAND_TOOLTIP": "Show your hand as a plain row of cards instead of the fan, on every device.",
     "AUTO_LANDSCAPE_MOBILE": "Auto landscape on mobile",
     "AUTO_LANDSCAPE_MOBILE_TOOLTIP": "Turns the game sideways on your first tap in portrait. Works with the fanned hand on mobile.",
-    "HIT_PREVIEW_EYE": "Eye of Ophidia",
-    "HIT_PREVIEW_EYE_TOOLTIP": "During an attack, hover over or hold the eye to see the board after the hit.",
-    "HIT_PREVIEW_EYE_ARIA": "Eye of Ophidia",
     "FORCE_MOBILE_LAYOUT": "Force mobile layout",
     "FORCE_MOBILE_LAYOUT_OPTIONS": {
       "NO": "No",

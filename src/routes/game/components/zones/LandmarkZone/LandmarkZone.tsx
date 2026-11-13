@@ -3,14 +3,12 @@ import { RootState } from 'app/Store';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import styles from './LandmarkZone.module.css';
 import { shallowEqual } from 'react-redux';
-import { selectIsHitPreviewing, viewOnlyCard } from 'features/game/hitPreview';
 
 export const LandmarkZone = () => {
   const cardToDisplay = useAppSelector(
     (state: RootState) => state.game.landmark,
     shallowEqual
   );
-  const previewing = useAppSelector(selectIsHitPreviewing);
 
   if (cardToDisplay === undefined) {
     return null;
@@ -18,9 +16,7 @@ export const LandmarkZone = () => {
 
   return (
     <div className={styles.landmark}>
-      <CardDisplay
-        card={previewing ? viewOnlyCard(cardToDisplay) : cardToDisplay}
-      />
+      <CardDisplay card={cardToDisplay} />
     </div>
   );
 };

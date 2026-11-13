@@ -1548,9 +1548,6 @@
     "CLASSIC_HAND_TOOLTIP": "",
     "AUTO_LANDSCAPE_MOBILE": "",
     "AUTO_LANDSCAPE_MOBILE_TOOLTIP": "",
-    "HIT_PREVIEW_EYE": "Eye of Ophidia",
-    "HIT_PREVIEW_EYE_TOOLTIP": "攻撃中に目にカーソルを合わせるか長押しすると、ヒット後のボードを確認できます。",
-    "HIT_PREVIEW_EYE_ARIA": "Eye of Ophidia",
     "FORCE_MOBILE_LAYOUT": "",
     "FORCE_MOBILE_LAYOUT_OPTIONS": {
       "NO": "",

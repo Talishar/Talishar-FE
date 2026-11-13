@@ -8,7 +8,6 @@ import {
 import { useAppSelector } from 'app/Hooks';
 import { Card } from 'features/Card';
 import { selectIsP2View, selectSidePlayer } from 'features/game/perspective';
-import { realPlayer } from 'features/game/hitPreview';
 import { useReducedMotionSetting } from 'features/settings/accessibility';
 import { useMediaQuery } from 'hooks/useMediaQuery';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
@@ -134,7 +133,7 @@ export default function EffectArrivals() {
   const enabled = mobile && !reducedMotion && !osReducedMotion;
   const perspective = useAppSelector(selectIsP2View);
   const opponentEffects = useAppSelector(
-    (state) => realPlayer(selectSidePlayer(state, false)).Effects
+    (state) => selectSidePlayer(state, false).Effects
   );
   const attackingCard = useAppSelector(
     (state) => state.game.activeChainLink?.attackingCard?.cardNumber
