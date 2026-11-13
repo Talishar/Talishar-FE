@@ -948,6 +948,31 @@
     "UNLOCKED_SUMMARY_one": "",
     "UNLOCKED_SUMMARY_other": ""
   },
+  "MATCH_HISTORY": {
+    "EMPTY": "Terminez une partie contre un autre joueur et elle apparaîtra ici.",
+    "FORMATS": {
+      "BRAWL": "Brawl",
+      "CLASH": "Clash",
+      "COMMONER": "Commoner",
+      "OPEN_BLITZ": "Blitz ouvert",
+      "SEALED": "Scellé"
+    },
+    "HEROES": "{{hero}} contre {{opponentHero}}",
+    "LOSS": "D",
+    "LOSS_LABEL": "Défaite",
+    "OPPONENT": "contre {{name}}",
+    "SAVE_REPLAY": "Enregistrer la rediffusion",
+    "SUBTITLE": "Vos {{limit}} dernières parties contre d'autres joueurs.",
+    "TITLE": "Historique des parties",
+    "TURNS_many": "{{count}} tours",
+    "TURNS_one": "{{count}} tour",
+    "TURNS_other": "{{count}} tours",
+    "UNKNOWN_OPPONENT": "Invité",
+    "WATCH": "Regarder n°{{number}}",
+    "WATCH_ERROR": "Impossible de charger cette rediffusion. Veuillez réessayer.",
+    "WIN": "V",
+    "WIN_LABEL": "Victoire"
+  },
   "MATCH_REVIEW": {
     "CAMERA": "Caméra",
     "CLOSE_MATCH_REVIEW": "Examen des matchs serrés",

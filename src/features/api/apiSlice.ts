@@ -124,6 +124,7 @@ import {
   SaveRecentGameRequest,
   SaveRecentGameResponse
 } from 'interface/API/GetRecentGames.php';
+import { GetMatchHistoryResponse } from 'interface/API/GetMatchHistory.php';
 import {
   HeroMasteryResponse,
   SaveHeroMasteryFrameRequest,
@@ -587,6 +588,12 @@ export const apiSlice = createApi({
         responseHandler: parseResponse
       }),
       invalidatesTags: ['SavedReplays', 'RecentGames']
+    }),
+    getMatchHistory: builder.query<GetMatchHistoryResponse, void>({
+      query: () => ({
+        url: URL_END_POINT.GET_MATCH_HISTORY,
+        method: 'GET'
+      })
     }),
     getReplayTurns: builder.query<
       { turns: Array<{ player: 1 | 2; number: number }> },
@@ -1187,6 +1194,7 @@ export const {
   useGetSavedReplaysQuery,
   useGetRecentGamesQuery,
   useSaveRecentGameMutation,
+  useGetMatchHistoryQuery,
   useGetReplayTurnsQuery,
   useSetReplayFavoriteMutation,
   useSetReplayNoteMutation,

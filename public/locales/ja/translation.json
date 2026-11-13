@@ -895,6 +895,29 @@
     "UNLOCKED_SUMMARY_one": "",
     "UNLOCKED_SUMMARY_other": ""
   },
+  "MATCH_HISTORY": {
+    "EMPTY": "他のプレイヤーとの対戦を終えると、ここに表示されます。",
+    "FORMATS": {
+      "BRAWL": "ブロウル",
+      "CLASH": "クラッシュ",
+      "COMMONER": "コモナー",
+      "OPEN_BLITZ": "オープンブリッツ",
+      "SEALED": "シールド"
+    },
+    "HEROES": "{{hero}} 対 {{opponentHero}}",
+    "LOSS": "負",
+    "LOSS_LABEL": "敗北",
+    "OPPONENT": "対戦相手：{{name}}",
+    "SAVE_REPLAY": "リプレイを保存",
+    "SUBTITLE": "他のプレイヤーとの直近{{limit}}試合です。",
+    "TITLE": "対戦履歴",
+    "TURNS_other": "{{count}}ターン",
+    "UNKNOWN_OPPONENT": "ゲスト",
+    "WATCH": "#{{number}}を見る",
+    "WATCH_ERROR": "このリプレイを読み込めませんでした。もう一度お試しください。",
+    "WIN": "勝",
+    "WIN_LABEL": "勝利"
+  },
   "MATCH_REVIEW": {
     "CLOSE_MATCH_REVIEW": "",
     "COPY_SHAREABLE_LINK": "",

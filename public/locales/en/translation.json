@@ -1152,6 +1152,30 @@
     "FRAME_OPTION_one": "Preview Mastery {{level}}, earned at {{count}} game",
     "FRAME_OPTION_other": "Preview Mastery {{level}}, earned at {{count}} games"
   },
+  "MATCH_HISTORY": {
+    "EMPTY": "Finish a game against another player and it will show up here.",
+    "FORMATS": {
+      "BRAWL": "Brawl",
+      "CLASH": "Clash",
+      "COMMONER": "Commoner",
+      "OPEN_BLITZ": "Open Blitz",
+      "SEALED": "Sealed"
+    },
+    "HEROES": "{{hero}} vs {{opponentHero}}",
+    "LOSS": "L",
+    "LOSS_LABEL": "Loss",
+    "OPPONENT": "vs {{name}}",
+    "SAVE_REPLAY": "Save replay",
+    "SUBTITLE": "Your last {{limit}} games against other players.",
+    "TITLE": "Match history",
+    "TURNS_one": "{{count}} turn",
+    "TURNS_other": "{{count}} turns",
+    "UNKNOWN_OPPONENT": "Guest",
+    "WATCH": "Watch #{{number}}",
+    "WATCH_ERROR": "Unable to load this replay. Please try again.",
+    "WIN": "W",
+    "WIN_LABEL": "Win"
+  },
   "MATCH_REVIEW": {
     "CAMERA": "Camera",
     "CLOSE_MATCH_REVIEW": "Close match review",
