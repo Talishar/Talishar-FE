@@ -61,6 +61,102 @@ const getSortableHeaderProps = (
   }
 });
 
+export interface CreatedCardResult {
+  cardId: string;
+  cardName: string;
+  pitchValue: number;
+  created: number;
+  damageDealt: number;
+  lifeLost: number;
+  damagePrevented: number;
+}
+
+interface CreatedCardRow extends CreatedCardResult {
+  played: number;
+  blocked: number;
+  pitched: number;
+  discarded: number;
+  hits: number;
+}
+
+type CreatedCardColumn = Exclude<
+  keyof CreatedCardRow,
+  'cardId' | 'cardName' | 'pitchValue'
+>;
+
+const CREATED_CARD_COLUMNS: {
+  field: CreatedCardColumn;
+  labelKey: string;
+  csvLabel: string;
+}[] = [
+  { field: 'created', labelKey: 'END_GAME.CREATED', csvLabel: 'Created' },
+  { field: 'played', labelKey: 'END_GAME.PLAYED', csvLabel: 'Played' },
+  { field: 'blocked', labelKey: 'END_GAME.BLOCKED', csvLabel: 'Blocked' },
+  { field: 'pitched', labelKey: 'END_GAME.PITCHED', csvLabel: 'Pitched' },
+  {
+    field: 'discarded',
+    labelKey: 'END_GAME.DISCARDED',
+    csvLabel: 'Discarded'
+  },
+  { field: 'hits', labelKey: 'END_GAME.TIMES_HIT', csvLabel: 'Times Hit' },
+  {
+    field: 'damageDealt',
+    labelKey: 'END_GAME.DAMAGE_DEALT',
+    csvLabel: 'Damage Dealt'
+  },
+  { field: 'lifeLost', labelKey: 'END_GAME.LIFE_LOST', csvLabel: 'Life Lost' },
+  {
+    field: 'damagePrevented',
+    labelKey: 'END_GAME.DAMAGE_PREVENTED',
+    csvLabel: 'Damage Prevented'
+  }
+];
+
+const emptyCreatedCardRow = (
+  card: Pick<CreatedCardRow, 'cardId' | 'cardName' | 'pitchValue'>
+): CreatedCardRow => ({
+  ...card,
+  created: 0,
+  damageDealt: 0,
+  lifeLost: 0,
+  damagePrevented: 0,
+  played: 0,
+  blocked: 0,
+  pitched: 0,
+  discarded: 0,
+  hits: 0
+});
+
+const buildCreatedCardRows = (
+  tokenResults?: CardResult[],
+  createdCardResults?: CreatedCardResult[]
+): CreatedCardRow[] => {
+  const rows = new Map<string, CreatedCardRow>();
+  for (const r of createdCardResults ?? []) {
+    rows.set(r.cardId, { ...emptyCreatedCardRow(r), ...r });
+  }
+  for (const r of tokenResults ?? []) {
+    if (!(r.played || r.blocked || r.pitched || r.discarded || r.hits)) {
+      continue;
+    }
+    const row = rows.get(r.cardId) ?? emptyCreatedCardRow(r);
+    row.played = r.played;
+    row.blocked = r.blocked;
+    row.pitched = r.pitched;
+    row.discarded = r.discarded;
+    row.hits = r.hits;
+    rows.set(r.cardId, row);
+  }
+  return [...rows.values()].sort((a, b) =>
+    a.cardName.localeCompare(b.cardName)
+  );
+};
+
+const visibleCreatedCardColumns = (rows: CreatedCardRow[]) =>
+  CREATED_CARD_COLUMNS.filter((column) =>
+    rows.some((row) => row[column.field] > 0)
+  );
+
 type CardSortField =
   | 'played'
   | 'blocked'
@@ -232,6 +328,7 @@ export interface EndGameData extends AggregateStats {
   startingLife?: number;
   opponentStartingLife?: number;
   contractsCompleted?: number;
+  createdCardResults?: CreatedCardResult[];
   disruptionValuePerCard?: number;
 }
 
@@ -656,7 +753,9 @@ function downloadViaBackend(
 
 const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
   (data, ref) => {
-    const [statsTab, setStatsTab] = useState<'deck' | 'activated'>('deck');
+    const [statsTab, setStatsTab] = useState<'deck' | 'activated' | 'created'>(
+      'deck'
+    );
     const cardSort = useSortState<CardSortField>();
     const [showAllCards, setShowAllCards] = useState(false);
     const statsRef = useRef<HTMLDivElement>(null);
@@ -1237,15 +1336,21 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
             });
           }
 
-          const playedTokenResults = playerData.tokenResults?.filter(
-            (r) => r.played > 0
+          const csvCreatedRows = buildCreatedCardRows(
+            playerData.tokenResults,
+            playerData.createdCardResults
           );
-          if (playedTokenResults && playedTokenResults.length > 0) {
-            content += '\nNON-DECK CARDS\n';
-            content += 'Card Name,Played,Blocked,Pitched,Times Hit\n';
-            playedTokenResults.forEach((result) => {
-              const cardName = result.cardName.replace(/,/g, ';');
-              content += `"${cardName}",${result.played},${result.blocked},${result.pitched},${result.hits}\n`;
+          if (csvCreatedRows.length > 0) {
+            const csvCreatedColumns = visibleCreatedCardColumns(csvCreatedRows);
+            content += '\nCARD CREATED STATS\n';
+            content += `Card Name${csvCreatedColumns
+              .map((column) => `,${column.csvLabel}`)
+              .join('')}\n`;
+            csvCreatedRows.forEach((row) => {
+              const cardName = row.cardName.replace(/,/g, ';');
+              content += `"${cardName}"${csvCreatedColumns
+                .map((column) => `,${row[column.field]}`)
+                .join('')}\n`;
             });
           }
 
@@ -1377,6 +1482,21 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
         a.cardName.localeCompare(b.cardName)
       );
     }, [data.arenaCardResults, data.cardResults]);
+
+    const createdCardRows = useMemo(
+      () => buildCreatedCardRows(data.tokenResults, data.createdCardResults),
+      [data.tokenResults, data.createdCardResults]
+    );
+
+    const createdCardColumns = useMemo(
+      () => visibleCreatedCardColumns(createdCardRows),
+      [createdCardRows]
+    );
+
+    const shownStatsTab =
+      statsTab === 'created' && createdCardRows.length === 0
+        ? 'deck'
+        : statsTab;
 
     const activatedColumns = useMemo(
       () => ({
@@ -2004,7 +2124,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
                 <div className={styles.statsTabs}>
                   <button
                     className={`${styles.statsTab} ${
-                      statsTab === 'deck' ? styles.statsTabActive : ''
+                      shownStatsTab === 'deck' ? styles.statsTabActive : ''
                     }`}
                     onClick={() => setStatsTab('deck')}
                   >
@@ -2012,14 +2132,24 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
                   </button>
                   <button
                     className={`${styles.statsTab} ${
-                      statsTab === 'activated' ? styles.statsTabActive : ''
+                      shownStatsTab === 'activated' ? styles.statsTabActive : ''
                     }`}
                     onClick={() => setStatsTab('activated')}
                   >
                     {t('END_GAME.CARD_ACTIVATED_STATS')}
                   </button>
+                  {createdCardRows.length > 0 && (
+                    <button
+                      className={`${styles.statsTab} ${
+                        shownStatsTab === 'created' ? styles.statsTabActive : ''
+                      }`}
+                      onClick={() => setStatsTab('created')}
+                    >
+                      {t('END_GAME.CARD_CREATED_STATS')}
+                    </button>
+                  )}
                 </div>
-                {statsTab === 'deck' && (
+                {shownStatsTab === 'deck' && (
                   <label
                     className={styles.excludeLastTurnLabel}
                     title={t('END_GAME.SHOW_ALL_CARDS_TITLE')}
@@ -2036,7 +2166,50 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
                   </label>
                 )}
               </div>
-              {statsTab === 'activated' ? (
+              {shownStatsTab === 'created' ? (
+                <ScrollableTable>
+                  <table className={styles.cardTable}>
+                    <thead>
+                      <tr className={styles.headers}>
+                        <th
+                          className={`${styles.firstHeadersStats} ${styles.hideOnExport}`}
+                        ></th>
+                        <th
+                          className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
+                        >
+                          {t('END_GAME.CARD_NAME')}
+                        </th>
+                        {createdCardColumns.map((column) => (
+                          <th
+                            key={column.field}
+                            className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
+                          >
+                            {t(column.labelKey)}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {createdCardRows.map((row) => (
+                        <tr key={`createdList${row.cardId}`}>
+                          <CardThumbnailCell
+                            cardId={row.cardId}
+                            imgClassName={getPitchStyles(row.pitchValue).border}
+                          />
+                          <td className={styles.zeroPitch} title={row.cardName}>
+                            {row.cardName}
+                          </td>
+                          {createdCardColumns.map((column) => (
+                            <td key={column.field} className={styles.cardStat}>
+                              {row[column.field]}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </ScrollableTable>
+              ) : shownStatsTab === 'activated' ? (
                 <ScrollableTable>
                   <table className={styles.cardTable}>
                     <thead>
@@ -2243,85 +2416,6 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
                   </table>
                 </ScrollableTable>
               )}
-              {statsTab === 'deck' &&
-                data.tokenResults &&
-                data.tokenResults.filter((r) => r.played > 0).length > 0 && (
-                  <>
-                    <h3 className={styles.subSectionHeader}>
-                      {t('END_GAME.NON_DECK_CARDS_PLAYED')}
-                    </h3>
-                    <ScrollableTable>
-                      <table className={styles.cardTable}>
-                        <thead>
-                          <tr className={styles.headers}>
-                            <th
-                              className={`${styles.firstHeadersStats} ${styles.hideOnExport}`}
-                            ></th>
-                            <th
-                              className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
-                            >
-                              {t('END_GAME.CARD_NAME')}
-                            </th>
-                            <th
-                              className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
-                            >
-                              {t('END_GAME.PLAYED')}
-                            </th>
-                            <th
-                              className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
-                            >
-                              {t('END_GAME.BLOCKED')}
-                            </th>
-                            <th
-                              className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
-                            >
-                              {t('END_GAME.PITCHED')}
-                            </th>
-                            <th
-                              className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
-                            >
-                              {t('END_GAME.TIMES_HIT')}
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {data.tokenResults
-                            .filter((r) => r.played > 0)
-                            .map((result, ix) => {
-                              return (
-                                <tr key={`tokenList${ix}`}>
-                                  <CardThumbnailCell
-                                    cardId={result.cardId}
-                                    imgClassName={
-                                      getPitchStyles(result.pitchValue).border
-                                    }
-                                  />
-                                  <td
-                                    className={styles.zeroPitch}
-                                    title={result.cardName}
-                                  >
-                                    {result.cardName}
-                                  </td>
-                                  <td className={styles.played}>
-                                    {result.played}
-                                  </td>
-                                  <td className={styles.blocked}>
-                                    {result.blocked}
-                                  </td>
-                                  <td className={styles.pitched}>
-                                    {result.pitched}
-                                  </td>
-                                  <td className={styles.cardStat}>
-                                    {result.hits}
-                                  </td>
-                                </tr>
-                              );
-                            })}
-                        </tbody>
-                      </table>
-                    </ScrollableTable>
-                  </>
-                )}
             </div>
           </div>
 

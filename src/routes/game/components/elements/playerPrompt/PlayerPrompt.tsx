@@ -43,7 +43,15 @@ const PlayerPrompt = React.memo(() => {
       displayedPrompt?.buttons?.map((button: Button, ix: number) => (
         <div
           className={styles.buttonDiv}
+          role="button"
+          tabIndex={0}
           onClick={() => dispatch(submitButton({ button }))}
+          onKeyDown={(e) => {
+            if (e.key !== 'Enter' && e.key !== ' ') return;
+            e.preventDefault();
+            e.stopPropagation();
+            dispatch(submitButton({ button }));
+          }}
           key={`${button.mode ?? ix}-${button.caption ?? ix}`}
         >
           {button.caption}

@@ -8,6 +8,8 @@ import CardImage from '../cardImage/CardImage';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import CountersOverlay from '../countersOverlay/CountersOverlay';
 import { selectSidePlayer } from 'features/game/perspective';
+import classNames from 'classnames';
+import { effectKeys, useEffectArrival } from './effectArrivalStore';
 
 export const PHONE_PORTRAIT_QUERY =
   '(orientation: portrait) and (max-width: 600px)';
@@ -18,10 +20,15 @@ export interface CardProp {
   name?: string;
   imgClassName?: string;
   isPlayer?: boolean;
+  arrivalKey?: string;
 }
 
 export function Effect(prop: CardProp) {
-  const { card, imgClassName, isPlayer } = prop;
+  const { card, imgClassName, isPlayer, arrivalKey } = prop;
+  const arrival = useEffectArrival(
+    isPlayer ? 'player' : 'opponent',
+    arrivalKey
+  );
   const src = generateCroppedImageUrl(prop.card.cardNumber);
   // Get the number value - check counters first, then use num from card if available
   const numValue = card.counters ?? (card as any).num ?? 0;
@@ -35,7 +42,12 @@ export function Effect(prop: CardProp) {
       isOpponent={!isPlayer}
       disableTilt
     >
-      <div className={styles.overlayContainer}>
+      <div
+        className={classNames(styles.overlayContainer, {
+          [styles.arriving]: arrival === 'arriving'
+        })}
+        data-effect-key={arrivalKey}
+      >
         <CardImage
           src={src}
           alt={card.cardName ?? prop.name ?? ''}
@@ -48,8 +60,12 @@ export function Effect(prop: CardProp) {
   );
 }
 
-export default function Effects(props: Player & { underEquipment?: boolean }) {
-  const classCSS = props.underEquipment
+export default function Effects(
+  props: Player & { underEquipment?: boolean; inBoard?: boolean }
+) {
+  const classCSS = props.inBoard
+    ? classNames(styles.inBoard, { [styles.inBoardOpponent]: !props.isPlayer })
+    : props.underEquipment
     ? styles.underEquipment
     : props.isPlayer
     ? styles.isPlayer
@@ -64,18 +80,20 @@ export default function Effects(props: Player & { underEquipment?: boolean }) {
     return <div className={classCSS}></div>;
   }
 
-  const seen = new Map<string, number>();
+  const keys = effectKeys(effects);
   return (
-    <div className={classCSS}>
-      {effects.map((card: Card) => {
-        const occurrence = seen.get(card.cardNumber) ?? 0;
-        seen.set(card.cardNumber, occurrence + 1);
-        const key =
-          card.uniqueId && card.uniqueId !== '-'
-            ? card.uniqueId
-            : `${card.cardNumber}#${occurrence}`;
-        return <Effect card={card} key={key} isPlayer={props.isPlayer} />;
-      })}
+    <div
+      className={classCSS}
+      data-effects-side={isPlayer ? 'player' : 'opponent'}
+    >
+      {effects.map((card: Card, i) => (
+        <Effect
+          card={card}
+          key={keys[i]}
+          arrivalKey={keys[i]}
+          isPlayer={props.isPlayer}
+        />
+      ))}
     </div>
   );
 }

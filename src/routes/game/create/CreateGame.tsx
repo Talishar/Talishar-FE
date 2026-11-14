@@ -6,7 +6,6 @@ import {
   GAME_VISIBILITY,
   AI_DECK,
   AI_DECKS_FOR_FORMAT,
-  isSmallDeckFormat,
   isPreconFormat,
   PRECON_DECKS,
   FAB_BAZAAR_DECK_URL_BASE,
@@ -18,8 +17,10 @@ import {
   useGetHeroMasteryQuery,
   useGetBazaarDecksQuery,
   useClearRustCountersMutation,
-  useGetLegalHeroesQuery
+  useGetLegalHeroesQuery,
+  useGetLegalHeroIdsQuery
 } from 'features/api/apiSlice';
+import { isHeroLegalIn } from 'utils/heroLegality';
 import {
   selectMetafyId,
   selectCurrentUserName,
@@ -35,17 +36,11 @@ import useRustCounters, {
 import { CreateGameAPI } from 'interface/API/CreateGame.php';
 import { BazaarDeck } from 'interface/API/GetBazaarDecks';
 import { FavoriteDeck } from 'interface/API/GetFavoriteDecks.php';
-import { toast } from 'react-hot-toast';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import styles from './CreateGame.module.css';
 import { FieldErrors, SubmitHandler, useForm } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
-import {
-  FaExclamationCircle,
-  FaQuestionCircle,
-  FaChevronUp,
-  FaChevronDown
-} from 'react-icons/fa';
+import { FaQuestionCircle, FaChevronUp, FaChevronDown } from 'react-icons/fa';
 import {
   HEROES_OF_RATHE,
   CLASS_OF_RATHE
@@ -67,6 +62,14 @@ import MasteryProgressCard from 'features/mastery/MasteryProgressCard';
 import { emptyMastery, masteryHeroId } from 'features/mastery/mastery';
 import { getCookie, setCookie } from 'utils/cookies';
 import { formatDeckLabel } from 'utils/formatUtils';
+import DeckLegality from 'components/DeckLegality';
+import Notice, { ServerErrorNotice } from 'components/Notice';
+import {
+  describeThrownError,
+  ServerError,
+  toServerError
+} from 'utils/serverError';
+import FindMatchStatus from 'routes/index/components/findMatch/FindMatchStatus';
 
 type CreateGameProps = {
   inUnifiedPanel?: boolean;
@@ -201,7 +204,6 @@ const CreateGame = ({
     formState: { isSubmitting, errors },
     register,
     handleSubmit,
-    setError,
     reset,
     setValue,
     watch
@@ -306,8 +308,59 @@ const CreateGame = ({
   const deckTestMode = watch('deckTestMode');
   const deckTestDeck = watch('deckTestDeck');
   const formVisibility = watch('visibility');
+  const formGameDescription = watch('gameDescription');
   const isPrivateGame =
     !hasUserLayout || formVisibility === GAME_VISIBILITY.PRIVATE;
+  const activeFormat = normalizeFormat(formFormat || selectedFormat) ?? '';
+  const standaloneDeckHero =
+    standaloneDeckSource === 'bazaar'
+      ? bazaarData?.decks?.find(
+          (deck: BazaarDeck) =>
+            (deck.id ?? deck.deckId) === standaloneSelectedBazaarDeck
+        )?.hero
+      : data?.favoriteDecks.find(
+          (deck: FavoriteDeck) => deck.key === selectedFavoriteDeck
+        )?.hero;
+  const canFindMatch = isEmbedded && isLoggedIn && !deckTestMode;
+  const findMatchSummary = quickJoinCtx?.findMatchStatus?.summary;
+  const isHeroIllegalForQueue =
+    findMatchSummary?.format === activeFormat &&
+    findMatchSummary.heroLegal === false;
+  const { data: legalHeroIds } = useGetLegalHeroIdsQuery();
+  const isDeckHeroIllegal =
+    isHeroIllegalForQueue ||
+    isHeroLegalIn(
+      isEmbedded ? quickJoinCtx?.selectedDeckHero : standaloneDeckHero,
+      activeFormat,
+      legalHeroIds
+    ) === false;
+  const [isFindingMatch, setIsFindingMatch] = useState(false);
+  const [serverError, setServerError] = useState<ServerError | null>(null);
+
+  // A failure from the last attempt no longer applies once the deck or format changes.
+  const activeDeckKey = quickJoinCtx
+    ? `${quickJoinCtx.effectiveFabdb}|${quickJoinCtx.effectiveFavoriteDecks}`
+    : `${standaloneDeckSource}|${selectedFavoriteDeck}|${standaloneSelectedBazaarDeck}`;
+  useEffect(() => {
+    setServerError(null);
+  }, [activeFormat, activeDeckKey]);
+
+  // Find match uses the same format and hero preference as the lobby.
+  const setFindMatchCriteria = quickJoinCtx?.setFindMatchCriteria;
+  const preconHero = isPreconFormat(activeFormat)
+    ? PRECON_DECKS.HEROES[PRECON_DECKS.LINKS.indexOf(selectedPreconDeck)] ??
+      null
+    : null;
+  useEffect(() => {
+    if (!isEmbedded || !setFindMatchCriteria) return;
+    setFindMatchCriteria(activeFormat, formGameDescription ?? '', preconHero);
+  }, [
+    isEmbedded,
+    setFindMatchCriteria,
+    activeFormat,
+    formGameDescription,
+    preconHero
+  ]);
 
   const aiDeckOptions: ImageSelectOption[] = React.useMemo(
     () =>
@@ -421,7 +474,15 @@ const CreateGame = ({
   }, []);
 
   const handleFormatChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newFormat = e.target.value;
+    applyFormat(e.target.value);
+  };
+
+  const selectFormat = (newFormat: string) => {
+    applyFormat(newFormat);
+    setValue('format', newFormat, { shouldDirty: true });
+  };
+
+  function applyFormat(newFormat: string) {
     const wasPrecon = isPreconFormat(previousFormat);
     const isNewPrecon = isPreconFormat(newFormat);
 
@@ -436,7 +497,7 @@ const CreateGame = ({
       setValue('fabdb', '');
     }
     // If switching between non-precon formats, don't touch fabdb
-  };
+  }
 
   const handleGameDescriptionChange = (
     e: React.ChangeEvent<HTMLSelectElement>
@@ -711,6 +772,7 @@ const CreateGame = ({
       requestRustPanelAttention();
       return;
     }
+    setServerError(null);
     try {
       // if you're not logged in you can ONLY make a private game.
       if (!isLoggedIn) values.visibility = GAME_VISIBILITY.PRIVATE;
@@ -775,7 +837,9 @@ const CreateGame = ({
 
       const response = await createGame(values).unwrap();
       if (response.error) {
-        throw response.error;
+        if (values.findMatchTicket)
+          quickJoinCtx?.cancelFindMatchTicket(values.findMatchTicket);
+        setServerError(toServerError(response.error, response.errorCards));
       } else {
         if (!response.playerID || !response.gameName || !response.authKey) {
           throw new Error('A required param is missing');
@@ -805,25 +869,119 @@ const CreateGame = ({
       }
     } catch (error) {
       console.warn(error);
-      toast.error(String(error), { position: 'top-center' });
-      setError('root.serverError', {
-        type: 'custom',
-        message: `There has been an error while creating your game. Error: ${JSON.stringify(
-          error
-        )} Please try again.`
+      if (values.findMatchTicket)
+        quickJoinCtx?.cancelFindMatchTicket(values.findMatchTicket);
+      setServerError({
+        title: describeThrownError(error, t('NOTICE.CREATE_FAILED'))
       });
     }
   };
 
-  const onInvalid = (formErrors: FieldErrors<CreateGameAPI>) => {
-    if (formErrors.favoriteDecks?.message) {
-      toast.error(formErrors.favoriteDecks.message, { position: 'top-center' });
-    } else if (formErrors.fabdb?.message) {
-      toast.error(formErrors.fabdb.message, { position: 'top-center' });
+  // Join the longest-waiting lobby that fits, or host a public one when none does.
+  const handleFindMatch = async () => {
+    if (!quickJoinCtx || isFindingMatch || isSubmitting) return;
+    if (isRustLocked) {
+      requestRustPanelAttention();
+      return;
+    }
+    const isPrecon = isPreconFormat(activeFormat);
+    if (!isPrecon && !quickJoinCtx.hasDeckConfigured) {
+      setServerError({ title: t('FIND_MATCH.NEED_DECK') });
+      return;
+    }
+    setServerError(null);
+    setIsFindingMatch(true);
+    try {
+      // The server decides each step under one lock, so two players searching
+      // at once are paired instead of both hosting.
+      const failedLobbies: number[] = [];
+      const deadline = Date.now() + 45000;
+      while (Date.now() < deadline) {
+        const step = await quickJoinCtx.findMatchStep(failedLobbies);
+        if (step.action === 'wait') {
+          await new Promise((resolve) => setTimeout(resolve, step.retryMs));
+          continue;
+        }
+        if (step.action === 'join') {
+          for (const gameName of step.games) {
+            const attempt = await quickJoinCtx.joinWithDeck(gameName, {
+              fabdb: isPrecon ? selectedPreconDeck : undefined,
+              findMatch: true
+            });
+            if (attempt.ok) return;
+            if (!attempt.lobbyTaken) {
+              setServerError(toServerError(attempt.error, attempt.cards));
+              return;
+            }
+            failedLobbies.push(gameName);
+          }
+          continue;
+        }
+        if (step.action === 'host') {
+          const ticket = step.ticket;
+          let submitted = false;
+          await handleSubmit((values) => {
+            submitted = true;
+            return onSubmit({
+              ...values,
+              visibility: GAME_VISIBILITY.PUBLIC,
+              deckTestMode: false,
+              findMatchTicket: ticket
+            });
+          }, onInvalid)();
+          if (!submitted) quickJoinCtx.cancelFindMatchTicket(ticket);
+          return;
+        }
+        setServerError({
+          title: step.error ?? t('FIND_MATCH.SEARCH_TIMEOUT')
+        });
+        return;
+      }
+      setServerError({ title: t('FIND_MATCH.SEARCH_TIMEOUT') });
+    } finally {
+      setIsFindingMatch(false);
     }
   };
 
+  const onInvalid = (formErrors: FieldErrors<CreateGameAPI>) => {
+    const message =
+      formErrors.favoriteDecks?.message ?? formErrors.fabdb?.message;
+    if (message) setServerError({ title: message });
+  };
+
   const buttonClass = classNames(styles.button, 'primary');
+
+  // While rust-locked the button stays clickable
+  // so it can direct the user to the rust counter panel.
+  const createButton = (
+    <button
+      type={isRustLocked ? 'button' : 'submit'}
+      className={classNames(
+        buttonClass,
+        isEmbedded && styles.embeddedSubmitButton,
+        isRustLocked && styles.submitLocked
+      )}
+      disabled={
+        isSubmitting || isAuthPending || isFindingMatch || isDeckHeroIllegal
+      }
+      aria-disabled={isRustLocked || undefined}
+      aria-busy={isSubmitting && !isFindingMatch}
+      onClick={
+        isRustLocked
+          ? (e) => {
+              e.preventDefault();
+              requestRustPanelAttention();
+            }
+          : undefined
+      }
+    >
+      {isSubmitting && !isFindingMatch
+        ? t('GAME_LOBBY.SUBMITTING')
+        : hasUserLayout
+        ? t('MENU.CREATE_GAME.TITLE')
+        : t('MENU.CREATE_GAME.PRIVATE_TITLE')}
+    </button>
+  );
 
   return (
     <div>
@@ -954,6 +1112,13 @@ const CreateGame = ({
                       aria-label={t('MENU.CREATE_GAME.SELECTED_DECK')}
                       aria-busy={isBazaarLoading}
                     />
+                    {standaloneSelectedBazaarDeck && (
+                      <DeckLegality
+                        heroId={standaloneDeckHero}
+                        format={activeFormat}
+                        onSelectFormat={selectFormat}
+                      />
+                    )}
                   </label>
                 ) : (
                   <p className={styles.bazaarMessage}>
@@ -986,15 +1151,17 @@ const CreateGame = ({
                         errors.favoriteDecks?.message ? 'true' : undefined
                       }
                     />
+                    {selectedFavoriteDeck && (
+                      <DeckLegality
+                        heroId={standaloneDeckHero}
+                        format={activeFormat}
+                        onSelectFormat={selectFormat}
+                      />
+                    )}
                     <input
                       type="hidden"
                       {...register('favoriteDecks')}
                       value={selectedFavoriteDeck}
-                    />
-                    <ErrorMessage
-                      errors={errors}
-                      name="favoriteDecks"
-                      render={({ message }) => <p>{message}</p>}
                     />
                   </label>
                 )}
@@ -1003,9 +1170,7 @@ const CreateGame = ({
                   errors={errors}
                   name="favoriteDecks"
                   render={({ message }) => (
-                    <p className={styles.fieldError}>
-                      <FaExclamationCircle /> {message}
-                    </p>
+                    <Notice tone="error" title={message} />
                   )}
                 />
               )}
@@ -1087,9 +1252,7 @@ const CreateGame = ({
                       errors={errors}
                       name="fabdb"
                       render={({ message }) => (
-                        <p className={styles.fieldError}>
-                          <FaExclamationCircle /> {message}
-                        </p>
+                        <Notice tone="error" title={message} />
                       )}
                     />
                   </label>
@@ -1439,6 +1602,16 @@ const CreateGame = ({
                     </option>
                   </optgroup>
                 </select>
+                {isEmbedded &&
+                  !canFindMatch &&
+                  !isPreconFormat(activeFormat) && (
+                    <DeckLegality
+                      heroId={quickJoinCtx?.selectedDeckHero}
+                      format={activeFormat}
+                      onlyMismatch
+                      onSelectFormat={selectFormat}
+                    />
+                  )}
               </label>
               <fieldset>
                 {hasUserLayout && (
@@ -1508,43 +1681,53 @@ const CreateGame = ({
                 )}
               </fieldset>
             </div>
-            {/* While rust-locked the button stays clickable
-                so it can direct the user to the rust counter panel. */}
-            <button
-              type={isRustLocked ? 'button' : 'submit'}
-              className={classNames(
-                buttonClass,
-                isEmbedded && styles.embeddedSubmitButton,
-                isRustLocked && styles.submitLocked
-              )}
-              disabled={isSubmitting || isAuthPending}
-              aria-disabled={isRustLocked || undefined}
-              aria-busy={isSubmitting}
-              onClick={
-                isRustLocked
-                  ? (e) => {
-                      e.preventDefault();
-                      requestRustPanelAttention();
-                    }
-                  : undefined
-              }
-            >
-              {isSubmitting
-                ? t('GAME_LOBBY.SUBMITTING')
-                : hasUserLayout
-                ? t('MENU.CREATE_GAME.TITLE')
-                : t('MENU.CREATE_GAME.PRIVATE_TITLE')}
-            </button>
+            {canFindMatch && (
+              <FindMatchStatus
+                status={quickJoinCtx?.findMatchStatus}
+                format={activeFormat}
+                heroId={quickJoinCtx?.selectedDeckHero}
+                onSelectFormat={selectFormat}
+                hasDeck={
+                  isPreconFormat(activeFormat) ||
+                  !!quickJoinCtx?.hasDeckConfigured
+                }
+              />
+            )}
+            {canFindMatch ? (
+              <div className={styles.findMatchActions}>
+                <button
+                  type="button"
+                  className={classNames(
+                    styles.findMatchButton,
+                    'secondary',
+                    isRustLocked && styles.submitLocked
+                  )}
+                  disabled={
+                    isFindingMatch ||
+                    isSubmitting ||
+                    isAuthPending ||
+                    isDeckHeroIllegal
+                  }
+                  aria-disabled={isRustLocked || undefined}
+                  aria-busy={isFindingMatch}
+                  title={t('FIND_MATCH.BUTTON_TITLE')}
+                  onClick={handleFindMatch}
+                >
+                  {isFindingMatch
+                    ? t('FIND_MATCH.FINDING')
+                    : t('FIND_MATCH.BUTTON')}
+                </button>
+                {createButton}
+              </div>
+            ) : (
+              createButton
+            )}
             {isRustLocked && (
               <div className={styles.rustLockedHint}>
                 {t('MENU.CREATE_GAME.RUST_LOCKED_HINT')}
               </div>
             )}
-            {errors.root?.serverError?.message && (
-              <div className={styles.fieldError}>
-                <FaExclamationCircle /> {errors.root?.serverError?.message}
-              </div>
-            )}
+            {serverError && <ServerErrorNotice error={serverError} />}
           </form>
         )}
       </article>

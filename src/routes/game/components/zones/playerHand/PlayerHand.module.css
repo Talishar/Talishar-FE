@@ -58,6 +58,18 @@
   height: calc(3 * var(--fan-window-vh));
 }
 
+:global(body.fanPortraitHand) .fanCollapseDock {
+  right: auto;
+  bottom: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:global(body.fanPortraitHand) .handCollapseButton {
+  position: static;
+}
+
 :global(body.fanLandscapeHand) :is(.fanStage, .fanCollapseDock) {
   margin-right: calc(-1 * var(--fan-fullscreen-overflow, 0px));
 }

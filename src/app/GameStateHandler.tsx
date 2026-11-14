@@ -78,6 +78,7 @@ const GameStateHandler = ({
   const [seatLookup, setSeatLookup] = useState<SeatLookup | null>(null);
   const seatLookupKeyRef = useRef('');
   const gameOverRef = useRef(false);
+  const resultPendingRef = useRef(false);
   const onInitialStateReceivedRef = useRef(onInitialStateReceived);
   const onLoadingErrorRef = useRef(onLoadingError);
 
@@ -388,6 +389,7 @@ const GameStateHandler = ({
     if (gameParamsRef.current.gameID !== currentGameID) {
       retryCountRef.current = 0;
       gameOverRef.current = false;
+      resultPendingRef.current = false;
       gameParamsRef.current = {
         gameID: currentGameID,
         playerID: currentPlayerID,
@@ -520,6 +522,7 @@ const GameStateHandler = ({
             ) {
               gameOverRef.current = false;
             }
+            resultPendingRef.current = !!parsedState.resultPending;
 
             dispatch(receiveGameState(parsedState));
             onInitialStateReceivedRef.current?.(currentGameID);
@@ -580,7 +583,7 @@ const GameStateHandler = ({
           source.close();
           sourceRef.current = null;
 
-          if (gameOverRef.current) return;
+          if (gameOverRef.current && !resultPendingRef.current) return;
 
           if (!hasConnected && retryCountRef.current === 1) {
             // Transient interruption during page load - retry once quickly
@@ -609,7 +612,11 @@ const GameStateHandler = ({
     }, 100);
 
     const stalenessWatchdog = setInterval(() => {
-      if (gameOverRef.current || streamPausedRef.current) return;
+      if (
+        (gameOverRef.current && !resultPendingRef.current) ||
+        streamPausedRef.current
+      )
+        return;
       if (Date.now() - lastEventTimeRef.current > 45000) {
         lastEventTimeRef.current = Date.now();
         setForceRetry((prev) => prev + 1);

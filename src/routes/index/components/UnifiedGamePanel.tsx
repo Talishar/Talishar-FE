@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa';
 import useAuth from 'hooks/useAuth';
 import useSupporterStatus from 'hooks/useSupporterStatus';

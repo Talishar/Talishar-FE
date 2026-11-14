@@ -571,6 +571,7 @@ export default function ParseGameState(input: any) {
 
   result.inactivityDeadline = input.inactivityDeadline ?? undefined;
   result.gameDeleteDeadline = input.gameDeleteDeadline ?? undefined;
+  result.resultPending = input.resultPending ?? undefined;
   result.serverTimeOffset = input.serverTime
     ? input.serverTime - Date.now()
     : undefined;

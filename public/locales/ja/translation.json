@@ -171,6 +171,7 @@
     "LOG": "",
     "QUICK_CHAT": "",
     "RECENT": "",
+    "SEND": "",
     "TYPING": ""
   },
   "COMBAT_CHAIN": {
@@ -285,7 +286,6 @@
     "METAFY": "",
     "MORE": "",
     "MORE_OPTIONS": "",
-    "NON_DECK_CARDS_PLAYED": "",
     "OPPONENT_HERO": "",
     "OPP_LIFE": "",
     "PASSIVE_TRIGGERED": "",
@@ -895,6 +895,29 @@
     "UNLOCKED_SUMMARY_one": "",
     "UNLOCKED_SUMMARY_other": ""
   },
+  "MATCH_HISTORY": {
+    "EMPTY": "他のプレイヤーとの対戦を終えると、ここに表示されます。",
+    "FORMATS": {
+      "BRAWL": "ブロウル",
+      "CLASH": "クラッシュ",
+      "COMMONER": "コモナー",
+      "OPEN_BLITZ": "オープンブリッツ",
+      "SEALED": "シールド"
+    },
+    "HEROES": "{{hero}} 対 {{opponentHero}}",
+    "LOSS": "負",
+    "LOSS_LABEL": "敗北",
+    "OPPONENT": "対戦相手：{{name}}",
+    "SAVE_REPLAY": "リプレイを保存",
+    "SUBTITLE": "他のプレイヤーとの直近{{limit}}試合です。",
+    "TITLE": "対戦履歴",
+    "TURNS_other": "{{count}}ターン",
+    "UNKNOWN_OPPONENT": "ゲスト",
+    "WATCH": "#{{number}}を見る",
+    "WATCH_ERROR": "このリプレイを読み込めませんでした。もう一度お試しください。",
+    "WIN": "勝",
+    "WIN_LABEL": "勝利"
+  },
   "MATCH_REVIEW": {
     "CLOSE_MATCH_REVIEW": "",
     "COPY_SHAREABLE_LINK": "",
@@ -1015,6 +1038,11 @@
         "PUBLIC_LOBBY": ""
       },
       "VISIBILITY": "公開範囲"
+    },
+    "FANNED_HAND_TIP": {
+      "CLOSE": "",
+      "GOT_IT": "",
+      "TEXT": ""
     },
     "FULLSCREEN": "",
     "HIDE_ARENA": "",
@@ -1539,12 +1567,10 @@
     "DISABLE_GLOBAL_STATS_TOOLTIP": "",
     "DISABLE_HERO_INTRO_ANIMATION": "",
     "DISABLE_PARTICLE_EFFECTS": "",
-    "FANNED_HAND_MOBILE": "",
-    "FANNED_HAND_MOBILE_TOOLTIP": "",
+    "CLASSIC_HAND": "",
+    "CLASSIC_HAND_TOOLTIP": "",
     "AUTO_LANDSCAPE_MOBILE": "",
     "AUTO_LANDSCAPE_MOBILE_TOOLTIP": "",
-    "FANNED_HAND_PC": "",
-    "FANNED_HAND_PC_TOOLTIP": "",
     "FORCE_MOBILE_LAYOUT": "",
     "FORCE_MOBILE_LAYOUT_OPTIONS": {
       "NO": "",

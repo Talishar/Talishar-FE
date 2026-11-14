@@ -122,7 +122,10 @@ export const PROCESS_INPUT = {
   OFFER_DRAW: 100027,
   ACCEPT_DRAW: 100028,
   DECLINE_DRAW: 100029,
-  CLAIM_DRAW_OVER_INACTIVE_OPPONENT: 100030
+  CLAIM_DRAW_OVER_INACTIVE_OPPONENT: 100030,
+  ACCEPT_TAKEBACK: 100031,
+  DECLINE_TAKEBACK: 100032,
+  SEND_HELD_RESULT: 100033
 };
 
 // Default shortcut inputs
@@ -407,6 +410,9 @@ export const URL_END_POINT = {
   CREATE_GAME: 'APIs/CreateGame.php',
   REPLAYS: 'APIs/CreateReplayGame.php',
   GET_SAVED_REPLAYS: 'APIs/GetSavedReplays.php',
+  GET_RECENT_GAMES: 'APIs/GetRecentGames.php',
+  SAVE_RECENT_GAME: 'APIs/SaveRecentGame.php',
+  GET_MATCH_HISTORY: 'APIs/GetMatchHistory.php',
   GET_REPLAY_TURNS: 'APIs/GetReplayTurns.php',
   SET_REPLAY_FAVORITE: 'APIs/SetReplayFavorite.php',
   SET_REPLAY_NOTE: 'APIs/SetReplayNote.php',
@@ -469,6 +475,8 @@ export const URL_END_POINT = {
   GET_APP_INFO: 'AccountFiles/GetAppInfoAPI.php',
   GET_HERO_MASTERY: 'APIs/GetHeroMastery.php',
   GET_LEGAL_HEROES: 'APIs/GetLegalHeroes.php',
+  GET_FIND_MATCH_STATUS: 'APIs/GetFindMatchStatus.php',
+  FIND_MATCH: 'APIs/FindMatch.php',
   SAVE_HERO_MASTERY_FRAME: 'APIs/SaveHeroMasteryFrame.php',
   GENERATE_AUTH_TOKEN: 'AccountFiles/GenerateAuthTokenAPI.php'
 };

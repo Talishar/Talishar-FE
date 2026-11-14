@@ -45,6 +45,12 @@ import {
   UpdateBazaarMatchupResponse
 } from 'interface/API/UpdateBazaarMatchup';
 import { GameListResponse } from 'routes/index/components/gameList/GameList';
+import {
+  FindMatchRequest,
+  FindMatchResponse,
+  FindMatchStatusRequest,
+  FindMatchStatusResponse
+} from 'interface/API/GetFindMatchStatus.php';
 import { GetCosmeticsResponse } from 'interface/API/GetCosmeticsResponse.php';
 import {
   DeleteDeckAPIRequest,
@@ -119,6 +125,12 @@ import {
   DeleteReplayRequest,
   DeleteReplayResponse
 } from 'interface/API/GetSavedReplays.php';
+import {
+  GetRecentGamesResponse,
+  SaveRecentGameRequest,
+  SaveRecentGameResponse
+} from 'interface/API/GetRecentGames.php';
+import { GetMatchHistoryResponse } from 'interface/API/GetMatchHistory.php';
 import {
   HeroMasteryResponse,
   SaveHeroMasteryFrameRequest,
@@ -248,6 +260,7 @@ export const apiSlice = createApi({
     'Auth',
     'SystemMessage',
     'SavedReplays',
+    'RecentGames',
     'HeroMastery',
     'PlayerReports',
     'BlockReports'
@@ -261,6 +274,22 @@ export const apiSlice = createApi({
         method: 'GET',
         responseHandler: parseResponse
       })
+    }),
+    getLegalHeroIds: builder.query<Record<string, string[]>, void>({
+      query: () => ({
+        url: `${URL_END_POINT.GET_LEGAL_HEROES}?by=setId`,
+        method: 'GET',
+        responseHandler: parseResponse
+      })
+    }),
+    getFindMatchStatus: builder.query<
+      FindMatchStatusResponse,
+      FindMatchStatusRequest
+    >({
+      query: (body) => postJson(URL_END_POINT.GET_FIND_MATCH_STATUS, body)
+    }),
+    findMatch: builder.mutation<FindMatchResponse, FindMatchRequest>({
+      query: (body) => postJson(URL_END_POINT.FIND_MATCH, body)
     }),
     getHeroMastery: builder.query<
       HeroMasteryResponse,
@@ -563,6 +592,31 @@ export const apiSlice = createApi({
       }),
       providesTags: ['SavedReplays']
     }),
+    getRecentGames: builder.query<GetRecentGamesResponse, void>({
+      query: () => ({
+        url: URL_END_POINT.GET_RECENT_GAMES,
+        method: 'GET'
+      }),
+      providesTags: ['RecentGames']
+    }),
+    saveRecentGame: builder.mutation<
+      SaveRecentGameResponse,
+      SaveRecentGameRequest
+    >({
+      query: (body) => ({
+        url: URL_END_POINT.SAVE_RECENT_GAME,
+        method: 'POST',
+        body,
+        responseHandler: parseResponse
+      }),
+      invalidatesTags: ['SavedReplays', 'RecentGames']
+    }),
+    getMatchHistory: builder.query<GetMatchHistoryResponse, void>({
+      query: () => ({
+        url: URL_END_POINT.GET_MATCH_HISTORY,
+        method: 'GET'
+      })
+    }),
     getReplayTurns: builder.query<
       { turns: Array<{ player: 1 | 2; number: number }> },
       number
@@ -603,7 +657,7 @@ export const apiSlice = createApi({
         body,
         responseHandler: parseResponse
       }),
-      invalidatesTags: ['SavedReplays']
+      invalidatesTags: ['SavedReplays', 'RecentGames']
     }),
     shareReplay: builder.mutation<ShareReplayResponse, ShareReplayAPI>({
       query: (body) => ({
@@ -1124,6 +1178,10 @@ export const apiSlice = createApi({
 // Export the auto-generated hook for the `getPosts` query endpoint
 export const {
   useGetLegalHeroesQuery,
+  useGetLegalHeroIdsQuery,
+  useGetFindMatchStatusQuery,
+  useLazyGetFindMatchStatusQuery,
+  useFindMatchMutation,
   useGetHeroMasteryQuery,
   useSaveHeroMasteryFrameMutation,
   useGetPopUpContentQuery,
@@ -1160,6 +1218,9 @@ export const {
   useClearRustCountersMutation,
   useLoadReplayMutation,
   useGetSavedReplaysQuery,
+  useGetRecentGamesQuery,
+  useSaveRecentGameMutation,
+  useGetMatchHistoryQuery,
   useGetReplayTurnsQuery,
   useSetReplayFavoriteMutation,
   useSetReplayNoteMutation,

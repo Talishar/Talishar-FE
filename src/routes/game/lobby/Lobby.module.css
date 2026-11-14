@@ -1155,12 +1155,14 @@ button {
   font-size: 0.95em;
 }
 
-button:hover {
-  background-color: var(--primary-hover);
-  border-color: var(--theme-primary);
-  color: var(--primary-inverse);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px var(--primary-focus);
+@media (hover: hover) and (pointer: fine) {
+  button:hover {
+    background-color: var(--primary-hover);
+    border-color: var(--theme-primary);
+    color: var(--primary-inverse);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px var(--primary-focus);
+  }
 }
 
 button.secondary {

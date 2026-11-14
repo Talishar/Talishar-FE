@@ -36,6 +36,16 @@
   }
 }
 
+:global(body.fanPortraitHand) .playmatFill {
+  bottom: calc(100% - var(--fan-portrait-seam, 50%));
+}
+
+.boardEffects {
+  grid-row: 1;
+  grid-column: 2 / 5;
+  min-width: 0;
+}
+
 .FirstBox {
   background-color: green;
   grid-area: green;

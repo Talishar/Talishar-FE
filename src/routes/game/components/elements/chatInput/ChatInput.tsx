@@ -183,6 +183,7 @@ export const ChatInput = ({ usePrimary = false }: { usePrimary?: boolean }) => {
           <button
             className={classNames(styles.buttonDiv, { secondary: !usePrimary })}
             onClick={handleSubmit}
+            aria-label={t('CHAT.SEND')}
           >
             <div className={styles.icon}>
               <GiChatBubble />

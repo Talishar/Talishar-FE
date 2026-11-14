@@ -11,6 +11,8 @@ import styles from './QuickJoinPanel.module.css';
 import { Trans, useTranslation } from 'react-i18next';
 import { getCookie, setCookie } from 'utils/cookies';
 import LoadingSkeleton from 'components/LoadingSkeleton/LoadingSkeleton';
+import DeckLegality from 'components/DeckLegality';
+import Notice, { ServerErrorNotice } from 'components/Notice';
 import { PHONE_LANDSCAPE_QUERY } from 'routes/game/lobby/phoneLandscape';
 
 interface Props {
@@ -29,6 +31,7 @@ const QuickJoinPanel = ({ embedded = false, userLayout }: Props) => {
     deckSource,
     selectedFavoriteDeck,
     selectedFavoriteDeckHero,
+    selectedDeckHero,
     selectedBazaarDeck,
     importDeckUrl,
     saveDeck,
@@ -67,7 +70,7 @@ const QuickJoinPanel = ({ embedded = false, userLayout }: Props) => {
   useEffect(() => {
     const isPhoneLandscape = window.matchMedia(PHONE_LANDSCAPE_QUERY).matches;
     if (error && (window.innerWidth < 768 || isPhoneLandscape)) {
-      toast.error(error, {
+      toast.error(error.title, {
         position: isPhoneLandscape ? 'top-center' : 'top-left'
       });
       setError(null);
@@ -96,6 +99,9 @@ const QuickJoinPanel = ({ embedded = false, userLayout }: Props) => {
           aria-busy={isFavoritesLoading}
           aria-label={t('JOIN.SELECT_DECK')}
         />
+        {selectedFavoriteDeck && (
+          <DeckLegality heroId={selectedFavoriteDeckHero} />
+        )}
       </label>
 
       {selectedFavoriteDeck &&
@@ -161,13 +167,11 @@ const QuickJoinPanel = ({ embedded = false, userLayout }: Props) => {
           }
         />
         {importDeckError && (
-          <span
+          <Notice
             id="quickJoinDeckUrlError"
-            className={styles.fieldError}
-            role="alert"
-          >
-            {importDeckError}
-          </span>
+            tone="error"
+            title={importDeckError}
+          />
         )}
       </label>
 
@@ -197,7 +201,8 @@ const QuickJoinPanel = ({ embedded = false, userLayout }: Props) => {
         aria-busy={isBazaarLoading}
         aria-label={t('MENU.CREATE_GAME.SELECT_BAZAAR_DECK_PLACEHOLDER')}
       />
-      {bazaarError && <span className={styles.bazaarError}>{bazaarError}</span>}
+      {selectedBazaarDeck && <DeckLegality heroId={selectedDeckHero} />}
+      {bazaarError && <Notice tone="error" title={bazaarError} />}
     </label>
   ) : (
     <p className={styles.bazaarMessage}>
@@ -245,11 +250,7 @@ const QuickJoinPanel = ({ embedded = false, userLayout }: Props) => {
         {deckSource === 'talishar' ? talisharContent : bazaarContent}
       </div>
 
-      {error && (
-        <div className={styles.errorBox} role="alert">
-          <span>{error}</span>
-        </div>
-      )}
+      {error && <ServerErrorNotice error={error} />}
 
       {isJoining && (
         <p className={styles.joiningText} aria-live="polite">

@@ -13,11 +13,14 @@ import EndGameStats, {
   type EndGameStatsRef
 } from '../endGameStats/EndGameStats';
 import EndGameMenuOptions from '../endGameMenuOptions/EndGameMenuOptions';
+import ResultTakeback from '../resultTakeback/ResultTakeback';
 import { shallowEqual } from 'react-redux';
 import useShowModal from 'hooks/useShowModals';
 import { FaEye, FaEyeSlash, FaEllipsisH, FaExchangeAlt } from 'react-icons/fa';
 import classNames from 'classnames';
 import { PiFileCsvFill, PiCameraFill } from 'react-icons/pi';
+import { MdSwapHoriz } from 'react-icons/md';
+import { markRematchDeckChange } from 'routes/game/lobby/components/changeDeck/rematchDeckIntent';
 import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import MetafyLogo from 'img/MetafyGradient.svg';
@@ -54,12 +57,15 @@ const EndGameScreen = () => {
   const [menuStyle, setMenuStyle] = useState<React.CSSProperties>({});
   const { isSupporter } = useSupporterStatus();
   const endGameStatsRef = useRef<EndGameStatsRef>(null);
-  const { data, isLoading, error } = useGetPopUpContentQuery({
-    gameID: gameInfo.gameID,
-    playerID: playerID,
-    authKey: gameInfo.authKey,
-    popupType: END_GAME_STATS
-  });
+  const { data, isLoading, error } = useGetPopUpContentQuery(
+    {
+      gameID: gameInfo.gameID,
+      playerID: playerID,
+      authKey: gameInfo.authKey,
+      popupType: END_GAME_STATS
+    },
+    { refetchOnMountOrArgChange: true }
+  );
   const masteryGameIdentifier = gameInfo.gameGUID || gameInfo.gameID;
   const { data: masteryData } = useGetHeroMasteryQuery(
     { gameKey: `talishar:${masteryGameIdentifier}`, scope: 'award' },
@@ -178,6 +184,12 @@ const EndGameScreen = () => {
     setShowStats(!showStats);
   };
 
+  const handleRematchNewDeck = () => {
+    markRematchDeckChange(gameInfo.gameID);
+    dispatch(submitButton({ button: { mode: PROCESS_INPUT.FULL_REMATCH } }));
+    setMoreOpen(false);
+  };
+
   const handleSwapHeroesRematch = () => {
     dispatch(
       submitButton({ button: { mode: PROCESS_INPUT.SWAP_HEROES_REMATCH } })
@@ -245,6 +257,16 @@ const EndGameScreen = () => {
                       <div className={styles.dropdownMenu} style={menuStyle}>
                         <button
                           className={styles.dropdownItem}
+                          onClick={handleRematchNewDeck}
+                        >
+                          <MdSwapHoriz
+                            aria-hidden="true"
+                            className={styles.dropdownIcon}
+                          />{' '}
+                          {t('END_GAME.REMATCH_NEW_DECK')}
+                        </button>
+                        <button
+                          className={styles.dropdownItem}
                           onClick={handleSwapHeroesRematch}
                         >
                           <FaExchangeAlt
@@ -289,6 +311,7 @@ const EndGameScreen = () => {
               </div>
             </div>
           </div>
+          <ResultTakeback />
           {!isSupporter && !isLoading && !error && (
             <div className={styles.supportCta}>
               <a
@@ -331,6 +354,7 @@ const EndGameScreen = () => {
           </div>
         </div>
       )}
+      {!showStats && <ResultTakeback />}
     </div>
   );
 };

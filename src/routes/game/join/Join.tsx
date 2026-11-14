@@ -4,8 +4,11 @@ import {
   useGetFavoriteDecksQuery,
   useJoinGameMutation,
   useGetGameListQuery,
-  useGetGameInfoQuery
+  useGetGameInfoQuery,
+  useGetFindMatchStatusQuery
 } from 'features/api/apiSlice';
+import { FindMatchBlocker } from 'interface/API/GetFindMatchStatus.php';
+import DeckLegality from 'components/DeckLegality';
 import { JoinGameAPI } from 'interface/API/JoinGame.php';
 import {
   IOpenGame,
@@ -16,8 +19,13 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import styles from './Join.module.css';
 import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
 import { setGameStart } from 'features/game/GameSlice';
-import { toast } from 'react-hot-toast';
-import { FaExclamationCircle, FaQuestionCircle } from 'react-icons/fa';
+import { FaQuestionCircle } from 'react-icons/fa';
+import Notice, { ServerErrorNotice } from 'components/Notice';
+import {
+  describeThrownError,
+  ServerError,
+  toServerError
+} from 'utils/serverError';
 import useAuth from 'hooks/useAuth';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import useAdScript from 'hooks/useAdScript';
@@ -27,33 +35,20 @@ import { ErrorMessage } from '@hookform/error-message';
 import { generateCroppedImageUrl, getHeroCropFocusX } from 'utils/cropImages';
 import { ImageSelect, ImageSelectOption } from 'components/ImageSelect';
 import { isPreconFormat, PRECON_DECKS } from 'appConstants';
-import { formatDeckLabel, getReadableFormatName } from 'utils/formatUtils';
+import {
+  filterDecksForFormat,
+  formatDeckLabel,
+  getReadableFormatName
+} from 'utils/formatUtils';
 import { useTranslation, Trans } from 'react-i18next';
 import PageBanner from 'components/PageBanner/PageBanner';
 
-// Helper function to extract base format type for matching
-// "Open CC", "Competitive CC", "Classic Constructed" all map to "Classic Constructed" base
-const getBaseFormatType = (format: string | null): string => {
-  if (!format) return '';
-  const readable = getReadableFormatName(format).toLowerCase();
-
-  // Extract base format by removing qualifiers like "open", "competitive"
-  if (readable.includes('living legend') || readable.includes('ll'))
-    return 'living legend';
-  if (readable.includes('classic constructed') || readable.includes('cc'))
-    return 'classic constructed';
-  if (readable.includes('blitz')) return 'blitz';
-  if (readable.includes('silver age') || readable.includes('sage'))
-    return 'silver age';
-  if (readable.includes('commoner')) return 'commoner';
-  if (readable.includes('clash')) return 'clash';
-  if (readable.includes('sealed')) return 'sealed';
-  if (readable.includes('draft') || readable.includes('limited'))
-    return 'draft / limited';
-  if (readable.includes('precon')) return 'preconstructed decks';
-
-  return readable;
-};
+// Hero legality is shown by DeckLegality, so it isn't repeated here.
+const LOBBY_BLOCKERS: FindMatchBlocker[] = [
+  'own',
+  'kicked',
+  'theyRejectHero'
+];
 
 const JoinGame = () => {
   const navigate = useNavigate();
@@ -99,10 +94,12 @@ const JoinGame = () => {
     formState: { isSubmitting, errors },
     register,
     handleSubmit,
-    setError,
     reset,
     setValue
   } = useForm<JoinGameAPI>({ mode: 'onBlur' });
+  const [serverError, setServerError] = React.useState<ServerError | null>(
+    null
+  );
 
   const [selectedFavoriteDeck, setSelectedFavoriteDeck] =
     React.useState<string>('');
@@ -173,17 +170,7 @@ const JoinGame = () => {
   // Convert favorite decks to ImageSelect options
   const favoriteDeckOptions: ImageSelectOption[] = React.useMemo(() => {
     if (!data?.favoriteDecks) return [];
-    const isOpenFormat =
-      gameFormat &&
-      getReadableFormatName(gameFormat).toLowerCase().includes('open');
-    const baseGameFormat = getBaseFormatType(gameFormat);
-    const filtered = data.favoriteDecks.filter((deck: FavoriteDeck) => {
-      // Show all decks for OPEN format
-      if (isOpenFormat) return true;
-      if (!deck.format) return false;
-      const baseDeckFormat = getBaseFormatType(deck.format);
-      return baseDeckFormat === baseGameFormat;
-    });
+    const filtered = filterDecksForFormat(data.favoriteDecks, gameFormat);
     return filtered.map((deck: FavoriteDeck) => ({
       value: deck.key,
       label: formatDeckLabel(deck.name, deck.format),
@@ -204,17 +191,29 @@ const JoinGame = () => {
 
   const isPrecon = isPreconFormat(gameFormat);
 
+  const selectedDeckHero = data?.favoriteDecks.find(
+    (deck: FavoriteDeck) => deck.key === selectedFavoriteDeck
+  )?.hero;
+  const { currentData: findMatchStatus } = useGetFindMatchStatusQuery(
+    { hero: selectedDeckHero ?? '', preference: '', format: '' },
+    { skip: !isLoggedIn || !selectedDeckHero || isPrecon }
+  );
+  const lobbyBlocker = LOBBY_BLOCKERS.find((code) =>
+    findMatchStatus?.blockers?.[finalGameName]?.includes(code)
+  );
+
   // Debug logging
   React.useEffect(() => {}, [isPrecon, gameFormat, gameListLoading]);
 
   const onSubmit: SubmitHandler<JoinGameAPI> = async (values: JoinGameAPI) => {
     values.playerID = parseInt(playerID);
     values.gameName = parseInt(finalGameName);
+    setServerError(null);
 
     try {
       const response = await joinGame(values).unwrap();
       if (response.error) {
-        throw response.error;
+        setServerError(toServerError(response.error, response.errorCards));
       } else {
         dispatch(
           setGameStart({
@@ -232,12 +231,8 @@ const JoinGame = () => {
       }
     } catch (error) {
       console.warn(error);
-      toast.error(String(error), { position: 'top-center' });
-      setError('root.serverError', {
-        type: 'custom',
-        message: `There has been an error while joining the game. Message: ${JSON.stringify(
-          error
-        )} Please try again`
+      setServerError({
+        title: describeThrownError(error, t('NOTICE.JOIN_FAILED'))
       });
     }
   };
@@ -303,15 +298,26 @@ const JoinGame = () => {
                           errors.favoriteDecks?.message ? 'true' : undefined
                         }
                       />
+                      {selectedFavoriteDeck && (
+                        <DeckLegality
+                          heroId={selectedDeckHero}
+                          format={gameFormat}
+                        />
+                      )}
+                      {selectedFavoriteDeck && lobbyBlocker && (
+                        <Notice
+                          tone="warning"
+                          title={t(`FIND_MATCH.BLOCKER_${lobbyBlocker}`, {
+                            hero:
+                              findMatchStatus?.heroShortName ??
+                              t('FIND_MATCH.YOUR_HERO')
+                          })}
+                        />
+                      )}
                       <input
                         type="hidden"
                         {...register('favoriteDecks')}
                         value={selectedFavoriteDeck}
-                      />
-                      <ErrorMessage
-                        errors={errors}
-                        name="favoriteDecks"
-                        render={({ message }) => <p>{message}</p>}
                       />
                     </label>
                   )}
@@ -319,9 +325,7 @@ const JoinGame = () => {
                     errors={errors}
                     name="favoriteDecks"
                     render={({ message }) => (
-                      <p className={styles.fieldError}>
-                        <FaExclamationCircle /> {message}
-                      </p>
+                      <Notice tone="error" title={message} />
                     )}
                   />
                   <fieldset>
@@ -354,9 +358,7 @@ const JoinGame = () => {
                         errors={errors}
                         name="fabdb"
                         render={({ message }) => (
-                          <p className={styles.fieldError}>
-                            <FaExclamationCircle /> {message}
-                          </p>
+                          <Notice tone="error" title={message} />
                         )}
                       />
                     </label>
@@ -405,11 +407,7 @@ const JoinGame = () => {
             >
               {isSubmitting ? t('JOIN.JOINING_GAME') : t('JOIN.JOIN')}
             </button>
-            {errors.root?.serverError?.message && (
-              <div className={styles.fieldError}>
-                <FaExclamationCircle /> {errors.root?.serverError?.message}
-              </div>
-            )}
+            {serverError && <ServerErrorNotice error={serverError} />}
           </form>
           <hr />
           <button

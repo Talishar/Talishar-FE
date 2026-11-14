@@ -14,7 +14,7 @@ import {
 import InitialGameState from './InitialGameState';
 import GameStaticInfo, { AltArt } from '../GameStaticInfo';
 import { Card, isAllyCard } from '../Card';
-import { linkKeyOf } from './objectLinks';
+import { linkKeyOf, stacksTogether } from './objectLinks';
 import { BACKEND_URL, PROCESS_INPUT, URL_END_POINT } from 'appConstants';
 import Button from '../Button';
 import GameState, { QueuedHandPlay } from '../GameState';
@@ -32,7 +32,6 @@ import {
   loadGamePlayerID
 } from 'utils/LocalKeyManagement';
 import { parseBackendJson } from 'utils/parseBackendResponse';
-import isEqual from 'react-fast-compare';
 import { CardStack } from '../../routes/game/components/zones/permanentsZone/PermanentsZone';
 import { reportPerformanceMetric } from 'utils/performanceMetrics';
 import { areZonesSortedByDefault } from 'routes/game/components/zones/cardListZone/zoneSortPreference';
@@ -579,6 +578,7 @@ function mergeReceivedGameState(
   state.opponentInactive = payload.opponentInactive ?? false;
   state.inactivityDeadline = payload.inactivityDeadline;
   state.gameDeleteDeadline = payload.gameDeleteDeadline;
+  state.resultPending = payload.resultPending;
   state.serverTimeOffset = payload.serverTimeOffset;
   state.preventPassPrompt = payload.preventPassPrompt;
 }
@@ -790,6 +790,7 @@ export const gameSlice = createSlice({
         state.opponentInactive = false;
         state.inactivityDeadline = undefined;
         state.gameDeleteDeadline = undefined;
+        state.resultPending = undefined;
         state.serverTimeOffset = undefined;
       }
 
@@ -1447,26 +1448,6 @@ const selectPlayerOnePermanents = (state: RootState) =>
   state.game.playerOne.Permanents;
 const selectPlayerTwoPermanents = (state: RootState) =>
   state.game.playerTwo.Permanents;
-
-const stacksTogether = (a: Card, b: Card): boolean => {
-  const aKeys = Object.keys(a) as (keyof Card)[];
-  const bKeys = Object.keys(b) as (keyof Card)[];
-  let aCount = 0;
-  for (const key of aKeys) {
-    if (key === 'actionDataOverride' || key === 'uniqueId') continue;
-    aCount++;
-    if (!(key in b)) return false;
-    const aValue = a[key];
-    const bValue = b[key];
-    if (aValue === bValue) continue;
-    if (!isEqual(aValue, bValue)) return false;
-  }
-  let bCount = 0;
-  for (const key of bKeys) {
-    if (key !== 'actionDataOverride' && key !== 'uniqueId') bCount++;
-  }
-  return aCount === bCount;
-};
 
 const gemStackIDsFor = (card: Card): string[] | undefined =>
   card.gem && card.gem !== 'none' && card.actionDataOverride !== undefined

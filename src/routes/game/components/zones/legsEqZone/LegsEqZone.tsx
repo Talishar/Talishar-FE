@@ -1,4 +1,3 @@
-import React from 'react';
 import Displayrow from 'interface/Displayrow';
 import EquipZone from '../equipZone/EquipZone';
 import styles from './LegsEqZone.module.css';

@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useLayoutEffect, useRef } from 'react';
+import { ReactNode, useEffect, useLayoutEffect, useRef } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppStore } from 'app/Hooks';

@@ -393,6 +393,10 @@
   grid-area: pOneArsenal;
 }
 
+:is(.pOneArsenal, .pTwoArsenal) {
+  --arsenal-split-shift: calc(-0.5 * (var(--card-size) + 1vh));
+}
+
 .pOneCount {
   grid-area: pOneCount;
   aspect-ratio: 1;

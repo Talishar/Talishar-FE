@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import LoadingSkeleton from 'components/LoadingSkeleton/LoadingSkeleton';
 import {
   useGetGameListQuery,

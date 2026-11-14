@@ -10,32 +10,25 @@ import styles from './ZoneCounts.module.css';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
+export function selectHasZoneCounts(
+  state: RootState,
+  isPlayer: boolean
+): boolean {
+  const player = isPlayer ? state.game.playerOne : state.game.playerTwo;
+  return !!(
+    player.SoulCount ||
+    player.bloodDebtCount ||
+    player.earthCount ||
+    player.blessingsCount
+  );
+}
+
 export const ZoneCounts = (prop: Displayrow) => {
-  const soulCount = useAppSelector((state: RootState) =>
-    prop.isPlayer
-      ? state.game.playerOne.SoulCount
-      : state.game.playerTwo.SoulCount
+  const hasCounts = useAppSelector((state: RootState) =>
+    selectHasZoneCounts(state, prop.isPlayer)
   );
 
-  const bloodDebt = useAppSelector((state: RootState) =>
-    prop.isPlayer
-      ? state.game.playerOne.bloodDebtCount
-      : state.game.playerTwo.bloodDebtCount
-  );
-
-  const earthCount = useAppSelector((state: RootState) =>
-    prop.isPlayer
-      ? state.game.playerOne.earthCount
-      : state.game.playerTwo.earthCount
-  );
-
-  const blessingsCount = useAppSelector((state: RootState) =>
-    prop.isPlayer
-      ? state.game.playerOne.blessingsCount
-      : state.game.playerTwo.blessingsCount
-  );
-
-  if (!soulCount && !bloodDebt && !earthCount && !blessingsCount) {
+  if (!hasCounts) {
     return null;
   }
 

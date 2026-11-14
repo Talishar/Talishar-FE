@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import Displayrow from 'interface/Displayrow';
@@ -9,6 +10,8 @@ import { useTranslation } from 'react-i18next';
 import DestroyAnimation from '../../elements/destroyAnimation/DestroyAnimation';
 import { useZonePlayerID } from '../../elements/destroyAnimation/useEquipDestroy';
 
+const EXTRA_ARSENAL_ZONE_CARDS = new Set(['new_horizon']);
+
 function ArsenalZone(prop: Displayrow) {
   const { isPlayer } = prop;
   const { t } = useTranslation();
@@ -17,6 +20,23 @@ function ArsenalZone(prop: Displayrow) {
     return isPlayer
       ? state.game.playerOne.Arsenal
       : state.game.playerTwo.Arsenal;
+  });
+
+  const hasExtraZone = useAppSelector((state: RootState) => {
+    const player = isPlayer ? state.game.playerOne : state.game.playerTwo;
+    return [
+      player.HeadEq,
+      player.ChestEq,
+      player.ArmsEq,
+      player.LegsEq,
+      player.WeaponLEq,
+      player.WeaponREq
+    ].some(
+      (card) =>
+        !!card &&
+        !card.isBroken &&
+        EXTRA_ARSENAL_ZONE_CARDS.has(card.cardNumber)
+    );
   });
 
   const arsenalFlipP1Card = useAppSelector(
@@ -45,25 +65,58 @@ function ArsenalZone(prop: Displayrow) {
   const destroyCard =
     currentPlayerID === 1 ? arsenalDestroyP1Card : arsenalDestroyP2Card;
 
-  if (
+  const cards: Card[] =
     arsenalCards === undefined ||
     arsenalCards.length === 0 ||
     arsenalCards[0].cardNumber === ''
-  ) {
+      ? []
+      : arsenalCards;
+
+  const renderCard = (card: Card, index: number) => {
+    // Check if this card is currently animating
+    const isAnimatingThisCard = showFlip && card.cardNumber === flipCard;
+
     return (
-      <div className={styles.arsenalContainer}>
-        <div className={styles.arsenalZone}>
-          {t('ZONES.ARSENAL')}
-          {destroyCard && (
-            <div className={styles.arsenalDestroySlot}>
-              <DestroyAnimation
-                key={`arsenalDestroyAnim-${arsenalDestroyTrigger}`}
-                cardNumber={destroyCard}
-                isPlayer={isPlayer}
-              />
-            </div>
-          )}
-        </div>
+      <div key={index} className={styles.cardWrapper}>
+        {/* Hide the actual card while animation is playing */}
+        {!isAnimatingThisCard && (
+          <CardDisplay card={card} isPlayer={isPlayer} />
+        )}
+        {/* Show animation overlay while animating */}
+        {isAnimatingThisCard && (
+          <div
+            key={`arsenalFlipAnimation-${arsenalFlipTrigger}`}
+            className={styles.arsenalFlipCard}
+          >
+            <CardDisplay card={{ cardNumber: flipCard }} isPlayer={isPlayer} />
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const destroySlot = destroyCard && (
+    <div className={styles.arsenalDestroySlot}>
+      <DestroyAnimation
+        key={`arsenalDestroyAnim-${arsenalDestroyTrigger}`}
+        cardNumber={destroyCard}
+        isPlayer={isPlayer}
+      />
+    </div>
+  );
+
+  if (hasExtraZone) {
+    const slots = [cards.slice(0, 1), cards.slice(1)];
+    return (
+      <div className={classNames(styles.arsenalContainer, styles.splitArsenal)}>
+        {slots.map((slotCards, slot) => (
+          <div key={slot} className={styles.arsenalZone}>
+            {slotCards.length === 0
+              ? t('ZONES.ARSENAL')
+              : slotCards.map((card, i) => renderCard(card, slot + i))}
+            {slot === 0 && destroySlot}
+          </div>
+        ))}
       </div>
     );
   }
@@ -71,40 +124,8 @@ function ArsenalZone(prop: Displayrow) {
   return (
     <div className={styles.arsenalContainer}>
       <div className={styles.arsenalZone}>
-        {arsenalCards.map((card: Card, index: number) => {
-          // Check if this card is currently animating
-          const isAnimatingThisCard = showFlip && card.cardNumber === flipCard;
-
-          return (
-            <div key={index} className={styles.cardWrapper}>
-              {/* Hide the actual card while animation is playing */}
-              {!isAnimatingThisCard && (
-                <CardDisplay card={card} isPlayer={isPlayer} />
-              )}
-              {/* Show animation overlay while animating */}
-              {isAnimatingThisCard && (
-                <div
-                  key={`arsenalFlipAnimation-${arsenalFlipTrigger}`}
-                  className={styles.arsenalFlipCard}
-                >
-                  <CardDisplay
-                    card={{ cardNumber: flipCard }}
-                    isPlayer={isPlayer}
-                  />
-                </div>
-              )}
-            </div>
-          );
-        })}
-        {destroyCard && (
-          <div className={styles.arsenalDestroySlot}>
-            <DestroyAnimation
-              key={`arsenalDestroyAnim-${arsenalDestroyTrigger}`}
-              cardNumber={destroyCard}
-              isPlayer={isPlayer}
-            />
-          </div>
-        )}
+        {cards.length === 0 ? t('ZONES.ARSENAL') : cards.map(renderCard)}
+        {destroySlot}
       </div>
     </div>
   );

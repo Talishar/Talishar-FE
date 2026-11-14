@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useAppDispatch } from 'app/Hooks';
 import {
   useDeleteReplayMutation,
   useCreateSnapshotGameMutation,
+  useGetRecentGamesQuery,
   useGetSavedReplaysQuery,
   useLoadReplayMutation,
+  useSaveRecentGameMutation,
   useSetReplayFavoriteMutation,
   useShareReplayMutation
 } from 'features/api/apiSlice';
-import { FaPlay, FaRegStar, FaStar } from 'react-icons/fa';
+import { FaPlay, FaRegStar, FaSave, FaStar } from 'react-icons/fa';
 import {
   MdDeleteOutline,
   MdGridView,
@@ -21,12 +23,12 @@ import {
   GetSavedReplaysResponse,
   SavedReplay
 } from 'interface/API/GetSavedReplays.php';
+import { RecentGame } from 'interface/API/GetRecentGames.php';
 import { toast } from 'react-hot-toast';
 import { LoadReplayAPI } from 'interface/API/LoadReplayAPI.php';
 import { setGameStart, setReplayStart } from 'features/game/GameSlice';
 import { useNavigate } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { TALISHAR_DISCORD_URL } from 'constants/socialLinks';
 import styles from './LoadReplay.module.css';
 import { GameLocationState } from 'interface/GameLocationState';
 import PageBanner from 'components/PageBanner/PageBanner';
@@ -105,7 +107,7 @@ const ReplaySlotMeter = ({
   const favoriteSlots = Math.min(savedReplayData.favoriteSlots ?? 0, usedSlots);
   const otherSlots = usedSlots - favoriteSlots;
   const freeSlots = maxSlots - usedSlots;
-  const canUpgrade = savedReplayData.nextSlotTier !== null;
+  const canUpgrade = savedReplayData.nextSlotTier !== null && freeSlots === 0;
   const usedLabel = t('LOAD_REPLAY.STORAGE_USED', {
     used: usedSlots,
     max: maxSlots
@@ -155,6 +157,149 @@ const ReplaySlotMeter = ({
           : t('LOAD_REPLAY.STORAGE_NOTE')}
       </p>
     </div>
+  );
+};
+
+const RecentGames = ({
+  onWatch,
+  isLoadingReplay
+}: {
+  onWatch: (replayNumber: number) => void;
+  isLoadingReplay: boolean;
+}) => {
+  const { t, i18n } = useTranslation();
+  const { data } = useGetRecentGamesQuery(undefined, {
+    refetchOnMountOrArgChange: true
+  });
+  const [saveRecentGame] = useSaveRecentGameMutation();
+  const [savingToken, setSavingToken] = useState<string | null>(null);
+  const games = data?.games ?? [];
+  if (!data?.loggedIn || games.length === 0) return null;
+
+  const slotsFull = data.slotsFull;
+  const hasUnsavedGame = games.some((game) => !game.savedReplayNumber);
+  const playedLabel = (game: RecentGame) => {
+    const hoursLeft = Math.max(
+      1,
+      Math.ceil((game.expiresAt * 1000 - Date.now()) / 3600000)
+    );
+    return t('RECENT_GAMES.PLAYED', {
+      date: new Intl.DateTimeFormat(i18n.resolvedLanguage || i18n.language, {
+        dateStyle: 'medium',
+        timeStyle: 'short'
+      }).format(new Date(game.endedAt * 1000)),
+      expiry: t('RECENT_GAMES.EXPIRES_IN', { count: hoursLeft })
+    });
+  };
+  const save = async (game: RecentGame) => {
+    setSavingToken(game.token);
+    try {
+      const result = await saveRecentGame({ token: game.token }).unwrap();
+      if (!result.success || !result.replayNumber) {
+        throw new Error(result.error || t('RECENT_GAMES.SAVE_ERROR'));
+      }
+      toast.success(t('RECENT_GAMES.SAVED', { number: result.replayNumber }));
+    } catch (error) {
+      const apiError = error as { data?: { error?: string } };
+      toast.error(
+        apiError.data?.error ||
+          (error instanceof Error
+            ? error.message
+            : t('RECENT_GAMES.SAVE_ERROR'))
+      );
+    } finally {
+      setSavingToken(null);
+    }
+  };
+
+  return (
+    <section
+      className={styles.savedReplays}
+      aria-labelledby="recent-games-heading"
+    >
+      <div className={styles.savedReplaysHeader}>
+        <div>
+          <h2 id="recent-games-heading">{t('RECENT_GAMES.TITLE')}</h2>
+          <p>{t('RECENT_GAMES.SUBTITLE', { count: data.capacity })}</p>
+          {slotsFull && hasUnsavedGame && (
+            <p>
+              {t(
+                data.capacity === 1
+                  ? 'RECENT_GAMES.SLOTS_FULL_FREE'
+                  : 'RECENT_GAMES.SLOTS_FULL',
+                { max: data.maxSlots }
+              )}
+            </p>
+          )}
+        </div>
+      </div>
+      <div className={styles.saveList}>
+        {games.map((game) => {
+          const players = [game.p1DisplayName, game.p2DisplayName]
+            .filter(Boolean)
+            .join(' vs ');
+          const heroes = [game.p1HeroName, game.p2HeroName]
+            .filter(Boolean)
+            .join(' vs ');
+          const savedReplayNumber = game.savedReplayNumber;
+          return (
+            <article key={game.token} className={styles.saveRow}>
+              <div className={styles.rowPortraits} aria-hidden="true">
+                <HeroCrop heroId={game.p1HeroCardId} />
+                <HeroCrop heroId={game.p2HeroCardId} />
+              </div>
+              <div className={styles.saveInfo}>
+                <div className={styles.saveTitleRow}>
+                  <span className={styles.replayNumber}>
+                    {players || t('RECENT_GAMES.UNKNOWN_PLAYERS')}
+                  </span>
+                </div>
+                {heroes && (
+                  <span className={styles.replayHeroes} title={heroes}>
+                    {heroes}
+                  </span>
+                )}
+                <span className={styles.replaySavedAt}>
+                  {playedLabel(game)}
+                </span>
+              </div>
+              <div className={styles.saveActions}>
+                {savedReplayNumber ? (
+                  <button
+                    type="button"
+                    className={styles.openButton}
+                    onClick={() => onWatch(savedReplayNumber)}
+                    disabled={isLoadingReplay}
+                  >
+                    <FaPlay aria-hidden="true" />
+                    {t('RECENT_GAMES.WATCH_SAVED', {
+                      number: savedReplayNumber
+                    })}
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className={styles.openButton}
+                    onClick={() => save(game)}
+                    disabled={slotsFull || savingToken !== null}
+                    title={
+                      slotsFull ? t('RECENT_GAMES.NO_FREE_SLOT') : undefined
+                    }
+                  >
+                    <FaSave aria-hidden="true" />
+                    {slotsFull
+                      ? t('RECENT_GAMES.NO_FREE_SLOT')
+                      : savingToken === game.token
+                      ? t('RECENT_GAMES.SAVING')
+                      : t('RECENT_GAMES.SAVE')}
+                  </button>
+                )}
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </section>
   );
 };
 
@@ -275,18 +420,6 @@ const ReplayGame = () => {
     snapshots: t('LOAD_REPLAY.FILTER_SNAPSHOTS'),
     favorites: t('LOAD_REPLAY.FILTER_FAVORITES')
   };
-  const removedNextNumber =
-    (savedReplayData?.maxSlots ?? 0) > 0
-      ? savedReplays
-          .filter((entry) => !entry.favorite)
-          .reduce<number | null>(
-            (oldest, entry) =>
-              oldest === null || entry.replayNumber < oldest
-                ? entry.replayNumber
-                : oldest,
-            null
-          )
-      : null;
   const normalizedQuery = searchQuery.trim().toLowerCase();
   const visibleSaves = savedReplays.filter((entry) => {
     if (saveFilter === 'replays' && entry.type === 'snapshot') return false;
@@ -534,15 +667,14 @@ const ReplayGame = () => {
             <HeroCrop heroId={entry.p2HeroCardId} />
           </div>
         )}
-        {!isList && noteButton}
-        {!isList && favoriteButton}
         <div className={styles.saveInfo}>
           <div className={styles.saveTitleRow}>
             <span className={styles.replayNumber}>{numberLabel}</span>
-            {entry.replayNumber === removedNextNumber && (
-              <span className={styles.removedNext}>
-                {t('LOAD_REPLAY.REMOVED_NEXT')}
-              </span>
+            {!isList && (
+              <div className={styles.saveTitleIcons}>
+                {noteButton}
+                {favoriteButton}
+              </div>
             )}
           </div>
           <span className={styles.replayPlayers} title={replayLabel(entry)}>
@@ -622,6 +754,10 @@ const ReplayGame = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.replayForm}>
+      <RecentGames
+        onWatch={(replayNumber) => onSubmit({ replayNumber })}
+        isLoadingReplay={isLoadingReplay}
+      />
       <section
         className={styles.savedReplays}
         aria-labelledby="saved-replays-heading"
