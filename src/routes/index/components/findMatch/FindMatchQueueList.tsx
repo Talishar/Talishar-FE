@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaTimes } from 'react-icons/fa';
 import { formatDisplayName } from 'utils/heroLegality';
@@ -14,6 +14,7 @@ interface Props {
   startedAt: number | null;
   onLeave: (id: string) => void;
   onLeaveAll: () => void;
+  footer?: ReactNode;
 }
 
 const formatElapsed = (ms: number) => {
@@ -26,7 +27,8 @@ const FindMatchQueueList = ({
   statuses,
   startedAt,
   onLeave,
-  onLeaveAll
+  onLeaveAll,
+  footer
 }: Props) => {
   const { t } = useTranslation();
   const [now, setNow] = useState(() => Date.now());
@@ -62,14 +64,16 @@ const FindMatchQueueList = ({
         {queues.map((queue) => {
           const format = formatDisplayName(t, queue.format);
           return (
-            <li key={queue.id} className={styles.chip}>
-              {queue.heroImage && (
+            <li key={queue.id} className={styles.row}>
+              {queue.heroImage ? (
                 <img
                   className={styles.hero}
                   src={queue.heroImage}
                   alt=""
                   aria-hidden="true"
                 />
+              ) : (
+                <span className={styles.hero} aria-hidden="true" />
               )}
               <span className={styles.text}>
                 <span className={styles.format}>{format}</span>
@@ -93,6 +97,7 @@ const FindMatchQueueList = ({
           );
         })}
       </ul>
+      {footer && <div className={styles.footer}>{footer}</div>}
     </div>
   );
 };
