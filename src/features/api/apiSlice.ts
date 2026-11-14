@@ -45,6 +45,10 @@ import {
   UpdateBazaarMatchupResponse
 } from 'interface/API/UpdateBazaarMatchup';
 import { GameListResponse } from 'routes/index/components/gameList/GameList';
+import {
+  MatchmakingStatusRequest,
+  MatchmakingStatusResponse
+} from 'interface/API/GetMatchmakingStatus.php';
 import { GetCosmeticsResponse } from 'interface/API/GetCosmeticsResponse.php';
 import {
   DeleteDeckAPIRequest,
@@ -268,6 +272,19 @@ export const apiSlice = createApi({
         method: 'GET',
         responseHandler: parseResponse
       })
+    }),
+    getLegalHeroIds: builder.query<Record<string, string[]>, void>({
+      query: () => ({
+        url: `${URL_END_POINT.GET_LEGAL_HEROES}?by=setId`,
+        method: 'GET',
+        responseHandler: parseResponse
+      })
+    }),
+    getMatchmakingStatus: builder.query<
+      MatchmakingStatusResponse,
+      MatchmakingStatusRequest
+    >({
+      query: (body) => postJson(URL_END_POINT.GET_MATCHMAKING_STATUS, body)
     }),
     getHeroMastery: builder.query<
       HeroMasteryResponse,
@@ -1156,6 +1173,9 @@ export const apiSlice = createApi({
 // Export the auto-generated hook for the `getPosts` query endpoint
 export const {
   useGetLegalHeroesQuery,
+  useGetLegalHeroIdsQuery,
+  useGetMatchmakingStatusQuery,
+  useLazyGetMatchmakingStatusQuery,
   useGetHeroMasteryQuery,
   useSaveHeroMasteryFrameMutation,
   useGetPopUpContentQuery,

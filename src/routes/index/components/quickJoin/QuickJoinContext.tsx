@@ -4,6 +4,7 @@ import React, {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState
 } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -12,8 +13,12 @@ import { setGameStart } from 'features/game/GameSlice';
 import {
   useJoinGameMutation,
   useGetFavoriteDecksQuery,
-  useGetBazaarDecksQuery
+  useGetBazaarDecksQuery,
+  useGetGameListQuery,
+  useGetMatchmakingStatusQuery,
+  useLazyGetMatchmakingStatusQuery
 } from 'features/api/apiSlice';
+import { MatchmakingStatusResponse } from 'interface/API/GetMatchmakingStatus.php';
 import {
   selectMetafyId,
   selectCurrentUserName,
@@ -31,6 +36,13 @@ import useRustCounters, {
   requestRustPanelAttention
 } from 'hooks/useRustCounters';
 import { useTranslation } from 'react-i18next';
+import {
+  cleanServerMessage,
+  describeThrownError,
+  ServerError,
+  ServerErrorCard,
+  toServerError
+} from 'utils/serverError';
 
 const isValidDeckUrl = (value: string): boolean => {
   try {
@@ -48,15 +60,34 @@ const shortenFormat = (format: string): string => {
   return readable || format;
 };
 
+export type JoinAttempt =
+  | { ok: true }
+  | {
+      ok: false;
+      error: string;
+      cards?: ServerErrorCard[];
+      lobbyTaken: boolean;
+    };
+
+// Errors about the lobby rather than the deck: Find match tries the next one.
+const LOBBY_TAKEN_ERRORS = [
+  /already joined/i,
+  /kicked from this lobby/i,
+  /lobby is looking to play against specific heroes/i,
+  /not interested in playing against your hero/i
+];
+
 interface QuickJoinContextType {
   deckSource: 'talishar' | 'bazaar';
   selectedFavoriteDeck: string;
   selectedFavoriteDeckHero: string | null;
+  /** Set ID of the active deck's hero, null for an imported URL or no deck */
+  selectedDeckHero: string | null;
   selectedBazaarDeck: string;
   importDeckUrl: string;
   saveDeck: boolean;
   detectedFormat: string | null;
-  error: string | null;
+  error: ServerError | null;
   importDeckError: string | null;
   isJoining: boolean;
   hasDeckConfigured: boolean;
@@ -77,8 +108,18 @@ interface QuickJoinContextType {
   setSelectedBazaarDeck: (v: string) => void;
   setImportDeckUrl: (v: string) => void;
   setSaveDeck: (v: boolean) => void;
-  setError: (v: string | null) => void;
+  setError: (v: ServerError | null) => void;
   quickJoin: (gameName: number) => Promise<void>;
+  /** Joins with the active deck (or `fabdb`) and reports failures instead of showing them */
+  joinWithDeck: (
+    gameName: number,
+    options?: { fabdb?: string; matchmaking?: boolean }
+  ) => Promise<JoinAttempt>;
+  /** Format and hero preference from the create form, used by matchmaking */
+  setMatchmakingCriteria: (format: string, preference: string) => void;
+  matchmaking: MatchmakingStatusResponse | undefined;
+  isMatchmakingFetching: boolean;
+  refreshMatchmaking: () => Promise<MatchmakingStatusResponse | undefined>;
 }
 
 const QuickJoinContext = createContext<QuickJoinContextType | null>(null);
@@ -135,7 +176,7 @@ export const QuickJoinProvider = ({
     () => localStorage.getItem(LS_SAVE_DECK_KEY) === 'true'
   );
   const [detectedFormat, setDetectedFormat] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<ServerError | null>(null);
   const [importDeckError, setImportDeckError] = useState<string | null>(null);
   const [isJoining, setIsJoining] = useState(false);
 
@@ -205,6 +246,89 @@ export const QuickJoinProvider = ({
     }
     return 'Failed to load FaB Bazaar decks';
   }, [bazaarFetchError]);
+
+  const selectedBazaarDeckHero = useMemo(
+    () =>
+      bazaarData?.decks?.find(
+        (deck: BazaarDeck) => (deck.id ?? deck.deckId) === selectedBazaarDeck
+      )?.hero ?? null,
+    [bazaarData?.decks, selectedBazaarDeck]
+  );
+  const selectedDeckHero =
+    deckSource === 'bazaar'
+      ? selectedBazaarDeckHero
+      : selectedFavoriteDeck
+      ? selectedFavoriteDeckHero
+      : null;
+
+  const [matchmakingCriteria, setMatchmakingCriteriaState] = useState({
+    format: '',
+    preference: ''
+  });
+  const setMatchmakingCriteria = useCallback(
+    (format: string, preference: string) =>
+      setMatchmakingCriteriaState((prev) =>
+        prev.format === format && prev.preference === preference
+          ? prev
+          : { format, preference }
+      ),
+    []
+  );
+  const canMatchmake = !isAuthLoading && isLoggedIn && !!currentUserName;
+  const matchmakingArgs = useMemo(
+    () => ({
+      hero: selectedDeckHero ?? '',
+      preference: matchmakingCriteria.preference,
+      format: matchmakingCriteria.format
+    }),
+    [selectedDeckHero, matchmakingCriteria]
+  );
+  const {
+    currentData: matchmaking,
+    isFetching: isMatchmakingFetching,
+    refetch: refetchMatchmaking
+  } = useGetMatchmakingStatusQuery(matchmakingArgs, {
+    skip: !canMatchmake,
+    refetchOnMountOrArgChange: true
+  });
+  const [fetchMatchmaking] = useLazyGetMatchmakingStatusQuery();
+
+  // The game list already polls; re-check matchmaking only when its lobbies change.
+  const { data: gameListData } = useGetGameListQuery(undefined, {
+    skip: !canMatchmake
+  });
+  const openGamesKey = useMemo(
+    () =>
+      (gameListData?.openGames ?? [])
+        .map(
+          (game) =>
+            `${game.gameName}:${game.format}:${game.p1Hero ?? ''}:${
+              game.description ?? ''
+            }`
+        )
+        .join('|'),
+    [gameListData?.openGames]
+  );
+  const lastOpenGamesKey = useRef<string | null>(null);
+  useEffect(() => {
+    if (!canMatchmake || !gameListData) return;
+    if (lastOpenGamesKey.current === null) {
+      lastOpenGamesKey.current = openGamesKey;
+      return;
+    }
+    if (lastOpenGamesKey.current === openGamesKey) return;
+    lastOpenGamesKey.current = openGamesKey;
+    refetchMatchmaking();
+  }, [canMatchmake, gameListData, openGamesKey, refetchMatchmaking]);
+
+  const refreshMatchmaking = useCallback(async () => {
+    if (!canMatchmake) return undefined;
+    try {
+      return await fetchMatchmaking(matchmakingArgs, false).unwrap();
+    } catch {
+      return undefined;
+    }
+  }, [canMatchmake, fetchMatchmaking, matchmakingArgs]);
 
   useEffect(() => {
     if (!selectedFavoriteDeck || !favoritesData?.favoriteDecks) {
@@ -298,34 +422,24 @@ export const QuickJoinProvider = ({
   const effectiveFavoriteDecks =
     deckSource === 'talishar' ? selectedFavoriteDeck : '';
 
-  const quickJoin = useCallback(
-    async (gameName: number) => {
-      if (isAuthLoading || !isLoggedIn || !currentUserName) return;
-      if (isRustLocked) {
-        requestRustPanelAttention();
-        return;
-      }
-      if (
-        deckSource === 'talishar' &&
-        !selectedFavoriteDeck &&
-        !isValidDeckUrl(importDeckUrl.trim())
-      ) {
-        setError(null);
-        setImportDeckError(t('JOIN.INVALID_DECK_URL'));
-        return;
-      }
-      setError(null);
-      setImportDeckError(null);
-      setIsJoining(true);
+  const joinWithDeck = useCallback(
+    async (
+      gameName: number,
+      options?: { fabdb?: string; matchmaking?: boolean }
+    ): Promise<JoinAttempt> => {
       try {
-        const isBazaar = deckSource === 'bazaar';
-        const fabdbValue = isBazaar
-          ? `${FAB_BAZAAR_DECK_URL_BASE}${selectedBazaarDeck}`
-          : importDeckUrl.trim();
-        const favDecksValue = isBazaar ? '' : selectedFavoriteDeck;
+        const overrideDeck = options?.fabdb;
+        const isBazaar = !overrideDeck && deckSource === 'bazaar';
+        const fabdbValue =
+          overrideDeck ??
+          (isBazaar
+            ? `${FAB_BAZAAR_DECK_URL_BASE}${selectedBazaarDeck}`
+            : importDeckUrl.trim());
+        const favDecksValue =
+          overrideDeck || isBazaar ? '' : selectedFavoriteDeck;
         // Only save deck if it's from importDeckUrl (not from favorites or bazaar)
         const shouldSaveDeck =
-          !isBazaar && saveDeck && importDeckUrl.trim() !== '';
+          !overrideDeck && !isBazaar && saveDeck && importDeckUrl.trim() !== '';
 
         const response = await joinGame({
           gameName,
@@ -340,7 +454,22 @@ export const QuickJoinProvider = ({
         }).unwrap();
 
         if (response.error) {
-          throw response.error;
+          const message = cleanServerMessage(response.error);
+          return {
+            ok: false,
+            error: message,
+            cards: response.errorCards,
+            lobbyTaken: LOBBY_TAKEN_ERRORS.some((pattern) =>
+              pattern.test(message)
+            )
+          };
+        }
+        if (options?.matchmaking && response.gameStarted) {
+          return {
+            ok: false,
+            error: t('MATCHMAKING.LOBBY_TAKEN'),
+            lobbyTaken: true
+          };
         }
 
         const authKeyToUse = response.authKey ?? '';
@@ -369,18 +498,19 @@ export const QuickJoinProvider = ({
             authKey: authKeyToUse
           }
         });
-      } catch (err: any) {
-        const message =
-          typeof err === 'string' ? err : err?.message ?? String(err);
-        setError(message);
-      } finally {
-        setIsJoining(false);
+        return { ok: true };
+      } catch (err) {
+        const message = describeThrownError(err, t('NOTICE.JOIN_FAILED'));
+        return {
+          ok: false,
+          error: message,
+          lobbyTaken: LOBBY_TAKEN_ERRORS.some((pattern) =>
+            pattern.test(message)
+          )
+        };
       }
     },
     [
-      isAuthLoading,
-      isLoggedIn,
-      currentUserName,
       joinGame,
       selectedFavoriteDeck,
       importDeckUrl,
@@ -390,6 +520,41 @@ export const QuickJoinProvider = ({
       dispatch,
       navigate,
       setSaveDeck,
+      t
+    ]
+  );
+
+  const quickJoin = useCallback(
+    async (gameName: number) => {
+      if (isAuthLoading || !isLoggedIn || !currentUserName) return;
+      if (isRustLocked) {
+        requestRustPanelAttention();
+        return;
+      }
+      if (
+        deckSource === 'talishar' &&
+        !selectedFavoriteDeck &&
+        !isValidDeckUrl(importDeckUrl.trim())
+      ) {
+        setError(null);
+        setImportDeckError(t('JOIN.INVALID_DECK_URL'));
+        return;
+      }
+      setError(null);
+      setImportDeckError(null);
+      setIsJoining(true);
+      const result = await joinWithDeck(gameName);
+      if (!result.ok) setError(toServerError(result.error, result.cards));
+      setIsJoining(false);
+    },
+    [
+      isAuthLoading,
+      isLoggedIn,
+      currentUserName,
+      selectedFavoriteDeck,
+      importDeckUrl,
+      deckSource,
+      joinWithDeck,
       isRustLocked,
       t
     ]
@@ -399,6 +564,7 @@ export const QuickJoinProvider = ({
     deckSource,
     selectedFavoriteDeck,
     selectedFavoriteDeckHero,
+    selectedDeckHero,
     selectedBazaarDeck,
     importDeckUrl,
     saveDeck,
@@ -423,7 +589,12 @@ export const QuickJoinProvider = ({
     setImportDeckUrl,
     setSaveDeck,
     setError,
-    quickJoin
+    quickJoin,
+    joinWithDeck,
+    setMatchmakingCriteria,
+    matchmaking,
+    isMatchmakingFetching,
+    refreshMatchmaking
   };
 
   return (

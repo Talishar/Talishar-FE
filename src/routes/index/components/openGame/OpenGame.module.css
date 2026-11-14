@@ -130,6 +130,13 @@
   white-space: nowrap;
 }
 
+.joinBlocker {
+  font-size: 0.72em;
+  line-height: 1.25;
+  color: var(--theme-primary, #d4af37);
+  opacity: 0.8;
+}
+
 .description {
   display: -webkit-box;
   -webkit-line-clamp: 2;

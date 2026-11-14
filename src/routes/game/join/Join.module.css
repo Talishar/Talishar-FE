@@ -32,10 +32,6 @@
   display: none !important;
 }
 
-.fieldError {
-  color: red;
-}
-
 .formContainer {
   background: transparent;
   width: 460px;

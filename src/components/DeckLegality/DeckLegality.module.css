@@ -1,0 +1,30 @@
+.summary {
+  display: block;
+  margin: 0.1rem 0 0;
+  font-size: 0.8rem;
+  line-height: 1.35;
+  color: var(--theme-text-muted, rgba(237, 237, 237, 0.6));
+}
+
+.formatLink {
+  display: inline;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  line-height: inherit;
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: currentColor;
+  text-underline-offset: 2px;
+  cursor: pointer;
+  box-shadow: none;
+}
+
+.formatLink:hover,
+.formatLink:focus-visible {
+  color: var(--theme-text, #ededed);
+  background: none;
+}

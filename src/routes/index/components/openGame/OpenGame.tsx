@@ -17,6 +17,15 @@ import { CLASS_OF_RATHE, HEROES_OF_RATHE } from '../filter/constants';
 import ConfirmModal from 'components/ConfirmModal/ConfirmModal';
 import { useGetLegalHeroesQuery } from 'features/api/apiSlice';
 import { shortenHeroNames } from 'routes/game/create/gameDescription';
+import { toast } from 'react-hot-toast';
+import { MatchmakingBlocker } from 'interface/API/GetMatchmakingStatus.php';
+
+// Lobby blockers that stop the selected deck from joining, most important first.
+const JOIN_BLOCKERS: MatchmakingBlocker[] = [
+  'kicked',
+  'heroIllegal',
+  'theyRejectHero'
+];
 
 const decodeHtmlEntities = (text: string): string => {
   const doc = new DOMParser().parseFromString(text, 'text/html');
@@ -110,6 +119,22 @@ const OpenGame = ({
     }
   };
   const { t, i18n } = useTranslation();
+
+  const matchmaking = quickJoinCtx?.matchmaking;
+  const lobbyBlockers = matchmaking?.blockers?.[String(entry.gameName)];
+  const isOwnLobby = !!lobbyBlockers?.includes('own');
+  const joinBlocker = hasDeckReady
+    ? JOIN_BLOCKERS.find((code) => lobbyBlockers?.includes(code))
+    : undefined;
+  const joinBlockerText = joinBlocker
+    ? t(`MATCHMAKING.BLOCKER_${joinBlocker}`, {
+        hero: matchmaking?.heroShortName ?? t('MATCHMAKING.YOUR_HERO')
+      })
+    : '';
+  const lobbyNote =
+    joinBlockerText || (isOwnLobby ? t('MATCHMAKING.BLOCKER_own') : '');
+  const blockedByHero =
+    joinBlocker === 'theyRejectHero' || joinBlocker === 'heroIllegal';
   const { data: legalHeroesByFormat } = useGetLegalHeroesQuery();
   const legalHeroNames =
     legalHeroesByFormat?.[normalizeFormat(entry.format) ?? ''] ?? [];
@@ -144,6 +169,14 @@ const OpenGame = ({
     e.stopPropagation();
     if (isRustLocked) {
       requestRustPanelAttention();
+      return;
+    }
+    if (blockedByHero) {
+      navigate(`/game/join/${entry.gameName}`);
+      return;
+    }
+    if (joinBlocker) {
+      toast.error(joinBlockerText, { position: 'top-center' });
       return;
     }
     if (isLearningGame) {
@@ -227,7 +260,7 @@ const OpenGame = ({
     styles.buttonWithIcon,
     'secondary',
     {
-      [styles.buttonLocked]: isRustLocked
+      [styles.buttonLocked]: isRustLocked || !!joinBlocker
     }
   );
 
@@ -263,6 +296,7 @@ const OpenGame = ({
         >
           {translateDescription(entry.description)}
         </span>
+        {lobbyNote && <span className={styles.joinBlocker}>{lobbyNote}</span>}
       </div>
       {isOther && !formatLabel && (
         <div className={styles.formatName}>
@@ -275,11 +309,15 @@ const OpenGame = ({
           className={buttonClass}
           href={`/game/join/${entry.gameName}`}
           role="button"
-          aria-disabled={isRustLocked || undefined}
+          aria-disabled={isRustLocked || !!joinBlocker || undefined}
           onClick={handleJoin}
           title={
             isRustLocked
               ? 'Clear your rust counters to join'
+              : blockedByHero
+              ? t('MATCHMAKING.PICK_OTHER_DECK', { reason: joinBlockerText })
+              : joinBlocker
+              ? joinBlockerText
               : hasDeckReady
               ? t('OPEN_GAME.JOIN_DECK_READY')
               : t('OPEN_GAME.JOIN_DECK_NOT_READY')
