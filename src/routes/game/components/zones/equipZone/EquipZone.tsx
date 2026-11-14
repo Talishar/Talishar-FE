@@ -5,6 +5,7 @@ import Displayrow from 'interface/Displayrow';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import DestroyAnimation from '../../elements/destroyAnimation/DestroyAnimation';
 import StackCount from '../../elements/stackCount/StackCount';
+import ValueChip from '../../elements/valueChip/ValueChip';
 import {
   EquipDestroySlot,
   useEquipDestroy
@@ -36,7 +37,9 @@ export const EquipZone = React.memo(
           t(`ZONES.${slot.toUpperCase()}`)
         ) : (
           <>
-            <CardDisplay card={cardToDisplay} isPlayer={isPlayer} />
+            <CardDisplay card={cardToDisplay} isPlayer={isPlayer}>
+              <ValueChip card={cardToDisplay} />
+            </CardDisplay>
             {subcardCount > 0 && (
               <StackCount
                 count={subcardCount}
