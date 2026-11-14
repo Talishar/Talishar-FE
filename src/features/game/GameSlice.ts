@@ -578,6 +578,7 @@ function mergeReceivedGameState(
   state.opponentInactive = payload.opponentInactive ?? false;
   state.inactivityDeadline = payload.inactivityDeadline;
   state.gameDeleteDeadline = payload.gameDeleteDeadline;
+  state.resultPending = payload.resultPending;
   state.serverTimeOffset = payload.serverTimeOffset;
   state.preventPassPrompt = payload.preventPassPrompt;
 }
@@ -789,6 +790,7 @@ export const gameSlice = createSlice({
         state.opponentInactive = false;
         state.inactivityDeadline = undefined;
         state.gameDeleteDeadline = undefined;
+        state.resultPending = undefined;
         state.serverTimeOffset = undefined;
       }
 

@@ -13,6 +13,7 @@ import EndGameStats, {
   type EndGameStatsRef
 } from '../endGameStats/EndGameStats';
 import EndGameMenuOptions from '../endGameMenuOptions/EndGameMenuOptions';
+import ResultTakeback from '../resultTakeback/ResultTakeback';
 import { shallowEqual } from 'react-redux';
 import useShowModal from 'hooks/useShowModals';
 import { FaEye, FaEyeSlash, FaEllipsisH, FaExchangeAlt } from 'react-icons/fa';
@@ -56,12 +57,15 @@ const EndGameScreen = () => {
   const [menuStyle, setMenuStyle] = useState<React.CSSProperties>({});
   const { isSupporter } = useSupporterStatus();
   const endGameStatsRef = useRef<EndGameStatsRef>(null);
-  const { data, isLoading, error } = useGetPopUpContentQuery({
-    gameID: gameInfo.gameID,
-    playerID: playerID,
-    authKey: gameInfo.authKey,
-    popupType: END_GAME_STATS
-  });
+  const { data, isLoading, error } = useGetPopUpContentQuery(
+    {
+      gameID: gameInfo.gameID,
+      playerID: playerID,
+      authKey: gameInfo.authKey,
+      popupType: END_GAME_STATS
+    },
+    { refetchOnMountOrArgChange: true }
+  );
   const masteryGameIdentifier = gameInfo.gameGUID || gameInfo.gameID;
   const { data: masteryData } = useGetHeroMasteryQuery(
     { gameKey: `talishar:${masteryGameIdentifier}`, scope: 'award' },
@@ -307,6 +311,7 @@ const EndGameScreen = () => {
               </div>
             </div>
           </div>
+          <ResultTakeback />
           {!isSupporter && !isLoading && !error && (
             <div className={styles.supportCta}>
               <a
@@ -349,6 +354,7 @@ const EndGameScreen = () => {
           </div>
         </div>
       )}
+      {!showStats && <ResultTakeback />}
     </div>
   );
 };
