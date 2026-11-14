@@ -16,6 +16,7 @@ import {
   BsX,
   BsCollection,
   BsCollectionPlay,
+  BsClockHistory,
   BsChevronDown,
   BsPlayCircle,
   BsInfoCircle,
@@ -141,6 +142,13 @@ const Header = () => {
             <li>
               <NavLink to="/game/load" className={navLinkClass}>
                 {t('HEADER.REPLAYS')}
+              </NavLink>
+            </li>
+          )}
+          {navigationUserName && (
+            <li>
+              <NavLink to="/match-history" className={navLinkClass}>
+                {t('HEADER.MATCH_HISTORY')}
               </NavLink>
             </li>
           )}
@@ -292,6 +300,13 @@ const Header = () => {
               <li>
                 <Link to="/game/load" onClick={closeMobileMenu}>
                   <BsCollectionPlay /> <span>{t('HEADER.REPLAYS')}</span>
+                </Link>
+              </li>
+            )}
+            {isLoggedIn && (
+              <li>
+                <Link to="/match-history" onClick={closeMobileMenu}>
+                  <BsClockHistory /> <span>{t('HEADER.MATCH_HISTORY')}</span>
                 </Link>
               </li>
             )}
