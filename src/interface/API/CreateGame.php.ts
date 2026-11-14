@@ -13,6 +13,7 @@ export interface CreateGameAPI {
   user?: string; // User ID for external site like fabrary
   deckTestDeck?: string; //Deck of the deck test opponent (AI)
   openHands?: boolean; // Private games only: both players see each other's hand and arsenal
+  findMatchTicket?: string; // From FindMatch.php when Find match hosts
 }
 
 export type CreateGameFormik = GameEntryFormik;

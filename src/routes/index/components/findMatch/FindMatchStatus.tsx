@@ -5,16 +5,16 @@ import Notice from 'components/Notice';
 import HeroLegalityLine from 'components/DeckLegality/HeroLegalityLine';
 import { useGetLegalHeroIdsQuery } from 'features/api/apiSlice';
 import {
-  MatchmakingBlocker,
-  MatchmakingStatusResponse
-} from 'interface/API/GetMatchmakingStatus.php';
+  FindMatchBlocker,
+  FindMatchStatusResponse
+} from 'interface/API/GetFindMatchStatus.php';
 import {
   formatDisplayName,
   getHeroLegalitySummary
 } from 'utils/heroLegality';
 
 interface Props {
-  status: MatchmakingStatusResponse | undefined;
+  status: FindMatchStatusResponse | undefined;
   format: string;
   hasDeck: boolean;
   /** Set ID of the selected deck's hero, for the "Legal for" line */
@@ -22,7 +22,7 @@ interface Props {
   onSelectFormat?: (format: string) => void;
 }
 
-const MatchmakingStatus = ({
+const FindMatchStatus = ({
   status,
   format,
   hasDeck,
@@ -35,46 +35,46 @@ const MatchmakingStatus = ({
   const summary = status?.summary;
 
   if (!hasDeck) {
-    return <Notice tone="info" title={t('MATCHMAKING.CHOOSE_DECK')} />;
+    return <Notice tone="info" title={t('FIND_MATCH.CHOOSE_DECK')} />;
   }
   if (!status || !summary || summary.format !== normalizeFormat(format)) {
-    return <Notice tone="info" title={t('MATCHMAKING.CHECKING')} />;
+    return <Notice tone="info" title={t('FIND_MATCH.CHECKING')} />;
   }
 
-  const hero = status.heroShortName ?? t('MATCHMAKING.YOUR_HERO');
+  const hero = status.heroShortName ?? t('FIND_MATCH.YOUR_HERO');
   const fits = summary.matches.length;
   const reasons = Object.entries(summary.reasons).filter(
     ([, count]) => (count ?? 0) > 0
-  ) as [MatchmakingBlocker, number][];
+  ) as [FindMatchBlocker, number][];
   const heroIllegal = summary.heroLegal === false;
 
   let headline: string;
   if (heroIllegal) {
-    headline = t('MATCHMAKING.HERO_ILLEGAL', { hero, format: formatName });
+    headline = t('FIND_MATCH.HERO_ILLEGAL', { hero, format: formatName });
   } else if (summary.waiting === 0) {
-    headline = t('MATCHMAKING.NOBODY_WAITING', { format: formatName });
+    headline = t('FIND_MATCH.NOBODY_WAITING', { format: formatName });
   } else if (fits > 0) {
     headline =
       fits === summary.waiting
-        ? t('MATCHMAKING.FITS_ALL', { count: fits, format: formatName })
-        : t('MATCHMAKING.FITS_SOME', {
+        ? t('FIND_MATCH.FITS_ALL', { count: fits, format: formatName })
+        : t('FIND_MATCH.FITS_SOME', {
             count: fits,
             waiting: summary.waiting,
             format: formatName
           });
   } else if (reasons.length === 1) {
-    headline = t(`MATCHMAKING.NONE_FIT_${reasons[0][0]}`, {
+    headline = t(`FIND_MATCH.NONE_FIT_${reasons[0][0]}`, {
       count: summary.waiting,
       hero,
       format: formatName
     });
   } else {
-    headline = t('MATCHMAKING.NONE_FIT_MIXED', {
+    headline = t('FIND_MATCH.NONE_FIT_MIXED', {
       count: summary.waiting,
       format: formatName,
       reasons: reasons
         .map(([code, count]) =>
-          t(`MATCHMAKING.REASON_${code}`, { count, hero })
+          t(`FIND_MATCH.REASON_${code}`, { count, hero })
         )
         .join(', ')
     });
@@ -100,11 +100,11 @@ const MatchmakingStatus = ({
     const others = Object.entries(summary.otherFormats);
     if (others.length > 0) {
       addNote(
-        t('MATCHMAKING.ALSO_WAITING', {
+        t('FIND_MATCH.ALSO_WAITING', {
           list: others
             .sort((a, b) => b[1] - a[1])
             .map(([otherFormat, count]) =>
-              t('MATCHMAKING.ALSO_WAITING_ITEM', {
+              t('FIND_MATCH.ALSO_WAITING_ITEM', {
                 count,
                 format: formatDisplayName(t, otherFormat)
               })
@@ -115,10 +115,10 @@ const MatchmakingStatus = ({
     }
   }
   if (!status.heroKnown && summary.waiting > 0) {
-    addNote(t('MATCHMAKING.HERO_UNKNOWN'));
+    addNote(t('FIND_MATCH.HERO_UNKNOWN'));
   }
   if (summary.competitive && status.hasPreference) {
-    addNote(t('MATCHMAKING.PREFERENCE_OFF_COMPETITIVE'));
+    addNote(t('FIND_MATCH.PREFERENCE_OFF_COMPETITIVE'));
   }
 
   return (
@@ -129,4 +129,4 @@ const MatchmakingStatus = ({
   );
 };
 
-export default MatchmakingStatus;
+export default FindMatchStatus;

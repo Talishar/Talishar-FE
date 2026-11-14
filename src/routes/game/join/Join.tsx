@@ -5,9 +5,9 @@ import {
   useJoinGameMutation,
   useGetGameListQuery,
   useGetGameInfoQuery,
-  useGetMatchmakingStatusQuery
+  useGetFindMatchStatusQuery
 } from 'features/api/apiSlice';
-import { MatchmakingBlocker } from 'interface/API/GetMatchmakingStatus.php';
+import { FindMatchBlocker } from 'interface/API/GetFindMatchStatus.php';
 import DeckLegality from 'components/DeckLegality';
 import { JoinGameAPI } from 'interface/API/JoinGame.php';
 import {
@@ -44,7 +44,7 @@ import { useTranslation, Trans } from 'react-i18next';
 import PageBanner from 'components/PageBanner/PageBanner';
 
 // Hero legality is shown by DeckLegality, so it isn't repeated here.
-const LOBBY_BLOCKERS: MatchmakingBlocker[] = [
+const LOBBY_BLOCKERS: FindMatchBlocker[] = [
   'own',
   'kicked',
   'theyRejectHero'
@@ -194,12 +194,12 @@ const JoinGame = () => {
   const selectedDeckHero = data?.favoriteDecks.find(
     (deck: FavoriteDeck) => deck.key === selectedFavoriteDeck
   )?.hero;
-  const { currentData: matchmaking } = useGetMatchmakingStatusQuery(
+  const { currentData: findMatchStatus } = useGetFindMatchStatusQuery(
     { hero: selectedDeckHero ?? '', preference: '', format: '' },
     { skip: !isLoggedIn || !selectedDeckHero || isPrecon }
   );
   const lobbyBlocker = LOBBY_BLOCKERS.find((code) =>
-    matchmaking?.blockers?.[finalGameName]?.includes(code)
+    findMatchStatus?.blockers?.[finalGameName]?.includes(code)
   );
 
   // Debug logging
@@ -307,10 +307,10 @@ const JoinGame = () => {
                       {selectedFavoriteDeck && lobbyBlocker && (
                         <Notice
                           tone="warning"
-                          title={t(`MATCHMAKING.BLOCKER_${lobbyBlocker}`, {
+                          title={t(`FIND_MATCH.BLOCKER_${lobbyBlocker}`, {
                             hero:
-                              matchmaking?.heroShortName ??
-                              t('MATCHMAKING.YOUR_HERO')
+                              findMatchStatus?.heroShortName ??
+                              t('FIND_MATCH.YOUR_HERO')
                           })}
                         />
                       )}

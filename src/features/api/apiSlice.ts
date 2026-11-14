@@ -46,9 +46,11 @@ import {
 } from 'interface/API/UpdateBazaarMatchup';
 import { GameListResponse } from 'routes/index/components/gameList/GameList';
 import {
-  MatchmakingStatusRequest,
-  MatchmakingStatusResponse
-} from 'interface/API/GetMatchmakingStatus.php';
+  FindMatchRequest,
+  FindMatchResponse,
+  FindMatchStatusRequest,
+  FindMatchStatusResponse
+} from 'interface/API/GetFindMatchStatus.php';
 import { GetCosmeticsResponse } from 'interface/API/GetCosmeticsResponse.php';
 import {
   DeleteDeckAPIRequest,
@@ -280,11 +282,14 @@ export const apiSlice = createApi({
         responseHandler: parseResponse
       })
     }),
-    getMatchmakingStatus: builder.query<
-      MatchmakingStatusResponse,
-      MatchmakingStatusRequest
+    getFindMatchStatus: builder.query<
+      FindMatchStatusResponse,
+      FindMatchStatusRequest
     >({
-      query: (body) => postJson(URL_END_POINT.GET_MATCHMAKING_STATUS, body)
+      query: (body) => postJson(URL_END_POINT.GET_FIND_MATCH_STATUS, body)
+    }),
+    findMatch: builder.mutation<FindMatchResponse, FindMatchRequest>({
+      query: (body) => postJson(URL_END_POINT.FIND_MATCH, body)
     }),
     getHeroMastery: builder.query<
       HeroMasteryResponse,
@@ -1174,8 +1179,9 @@ export const apiSlice = createApi({
 export const {
   useGetLegalHeroesQuery,
   useGetLegalHeroIdsQuery,
-  useGetMatchmakingStatusQuery,
-  useLazyGetMatchmakingStatusQuery,
+  useGetFindMatchStatusQuery,
+  useLazyGetFindMatchStatusQuery,
+  useFindMatchMutation,
   useGetHeroMasteryQuery,
   useSaveHeroMasteryFrameMutation,
   useGetPopUpContentQuery,

@@ -123,14 +123,14 @@
   cursor: not-allowed;
 }
 
-.matchmakingActions {
+.findMatchActions {
   display: flex;
   gap: 0.5rem;
   margin-top: 0.75rem;
   flex-shrink: 0;
 }
 
-.matchmakingActions > button {
+.findMatchActions > button {
   flex: 1 1 0;
   min-width: 0;
   margin-top: 0;

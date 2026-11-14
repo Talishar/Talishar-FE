@@ -15,10 +15,13 @@ import {
   useGetFavoriteDecksQuery,
   useGetBazaarDecksQuery,
   useGetGameListQuery,
-  useGetMatchmakingStatusQuery,
-  useLazyGetMatchmakingStatusQuery
+  useGetFindMatchStatusQuery,
+  useFindMatchMutation
 } from 'features/api/apiSlice';
-import { MatchmakingStatusResponse } from 'interface/API/GetMatchmakingStatus.php';
+import {
+  FindMatchResponse,
+  FindMatchStatusResponse
+} from 'interface/API/GetFindMatchStatus.php';
 import {
   selectMetafyId,
   selectCurrentUserName,
@@ -74,7 +77,9 @@ const LOBBY_TAKEN_ERRORS = [
   /already joined/i,
   /kicked from this lobby/i,
   /lobby is looking to play against specific heroes/i,
-  /not interested in playing against your hero/i
+  /not interested in playing against your hero/i,
+  /unable to join this game/i,
+  /lobby no longer exists/i
 ];
 
 interface QuickJoinContextType {
@@ -113,13 +118,19 @@ interface QuickJoinContextType {
   /** Joins with the active deck (or `fabdb`) and reports failures instead of showing them */
   joinWithDeck: (
     gameName: number,
-    options?: { fabdb?: string; matchmaking?: boolean }
+    options?: { fabdb?: string; findMatch?: boolean }
   ) => Promise<JoinAttempt>;
-  /** Format and hero preference from the create form, used by matchmaking */
-  setMatchmakingCriteria: (format: string, preference: string) => void;
-  matchmaking: MatchmakingStatusResponse | undefined;
-  isMatchmakingFetching: boolean;
-  refreshMatchmaking: () => Promise<MatchmakingStatusResponse | undefined>;
+  /** Format, hero preference and (for precon) hero from the create form, used by Find match */
+  setFindMatchCriteria: (
+    format: string,
+    preference: string,
+    hero?: string | null
+  ) => void;
+  findMatchStatus: FindMatchStatusResponse | undefined;
+  isFindMatchFetching: boolean;
+  /** One server-side Find match decision for the current criteria */
+  findMatchStep: (exclude: number[]) => Promise<FindMatchResponse>;
+  cancelFindMatchTicket: (ticket: string) => void;
 }
 
 const QuickJoinContext = createContext<QuickJoinContextType | null>(null);
@@ -261,41 +272,48 @@ export const QuickJoinProvider = ({
       ? selectedFavoriteDeckHero
       : null;
 
-  const [matchmakingCriteria, setMatchmakingCriteriaState] = useState({
+  const [findMatchCriteria, setFindMatchCriteriaState] = useState<{
+    format: string;
+    preference: string;
+    hero: string | null;
+  }>({
     format: '',
-    preference: ''
+    preference: '',
+    hero: null
   });
-  const setMatchmakingCriteria = useCallback(
-    (format: string, preference: string) =>
-      setMatchmakingCriteriaState((prev) =>
-        prev.format === format && prev.preference === preference
+  const setFindMatchCriteria = useCallback(
+    (format: string, preference: string, hero: string | null = null) =>
+      setFindMatchCriteriaState((prev) =>
+        prev.format === format &&
+        prev.preference === preference &&
+        prev.hero === hero
           ? prev
-          : { format, preference }
+          : { format, preference, hero }
       ),
     []
   );
-  const canMatchmake = !isAuthLoading && isLoggedIn && !!currentUserName;
-  const matchmakingArgs = useMemo(
+  const canCheckFindMatch = !isAuthLoading && isLoggedIn && !!currentUserName;
+  const findMatchArgs = useMemo(
     () => ({
-      hero: selectedDeckHero ?? '',
-      preference: matchmakingCriteria.preference,
-      format: matchmakingCriteria.format
+      hero: findMatchCriteria.hero ?? selectedDeckHero ?? '',
+      preference: findMatchCriteria.preference,
+      format: findMatchCriteria.format
     }),
-    [selectedDeckHero, matchmakingCriteria]
+    [selectedDeckHero, findMatchCriteria]
   );
   const {
-    currentData: matchmaking,
-    isFetching: isMatchmakingFetching,
-    refetch: refetchMatchmaking
-  } = useGetMatchmakingStatusQuery(matchmakingArgs, {
-    skip: !canMatchmake,
+    currentData: findMatchStatus,
+    isFetching: isFindMatchFetching,
+    refetch: refetchFindMatchStatus
+  } = useGetFindMatchStatusQuery(findMatchArgs, {
+    skip: !canCheckFindMatch,
     refetchOnMountOrArgChange: true
   });
-  const [fetchMatchmaking] = useLazyGetMatchmakingStatusQuery();
+  const [findMatch] = useFindMatchMutation();
 
-  // The game list already polls; re-check matchmaking only when its lobbies change.
+  // The game list already polls; re-check Find match only when its lobbies change.
   const { data: gameListData } = useGetGameListQuery(undefined, {
-    skip: !canMatchmake
+    skip: !canCheckFindMatch
   });
   const openGamesKey = useMemo(
     () =>
@@ -311,24 +329,33 @@ export const QuickJoinProvider = ({
   );
   const lastOpenGamesKey = useRef<string | null>(null);
   useEffect(() => {
-    if (!canMatchmake || !gameListData) return;
+    if (!canCheckFindMatch || !gameListData) return;
     if (lastOpenGamesKey.current === null) {
       lastOpenGamesKey.current = openGamesKey;
       return;
     }
     if (lastOpenGamesKey.current === openGamesKey) return;
     lastOpenGamesKey.current = openGamesKey;
-    refetchMatchmaking();
-  }, [canMatchmake, gameListData, openGamesKey, refetchMatchmaking]);
+    refetchFindMatchStatus();
+  }, [canCheckFindMatch, gameListData, openGamesKey, refetchFindMatchStatus]);
 
-  const refreshMatchmaking = useCallback(async () => {
-    if (!canMatchmake) return undefined;
-    try {
-      return await fetchMatchmaking(matchmakingArgs, false).unwrap();
-    } catch {
-      return undefined;
-    }
-  }, [canMatchmake, fetchMatchmaking, matchmakingArgs]);
+  const findMatchStep = useCallback(
+    async (exclude: number[]): Promise<FindMatchResponse> => {
+      try {
+        return await findMatch({ ...findMatchArgs, exclude }).unwrap();
+      } catch (err) {
+        return { error: describeThrownError(err, t('NOTICE.JOIN_FAILED')) };
+      }
+    },
+    [findMatch, findMatchArgs, t]
+  );
+
+  const cancelFindMatchTicket = useCallback(
+    (ticket: string) => {
+      findMatch({ cancel: ticket }).catch(() => undefined);
+    },
+    [findMatch]
+  );
 
   useEffect(() => {
     if (!selectedFavoriteDeck || !favoritesData?.favoriteDecks) {
@@ -425,7 +452,7 @@ export const QuickJoinProvider = ({
   const joinWithDeck = useCallback(
     async (
       gameName: number,
-      options?: { fabdb?: string; matchmaking?: boolean }
+      options?: { fabdb?: string; findMatch?: boolean }
     ): Promise<JoinAttempt> => {
       try {
         const overrideDeck = options?.fabdb;
@@ -464,10 +491,10 @@ export const QuickJoinProvider = ({
             )
           };
         }
-        if (options?.matchmaking && response.gameStarted) {
+        if (options?.findMatch && response.gameStarted) {
           return {
             ok: false,
-            error: t('MATCHMAKING.LOBBY_TAKEN'),
+            error: t('FIND_MATCH.LOBBY_TAKEN'),
             lobbyTaken: true
           };
         }
@@ -591,10 +618,11 @@ export const QuickJoinProvider = ({
     setError,
     quickJoin,
     joinWithDeck,
-    setMatchmakingCriteria,
-    matchmaking,
-    isMatchmakingFetching,
-    refreshMatchmaking
+    setFindMatchCriteria,
+    findMatchStatus,
+    isFindMatchFetching,
+    findMatchStep,
+    cancelFindMatchTicket
   };
 
   return (

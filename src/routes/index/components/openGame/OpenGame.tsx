@@ -18,10 +18,10 @@ import ConfirmModal from 'components/ConfirmModal/ConfirmModal';
 import { useGetLegalHeroesQuery } from 'features/api/apiSlice';
 import { shortenHeroNames } from 'routes/game/create/gameDescription';
 import { toast } from 'react-hot-toast';
-import { MatchmakingBlocker } from 'interface/API/GetMatchmakingStatus.php';
+import { FindMatchBlocker } from 'interface/API/GetFindMatchStatus.php';
 
 // Lobby blockers that stop the selected deck from joining, most important first.
-const JOIN_BLOCKERS: MatchmakingBlocker[] = [
+const JOIN_BLOCKERS: FindMatchBlocker[] = [
   'kicked',
   'heroIllegal',
   'theyRejectHero'
@@ -120,19 +120,19 @@ const OpenGame = ({
   };
   const { t, i18n } = useTranslation();
 
-  const matchmaking = quickJoinCtx?.matchmaking;
-  const lobbyBlockers = matchmaking?.blockers?.[String(entry.gameName)];
+  const findMatchStatus = quickJoinCtx?.findMatchStatus;
+  const lobbyBlockers = findMatchStatus?.blockers?.[String(entry.gameName)];
   const isOwnLobby = !!lobbyBlockers?.includes('own');
   const joinBlocker = hasDeckReady
     ? JOIN_BLOCKERS.find((code) => lobbyBlockers?.includes(code))
     : undefined;
   const joinBlockerText = joinBlocker
-    ? t(`MATCHMAKING.BLOCKER_${joinBlocker}`, {
-        hero: matchmaking?.heroShortName ?? t('MATCHMAKING.YOUR_HERO')
+    ? t(`FIND_MATCH.BLOCKER_${joinBlocker}`, {
+        hero: findMatchStatus?.heroShortName ?? t('FIND_MATCH.YOUR_HERO')
       })
     : '';
   const lobbyNote =
-    joinBlockerText || (isOwnLobby ? t('MATCHMAKING.BLOCKER_own') : '');
+    joinBlockerText || (isOwnLobby ? t('FIND_MATCH.BLOCKER_own') : '');
   const blockedByHero =
     joinBlocker === 'theyRejectHero' || joinBlocker === 'heroIllegal';
   const { data: legalHeroesByFormat } = useGetLegalHeroesQuery();
@@ -315,7 +315,7 @@ const OpenGame = ({
             isRustLocked
               ? 'Clear your rust counters to join'
               : blockedByHero
-              ? t('MATCHMAKING.PICK_OTHER_DECK', { reason: joinBlockerText })
+              ? t('FIND_MATCH.PICK_OTHER_DECK', { reason: joinBlockerText })
               : joinBlocker
               ? joinBlockerText
               : hasDeckReady

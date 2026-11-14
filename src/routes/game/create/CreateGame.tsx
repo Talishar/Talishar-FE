@@ -69,7 +69,7 @@ import {
   ServerError,
   toServerError
 } from 'utils/serverError';
-import MatchmakingStatus from 'routes/index/components/matchmaking/MatchmakingStatus';
+import FindMatchStatus from 'routes/index/components/findMatch/FindMatchStatus';
 
 type CreateGameProps = {
   inUnifiedPanel?: boolean;
@@ -322,10 +322,10 @@ const CreateGame = ({
           (deck: FavoriteDeck) => deck.key === selectedFavoriteDeck
         )?.hero;
   const canFindMatch = isEmbedded && isLoggedIn && !deckTestMode;
-  const matchmakingSummary = quickJoinCtx?.matchmaking?.summary;
+  const findMatchSummary = quickJoinCtx?.findMatchStatus?.summary;
   const isHeroIllegalForQueue =
-    matchmakingSummary?.format === activeFormat &&
-    matchmakingSummary.heroLegal === false;
+    findMatchSummary?.format === activeFormat &&
+    findMatchSummary.heroLegal === false;
   const { data: legalHeroIds } = useGetLegalHeroIdsQuery();
   const isDeckHeroIllegal =
     isHeroIllegalForQueue ||
@@ -345,12 +345,22 @@ const CreateGame = ({
     setServerError(null);
   }, [activeFormat, activeDeckKey]);
 
-  // The matchmaking queue uses the same format and hero preference as the lobby.
-  const setMatchmakingCriteria = quickJoinCtx?.setMatchmakingCriteria;
+  // Find match uses the same format and hero preference as the lobby.
+  const setFindMatchCriteria = quickJoinCtx?.setFindMatchCriteria;
+  const preconHero = isPreconFormat(activeFormat)
+    ? PRECON_DECKS.HEROES[PRECON_DECKS.LINKS.indexOf(selectedPreconDeck)] ??
+      null
+    : null;
   useEffect(() => {
-    if (!isEmbedded || !setMatchmakingCriteria) return;
-    setMatchmakingCriteria(activeFormat, formGameDescription ?? '');
-  }, [isEmbedded, setMatchmakingCriteria, activeFormat, formGameDescription]);
+    if (!isEmbedded || !setFindMatchCriteria) return;
+    setFindMatchCriteria(activeFormat, formGameDescription ?? '', preconHero);
+  }, [
+    isEmbedded,
+    setFindMatchCriteria,
+    activeFormat,
+    formGameDescription,
+    preconHero
+  ]);
 
   const aiDeckOptions: ImageSelectOption[] = React.useMemo(
     () =>
@@ -827,6 +837,8 @@ const CreateGame = ({
 
       const response = await createGame(values).unwrap();
       if (response.error) {
+        if (values.findMatchTicket)
+          quickJoinCtx?.cancelFindMatchTicket(values.findMatchTicket);
         setServerError(toServerError(response.error, response.errorCards));
       } else {
         if (!response.playerID || !response.gameName || !response.authKey) {
@@ -857,6 +869,8 @@ const CreateGame = ({
       }
     } catch (error) {
       console.warn(error);
+      if (values.findMatchTicket)
+        quickJoinCtx?.cancelFindMatchTicket(values.findMatchTicket);
       setServerError({
         title: describeThrownError(error, t('NOTICE.CREATE_FAILED'))
       });
@@ -872,35 +886,58 @@ const CreateGame = ({
     }
     const isPrecon = isPreconFormat(activeFormat);
     if (!isPrecon && !quickJoinCtx.hasDeckConfigured) {
-      setServerError({ title: t('MATCHMAKING.NEED_DECK') });
+      setServerError({ title: t('FIND_MATCH.NEED_DECK') });
       return;
     }
     setServerError(null);
     setIsFindingMatch(true);
     try {
-      const status = await quickJoinCtx.refreshMatchmaking();
-      const candidates =
-        status?.summary?.format === activeFormat ? status.summary.matches : [];
-      for (const gameName of candidates.slice(0, 3)) {
-        const attempt = await quickJoinCtx.joinWithDeck(gameName, {
-          fabdb: isPrecon ? selectedPreconDeck : undefined,
-          matchmaking: true
-        });
-        if (attempt.ok) return;
-        if (!attempt.lobbyTaken) {
-          setServerError(toServerError(attempt.error, attempt.cards));
+      // The server decides each step under one lock, so two players searching
+      // at once are paired instead of both hosting.
+      const failedLobbies: number[] = [];
+      const deadline = Date.now() + 45000;
+      while (Date.now() < deadline) {
+        const step = await quickJoinCtx.findMatchStep(failedLobbies);
+        if (step.action === 'wait') {
+          await new Promise((resolve) => setTimeout(resolve, step.retryMs));
+          continue;
+        }
+        if (step.action === 'join') {
+          for (const gameName of step.games) {
+            const attempt = await quickJoinCtx.joinWithDeck(gameName, {
+              fabdb: isPrecon ? selectedPreconDeck : undefined,
+              findMatch: true
+            });
+            if (attempt.ok) return;
+            if (!attempt.lobbyTaken) {
+              setServerError(toServerError(attempt.error, attempt.cards));
+              return;
+            }
+            failedLobbies.push(gameName);
+          }
+          continue;
+        }
+        if (step.action === 'host') {
+          const ticket = step.ticket;
+          let submitted = false;
+          await handleSubmit((values) => {
+            submitted = true;
+            return onSubmit({
+              ...values,
+              visibility: GAME_VISIBILITY.PUBLIC,
+              deckTestMode: false,
+              findMatchTicket: ticket
+            });
+          }, onInvalid)();
+          if (!submitted) quickJoinCtx.cancelFindMatchTicket(ticket);
           return;
         }
+        setServerError({
+          title: step.error ?? t('FIND_MATCH.SEARCH_TIMEOUT')
+        });
+        return;
       }
-      await handleSubmit(
-        (values) =>
-          onSubmit({
-            ...values,
-            visibility: GAME_VISIBILITY.PUBLIC,
-            deckTestMode: false
-          }),
-        onInvalid
-      )();
+      setServerError({ title: t('FIND_MATCH.SEARCH_TIMEOUT') });
     } finally {
       setIsFindingMatch(false);
     }
@@ -1645,8 +1682,8 @@ const CreateGame = ({
               </fieldset>
             </div>
             {canFindMatch && (
-              <MatchmakingStatus
-                status={quickJoinCtx?.matchmaking}
+              <FindMatchStatus
+                status={quickJoinCtx?.findMatchStatus}
                 format={activeFormat}
                 heroId={quickJoinCtx?.selectedDeckHero}
                 onSelectFormat={selectFormat}
@@ -1657,7 +1694,7 @@ const CreateGame = ({
               />
             )}
             {canFindMatch ? (
-              <div className={styles.matchmakingActions}>
+              <div className={styles.findMatchActions}>
                 <button
                   type="button"
                   className={classNames(
@@ -1673,12 +1710,12 @@ const CreateGame = ({
                   }
                   aria-disabled={isRustLocked || undefined}
                   aria-busy={isFindingMatch}
-                  title={t('MATCHMAKING.FIND_MATCH_TITLE')}
+                  title={t('FIND_MATCH.BUTTON_TITLE')}
                   onClick={handleFindMatch}
                 >
                   {isFindingMatch
-                    ? t('MATCHMAKING.FINDING')
-                    : t('MATCHMAKING.FIND_MATCH')}
+                    ? t('FIND_MATCH.FINDING')
+                    : t('FIND_MATCH.BUTTON')}
                 </button>
                 {createButton}
               </div>

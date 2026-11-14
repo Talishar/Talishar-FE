@@ -475,7 +475,8 @@ export const URL_END_POINT = {
   GET_APP_INFO: 'AccountFiles/GetAppInfoAPI.php',
   GET_HERO_MASTERY: 'APIs/GetHeroMastery.php',
   GET_LEGAL_HEROES: 'APIs/GetLegalHeroes.php',
-  GET_MATCHMAKING_STATUS: 'APIs/GetMatchmakingStatus.php',
+  GET_FIND_MATCH_STATUS: 'APIs/GetFindMatchStatus.php',
+  FIND_MATCH: 'APIs/FindMatch.php',
   SAVE_HERO_MASTERY_FRAME: 'APIs/SaveHeroMasteryFrame.php',
   GENERATE_AUTH_TOKEN: 'AccountFiles/GenerateAuthTokenAPI.php'
 };
