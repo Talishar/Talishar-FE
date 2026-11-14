@@ -16,7 +16,7 @@ export const isAdFreeRoute = (pathname: string) =>
   AD_FREE_ROUTE_RE.test(pathname);
 
 const VIDEO_AD_ROUTE_RE =
-  /^\/(?:learn|about|mastery|game\/load|ads-test)?\/?$/i;
+  /^\/(?:learn|about|mastery|match-history|game\/load|ads-test)?\/?$/i;
 
 export const isVideoAdRoute = (pathname: string) =>
   VIDEO_AD_ROUTE_RE.test(pathname);

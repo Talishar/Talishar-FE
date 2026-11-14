@@ -550,6 +550,14 @@
   }
 }
 
+@media only screen and (max-width: 900px) {
+  .navBar .centerNav li a {
+    padding: 0 5px;
+    font-size: 13px;
+    min-width: 0;
+  }
+}
+
 .burgerButton {
   display: none;
   background: none;

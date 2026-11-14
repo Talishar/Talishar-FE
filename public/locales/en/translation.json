@@ -692,6 +692,7 @@
     "LOGIN": "Log in",
     "LOGOUT": "Log out",
     "MASTERY": "Mastery",
+    "MATCH_HISTORY": "Match History",
     "MOD_PAGE": "Mod Page",
     "MY_DECKS": "My Decks",
     "OPEN_MENU": "Open menu",
@@ -1178,6 +1179,7 @@
       "SEALED": "Sealed"
     },
     "HEROES": "{{hero}} vs {{opponentHero}}",
+    "LOAD_ERROR": "Match history could not be loaded.",
     "LOSS": "L",
     "LOSS_LABEL": "Loss",
     "OPPONENT": "vs {{name}}",

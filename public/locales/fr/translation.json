@@ -583,6 +583,7 @@
     "LOGIN": "Se Connecter",
     "LOGOUT": "Déconnexion",
     "MASTERY": "",
+    "MATCH_HISTORY": "Historique",
     "MOD_PAGE": "Page de modules",
     "MY_DECKS": "Mes platines",
     "OPEN_MENU": "Ouvrir le menu",
@@ -958,6 +959,7 @@
       "SEALED": "Scellé"
     },
     "HEROES": "{{hero}} contre {{opponentHero}}",
+    "LOAD_ERROR": "Impossible de charger l'historique des parties.",
     "LOSS": "D",
     "LOSS_LABEL": "Défaite",
     "OPPONENT": "contre {{name}}",
