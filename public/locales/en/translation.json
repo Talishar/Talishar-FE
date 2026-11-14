@@ -1193,9 +1193,6 @@
     "WIN_LABEL": "Win"
   },
   "FIND_MATCH": {
-    "BUTTON": "Find match",
-    "FINDING": "Finding a match...",
-    "BUTTON_TITLE": "Join a waiting player who fits your deck and hero preference, or open a public lobby if nobody does",
     "CHOOSE_DECK": "Choose a deck above to find a match.",
     "NEED_DECK": "Choose a deck first.",
     "SEARCH_TIMEOUT": "Could not find a match right now. Try again in a moment.",
@@ -1243,7 +1240,17 @@
     "BLOCKER_heroIllegal": "{{hero}} isn't legal in this format",
     "BLOCKER_kicked": "You were kicked from this lobby",
     "BLOCKER_own": "This is your lobby",
-    "PICK_OTHER_DECK": "{{reason}}. Pick another deck to join."
+    "PICK_OTHER_DECK": "{{reason}}. Pick another deck to join.",
+    "JOIN_QUEUE": "Join queue",
+    "UPDATE_QUEUE": "Update queue",
+    "JOIN_QUEUE_TITLE": "Start searching with this format, deck and hero preference. You can be in up to {{max}} queues at once, one per format, and go to whichever lobby finds an opponent first.",
+    "QUEUES": "Your queues",
+    "SEARCHING_FOR": "Searching {{time}}",
+    "LEAVE_ALL": "Leave all",
+    "QUEUE_SEARCHING": "Searching",
+    "QUEUE_HOSTING": "Waiting",
+    "LEAVE_QUEUE": "Leave {{format}} queue",
+    "IMPORTED_DECK": "Imported deck"
   },
   "MATCH_REVIEW": {
     "CAMERA": "Camera",

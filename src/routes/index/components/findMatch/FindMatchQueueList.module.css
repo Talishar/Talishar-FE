@@ -1,0 +1,104 @@
+.queues {
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+}
+
+.heading {
+  color: var(--theme-text-muted, rgba(237, 237, 237, 0.6));
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0;
+  padding: 0.25rem 0.3rem 0.25rem 0.25rem;
+  list-style: none;
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.12));
+  border-radius: 6px;
+  background: var(--theme-form-background, rgba(255, 255, 255, 0.04));
+}
+
+.hero {
+  flex-shrink: 0;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.2;
+}
+
+.format {
+  color: var(--theme-text, #ededed);
+  font-weight: 600;
+}
+
+.deck {
+  overflow: hidden;
+  color: var(--theme-text-muted, rgba(237, 237, 237, 0.6));
+  font-size: 0.78rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status {
+  flex-shrink: 0;
+  padding: 0 0.25rem;
+  color: var(--theme-text-muted, rgba(237, 237, 237, 0.6));
+  font-size: 0.75rem;
+}
+
+button.remove,
+button.cancel {
+  width: auto;
+  margin: 0;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--theme-text-muted, rgba(237, 237, 237, 0.6));
+  line-height: 1;
+  box-shadow: none;
+}
+
+button.remove {
+  flex-shrink: 0;
+  padding: 0.3rem;
+  border-radius: 4px;
+}
+
+button.cancel {
+  padding: 0.25rem 0.5rem;
+  border-color: var(--theme-border, rgba(255, 255, 255, 0.12));
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
+button.remove:hover,
+button.cancel:hover {
+  color: var(--theme-text, #ededed);
+  border-color: var(--theme-border-light, rgba(255, 255, 255, 0.25));
+}

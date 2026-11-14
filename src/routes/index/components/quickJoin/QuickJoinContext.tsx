@@ -15,13 +15,9 @@ import {
   useGetFavoriteDecksQuery,
   useGetBazaarDecksQuery,
   useGetGameListQuery,
-  useGetFindMatchStatusQuery,
-  useFindMatchMutation
+  useGetFindMatchStatusQuery
 } from 'features/api/apiSlice';
-import {
-  FindMatchResponse,
-  FindMatchStatusResponse
-} from 'interface/API/GetFindMatchStatus.php';
+import { FindMatchStatusResponse } from 'interface/API/GetFindMatchStatus.php';
 import {
   selectMetafyId,
   selectCurrentUserName,
@@ -46,6 +42,10 @@ import {
   ServerErrorCard,
   toServerError
 } from 'utils/serverError';
+import {
+  FindMatchQueueDeck,
+  useFindMatchQueues
+} from 'routes/index/components/findMatch/useFindMatchQueues';
 
 const isValidDeckUrl = (value: string): boolean => {
   try {
@@ -115,10 +115,10 @@ interface QuickJoinContextType {
   setSaveDeck: (v: boolean) => void;
   setError: (v: ServerError | null) => void;
   quickJoin: (gameName: number) => Promise<void>;
-  /** Joins with the active deck (or `fabdb`) and reports failures instead of showing them */
+  /** Joins with the active deck (or `fabdb`, or a queued `deck`) and reports failures instead of showing them */
   joinWithDeck: (
     gameName: number,
-    options?: { fabdb?: string; findMatch?: boolean }
+    options?: { fabdb?: string; deck?: FindMatchQueueDeck; findMatch?: boolean }
   ) => Promise<JoinAttempt>;
   /** Format, hero preference and (for precon) hero from the create form, used by Find match */
   setFindMatchCriteria: (
@@ -128,9 +128,8 @@ interface QuickJoinContextType {
   ) => void;
   findMatchStatus: FindMatchStatusResponse | undefined;
   isFindMatchFetching: boolean;
-  /** One server-side Find match decision for the current criteria */
-  findMatchStep: (exclude: number[]) => Promise<FindMatchResponse>;
-  cancelFindMatchTicket: (ticket: string) => void;
+  /** Saved format + deck searches that Find match runs together */
+  findMatchQueues: ReturnType<typeof useFindMatchQueues>;
 }
 
 const QuickJoinContext = createContext<QuickJoinContextType | null>(null);
@@ -309,7 +308,6 @@ export const QuickJoinProvider = ({
     skip: !canCheckFindMatch,
     refetchOnMountOrArgChange: true
   });
-  const [findMatch] = useFindMatchMutation();
 
   // The game list already polls; re-check Find match only when its lobbies change.
   const { data: gameListData } = useGetGameListQuery(undefined, {
@@ -338,24 +336,6 @@ export const QuickJoinProvider = ({
     lastOpenGamesKey.current = openGamesKey;
     refetchFindMatchStatus();
   }, [canCheckFindMatch, gameListData, openGamesKey, refetchFindMatchStatus]);
-
-  const findMatchStep = useCallback(
-    async (exclude: number[]): Promise<FindMatchResponse> => {
-      try {
-        return await findMatch({ ...findMatchArgs, exclude }).unwrap();
-      } catch (err) {
-        return { error: describeThrownError(err, t('NOTICE.JOIN_FAILED')) };
-      }
-    },
-    [findMatch, findMatchArgs, t]
-  );
-
-  const cancelFindMatchTicket = useCallback(
-    (ticket: string) => {
-      findMatch({ cancel: ticket }).catch(() => undefined);
-    },
-    [findMatch]
-  );
 
   useEffect(() => {
     if (!selectedFavoriteDeck || !favoritesData?.favoriteDecks) {
@@ -452,21 +432,35 @@ export const QuickJoinProvider = ({
   const joinWithDeck = useCallback(
     async (
       gameName: number,
-      options?: { fabdb?: string; findMatch?: boolean }
+      options?: {
+        fabdb?: string;
+        deck?: FindMatchQueueDeck;
+        findMatch?: boolean;
+      }
     ): Promise<JoinAttempt> => {
       try {
+        const queuedDeck = options?.deck;
         const overrideDeck = options?.fabdb;
-        const isBazaar = !overrideDeck && deckSource === 'bazaar';
-        const fabdbValue =
-          overrideDeck ??
-          (isBazaar
-            ? `${FAB_BAZAAR_DECK_URL_BASE}${selectedBazaarDeck}`
-            : importDeckUrl.trim());
-        const favDecksValue =
-          overrideDeck || isBazaar ? '' : selectedFavoriteDeck;
+        const isBazaar =
+          !queuedDeck && !overrideDeck && deckSource === 'bazaar';
+        const fabdbValue = queuedDeck
+          ? queuedDeck.fabdb
+          : overrideDeck ??
+            (isBazaar
+              ? `${FAB_BAZAAR_DECK_URL_BASE}${selectedBazaarDeck}`
+              : importDeckUrl.trim());
+        const favDecksValue = queuedDeck
+          ? queuedDeck.favoriteDecks
+          : overrideDeck || isBazaar
+          ? ''
+          : selectedFavoriteDeck;
         // Only save deck if it's from importDeckUrl (not from favorites or bazaar)
         const shouldSaveDeck =
-          !overrideDeck && !isBazaar && saveDeck && importDeckUrl.trim() !== '';
+          !queuedDeck &&
+          !overrideDeck &&
+          !isBazaar &&
+          saveDeck &&
+          importDeckUrl.trim() !== '';
 
         const response = await joinGame({
           gameName,
@@ -512,7 +506,11 @@ export const QuickJoinProvider = ({
             playerID: playerIDToUse,
             gameID: gameIDToUse,
             authKey: authKeyToUse,
-            bazaarDeckId: isBazaar ? selectedBazaarDeck : undefined
+            bazaarDeckId: queuedDeck
+              ? queuedDeck.bazaarDeckId
+              : isBazaar
+              ? selectedBazaarDeck
+              : undefined
           })
         );
 
@@ -550,6 +548,8 @@ export const QuickJoinProvider = ({
       t
     ]
   );
+
+  const findMatchQueues = useFindMatchQueues(joinWithDeck);
 
   const quickJoin = useCallback(
     async (gameName: number) => {
@@ -621,8 +621,7 @@ export const QuickJoinProvider = ({
     setFindMatchCriteria,
     findMatchStatus,
     isFindMatchFetching,
-    findMatchStep,
-    cancelFindMatchTicket
+    findMatchQueues
   };
 
   return (
