@@ -1,0 +1,48 @@
+.frame {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  container-type: size;
+  pointer-events: none;
+}
+
+@media (max-width: 1199px) {
+  .frame {
+    display: block;
+  }
+}
+
+.chip {
+  position: absolute;
+  right: 3px;
+  bottom: 3px;
+  display: flex;
+  align-items: center;
+  gap: 2.5cqw;
+  height: 27cqw;
+  padding: 0 5cqw 0 3.5cqw;
+  border-radius: 6cqw;
+  background: var(--theme-near-black);
+  box-shadow: 0 0 0 1px var(--theme-border);
+  color: var(--theme-text);
+  font-size: 20cqw;
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.icon {
+  display: block;
+  width: 17cqw;
+  height: 17cqw;
+  object-fit: contain;
+}
+
+.lowered {
+  color: var(--theme-danger);
+}
+
+.raised {
+  color: var(--theme-success);
+}
