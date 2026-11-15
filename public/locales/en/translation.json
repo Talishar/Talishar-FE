@@ -2289,6 +2289,8 @@
     "CLASSIC_HAND_TOOLTIP": "Show your hand as a plain row of cards instead of the fan, on every device.",
     "AUTO_LANDSCAPE_MOBILE": "Auto landscape on mobile",
     "AUTO_LANDSCAPE_MOBILE_TOOLTIP": "Turns the game sideways on your first tap in portrait. Works with the fanned hand on mobile.",
+    "EQUIPMENT_VALUES_MOBILE": "Block and power values on mobile",
+    "EQUIPMENT_VALUES_MOBILE_TOOLTIP": "Shows the printed block of equipment and the printed power of weapons in the corner of the card on phones and tablets.",
     "FORCE_MOBILE_LAYOUT": "Force mobile layout",
     "FORCE_MOBILE_LAYOUT_OPTIONS": {
       "NO": "No",
