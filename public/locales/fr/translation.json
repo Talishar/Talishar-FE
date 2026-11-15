@@ -1670,6 +1670,8 @@
     "CLASSIC_HAND_TOOLTIP": "Affiche votre main en simple rangée de cartes au lieu de l’éventail, sur tous les appareils.",
     "AUTO_LANDSCAPE_MOBILE": "Paysage automatique sur mobile",
     "AUTO_LANDSCAPE_MOBILE_TOOLTIP": "Passe la partie en paysage dès votre premier appui en portrait. Fonctionne avec la main en éventail sur mobile.",
+    "EQUIPMENT_VALUES_MOBILE": "Valeurs de défense et de puissance sur mobile",
+    "EQUIPMENT_VALUES_MOBILE_TOOLTIP": "Affiche la défense imprimée des équipements et la puissance imprimée des armes dans le coin de la carte, sur téléphone et tablette.",
     "FORCE_MOBILE_LAYOUT": "Forcer la disposition mobile",
     "FORCE_MOBILE_LAYOUT_OPTIONS": {
       "NO": "Non",
