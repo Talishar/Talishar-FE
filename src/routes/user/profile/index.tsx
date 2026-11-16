@@ -13,6 +13,7 @@ import BlockedUsers from './BlockedUsers';
 import MetafySection from './MetafySection';
 import UpgradeSection from './UpgradeSection';
 import useAuth from 'hooks/useAuth';
+import { describeThrownError } from 'utils/serverError';
 
 const CODE = 'code';
 const CLIENT_ID =
@@ -102,7 +103,7 @@ export const ProfilePage = () => {
     } catch (err) {
       console.warn(err);
       toast.error(
-        `Error deleting account: ${err?.toString() || 'Unknown error'}`,
+        `Error deleting account: ${describeThrownError(err, 'Unknown error')}`,
         {
           style: {
             minWidth: '250px'

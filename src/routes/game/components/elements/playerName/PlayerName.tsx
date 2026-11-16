@@ -232,10 +232,12 @@ export default function PlayerName(player: Player) {
   );
 
   // Friend request and block mutations
-  const [addFriend] = useAddFriendMutation();
-  const [cancelRequest] = useCancelRequestMutation();
+  const [addFriend, { isLoading: isAddingFriend }] = useAddFriendMutation();
+  const [cancelRequest, { isLoading: isCancellingRequest }] =
+    useCancelRequestMutation();
   const [blockUser, { isLoading: isBlockingUser }] = useBlockUserMutation();
-  const [unblockUser] = useUnblockUserMutation();
+  const [unblockUser, { isLoading: isUnblockingUser }] =
+    useUnblockUserMutation();
 
   const shouldLoadRelationships =
     isDropdownOpen && !player.isPlayer && playerID !== 3 && !isBotOpponent;
@@ -251,6 +253,9 @@ export default function PlayerName(player: Player) {
   } = useGetBlockedUsersQuery(undefined, { skip: !shouldLoadRelationships });
   const areRelationshipsLoading =
     isSentRequestsFetching || isBlockedUsersFetching;
+  const isFriendActionPending =
+    areRelationshipsLoading || isAddingFriend || isCancellingRequest;
+  const isBlockActionPending = areRelationshipsLoading || isUnblockingUser;
 
   // Memoized: only rebuilt when the underlying list reference changes
   const sentRequestsByUsername = useMemo(
@@ -466,9 +471,9 @@ export default function PlayerName(player: Player) {
           >
             <button
               className={`${styles.dropdownOption} ${
-                hasRequestSent || areRelationshipsLoading ? styles.disabled : ''
+                hasRequestSent || isFriendActionPending ? styles.disabled : ''
               }`}
-              disabled={areRelationshipsLoading}
+              disabled={isFriendActionPending}
               onClick={
                 hasRequestSent ? handleCancelFriendRequest : handleAddFriend
               }
@@ -485,9 +490,9 @@ export default function PlayerName(player: Player) {
             </button>
             <button
               className={`${styles.dropdownOption} ${
-                isBlocked || areRelationshipsLoading ? styles.disabled : ''
+                isBlocked || isBlockActionPending ? styles.disabled : ''
               }`}
-              disabled={areRelationshipsLoading}
+              disabled={isBlockActionPending}
               onClick={isBlocked ? handleUnblockUser : handleBlockUser}
               title={
                 isBlocked ? t('PROFILE.UNBLOCK_USER') : t('PROFILE.BLOCK_USER')

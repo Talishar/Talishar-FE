@@ -47,6 +47,7 @@ import {
   ROMAN_LEVELS,
   masteryHeroId
 } from 'features/mastery/mastery';
+import { describeThrownError } from 'utils/serverError';
 import styles from './decks.module.css';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -196,6 +197,7 @@ export const DecksPage = () => {
     Record<string, string>
   >({});
   const [updatingDeckLink, setUpdatingDeckLink] = useState<string | null>(null);
+  const [deletingDeckLink, setDeletingDeckLink] = useState<string | null>(null);
   const [savingFrameHero, setSavingFrameHero] = useState<string | null>(null);
   const [hoverPreview, setHoverPreview] = useState<HoverPreviewState | null>(
     null
@@ -389,12 +391,10 @@ export const DecksPage = () => {
           loading: 'Adding deck to favorites...',
           success: () => 'Deck added to favorites successfully!',
           error: (err) =>
-            `Error adding deck: ${
-              err?.message ||
-              err?.error ||
-              err?.toString() ||
+            `Error adding deck: ${describeThrownError(
+              err,
               'Invalid deck URL or deck not accessible'
-            }`
+            )}`
         },
         { style: { minWidth: '250px' }, position: 'top-center' }
       );
@@ -432,9 +432,7 @@ export const DecksPage = () => {
             return 'Hero updated successfully!';
           },
           error: (err) =>
-            `Error updating hero: ${
-              err?.message || err?.error || err?.toString() || 'Unknown error'
-            }`
+            `Error updating hero: ${describeThrownError(err, 'Unknown error')}`
         },
         { style: { minWidth: '250px' }, position: 'top-center' }
       );
@@ -472,6 +470,8 @@ export const DecksPage = () => {
   };
 
   const handleDeleteDeck = async (deckLink: string) => {
+    if (deletingDeckLink !== null) return;
+    setDeletingDeckLink(deckLink);
     try {
       const deleteDeckPromise = deleteDeck({ deckLink }).unwrap();
       toast.promise(
@@ -480,7 +480,10 @@ export const DecksPage = () => {
           loading: 'Deleting deck...',
           success: (data) => handleDeleteDeckMessage(data),
           error: (err) =>
-            `There has been an error, please try again. Error: ${err.toString()}`
+            `There has been an error, please try again. Error: ${describeThrownError(
+              err,
+              'Unknown error'
+            )}`
         },
         { style: { minWidth: '250px' }, position: 'top-center' }
       );
@@ -488,6 +491,7 @@ export const DecksPage = () => {
     } catch (err) {
       // Non-fatal: toast.promise above already surfaced the error to the user.
     } finally {
+      setDeletingDeckLink(null);
       refetchDecks();
     }
   };
@@ -789,6 +793,7 @@ export const DecksPage = () => {
                     type="button"
                     className={styles.deckActionButton}
                     onClick={() => handleDeleteDeck(deck.link)}
+                    disabled={deletingDeckLink !== null}
                     title={t('DECKS.DELETE_DECK')}
                   >
                     <RiDeleteBin5Line fontSize={'1.3em'} /> {t('DECKS.DELETE')}

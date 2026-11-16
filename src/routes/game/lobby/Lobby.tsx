@@ -407,7 +407,8 @@ const Lobby = () => {
   const [submitLobbyInput, submitLobbyInputData] =
     useSubmitLobbyInputMutation();
 
-  const [kickPlayerMutation] = useKickPlayerMutation();
+  const [kickPlayerMutation, { isLoading: isKickingPlayer }] =
+    useKickPlayerMutation();
 
   const [isChangeDeckOpen, setIsChangeDeckOpen] = useState(false);
   const canChangeDeck = !!gameLobby?.canChangeDeck && playerID !== 3;
@@ -1492,6 +1493,7 @@ const Lobby = () => {
                         type="button"
                         className={styles.kickButton}
                         onClick={handleKickPlayer}
+                        disabled={isKickingPlayer}
                         title={t('GAME_LOBBY.KICK_TITLE', {
                           name: isStreamerMode
                             ? t('GAME_LOBBY.OPPONENT')
