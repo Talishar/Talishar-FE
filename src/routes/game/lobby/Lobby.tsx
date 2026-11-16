@@ -28,7 +28,8 @@ import StickyFooter, {
 } from './components/stickyFooter/StickyFooter';
 import ChangeDeckModal from './components/changeDeck/ChangeDeckModal';
 import { consumeRematchDeckChange } from './components/changeDeck/rematchDeckIntent';
-import { toast } from 'react-hot-toast';
+import { toast, Toaster } from 'react-hot-toast';
+import { TOAST_OPTIONS } from 'constants/toastOptions';
 import useAuth from 'hooks/useAuth';
 import useAdScript from 'hooks/useAdScript';
 import useSupporterStatus from 'hooks/useSupporterStatus';
@@ -1227,7 +1228,6 @@ const Lobby = () => {
       const submitError = submitResponse?.deckError ?? submitResponse?.error;
       if (submitError) {
         setSubmitError(String(submitError));
-        toast.error(String(submitError));
         return;
       }
 
@@ -1273,6 +1273,7 @@ const Lobby = () => {
 
   return (
     <main className={mainClassNames}>
+      <Toaster position="top-left" toastOptions={TOAST_OPTIONS} />
       {pendingEquipmentSubmission &&
         createPortal(
           <dialog open className={styles.modal}>
