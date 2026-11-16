@@ -24,7 +24,9 @@ export const Playmat = ({ isPlayer }: { isPlayer: boolean }) => {
     const dim = 1 - intensity;
     const dimLayer = `linear-gradient(rgba(0, 0, 0, ${dim}), rgba(0, 0, 0, ${dim}))`;
     return {
-      backgroundImage: `${dimLayer}, url(/playmats/${playmat}.webp)`,
+      backgroundImage: playmat
+        ? `${dimLayer}, url(/playmats/${playmat}.webp)`
+        : dimLayer,
       borderRadius: `10px`
     };
   }, [playmat, playmatIntensity]);
