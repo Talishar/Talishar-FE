@@ -532,6 +532,7 @@
     "LOGIN": "ログイン",
     "LOGOUT": "ログアウト",
     "MASTERY": "",
+    "MATCH_HISTORY": "対戦履歴",
     "MOD_PAGE": "",
     "MY_DECKS": "",
     "OPEN_MENU": "",
@@ -905,6 +906,7 @@
       "SEALED": "シールド"
     },
     "HEROES": "{{hero}} 対 {{opponentHero}}",
+    "LOAD_ERROR": "対戦履歴を読み込めませんでした。",
     "LOSS": "負",
     "LOSS_LABEL": "敗北",
     "OPPONENT": "対戦相手：{{name}}",
@@ -1571,6 +1573,8 @@
     "CLASSIC_HAND_TOOLTIP": "",
     "AUTO_LANDSCAPE_MOBILE": "",
     "AUTO_LANDSCAPE_MOBILE_TOOLTIP": "",
+    "EQUIPMENT_VALUES_MOBILE": "",
+    "EQUIPMENT_VALUES_MOBILE_TOOLTIP": "",
     "FORCE_MOBILE_LAYOUT": "",
     "FORCE_MOBILE_LAYOUT_OPTIONS": {
       "NO": "",

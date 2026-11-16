@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-hot-toast';
 import { FaPlay, FaSave } from 'react-icons/fa';
-import { IoMdArrowDropright } from 'react-icons/io';
 import { useAppDispatch } from 'app/Hooks';
+import PageBanner from 'components/PageBanner/PageBanner';
+import useAdScript from 'hooks/useAdScript';
+import useSupporterStatus from 'hooks/useSupporterStatus';
 import {
   useGetMatchHistoryQuery,
   useLoadReplayMutation
@@ -31,16 +32,13 @@ const HeroCrop = ({ heroId }: { heroId: string }) => (
   />
 );
 
-interface MatchHistoryProps {
-  className?: string;
-}
-
-export const MatchHistory: React.FC<MatchHistoryProps> = ({ className }) => {
+const MatchHistory = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const [isExpanded, setIsExpanded] = useState(true);
-  const { data, isLoading } = useGetMatchHistoryQuery(undefined, {
+  const { showAds } = useSupporterStatus();
+  useAdScript(showAds);
+  const { data, isError } = useGetMatchHistoryQuery(undefined, {
     refetchOnMountOrArgChange: true
   });
   const [loadReplay, { isLoading: isLoadingReplay }] = useLoadReplayMutation();
@@ -119,107 +117,85 @@ export const MatchHistory: React.FC<MatchHistoryProps> = ({ className }) => {
     }
   };
 
-  if (!data?.loggedIn && !isLoading) return null;
-
   return (
-    <article className={`${styles.container} ${className ?? ''}`}>
-      <h3 className={styles.title}>
-        <button
-          type="button"
-          className={styles.titleButton}
-          onClick={() => setIsExpanded(!isExpanded)}
-          aria-expanded={isExpanded}
-        >
-          {t('MATCH_HISTORY.TITLE')}
-          <span
-            className={`${styles.arrow} ${
-              isExpanded ? styles.arrowExpanded : ''
-            }`}
-            aria-hidden="true"
-          >
-            <IoMdArrowDropright />
-          </span>
-        </button>
-      </h3>
-
-      {isExpanded && (
-        <>
-          <p className={styles.subtitle}>
-            {t('MATCH_HISTORY.SUBTITLE', { limit: data?.limit ?? 20 })}
-          </p>
-          {!isLoading && games.length === 0 && (
-            <p className={styles.empty}>{t('MATCH_HISTORY.EMPTY')}</p>
-          )}
-          <div className={styles.list}>
-            {games.map((game, index) => {
-              const opponent =
-                game.opponentName || t('MATCH_HISTORY.UNKNOWN_OPPONENT');
-              const heroes =
-                game.heroName && game.opponentHeroName
-                  ? t('MATCH_HISTORY.HEROES', {
-                      hero: game.heroName,
-                      opponentHero: game.opponentHeroName
-                    })
-                  : game.heroName || game.opponentHeroName;
-              const savedReplayNumber = game.savedReplayNumber;
-              return (
-                <div key={`${game.endedAt}-${index}`} className={styles.row}>
-                  <span
-                    className={`${styles.result} ${
-                      game.won ? styles.win : styles.loss
-                    }`}
-                    title={
-                      game.won
-                        ? t('MATCH_HISTORY.WIN_LABEL')
-                        : t('MATCH_HISTORY.LOSS_LABEL')
-                    }
-                  >
-                    {game.won
-                      ? t('MATCH_HISTORY.WIN')
-                      : t('MATCH_HISTORY.LOSS')}
-                  </span>
-                  <div className={styles.portraits} aria-hidden="true">
-                    <HeroCrop heroId={game.heroCardId} />
-                    <HeroCrop heroId={game.opponentHeroCardId} />
-                  </div>
-                  <div className={styles.info}>
-                    <span className={styles.opponent}>
-                      {t('MATCH_HISTORY.OPPONENT', { name: opponent })}
-                    </span>
-                    {heroes && (
-                      <span className={styles.heroes} title={heroes}>
-                        {heroes}
-                      </span>
-                    )}
-                    <span className={styles.meta}>{playedLabel(game)}</span>
-                  </div>
-                  {savedReplayNumber ? (
-                    <button
-                      type="button"
-                      className={styles.action}
-                      onClick={() => watch(savedReplayNumber)}
-                      disabled={isLoadingReplay}
-                    >
-                      <FaPlay aria-hidden="true" />
-                      {t('MATCH_HISTORY.WATCH', {
-                        number: savedReplayNumber
-                      })}
-                    </button>
-                  ) : game.canSaveReplay ? (
-                    <Link to="/game/load" className={styles.action}>
-                      <FaSave aria-hidden="true" />
-                      {t('MATCH_HISTORY.SAVE_REPLAY')}
-                    </Link>
-                  ) : (
-                    <span />
-                  )}
+    <main className={styles.page}>
+      <PageBanner
+        title={t('MATCH_HISTORY.TITLE')}
+        subtitle={t('MATCH_HISTORY.SUBTITLE', { limit: data?.limit ?? 20 })}
+      />
+      <div className={styles.content}>
+        {isError || data?.loggedIn === false ? (
+          <p className={styles.status}>{t('MATCH_HISTORY.LOAD_ERROR')}</p>
+        ) : data?.loggedIn && games.length === 0 ? (
+          <p className={styles.status}>{t('MATCH_HISTORY.EMPTY')}</p>
+        ) : null}
+        <div className={styles.list}>
+          {games.map((game, index) => {
+            const opponent =
+              game.opponentName || t('MATCH_HISTORY.UNKNOWN_OPPONENT');
+            const heroes =
+              game.heroName && game.opponentHeroName
+                ? t('MATCH_HISTORY.HEROES', {
+                    hero: game.heroName,
+                    opponentHero: game.opponentHeroName
+                  })
+                : game.heroName || game.opponentHeroName;
+            const savedReplayNumber = game.savedReplayNumber;
+            return (
+              <div key={`${game.endedAt}-${index}`} className={styles.row}>
+                <span
+                  className={`${styles.result} ${
+                    game.won ? styles.win : styles.loss
+                  }`}
+                  title={
+                    game.won
+                      ? t('MATCH_HISTORY.WIN_LABEL')
+                      : t('MATCH_HISTORY.LOSS_LABEL')
+                  }
+                >
+                  {game.won ? t('MATCH_HISTORY.WIN') : t('MATCH_HISTORY.LOSS')}
+                </span>
+                <div className={styles.portraits} aria-hidden="true">
+                  <HeroCrop heroId={game.heroCardId} />
+                  <HeroCrop heroId={game.opponentHeroCardId} />
                 </div>
-              );
-            })}
-          </div>
-        </>
-      )}
-    </article>
+                <div className={styles.info}>
+                  <span className={styles.opponent}>
+                    {t('MATCH_HISTORY.OPPONENT', { name: opponent })}
+                  </span>
+                  {heroes && (
+                    <span className={styles.heroes} title={heroes}>
+                      {heroes}
+                    </span>
+                  )}
+                  <span className={styles.meta}>{playedLabel(game)}</span>
+                </div>
+                {savedReplayNumber ? (
+                  <button
+                    type="button"
+                    className={styles.action}
+                    onClick={() => watch(savedReplayNumber)}
+                    disabled={isLoadingReplay}
+                  >
+                    <FaPlay aria-hidden="true" />
+                    {t('MATCH_HISTORY.WATCH', {
+                      number: savedReplayNumber
+                    })}
+                  </button>
+                ) : game.canSaveReplay ? (
+                  <Link to="/game/load" className={styles.action}>
+                    <FaSave aria-hidden="true" />
+                    {t('MATCH_HISTORY.SAVE_REPLAY')}
+                  </Link>
+                ) : (
+                  <span />
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </main>
   );
 };
 

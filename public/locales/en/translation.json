@@ -692,6 +692,7 @@
     "LOGIN": "Log in",
     "LOGOUT": "Log out",
     "MASTERY": "Mastery",
+    "MATCH_HISTORY": "Match History",
     "MOD_PAGE": "Mod Page",
     "MY_DECKS": "My Decks",
     "OPEN_MENU": "Open menu",
@@ -1178,6 +1179,7 @@
       "SEALED": "Sealed"
     },
     "HEROES": "{{hero}} vs {{opponentHero}}",
+    "LOAD_ERROR": "Match history could not be loaded.",
     "LOSS": "L",
     "LOSS_LABEL": "Loss",
     "OPPONENT": "vs {{name}}",
@@ -1193,9 +1195,6 @@
     "WIN_LABEL": "Win"
   },
   "FIND_MATCH": {
-    "BUTTON": "Find match",
-    "FINDING": "Finding a match...",
-    "BUTTON_TITLE": "Join a waiting player who fits your deck and hero preference, or open a public lobby if nobody does",
     "CHOOSE_DECK": "Choose a deck above to find a match.",
     "NEED_DECK": "Choose a deck first.",
     "SEARCH_TIMEOUT": "Could not find a match right now. Try again in a moment.",
@@ -1243,7 +1242,17 @@
     "BLOCKER_heroIllegal": "{{hero}} isn't legal in this format",
     "BLOCKER_kicked": "You were kicked from this lobby",
     "BLOCKER_own": "This is your lobby",
-    "PICK_OTHER_DECK": "{{reason}}. Pick another deck to join."
+    "PICK_OTHER_DECK": "{{reason}}. Pick another deck to join.",
+    "JOIN_QUEUE": "Join queue",
+    "UPDATE_QUEUE": "Update queue",
+    "JOIN_QUEUE_TITLE": "Start searching with this format, deck and hero preference. You can be in up to {{max}} queues at once, one per format, and go to whichever lobby finds an opponent first.",
+    "QUEUES": "Your queues",
+    "SEARCHING_FOR": "Searching {{time}}",
+    "LEAVE_ALL": "Leave all",
+    "QUEUE_SEARCHING": "Searching",
+    "QUEUE_HOSTING": "Waiting",
+    "LEAVE_QUEUE": "Leave {{format}} queue",
+    "IMPORTED_DECK": "Imported deck"
   },
   "MATCH_REVIEW": {
     "CAMERA": "Camera",
@@ -2165,6 +2174,7 @@
     "FAILED": "Your note could not be sent, but the game log was still saved.",
     "INTRO": "The log of this game will be saved for the moderators. Adding a reason or a note is optional, but it helps them.",
     "PRIVACY": "Only moderators can read your note.",
+    "SUBMITTED": "Thank you for reporting a player. The game log has been saved for the moderators (game {{gameID}}). You can also contact a mod on Discord if needed.",
     "TITLE": "Report your opponent"
   },
   "RUST_COUNTER_PANEL": {
@@ -2280,6 +2290,8 @@
     "CLASSIC_HAND_TOOLTIP": "Show your hand as a plain row of cards instead of the fan, on every device.",
     "AUTO_LANDSCAPE_MOBILE": "Auto landscape on mobile",
     "AUTO_LANDSCAPE_MOBILE_TOOLTIP": "Turns the game sideways on your first tap in portrait. Works with the fanned hand on mobile.",
+    "EQUIPMENT_VALUES_MOBILE": "Block and power values on mobile",
+    "EQUIPMENT_VALUES_MOBILE_TOOLTIP": "Shows the printed block of equipment and the printed power of weapons in the corner of the card on phones and tablets.",
     "FORCE_MOBILE_LAYOUT": "Force mobile layout",
     "FORCE_MOBILE_LAYOUT_OPTIONS": {
       "NO": "No",

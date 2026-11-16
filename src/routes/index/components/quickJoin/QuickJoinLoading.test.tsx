@@ -58,7 +58,10 @@ vi.mock('features/api/apiSlice', () => ({
   useGetBazaarDecksQuery: () => ({}),
   useGetHeroMasteryQuery: () => ({}),
   useJoinGameMutation: () => [state.joinGame],
-  useClearRustCountersMutation: () => [vi.fn()]
+  useClearRustCountersMutation: () => [vi.fn()],
+  useGetFindMatchStatusQuery: () => ({ refetch: vi.fn() }),
+  useFindMatchMutation: () => [vi.fn()],
+  useCreateGameMutation: () => [vi.fn()]
 }));
 vi.mock('routes/game/create/CreateGame', () => ({
   default: () => <div data-testid="creation-form" />

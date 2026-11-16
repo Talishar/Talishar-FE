@@ -583,6 +583,7 @@
     "LOGIN": "Se Connecter",
     "LOGOUT": "Déconnexion",
     "MASTERY": "",
+    "MATCH_HISTORY": "Historique",
     "MOD_PAGE": "Page de modules",
     "MY_DECKS": "Mes platines",
     "OPEN_MENU": "Ouvrir le menu",
@@ -958,6 +959,7 @@
       "SEALED": "Scellé"
     },
     "HEROES": "{{hero}} contre {{opponentHero}}",
+    "LOAD_ERROR": "Impossible de charger l'historique des parties.",
     "LOSS": "D",
     "LOSS_LABEL": "Défaite",
     "OPPONENT": "contre {{name}}",
@@ -1606,6 +1608,7 @@
     "FAILED": "Votre note n'a pas pu être envoyée, mais le journal de la partie a bien été sauvegardé.",
     "INTRO": "Le journal de cette partie sera sauvegardé pour les modérateurs. Ajouter une raison ou une note est facultatif, mais cela les aide.",
     "PRIVACY": "Seuls les modérateurs peuvent lire votre note.",
+    "SUBMITTED": "Merci d'avoir signalé un joueur. Le journal de la partie a été sauvegardé pour les modérateurs (partie {{gameID}}). Vous pouvez aussi contacter un modérateur sur Discord au besoin.",
     "TITLE": "Signaler votre adversaire"
   },
   "RUST_COUNTER_PANEL": {
@@ -1668,6 +1671,8 @@
     "CLASSIC_HAND_TOOLTIP": "Affiche votre main en simple rangée de cartes au lieu de l’éventail, sur tous les appareils.",
     "AUTO_LANDSCAPE_MOBILE": "Paysage automatique sur mobile",
     "AUTO_LANDSCAPE_MOBILE_TOOLTIP": "Passe la partie en paysage dès votre premier appui en portrait. Fonctionne avec la main en éventail sur mobile.",
+    "EQUIPMENT_VALUES_MOBILE": "Valeurs de défense et de puissance sur mobile",
+    "EQUIPMENT_VALUES_MOBILE_TOOLTIP": "Affiche la défense imprimée des équipements et la puissance imprimée des armes dans le coin de la carte, sur téléphone et tablette.",
     "FORCE_MOBILE_LAYOUT": "Forcer la disposition mobile",
     "FORCE_MOBILE_LAYOUT_OPTIONS": {
       "NO": "Non",

@@ -1,5 +1,6 @@
 import * as optConst from 'features/options/constants';
 import { DISABLE_EQUIPMENT_GEM_BUTTONS_COOKIE } from 'routes/game/components/elements/gemSlider/equipmentGemPreference';
+import { HIDE_EQUIPMENT_VALUES_COOKIE } from 'routes/game/components/elements/valueChip/equipmentValuePreference';
 import { CLASSIC_HAND_COOKIE } from 'routes/game/components/zones/playerHand/fanLayout';
 import { SORT_ZONES_BY_DEFAULT_COOKIE } from 'routes/game/components/zones/cardListZone/zoneSortPreference';
 import {
@@ -487,6 +488,17 @@ export const SETTINGS_DEFS: SettingDef[] = [
     name: AUTO_LANDSCAPE_COOKIE,
     defaultOn: false,
     visible: () => canLockLandscape()
+  },
+  {
+    kind: 'toggle',
+    key: 'equipmentValues',
+    group: 'appearance',
+    labelKey: 'SETTINGS.EQUIPMENT_VALUES_MOBILE',
+    tooltipKey: 'SETTINGS.EQUIPMENT_VALUES_MOBILE_TOOLTIP',
+    storage: 'device',
+    name: HIDE_EQUIPMENT_VALUES_COOKIE,
+    invert: true,
+    defaultOn: true
   },
   {
     kind: 'radio',

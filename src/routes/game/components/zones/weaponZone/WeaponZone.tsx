@@ -4,6 +4,7 @@ import { RootState } from 'app/Store';
 import Displayrow from 'interface/Displayrow';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import DestroyAnimation from '../../elements/destroyAnimation/DestroyAnimation';
+import ValueChip from '../../elements/valueChip/ValueChip';
 import { useEquipDestroy } from '../../elements/destroyAnimation/useEquipDestroy';
 import { selectIsP2View } from 'features/game/perspective';
 
@@ -27,7 +28,9 @@ export const WeaponZone = React.memo(
         className={zoneClassName}
         data-fan-unhover-anchor={isPlayer !== isP2View ? '' : undefined}
       >
-        <CardDisplay card={cardToDisplay} isPlayer={isPlayer} />
+        <CardDisplay card={cardToDisplay} isPlayer={isPlayer}>
+          <ValueChip card={cardToDisplay} />
+        </CardDisplay>
         {destroy && (
           <DestroyAnimation
             key={`equipDestroyAnim-${destroy.id}`}

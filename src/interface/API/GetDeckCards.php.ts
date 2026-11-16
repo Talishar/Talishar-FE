@@ -4,6 +4,7 @@ export interface GetDeckCardsRequest {
 
 export interface DeckCardAltArtOptions {
   cardId: string;
+  cardName?: string;
   altArts: string[];
   baseCardNumber: string;
   selectedAltPath: string | null;

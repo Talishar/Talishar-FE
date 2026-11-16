@@ -83,6 +83,9 @@ function ParseCard(input: any) {
   card.holoCounters = input.holoCounters ? Boolean(input.holoCounters) : false;
   if (input.goAgain) card.goAgain = true;
   if (input.pile) card.pile = String(input.pile);
+  if (input.blockValue != null)
+    card.blockValue = input.blockValue === '*' ? '*' : Number(input.blockValue);
+  if (input.powerValue != null) card.powerValue = Number(input.powerValue);
   return card;
 }
 

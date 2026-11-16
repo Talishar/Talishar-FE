@@ -532,6 +532,7 @@
     "LOGIN": "登录",
     "LOGOUT": "登出",
     "MASTERY": "",
+    "MATCH_HISTORY": "对局记录",
     "MOD_PAGE": "模组页面",
     "MY_DECKS": "我的卡组",
     "OPEN_MENU": "打开菜单",
@@ -905,6 +906,7 @@
       "SEALED": "现开赛"
     },
     "HEROES": "{{hero}} 对阵 {{opponentHero}}",
+    "LOAD_ERROR": "无法加载对局记录。",
     "LOSS": "负",
     "LOSS_LABEL": "失败",
     "OPPONENT": "对手：{{name}}",
@@ -1571,6 +1573,8 @@
     "CLASSIC_HAND_TOOLTIP": "",
     "AUTO_LANDSCAPE_MOBILE": "",
     "AUTO_LANDSCAPE_MOBILE_TOOLTIP": "",
+    "EQUIPMENT_VALUES_MOBILE": "",
+    "EQUIPMENT_VALUES_MOBILE_TOOLTIP": "",
     "FORCE_MOBILE_LAYOUT": "",
     "FORCE_MOBILE_LAYOUT_OPTIONS": {
       "NO": "",

@@ -291,7 +291,8 @@ export const submitButton = createAsyncThunk(
       queryParams
     );
     return params.button.mode === PROCESS_INPUT.CREATE_REPLAY ||
-      params.button.mode === PROCESS_INPUT.SAVE_SNAPSHOT
+      params.button.mode === PROCESS_INPUT.SAVE_SNAPSHOT ||
+      params.button.mode === PROCESS_INPUT.REPORT_PLAYER
       ? response
       : undefined;
   }

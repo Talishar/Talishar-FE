@@ -1,0 +1,43 @@
+.frame {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  container-type: size;
+  pointer-events: none;
+}
+
+@media (max-width: 1199px) {
+  @supports (width: 1cqw) {
+    .frame {
+      display: block;
+    }
+  }
+}
+
+.piece {
+  position: absolute;
+  bottom: 1.5cqw;
+  width: 43.056cqw;
+  height: 24cqw;
+  overflow: visible;
+}
+
+.power {
+  left: 1.5cqw;
+}
+
+.block {
+  right: 1.5cqw;
+}
+
+.tab {
+  fill: #ece8db;
+  stroke: #000;
+  stroke-width: 24;
+  paint-order: stroke;
+}
+
+.digit {
+  fill: #17130a;
+}

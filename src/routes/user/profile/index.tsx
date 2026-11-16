@@ -10,7 +10,6 @@ import { useState } from 'react';
 import styles from './profile.module.css';
 import FriendsList from './FriendsList';
 import BlockedUsers from './BlockedUsers';
-import MatchHistory from './MatchHistory';
 import MetafySection from './MetafySection';
 import UpgradeSection from './UpgradeSection';
 import useAuth from 'hooks/useAuth';
@@ -362,7 +361,6 @@ export const ProfilePage = () => {
             </article>
           </div>
           <div className={styles.rightColumn}>
-            <MatchHistory className={styles.friendsSection} />
             <FriendsList className={styles.friendsSection} />
             <BlockedUsers className={styles.friendsSection} />
           </div>

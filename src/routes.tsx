@@ -48,6 +48,7 @@ const Learn = lazy(() => import('routes/learn/Learn'));
 const About = lazy(() => import('routes/about/About'));
 const Premium = lazy(() => import('routes/premium/Premium'));
 const Mastery = lazy(() => import('routes/mastery/Mastery'));
+const MatchHistory = lazy(() => import('routes/matchHistory/MatchHistory'));
 const LoginPage = lazy(() =>
   import('routes/user/login').then((module) => ({ default: module.LoginPage }))
 );
@@ -224,6 +225,14 @@ export const router = createRouter(
             element={
               <LoggedInGuard shouldBeLoggedIn={true}>
                 <Mastery />
+              </LoggedInGuard>
+            }
+          />
+          <Route
+            path="match-history"
+            element={
+              <LoggedInGuard shouldBeLoggedIn={true}>
+                <MatchHistory />
               </LoggedInGuard>
             }
           />

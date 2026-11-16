@@ -123,9 +123,10 @@ const OpenGame = ({
   const findMatchStatus = quickJoinCtx?.findMatchStatus;
   const lobbyBlockers = findMatchStatus?.blockers?.[String(entry.gameName)];
   const isOwnLobby = !!lobbyBlockers?.includes('own');
-  const joinBlocker = hasDeckReady
-    ? JOIN_BLOCKERS.find((code) => lobbyBlockers?.includes(code))
-    : undefined;
+  const joinBlocker =
+    hasDeckReady && !isOwnLobby
+      ? JOIN_BLOCKERS.find((code) => lobbyBlockers?.includes(code))
+      : undefined;
   const joinBlockerText = joinBlocker
     ? t(`FIND_MATCH.BLOCKER_${joinBlocker}`, {
         hero: findMatchStatus?.heroShortName ?? t('FIND_MATCH.YOUR_HERO')

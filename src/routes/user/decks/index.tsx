@@ -81,8 +81,9 @@ const getAllAltArtSelection = (
   return altArts;
 };
 
-const getReadableCardName = (cardId: string) =>
-  cardId
+const getReadableCardName = (card: DeckCardAltArtOptions) =>
+  card.cardName ||
+  card.cardId
     .split('_')
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
@@ -587,7 +588,7 @@ export const DecksPage = () => {
     return (
       <div className={styles.altArtRow} key={card.cardId}>
         <span className={styles.altArtCardName}>
-          {getReadableCardName(card.cardId)}
+          {getReadableCardName(card)}
         </span>
         <div className={styles.thumbGrid}>
           {card.baseCardNumber && (
@@ -597,7 +598,7 @@ export const DecksPage = () => {
               onClick={() => handleAltArtClear(deck, card.cardId)}
               title={
                 !hasAlts
-                  ? getReadableCardName(card.cardId)
+                  ? getReadableCardName(card)
                   : isBaseSelected
                   ? 'Selected'
                   : 'Use the base art'

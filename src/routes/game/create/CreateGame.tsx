@@ -70,6 +70,8 @@ import {
   toServerError
 } from 'utils/serverError';
 import FindMatchStatus from 'routes/index/components/findMatch/FindMatchStatus';
+import FindMatchQueueList from 'routes/index/components/findMatch/FindMatchQueueList';
+import { MAX_FIND_MATCH_QUEUES } from 'routes/index/components/findMatch/useFindMatchQueues';
 
 type CreateGameProps = {
   inUnifiedPanel?: boolean;
@@ -334,7 +336,6 @@ const CreateGame = ({
       activeFormat,
       legalHeroIds
     ) === false;
-  const [isFindingMatch, setIsFindingMatch] = useState(false);
   const [serverError, setServerError] = useState<ServerError | null>(null);
 
   // A failure from the last attempt no longer applies once the deck or format changes.
@@ -763,6 +764,68 @@ const CreateGame = ({
     }));
   }, []);
 
+  // The values CreateGame.php gets for this form, also snapshotted by Find match queues.
+  const prepareCreateValues = (values: CreateGameAPI): CreateGameAPI => {
+    // if you're not logged in you can ONLY make a private game.
+    if (!isLoggedIn) values.visibility = GAME_VISIBILITY.PRIVATE;
+    values.openHands =
+      values.visibility === GAME_VISIBILITY.PRIVATE && !!values.openHands;
+    values.user = searchParams.get('user') ?? undefined;
+
+    // When inside QuickJoinProvider (main menu), use deck from shared context.
+    // For precon formats, keep the precon deck URL already set in values.fabdb via the form.
+    if (isEmbedded && !isPreconFormat(values.format)) {
+      values.favoriteDecks = quickJoinCtx!.effectiveFavoriteDecks;
+      values.fabdb = quickJoinCtx!.effectiveFabdb;
+      // Only save deck if "Save Deck" is checked and a new deck URL is being used (not a saved favorite or bazaar)
+      values.favoriteDeck =
+        quickJoinCtx!.saveDeck &&
+        quickJoinCtx!.deckSource === 'talishar' &&
+        quickJoinCtx!.importDeckUrl.trim() !== '';
+    }
+
+    // Extract base game description (remove hero/class names) - always store in English
+    // so the description is language-neutral and can be translated on display
+    let baseGameDescription = values.gameDescription || '';
+    if (selectedClasses.length > 0) {
+      baseGameDescription = 'Looking to play against a specific class';
+    } else if (selectedHeroes.length > 0) {
+      if (gameDescription.startsWith('No interest')) {
+        baseGameDescription = 'No interest in playing against specific hero';
+      } else {
+        baseGameDescription = 'Looking to play against a specific hero';
+      }
+    } else if (
+      baseGameDescription.startsWith('Looking to play against ') &&
+      baseGameDescription.includes(',')
+    ) {
+      baseGameDescription = 'Looking to play against a specific hero';
+    } else if (
+      baseGameDescription.startsWith('No interest in playing against') &&
+      baseGameDescription.includes(',')
+    ) {
+      baseGameDescription = 'No interest in playing against specific hero';
+    }
+
+    // Save the base option and selected heroes/classes to localStorage
+    localStorage.setItem('lastGameDescription', baseGameDescription);
+    localStorage.setItem('lastSelectedHeroes', JSON.stringify(selectedHeroes));
+    localStorage.setItem(
+      'lastSelectedClasses',
+      JSON.stringify(selectedClasses)
+    );
+    if (
+      gameDescription === 'Looking to play against a specific hero' &&
+      oscilioVariant &&
+      hasOscilioHero(selectedHeroes)
+    ) {
+      localStorage.setItem('lastOscilioVariant', oscilioVariant);
+    } else {
+      localStorage.removeItem('lastOscilioVariant');
+    }
+    return values;
+  };
+
   const onSubmit: SubmitHandler<CreateGameAPI> = async (
     values: CreateGameAPI
   ) => {
@@ -774,71 +837,9 @@ const CreateGame = ({
     }
     setServerError(null);
     try {
-      // if you're not logged in you can ONLY make a private game.
-      if (!isLoggedIn) values.visibility = GAME_VISIBILITY.PRIVATE;
-      values.openHands =
-        values.visibility === GAME_VISIBILITY.PRIVATE && !!values.openHands;
-      values.user = searchParams.get('user') ?? undefined;
-
-      // When inside QuickJoinProvider (main menu), use deck from shared context.
-      // For precon formats, keep the precon deck URL already set in values.fabdb via the form.
-      if (isEmbedded && !isPreconFormat(values.format)) {
-        values.favoriteDecks = quickJoinCtx!.effectiveFavoriteDecks;
-        values.fabdb = quickJoinCtx!.effectiveFabdb;
-        // Only save deck if "Save Deck" is checked and a new deck URL is being used (not a saved favorite or bazaar)
-        values.favoriteDeck =
-          quickJoinCtx!.saveDeck &&
-          quickJoinCtx!.deckSource === 'talishar' &&
-          quickJoinCtx!.importDeckUrl.trim() !== '';
-      }
-
-      // Extract base game description (remove hero/class names) - always store in English
-      // so the description is language-neutral and can be translated on display
-      let baseGameDescription = values.gameDescription || '';
-      if (selectedClasses.length > 0) {
-        baseGameDescription = 'Looking to play against a specific class';
-      } else if (selectedHeroes.length > 0) {
-        if (gameDescription.startsWith('No interest')) {
-          baseGameDescription = 'No interest in playing against specific hero';
-        } else {
-          baseGameDescription = 'Looking to play against a specific hero';
-        }
-      } else if (
-        baseGameDescription.startsWith('Looking to play against ') &&
-        baseGameDescription.includes(',')
-      ) {
-        baseGameDescription = 'Looking to play against a specific hero';
-      } else if (
-        baseGameDescription.startsWith('No interest in playing against') &&
-        baseGameDescription.includes(',')
-      ) {
-        baseGameDescription = 'No interest in playing against specific hero';
-      }
-
-      // Save the base option and selected heroes/classes to localStorage
-      localStorage.setItem('lastGameDescription', baseGameDescription);
-      localStorage.setItem(
-        'lastSelectedHeroes',
-        JSON.stringify(selectedHeroes)
-      );
-      localStorage.setItem(
-        'lastSelectedClasses',
-        JSON.stringify(selectedClasses)
-      );
-      if (
-        gameDescription === 'Looking to play against a specific hero' &&
-        oscilioVariant &&
-        hasOscilioHero(selectedHeroes)
-      ) {
-        localStorage.setItem('lastOscilioVariant', oscilioVariant);
-      } else {
-        localStorage.removeItem('lastOscilioVariant');
-      }
-
+      prepareCreateValues(values);
       const response = await createGame(values).unwrap();
       if (response.error) {
-        if (values.findMatchTicket)
-          quickJoinCtx?.cancelFindMatchTicket(values.findMatchTicket);
         setServerError(toServerError(response.error, response.errorCards));
       } else {
         if (!response.playerID || !response.gameName || !response.authKey) {
@@ -869,17 +870,47 @@ const CreateGame = ({
       }
     } catch (error) {
       console.warn(error);
-      if (values.findMatchTicket)
-        quickJoinCtx?.cancelFindMatchTicket(values.findMatchTicket);
       setServerError({
         title: describeThrownError(error, t('NOTICE.CREATE_FAILED'))
       });
     }
   };
 
-  // Join the longest-waiting lobby that fits, or host a public one when none does.
-  const handleFindMatch = async () => {
-    if (!quickJoinCtx || isFindingMatch || isSubmitting) return;
+  const findMatchQueues = quickJoinCtx?.findMatchQueues;
+  const queuedSearches = findMatchQueues?.queues ?? [];
+  const isActiveFormatQueued = queuedSearches.some(
+    (queue) => queue.format === activeFormat
+  );
+  const queueSearchError = findMatchQueues?.searchError ?? null;
+  useEffect(() => {
+    if (queueSearchError) setServerError(queueSearchError);
+  }, [queueSearchError]);
+
+  const selectedDeckLabel = (): string => {
+    if (isPreconFormat(activeFormat)) {
+      return (
+        PRECON_DECKS.NAMES[PRECON_DECKS.LINKS.indexOf(selectedPreconDeck)] ?? ''
+      );
+    }
+    if (!quickJoinCtx) return '';
+    const isBazaar = quickJoinCtx.deckSource === 'bazaar';
+    const options = isBazaar
+      ? quickJoinCtx.bazaarDeckOptions
+      : quickJoinCtx.favoriteDeckOptions;
+    const value = isBazaar
+      ? quickJoinCtx.selectedBazaarDeck
+      : quickJoinCtx.selectedFavoriteDeck;
+    const label = value
+      ? options.find((option) => option.value === value)?.label
+      : undefined;
+    return typeof label === 'string' && label !== ''
+      ? label
+      : t('FIND_MATCH.IMPORTED_DECK');
+  };
+
+  // Queues this format, deck and hero preference and starts searching it right away.
+  const handleJoinQueue = async () => {
+    if (!quickJoinCtx || !findMatchQueues || isSubmitting) return;
     if (isRustLocked) {
       requestRustPanelAttention();
       return;
@@ -890,57 +921,35 @@ const CreateGame = ({
       return;
     }
     setServerError(null);
-    setIsFindingMatch(true);
-    try {
-      // The server decides each step under one lock, so two players searching
-      // at once are paired instead of both hosting.
-      const failedLobbies: number[] = [];
-      const deadline = Date.now() + 45000;
-      while (Date.now() < deadline) {
-        const step = await quickJoinCtx.findMatchStep(failedLobbies);
-        if (step.action === 'wait') {
-          await new Promise((resolve) => setTimeout(resolve, step.retryMs));
-          continue;
-        }
-        if (step.action === 'join') {
-          for (const gameName of step.games) {
-            const attempt = await quickJoinCtx.joinWithDeck(gameName, {
-              fabdb: isPrecon ? selectedPreconDeck : undefined,
-              findMatch: true
-            });
-            if (attempt.ok) return;
-            if (!attempt.lobbyTaken) {
-              setServerError(toServerError(attempt.error, attempt.cards));
-              return;
-            }
-            failedLobbies.push(gameName);
-          }
-          continue;
-        }
-        if (step.action === 'host') {
-          const ticket = step.ticket;
-          let submitted = false;
-          await handleSubmit((values) => {
-            submitted = true;
-            return onSubmit({
-              ...values,
-              visibility: GAME_VISIBILITY.PUBLIC,
-              deckTestMode: false,
-              findMatchTicket: ticket
-            });
-          }, onInvalid)();
-          if (!submitted) quickJoinCtx.cancelFindMatchTicket(ticket);
-          return;
-        }
-        setServerError({
-          title: step.error ?? t('FIND_MATCH.SEARCH_TIMEOUT')
-        });
-        return;
-      }
-      setServerError({ title: t('FIND_MATCH.SEARCH_TIMEOUT') });
-    } finally {
-      setIsFindingMatch(false);
-    }
+    findMatchQueues.setSearchError(null);
+    await handleSubmit((values) => {
+      const createValues = prepareCreateValues({
+        ...values,
+        visibility: GAME_VISIBILITY.PUBLIC,
+        deckTestMode: false,
+        favoriteDeck: false
+      });
+      const hero =
+        (isPrecon ? preconHero : quickJoinCtx.selectedDeckHero) ?? '';
+      findMatchQueues.joinQueue({
+        format: activeFormat,
+        hero,
+        preference: createValues.gameDescription ?? '',
+        deckLabel: selectedDeckLabel(),
+        heroImage: hero ? generateCroppedImageUrl(hero) : undefined,
+        deck: isPrecon
+          ? { fabdb: selectedPreconDeck, favoriteDecks: '' }
+          : {
+              fabdb: quickJoinCtx.effectiveFabdb,
+              favoriteDecks: quickJoinCtx.effectiveFavoriteDecks,
+              bazaarDeckId:
+                quickJoinCtx.deckSource === 'bazaar'
+                  ? quickJoinCtx.selectedBazaarDeck
+                  : undefined
+            },
+        createValues
+      });
+    }, onInvalid)();
   };
 
   const onInvalid = (formErrors: FieldErrors<CreateGameAPI>) => {
@@ -953,6 +962,18 @@ const CreateGame = ({
 
   // While rust-locked the button stays clickable
   // so it can direct the user to the rust counter panel.
+  const findMatchStatusNotice = canFindMatch ? (
+    <FindMatchStatus
+      status={quickJoinCtx?.findMatchStatus}
+      format={activeFormat}
+      heroId={quickJoinCtx?.selectedDeckHero}
+      onSelectFormat={selectFormat}
+      hasDeck={
+        isPreconFormat(activeFormat) || !!quickJoinCtx?.hasDeckConfigured
+      }
+    />
+  ) : null;
+
   const createButton = (
     <button
       type={isRustLocked ? 'button' : 'submit'}
@@ -961,11 +982,9 @@ const CreateGame = ({
         isEmbedded && styles.embeddedSubmitButton,
         isRustLocked && styles.submitLocked
       )}
-      disabled={
-        isSubmitting || isAuthPending || isFindingMatch || isDeckHeroIllegal
-      }
+      disabled={isSubmitting || isAuthPending || isDeckHeroIllegal}
       aria-disabled={isRustLocked || undefined}
-      aria-busy={isSubmitting && !isFindingMatch}
+      aria-busy={isSubmitting}
       onClick={
         isRustLocked
           ? (e) => {
@@ -975,7 +994,7 @@ const CreateGame = ({
           : undefined
       }
     >
-      {isSubmitting && !isFindingMatch
+      {isSubmitting
         ? t('GAME_LOBBY.SUBMITTING')
         : hasUserLayout
         ? t('MENU.CREATE_GAME.TITLE')
@@ -1681,18 +1700,6 @@ const CreateGame = ({
                 )}
               </fieldset>
             </div>
-            {canFindMatch && (
-              <FindMatchStatus
-                status={quickJoinCtx?.findMatchStatus}
-                format={activeFormat}
-                heroId={quickJoinCtx?.selectedDeckHero}
-                onSelectFormat={selectFormat}
-                hasDeck={
-                  isPreconFormat(activeFormat) ||
-                  !!quickJoinCtx?.hasDeckConfigured
-                }
-              />
-            )}
             {canFindMatch ? (
               <div className={styles.findMatchActions}>
                 <button
@@ -1703,19 +1710,21 @@ const CreateGame = ({
                     isRustLocked && styles.submitLocked
                   )}
                   disabled={
-                    isFindingMatch ||
                     isSubmitting ||
                     isAuthPending ||
-                    isDeckHeroIllegal
+                    isDeckHeroIllegal ||
+                    (queuedSearches.length >= MAX_FIND_MATCH_QUEUES &&
+                      !isActiveFormatQueued)
                   }
                   aria-disabled={isRustLocked || undefined}
-                  aria-busy={isFindingMatch}
-                  title={t('FIND_MATCH.BUTTON_TITLE')}
-                  onClick={handleFindMatch}
+                  title={t('FIND_MATCH.JOIN_QUEUE_TITLE', {
+                    max: MAX_FIND_MATCH_QUEUES
+                  })}
+                  onClick={handleJoinQueue}
                 >
-                  {isFindingMatch
-                    ? t('FIND_MATCH.FINDING')
-                    : t('FIND_MATCH.BUTTON')}
+                  {isActiveFormatQueued
+                    ? t('FIND_MATCH.UPDATE_QUEUE')
+                    : t('FIND_MATCH.JOIN_QUEUE')}
                 </button>
                 {createButton}
               </div>
@@ -1728,6 +1737,19 @@ const CreateGame = ({
               </div>
             )}
             {serverError && <ServerErrorNotice error={serverError} />}
+            {findMatchStatusNotice &&
+              (findMatchQueues && queuedSearches.length > 0 ? (
+                <FindMatchQueueList
+                  queues={queuedSearches}
+                  statuses={findMatchQueues.statuses}
+                  startedAt={findMatchQueues.startedAt}
+                  onLeave={findMatchQueues.leaveQueue}
+                  onLeaveAll={findMatchQueues.leaveAll}
+                  footer={findMatchStatusNotice}
+                />
+              ) : (
+                findMatchStatusNotice
+              ))}
           </form>
         )}
       </article>
