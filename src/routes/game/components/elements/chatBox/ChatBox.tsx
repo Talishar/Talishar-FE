@@ -7,6 +7,7 @@ import classNames from 'classnames';
 import useSetting from 'hooks/useSetting';
 import { IS_STREAMER_MODE } from 'features/options/constants';
 import GameLogMessages from './GameLogMessages';
+import SnapshotInviteNotice from './SnapshotInviteNotice';
 import { useTranslation } from 'react-i18next';
 
 export default function ChatBox({
@@ -243,6 +244,7 @@ export default function ChatBox({
           onScroll={handleScroll}
         >
           <div ref={chatContentRef}>
+            {chatFilter !== 'log' && <SnapshotInviteNotice />}
             <GameLogMessages
               chatLog={chatLog}
               chatFilter={chatFilter}

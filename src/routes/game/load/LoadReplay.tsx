@@ -39,14 +39,6 @@ import { Trans, useTranslation } from 'react-i18next';
 import { generateCroppedImageUrl, heroCropFocusStyle } from 'utils/cropImages';
 import SaveNoteModal from 'components/SaveNoteModal/SaveNoteModal';
 
-interface PreparedSnapshot {
-  snapshotNumber: number;
-  gameName: number;
-  playerID: number;
-  authKey: string;
-  inviteUrl: string;
-}
-
 const LoadReplay = () => {
   const { t } = useTranslation();
   const { showAds } = useSupporterStatus();
@@ -317,8 +309,6 @@ const ReplayGame = () => {
   const [deletingReplayNumber, setDeletingReplayNumber] = useState<
     number | null
   >(null);
-  const [preparedSnapshot, setPreparedSnapshot] =
-    useState<PreparedSnapshot | null>(null);
   const [noteSave, setNoteSave] = useState<SavedReplay | null>(null);
   const { data: savedReplayData, isLoading: isLoadingSavedReplays } =
     useGetSavedReplaysQuery();
@@ -452,7 +442,7 @@ const ReplayGame = () => {
     }
   };
   const startSnapshot = async (snapshot: SavedReplay) => {
-    if (preparedSnapshot?.snapshotNumber === snapshot.replayNumber) return;
+    if (isStartingSnapshot) return;
     try {
       const result = await createSnapshotGame({
         snapshotNumber: snapshot.replayNumber
@@ -470,19 +460,31 @@ const ReplayGame = () => {
         `talishar_snapshot_invite_${result.gameName}`,
         inviteUrl
       );
-      setPreparedSnapshot({
-        snapshotNumber: snapshot.replayNumber,
-        gameName: result.gameName,
-        playerID: result.playerID,
-        authKey: result.authKey,
-        inviteUrl
-      });
+      let noticeKey = 'LOAD_REPLAY.SNAPSHOT_INVITE_COPIED';
       try {
         await navigator.clipboard.writeText(inviteUrl);
-        toast.success(t('LOAD_REPLAY.SNAPSHOT_INVITE_COPIED'));
+        toast.success(t(noticeKey), { duration: 8000 });
       } catch {
-        toast(t('LOAD_REPLAY.SNAPSHOT_INVITE_VISIBLE'));
+        noticeKey = 'LOAD_REPLAY.SNAPSHOT_INVITE_IN_MENU';
+        toast(t(noticeKey), { duration: 8000 });
       }
+      sessionStorage.setItem(
+        `talishar_snapshot_invite_notice_${result.gameName}`,
+        noticeKey
+      );
+      dispatch(
+        setGameStart({
+          playerID: result.playerID,
+          gameID: result.gameName,
+          authKey: result.authKey
+        })
+      );
+      navigate(`/game/play/${result.gameName}`, {
+        state: {
+          playerID: result.playerID,
+          authKey: result.authKey
+        } as GameLocationState
+      });
     } catch (error) {
       const apiError = error as { data?: { error?: string } };
       toast.error(
@@ -491,31 +493,6 @@ const ReplayGame = () => {
             ? error.message
             : t('LOAD_REPLAY.SNAPSHOT_START_ERROR'))
       );
-    }
-  };
-  const openSnapshotSeat = () => {
-    if (!preparedSnapshot) return;
-    dispatch(
-      setGameStart({
-        playerID: preparedSnapshot.playerID,
-        gameID: preparedSnapshot.gameName,
-        authKey: preparedSnapshot.authKey
-      })
-    );
-    navigate(`/game/play/${preparedSnapshot.gameName}`, {
-      state: {
-        playerID: preparedSnapshot.playerID,
-        authKey: preparedSnapshot.authKey
-      } as GameLocationState
-    });
-  };
-  const copySnapshotInvite = async () => {
-    if (!preparedSnapshot) return;
-    try {
-      await navigator.clipboard.writeText(preparedSnapshot.inviteUrl);
-      toast.success(t('LOAD_REPLAY.SNAPSHOT_INVITE_COPIED'));
-    } catch {
-      toast.error(t('LOAD_REPLAY.SNAPSHOT_COPY_FAILED'));
     }
   };
   const replayLabel = (replay: SavedReplay) => {
@@ -781,37 +758,6 @@ const ReplayGame = () => {
           <>
             {savedReplayData?.loggedIn && (
               <ReplaySlotMeter savedReplayData={savedReplayData} />
-            )}
-            {preparedSnapshot && (
-              <div className={styles.snapshotInvitePanel} role="status">
-                <h3>
-                  {t('LOAD_REPLAY.SNAPSHOT_INVITE_READY', {
-                    number: preparedSnapshot.snapshotNumber
-                  })}
-                </h3>
-                <p>
-                  {t('LOAD_REPLAY.SNAPSHOT_INVITE_HELP')}{' '}
-                  {t('LOAD_REPLAY.SNAPSHOTS_TWO_TABS')}
-                </p>
-                <div className={styles.snapshotInviteRow}>
-                  <input
-                    aria-label={t('LOAD_REPLAY.SNAPSHOT_INVITE_LABEL')}
-                    value={preparedSnapshot.inviteUrl}
-                    readOnly
-                    onFocus={(event) => event.currentTarget.select()}
-                  />
-                  <button
-                    type="button"
-                    className={styles.snapshotCopyButton}
-                    onClick={copySnapshotInvite}
-                  >
-                    {t('LOAD_REPLAY.SNAPSHOT_COPY_LINK')}
-                  </button>
-                  <button type="button" onClick={openSnapshotSeat}>
-                    {t('LOAD_REPLAY.SNAPSHOT_OPEN_SEAT')}
-                  </button>
-                </div>
-              </div>
             )}
             <div className={styles.saveToolbar}>
               <div
