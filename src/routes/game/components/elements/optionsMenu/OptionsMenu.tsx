@@ -200,7 +200,24 @@ const OptionsContent = ({ searchQuery }: { searchQuery: string }) => {
     } catch (error) {
       toast.error(t('REPORT_MODAL.FAILED'));
     }
-    dispatch(submitButton({ button: { mode: PROCESS_INPUT.REPORT_PLAYER } }));
+    try {
+      const body = await dispatch(
+        submitButton({ button: { mode: PROCESS_INPUT.REPORT_PLAYER } })
+      ).unwrap();
+      const result = JSON.parse(body || '{}') as {
+        success?: boolean;
+        message?: string;
+      };
+      if (result.success) {
+        toast.success(t('REPORT_MODAL.SUBMITTED', { gameID }), {
+          duration: 8000
+        });
+      } else if (result.message) {
+        toast.error(result.message, { duration: 8000 });
+      }
+    } catch (error) {
+      toast.error(t('REPORT_MODAL.FAILED'));
+    }
     setIsReportModalOpen(false);
     clickCloseOptionsHandler();
   };

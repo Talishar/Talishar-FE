@@ -1608,6 +1608,7 @@
     "FAILED": "Votre note n'a pas pu être envoyée, mais le journal de la partie a bien été sauvegardé.",
     "INTRO": "Le journal de cette partie sera sauvegardé pour les modérateurs. Ajouter une raison ou une note est facultatif, mais cela les aide.",
     "PRIVACY": "Seuls les modérateurs peuvent lire votre note.",
+    "SUBMITTED": "Merci d'avoir signalé un joueur. Le journal de la partie a été sauvegardé pour les modérateurs (partie {{gameID}}). Vous pouvez aussi contacter un modérateur sur Discord au besoin.",
     "TITLE": "Signaler votre adversaire"
   },
   "RUST_COUNTER_PANEL": {

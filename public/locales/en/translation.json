@@ -2174,6 +2174,7 @@
     "FAILED": "Your note could not be sent, but the game log was still saved.",
     "INTRO": "The log of this game will be saved for the moderators. Adding a reason or a note is optional, but it helps them.",
     "PRIVACY": "Only moderators can read your note.",
+    "SUBMITTED": "Thank you for reporting a player. The game log has been saved for the moderators (game {{gameID}}). You can also contact a mod on Discord if needed.",
     "TITLE": "Report your opponent"
   },
   "RUST_COUNTER_PANEL": {
