@@ -6,6 +6,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { usePageTitle } from 'hooks/usePageTitle';
 import SwordLoader from 'components/SwordLoader/SwordLoader';
 import { clearSupporterStatusCache } from 'hooks/useSupporterStatus';
+import { describeThrownError } from 'utils/serverError';
 import styles from './linkMetafy.module.css';
 
 export interface MetafyLoginResponse {
@@ -34,17 +35,23 @@ const LinkMetafy = () => {
           });
           navigate('/user/profile');
         } else {
-          toast.error(`Metafy login error:\n${data?.error}`, {
-            position: 'top-center'
-          });
+          toast.error(
+            `Metafy login error:\n${data?.error || 'Unknown error'}`,
+            {
+              position: 'top-center'
+            }
+          );
           navigate('/user/profile');
         }
       })
       .catch((err: any) => {
         console.error('Metafy login error:', err);
-        toast.error(`Metafy login error:\n${err?.toString()}`, {
-          position: 'top-center'
-        });
+        toast.error(
+          `Metafy login error:\n${describeThrownError(err, 'Unknown error')}`,
+          {
+            position: 'top-center'
+          }
+        );
         navigate('/user/profile');
       });
   }, []);

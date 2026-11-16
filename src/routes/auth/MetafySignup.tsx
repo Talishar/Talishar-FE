@@ -9,6 +9,7 @@ import styles from 'routes/user/profile/linkmetafy/linkMetafy.module.css';
 import { MetafySignupResponse } from 'interface/API/MetafyAPI.php';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 import type { SerializedError } from '@reduxjs/toolkit';
+import { describeThrownError } from 'utils/serverError';
 
 // Module-level variable to track processed codes - persists across component remounts
 const processedCodes = new Set<string>();
@@ -71,9 +72,12 @@ const MetafySignup = () => {
       })
       .catch((err: FetchBaseQueryError | SerializedError) => {
         console.error('Metafy signup error:', err);
-        toast.error(`Signup error: ${err?.toString() || 'Unknown error'}`, {
-          position: 'top-center'
-        });
+        toast.error(
+          `Signup error: ${describeThrownError(err, 'Unknown error')}`,
+          {
+            position: 'top-center'
+          }
+        );
         navigate('/user/login', { replace: true });
       });
   }, [searchParams, navigate, setSearchParams, submitMetafySignup]);
