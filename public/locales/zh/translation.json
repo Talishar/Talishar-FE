@@ -1955,6 +1955,8 @@
     "DEVICE_ONLY": "此设备",
     "DEVICE_ONLY_HINT": "仅保存在此浏览器中。登录后它会跟随您的账户同步到所有设备。",
     "DEVICE_ONLY_LOCAL_HINT": "仅保存在此浏览器中。",
+    "EFFECT_POPUPS": "效果弹窗（手机）",
+    "EFFECT_POPUPS_TOOLTIP": "对手产生新效果时，先放大显示，再移入效果栏。关闭后，效果会直接出现在效果栏中。",
     "EQUIPMENT_GEM_BUTTONS": "装备宝石按钮",
     "EQUIPMENT_GEM_BUTTONS_TOOLTIP": "在装备上显示宝石。关闭后点击将直接作用于装备卡。永久物上的宝石在两种情况下都会保持可见且可交互。",
     "FABRARY_STATS": "与 FaBrary 共享统计数据",

@@ -2000,6 +2000,8 @@
     "DEVICE_ONLY": "Cet appareil",
     "DEVICE_ONLY_HINT": "Enregistré uniquement dans ce navigateur. Connectez-vous et il suivra votre compte sur tous vos appareils.",
     "DEVICE_ONLY_LOCAL_HINT": "Enregistré uniquement dans ce navigateur.",
+    "EFFECT_POPUPS": "Aperçus des effets (mobile)",
+    "EFFECT_POPUPS_TOOLTIP": "Affiche un grand aperçu de chaque nouvel effet créé par votre adversaire avant qu'il rejoigne la rangée des effets. Désactivé, l'effet apparaît directement dans la rangée.",
     "EQUIPMENT_GEM_BUTTONS": "Boutons de gemme sur l'équipement",
     "EQUIPMENT_GEM_BUTTONS_TOOLTIP": "Affiche les gemmes sur l'équipement. Désactivez pour que les appuis aillent directement à la carte d'équipement. Les gemmes sur les cartes permanentes restent visibles et utilisables dans tous les cas.",
     "FABRARY_STATS": "Partager les statistiques avec FaBrary",

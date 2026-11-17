@@ -1955,6 +1955,8 @@
     "DEVICE_ONLY": "このデバイス",
     "DEVICE_ONLY_HINT": "このブラウザにのみ保存されます。ログインするとアカウントに紐づき、すべてのデバイスで使えます。",
     "DEVICE_ONLY_LOCAL_HINT": "このブラウザにのみ保存されます。",
+    "EFFECT_POPUPS": "効果のポップアップ（モバイル）",
+    "EFFECT_POPUPS_TOOLTIP": "相手が新しい効果を作ったとき、効果欄に入る前に大きく表示します。オフにすると、効果はすぐに効果欄に表示されます。",
     "EQUIPMENT_GEM_BUTTONS": "装備のジェムボタン",
     "EQUIPMENT_GEM_BUTTONS_TOOLTIP": "装備にジェムを表示します。オフにすると、タップが直接装備カードに反応します。パーマネントのジェムはどちらの場合も表示され、操作できます。",
     "FABRARY_STATS": "FaBraryと統計を共有",
