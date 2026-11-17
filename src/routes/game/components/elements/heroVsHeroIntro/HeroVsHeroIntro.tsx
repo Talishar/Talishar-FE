@@ -239,6 +239,7 @@ const VSShockwave: React.FC<{ show: boolean }> = ({ show }) => {
 
 const HeroVsHeroIntro = () => {
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const { isLoggedIn } = useAuth();
 
   const playerID = useAppSelector(
@@ -324,8 +325,10 @@ const HeroVsHeroIntro = () => {
   const opponentPatronInfo =
     playerID === 1 ? playerTwoPatronInfo : playerOnePatronInfo;
 
-  const displayYourHeroName = formatHeroName(yourHero) || 'Your Hero';
-  const displayOpponentHeroName = formatHeroName(opponentHero) || 'Opponent';
+  const displayYourHeroName =
+    formatHeroName(yourHero) || t('HERO_VS_HERO.YOUR_HERO');
+  const displayOpponentHeroName =
+    formatHeroName(opponentHero) || t('HERO_VS_HERO.OPPONENT');
   const yourPatronStatus = checkPatron(yourPatronInfo);
   const opponentPatronStatus = checkPatron(opponentPatronInfo);
   const yourMetafyTierName = getBadgeLabel(yourPatronInfo);
@@ -339,7 +342,8 @@ const HeroVsHeroIntro = () => {
     isVisible &&
     !!yourHero &&
     !!opponentHero &&
-    yourHero !== opponentHero &&
+    yourHero !== 'CardBack' &&
+    opponentHero !== 'CardBack' &&
     !disableHeroIntro;
 
   const handleDismiss = useCallback(() => {
@@ -444,7 +448,7 @@ const HeroVsHeroIntro = () => {
               event.stopPropagation();
               handleDismiss();
             }}
-            aria-label="Close hero intro"
+            aria-label={t('HERO_VS_HERO.CLOSE')}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.1 }}

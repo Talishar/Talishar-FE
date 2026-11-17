@@ -4,6 +4,7 @@ import { FaEye, FaFireAlt, FaLayerGroup, FaSun } from 'react-icons/fa';
 import { ToastOptions } from 'react-hot-toast';
 import CardDisplay from '../cardDisplay/CardDisplay';
 import styles from './EventsHandler.module.css';
+import { useTranslation } from 'react-i18next';
 
 export type MovementEventType =
   | 'REVEAL'
@@ -22,29 +23,29 @@ export const MOVEMENT_TOAST_OPTIONS = {
 
 const EVENT_PRESENTATION = {
   REVEAL: {
-    label: 'Card Revealed',
+    labelKey: 'MOVEMENT_EVENT.REVEALED',
     className: styles.revealEvent,
     Icon: FaEye
   },
   DISCARD: {
-    label: 'Card Discarded',
+    labelKey: 'MOVEMENT_EVENT.DISCARDED',
     className: styles.discardEvent,
     Icon: FaLayerGroup
   },
   BANISH: {
-    label: 'Card Banished',
+    labelKey: 'MOVEMENT_EVENT.BANISHED',
     className: styles.banishEvent,
     Icon: FaFireAlt
   },
   SOUL: {
-    label: 'Into Soul',
+    labelKey: 'MOVEMENT_EVENT.INTO_SOUL',
     className: styles.soulEvent,
     Icon: FaSun
   }
 } satisfies Record<
   MovementEventType,
   {
-    label: string;
+    labelKey: string;
     className: string;
     Icon: React.ComponentType<{ 'aria-hidden'?: boolean }>;
   }
@@ -63,6 +64,7 @@ export default function MovementEventCard({
   isPlayer,
   onDismiss
 }: MovementEventCardProps) {
+  const { t } = useTranslation();
   const presentation = EVENT_PRESENTATION[type];
   const { Icon } = presentation;
 
@@ -83,11 +85,11 @@ export default function MovementEventCard({
       onKeyDown={dismissOnKeyboard}
       role={onDismiss ? 'button' : undefined}
       tabIndex={onDismiss ? 0 : undefined}
-      title={onDismiss ? 'Click to dismiss' : undefined}
+      title={onDismiss ? t('MOVEMENT_EVENT.CLICK_TO_DISMISS') : undefined}
     >
       <div className={styles.movementEventHeading}>
         <Icon aria-hidden={true} />
-        <span>{presentation.label}</span>
+        <span>{t(presentation.labelKey)}</span>
       </div>
       <div className={styles.movementEventStage}>
         <div className={styles.movementEventAura} aria-hidden="true" />

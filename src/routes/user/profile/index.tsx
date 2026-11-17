@@ -43,21 +43,20 @@ export const ProfilePage = () => {
       if (resp.status === 'success') {
         toast.success(
           displayName === ''
-            ? 'Display name reset to your username.'
-            : `Display name changed to ${resp.displayName}.`,
+            ? t('PROFILE.DISPLAY_NAME_RESET')
+            : t('PROFILE.DISPLAY_NAME_CHANGED', { name: resp.displayName }),
           { position: 'top-center' }
         );
         setIsEditingDisplayName(false);
         setNewDisplayName('');
       } else {
-        toast.error(resp.message ?? 'Failed to change display name.', {
+        toast.error(resp.message ?? t('PROFILE.DISPLAY_NAME_CHANGE_FAILED'), {
           position: 'top-center'
         });
       }
     } catch (err: any) {
       const message =
-        err?.data?.message ??
-        'Failed to change display name. Please try again.';
+        err?.data?.message ?? t('PROFILE.DISPLAY_NAME_CHANGE_FAILED_RETRY');
       toast.error(message, { position: 'top-center' });
     }
   };
@@ -68,7 +67,7 @@ export const ProfilePage = () => {
 
   const handleDeleteAccountConfirm = async () => {
     if (!confirmationUsername) {
-      toast.error('Please enter your username to confirm deletion', {
+      toast.error(t('PROFILE.DELETE_ENTER_USERNAME'), {
         position: 'top-center'
       });
       return;
@@ -80,7 +79,7 @@ export const ProfilePage = () => {
       }).unwrap();
 
       if (!response.success) {
-        toast.error(`Error: ${response.message}`, {
+        toast.error(t('PROFILE.DELETE_ERROR', { error: response.message }), {
           style: {
             minWidth: '250px'
           },
@@ -103,7 +102,9 @@ export const ProfilePage = () => {
     } catch (err) {
       console.warn(err);
       toast.error(
-        `Error deleting account: ${describeThrownError(err, 'Unknown error')}`,
+        t('PROFILE.DELETE_FAILED', {
+          error: describeThrownError(err, t('BASE.UNKNOWN_ERROR'))
+        }),
         {
           style: {
             minWidth: '250px'
@@ -232,7 +233,7 @@ export const ProfilePage = () => {
                           type="text"
                           value={newDisplayName}
                           onChange={(e) => setNewDisplayName(e.target.value)}
-                          placeholder="New display name (3-20 letters/numbers)"
+                          placeholder={t('PROFILE.DISPLAY_NAME_PLACEHOLDER')}
                           maxLength={20}
                           className={styles.displayNameInput}
                           disabled={isChangingName}
@@ -327,7 +328,7 @@ export const ProfilePage = () => {
                     </p>
                     <input
                       type="text"
-                      placeholder="Enter your username"
+                      placeholder={t('PROFILE.DELETE_USERNAME_PLACEHOLDER')}
                       value={confirmationUsername}
                       onChange={(e) => setConfirmationUsername(e.target.value)}
                       className={styles.modalInput}

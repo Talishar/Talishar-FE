@@ -18,6 +18,7 @@ import {
 import { useEffect, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 const AUTH_REFRESH_INTERVAL_MS = 10 * 60 * 1000;
 
@@ -34,6 +35,7 @@ const MOD_USERNAMES = [
 ];
 
 export default function useAuth() {
+  const { t } = useTranslation();
   const currentUserId = useAppSelector(selectCurrentUser);
   const currentUserName = useAppSelector(selectCurrentUserName);
   const currentDisplayName = useAppSelector(selectCurrentDisplayName);
@@ -94,11 +96,11 @@ export default function useAuth() {
     try {
       await logOutAPI({}).unwrap();
       dispatch(logOutReducer());
-      toast.success('Logged Out', { position: 'top-center' });
+      toast.success(t('AUTH.LOGGED_OUT'), { position: 'top-center' });
       navigate('/');
     } catch (err) {
       console.warn(err);
-      toast.error('Error Logging Out', { position: 'top-center' });
+      toast.error(t('AUTH.LOG_OUT_FAILED'), { position: 'top-center' });
       // Still redirect on error to clear state
       navigate('/');
     }

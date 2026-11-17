@@ -461,10 +461,7 @@ export const EventsHandler = React.memo(() => {
             continue;
           case 'UNDODENIEDNOTICE':
             if (parseInt(event.eventValue ?? '0') === playerID) {
-              toast.error(
-                'Your undo requests have been declined too many times. No more undo requests allowed this turn.',
-                { duration: 5000 }
-              );
+              toast.error(t('EVENTS.UNDO_DENIED_LIMIT'), { duration: 5000 });
             }
             continue;
           case 'SHUFFLE': {
@@ -518,9 +515,9 @@ export const EventsHandler = React.memo(() => {
   if (showModal) {
     const isDrawOffer = modalType === ModalType.RequestDraw;
     const modalTitle = isDrawOffer
-      ? 'Draw offer'
+      ? t('EVENTS.DRAW_OFFER')
       : isRequestModal(modalType)
-      ? 'Undo request'
+      ? t('EVENTS.UNDO_REQUEST')
       : null;
     return (
       <>
@@ -541,10 +538,10 @@ export const EventsHandler = React.memo(() => {
                   onClick={clickYes}
                   className={isDrawOffer ? styles.acceptDraw : undefined}
                 >
-                  {isDrawOffer ? 'Accept draw' : t('GAME_LOBBY.YES')}
+                  {isDrawOffer ? t('EVENTS.ACCEPT_DRAW') : t('GAME_LOBBY.YES')}
                 </button>
                 <button onClick={clickNo}>
-                  {isDrawOffer ? 'Decline' : t('GAME_LOBBY.NO')}
+                  {isDrawOffer ? t('EVENTS.DECLINE') : t('GAME_LOBBY.NO')}
                 </button>
               </div>
             </div>

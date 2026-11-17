@@ -50,8 +50,8 @@ export default function CurrentAttack() {
   const targets = activeCombatChain.attackTarget?.split('|');
   const tooltipText =
     targets && targets.length > 1
-      ? `Attack targets: ${targets.join(', ')}`
-      : `Attack target: ${targets?.[0]}`;
+      ? t('CURRENT_ATTACK.TARGETS', { targets: targets.join(', ') })
+      : t('CURRENT_ATTACK.TARGET', { target: targets?.[0] });
 
   return (
     <div className={styles.currentAttack}>

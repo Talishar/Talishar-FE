@@ -8,6 +8,7 @@ import {
 import useAuth from 'hooks/useAuth';
 import { clearSupporterStatusCache } from 'hooks/useSupporterStatus';
 import { toast } from 'react-hot-toast';
+import { describeThrownError } from 'utils/serverError';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { LoginValidationType } from './validation';
@@ -83,14 +84,19 @@ export const LoginForm = () => {
       }
     } catch (err) {
       console.warn(err);
-      toast.error(`Network error: ${JSON.stringify(err)}`, {
-        position: 'top-center'
-      });
+      toast.error(
+        t('USER.LOGIN.NETWORK_ERROR', {
+          error: describeThrownError(err, t('BASE.UNKNOWN_ERROR'))
+        }),
+        {
+          position: 'top-center'
+        }
+      );
       setError('root.serverError', {
         type: 'custom',
-        message: `There has been a network error while logging in. Please try again. If you still get an error, please report it on our Discord and include the following: ${JSON.stringify(
-          err
-        )}`
+        message: t('USER.LOGIN.LOGIN_NETWORK_ERROR_REPORT', {
+          error: JSON.stringify(err)
+        })
       });
     }
   };

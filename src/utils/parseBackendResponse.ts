@@ -1,5 +1,6 @@
 import { toast } from 'react-hot-toast';
 import { cleanErrorText } from 'utils/cleanErrorText';
+import i18n from 'i18next';
 
 export const parseBackendJson = (body: string): unknown => {
   let stringData = body.trim();
@@ -33,7 +34,7 @@ export const parseBackendJson = (body: string): unknown => {
     return JSON.parse(stringData);
   } catch (e) {
     console.error('JSON Parse Error:', e, 'Input:', stringData);
-    toast.error('Failed to parse server response. Please try again.');
+    toast.error(i18n.t('BASE.PARSE_RESPONSE_FAILED'));
     return {};
   }
 };

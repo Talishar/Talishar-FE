@@ -269,7 +269,7 @@ export default function ActiveLayersZone() {
                 <h3 className={styles.title}>
                   {t('ZONES.ACTIVE_LAYERS')}
                   {activeLayer.isReorderable
-                    ? ' (Drag highlighted to reorder)'
+                    ? ` ${t('ZONES.DRAG_TO_REORDER')}`
                     : null}
                 </h3>
                 <Target target={activeLayer.target} />
@@ -336,8 +336,8 @@ export default function ActiveLayersZone() {
               onTouchStart={(e) => e.stopPropagation()}
               title={
                 xDragEnabled
-                  ? 'Lock to vertical movement'
-                  : 'Unlock horizontal movement'
+                  ? t('ZONES.LOCK_VERTICAL')
+                  : t('ZONES.UNLOCK_HORIZONTAL')
               }
             >
               {xDragEnabled ? (
@@ -349,7 +349,7 @@ export default function ActiveLayersZone() {
             <MdDragHandle
               size={32}
               className={styles.gripIcon}
-              aria-label="Drag to move active layers panel"
+              aria-label={t('ZONES.DRAG_ACTIVE_LAYERS')}
             />
           </div>
         </motion.div>

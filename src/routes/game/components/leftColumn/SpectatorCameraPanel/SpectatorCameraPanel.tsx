@@ -2,9 +2,11 @@ import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { getGameInfo, setSpectatorCameraView } from 'features/game/GameSlice';
 import styles from './SpectatorCameraPanel.module.css';
 import { MdSwapVert } from 'react-icons/md';
+import { useTranslation } from 'react-i18next';
 
 export default function SpectatorCameraPanel() {
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const { playerID, isReplay } = useAppSelector(getGameInfo);
   const spectatorCameraView = useAppSelector(
     (state: any) => state.game.spectatorCameraView
@@ -15,6 +17,10 @@ export default function SpectatorCameraPanel() {
     return null;
   }
 
+  const switchLabel = t('SPECTATOR.SWITCH_VIEW', {
+    player: spectatorCameraView === 1 ? 2 : 1
+  });
+
   const toggleView = () => {
     const newView = spectatorCameraView === 1 ? 2 : 1;
     dispatch(setSpectatorCameraView(newView));
@@ -24,8 +30,8 @@ export default function SpectatorCameraPanel() {
     <button
       className={styles.cameraTab}
       onClick={toggleView}
-      title={`Switch to Player ${spectatorCameraView === 1 ? 2 : 1} View`}
-      aria-label={`Switch to Player ${spectatorCameraView === 1 ? 2 : 1} View`}
+      title={switchLabel}
+      aria-label={switchLabel}
     >
       <div className={styles.buttonContent}>
         <MdSwapVert className={styles.icon} />

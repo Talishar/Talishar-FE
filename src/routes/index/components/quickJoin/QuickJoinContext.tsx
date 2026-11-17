@@ -254,7 +254,7 @@ export const QuickJoinProvider = ({
     ) {
       return (bazaarFetchError.data as any).error;
     }
-    return 'Failed to load FaB Bazaar decks';
+    return t('FIND_MATCH.BAZAAR_LOAD_FAILED');
   }, [bazaarFetchError]);
 
   const selectedBazaarDeckHero = useMemo(

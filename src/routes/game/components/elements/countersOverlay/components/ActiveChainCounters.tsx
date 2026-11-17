@@ -1,5 +1,6 @@
 import CombatChainLink from 'features/CombatChainLink';
 import styles from '../CountersOverlay.module.css';
+import { useTranslation } from 'react-i18next';
 import { TooltipWrapper } from 'components/Tooltip/TooltipWrapper';
 import { KeywordPopover } from '../../keywordPopover';
 import {
@@ -25,6 +26,7 @@ type Props = {
 };
 export const ActiveCardCounterOverlay = (props: Props) => {
   const { activeCombatChain } = props;
+  const { t } = useTranslation();
 
   if (!activeCombatChain) {
     return null;
@@ -125,7 +127,9 @@ export const ActiveCardCounterOverlay = (props: Props) => {
       {!!activeCombatChain.damagePrevention && (
         <TooltipWrapper
           className={styles.icon}
-          tooltip={`${activeCombatChain.damagePrevention} Damage Prevention`}
+          tooltip={t('CHAIN_COUNTERS.DAMAGE_PREVENTION', {
+            count: activeCombatChain.damagePrevention
+          })}
         >
           <GiShieldReflect />
           <div className={styles.iconTextCombatChain}>
@@ -134,14 +138,19 @@ export const ActiveCardCounterOverlay = (props: Props) => {
         </TooltipWrapper>
       )}
       {activeCombatChain.unpreventable && (
-        <TooltipWrapper className={styles.icon} tooltip="Unpreventable">
+        <TooltipWrapper
+          className={styles.icon}
+          tooltip={t('CHAIN_COUNTERS.UNPREVENTABLE')}
+        >
           <GiOpenWound />
         </TooltipWrapper>
       )}
       {activeCombatChain.numRequiredEquipBlock && (
         <TooltipWrapper
           className={styles.icon}
-          tooltip={`Chain link must be defended with at least ${activeCombatChain.numRequiredEquipBlock} equipment`}
+          tooltip={t('CHAIN_COUNTERS.REQUIRED_EQUIPMENT_BLOCK', {
+            count: activeCombatChain.numRequiredEquipBlock
+          })}
         >
           <GiShoulderArmor />
           <div className={styles.iconText}>

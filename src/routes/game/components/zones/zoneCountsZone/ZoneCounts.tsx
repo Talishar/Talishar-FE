@@ -115,6 +115,7 @@ const BlessingsCount = React.memo((prop: Displayrow) => {
 
 const BloodDebtCount = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
+  const { t } = useTranslation();
   const bloodDebtCount = useAppSelector((state: RootState) =>
     isPlayer
       ? state.game.playerOne.bloodDebtCount
@@ -135,7 +136,7 @@ const BloodDebtCount = React.memo((prop: Displayrow) => {
 
   return (
     <div
-      title={`Blood Debt${bloodDebtCount === 1 ? '' : 's'}`}
+      title={t('ZONES.BLOOD_DEBT', { count: bloodDebtCount })}
       className={bloodDebtItem}
     >
       <GiDroplets /> {bloodDebtCount}

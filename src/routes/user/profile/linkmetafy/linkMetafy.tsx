@@ -36,7 +36,9 @@ const LinkMetafy = () => {
           navigate('/user/profile');
         } else {
           toast.error(
-            `Metafy login error:\n${data?.error || 'Unknown error'}`,
+            t('LINK_METAFY_PAGE.ERROR', {
+              error: data?.error || t('BASE.UNKNOWN_ERROR')
+            }),
             {
               position: 'top-center'
             }
@@ -47,7 +49,9 @@ const LinkMetafy = () => {
       .catch((err: any) => {
         console.error('Metafy login error:', err);
         toast.error(
-          `Metafy login error:\n${describeThrownError(err, 'Unknown error')}`,
+          t('LINK_METAFY_PAGE.ERROR', {
+            error: describeThrownError(err, t('BASE.UNKNOWN_ERROR'))
+          }),
           {
             position: 'top-center'
           }

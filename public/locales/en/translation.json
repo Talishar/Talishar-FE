@@ -108,7 +108,9 @@
     "METAFY_SIGNUP": {
       "PAGE_TITLE": "Metafy Sign Up",
       "PROCESSING": "Processing...",
-      "REDIRECTING": "Redirecting to home..."
+      "REDIRECTING": "Redirecting to home...",
+      "ERROR": "Metafy signup error: {{error}}",
+      "FAILED": "Signup failed: {{error}}"
     },
     "VERIFY": {
       "ALLOW": "Allow",
@@ -130,12 +132,19 @@
       "SIGNIN_CONTINUE": "Log in to continue",
       "SIGN_IN": "Log in",
       "WAIT_MESSAGE": "Please wait while we verify the request."
-    }
+    },
+    "LOGGED_OUT": "Logged out",
+    "LOG_OUT_FAILED": "Error logging out"
   },
   "BASE": {
     "ERROR_ALERT": "There has been an error!",
     "LOADING": "Loading…",
-    "SEARCH": "Search"
+    "SEARCH": "Search",
+    "NETWORK_ERROR": "A network error happened, please try again. Error:\n{{status}}\n{{message}}",
+    "UNKNOWN_ERROR": "Unknown error",
+    "CLOSE_NAMED": "Close {{name}}",
+    "SELECT_OPTION": "Select an option",
+    "PARSE_RESPONSE_FAILED": "Failed to parse server response. Please try again."
   },
   "BLOCK_MODAL": {
     "CONFIRM": "Block",
@@ -210,7 +219,14 @@
     "NO_ATTACKER": "No attacker",
     "NO_BLOCKS": "No blocks",
     "NO_MODIFIERS": "No modifiers",
-    "POWER_COUNTER_ALT": "+1 Power Counter"
+    "POWER_COUNTER_ALT": "+1 Power Counter",
+    "CHAIN_LINK_N": "Chain Link {{number}}",
+    "CURRENT_ATTACK": "Current Attack",
+    "ERROR_STATUS": "Error {{status}}",
+    "LOAD_FAILED": "Failed to load chain link summary",
+    "HIT": "Hit",
+    "NO_HIT": "No hit",
+    "ACTIVE_COMBAT_EFFECTS": "Active combat effects"
   },
   "CHAT": {
     "ALL": "All",
@@ -222,7 +238,12 @@
     "RECENT": "⭐ Recent",
     "SEND": "Send message",
     "TURN_OFF": "Turn chat off",
-    "TYPING": "Opponent is typing…"
+    "TYPING": "Opponent is typing…",
+    "QUICK_CHAT_COOLDOWN": "Please wait before sending another quick chat.",
+    "DISABLED_PLACEHOLDER": "Chat Disabled",
+    "SEND_PLACEHOLDER": "Hit return to send",
+    "REPEATED_LOG_EVENTS_one": "{{count}} repeated log event",
+    "REPEATED_LOG_EVENTS_other": "{{count}} repeated log events"
   },
   "COMBAT_CHAIN": {
     "DRAG_TOOLTIP": "Drag to move combat chain"
@@ -255,7 +276,9 @@
   },
   "CURRENT_ATTACK": {
     "ATTACK_SYMBOL": "attack symbol",
-    "DEFENSE_SYMBOL": "defense symbol"
+    "DEFENSE_SYMBOL": "defense symbol",
+    "TARGETS": "Attack targets: {{targets}}",
+    "TARGET": "Attack target: {{target}}"
   },
   "DECKS": {
     "ADDING": "Adding…",
@@ -289,7 +312,26 @@
     "SELECT_HERO": "-- Select Hero --",
     "TOKENS": "Tokens",
     "UNSAVED_CHANGES": "Unsaved changes",
-    "UPSELL_BANNER": "Card backs, playmats, and alternate art beyond the defaults are supporter perks. <2>Support Talishar on Metafy</2> to unlock more."
+    "UPSELL_BANNER": "Card backs, playmats, and alternate art beyond the defaults are supporter perks. <2>Support Talishar on Metafy</2> to unlock more.",
+    "CUSTOMIZATION_SAVED": "Deck customization saved!",
+    "CUSTOMIZATION_SAVE_FAILED": "Failed to save deck customization. Please try again.",
+    "ENTER_DECK_URL": "Please enter a deck URL",
+    "ADDING_DECK": "Adding deck to favorites...",
+    "DECK_ADDED": "Deck added to favorites successfully!",
+    "ADD_DECK_FAILED": "Error adding deck: {{error}}",
+    "INVALID_DECK_URL": "Invalid deck URL or deck not accessible",
+    "UPDATING_HERO": "Updating hero...",
+    "HERO_UPDATED": "Hero updated successfully!",
+    "HERO_UPDATE_FAILED": "Error updating hero: {{error}}",
+    "DECK_REMOVED": "The deck has been removed from your favorites list. It is still available to view on the deckbuilding site.",
+    "DECK_DELETE_PROBLEM": "There has been a problem deleting your deck, please try again.",
+    "DELETING_DECK": "Deleting deck...",
+    "DECK_DELETE_FAILED": "There has been an error, please try again. Error: {{error}}",
+    "SELECTED": "Selected",
+    "USE_BASE_ART": "Use the base art",
+    "SELECTED_USE_BASE_ART": "Selected - click to use base art",
+    "USE_ALT_ART": "Use this alt art",
+    "PASTE_DECK_URL": "Paste deck URL here..."
   },
   "DECK_LEGALITY": {
     "LEGAL_FOR": "Legal for: {{formats}}",
@@ -475,7 +517,12 @@
   },
   "EVENTS": {
     "DIE_ROLLED": "Die rolled, result:",
-    "DISMISS": "Click to dismiss"
+    "DISMISS": "Click to dismiss",
+    "UNDO_DENIED_LIMIT": "Your undo requests have been declined too many times. No more undo requests allowed this turn.",
+    "DRAW_OFFER": "Draw offer",
+    "UNDO_REQUEST": "Undo request",
+    "ACCEPT_DRAW": "Accept draw",
+    "DECLINE": "Decline"
   },
   "FILTER": {
     "CLEAR": "Clear hero filter",
@@ -537,7 +584,13 @@
     "OPEN_GAMES": "Open Games",
     "PLEASE_LOGIN": "Log in to browse and join open lobbies or spectate games in progress.",
     "PRIVATE_GAMES_AVAILABLE": "You can still create a private game here or join one from a shared link. No account needed.",
-    "REFRESH": "Refresh"
+    "REFRESH": "Refresh",
+    "FRIENDS_LOOKING_one": "{{count}} friend looking for an opponent",
+    "FRIENDS_LOOKING_other": "{{count}} friends looking for an opponent",
+    "FRIENDS_PLAYING_one": "{{count}} friend playing",
+    "FRIENDS_PLAYING_other": "{{count}} friends playing",
+    "FRIEND_NAMED_GAME": "{{name}}'s game",
+    "FRIEND_GAME": "Friend's game"
   },
   "GAME_LOBBY": {
     "1ST": "1st",
@@ -644,7 +697,11 @@
     "WAITING_FOR_ARENA": "waiting for opponent",
     "WEAPONS": "Weapons / Off-Hand",
     "YES": "Yes",
-    "YOU_WON_DIE": "You won the die roll!"
+    "YOU_WON_DIE": "You won the die roll!",
+    "REFRESH_TIMED_OUT": "Lobby refresh timed out",
+    "SERVER_UNREACHABLE": "Unable to reach the lobby server",
+    "REFRESH_FAILED_HTTP": "Lobby refresh failed (HTTP {{status}})",
+    "INVALID_RESPONSE": "Lobby server returned an invalid response"
   },
   "GAME_LOG": {
     "CHAIN_LINK": "Chain Link {{number}}",
@@ -707,7 +764,10 @@
     "TALISHAR_LOGO_ALT": "Talishar home"
   },
   "HERO_VS_HERO": {
-    "VS": "VS"
+    "VS": "VS",
+    "CLOSE": "Close hero intro",
+    "YOUR_HERO": "Your Hero",
+    "OPPONENT": "Opponent"
   },
   "HOME": {
     "HERO": {
@@ -818,7 +878,8 @@
       "PREVIOUS": "← Previous"
     },
     "SUPPORTER_DISCOUNT": "Supporter discount",
-    "TRY_AGAIN": "Try Again"
+    "TRY_AGAIN": "Try Again",
+    "LOAD_FAILED": "Failed to load guides: {{error}}"
   },
   "LEGAL": {
     "CONTACT_DISCORD": "Discord:",
@@ -946,7 +1007,8 @@
   "LINK_METAFY_PAGE": {
     "BANNER_SUBTITLE": "Connect your Metafy account",
     "CONNECTING": "Connecting to Metafy…",
-    "SUCCESS": "Metafy account linked."
+    "SUCCESS": "Metafy account linked.",
+    "ERROR": "Metafy login error:\n{{error}}"
   },
   "LINK_PATREON_PAGE": {
     "CONNECTING": "Connecting to Patreon…",
@@ -1015,7 +1077,17 @@
     "START_GAME": "Start game",
     "NO_SAVES": "No saves yet. Save a replay when a game ends, or a snapshot from the in-game menu.",
     "NO_MATCHES": "No saves match your search.",
-    "NO_FAVORITES": "No favorites yet. Star a save to protect it from cleanup."
+    "NO_FAVORITES": "No favorites yet. Star a save to protect it from cleanup.",
+    "REPLAY_NUMBER_REQUIRED": "Replay number is required. Please enter a valid replay game number.",
+    "LOADED_SUCCESS": "Replay loaded successfully! Game ID: {{gameID}}",
+    "PLAYERS_UNAVAILABLE": "Players unavailable for older replay",
+    "FAVORITE_UPDATE_FAILED": "Unable to update replay favorite. Please try again.",
+    "REMOVE_FAVORITE_ARIA": "Remove {{label}} from favorites",
+    "ADD_FAVORITE_ARIA": "Add {{label}} to favorites",
+    "REMOVE_FROM_FAVORITES": "Remove from favorites",
+    "KEEP_SNAPSHOT": "Keep this snapshot",
+    "KEEP_REPLAY": "Keep this replay",
+    "SHARE_REPLAY_ARIA": "Copy a shareable link for Replay #{{number}}"
   },
   "RECENT_GAMES": {
     "TITLE": "Recent games",
@@ -1245,7 +1317,8 @@
     "QUEUE_SEARCHING": "Searching",
     "QUEUE_HOSTING": "Waiting",
     "LEAVE_QUEUE": "Leave {{format}} queue",
-    "IMPORTED_DECK": "Imported deck"
+    "IMPORTED_DECK": "Imported deck",
+    "BAZAAR_LOAD_FAILED": "Failed to load FaB Bazaar decks"
   },
   "MATCH_REVIEW": {
     "CAMERA": "Camera",
@@ -1503,7 +1576,7 @@
     "ADS_INSIGHT_HIDDEN_other": "{{total}} ads rendered while hidden, mostly {{slot}} on {{page}}. Players cannot see hidden ads, and Google's policies do not allow them.",
     "ADS_INSIGHT_IN_GAME_GATE": "The in-game block has room for {{ok}} of desktop game time. {{short}} is spent in windows under {{height}}px tall and {{narrow}} in windows 1200px wide or less, where it does not show.",
     "ADS_INSIGHT_IN_GAME_STATES": "While the in-game block has room, it shows an ad {{ad}} of the time and the member card {{empty}} of the time because nothing filled. It is off screen {{off}}, covered by other UI {{covered}}, and missing or hidden {{missing}}.",
-    "ADS_INSIGHT_NEVER_REQUESTED":"{{slot}} on {{page}} is on screen in {{seen}} of views but has never asked for an ad. Check that RevIQ has this code set up.",
+    "ADS_INSIGHT_NEVER_REQUESTED": "{{slot}} on {{page}} is on screen in {{seen}} of views but has never asked for an ad. Check that RevIQ has this code set up.",
     "ADS_INSIGHT_NO_ADS": "{{page}} has no ad slot but holds {{share}} of on-screen time ({{avg}} per visit). It is the strongest candidate for a new slot.",
     "ADS_INSIGHT_QUICK_CLICKS": "{{share}} of clicks on {{slot}} on {{page}} came back within 5 seconds. That usually means a misclick, which annoys players and which Google discounts.",
     "ADS_INSIGHT_FOCUS_STEAL": "Ads in {{slot}} on {{page}} took keyboard focus {{count}} times with the pointer elsewhere. These are not clicks: a creative focused itself, and anything the player was typing went to the ad.",
@@ -1756,7 +1829,8 @@
     "LEARNING_WARNING_BODY": "The player who made this game is learning a new hero or learning the game itself. They may be new to Flesh and Blood, and their turns may take longer than usual.",
     "LEARNING_WARNING_CANCEL": "Go back",
     "LEARNING_WARNING_CONFIRM": "Yes, join",
-    "LEARNING_WARNING_TITLE": "This player is learning"
+    "LEARNING_WARNING_TITLE": "This player is learning",
+    "CLEAR_RUST_TO_JOIN": "Clear your rust counters to join"
   },
   "OPPONENT_INACTIVE": {
     "CLAIM_DRAW": "Claim Draw",
@@ -1897,7 +1971,12 @@
     "NOTE_FOR": "Note for {{playerName}}",
     "NOTE_PLACEHOLDER": "Add a personal note about this opponent…",
     "OPEN_PLAYER_OPTIONS": "Open player options",
-    "SAVE_NOTE": "Save Note"
+    "SAVE_NOTE": "Save Note",
+    "NOTE_SAVE_FAILED": "Failed to save note",
+    "NOTE_SAVED": "Note saved!",
+    "FRIEND_REQUEST_CANCELLED": "Cancelled friend request to {{name}}",
+    "BLOCKED": "{{name}} has been blocked",
+    "UNBLOCKED": "{{name}} has been unblocked"
   },
   "PLAYER_REPORTS": {
     "CHAT": "Chat ({{count}})",
@@ -2160,7 +2239,16 @@
     "USER_ID_LABEL": "User ID",
     "USER_UNBLOCKED": "{{username}} has been unblocked",
     "VISIT_COMMUNITY": "Visit Community →",
-    "YOUR_COMMUNITIES": "Your Communities:"
+    "YOUR_COMMUNITIES": "Your Communities:",
+    "DISPLAY_NAME_RESET": "Display name reset to your username.",
+    "DISPLAY_NAME_CHANGED": "Display name changed to {{name}}.",
+    "DISPLAY_NAME_CHANGE_FAILED": "Failed to change display name.",
+    "DISPLAY_NAME_CHANGE_FAILED_RETRY": "Failed to change display name. Please try again.",
+    "DELETE_ENTER_USERNAME": "Please enter your username to confirm deletion",
+    "DELETE_ERROR": "Error: {{error}}",
+    "DELETE_FAILED": "Error deleting account: {{error}}",
+    "DISPLAY_NAME_PLACEHOLDER": "New display name (3-20 letters/numbers)",
+    "DELETE_USERNAME_PLACEHOLDER": "Enter your username"
   },
   "REPORT_MODAL": {
     "CONFIRM": "Send report",
@@ -2382,7 +2470,9 @@
     },
     "TAP_TO_PREVIEW_BEFORE_PLAYING_MOBILE": "Tap to Preview Before Playing (Mobile)",
     "THEME": "Theme",
-    "TRANSPARENCY": "Transparency"
+    "TRANSPARENCY": "Transparency",
+    "LOAD_FAILED": "Your settings could not be loaded. Please refresh the page.",
+    "SAVE_FAILED": "Your setting could not be saved. Please check your connection and try again."
   },
   "SHARED_REPLAY_PAGE": {
     "ERROR_FAILED_LOAD": "Failed to load shared replay.",
@@ -2409,7 +2499,11 @@
     "LOGIN_REQUIRED_ACTION": "Log in",
     "LOGIN_REQUIRED_BODY": "You need to be logged in to watch a game. Log in and open this link again to start spectating.",
     "LOGIN_REQUIRED_HOME": "Go home",
-    "LOGIN_REQUIRED_TITLE": "Log in to spectate"
+    "LOGIN_REQUIRED_TITLE": "Log in to spectate",
+    "SWITCH_VIEW": "Switch to Player {{player}} view",
+    "SWITCH_VIEW_SHORT": "Switch to P{{player}} view",
+    "WATCHING_one": "{{count}} spectator watching",
+    "WATCHING_other": "{{count}} spectators watching"
   },
   "SYSTEM_MESSAGE_MODAL": {
     "ACKNOWLEDGE": "Acknowledge",
@@ -2482,7 +2576,9 @@
       "SUBMIT": "Submit",
       "TALISHAR_CONSENT": "I agree that <0>Talishar is not a judge.</0>",
       "USERNAME": "Username",
-      "WELCOME_BACK": "Welcome back to Talishar"
+      "WELCOME_BACK": "Welcome back to Talishar",
+      "LOGIN_NETWORK_ERROR_REPORT": "There has been a network error while logging in. Please try again. If you still get an error, please report it on our Discord and include the following: {{error}}",
+      "RESET_PASSWORD_NETWORK_ERROR_REPORT": "There has been a network error submitting the password reset. Please try again. If you still get an error, please report it on our Discord and include the following: {{error}}"
     }
   },
   "USERNAME_MODERATION": {
@@ -2540,6 +2636,129 @@
     "LEGS": "Legs",
     "PASS": "Pass",
     "PITCH": "Pitch",
-    "SOUL": "Soul"
+    "SOUL": "Soul",
+    "DRAG_ACTIVE_LAYERS": "Drag to move the active layers panel",
+    "DECK_PEEK_YOURS": "Top of your deck. Only you can see this.",
+    "DECK_PEEK_OPPONENT": "Top of your opponent's deck. Only you can see this.",
+    "CARDS_UNDERNEATH_one": "{{count}} card underneath",
+    "CARDS_UNDERNEATH_other": "{{count}} cards underneath",
+    "STACK_OF": "Stack of {{count}}",
+    "BLOOD_DEBT_one": "Blood Debt",
+    "BLOOD_DEBT_other": "Blood Debts",
+    "HAND": "Hand",
+    "LIST_TITLE_YOURS": "Your {{zone}}",
+    "LIST_TITLE_OPPONENT": "Opponent's {{zone}}",
+    "CLICK_TO_VIEW_YOUR_HAND": "Click to view your hand",
+    "CLICK_TO_VIEW_OPPONENT_HAND": "Click to view your opponent's hand",
+    "DRAG_TO_REORDER": "(Drag highlighted to reorder)",
+    "LOCK_VERTICAL": "Lock to vertical movement",
+    "UNLOCK_HORIZONTAL": "Unlock horizontal movement"
+  },
+  "COUNTERS": {
+    "DEFENSE_one": "{{count}} defense",
+    "DEFENSE_other": "{{count}} defense",
+    "STEAM_one": "{{count}} steam counter",
+    "STEAM_other": "{{count}} steam counters",
+    "ATTACK_one": "{{count}} power",
+    "ATTACK_other": "{{count}} power",
+    "LIFE_one": "{{count}} life",
+    "LIFE_other": "{{count}} life",
+    "ENERGY_one": "{{count}} energy counter",
+    "ENERGY_other": "{{count}} energy counters",
+    "HAUNT_one": "{{count}} haunt counter",
+    "HAUNT_other": "{{count}} haunt counters",
+    "VERSE_one": "{{count}} verse counter",
+    "VERSE_other": "{{count}} verse counters",
+    "DOOM_one": "{{count}} doom counter",
+    "DOOM_other": "{{count}} doom counters",
+    "LESSON_one": "{{count}} lesson counter",
+    "LESSON_other": "{{count}} lesson counters",
+    "RUST_one": "{{count}} rust counter",
+    "RUST_other": "{{count}} rust counters",
+    "FLOW_one": "{{count}} flow counter",
+    "FLOW_other": "{{count}} flow counters",
+    "FROST_one": "{{count}} frost counter",
+    "FROST_other": "{{count}} frost counters",
+    "BALANCE_one": "{{count}} balance counter",
+    "BALANCE_other": "{{count}} balance counters",
+    "BIND_one": "{{count}} bind counter",
+    "BIND_other": "{{count}} bind counters",
+    "STAIN_one": "{{count}} stain counter",
+    "STAIN_other": "{{count}} stain counters",
+    "STORM_one": "{{count}} storm counter",
+    "STORM_other": "{{count}} storm counters",
+    "GOLD_one": "{{count}} gold counter",
+    "GOLD_other": "{{count}} gold counters",
+    "SUSPENSE_one": "{{count}} suspense counter",
+    "SUSPENSE_other": "{{count}} suspense counters",
+    "SAND_one": "{{count}} sand counter",
+    "SAND_other": "{{count}} sand counters",
+    "LIGHTNING_one": "{{count}} lightning card played",
+    "LIGHTNING_other": "{{count}} lightning cards played",
+    "AMP_one": "{{count}} arcane bonus",
+    "AMP_other": "{{count}} arcane bonus",
+    "AIM_one": "{{count}} aim counter",
+    "AIM_other": "{{count}} aim counters"
+  },
+  "CHAIN_COUNTERS": {
+    "DAMAGE_PREVENTION": "{{count}} damage prevention",
+    "UNPREVENTABLE": "Unpreventable",
+    "REQUIRED_EQUIPMENT_BLOCK": "Chain link must be defended with at least {{count}} equipment"
+  },
+  "SHARE_REPLAY": {
+    "COPIED": "Share link copied to clipboard!",
+    "COPY_PROMPT": "Copy this replay share link:",
+    "FAILED": "Failed to create share link."
+  },
+  "REPLAY_PANEL": {
+    "REPLAY_NUMBER_MISSING": "Replay number not available. Please reload the replay.",
+    "LOADING_TURN": "Loading turn {{number}}…",
+    "TURN_LOADED": "Turn {{number}} loaded",
+    "TURN_LOAD_FAILED": "Unable to load that turn",
+    "ENTER_SAVED_TURN": "Enter a saved turn between 1 and {{max}}, or 0 for the start.",
+    "SAVED_TURNS_LOADING": "Saved turns are still loading.",
+    "RETURNED_TO_START": "Returned to the start of the replay.",
+    "RESTART_FAILED": "Unable to restart this replay.",
+    "SAVED_TURNS_one": "{{count}} saved turn",
+    "SAVED_TURNS_other": "{{count}} saved turns",
+    "SAVED_TURNS_SCROLL_one": "{{count}} saved turn - scroll right",
+    "SAVED_TURNS_SCROLL_other": "{{count}} saved turns - scroll right",
+    "BUILDS_AS_YOU_REVIEW": "Builds as you review",
+    "LOAD_TURN_LABEL": "Load turn {{number}}, {{player}}",
+    "COMBAT": "Combat",
+    "DAMAGE": "Damage",
+    "COMBAT_AND_DAMAGE": "Combat and damage",
+    "LIFE_CHANGED": "Life changed"
+  },
+  "CHAIN_LINKS": {
+    "DRACONIC": "Draconic Chain Link",
+    "GAME_OVER": "Game over"
+  },
+  "MOVEMENT_EVENT": {
+    "REVEALED": "Card Revealed",
+    "DISCARDED": "Card Discarded",
+    "BANISHED": "Card Banished",
+    "INTO_SOUL": "Into Soul",
+    "CLICK_TO_DISMISS": "Click to dismiss"
+  },
+  "VALIDATION": {
+    "USERNAME_REQUIRED": "Username is required",
+    "USERNAME_CHARACTERS": "Only letters, numbers and underscores are allowed",
+    "EMAIL_INVALID": "Must be a valid email",
+    "EMAIL_REQUIRED": "Email is required",
+    "PASSWORD_REQUIRED": "Password is required",
+    "PASSWORD_MIN_LENGTH": "Password must be at least 8 characters long",
+    "PASSWORD_CONFIRM_REQUIRED": "You must confirm your password",
+    "PASSWORDS_MUST_MATCH": "Passwords must match",
+    "AGREE_TO_TERMS": "You must agree to the terms",
+    "LOGIN_USERNAME_REQUIRED": "You must enter a username",
+    "LOGIN_PASSWORD_REQUIRED": "You must enter a password"
+  },
+  "CREATE_GAME": {
+    "MINIMIZE_PANEL": "Minimize panel",
+    "EXPAND_PANEL": "Expand panel"
+  },
+  "GAME": {
+    "RELEASE_TO_PLAY": "Release to play this card"
   }
 }

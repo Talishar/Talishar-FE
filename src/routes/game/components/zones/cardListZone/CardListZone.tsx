@@ -50,6 +50,16 @@ const cardPile = (card: Card): string =>
   card.pile ?? (isAllyCard(card) ? 'ALLY' : '');
 
 const ZONE_SWITCH = /^(Your|Opponent's) (Graveyard|Banish Zone|Soul)$/;
+const ZONE_TITLE =
+  /^(Your|Opponent's) (Graveyard|Banish Zone|Soul|Deck|Pitch|Hand)$/;
+const ZONE_TITLE_KEYS: Record<string, string> = {
+  Graveyard: 'ZONES.GRAVEYARD',
+  'Banish Zone': 'ZONES.BANISH',
+  Soul: 'ZONES.SOUL',
+  Deck: 'ZONES.DECK',
+  Pitch: 'ZONES.PITCH',
+  Hand: 'ZONES.HAND'
+};
 const SWITCH_ZONES = [
   { zone: 'Graveyard', label: 'ZONES.GRAVEYARD' },
   { zone: 'Banish Zone', label: 'ZONES.BANISH' },
@@ -185,6 +195,15 @@ export const CardListZone = () => {
   const isOpponentZone = cardList?.name?.includes("Opponent's") ?? false;
 
   const zoneSwitch = cardList?.name ? ZONE_SWITCH.exec(cardList.name) : null;
+  const zoneTitle = cardList?.name ? ZONE_TITLE.exec(cardList.name) : null;
+  const listTitle = zoneTitle
+    ? t(
+        zoneTitle[1] === 'Your'
+          ? 'ZONES.LIST_TITLE_YOURS'
+          : 'ZONES.LIST_TITLE_OPPONENT',
+        { zone: t(ZONE_TITLE_KEYS[zoneTitle[2]]) }
+      )
+    : cardList?.name;
   const switchOwnerIsPlayer = zoneSwitch?.[1] === 'Your';
   const switchZoneCards = useAppSelector((state: RootState) => {
     if (!zoneSwitch) return undefined;
@@ -281,7 +300,7 @@ export const CardListZone = () => {
                 <MdClose aria-hidden="true" />
               </button>
               <div className={styles.cardListTitle}>
-                <h3 className={styles.title}>{cardList?.name}</h3>
+                <h3 className={styles.title}>{listTitle}</h3>
               </div>
               {zoneSwitch &&
                 SWITCH_ZONES.map(({ zone, label }) => {

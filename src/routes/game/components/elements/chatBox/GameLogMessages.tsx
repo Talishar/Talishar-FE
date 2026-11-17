@@ -173,6 +173,7 @@ const Message = React.memo(function Message({
   mobile: boolean;
   repeatCount?: number;
 }) {
+  const { t } = useTranslation();
   const className = classNames(
     mobile ? styles.chatMobileMessage : styles.chatMessage,
     importanceClass(message)
@@ -180,7 +181,11 @@ const Message = React.memo(function Message({
   return (
     <div
       className={className}
-      title={repeatCount > 1 ? `${repeatCount} repeated log events` : undefined}
+      title={
+        repeatCount > 1
+          ? t('CHAT.REPEATED_LOG_EVENTS', { count: repeatCount })
+          : undefined
+      }
     >
       {parseHtmlToReactElements(transformMessage(message))}
       {repeatCount > 1 && <RepeatBadge repeatCount={repeatCount} />}

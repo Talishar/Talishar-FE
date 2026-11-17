@@ -1,4 +1,5 @@
 import styles from '../CountersOverlay.module.css';
+import { useTranslation } from 'react-i18next';
 import { TooltipWrapper } from 'components/Tooltip/TooltipWrapper';
 import { GiLightningArc } from 'react-icons/gi';
 import { GiTombstone } from 'react-icons/gi';
@@ -11,6 +12,7 @@ type Props = {
 
 export const ContinuousCounters = (props: Props) => {
   const { countersMap, excludeFancyCounters } = props;
+  const { t } = useTranslation();
 
   // Only return null if excluding fancy counters and there's no amp counter
   if (excludeFancyCounters && !countersMap?.amp) {
@@ -22,7 +24,7 @@ export const ContinuousCounters = (props: Props) => {
       {!!Number(countersMap?.defense) && (
         <TooltipWrapper
           className={styles.defCounter}
-          tooltip={`${countersMap?.defense} defense(s)`}
+          tooltip={t('COUNTERS.DEFENSE', { count: countersMap?.defense })}
         >
           <div>{countersMap?.defense}</div>
         </TooltipWrapper>
@@ -30,7 +32,7 @@ export const ContinuousCounters = (props: Props) => {
       {!!Number(countersMap?.steam) && (
         <TooltipWrapper
           className={styles.steamCounter}
-          tooltip={`${countersMap?.steam} steam counter(s)`}
+          tooltip={t('COUNTERS.STEAM', { count: countersMap?.steam })}
         >
           <div>{countersMap?.steam}</div>
         </TooltipWrapper>
@@ -38,7 +40,7 @@ export const ContinuousCounters = (props: Props) => {
       {!!Number(countersMap?.attack) && (
         <TooltipWrapper
           className={styles.powerCounter}
-          tooltip={`${countersMap?.attack} power(s)`}
+          tooltip={t('COUNTERS.ATTACK', { count: countersMap?.attack })}
         >
           <div>{countersMap?.attack}</div>
         </TooltipWrapper>
@@ -46,7 +48,7 @@ export const ContinuousCounters = (props: Props) => {
       {!!Number(countersMap?.life) && (
         <TooltipWrapper
           className={styles.lifeCounter}
-          tooltip={`${countersMap?.life} life(s)`}
+          tooltip={t('COUNTERS.LIFE', { count: countersMap?.life })}
         >
           <div>{countersMap?.life}</div>
         </TooltipWrapper>
@@ -54,7 +56,7 @@ export const ContinuousCounters = (props: Props) => {
       {!!Number(countersMap?.energy) && (
         <TooltipWrapper
           className={styles.energyCounter}
-          tooltip={`${countersMap?.energy} energy counter(s)`}
+          tooltip={t('COUNTERS.ENERGY', { count: countersMap?.energy })}
         >
           <div>{countersMap?.energy}</div>
         </TooltipWrapper>
@@ -62,7 +64,7 @@ export const ContinuousCounters = (props: Props) => {
       {!!Number(countersMap?.haunt) && (
         <TooltipWrapper
           className={styles.hauntCounter}
-          tooltip={`${countersMap?.haunt} haunt counter(s)`}
+          tooltip={t('COUNTERS.HAUNT', { count: countersMap?.haunt })}
         >
           <div>{countersMap?.haunt}</div>
         </TooltipWrapper>
@@ -70,7 +72,7 @@ export const ContinuousCounters = (props: Props) => {
       {!!Number(countersMap?.verse) && (
         <TooltipWrapper
           className={styles.verseCounter}
-          tooltip={`${countersMap?.verse} verse counter(s)`}
+          tooltip={t('COUNTERS.VERSE', { count: countersMap?.verse })}
         >
           <div>{countersMap?.verse}</div>
         </TooltipWrapper>
@@ -78,7 +80,7 @@ export const ContinuousCounters = (props: Props) => {
       {!!Number(countersMap?.doom) && (
         <TooltipWrapper
           className={styles.doomCounter}
-          tooltip={`${countersMap?.doom} doom counter(s)`}
+          tooltip={t('COUNTERS.DOOM', { count: countersMap?.doom })}
         >
           <div>{countersMap?.doom}</div>
         </TooltipWrapper>
@@ -86,7 +88,7 @@ export const ContinuousCounters = (props: Props) => {
       {!!Number(countersMap?.lesson) && (
         <TooltipWrapper
           className={styles.lessonCounter}
-          tooltip={`${countersMap?.lesson} lesson counter(s)`}
+          tooltip={t('COUNTERS.LESSON', { count: countersMap?.lesson })}
         >
           <div>{countersMap?.lesson}</div>
         </TooltipWrapper>
@@ -94,7 +96,7 @@ export const ContinuousCounters = (props: Props) => {
       {!!Number(countersMap?.rust) && (
         <TooltipWrapper
           className={styles.rustCounter}
-          tooltip={`${countersMap?.rust} rust counter(s)`}
+          tooltip={t('COUNTERS.RUST', { count: countersMap?.rust })}
         >
           <div>{countersMap?.rust}</div>
         </TooltipWrapper>
@@ -102,7 +104,7 @@ export const ContinuousCounters = (props: Props) => {
       {!!Number(countersMap?.flow) && (
         <TooltipWrapper
           className={styles.flowCounter}
-          tooltip={`${countersMap?.flow} flow counter(s)`}
+          tooltip={t('COUNTERS.FLOW', { count: countersMap?.flow })}
         >
           <div>{countersMap?.flow}</div>
         </TooltipWrapper>
@@ -110,7 +112,7 @@ export const ContinuousCounters = (props: Props) => {
       {!!Number(countersMap?.frost) && (
         <TooltipWrapper
           className={styles.frostCounter}
-          tooltip={`${countersMap?.frost} frost counter(s)`}
+          tooltip={t('COUNTERS.FROST', { count: countersMap?.frost })}
         >
           <div>{countersMap?.frost}</div>
         </TooltipWrapper>
@@ -118,7 +120,7 @@ export const ContinuousCounters = (props: Props) => {
       {!!Number(countersMap?.balance) && (
         <TooltipWrapper
           className={styles.balanceCounter}
-          tooltip={`${countersMap?.balance} balance counter(s)`}
+          tooltip={t('COUNTERS.BALANCE', { count: countersMap?.balance })}
         >
           <div>{countersMap?.balance}</div>
         </TooltipWrapper>
@@ -126,7 +128,7 @@ export const ContinuousCounters = (props: Props) => {
       {!!Number(countersMap?.bind) && (
         <TooltipWrapper
           className={styles.bindCounter}
-          tooltip={`${countersMap?.bind} bind counter(s)`}
+          tooltip={t('COUNTERS.BIND', { count: countersMap?.bind })}
         >
           <div>{countersMap?.bind}</div>
         </TooltipWrapper>
@@ -134,7 +136,7 @@ export const ContinuousCounters = (props: Props) => {
       {!!Number(countersMap?.stain) && (
         <TooltipWrapper
           className={styles.stainCounter}
-          tooltip={`${countersMap?.stain} stain counter(s)`}
+          tooltip={t('COUNTERS.STAIN', { count: countersMap?.stain })}
         >
           <div>{countersMap?.stain}</div>
         </TooltipWrapper>
@@ -142,7 +144,7 @@ export const ContinuousCounters = (props: Props) => {
       {!!Number(countersMap?.storm) && (
         <TooltipWrapper
           className={styles.stormCounter}
-          tooltip={`${countersMap?.storm} storm counter(s)`}
+          tooltip={t('COUNTERS.STORM', { count: countersMap?.storm })}
         >
           <div>{countersMap?.storm}</div>
         </TooltipWrapper>
@@ -150,7 +152,7 @@ export const ContinuousCounters = (props: Props) => {
       {!!Number(countersMap?.gold) && (
         <TooltipWrapper
           className={styles.goldCounter}
-          tooltip={`${countersMap?.gold} gold counter(s)`}
+          tooltip={t('COUNTERS.GOLD', { count: countersMap?.gold })}
         >
           <div>{countersMap?.gold}</div>
         </TooltipWrapper>
@@ -158,7 +160,7 @@ export const ContinuousCounters = (props: Props) => {
       {!!Number(countersMap?.suspense) && (
         <TooltipWrapper
           className={styles.suspenseCounter}
-          tooltip={`${countersMap?.suspense} suspense counter(s)`}
+          tooltip={t('COUNTERS.SUSPENSE', { count: countersMap?.suspense })}
         >
           <div>{countersMap?.suspense}</div>
         </TooltipWrapper>
@@ -166,7 +168,7 @@ export const ContinuousCounters = (props: Props) => {
       {!!Number(countersMap?.sand) && (
         <TooltipWrapper
           className={styles.sandCounter}
-          tooltip={`${countersMap?.sand} sand counter(s)`}
+          tooltip={t('COUNTERS.SAND', { count: countersMap?.sand })}
         >
           <div>{countersMap?.sand}</div>
         </TooltipWrapper>
@@ -174,7 +176,7 @@ export const ContinuousCounters = (props: Props) => {
       {!!Number(countersMap?.lightning) && (
         <TooltipWrapper
           className={styles.icon}
-          tooltip={`${countersMap?.lightning} lightning card(s) played`}
+          tooltip={t('COUNTERS.LIGHTNING', { count: countersMap?.lightning })}
         >
           <div className={styles.iconText}>{countersMap?.lightning}</div>
           <GiLightningArc />
@@ -183,14 +185,17 @@ export const ContinuousCounters = (props: Props) => {
       {!!Number(countersMap?.amp) && (
         <TooltipWrapper
           className={styles.icon}
-          tooltip={`${countersMap?.amp} Arcane Bonus`}
+          tooltip={t('COUNTERS.AMP', { count: countersMap?.amp })}
         >
           <div className={styles.iconText}>{countersMap?.amp}</div>
           <GiLightningArc />
         </TooltipWrapper>
       )}
       {!!Number(countersMap?.aim) && (
-        <TooltipWrapper className={styles.icon} tooltip="Aim counter(s)">
+        <TooltipWrapper
+          className={styles.icon}
+          tooltip={t('COUNTERS.AIM', { count: countersMap?.aim })}
+        >
           <TbTargetArrow />
         </TooltipWrapper>
       )}

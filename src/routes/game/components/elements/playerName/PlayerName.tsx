@@ -160,7 +160,7 @@ export default function PlayerName(player: Player) {
         localStorage.removeItem(getPlayerNoteKey(username));
       }
     } catch {
-      toast.error('Failed to save note');
+      toast.error(t('PLAYER_NAME.NOTE_SAVE_FAILED'));
     }
   };
 
@@ -183,7 +183,7 @@ export default function PlayerName(player: Player) {
     if (playerName) {
       savePlayerNote(playerName, note);
       setPlayerNote(note);
-      toast.success('Note saved!');
+      toast.success(t('PLAYER_NAME.NOTE_SAVED'));
     }
   };
 
@@ -355,10 +355,10 @@ export default function PlayerName(player: Player) {
   const handleAddFriend = async () => {
     try {
       await addFriend({ friendUsername: playerName! }).unwrap();
-      toast.success(`Friend request sent to ${playerName}!`);
+      toast.success(t('PROFILE.FRIEND_REQUEST_SENT', { username: playerName }));
       refetchSent();
     } catch (err: any) {
-      toast.error(err.error || 'Failed to send friend request');
+      toast.error(err.error || t('PROFILE.FAILED_SEND_FRIEND_REQUEST'));
     }
   };
 
@@ -366,10 +366,12 @@ export default function PlayerName(player: Player) {
     try {
       if (!sentRequestUserId) return;
       await cancelRequest({ recipientUserId: sentRequestUserId }).unwrap();
-      toast.success(`Cancelled friend request to ${playerName}`);
+      toast.success(
+        t('PLAYER_NAME.FRIEND_REQUEST_CANCELLED', { name: playerName })
+      );
       refetchSent();
     } catch (err: any) {
-      toast.error(err.error || 'Failed to cancel friend request');
+      toast.error(err.error || t('PROFILE.FAILED_CANCEL_REQUEST'));
     }
   };
 
@@ -385,10 +387,10 @@ export default function PlayerName(player: Player) {
     try {
       await blockUser({ blockedUsername: playerName!, reason, note }).unwrap();
       setIsBlockModalOpen(false);
-      toast.success(`${playerName} has been blocked`);
+      toast.success(t('PLAYER_NAME.BLOCKED', { name: playerName }));
       refetchBlocked();
     } catch (err: any) {
-      toast.error(err.error || 'Failed to block user');
+      toast.error(err.error || t('PROFILE.FAILED_BLOCK'));
     }
   };
 
@@ -396,10 +398,10 @@ export default function PlayerName(player: Player) {
     try {
       if (!blockedUserId) return;
       await unblockUser({ blockedUserId }).unwrap();
-      toast.success(`${playerName} has been unblocked`);
+      toast.success(t('PLAYER_NAME.UNBLOCKED', { name: playerName }));
       refetchBlocked();
     } catch (err: any) {
-      toast.error(err.error || 'Failed to unblock user');
+      toast.error(err.error || t('PROFILE.FAILED_UNBLOCK'));
     }
   };
 

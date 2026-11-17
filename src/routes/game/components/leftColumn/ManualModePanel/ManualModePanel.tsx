@@ -291,7 +291,9 @@ function ManualModeContent({
           type="button"
           className={styles.closeButton}
           onClick={onClose}
-          aria-label={`Close ${t('MANUAL_MODE_PANEL.TITLE')}`}
+          aria-label={t('BASE.CLOSE_NAMED', {
+            name: t('MANUAL_MODE_PANEL.TITLE')
+          })}
         >
           <MdClose aria-hidden="true" />
         </button>

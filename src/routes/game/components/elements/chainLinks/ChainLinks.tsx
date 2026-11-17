@@ -12,8 +12,10 @@ import {
 import { GiBreakingChain } from 'react-icons/gi';
 import { PROCESS_INPUT } from 'appConstants';
 import CombatChainLink from 'features/CombatChainLink';
+import { useTranslation } from 'react-i18next';
 
 export default function ChainLinks() {
+  const { t } = useTranslation();
   const oldCombatChain = useAppSelector(
     (state: RootState) => state.game.oldCombatChain
   );
@@ -62,7 +64,7 @@ export default function ChainLinks() {
             onClick={() => clickChainLink(ix)}
             onPointerEnter={() => previewChainLink(ix)}
             onPointerLeave={hideChainLinkPreview}
-            title={ChainLink.isDraconic ? 'Draconic Chain Link' : ''}
+            title={ChainLink.isDraconic ? t('CHAIN_LINKS.DRACONIC') : ''}
           >
             <div className={styles.chainLinkSymbol}>
               <img src={hitPic} className={styles.chainLinkSymbol} alt="" />
@@ -85,7 +87,7 @@ export default function ChainLinks() {
             isGameOver ? styles.breakChainDisabled : ''
           }`}
           onClick={handleBreakChainClick}
-          title={isGameOver ? 'Game over' : ''}
+          title={isGameOver ? t('CHAIN_LINKS.GAME_OVER') : ''}
         >
           <GiBreakingChain className={styles.breakChainIcon} />
         </div>

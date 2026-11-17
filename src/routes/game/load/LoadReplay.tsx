@@ -329,9 +329,7 @@ const ReplayGame = () => {
   ) => {
     try {
       if (!values.replayNumber) {
-        throw new Error(
-          'Replay number is required. Please enter a valid replay game number.'
-        );
+        throw new Error(t('LOAD_REPLAY.REPLAY_NUMBER_REQUIRED'));
       }
 
       const response = await loadReplay(values).unwrap();
@@ -377,7 +375,7 @@ const ReplayGame = () => {
           })
         );
         toast.success(
-          `Replay loaded successfully! Game ID: ${response.gameName}`,
+          t('LOAD_REPLAY.LOADED_SUCCESS', { gameID: response.gameName }),
           { position: 'top-center' }
         );
         navigate(`/game/play/${response.gameName}`, {
@@ -499,7 +497,7 @@ const ReplayGame = () => {
     const names = [replay.p1DisplayName, replay.p2DisplayName].filter(Boolean);
     return names.length
       ? names.join(' vs ')
-      : 'Players unavailable for older replay';
+      : t('LOAD_REPLAY.PLAYERS_UNAVAILABLE');
   };
   const heroLabel = (replay: SavedReplay) => {
     const heroes = [replay.p1HeroName, replay.p2HeroName].filter(Boolean);
@@ -524,28 +522,32 @@ const ReplayGame = () => {
         favorite: !replay.favorite
       }).unwrap();
     } catch {
-      toast.error('Unable to update replay favorite. Please try again.');
+      toast.error(t('LOAD_REPLAY.FAVORITE_UPDATE_FAILED'));
     }
   };
   const shareSavedReplay = async (replay: SavedReplay) => {
+    let shareUrl: string;
     try {
       const result = await shareReplay({
         replayNumber: replay.replayNumber
       }).unwrap();
       if (!result.token)
-        throw new Error(result.error || 'No share link created.');
-
-      await navigator.clipboard.writeText(
-        `${window.location.origin}/replay/shared?token=${result.token}`
-      );
-      toast.success('Share link copied to clipboard!');
+        throw new Error(result.error || t('SHARE_REPLAY.FAILED'));
+      shareUrl = `${window.location.origin}/replay/shared?token=${result.token}`;
     } catch (error) {
       const apiError = error as { data?: { error?: string } };
       toast.error(
         error instanceof Error
           ? error.message
-          : apiError.data?.error || 'Failed to create share link.'
+          : apiError.data?.error || t('SHARE_REPLAY.FAILED')
       );
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      toast.success(t('SHARE_REPLAY.COPIED'));
+    } catch {
+      window.prompt(t('SHARE_REPLAY.COPY_PROMPT'), shareUrl);
     }
   };
   const deleteSavedReplay = async (replay: SavedReplay) => {
@@ -597,16 +599,18 @@ const ReplayGame = () => {
         }`}
         onClick={() => toggleFavorite(entry)}
         disabled={isUpdatingFavorite}
-        aria-label={`${entry.favorite ? 'Remove' : 'Add'} ${numberLabel} ${
-          entry.favorite ? 'from' : 'to'
-        } favorites`}
+        aria-label={
+          entry.favorite
+            ? t('LOAD_REPLAY.REMOVE_FAVORITE_ARIA', { label: numberLabel })
+            : t('LOAD_REPLAY.ADD_FAVORITE_ARIA', { label: numberLabel })
+        }
         aria-pressed={entry.favorite}
         title={
           entry.favorite
-            ? 'Remove from favorites'
+            ? t('LOAD_REPLAY.REMOVE_FROM_FAVORITES')
             : isSnapshot
-            ? 'Keep this snapshot'
-            : 'Keep this replay'
+            ? t('LOAD_REPLAY.KEEP_SNAPSHOT')
+            : t('LOAD_REPLAY.KEEP_REPLAY')
         }
       >
         {entry.favorite ? <FaStar /> : <FaRegStar />}
@@ -692,7 +696,9 @@ const ReplayGame = () => {
                 ? t('LOAD_REPLAY.SHARE_SNAPSHOT_ARIA', {
                     number: entry.replayNumber
                   })
-                : `Copy a shareable link for Replay #${entry.replayNumber}`
+                : t('LOAD_REPLAY.SHARE_REPLAY_ARIA', {
+                    number: entry.replayNumber
+                  })
             }
             title={
               isSnapshot

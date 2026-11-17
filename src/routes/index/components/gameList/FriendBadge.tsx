@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { MdPeople } from 'react-icons/md';
 import styles from './FriendBadge.module.css';
+import { useTranslation } from 'react-i18next';
 
 interface FriendBadgeProps {
   isFriendsGame?: boolean;
@@ -18,6 +19,7 @@ export const FriendBadge: React.FC<FriendBadgeProps> = ({
   size = 'small',
   label
 }) => {
+  const { t } = useTranslation();
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
   const badgeRef = useRef<HTMLDivElement>(null);
@@ -42,7 +44,10 @@ export const FriendBadge: React.FC<FriendBadgeProps> = ({
   };
 
   const tooltipText =
-    tooltip ?? (friendName ? `${friendName}'s game` : "Friend's game");
+    tooltip ??
+    (friendName
+      ? t('GAME_LIST.FRIEND_NAMED_GAME', { name: friendName })
+      : t('GAME_LIST.FRIEND_GAME'));
 
   return (
     <>

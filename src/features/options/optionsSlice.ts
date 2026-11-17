@@ -15,6 +15,7 @@ import {
 import GameStaticInfo from 'features/GameStaticInfo';
 import { ProcessInputAPI } from 'interface/API/ProcessInputAPI';
 import { toast } from 'react-hot-toast';
+import i18n from 'i18next';
 import { loadInitialLanguage } from 'utils/multilanguage/languagePreference';
 
 export interface GameOptions {
@@ -173,7 +174,8 @@ const optionsSlice = createSlice({
     });
     builder.addCase(fetchAllSettings.rejected, (state, action) => {
       if (state.latestFetchId !== action.meta.requestId) return;
-      toast.error(JSON.stringify(action.error));
+      console.error('Settings load failed:', action.error);
+      toast.error(i18n.t('SETTINGS.LOAD_FAILED'), { id: 'settings-load' });
       state.loadingSettingsKey = null;
       state.status = QUERY_STATUS.FAILED;
     });
@@ -197,10 +199,10 @@ const optionsSlice = createSlice({
         });
         delete state.pendingRollbacks[action.meta.requestId];
       }
-      toast.error(
-        'Your setting could not be saved. Please check your connection and try again.',
-        { position: 'top-center' }
-      );
+      toast.error(i18n.t('SETTINGS.SAVE_FAILED'), {
+        id: 'settings-save',
+        position: 'top-center'
+      });
     });
     builder.addCase(updateOptions.pending, (state, action) => {
       state.pendingRollbacks[action.meta.requestId] =

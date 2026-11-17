@@ -103,6 +103,7 @@ function UndoButton() {
 
 function CameraSwitchButton() {
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const spectatorCameraView = useAppSelector(
     (state: RootState) => state.game.spectatorCameraView
   );
@@ -114,8 +115,12 @@ function CameraSwitchButton() {
     <button
       className={styles.btn}
       onClick={toggleView}
-      aria-label={`Switch to Player ${spectatorCameraView === 1 ? 2 : 1} View`}
-      data-tooltip={`Switch to P${spectatorCameraView === 1 ? 2 : 1} View`}
+      aria-label={t('SPECTATOR.SWITCH_VIEW', {
+        player: spectatorCameraView === 1 ? 2 : 1
+      })}
+      data-tooltip={t('SPECTATOR.SWITCH_VIEW_SHORT', {
+        player: spectatorCameraView === 1 ? 2 : 1
+      })}
       data-placement="bottom"
     >
       <FaExchangeAlt aria-hidden="true" />

@@ -26,7 +26,7 @@ const MetafySignup = () => {
     const error = searchParams.get('error');
 
     if (error) {
-      toast.error(`Metafy signup error: ${error}`, {
+      toast.error(t('AUTH.METAFY_SIGNUP.ERROR', { error }), {
         position: 'top-center'
       });
       navigate('/user/login', { replace: true });
@@ -64,16 +64,23 @@ const MetafySignup = () => {
           });
           navigate('/');
         } else {
-          toast.error(`Signup failed: ${data.error || 'Unknown error'}`, {
-            position: 'top-center'
-          });
+          toast.error(
+            t('AUTH.METAFY_SIGNUP.FAILED', {
+              error: data.error || t('BASE.UNKNOWN_ERROR')
+            }),
+            {
+              position: 'top-center'
+            }
+          );
           navigate('/user/login', { replace: true });
         }
       })
       .catch((err: FetchBaseQueryError | SerializedError) => {
         console.error('Metafy signup error:', err);
         toast.error(
-          `Signup error: ${describeThrownError(err, 'Unknown error')}`,
+          t('AUTH.METAFY_SIGNUP.ERROR', {
+            error: describeThrownError(err, t('BASE.UNKNOWN_ERROR'))
+          }),
           {
             position: 'top-center'
           }

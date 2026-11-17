@@ -277,8 +277,10 @@ const ChainLinkSummary = ({
   useShortcut(DEFAULT_SHORTCUTS.CLOSE_WINDOW, closeCardList);
 
   const title = isResolvedLink
-    ? `Chain Link ${(chainLinkIndex ?? 0) + 1}`
-    : 'Current Attack';
+    ? t('CHAIN_LINK_SUMMARY.CHAIN_LINK_N', {
+        number: (chainLinkIndex ?? 0) + 1
+      })
+    : t('CHAIN_LINK_SUMMARY.CURRENT_ATTACK');
 
   let content;
   let headerBadge: React.ReactNode = null;
@@ -290,8 +292,10 @@ const ChainLinkSummary = ({
   } else if (error) {
     const errorMsg =
       'status' in (error as object)
-        ? `Error ${(error as { status: number }).status}`
-        : 'Failed to load chain link summary';
+        ? t('CHAIN_LINK_SUMMARY.ERROR_STATUS', {
+            status: (error as { status: number }).status
+          })
+        : t('CHAIN_LINK_SUMMARY.LOAD_FAILED');
     content = <div className={styles.error}>{errorMsg}</div>;
   } else if (!data?.Cards) {
     content = <div className={styles.error}>{JSON.stringify(data)}</div>;
@@ -339,7 +343,9 @@ const ChainLinkSummary = ({
         <span
           className={`${styles.badge} ${didHit ? styles.hit : styles.noHit}`}
         >
-          {didHit ? 'Hit' : 'No hit'}
+          {didHit
+            ? t('CHAIN_LINK_SUMMARY.HIT')
+            : t('CHAIN_LINK_SUMMARY.NO_HIT')}
         </span>
       );
 
@@ -390,7 +396,7 @@ const ChainLinkSummary = ({
                   <CardRow
                     entry={{
                       Player: attackerPID,
-                      Name: 'Active combat effects',
+                      Name: t('CHAIN_LINK_SUMMARY.ACTIVE_COMBAT_EFFECTS'),
                       cardID: 'POWERCOUNTER',
                       modifier: activeEffectModifier
                     }}

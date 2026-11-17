@@ -885,9 +885,9 @@ const GameList = () => {
                   <FriendBadge
                     isFriendsGame
                     size="small"
-                    tooltip={`${friendOpenGamesCount} friend${
-                      friendOpenGamesCount > 1 ? 's' : ''
-                    } looking for opponent`}
+                    tooltip={t('GAME_LIST.FRIENDS_LOOKING', {
+                      count: friendOpenGamesCount
+                    })}
                   />
                 )}
               </button>
@@ -911,9 +911,9 @@ const GameList = () => {
                   <FriendBadge
                     isFriendsGame
                     size="small"
-                    tooltip={`${friendInProgressCount} friend${
-                      friendInProgressCount > 1 ? 's' : ''
-                    } playing`}
+                    tooltip={t('GAME_LIST.FRIENDS_PLAYING', {
+                      count: friendInProgressCount
+                    })}
                   />
                 )}
               </button>

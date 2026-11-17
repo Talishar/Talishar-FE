@@ -10,6 +10,7 @@ import { createPortal } from 'react-dom';
 import styles from './ImageSelect.module.css';
 import { useOutsideClick } from 'hooks/useOutsideClick';
 import { cropFocusStyle } from 'utils/cropImages';
+import { useTranslation } from 'react-i18next';
 
 interface DropdownPosition {
   top: number;
@@ -45,13 +46,15 @@ export const ImageSelect: React.FC<ImageSelectProps> = ({
   options,
   value,
   onChange,
-  placeholder = 'Select an option',
+  placeholder,
   disabled = false,
   'aria-invalid': ariaInvalid,
   'aria-busy': ariaBusy,
   'aria-label': ariaLabel,
   id
 }) => {
+  const { t } = useTranslation();
+  const placeholderText = placeholder ?? t('BASE.SELECT_OPTION');
   const [isOpen, setIsOpen] = useState(false);
   const selectedOption = useMemo(
     () => options.find((option) => option.value === value),
@@ -174,9 +177,9 @@ export const ImageSelect: React.FC<ImageSelectProps> = ({
             ))}
           <span
             className={!selectedOption ? styles.placeholder : undefined}
-            title={selectedOption?.label ?? placeholder}
+            title={selectedOption?.label ?? placeholderText}
           >
-            {selectedOption?.label ?? placeholder}
+            {selectedOption?.label ?? placeholderText}
           </span>
         </div>
         <svg

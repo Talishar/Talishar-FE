@@ -1,6 +1,7 @@
 import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
 import styles from './HandZone.module.css';
+import { useTranslation } from 'react-i18next';
 import { RootState } from 'app/Store';
 import Player from 'interface/Player';
 import { Card } from 'features/Card';
@@ -23,6 +24,7 @@ type HandLayout = { isOverflowing: boolean; overlap: number };
 const EMPTY_HAND_LAYOUT: HandLayout = { isOverflowing: false, overlap: 0 };
 
 const HandZone = React.memo(function HandZone(prop: Player) {
+  const { t } = useTranslation();
   const { isPlayer } = prop;
   const dispatch = useAppDispatch();
 
@@ -180,7 +182,11 @@ const HandZone = React.memo(function HandZone(prop: Player) {
       }}
       onClick={openHandList}
       title={
-        canOpenHandList ? `Click to view ${zoneTitle.toLowerCase()}` : undefined
+        canOpenHandList
+          ? isPlayer
+            ? t('ZONES.CLICK_TO_VIEW_YOUR_HAND')
+            : t('ZONES.CLICK_TO_VIEW_OPPONENT_HAND')
+          : undefined
       }
     >
       {handCards.map((card: Card, index: number) => (

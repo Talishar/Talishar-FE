@@ -28,7 +28,7 @@ const LinkPatreon = () => {
         } else {
           toast.error(
             t('LINK_PATREON_PAGE.ERROR', {
-              error: data?.error || 'Unknown error'
+              error: data?.error || t('BASE.UNKNOWN_ERROR')
             })
           );
           navigate('/user/profile');
@@ -37,7 +37,7 @@ const LinkPatreon = () => {
       .catch((err: any) => {
         toast.error(
           t('LINK_PATREON_PAGE.NETWORK_ERROR', {
-            error: describeThrownError(err, 'Unknown error')
+            error: describeThrownError(err, t('BASE.UNKNOWN_ERROR'))
           })
         );
         navigate('/user/profile');
