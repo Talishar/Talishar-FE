@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styles from './CommunityContent.module.css';
 import {
   fetchDiscordContentCarousel,
+  peekDiscordContentCarousel,
   ContentVideo
 } from '../../../services/contentService';
 import { Trans, useTranslation } from 'react-i18next';
@@ -35,9 +36,13 @@ const inferContentType = (title: string, description?: string): string => {
 const CommunityContent: React.FC<CommunityContentProps> = ({
   showAds = false
 }) => {
-  const [videos, setVideos] = useState<ContentVideo[]>([]);
+  const [videos, setVideos] = useState<ContentVideo[]>(
+    () => peekDiscordContentCarousel(20) ?? []
+  );
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(
+    () => peekDiscordContentCarousel(20) === undefined
+  );
   const { t, i18n } = useTranslation();
 
   const cleanTitle = (title: string): string => {

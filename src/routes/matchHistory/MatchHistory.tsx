@@ -5,6 +5,7 @@ import { FaPlay, FaSave } from 'react-icons/fa';
 import { useAppDispatch } from 'app/Hooks';
 import PageBanner from 'components/PageBanner/PageBanner';
 import useAdScript from 'hooks/useAdScript';
+import { usePageTitle } from 'hooks/usePageTitle';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import {
   useGetMatchHistoryQuery,
@@ -34,6 +35,7 @@ const HeroCrop = ({ heroId }: { heroId: string }) => (
 
 const MatchHistory = () => {
   const { t, i18n } = useTranslation();
+  usePageTitle(t('HEADER.MATCH_HISTORY'));
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { showAds } = useSupporterStatus();

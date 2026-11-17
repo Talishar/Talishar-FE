@@ -29,6 +29,7 @@ import {
 import useAuth from 'hooks/useAuth';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import useAdScript from 'hooks/useAdScript';
+import { usePageTitle } from 'hooks/usePageTitle';
 import { AdUnit } from 'components/ads/AdUnit';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
@@ -61,6 +62,7 @@ const JoinGame = () => {
 
   // Initial stuff to allow the lang to change
   const { t } = useTranslation();
+  usePageTitle(t('JOIN.TITLE'));
 
   const [{ gameName: searchGameName = '0', playerID = '2' }] =
     useKnownSearchParams();

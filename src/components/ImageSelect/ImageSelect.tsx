@@ -229,6 +229,7 @@ export const ImageSelect: React.FC<ImageSelectProps> = ({
                   <img
                     src={option.imageUrl}
                     alt=""
+                    loading="lazy"
                     className={styles.optionImage}
                     style={cropFocusStyle(option.imageFocusX)}
                   />

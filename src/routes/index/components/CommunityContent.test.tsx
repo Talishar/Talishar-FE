@@ -14,7 +14,8 @@ import {
 } from 'services/contentService';
 
 vi.mock('services/contentService', () => ({
-  fetchDiscordContentCarousel: vi.fn()
+  fetchDiscordContentCarousel: vi.fn(),
+  peekDiscordContentCarousel: vi.fn(() => undefined)
 }));
 vi.mock('components/ads/AdUnit', () => ({
   AdUnit: ({ placement }: { placement: string }) => <div data-ad={placement} />

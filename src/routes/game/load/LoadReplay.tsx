@@ -33,6 +33,7 @@ import styles from './LoadReplay.module.css';
 import { GameLocationState } from 'interface/GameLocationState';
 import PageBanner from 'components/PageBanner/PageBanner';
 import useAdScript from 'hooks/useAdScript';
+import { usePageTitle } from 'hooks/usePageTitle';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import { Link } from 'react-router-dom';
 import { Trans, useTranslation } from 'react-i18next';
@@ -41,6 +42,7 @@ import SaveNoteModal from 'components/SaveNoteModal/SaveNoteModal';
 
 const LoadReplay = () => {
   const { t } = useTranslation();
+  usePageTitle(t('HEADER.REPLAYS'));
   const { showAds } = useSupporterStatus();
   useAdScript(showAds);
   return (
