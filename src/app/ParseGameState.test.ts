@@ -68,6 +68,25 @@ describe('ParseGameState equipment slots', () => {
   });
 });
 
+describe('ParseGameState counters', () => {
+  it('converts counter values to numbers on board and popup cards', () => {
+    const countersMap = { steam: '3', defense: 1, wateryGrave: true, bad: '-' };
+    const gameState = ParseGameState({
+      playerEquipment: [{ cardNumber: 'gear', type: 'E', slot: 'Head', countersMap }],
+      playerInputPopUp: {
+        active: true,
+        popup: { cards: [{ cardNumber: 'item', countersMap: { ...countersMap } }] }
+      }
+    });
+
+    const expected = { steam: 3, defense: 1, wateryGrave: 1 };
+    expect(gameState.playerOne.HeadEq?.countersMap).toEqual(expected);
+    expect(gameState.playerInputPopUp?.popup?.cards?.[0].countersMap).toEqual(
+      expected
+    );
+  });
+});
+
 describe('ParseGameState card piles and chat', () => {
   it('preserves pile order, card names, and image path handling', () => {
     const gameState = ParseGameState({
