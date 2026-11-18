@@ -40,6 +40,19 @@ function GetCardName(cardNumber: string): string {
   return result;
 }
 
+// The backend sends counter values as strings ("3") or flags (wateryGrave: true).
+// Convert them to numbers once here so consumers, and i18next plurals keyed on
+// `count`, see real numbers. Non-numeric values are dropped.
+function parseCountersMap(input: any): Card['countersMap'] {
+  if (!input || typeof input !== 'object') return undefined;
+  const result: NonNullable<Card['countersMap']> = {};
+  for (const key in input) {
+    const value = Number(input[key]);
+    if (!Number.isNaN(value)) result[key] = value;
+  }
+  return result;
+}
+
 function ParseCard(input: any) {
   const card: Card = { cardNumber: 'blank' };
   if (input === undefined) {
@@ -70,7 +83,7 @@ function ParseCard(input: any) {
     ? Boolean(input.hasBoundAura)
     : false;
   card.gem = input.gem ? (input.gem == 1 ? 'active' : 'inactive') : 'none';
-  card.countersMap = input.countersMap ? input.countersMap : undefined;
+  card.countersMap = parseCountersMap(input.countersMap);
   card.label = input.label ? String(input.label) : undefined;
   card.zone = input.zone;
   card.slot = input.slot ? String(input.slot) : undefined;
@@ -486,6 +499,7 @@ export default function ParseGameState(input: any) {
     if (!Array.isArray(cards)) continue;
     for (const card of cards) {
       if (card?.uniqueID != null) card.uniqueId = String(card.uniqueID);
+      if (card?.countersMap) card.countersMap = parseCountersMap(card.countersMap);
     }
   }
   result.playerInputPopUp = input.playerInputPopUp;
