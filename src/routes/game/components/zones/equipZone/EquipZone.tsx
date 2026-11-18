@@ -44,9 +44,7 @@ export const EquipZone = React.memo(
               <StackCount
                 count={subcardCount}
                 className={styles.subcardCounter}
-                title={`${subcardCount} card${
-                  subcardCount !== 1 ? 's' : ''
-                } underneath`}
+                title={t('ZONES.CARDS_UNDERNEATH', { count: subcardCount })}
               />
             )}
           </>

@@ -84,6 +84,8 @@ const FORMAT_DISPLAY_NAMES: Record<string, string> = {
   [GAME_FORMAT.SEALED]: 'Limited'
 };
 
+const UNKNOWN_HERO_URL = generateCroppedImageUrl('UNKNOWNHERO');
+
 const OpenGame = ({
   ix,
   entry,
@@ -100,8 +102,6 @@ const OpenGame = ({
   const navigate = useNavigate();
   const quickJoinCtx = useContext(QuickJoinContext);
   const hasDeckReady = !!quickJoinCtx?.hasDeckConfigured;
-  const UNKNOWN_HERO_URL =
-    'https://images.talishar.net/public/crops/UNKNOWNHERO_cropped.webp';
   const selectedFavoriteOption = quickJoinCtx?.selectedFavoriteDeck
     ? quickJoinCtx.favoriteDeckOptions.find(
         (o) => o.value === quickJoinCtx.selectedFavoriteDeck
@@ -279,7 +279,7 @@ const OpenGame = ({
         ) : (
           <img
             className={styles.heroImg}
-            src="https://images.talishar.net/public/crops/UNKNOWNHERO_cropped.webp"
+            src={UNKNOWN_HERO_URL}
             alt=""
             loading="lazy"
           />
@@ -314,7 +314,7 @@ const OpenGame = ({
           onClick={handleJoin}
           title={
             isRustLocked
-              ? 'Clear your rust counters to join'
+              ? t('OPEN_GAME.CLEAR_RUST_TO_JOIN')
               : blockedByHero
               ? t('FIND_MATCH.PICK_OTHER_DECK', { reason: joinBlockerText })
               : joinBlocker

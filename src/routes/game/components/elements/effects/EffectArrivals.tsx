@@ -10,6 +10,7 @@ import { Card } from 'features/Card';
 import { selectIsP2View, selectSidePlayer } from 'features/game/perspective';
 import { useReducedMotionSetting } from 'features/settings/accessibility';
 import { useMediaQuery } from 'hooks/useMediaQuery';
+import { useCookieString } from 'utils/cookieStore';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import { CARD_IMAGES_PATH, getCollectionCardImagePath } from 'utils';
 import { generateCroppedImageUrl } from 'utils/cropImages';
@@ -130,7 +131,9 @@ export default function EffectArrivals() {
   const mobile = useMediaQuery(MOBILE_QUERY);
   const osReducedMotion = useMediaQuery(REDUCED_MOTION_QUERY);
   const reducedMotion = useReducedMotionSetting();
-  const enabled = mobile && !reducedMotion && !osReducedMotion;
+  const popupsDisabled = useCookieString('disableEffectPopups') === 'true';
+  const enabled =
+    mobile && !reducedMotion && !osReducedMotion && !popupsDisabled;
   const perspective = useAppSelector(selectIsP2View);
   const opponentEffects = useAppSelector(
     (state) => selectSidePlayer(state, false).Effects

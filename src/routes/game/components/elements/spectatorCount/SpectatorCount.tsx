@@ -4,6 +4,7 @@ import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import styles from './SpectatorCount.module.css';
 import { FaEye } from 'react-icons/fa';
+import { useTranslation } from 'react-i18next';
 import { useShowsLandscapeFan } from '../../zones/playerHand/useShowsLandscapeFan';
 
 const emptyArray: string[] = [];
@@ -88,6 +89,7 @@ export default function SpectatorCount({
 }: {
   compact?: boolean;
 }) {
+  const { t } = useTranslation();
   const spectatorCount = useAppSelector(
     (state: RootState) => state.game?.gameDynamicInfo?.spectatorCount ?? 0
   );
@@ -110,9 +112,7 @@ export default function SpectatorCount({
         className={styles.spectatorCountCompact}
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
-        aria-label={`${spectatorCount} ${
-          spectatorCount === 1 ? 'spectator' : 'spectators'
-        } watching`}
+        aria-label={t('SPECTATOR.WATCHING', { count: spectatorCount })}
       >
         <FaEye aria-hidden="true" />
         <span className={styles.spectatorCountBadge}>{spectatorCount}</span>

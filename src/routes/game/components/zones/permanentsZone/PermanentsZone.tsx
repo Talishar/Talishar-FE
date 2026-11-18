@@ -228,7 +228,7 @@ function PermanentsZone(prop: Displayrow) {
                   {cardStack.count > 1 && (
                     <StackCount
                       count={cardStack.count}
-                      title={`Stack of ${cardStack.count}`}
+                      title={t('ZONES.STACK_OF', { count: cardStack.count })}
                       className={
                         isPlayer ? styles.counter : styles.counterOpponent
                       }

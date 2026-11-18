@@ -51,3 +51,4 @@ yarn-error.log*
 THEME_IMPLEMENTATION_SUMMARY.md
 THEME_QUICKSTART.md
 THEME_SYSTEM.md
+*.stackdump

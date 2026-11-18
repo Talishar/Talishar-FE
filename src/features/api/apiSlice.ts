@@ -28,6 +28,7 @@ import {
   LoadSharedReplayResponse
 } from 'interface/API/ShareReplayAPI';
 import { toast } from 'react-hot-toast';
+import i18n from 'i18next';
 import { parseResponse } from 'utils/parseBackendResponse';
 import { PlayerPresence } from 'features/PlayerPresence';
 import { JoinGameAPI, JoinGameResponse } from 'interface/API/JoinGame.php';
@@ -166,7 +167,11 @@ export const rtkQueryErrorToaster: Middleware =
       // Also 403 Forbidden errors which can happen when trying to access a resource the user doesn't have permissions for, and are not actionable by the user
       if (errorStatus !== 401 && errorStatus !== 403) {
         toast.error(
-          `A network error happened, please try again. Error:\n${errorStatus}\n${errorMessage}`
+          i18n.t('BASE.NETWORK_ERROR', {
+            status: errorStatus,
+            message: errorMessage
+          }),
+          { id: 'network-error' }
         );
       }
     }

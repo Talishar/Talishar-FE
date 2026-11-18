@@ -31,8 +31,9 @@ const Learn: React.FC = () => {
       setGuides(result.guides);
       setTotalPages(result.meta.pagination.total_pages);
     } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : 'Unknown error';
-      setError(`Failed to load guides: ${errorMsg}`);
+      const errorMsg =
+        err instanceof Error ? err.message : t('BASE.UNKNOWN_ERROR');
+      setError(t('LEARN.LOAD_FAILED', { error: errorMsg }));
       console.error('Error loading guides:', err);
       setGuides([]);
     } finally {

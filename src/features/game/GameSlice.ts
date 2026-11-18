@@ -12,6 +12,7 @@ import {
   preserveStringArray
 } from 'utils/PreserveIdentities';
 import InitialGameState from './InitialGameState';
+import i18n from 'i18next';
 import GameStaticInfo, { AltArt } from '../GameStaticInfo';
 import { Card, isAllyCard } from '../Card';
 import { linkKeyOf, stacksTogether } from './objectLinks';
@@ -184,17 +185,19 @@ export const gameLobby = createAsyncThunk<
     return rejectWithValue({
       status: 0,
       message: params.signal?.aborted
-        ? 'Lobby refresh timed out'
+        ? i18n.t('GAME_LOBBY.REFRESH_TIMED_OUT')
         : e instanceof Error
         ? e.message
-        : 'Unable to reach the lobby server',
+        : i18n.t('GAME_LOBBY.SERVER_UNREACHABLE'),
       terminal: false,
       aborted: params.signal?.aborted
     });
   }
 
   if (!response.ok) {
-    let message = `Lobby refresh failed (HTTP ${response.status})`;
+    let message = i18n.t('GAME_LOBBY.REFRESH_FAILED_HTTP', {
+      status: response.status
+    });
     try {
       const errorResponse = JSON.parse(data) as { error?: string };
       if (errorResponse.error) message = errorResponse.error;
@@ -226,7 +229,7 @@ export const gameLobby = createAsyncThunk<
   if (Object.keys(parsedData).length === 0) {
     return rejectWithValue({
       status: 502,
-      message: 'Lobby server returned an invalid response',
+      message: i18n.t('GAME_LOBBY.INVALID_RESPONSE'),
       terminal: false
     });
   }
@@ -675,7 +678,7 @@ export const gameSlice = createSlice({
     setPlayCardMessage: (state) => {
       state.playCardMessage = {
         popUpOn: true,
-        message: 'Release to play this card'
+        message: i18n.t('GAME.RELEASE_TO_PLAY')
       };
     },
     clearPlayCardMessage: (state) => {

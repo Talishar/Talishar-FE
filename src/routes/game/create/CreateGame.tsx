@@ -1017,7 +1017,11 @@ const CreateGame = ({
               className={styles.toggleButton}
               onClick={() => setIsExpanded(!isExpanded)}
               aria-expanded={isExpanded}
-              aria-label={isExpanded ? 'Minimize panel' : 'Expand panel'}
+              aria-label={
+                isExpanded
+                  ? t('CREATE_GAME.MINIMIZE_PANEL')
+                  : t('CREATE_GAME.EXPAND_PANEL')
+              }
             >
               {isExpanded ? (
                 <FaChevronUp size={16} />

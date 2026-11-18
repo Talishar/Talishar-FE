@@ -47,6 +47,7 @@ import {
   ROMAN_LEVELS,
   masteryHeroId
 } from 'features/mastery/mastery';
+import { describeThrownError } from 'utils/serverError';
 import styles from './decks.module.css';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -196,6 +197,7 @@ export const DecksPage = () => {
     Record<string, string>
   >({});
   const [updatingDeckLink, setUpdatingDeckLink] = useState<string | null>(null);
+  const [deletingDeckLink, setDeletingDeckLink] = useState<string | null>(null);
   const [savingFrameHero, setSavingFrameHero] = useState<string | null>(null);
   const [hoverPreview, setHoverPreview] = useState<HoverPreviewState | null>(
     null
@@ -356,12 +358,11 @@ export const DecksPage = () => {
           altPath
         }))
       }).unwrap();
-      toast.success('Deck customization saved!', { position: 'top-center' });
+      toast.success(t('DECKS.CUSTOMIZATION_SAVED'), { position: 'top-center' });
       refetchDecks();
     } catch (err: any) {
       const message =
-        err?.data?.message ??
-        'Failed to save deck customization. Please try again.';
+        err?.data?.message ?? t('DECKS.CUSTOMIZATION_SAVE_FAILED');
       toast.error(message, { position: 'top-center' });
     } finally {
       setSaving((prev) => ({ ...prev, [deck.link]: false }));
@@ -370,7 +371,7 @@ export const DecksPage = () => {
 
   const handleAddDeck = async () => {
     if (!newDeckUrl.trim()) {
-      toast.error('Please enter a deck URL', { position: 'top-center' });
+      toast.error(t('DECKS.ENTER_DECK_URL'), { position: 'top-center' });
       return;
     }
 
@@ -386,15 +387,12 @@ export const DecksPage = () => {
       toast.promise(
         addDeckPromise,
         {
-          loading: 'Adding deck to favorites...',
-          success: () => 'Deck added to favorites successfully!',
+          loading: t('DECKS.ADDING_DECK'),
+          success: () => t('DECKS.DECK_ADDED'),
           error: (err) =>
-            `Error adding deck: ${
-              err?.message ||
-              err?.error ||
-              err?.toString() ||
-              'Invalid deck URL or deck not accessible'
-            }`
+            t('DECKS.ADD_DECK_FAILED', {
+              error: describeThrownError(err, t('DECKS.INVALID_DECK_URL'))
+            })
         },
         { style: { minWidth: '250px' }, position: 'top-center' }
       );
@@ -423,18 +421,18 @@ export const DecksPage = () => {
       toast.promise(
         updatePromise,
         {
-          loading: 'Updating hero...',
+          loading: t('DECKS.UPDATING_HERO'),
           success: () => {
             setSelectedHeroByDeck((prev) => ({
               ...prev,
               [deckLink]: newHeroValue
             }));
-            return 'Hero updated successfully!';
+            return t('DECKS.HERO_UPDATED');
           },
           error: (err) =>
-            `Error updating hero: ${
-              err?.message || err?.error || err?.toString() || 'Unknown error'
-            }`
+            t('DECKS.HERO_UPDATE_FAILED', {
+              error: describeThrownError(err, t('BASE.UNKNOWN_ERROR'))
+            })
         },
         { style: { minWidth: '250px' }, position: 'top-center' }
       );
@@ -466,21 +464,25 @@ export const DecksPage = () => {
 
   const handleDeleteDeckMessage = (resp: DeleteDeckAPIResponse): string => {
     if (resp.message === 'Deck deleted successfully.') {
-      return 'The deck has been removed from your favorites list. It is still available to view on the deckbuilding site.';
+      return t('DECKS.DECK_REMOVED');
     }
-    return 'There has been a problem deleting your deck, please try again.';
+    return t('DECKS.DECK_DELETE_PROBLEM');
   };
 
   const handleDeleteDeck = async (deckLink: string) => {
+    if (deletingDeckLink !== null) return;
+    setDeletingDeckLink(deckLink);
     try {
       const deleteDeckPromise = deleteDeck({ deckLink }).unwrap();
       toast.promise(
         deleteDeckPromise,
         {
-          loading: 'Deleting deck...',
+          loading: t('DECKS.DELETING_DECK'),
           success: (data) => handleDeleteDeckMessage(data),
           error: (err) =>
-            `There has been an error, please try again. Error: ${err.toString()}`
+            t('DECKS.DECK_DELETE_FAILED', {
+              error: describeThrownError(err, t('BASE.UNKNOWN_ERROR'))
+            })
         },
         { style: { minWidth: '250px' }, position: 'top-center' }
       );
@@ -488,6 +490,7 @@ export const DecksPage = () => {
     } catch (err) {
       // Non-fatal: toast.promise above already surfaced the error to the user.
     } finally {
+      setDeletingDeckLink(null);
       refetchDecks();
     }
   };
@@ -600,8 +603,8 @@ export const DecksPage = () => {
                 !hasAlts
                   ? getReadableCardName(card)
                   : isBaseSelected
-                  ? 'Selected'
-                  : 'Use the base art'
+                  ? t('DECKS.SELECTED')
+                  : t('DECKS.USE_BASE_ART')
               }
             >
               <img
@@ -629,8 +632,8 @@ export const DecksPage = () => {
               onClick={() => handleAltArtSelect(deck, card.cardId, altPath)}
               title={
                 state.altArts[card.cardId] === altPath
-                  ? 'Selected - click to use base art'
-                  : 'Use this alt art'
+                  ? t('DECKS.SELECTED_USE_BASE_ART')
+                  : t('DECKS.USE_ALT_ART')
               }
             >
               <img
@@ -698,7 +701,7 @@ export const DecksPage = () => {
         <div className={styles.addDeckContainer}>
           <input
             type="text"
-            placeholder="Paste deck URL here..."
+            placeholder={t('DECKS.PASTE_DECK_URL')}
             value={newDeckUrl}
             onChange={(e) => setNewDeckUrl(e.target.value)}
             disabled={isAddingDeck}
@@ -789,6 +792,7 @@ export const DecksPage = () => {
                     type="button"
                     className={styles.deckActionButton}
                     onClick={() => handleDeleteDeck(deck.link)}
+                    disabled={deletingDeckLink !== null}
                     title={t('DECKS.DELETE_DECK')}
                   >
                     <RiDeleteBin5Line fontSize={'1.3em'} /> {t('DECKS.DELETE')}

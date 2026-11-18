@@ -249,9 +249,9 @@ function ReplayContent({
       })
     ).unwrap();
     toast.promise(request, {
-      loading: `Loading turn ${turn.number}…`,
-      success: `Turn ${turn.number} loaded`,
-      error: 'Unable to load that turn'
+      loading: t('REPLAY_PANEL.LOADING_TURN', { number: turn.number }),
+      success: t('REPLAY_PANEL.TURN_LOADED', { number: turn.number }),
+      error: t('REPLAY_PANEL.TURN_LOAD_FAILED')
     });
   };
 
@@ -281,8 +281,8 @@ function ReplayContent({
     ) {
       toast.error(
         maxSavedTurn
-          ? `Enter a saved turn between 1 and ${maxSavedTurn}, or 0 for the start.`
-          : 'Saved turns are still loading.'
+          ? t('REPLAY_PANEL.ENTER_SAVED_TURN', { max: maxSavedTurn })
+          : t('REPLAY_PANEL.SAVED_TURNS_LOADING')
       );
       return;
     }
@@ -319,32 +319,33 @@ function ReplayContent({
       navigate(`/game/play/${response.gameName}`, {
         state: { playerID: response.playerID } as GameLocationState
       });
-      toast.success('Returned to the start of the replay.');
+      toast.success(t('REPLAY_PANEL.RETURNED_TO_START'));
     } catch (error: any) {
       toast.error(
-        error?.message || error?.data?.error || 'Unable to restart this replay.'
+        error?.message || error?.data?.error || t('REPLAY_PANEL.RESTART_FAILED')
       );
     }
   };
 
   const handleShare = async () => {
     if (!gameInfo?.replayNumber)
-      return toast.error(
-        'Replay number not available. Please reload the replay.'
-      );
+      return toast.error(t('REPLAY_PANEL.REPLAY_NUMBER_MISSING'));
+    let shareUrl: string;
     try {
       const result = await shareReplay({
         replayNumber: gameInfo.replayNumber
       }).unwrap();
       if (result.error) throw new Error(result.error);
-      await navigator.clipboard.writeText(
-        `${window.location.origin}/replay/shared?token=${result.token}`
-      );
-      toast.success('Share link copied to clipboard!');
+      shareUrl = `${window.location.origin}/replay/shared?token=${result.token}`;
     } catch (err: any) {
-      toast.error(
-        err?.message || err?.data?.error || 'Failed to create share link.'
-      );
+      toast.error(err?.message || err?.data?.error || t('SHARE_REPLAY.FAILED'));
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      toast.success(t('SHARE_REPLAY.COPIED'));
+    } catch {
+      window.prompt(t('SHARE_REPLAY.COPY_PROMPT'), shareUrl);
     }
   };
 
@@ -450,10 +451,12 @@ function ReplayContent({
             <span>{t('MATCH_REVIEW.TIMELINE')}</span>
             <span>
               {reviewTurns.length
-                ? `${reviewTurns.length} saved ${
-                    reviewTurns.length === 1 ? 'turn' : 'turns'
-                  }${canScrollTimeline ? ' - scroll right' : ''}`
-                : 'Builds as you review'}
+                ? canScrollTimeline
+                  ? t('REPLAY_PANEL.SAVED_TURNS_SCROLL', {
+                      count: reviewTurns.length
+                    })
+                  : t('REPLAY_PANEL.SAVED_TURNS', { count: reviewTurns.length })
+                : t('REPLAY_PANEL.BUILDS_AS_YOU_REVIEW')}
             </span>
           </div>
           {reviewTurns.length ? (
@@ -472,9 +475,10 @@ function ReplayContent({
                   }`}
                   onClick={() => loadTurn(turn)}
                   disabled={isRequestInProgress}
-                  aria-label={`Load turn ${turn.number}, ${
-                    playerNames[turn.player]
-                  }`}
+                  aria-label={t('REPLAY_PANEL.LOAD_TURN_LABEL', {
+                    number: turn.number,
+                    player: playerNames[turn.player]
+                  })}
                 >
                   <span className={styles.turnNumber}>
                     {t('MATCH_REVIEW.TURN')} {turn.number}
@@ -484,17 +488,21 @@ function ReplayContent({
                   </span>
                   {(turn.hasCombat || turn.hasDamage) && (
                     <span className={styles.turnEventSummary}>
-                      {turn.hasCombat && 'Combat'}
+                      {turn.hasCombat && t('REPLAY_PANEL.COMBAT')}
                       {turn.hasCombat && turn.hasDamage && ' / '}
-                      {turn.hasDamage && 'Life changed'}
+                      {turn.hasDamage && t('REPLAY_PANEL.LIFE_CHANGED')}
                     </span>
                   )}
                   {(turn.hasCombat || turn.hasDamage) && (
                     <span
                       className={styles.turnEvents}
-                      aria-label={`${turn.hasCombat ? 'combat' : ''}${
-                        turn.hasCombat && turn.hasDamage ? ' and ' : ''
-                      }${turn.hasDamage ? 'damage' : ''}`}
+                      aria-label={
+                        turn.hasCombat && turn.hasDamage
+                          ? t('REPLAY_PANEL.COMBAT_AND_DAMAGE')
+                          : turn.hasCombat
+                          ? t('REPLAY_PANEL.COMBAT')
+                          : t('REPLAY_PANEL.DAMAGE')
+                      }
                     >
                       {turn.hasCombat && '⚔'}
                       {turn.hasDamage && '♥'}

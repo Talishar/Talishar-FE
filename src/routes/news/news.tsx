@@ -2,6 +2,7 @@ import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import styles from '../index/Index.module.css';
 import {
   fetchDiscordReleaseNotes,
+  peekDiscordReleaseNotes,
   DiscordMessage,
   DiscordReaction
 } from '../../services/contentService';
@@ -121,8 +122,12 @@ const NewsCard = ({ message }: { message: DiscordMessage }) => {
 };
 
 const News = () => {
-  const [discordMessages, setDiscordMessages] = useState<DiscordMessage[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [discordMessages, setDiscordMessages] = useState<DiscordMessage[]>(
+    () => peekDiscordReleaseNotes(3) ?? []
+  );
+  const [loading, setLoading] = useState(
+    () => peekDiscordReleaseNotes(3) === undefined
+  );
   // Initial stuff to allow the lang to change
   const { t } = useTranslation();
 

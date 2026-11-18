@@ -151,7 +151,7 @@ export const ChatInput = ({ usePrimary = false }: { usePrimary?: boolean }) => {
       }
     } catch (err) {
       console.warn(err);
-      toast.error('There has been an error!');
+      toast.error(t('BASE.ERROR_ALERT'));
     }
   };
 
@@ -176,7 +176,9 @@ export const ChatInput = ({ usePrimary = false }: { usePrimary?: boolean }) => {
               }
             }}
             placeholder={
-              playerID === 3 && !isMod ? 'Chat Disabled' : 'Hit return to send'
+              playerID === 3 && !isMod
+                ? t('CHAT.DISABLED_PLACEHOLDER')
+                : t('CHAT.SEND_PLACEHOLDER')
             }
             disabled={playerID === 3 && !isMod}
           />
@@ -272,7 +274,7 @@ const ChatWheel = ({ usePrimary = false }: { usePrimary?: boolean }) => {
         setSentChatRequest(true);
       } catch (err) {
         console.warn(err);
-        toast.error('There has been an error!');
+        toast.error(t('BASE.ERROR_ALERT'));
       }
     } else {
       dispatch(
@@ -355,7 +357,7 @@ const ChatOptions = ({ setModalDisplay }: ChatOptionsProps) => {
     if (now - lastQuickChatSent < QUICK_CHAT_COOLDOWN_MS) {
       if (!quickChatToastPending) {
         quickChatToastPending = true;
-        toast.error('Please wait before sending another quick chat.', {
+        toast.error(t('CHAT.QUICK_CHAT_COOLDOWN'), {
           duration: 2000
         });
         setTimeout(() => {

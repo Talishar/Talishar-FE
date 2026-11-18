@@ -108,7 +108,9 @@
     "METAFY_SIGNUP": {
       "PAGE_TITLE": "Métafy S'inscrire",
       "PROCESSING": "Traitement…",
-      "REDIRECTING": "Redirection vers la maison…"
+      "REDIRECTING": "Redirection vers la maison…",
+      "ERROR": "Erreur d'inscription Metafy : {{error}}",
+      "FAILED": "Échec de l'inscription : {{error}}"
     },
     "VERIFY": {
       "ALLOW": "Permettre",
@@ -130,12 +132,19 @@
       "SIGNIN_CONTINUE": "Connectez-vous pour continuer",
       "SIGN_IN": "Se connecter",
       "WAIT_MESSAGE": "Veuillez patienter pendant que nous vérifions la demande."
-    }
+    },
+    "LOGGED_OUT": "Déconnecté",
+    "LOG_OUT_FAILED": "Erreur lors de la déconnexion"
   },
   "BASE": {
     "ERROR_ALERT": "Une erreur est survenue!",
     "LOADING": "Chargement…",
-    "SEARCH": "Rechercher"
+    "SEARCH": "Rechercher",
+    "NETWORK_ERROR": "Une erreur réseau est survenue, veuillez réessayer. Erreur :\n{{status}}\n{{message}}",
+    "UNKNOWN_ERROR": "Erreur inconnue",
+    "CLOSE_NAMED": "Fermer {{name}}",
+    "SELECT_OPTION": "Sélectionnez une option",
+    "PARSE_RESPONSE_FAILED": "Impossible de lire la réponse du serveur. Veuillez réessayer."
   },
   "BLOCK_MODAL": {
     "CONFIRM": "Bloquer",
@@ -157,7 +166,19 @@
     "LOADING": "Chargement…",
     "NO_CARDS_FOUND": "Aucune carte trouvée correspondant à \"{{searchQuery}}\"",
     "NO_CARDS_IN_ZONE": "Aucune carte dans cette zone",
-    "SORT": "Trier"
+    "SORT": "Trier",
+    "PILE": {
+      "ALLY": "Alliés",
+      "BLOODDEBT": "Dette de sang",
+      "DOWN": "Face cachée",
+      "EARTH": "Terre",
+      "INT": "Intimidées",
+      "OTHER": "Autres",
+      "PLAY": "Jouables",
+      "PLAYNEXT": "Jouables au prochain tour",
+      "POWER6": "Puissance 6+",
+      "TRAPDOOR": "Trappe"
+    }
   },
   "CHAIN_LINK_SUMMARY": {
     "ATTACK": "Attaque",
@@ -169,7 +190,14 @@
     "NO_ATTACKER": "Aucun attaquant",
     "NO_BLOCKS": "Aucun blocage",
     "NO_MODIFIERS": "Aucun modificateur",
-    "POWER_COUNTER_ALT": "+1 compteur de puissance"
+    "POWER_COUNTER_ALT": "+1 compteur de puissance",
+    "CHAIN_LINK_N": "Maillon de chaîne {{number}}",
+    "CURRENT_ATTACK": "Attaque en cours",
+    "ERROR_STATUS": "Erreur {{status}}",
+    "LOAD_FAILED": "Impossible de charger le résumé du maillon de chaîne",
+    "HIT": "Touché",
+    "NO_HIT": "Pas touché",
+    "ACTIVE_COMBAT_EFFECTS": "Effets de combat actifs"
   },
   "CHAT": {
     "ALL": "Tous",
@@ -180,7 +208,13 @@
     "RECENT": "⭐ Récent",
     "SEND": "Envoyer le message",
     "TURN_OFF": "Désactiver le chat",
-    "TYPING": "L’adversaire tape…"
+    "TYPING": "L’adversaire tape…",
+    "LOAD_EARLIER_MESSAGES": "Charger les messages précédents",
+    "QUICK_CHAT_COOLDOWN": "Veuillez patienter avant d'envoyer un autre message rapide.",
+    "DISABLED_PLACEHOLDER": "Chat désactivé",
+    "SEND_PLACEHOLDER": "Appuyez sur Entrée pour envoyer",
+    "REPEATED_LOG_EVENTS_one": "{{count}} événement répété",
+    "REPEATED_LOG_EVENTS_other": "{{count}} événements répétés"
   },
   "COMBAT_CHAIN": {
     "DRAG_TOOLTIP": "Faites glisser pour déplacer la chaîne de combat"
@@ -193,7 +227,7 @@
     "JOIN_DISCORD": "Rejoignez Discorde",
     "LOADING": "Chargement du contenu en vedette…",
     "TITLE": "Communauté & Hub de Contenu",
-    "TYPE_DECK_TECH": "Technologie de pont",
+    "TYPE_DECK_TECH": "Présentation de deck",
     "TYPE_GUIDE": "Guide",
     "TYPE_LIVE_RECAP": "Récapitulatif en direct",
     "TYPE_PODCAST": "Podcast",
@@ -213,18 +247,20 @@
   },
   "CURRENT_ATTACK": {
     "ATTACK_SYMBOL": "symbole d'attaque",
-    "DEFENSE_SYMBOL": "symbole de défense"
+    "DEFENSE_SYMBOL": "symbole de défense",
+    "TARGETS": "Cibles de l'attaque : {{targets}}",
+    "TARGET": "Cible de l'attaque : {{target}}"
   },
   "DECKS": {
     "ADDING": "Ajout…",
-    "ADD_DECK": "Ajouter un pont",
+    "ADD_DECK": "Ajouter un deck",
     "ADD_DECK_HINT": "Collez un lien de deck depuis <2>FaBrary.net</2> pour l'ajouter à vos favoris.",
     "ALT_ART": "Art alternatif",
     "CARD_BACK": "Dos de la carte",
     "CHECKING_ALT_ARTS": "Vérification de votre deck pour les arts alternatifs débloqués…",
     "DEFAULT": "Défaut",
     "DELETE": "Supprimer",
-    "DELETE_DECK": "Supprimer le pont",
+    "DELETE_DECK": "Supprimer le deck",
     "EDIT": "Modifier",
     "EDIT_DECK": "Modifier le deck",
     "EMPTY_STATE": "Vous n'avez encore ajouté aucun deck à vos favoris. ",
@@ -240,7 +276,33 @@
     "SELECT_HERO": "-- Sélectionnez un héros --",
     "TOKENS": "Jetons",
     "UNSAVED_CHANGES": "Modifications non enregistrées",
-    "UPSELL_BANNER": "Les dos de cartes, les tapis de jeu et les arts alternatifs au-delà des valeurs par défaut sont un avantage pour les supporters. <2>Soutenez Talishar sur Metafy</2> pour en débloquer davantage."
+    "UPSELL_BANNER": "Les dos de cartes, les tapis de jeu et les arts alternatifs au-delà des valeurs par défaut sont un avantage pour les supporters. <2>Soutenez Talishar sur Metafy</2> pour en débloquer davantage.",
+    "MASTERY_FRAME": "Cadre de maîtrise",
+    "MASTERY_FRAME_DEFAULT": "Par défaut ({{mastery}})",
+    "MASTERY_FRAME_ERROR": "Impossible d'enregistrer votre cadre de maîtrise. Veuillez réessayer.",
+    "MASTERY_FRAME_HINT": "Choisissez le cadre que {{hero}} porte dans le lobby et sur l'écran de duel. Il est enregistré pour le héros, donc chaque deck {{hero}} l'utilise. Par défaut, votre cadre le plus récent est utilisé.",
+    "MASTERY_FRAME_LOCKED": "Jouez des parties éligibles avec {{hero}} pour débloquer des cadres de maîtrise.",
+    "MASTERY_FRAME_NONE": "Aucun cadre",
+    "MASTERY_FRAME_SAVED": "Cadre de maîtrise enregistré !",
+    "CUSTOMIZATION_SAVED": "Personnalisation du deck enregistrée !",
+    "CUSTOMIZATION_SAVE_FAILED": "Impossible d'enregistrer la personnalisation du deck. Veuillez réessayer.",
+    "ENTER_DECK_URL": "Veuillez saisir l'URL d'un deck",
+    "ADDING_DECK": "Ajout du deck aux favoris...",
+    "DECK_ADDED": "Deck ajouté aux favoris !",
+    "ADD_DECK_FAILED": "Erreur lors de l'ajout du deck : {{error}}",
+    "INVALID_DECK_URL": "URL de deck invalide ou deck inaccessible",
+    "UPDATING_HERO": "Mise à jour du héros...",
+    "HERO_UPDATED": "Héros mis à jour !",
+    "HERO_UPDATE_FAILED": "Erreur lors de la mise à jour du héros : {{error}}",
+    "DECK_REMOVED": "Le deck a été retiré de votre liste de favoris. Il reste consultable sur le site de construction de deck.",
+    "DECK_DELETE_PROBLEM": "Un problème est survenu lors de la suppression de votre deck, veuillez réessayer.",
+    "DELETING_DECK": "Suppression du deck...",
+    "DECK_DELETE_FAILED": "Une erreur est survenue, veuillez réessayer. Erreur : {{error}}",
+    "SELECTED": "Sélectionné",
+    "USE_BASE_ART": "Utiliser l'illustration de base",
+    "SELECTED_USE_BASE_ART": "Sélectionné - cliquez pour utiliser l'illustration de base",
+    "USE_ALT_ART": "Utiliser cette illustration alternative",
+    "PASTE_DECK_URL": "Collez l'URL du deck ici..."
   },
   "DEV_TOOL": {
     "BUG_REPORT_VARIANT": "Variante du rapport de bug",
@@ -362,7 +424,23 @@
     "YOUR_LIFE": "Votre vie",
     "YOUR_TIME": "Votre temps :",
     "YOU_THREATENED": "Vous avez menacé",
-    "YOU_TOOK": "Vous avez pris"
+    "YOU_TOOK": "Vous avez pris",
+    "SAVE_REPLAY_ERROR": "Impossible d'enregistrer le replay. Veuillez réessayer.",
+    "SAVING_REPLAY": "Enregistrement du replay…",
+    "REPLAY_SAVED": "Replay enregistré",
+    "REPLAY_SAVED_NUMBER": "Replay n°{{number}} enregistré.",
+    "TAKEBACK_ACCEPT": "Accepter",
+    "TAKEBACK_DECLINE": "Refuser ({{time}})",
+    "TAKEBACK_DECLINED": "Votre adversaire a refusé l'annulation.",
+    "TAKEBACK_NO_ANSWER": "Votre adversaire n'a pas répondu à la demande d'annulation.",
+    "TAKEBACK_OPPONENT_ASKS_ACTION": "Votre adversaire a demandé d'annuler la dernière action",
+    "TAKEBACK_OPPONENT_ASKS_POINT": "Votre adversaire a demandé de revenir à {{point}}",
+    "TAKEBACK_OPPONENT_ASKS_DETAIL": "Si vous acceptez, la partie reprend à partir de là et aucun résultat n'est envoyé.",
+    "TAKEBACK_SCOPE_CHAIN_LINK": "le début du maillon de chaîne",
+    "TAKEBACK_SCOPE_LAST_TURN": "le début du tour précédent",
+    "TAKEBACK_SCOPE_TURN": "le début du tour",
+    "TAKEBACK_WAITING": "En attente de votre adversaire ({{time}})",
+    "TAKEBACK_WAITING_DETAIL": "S'il accepte, la partie reprend à partir de là."
   },
   "ERROR_PAGE": {
     "BLOCKED_ASSET_INSTRUCTION": "Désactivez les bloqueurs de publicités ou de contenu pour talishar.net, ou essayez sans VPN ni Relais privé iCloud. Si le problème persiste, envoyez-nous l'erreur ci-dessous.",
@@ -381,7 +459,13 @@
     "WINDOWS_LINUX": "Windows / Linux"
   },
   "EVENTS": {
-    "DISMISS": "Cliquez pour rejeter"
+    "DISMISS": "Cliquez pour rejeter",
+    "DIE_ROLLED": "Dé lancé, résultat :",
+    "UNDO_DENIED_LIMIT": "Vos demandes d'annulation ont été refusées trop de fois. Plus aucune demande d'annulation n'est autorisée ce tour-ci.",
+    "DRAW_OFFER": "Proposition de match nul",
+    "UNDO_REQUEST": "Demande d'annulation",
+    "ACCEPT_DRAW": "Accepter le match nul",
+    "DECLINE": "Refuser"
   },
   "FILTER": {
     "CLEAR": "Effacer le filtre de héros",
@@ -441,7 +525,15 @@
     "OPEN_GAMES": "Parties Ouvertes",
     "PLEASE_LOGIN": "Connectez-vous pour parcourir et rejoindre les salons ouverts ou observer les parties en cours.",
     "PRIVATE_GAMES_AVAILABLE": "Vous pouvez toujours créer une partie privée ici ou en rejoindre une via un lien partagé. Aucun compte requis.",
-    "REFRESH": "Actualiser"
+    "REFRESH": "Actualiser",
+    "FEATURED_MATCH_one": "Match à la une",
+    "FEATURED_MATCH_other": "Matchs à la une",
+    "FRIENDS_LOOKING_one": "{{count}} ami cherche un adversaire",
+    "FRIENDS_LOOKING_other": "{{count}} amis cherchent un adversaire",
+    "FRIENDS_PLAYING_one": "{{count}} ami en partie",
+    "FRIENDS_PLAYING_other": "{{count}} amis en partie",
+    "FRIEND_NAMED_GAME": "Partie de {{name}}",
+    "FRIEND_GAME": "Partie d'un ami"
   },
   "GAME_LOBBY": {
     "1ST": "1er",
@@ -534,9 +626,9 @@
       "HEAD_REQUIRED": "Vous devez avoir un équipement de tête.",
       "HERO_REQUIRED": "Vous devez avoir un héros !",
       "LEGS_REQUIRED": "Vous devez avoir un équipement pour les jambes.",
-      "MAX_DECK_SIZE": "La taille maximale du pont est {{size}} cartes.",
+      "MAX_DECK_SIZE": "La taille maximale du deck est {{size}} cartes.",
       "MAX_WEAPONS": "Trop d'armes/mains secondaires équipées.",
-      "MIN_DECK_SIZE": "La taille minimale du pont est {{size}} cartes.",
+      "MIN_DECK_SIZE": "La taille minimale du deck est {{size}} cartes.",
       "MIN_WEAPONS": "Choisissez au moins une arme/main libre.",
       "TOO_MANY_OFFHANDS": "Trop de personnes équipées",
       "TOO_MANY_WEAPONS_FOR_HANDS": "Trop d'armes pour tes mains"
@@ -547,7 +639,12 @@
     "WAITING_FOR_ARENA": "en attente de l’adversaire",
     "WEAPONS": "Armes / main secondaire",
     "YES": "Oui",
-    "YOU_WON_DIE": "Vous avez gagné le lancer de dé!"
+    "YOU_WON_DIE": "Vous avez gagné le lancer de dé!",
+    "SUBMIT_FAILED": "Impossible de confirmer votre sélection ({{status}}). Veuillez signaler la partie n°{{gameId}} si le problème persiste.",
+    "REFRESH_TIMED_OUT": "L'actualisation du lobby a expiré",
+    "SERVER_UNREACHABLE": "Impossible de joindre le serveur du lobby",
+    "REFRESH_FAILED_HTTP": "Échec de l'actualisation du lobby (HTTP {{status}})",
+    "INVALID_RESPONSE": "Le serveur du lobby a renvoyé une réponse invalide"
   },
   "GAME_LOG": {
     "CHAIN_LINK": "Lien de chaîne {{number}}",
@@ -562,7 +659,8 @@
     "AUTH_ERROR": "Erreur d'authentification : {{message}}",
     "CONNECTION_LOST": "Connexion au serveur de jeu perdue. ",
     "GAME_ERROR": "Erreur de jeu : {{message}}",
-    "SERVER_ERROR": "Erreur du serveur : {{message}}"
+    "SERVER_ERROR": "Erreur du serveur : {{message}}",
+    "LOADING": "Préparation de l'arène…"
   },
   "HAND": {
     "SCROLL_LEFT": "Faire défiler la main vers la gauche",
@@ -582,7 +680,7 @@
     "LEARN": "Apprendre",
     "LOGIN": "Se Connecter",
     "LOGOUT": "Déconnexion",
-    "MASTERY": "",
+    "MASTERY": "Maîtrise",
     "MATCH_HISTORY": "Historique",
     "MOD_PAGE": "Page de modules",
     "MY_DECKS": "Mes platines",
@@ -593,10 +691,15 @@
     "SETTINGS": "Paramètres",
     "SIGN_UP": "S'inscrire",
     "SUPPORT_US": "Supportez-nous!",
-    "TALISHAR_LOGO_ALT": "Logo Talishar - lien vers la page d'accueil"
+    "TALISHAR_LOGO_ALT": "Logo Talishar - lien vers la page d'accueil",
+    "PENDING_REQUESTS_one": "{{count}} demande d'ami en attente",
+    "PENDING_REQUESTS_other": "{{count}} demandes d'ami en attente"
   },
   "HERO_VS_HERO": {
-    "VS": "CONTRE"
+    "VS": "CONTRE",
+    "CLOSE": "Fermer l'intro des héros",
+    "YOUR_HERO": "Votre héros",
+    "OPPONENT": "Adversaire"
   },
   "HOME": {
     "HERO": {
@@ -634,12 +737,16 @@
   "INVENTORY": {
     "CLOSE": "Fermer l'inventaire",
     "EMPTY": "Aucun article en inventaire",
-    "TITLE": "Inventaire"
+    "TITLE": "Inventaire",
+    "VIEW": "Voir votre inventaire"
   },
   "IN_PROGRESS_GAME": {
     "LIFE": "Points de vie",
     "SPECTATE": "Observer",
-    "TURN": "Tour {{turn}}"
+    "TURN": "Tour {{turn}}",
+    "MASTERY_LEVEL": "Maîtrise {{level}}+",
+    "SPECTATOR_COUNT_one": "{{count}} spectateur",
+    "SPECTATOR_COUNT_other": "{{count}} spectateurs"
   },
   "JOIN": {
     "BACK": "Retour",
@@ -661,7 +768,12 @@
     "SELECT_DECK": "Sélectionnez un deck",
     "SUBTITLE": "Choisissez votre deck et entrez dans le jeu",
     "TALISHAR_DECKS": "Decks Talishar",
-    "TITLE": "Rejoindre le jeu"
+    "TITLE": "Rejoindre le jeu",
+    "DECK_URL_LABEL": "URL du deck",
+    "DECK_URL_PLACEHOLDER": "Collez l'URL de la liste de deck",
+    "INVALID_DECK_URL": "Saisissez une URL de deck valide (par exemple, un lien de deck FaBrary).",
+    "PASTE_NOT_URL": "Cela ne ressemble pas à une URL valide.",
+    "URL_EXTRACTED": "URL extraite du contenu collé."
   },
   "KEYWORD": {
     "VIEW_CR": "Afficher dans les règles complètes"
@@ -699,7 +811,8 @@
       "PREVIOUS": "← Précédent"
     },
     "SUPPORTER_DISCOUNT": "Remise pour les supporters",
-    "TRY_AGAIN": "Essayer à nouveau"
+    "TRY_AGAIN": "Essayer à nouveau",
+    "LOAD_FAILED": "Impossible de charger les guides : {{error}}"
   },
   "LEGAL": {
     "CONTACT_DISCORD": "Discorde:",
@@ -827,7 +940,8 @@
   "LINK_METAFY_PAGE": {
     "BANNER_SUBTITLE": "Connectez votre compte Metafy",
     "CONNECTING": "Connexion à Metafy…",
-    "SUCCESS": "Compte Metafy lié avec succès !"
+    "SUCCESS": "Compte Metafy lié avec succès !",
+    "ERROR": "Erreur de connexion Metafy :\n{{error}}"
   },
   "LINK_PATREON_PAGE": {
     "CONNECTING": "Connexion à Patreon…",
@@ -853,7 +967,63 @@
     "SUBTITLE": "Passez en revue vos parties sauvegardées, revisitez les tours clés et améliorez votre prochain match.",
     "SUPPORTER_INFO": "La sauvegarde des replays est disponible pour les supporters de Metafy.  <2>Prime</2> page pour les détails du niveau.",
     "TROUBLESHOOTING_STEPS": "Étapes de dépannage",
-    "VERIFY_DIRECTORY": "Vérifiez que le répertoire de relecture existe à l'adresse :"
+    "VERIFY_DIRECTORY": "Vérifiez que le répertoire de relecture existe à l'adresse :",
+    "DELETE_SNAPSHOT": "Supprimer l'instantané",
+    "DELETE_SNAPSHOT_ARIA": "Supprimer l'instantané n°{{number}}",
+    "DELETE_SNAPSHOT_CONFIRM": "Supprimer l'instantané n°{{number}} ? Cette action est irréversible.",
+    "DELETE_SNAPSHOT_SUCCESS": "Instantané n°{{number}} supprimé.",
+    "DELETE_ARIA_LABEL": "Supprimer le replay n°{{number}}",
+    "DELETE_CONFIRM": "Supprimer le replay n°{{number}} ? Cette action est irréversible.",
+    "DELETE_ERROR": "Impossible de supprimer le replay. Veuillez réessayer.",
+    "DELETE_REPLAY": "Supprimer le replay",
+    "DELETE_SUCCESS": "Replay n°{{number}} supprimé.",
+    "NO_SNAPSHOTS": "Aucun instantané pour l'instant. Enregistrez-en un depuis le menu en jeu.",
+    "SAVED_AT": "Enregistré le {{date}}",
+    "SAVED_AT_UNKNOWN": "Date d'enregistrement indisponible",
+    "SNAPSHOT_NUMBER": "Instantané n°{{number}}",
+    "SNAPSHOT_START_ERROR": "Impossible de démarrer cet instantané.",
+    "SNAPSHOT_INVITE_COPIED": "Lien d'invitation pour l'autre siège copié. Partagez-le avec un ami ou ouvrez-le dans un autre onglet pour jouer les deux sièges. Vous pouvez le copier à nouveau depuis le menu Options.",
+    "SNAPSHOT_COPY_INVITE": "Copiez ce lien d'invitation pour l'autre siège :",
+    "SNAPSHOT_INVITE_IN_MENU": "Impossible de copier automatiquement le lien d'invitation. Copiez-le depuis le menu Options en jeu.",
+    "SHARE_SNAPSHOT": "Démarrer l'instantané et obtenir le lien d'invitation",
+    "SHARE_SNAPSHOT_ARIA": "Démarrer l'instantané n°{{number}} et obtenir un lien d'invitation pour l'autre siège",
+    "SLOTS_FREE_one": "{{count}} emplacement libre",
+    "SLOTS_FREE_other": "{{count}} emplacements libres",
+    "SLOTS_UPGRADE": "Soutenez Talishar pour plus d'emplacements.",
+    "SAVES_TITLE": "Vos sauvegardes",
+    "SAVES_SUBTITLE": "Regardez un replay ou lancez une nouvelle partie à partir d'un instantané. Chaque lancement d'instantané vous donne une nouvelle invitation pour l'autre siège.",
+    "STORAGE_USED": "Stockage : {{used}} emplacements utilisés sur {{max}}",
+    "STORAGE_FAVORITES_one": "{{count}} favori, jamais supprimé",
+    "STORAGE_FAVORITES_other": "{{count}} favoris, jamais supprimés",
+    "STORAGE_OTHER_one": "{{count}} autre sauvegarde",
+    "STORAGE_OTHER_other": "{{count}} autres sauvegardes",
+    "STORAGE_NOTE": "Les replays et les instantanés partagent ces emplacements. Lorsqu'ils sont pleins, une nouvelle sauvegarde supprime votre plus ancienne sauvegarde non favorite.",
+    "STORAGE_ALL_FAVORITES": "Tous les emplacements sont des favoris, les nouvelles sauvegardes ne seront donc pas conservées. Retirez un favori pour faire de la place.",
+    "FILTER_LABEL": "Afficher",
+    "FILTER_ALL": "Tout",
+    "FILTER_REPLAYS": "Replays",
+    "FILTER_SNAPSHOTS": "Instantanés",
+    "FILTER_FAVORITES": "Favoris",
+    "SEARCH_LABEL": "Rechercher des sauvegardes",
+    "SEARCH_PLACEHOLDER": "Joueur ou héros",
+    "VIEW_LABEL": "Disposition",
+    "VIEW_CARDS": "Afficher en cartes",
+    "VIEW_LIST": "Afficher en liste",
+    "WATCH": "Regarder",
+    "START_GAME": "Lancer la partie",
+    "NO_SAVES": "Aucune sauvegarde pour l'instant. Enregistrez un replay à la fin d'une partie, ou un instantané depuis le menu en jeu.",
+    "NO_MATCHES": "Aucune sauvegarde ne correspond à votre recherche.",
+    "NO_FAVORITES": "Aucun favori pour l'instant. Ajoutez une étoile à une sauvegarde pour la protéger du nettoyage.",
+    "REPLAY_NUMBER_REQUIRED": "Le numéro de replay est requis. Veuillez saisir un numéro de partie valide.",
+    "LOADED_SUCCESS": "Replay chargé ! ID de partie : {{gameID}}",
+    "PLAYERS_UNAVAILABLE": "Joueurs indisponibles pour les anciens replays",
+    "FAVORITE_UPDATE_FAILED": "Impossible de mettre à jour le favori. Veuillez réessayer.",
+    "REMOVE_FAVORITE_ARIA": "Retirer {{label}} des favoris",
+    "ADD_FAVORITE_ARIA": "Ajouter {{label}} aux favoris",
+    "REMOVE_FROM_FAVORITES": "Retirer des favoris",
+    "KEEP_SNAPSHOT": "Conserver cet instantané",
+    "KEEP_REPLAY": "Conserver ce replay",
+    "SHARE_REPLAY_ARIA": "Copier un lien de partage pour le replay n°{{number}}"
   },
   "LOGIN_REQUIRED": "Tu dois être <1>connecté</1> rejoindre les lobbies publics.",
   "MANUAL_MODE_PANEL": {
@@ -903,51 +1073,86 @@
     "TOKEN_DESCRIPTION": "Jetons - les place directement dans l'arène",
     "TOKEN_PIPE_DESCRIPTION": "Jeton + Tuyau + Numéro - Crée autant de copies dans l'arène",
     "WRENCH_POWER": "Clé-tastique! ",
-    "WRENCH_POWER_ARIA": "Puissance clé-tastique"
+    "WRENCH_POWER_ARIA": "Puissance clé-tastique",
+    "CARDS_TO_DRAW": "Cartes à piocher",
+    "CARD_SNATCH_DECK": "Snatch|deck",
+    "CARD_SNATCH_PIPE_DECK": "Snatch|2|deck",
+    "COUNT_DESTINATION_DESCRIPTION": "Le nombre et la destination peuvent être combinés : ceci place 2 exemplaires au-dessus de votre deck",
+    "DECK_DESCRIPTION": "Nom de carte + barre verticale + destination envoie la carte ailleurs que dans votre main. Utilisez deck pour le dessus de votre deck, ou grave, banish ou inv",
+    "ORGANIZE_DECK": "Organiser le deck",
+    "TYPE_A_VALUE": "Saisissez une valeur pour la définir, ou +5 / -5 pour l'ajuster"
   },
   "MASTERY": {
-    "CARD_MAXIMUM_one": "",
-    "CARD_MAXIMUM_other": "",
-    "CARD_PROGRESS": "",
-    "EMPTY": "",
+    "CARD_MAXIMUM_one": "{{formattedCount}} partie jouée - {{remaining}}",
+    "CARD_MAXIMUM_other": "{{formattedCount}} parties jouées - {{remaining}}",
+    "CARD_PROGRESS": "{{games}} / {{threshold}} {{remaining}}",
+    "EMPTY": "Aucun héros ne correspond à ce filtre.",
     "FILTER": {
-      "ALL": "",
-      "LABEL": "",
-      "MASTERED": "",
-      "PLAYED": ""
+      "ALL": "Tous les héros",
+      "LABEL": "Filtrer les héros",
+      "MASTERED": "Maîtrisés",
+      "PLAYED": "Joués"
     },
-    "GAMES_PLAYED_one": "",
-    "GAMES_PLAYED_other": "",
+    "GAMES_PLAYED_one": "{{formattedCount}} partie jouée",
+    "GAMES_PLAYED_other": "{{formattedCount}} parties jouées",
     "GAMES_PROGRESS": "",
-    "GAMES_PROGRESS_LABEL": "",
-    "GAMES_UNTIL_MASTERY": "",
-    "GAMES_UNTIL_one": "",
-    "GAMES_UNTIL_other": "",
-    "GAME_COUNT_one": "",
-    "GAME_COUNT_other": "",
+    "GAMES_PROGRESS_LABEL": "{{games}} parties sur {{threshold}}",
+    "GAMES_UNTIL_MASTERY": "parties avant la maîtrise {{level}}",
+    "GAMES_UNTIL_one": "{{count}} partie avant {{mastery}}",
+    "GAMES_UNTIL_other": "{{count}} parties avant {{mastery}}",
+    "GAME_COUNT_one": "{{formattedCount}} partie",
+    "GAME_COUNT_other": "{{formattedCount}} parties",
     "GROUPS": {
-      "CLASSIC_CONSTRUCTED": "",
-      "LIVING_LEGEND": "",
-      "SILVER_AGE": ""
+      "CLASSIC_CONSTRUCTED": "Classic Constructed",
+      "LIVING_LEGEND": "Living Legend",
+      "SILVER_AGE": "Silver Age"
     },
-    "HERO_TITLE": "",
-    "HIGHEST_REACHED": "",
-    "LEVEL": "",
-    "LEVEL_UNLOCKED": "",
-    "LOADING": "",
-    "LOAD_ERROR": "",
-    "MAXIMUM_REACHED": "",
-    "ONE_MORE_GAME": "",
+    "HERO_TITLE": "{{hero}} - {{mastery}}",
+    "HIGHEST_REACHED": "Maîtrise la plus élevée atteinte",
+    "LEVEL": "Maîtrise {{level}}",
+    "LEVEL_UNLOCKED": "Maîtrise {{level}} débloquée",
+    "LOADING": "Rassemblement de vos héros…",
+    "LOAD_ERROR": "Impossible de charger la maîtrise des héros.",
+    "MAXIMUM_REACHED": "- Maîtrise maximale atteinte",
+    "ONE_MORE_GAME": "- Encore une partie pour débloquer {{mastery}}",
     "SORT": {
-      "ALPHABETICAL": "",
-      "LABEL": "",
-      "RANK": ""
+      "ALPHABETICAL": "Alphabétique",
+      "LABEL": "Trier les héros",
+      "RANK": "Rang / parties jouées"
     },
-    "SUBTITLE": "",
-    "TITLE": "",
-    "UNLOCKED": "",
-    "UNLOCKED_SUMMARY_one": "",
-    "UNLOCKED_SUMMARY_other": ""
+    "SUBTITLE": "Chaque partie éligible enrichit votre histoire avec ce héros.",
+    "TITLE": "Maîtrise des héros",
+    "UNLOCKED": "MAÎTRISE DE HÉROS DÉBLOQUÉE",
+    "UNLOCKED_SUMMARY_one": "Maîtrise {{level}} - {{count}} partie jouée",
+    "UNLOCKED_SUMMARY_other": "Maîtrise {{level}} - {{count}} parties jouées",
+    "SUMMARY": {
+      "GAMES_PLAYED": "Parties jouées",
+      "HEROES_PLAYED": "Héros joués",
+      "HIGHEST_FRAME": "Cadre le plus élevé",
+      "HIGHEST_HERO_one": "{{hero}} ({{formattedCount}} partie)",
+      "HIGHEST_HERO_other": "{{hero}} ({{formattedCount}} parties)",
+      "FIRST_FRAME_one": "Jouez {{count}} partie avec un héros pour obtenir la maîtrise I.",
+      "FIRST_FRAME_other": "Jouez {{count}} parties avec un héros pour obtenir la maîtrise I.",
+      "GROUP_GAMES": "{{games}} {{group}}",
+      "GROUP_PLAYED": "{{played}} sur {{total}} {{group}}",
+      "CLOSEST_TITLE": "Le plus proche du prochain cadre"
+    },
+    "FORMAT_LABEL": "Format",
+    "SEARCH_LABEL": "Trouver un héros",
+    "SEARCH_PLACEHOLDER": "Trouver un héros",
+    "NONE_PLAYED": "Vous n'avez pas encore joué de héros {{group}}.",
+    "UNPLAYED_one": "{{count}} héros pas encore joué",
+    "UNPLAYED_other": "{{count}} héros pas encore joués",
+    "SHOW_UNPLAYED": "Tout afficher",
+    "HIDE_UNPLAYED": "Masquer",
+    "DETAIL_LABEL": "Détail de la maîtrise du héros",
+    "NO_FRAME_YET": "Pas encore de cadre",
+    "FRAMES": "Cadres",
+    "FRAMES_HINT": "Sélectionnez un cadre pour le prévisualiser sur ce héros.",
+    "PREVIEWING": "Aperçu de la maîtrise {{level}}",
+    "SHOW_CURRENT": "Afficher l'actuel",
+    "FRAME_OPTION_one": "Aperçu de la maîtrise {{level}}, obtenue à {{count}} partie",
+    "FRAME_OPTION_other": "Aperçu de la maîtrise {{level}}, obtenue à {{count}} parties"
   },
   "MATCH_HISTORY": {
     "EMPTY": "Terminez une partie contre un autre joueur et elle apparaîtra ici.",
@@ -999,7 +1204,11 @@
     "TIMELINE_ARIA": "Rejouez la chronologie du tour. ",
     "TIMELINE_EMPTY": "Les marqueurs de tour apparaissent ici au fur et à mesure de la progression de la relecture. ",
     "TURN": "Tourner",
-    "TURN_TIMELINE": "Tourner la chronologie"
+    "TURN_TIMELINE": "Tourner la chronologie",
+    "RETURNING_TO_START": "Retour au début…",
+    "RETURN_TO_START": "Revenir au début",
+    "SHARE_REPLAY": "Partager le replay",
+    "SHARING": "Partage…"
   },
   "MENU": {
     "ALWAYS_HOLD_PRIORITY": "Gardez toujours la priorité",
@@ -1236,7 +1445,8 @@
       "UPDATE": "Mise à jour"
     },
     "TITLE": "Notes de version de Talishar",
-    "VIEW_ALL": "Tout voir "
+    "VIEW_ALL": "Tout voir ",
+    "CODED_CARDS": "Nouvelles extensions : cartes codées"
   },
   "OPEN_GAME": {
     "JOIN": "Rejoindre",
@@ -1246,7 +1456,8 @@
     "LEARNING_WARNING_BODY": "Le joueur qui a créé cette partie apprend un nouveau héros ou découvre le jeu. Il débute peut-être à Flesh and Blood, et ses tours peuvent prendre plus de temps que d'habitude.",
     "LEARNING_WARNING_CANCEL": "Retour",
     "LEARNING_WARNING_CONFIRM": "Oui, rejoindre",
-    "LEARNING_WARNING_TITLE": "Ce joueur apprend"
+    "LEARNING_WARNING_TITLE": "Ce joueur apprend",
+    "CLEAR_RUST_TO_JOIN": "Retirez vos marqueurs de rouille pour rejoindre"
   },
   "OPPONENT_INACTIVE": {
     "CLAIM_DRAW": "Réclamez le match nul",
@@ -1255,7 +1466,13 @@
     "IM_STILL_HERE": "Je suis toujours là",
     "OPPONENT_INACTIVE": "Votre adversaire semble inactif",
     "WARNING": "⚠️",
-    "YOU_INACTIVE": "Vous semblez inactif. "
+    "YOU_INACTIVE": "Vous semblez inactif. ",
+    "COUNTDOWN_OPPONENT": "En attente de votre adversaire",
+    "COUNTDOWN_PLAYER": "En attente de {{player}}",
+    "COUNTDOWN_YOU": "C'est à vous de jouer",
+    "GAME_CLOSING": "Cette partie va se fermer si aucun joueur n'agit",
+    "GAME_CLOSING_NOW": "Cette partie va bientôt se fermer pour inactivité",
+    "PLAYER_INACTIVE": "{{player}} semble inactif"
   },
   "OPTIONS_MENU": {
     "ALLOW_SPECTATORS_PRIVATE_MATCH": "Autoriser les spectateurs pour les matchs privés",
@@ -1284,7 +1501,16 @@
     "REVERT_TO_START_OF_THIS_CHAIN_LINK": "Revenir au début de ce maillon de chaîne",
     "REVERT_TO_START_OF_THIS_TURN": "Revenir au début de ce tour",
     "SETTINGS_MENU": "Menu Paramètres",
-    "UNDO": "Défaire"
+    "UNDO": "Défaire",
+    "COPY_SNAPSHOT_INVITE": "Copier l'invitation de l'instantané",
+    "COSMETICS_DECK_NOTE": "Les modifications faites ici s'appliquent au deck que vous jouez actuellement et ne changent pas votre tapis de jeu ou votre dos de carte (sleeve) par défaut.",
+    "COSMETICS_DECK_SAVED": "Apparence enregistrée pour ce deck.",
+    "COSMETICS_DECK_SAVE_ERROR": "Impossible d'enregistrer l'apparence pour ce deck. Veuillez réessayer.",
+    "SAVE_COSMETICS_TO_DECK": "Enregistrer pour ce deck",
+    "SAVE_SNAPSHOT": "Enregistrer un instantané",
+    "SAVING_SNAPSHOT": "Enregistrement de l'instantané...",
+    "SNAPSHOT_SAVED": "Instantané n°{{number}} enregistré. Lancez-le depuis la section Instantanés de la page Outil de replay.",
+    "SNAPSHOT_SAVE_ERROR": "Impossible d'enregistrer l'instantané."
   },
   "PAGES": {
     "ABOUT": "À propos",
@@ -1330,7 +1556,10 @@
     "REACTION": "Réaction",
     "REPLAY": "Rejouer",
     "TITLE": "{{subtitle}} - priorité de passage - Espace",
-    "WAIT": "ATTENDEZ"
+    "WAIT": "ATTENDEZ",
+    "AUTO": "AUTO",
+    "AUTO_PASS_CANCEL": "Passe automatique jusqu'à la fin du tour - cliquez pour arrêter",
+    "TITLE_HOLD": "{{subtitle}} - Passer la priorité - Espace - Maintenir pour passer automatiquement jusqu'à la fin du tour"
   },
   "PERMANENTS_ZONE": {
     "SCROLL_LEFT": "Faire défiler les permanents vers la gauche",
@@ -1355,7 +1584,8 @@
     "SUBMIT": "Soumettre",
     "TOP_OF_DECK": "Dessus du deck",
     "TOP_OF_THEIR_DECK": "Dessus du deck adverse",
-    "TRIGGERS": "Déclencheurs"
+    "TRIGGERS": "Déclencheurs",
+    "MORE_CHOICES": "Plus de choix"
   },
   "PLAYER_NAME": {
     "CANCEL": "Annuler",
@@ -1363,7 +1593,14 @@
     "NOTE_FOR": "Remarque pour {{playerName}}",
     "NOTE_PLACEHOLDER": "Ajoutez une note personnelle sur cet adversaire…",
     "OPEN_PLAYER_OPTIONS": "Ouvrir les options du joueur",
-    "SAVE_NOTE": "Enregistrer la note"
+    "SAVE_NOTE": "Enregistrer la note",
+    "ADD_NOTE": "Ajouter une note",
+    "EDIT_NOTE": "Modifier la note",
+    "NOTE_SAVE_FAILED": "Impossible d'enregistrer la note",
+    "NOTE_SAVED": "Note enregistrée !",
+    "FRIEND_REQUEST_CANCELLED": "Demande d'ami envoyée à {{name}} annulée",
+    "BLOCKED": "{{name}} a été bloqué",
+    "UNBLOCKED": "{{name}} a été débloqué"
   },
   "PREMIUM_PAGE": {
     "BECOME_SUPPORTER": "Devenez supporter",
@@ -1601,7 +1838,20 @@
     "USER_ID_LABEL": "ID de l'utilisateur",
     "USER_UNBLOCKED": "{{username}} a été débloqué",
     "VISIT_COMMUNITY": "Visitez la communauté →",
-    "YOUR_COMMUNITIES": "Vos communautés :"
+    "YOUR_COMMUNITIES": "Vos communautés :",
+    "METAFY_NOT_SIGNED_IN": "Vous êtes déconnecté. Veuillez vous reconnecter, puis actualisez votre connexion Metafy.",
+    "METAFY_REAUTH_REQUIRED": "Cette connexion Metafy ne peut pas lire votre abonnement, les avantages de soutien ne s'appliqueront donc pas. Reconnectez-vous pour corriger cela.",
+    "METAFY_UNAVAILABLE": "Impossible de joindre Metafy pour le moment. Votre statut actuel a été conservé, veuillez réessayer dans un instant.",
+    "RECONNECT_METAFY": "Reconnecter Metafy",
+    "DISPLAY_NAME_RESET": "Nom d'affichage réinitialisé à votre nom d'utilisateur.",
+    "DISPLAY_NAME_CHANGED": "Nom d'affichage changé en {{name}}.",
+    "DISPLAY_NAME_CHANGE_FAILED": "Impossible de changer le nom d'affichage.",
+    "DISPLAY_NAME_CHANGE_FAILED_RETRY": "Impossible de changer le nom d'affichage. Veuillez réessayer.",
+    "DELETE_ENTER_USERNAME": "Veuillez saisir votre nom d'utilisateur pour confirmer la suppression",
+    "DELETE_ERROR": "Erreur : {{error}}",
+    "DELETE_FAILED": "Erreur lors de la suppression du compte : {{error}}",
+    "DISPLAY_NAME_PLACEHOLDER": "Nouveau nom d'affichage (3 à 20 lettres/chiffres)",
+    "DELETE_USERNAME_PLACEHOLDER": "Saisissez votre nom d'utilisateur"
   },
   "REPORT_MODAL": {
     "CONFIRM": "Envoyer le signalement",
@@ -1624,7 +1874,11 @@
     "WHAT_ARE_RUST_COUNTERS": "Que sont les compteurs de rouille ?"
   },
   "SEARCH_CARD": {
-    "SUBMIT": "Soumettre"
+    "SUBMIT": "Soumettre",
+    "FUTURE_QUEUE_NOTICE": "Les nouvelles cartes non sorties peuvent ne pas apparaître dans la liste avant la mise à jour de la base de données. Si vous n'en trouvez pas une, saisissez son nom imprimé exact ci-dessous.",
+    "MANUAL_INPUT_LABEL": "Saisir un nom de carte manuellement",
+    "MANUAL_INPUT_PLACEHOLDER": "Nom de carte imprimé exact",
+    "SUBMIT_MANUAL_NAME": "Valider le nom"
   },
   "SESSION_RECOVERY": {
     "ACTIVE_GAME": "Vous avez un jeu actif <1>#{{gameId}}</1> en attendant",
@@ -1710,7 +1964,113 @@
     "TAP_TO_PREVIEW_BEFORE_PLAYING_MOBILE": "Appuyer pour prévisualiser avant de jouer (mobile)",
     "THEME": "Thème",
     "TRANSPARENCY": "Transparence",
-    "VISUAL_SETTINGS": "Paramètres visuels"
+    "VISUAL_SETTINGS": "Paramètres visuels",
+    "ALTERNATE_ART": "Illustration alternative",
+    "AUTO_PITCH_FORCED": "Pitch automatique des choix forcés",
+    "AUTO_PITCH_FORCED_TOOLTIP": "Pitcher automatiquement votre main lorsque chaque carte qu'elle contient est nécessaire pour payer le coût restant. L'annulation reste disponible.",
+    "REQUIRE_YES_NO_ANSWER": "Exiger une réponse aux questions Oui/Non",
+    "REQUIRE_YES_NO_ANSWER_TOOLTIP": "Passer et Espace ne répondent plus Non aux questions Oui/Non. Vous devez cliquer sur Oui ou Non.",
+    "CARD_HOVER_TILT": "Inclinaison des cartes au survol",
+    "CARD_BORDER_COLORS": "Couleurs de surbrillance",
+    "CARD_BORDER_COLORS_TOOLTIP": "Changez la couleur de lueur affichée autour des cartes pour chaque type de surbrillance.",
+    "CARD_BORDER_COLOR_OPTIONS": {
+      "BONUS_ACTIVE": "mot-clé actif (combo, reprise, rupture)",
+      "BUFFED": "Arme ou héros renforcé",
+      "DISCARD_DESTROY": "Défausser ou détruire",
+      "HERO_READY": "Capacité du héros prête",
+      "LINKED_OBJECT": "Même objet que la carte survolée",
+      "OPPONENTS": "Cartes de l'adversaire",
+      "PLAYABLE": "Jouable",
+      "PLAYABLE_FROM_ZONE": "Jouable depuis le bannissement ou le cimetière",
+      "SELECTABLE": "Pitcher, bloquer ou choisir",
+      "YOURS": "Vos cartes"
+    },
+    "COLOR_ACCESSIBILITY_MODE_TOOLTIP": "Toute option autre que Désactivé masque les tapis de jeu et passe les graphiques de fin de partie en couleurs adaptées au daltonisme. Les préréglages de vision changent aussi les couleurs de surbrillance des cartes, et les Couleurs de surbrillance ci-dessous partent du préréglage choisi.",
+    "COLOR_ACCESSIBILITY_OPTIONS": {
+      "OFF": "Désactivé",
+      "STANDARD": "Activé (surbrillances par défaut)",
+      "DEUTERANOPIA": "Deutéranopie",
+      "PROTANOPIA": "Protanopie",
+      "TRITANOPIA": "Tritanopie"
+    },
+    "REDUCED_MOTION": "Réduire les animations",
+    "REDUCED_MOTION_TOOLTIP": "Ignore les animations de retournement, de glissement et de destruction des cartes, l'intro des héros, les particules et l'inclinaison des cartes.",
+    "PROMPT_TEXT_SIZE": "Texte des invites",
+    "CHAT_TEXT_SIZE": "Texte du chat et du journal",
+    "DEVICE_ONLY": "Cet appareil",
+    "DEVICE_ONLY_HINT": "Enregistré uniquement dans ce navigateur. Connectez-vous et il suivra votre compte sur tous vos appareils.",
+    "DEVICE_ONLY_LOCAL_HINT": "Enregistré uniquement dans ce navigateur.",
+    "EFFECT_POPUPS": "Aperçus des effets (mobile)",
+    "EFFECT_POPUPS_TOOLTIP": "Affiche un grand aperçu de chaque nouvel effet créé par votre adversaire avant qu'il rejoigne la rangée des effets. Désactivé, l'effet apparaît directement dans la rangée.",
+    "EQUIPMENT_GEM_BUTTONS": "Boutons de gemme sur l'équipement",
+    "EQUIPMENT_GEM_BUTTONS_TOOLTIP": "Affiche les gemmes sur l'équipement. Désactivez pour que les appuis aillent directement à la carte d'équipement. Les gemmes sur les cartes permanentes restent visibles et utilisables dans tous les cas.",
+    "FABRARY_STATS": "Partager les statistiques avec FaBrary",
+    "GAME_SOUNDS": "Sons du jeu",
+    "GEMS_OFF_BY_DEFAULT": "Démarrer avec les gemmes désactivées",
+    "GEMS_OFF_BY_DEFAULT_TOOLTIP": "L'équipement, le héros, les objets, les auras, etc. entrent en jeu avec leur gemme désactivée, leurs déclencheurs optionnels restent donc inactifs jusqu'à ce que vous activiez la gemme. Les cartes dont la gemme est toujours activée ne sont pas concernées.",
+    "GLOBAL_STATS": "Partager les statistiques avec FaB Insights et FaBlazing",
+    "GLOBAL_STATS_TOOLTIP": "Envoie les statistiques de partie à FaB Insights et FaBlazing pour le suivi des statistiques.",
+    "GROUPS": {
+      "ACCESSIBILITY": "Accessibilité",
+      "APPEARANCE": "Apparence",
+      "BOARD_LAYOUT": "Disposition du plateau",
+      "BROADCAST": "Streaming et commentaire",
+      "CARD_MODES": "Modes spécifiques aux cartes",
+      "CARD_BORDER_COLORS": "Surbrillance des cartes",
+      "CARD_VISUALS": "Cartes et effets",
+      "FRIENDS": "Amis",
+      "GAME_LOG": "Journal de partie",
+      "MATCH_CONTROLS": "Contrôles de partie",
+      "NOTIFICATIONS": "Notifications",
+      "SHORTCUTS": "Raccourcis",
+      "SIZING": "Taille et intensité",
+      "SOUND": "Son",
+      "STATS_SHARING": "Partage des statistiques",
+      "STATS_SHARING_TOOLTIP": "Choisissez quels sites communautaires reçoivent les résultats de vos parties.",
+      "TEXT_SIZE": "Taille du texte",
+      "TEXT_SIZE_TOOLTIP": "Agrandit le texte en plus du zoom du navigateur."
+    },
+    "LAYER_GO_AGAIN_ICON": "Icône Go again sur les couches",
+    "LAYER_GO_AGAIN_ICON_TOOLTIP": "Affiche une icône go again sur les attaques lorsqu'elles sont dans la fenêtre des couches actives.",
+    "HERO_INTRO_ANIMATION": "Animation d'intro des héros",
+    "HIDE_LOG_NOISE": "Masquer les passes et les lignes de combat fermées",
+    "HIDE_LOG_NOISE_TOOLTIP": "Retire les lignes « passed priority », « chain link was resolved » et « combat chain was closed » du journal de partie. Le chat et toutes les autres lignes restent.",
+    "HOLD_TO_AUTO_PASS": "Maintenir pour passer automatiquement",
+    "HOLD_TO_AUTO_PASS_TOOLTIP": "Maintenir Espace ou le bouton PASSER active la passe automatique. Désactivez et maintenir ne fait que passer la priorité une fois, comme un appui normal.",
+    "MANUAL_DYNAMO_MODE": "Mode Valiant Dynamo manuel",
+    "MANUAL_DYNAMO_MODE_TOOLTIP": "Déclenchez Valiant Dynamo vous-même au lieu que Talishar l'applique automatiquement lors de votre deuxième attaque d'arme.",
+    "MANUAL_MODE_TOOLTIP": "Contourne l'application des règles pour déplacer librement les cartes. Disponible dans les parties privées, contre l'IA et Futures.",
+    "MANUAL_TUNIC_MODE_TOOLTIP": "Dépensez vous-même les marqueurs de Fyendal's Spring Tunic au lieu que Talishar les charge et les dépense automatiquement.",
+    "MANUAL_VALDA_MODE": "Mode Valda manuel",
+    "MANUAL_VALDA_MODE_TOOLTIP": "Créez les jetons Seismic Surge de Valda en cliquant sur votre héros au lieu que Talishar interrompe le tour de votre adversaire à chaque déclenchement de pioche.",
+    "MIDDLE_CLICK_PASSES": "Le clic du milieu passe",
+    "NO_SEARCH_RESULTS": "Aucun paramètre ne correspond à « {{query}} ».",
+    "PARTICLE_EFFECTS": "Effets de particules",
+    "PRIORITY_NOTIFICATION_BODY": "Talishar attend votre action.",
+    "PRIORITY_NOTIFICATION_TITLE": "C'est votre priorité",
+    "PRIORITY_NOTIFICATIONS": "M'avertir quand j'obtiens la priorité",
+    "PRIORITY_NOTIFICATIONS_BLOCKED": "Votre navigateur a bloqué les notifications pour Talishar. Autorisez-les dans les paramètres du site, puis réactivez cette option.",
+    "PRIORITY_NOTIFICATIONS_TOOLTIP": "Affiche une notification sur le bureau lorsque vous obtenez la priorité alors que Talishar est dans un onglet en arrière-plan ou qu'une autre fenêtre est active.",
+    "RESET_TAB": "Réinitialiser cet onglet par défaut",
+    "SEARCH_PLACEHOLDER": "Rechercher dans les paramètres",
+    "SOUND_TOGGLES": {
+      "HAND_REORDER": "Son de réorganisation de la main",
+      "PLAYER_JOINED": "Son d'arrivée d'un adversaire dans le lobby",
+      "PRIORITY": "Son d'alerte de priorité",
+      "SHUFFLE": "Son de mélange"
+    },
+    "SOUND_VOLUME": "Volume",
+    "SPACE_PASSES": "La barre d'espace passe",
+    "TABS": {
+      "GAMEPLAY": "Jeu",
+      "CARD_SPECIFIC": "Spécifique aux cartes",
+      "INTERFACE": "Interface",
+      "COSMETICS": "Apparence",
+      "PRIVACY": "Confidentialité et social",
+      "ACCESSIBILITY": "Accessibilité et son"
+    },
+    "LOAD_FAILED": "Impossible de charger vos paramètres. Veuillez actualiser la page.",
+    "SAVE_FAILED": "Votre paramètre n'a pas pu être enregistré. Vérifiez votre connexion et réessayez."
   },
   "SHARED_REPLAY_PAGE": {
     "ERROR_FAILED_LOAD": "Échec du chargement de la rediffusion partagée.",
@@ -1795,7 +2155,11 @@
       "SUBMIT": "Soumettre",
       "TALISHAR_CONSENT": "J’accepte que <0>Talishar ne soit pas un juge.</0>",
       "USERNAME": "Nom d’utilisateur",
-      "WELCOME_BACK": "Bienvenue à Talishar"
+      "WELCOME_BACK": "Bienvenue à Talishar",
+      "HIDE_PASSWORD": "Masquer le mot de passe",
+      "SHOW_PASSWORD": "Afficher le mot de passe",
+      "LOGIN_NETWORK_ERROR_REPORT": "Une erreur réseau est survenue lors de la connexion. Veuillez réessayer. Si l'erreur persiste, signalez-la sur notre Discord en incluant ceci : {{error}}",
+      "RESET_PASSWORD_NETWORK_ERROR_REPORT": "Une erreur réseau est survenue lors de l'envoi de la réinitialisation du mot de passe. Veuillez réessayer. Si l'erreur persiste, signalez-la sur notre Discord en incluant ceci : {{error}}"
     }
   },
   "USERNAME_MODERATION": {
@@ -1851,16 +2215,305 @@
     "ACTIVE_LAYERS": "Calques actifs",
     "ARMS": "Bras",
     "ARSENAL": "Arsenal",
-    "BANISH": "Bannir",
+    "BANISH": "Bannissement",
     "CHEST": "Poitrine",
     "COUNT_YOUR_BLESSINGS": "Comptez vos bénédictions",
-    "DECK": "Pont",
+    "DECK": "Deck",
     "EARTH_CARDS_COUNT": "Nombre de cartes terrestres",
     "GRAVEYARD": "Cimetière",
     "HEAD": "Tête",
     "LEGS": "Jambes",
     "PASS": "Passer",
-    "PITCH": "Pas",
-    "SOUL": "Âme"
+    "PITCH": "Pitch",
+    "SOUL": "Âme",
+    "DRAG_ACTIVE_LAYERS": "Faites glisser pour déplacer le panneau des couches actives",
+    "DECK_PEEK_YOURS": "Dessus de votre deck. Vous seul pouvez le voir.",
+    "DECK_PEEK_OPPONENT": "Dessus du deck de votre adversaire. Vous seul pouvez le voir.",
+    "CARDS_UNDERNEATH_one": "{{count}} carte en dessous",
+    "CARDS_UNDERNEATH_other": "{{count}} cartes en dessous",
+    "STACK_OF": "Pile de {{count}}",
+    "BLOOD_DEBT_one": "Dette de sang",
+    "BLOOD_DEBT_other": "Dettes de sang",
+    "HAND": "Main",
+    "LIST_TITLE_YOURS": "Votre zone : {{zone}}",
+    "LIST_TITLE_OPPONENT": "Zone de l'adversaire : {{zone}}",
+    "CLICK_TO_VIEW_YOUR_HAND": "Cliquez pour voir votre main",
+    "CLICK_TO_VIEW_OPPONENT_HAND": "Cliquez pour voir la main de votre adversaire",
+    "DRAG_TO_REORDER": "(Faites glisser les cartes en surbrillance pour réordonner)",
+    "LOCK_VERTICAL": "Verrouiller le déplacement vertical",
+    "UNLOCK_HORIZONTAL": "Déverrouiller le déplacement horizontal"
+  },
+  "DECK_LEGALITY": {
+    "LEGAL_FOR": "Légal en : {{formats}}",
+    "ONLY_LEGAL_IN": "Légal uniquement en {{formats}}",
+    "ONLY_OPEN": "Légal uniquement en Open",
+    "NOT_LEGAL_IN": "Non légal en {{format}}",
+    "FORMATS": {
+      "CC": "Classic Constructed",
+      "LL": "Living Legend",
+      "SAGE": "Silver Age",
+      "BLITZ": "Blitz",
+      "GAGE": "Golden Age",
+      "FUTURE_CC": "Future Classic Constructed",
+      "FUTURE_LL": "Future Living Legend",
+      "FUTURE_SAGE": "Future Silver Age"
+    }
+  },
+  "DECK_ORGANIZER": {
+    "CLOSE": "Fermer l'organisateur de deck",
+    "HINT": "Les cartes sont listées du dessus de votre deck vers le bas. Faites glisser une carte pour la réordonner, ou envoyez-la directement au-dessus ou au-dessous, puis enregistrez.",
+    "MOVE_TO_BOTTOM": "Placer en dessous du deck",
+    "MOVE_TO_TOP": "Placer au-dessus du deck",
+    "RESET": "Réinitialiser",
+    "SAVE": "Enregistrer l'ordre",
+    "SAVE_FAILED": "Impossible d'enregistrer l'ordre du deck. Veuillez réessayer.",
+    "SAVING": "Enregistrement...",
+    "SEARCH": "Rechercher des cartes",
+    "TITLE": "Organiser le deck"
+  },
+  "GEM_SLIDER": {
+    "ACTIVE_LABEL": "Capacité de la carte active. Cliquez pour la désactiver.",
+    "INACTIVE_LABEL": "Capacité de la carte inactive. Cliquez pour l'activer.",
+    "ALWAYS_WAGER_ACTIVE_LABEL": "Le pari automatique est activé. Vous pariez automatiquement sans qu'on vous le demande. Cliquez pour le désactiver.",
+    "ALWAYS_WAGER_INACTIVE_LABEL": "Le pari automatique est désactivé. On vous le demande à chaque fois. Cliquez pour toujours parier automatiquement.",
+    "ALWAYS_PAY_LIFE_ACTIVE_LABEL": "Le paiement automatique de vie est activé. Vynnset paie 1 point de vie automatiquement sans demander. Cliquez pour le désactiver.",
+    "ALWAYS_PAY_LIFE_INACTIVE_LABEL": "Le paiement automatique de vie est désactivé. On vous le demande à chaque fois. Cliquez pour toujours payer 1 point de vie automatiquement.",
+    "HEAVE_ACTIVE_LABEL": "Heave est activé. On vous demandera de heave des cartes pendant la phase de fin. Cliquez pour le désactiver.",
+    "HEAVE_INACTIVE_LABEL": "Heave est désactivé. Heave ne se déclenchera pas pendant la phase de fin. Cliquez pour l'activer.",
+    "JARL_ACTIVE_LABEL": "Frostbite et heave sont activés. Vous serez sollicité quand le frostbite de Jarl se déclenche, et on vous demandera de heave des cartes pendant la phase de fin. Cliquez pour les désactiver.",
+    "JARL_INACTIVE_LABEL": "Frostbite et heave sont désactivés. Vous ne serez pas sollicité pour le frostbite de Jarl et heave ne se déclenchera pas pendant la phase de fin. Cliquez pour les activer."
+  },
+  "RECENT_GAMES": {
+    "TITLE": "Parties récentes",
+    "SUBTITLE_one": "Votre dernière partie reste ici pendant 24 heures, vous pouvez donc encore enregistrer le replay après avoir quitté la partie.",
+    "SUBTITLE_other": "Vos {{count}} dernières parties restent ici pendant 24 heures, vous pouvez donc encore enregistrer le replay après avoir quitté la partie.",
+    "SLOTS_FULL": "Vos {{max}} emplacements de replay sont tous utilisés. Supprimez un replay enregistré pour enregistrer l'une de ces parties.",
+    "SLOTS_FULL_FREE": "Vos {{max}} emplacements de replay sont tous utilisés, seule votre dernière partie est donc conservée. Supprimez un replay enregistré pour l'enregistrer et conserver vos 3 dernières parties.",
+    "NO_FREE_SLOT": "Aucun emplacement libre",
+    "PLAYED": "Jouée le {{date}}. {{expiry}}",
+    "EXPIRES_IN_one": "Expire dans {{count}} heure",
+    "EXPIRES_IN_other": "Expire dans {{count}} heures",
+    "UNKNOWN_PLAYERS": "Joueurs indisponibles",
+    "SAVE": "Enregistrer le replay",
+    "SAVING": "Enregistrement…",
+    "SAVED": "Enregistré en tant que replay n°{{number}}.",
+    "SAVE_ERROR": "Impossible d'enregistrer ce replay. Veuillez réessayer.",
+    "WATCH_SAVED": "Regarder le n°{{number}}"
+  },
+  "FIND_MATCH": {
+    "CHOOSE_DECK": "Choisissez un deck ci-dessus pour trouver un match.",
+    "NEED_DECK": "Choisissez d'abord un deck.",
+    "SEARCH_TIMEOUT": "Impossible de trouver un match pour le moment. Réessayez dans un instant.",
+    "CHECKING": "Vérification des joueurs en attente...",
+    "YOUR_HERO": "votre héros",
+    "HERO_ILLEGAL": "{{hero}} n'est pas légal en {{format}}",
+    "NOBODY_WAITING": "Personne n'attend dans la file {{format}} pour le moment.",
+    "FITS_ALL_one": "1 joueur en attente en {{format}} vous correspond.",
+    "FITS_ALL_other": "{{count}} joueurs en attente en {{format}} vous correspondent.",
+    "FITS_SOME_one": "1 des {{waiting}} joueurs en attente en {{format}} vous correspond.",
+    "FITS_SOME_other": "{{count}} des {{waiting}} joueurs en attente en {{format}} vous correspondent.",
+    "NONE_FIT_theyRejectHero_one": "1 joueur en attente en {{format}}, mais il n'accepte pas {{hero}}.",
+    "NONE_FIT_theyRejectHero_other": "{{count}} joueurs en attente en {{format}}, mais aucun n'accepte {{hero}}.",
+    "NONE_FIT_youRejectHero_one": "1 joueur en attente en {{format}}, mais son héros ne correspond pas à votre préférence.",
+    "NONE_FIT_youRejectHero_other": "{{count}} joueurs en attente en {{format}}, mais aucun de leurs héros ne correspond à votre préférence.",
+    "NONE_FIT_learning_one": "1 joueur en attente en {{format}}, mais c'est un lobby d'apprentissage. Rejoignez-le depuis la liste si vous voulez l'affronter.",
+    "NONE_FIT_learning_other": "{{count}} joueurs en attente en {{format}}, mais ce sont tous des lobbys d'apprentissage. Rejoignez-en un depuis la liste si vous voulez les affronter.",
+    "NONE_FIT_own_one": "Le seul lobby en attente en {{format}} est le vôtre.",
+    "NONE_FIT_own_other": "Les {{count}} lobbys en attente en {{format}} sont tous les vôtres.",
+    "NONE_FIT_kicked_one": "1 joueur en attente en {{format}}, mais il vous a exclu de son lobby.",
+    "NONE_FIT_kicked_other": "{{count}} joueurs en attente en {{format}}, mais ils vous ont tous exclu de leurs lobbys.",
+    "NONE_FIT_heroIllegal_one": "1 joueur en attente en {{format}}, mais {{hero}} n'y est pas légal.",
+    "NONE_FIT_heroIllegal_other": "{{count}} joueurs en attente en {{format}}, mais {{hero}} n'y est pas légal.",
+    "NONE_FIT_MIXED_one": "1 joueur en attente en {{format}}, mais il ne correspond pas : {{reasons}}.",
+    "NONE_FIT_MIXED_other": "{{count}} joueurs en attente en {{format}}, mais aucun ne correspond : {{reasons}}.",
+    "REASON_theyRejectHero_one": "1 n'accepte pas {{hero}}",
+    "REASON_theyRejectHero_other": "{{count}} n'acceptent pas {{hero}}",
+    "REASON_youRejectHero_one": "1 ne correspond pas à votre préférence de héros",
+    "REASON_youRejectHero_other": "{{count}} ne correspondent pas à votre préférence de héros",
+    "REASON_learning_one": "1 est un lobby d'apprentissage",
+    "REASON_learning_other": "{{count}} sont des lobbys d'apprentissage",
+    "REASON_own_one": "1 est votre propre lobby",
+    "REASON_own_other": "{{count}} sont vos propres lobbys",
+    "REASON_kicked_one": "1 vous a exclu",
+    "REASON_kicked_other": "{{count}} vous ont exclu",
+    "REASON_heroIllegal_one": "1 n'autorise pas {{hero}}",
+    "REASON_heroIllegal_other": "{{count}} n'autorisent pas {{hero}}",
+    "ALSO_WAITING": "Également en attente : {{list}}.",
+    "ALSO_WAITING_ITEM_one": "1 en {{format}}",
+    "ALSO_WAITING_ITEM_other": "{{count}} en {{format}}",
+    "HERO_UNKNOWN": "Les decks importés sont lus lorsque vous rejoignez, un lobby qui n'accepte pas votre héros est donc ignoré à ce moment-là.",
+    "PREFERENCE_OFF_COMPETITIVE": "Votre préférence de héros ne filtre pas les lobbys ici, car les lobbys compétitifs masquent leurs héros.",
+    "LOBBY_TAKEN": "Un autre joueur a déjà rejoint la partie.",
+    "BLOCKER_theyRejectHero": "N'accepte pas {{hero}}",
+    "BLOCKER_heroIllegal": "{{hero}} n'est pas légal dans ce format",
+    "BLOCKER_kicked": "Vous avez été exclu de ce lobby",
+    "BLOCKER_own": "C'est votre lobby",
+    "PICK_OTHER_DECK": "{{reason}}. Choisissez un autre deck pour rejoindre.",
+    "JOIN_QUEUE": "Rejoindre la file",
+    "UPDATE_QUEUE": "Mettre à jour la file",
+    "JOIN_QUEUE_TITLE": "Lancer la recherche avec ce format, ce deck et cette préférence de héros. Vous pouvez être dans {{max}} files à la fois, une par format, et rejoindre le premier lobby qui trouve un adversaire.",
+    "QUEUES": "Vos files",
+    "SEARCHING_FOR": "Recherche depuis {{time}}",
+    "LEAVE_ALL": "Tout quitter",
+    "QUEUE_SEARCHING": "Recherche",
+    "QUEUE_HOSTING": "En attente",
+    "LEAVE_QUEUE": "Quitter la file {{format}}",
+    "IMPORTED_DECK": "Deck importé",
+    "BAZAAR_LOAD_FAILED": "Impossible de charger les decks FaB Bazaar"
+  },
+  "NOTICE": {
+    "CREATE_FAILED": "Impossible de créer la partie. Vérifiez votre connexion et réessayez.",
+    "JOIN_FAILED": "Impossible de rejoindre la partie. Vérifiez votre connexion et réessayez.",
+    "PITCH_RED": "Rouge",
+    "PITCH_YELLOW": "Jaune",
+    "PITCH_BLUE": "Bleu"
+  },
+  "PLAYER_HAND_CARD": {
+    "CANNOT_PLAY": "Impossible de jouer : {{reason}}"
+  },
+  "SAVE_NOTE": {
+    "ADD_NOTE": "Ajouter une note",
+    "ADD_NOTE_ARIA": "Ajouter une note à {{save}}",
+    "AFTER_REPLAY_INTRO": "Ajoutez une note à consulter plus tard, comme un résumé ou une question. Regardez le replay et lisez la note depuis la page Outil de replay.",
+    "AFTER_SNAPSHOT_INTRO": "Ajoutez une note à consulter plus tard, comme un résumé ou une question. Lancez l'instantané et lisez la note depuis la page Outil de replay.",
+    "CLOSE": "Fermer",
+    "ERROR": "Impossible d'enregistrer la note. Veuillez réessayer.",
+    "LABEL": "Note",
+    "PLACEHOLDER": "Un résumé de la partie, ou une question à examiner plus tard",
+    "PRIVACY": "Vous seul pouvez lire cette note.",
+    "READ_NOTE": "Lire la note",
+    "READ_NOTE_ARIA": "Lire la note de {{save}}",
+    "REMOVED": "Note supprimée.",
+    "REPLAY_SAVED_TITLE": "Replay n°{{number}} enregistré",
+    "REPLAY_TITLE": "Note du replay n°{{number}}",
+    "SAVE": "Enregistrer la note",
+    "SAVED": "Note enregistrée.",
+    "SKIP": "Passer",
+    "SNAPSHOT_SAVED_TITLE": "Instantané n°{{number}} enregistré",
+    "SNAPSHOT_TITLE": "Note de l'instantané n°{{number}}"
+  },
+  "SNAPSHOT_JOIN": {
+    "TITLE": "Rejoindre la partie de l'instantané",
+    "LOADING": "Connexion à l'autre siège...",
+    "INVALID_LINK": "Ce lien d'invitation d'instantané n'est pas valide.",
+    "JOIN_ERROR": "Impossible de rejoindre cette partie d'instantané.",
+    "RETURN_MAIN_MENU": "Retour au menu principal"
+  },
+  "SPECTATOR": {
+    "LOGIN_REQUIRED_ACTION": "Se connecter",
+    "LOGIN_REQUIRED_BODY": "Vous devez être connecté pour regarder une partie. Connectez-vous et rouvrez ce lien pour commencer à regarder.",
+    "LOGIN_REQUIRED_HOME": "Accueil",
+    "LOGIN_REQUIRED_TITLE": "Connectez-vous pour regarder",
+    "SWITCH_VIEW": "Passer à la vue du joueur {{player}}",
+    "SWITCH_VIEW_SHORT": "Passer à la vue J{{player}}",
+    "WATCHING_one": "{{count}} spectateur",
+    "WATCHING_other": "{{count}} spectateurs"
+  },
+  "COUNTERS": {
+    "DEFENSE_one": "{{count}} défense",
+    "DEFENSE_other": "{{count}} défense",
+    "STEAM_one": "{{count}} marqueur vapeur",
+    "STEAM_other": "{{count}} marqueurs vapeur",
+    "ATTACK_one": "{{count}} puissance",
+    "ATTACK_other": "{{count}} puissance",
+    "LIFE_one": "{{count}} vie",
+    "LIFE_other": "{{count}} vie",
+    "ENERGY_one": "{{count}} marqueur énergie",
+    "ENERGY_other": "{{count}} marqueurs énergie",
+    "HAUNT_one": "{{count}} marqueur hantise",
+    "HAUNT_other": "{{count}} marqueurs hantise",
+    "VERSE_one": "{{count}} marqueur couplet",
+    "VERSE_other": "{{count}} marqueurs couplet",
+    "DOOM_one": "{{count}} marqueur fatalité",
+    "DOOM_other": "{{count}} marqueurs fatalité",
+    "LESSON_one": "{{count}} marqueur leçon",
+    "LESSON_other": "{{count}} marqueurs leçon",
+    "RUST_one": "{{count}} marqueur rouille",
+    "RUST_other": "{{count}} marqueurs rouille",
+    "FLOW_one": "{{count}} marqueur flux",
+    "FLOW_other": "{{count}} marqueurs flux",
+    "FROST_one": "{{count}} marqueur givre",
+    "FROST_other": "{{count}} marqueurs givre",
+    "BALANCE_one": "{{count}} marqueur équilibre",
+    "BALANCE_other": "{{count}} marqueurs équilibre",
+    "BIND_one": "{{count}} marqueur lien",
+    "BIND_other": "{{count}} marqueurs lien",
+    "STAIN_one": "{{count}} marqueur souillure",
+    "STAIN_other": "{{count}} marqueurs souillure",
+    "STORM_one": "{{count}} marqueur tempête",
+    "STORM_other": "{{count}} marqueurs tempête",
+    "GOLD_one": "{{count}} marqueur or",
+    "GOLD_other": "{{count}} marqueurs or",
+    "SUSPENSE_one": "{{count}} marqueur suspense",
+    "SUSPENSE_other": "{{count}} marqueurs suspense",
+    "SAND_one": "{{count}} marqueur sable",
+    "SAND_other": "{{count}} marqueurs sable",
+    "LIGHTNING_one": "{{count}} carte foudre jouée",
+    "LIGHTNING_other": "{{count}} cartes foudre jouées",
+    "AMP_one": "{{count}} bonus arcanique",
+    "AMP_other": "{{count}} bonus arcanique",
+    "AIM_one": "{{count}} marqueur visée",
+    "AIM_other": "{{count}} marqueurs visée"
+  },
+  "CHAIN_COUNTERS": {
+    "DAMAGE_PREVENTION": "{{count}} prévention de dégâts",
+    "UNPREVENTABLE": "Imprévenable",
+    "REQUIRED_EQUIPMENT_BLOCK": "Le maillon de chaîne doit être défendu avec au moins {{count}} équipement(s)"
+  },
+  "SHARE_REPLAY": {
+    "COPIED": "Lien de partage copié dans le presse-papiers !",
+    "COPY_PROMPT": "Copiez ce lien de partage du replay :",
+    "FAILED": "Impossible de créer le lien de partage."
+  },
+  "REPLAY_PANEL": {
+    "REPLAY_NUMBER_MISSING": "Numéro de replay indisponible. Veuillez recharger le replay.",
+    "LOADING_TURN": "Chargement du tour {{number}}…",
+    "TURN_LOADED": "Tour {{number}} chargé",
+    "TURN_LOAD_FAILED": "Impossible de charger ce tour",
+    "ENTER_SAVED_TURN": "Saisissez un tour enregistré entre 1 et {{max}}, ou 0 pour le début.",
+    "SAVED_TURNS_LOADING": "Les tours enregistrés sont encore en cours de chargement.",
+    "RETURNED_TO_START": "Retour au début du replay.",
+    "RESTART_FAILED": "Impossible de redémarrer ce replay.",
+    "SAVED_TURNS_one": "{{count}} tour enregistré",
+    "SAVED_TURNS_other": "{{count}} tours enregistrés",
+    "SAVED_TURNS_SCROLL_one": "{{count}} tour enregistré - faites défiler vers la droite",
+    "SAVED_TURNS_SCROLL_other": "{{count}} tours enregistrés - faites défiler vers la droite",
+    "BUILDS_AS_YOU_REVIEW": "Se construit au fil de votre revue",
+    "LOAD_TURN_LABEL": "Charger le tour {{number}}, {{player}}",
+    "COMBAT": "Combat",
+    "DAMAGE": "Dégâts",
+    "COMBAT_AND_DAMAGE": "Combat et dégâts",
+    "LIFE_CHANGED": "Vie modifiée"
+  },
+  "CHAIN_LINKS": {
+    "DRACONIC": "Maillon de chaîne draconique",
+    "GAME_OVER": "Partie terminée"
+  },
+  "MOVEMENT_EVENT": {
+    "REVEALED": "Carte révélée",
+    "DISCARDED": "Carte défaussée",
+    "BANISHED": "Carte bannie",
+    "INTO_SOUL": "Dans l'âme",
+    "CLICK_TO_DISMISS": "Cliquez pour fermer"
+  },
+  "VALIDATION": {
+    "USERNAME_REQUIRED": "Le nom d'utilisateur est requis",
+    "USERNAME_CHARACTERS": "Seuls les lettres, chiffres et tirets bas sont autorisés",
+    "EMAIL_INVALID": "L'adresse e-mail doit être valide",
+    "EMAIL_REQUIRED": "L'adresse e-mail est requise",
+    "PASSWORD_REQUIRED": "Le mot de passe est requis",
+    "PASSWORD_MIN_LENGTH": "Le mot de passe doit contenir au moins 8 caractères",
+    "PASSWORD_CONFIRM_REQUIRED": "Vous devez confirmer votre mot de passe",
+    "PASSWORDS_MUST_MATCH": "Les mots de passe doivent correspondre",
+    "AGREE_TO_TERMS": "Vous devez accepter les conditions",
+    "LOGIN_USERNAME_REQUIRED": "Vous devez saisir un nom d'utilisateur",
+    "LOGIN_PASSWORD_REQUIRED": "Vous devez saisir un mot de passe"
+  },
+  "CREATE_GAME": {
+    "MINIMIZE_PANEL": "Réduire le panneau",
+    "EXPAND_PANEL": "Agrandir le panneau"
+  },
+  "GAME": {
+    "RELEASE_TO_PLAY": "Relâchez pour jouer cette carte"
   }
 }

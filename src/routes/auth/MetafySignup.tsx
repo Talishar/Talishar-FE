@@ -9,6 +9,7 @@ import styles from 'routes/user/profile/linkmetafy/linkMetafy.module.css';
 import { MetafySignupResponse } from 'interface/API/MetafyAPI.php';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 import type { SerializedError } from '@reduxjs/toolkit';
+import { describeThrownError } from 'utils/serverError';
 
 // Module-level variable to track processed codes - persists across component remounts
 const processedCodes = new Set<string>();
@@ -25,7 +26,7 @@ const MetafySignup = () => {
     const error = searchParams.get('error');
 
     if (error) {
-      toast.error(`Metafy signup error: ${error}`, {
+      toast.error(t('AUTH.METAFY_SIGNUP.ERROR', { error }), {
         position: 'top-center'
       });
       navigate('/user/login', { replace: true });
@@ -63,17 +64,27 @@ const MetafySignup = () => {
           });
           navigate('/');
         } else {
-          toast.error(`Signup failed: ${data.error || 'Unknown error'}`, {
-            position: 'top-center'
-          });
+          toast.error(
+            t('AUTH.METAFY_SIGNUP.FAILED', {
+              error: data.error || t('BASE.UNKNOWN_ERROR')
+            }),
+            {
+              position: 'top-center'
+            }
+          );
           navigate('/user/login', { replace: true });
         }
       })
       .catch((err: FetchBaseQueryError | SerializedError) => {
         console.error('Metafy signup error:', err);
-        toast.error(`Signup error: ${err?.toString() || 'Unknown error'}`, {
-          position: 'top-center'
-        });
+        toast.error(
+          t('AUTH.METAFY_SIGNUP.ERROR', {
+            error: describeThrownError(err, t('BASE.UNKNOWN_ERROR'))
+          }),
+          {
+            position: 'top-center'
+          }
+        );
         navigate('/user/login', { replace: true });
       });
   }, [searchParams, navigate, setSearchParams, submitMetafySignup]);

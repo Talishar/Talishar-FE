@@ -6,6 +6,7 @@ import { generateCroppedImageUrl, heroCropFocusStyle } from 'utils/cropImages';
 import MasteryFrame from 'features/mastery/MasteryFrame';
 import PageBanner from 'components/PageBanner/PageBanner';
 import useAdScript from 'hooks/useAdScript';
+import { usePageTitle } from 'hooks/usePageTitle';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import {
   MASTERY_MILESTONES,
@@ -31,6 +32,7 @@ const progressPercent = (item: HeroMasteryProgress, milestones: number[]) => {
 
 const Mastery = () => {
   const { t } = useTranslation();
+  usePageTitle(t('HEADER.MASTERY'));
   const { data, isLoading, error } = useGetHeroMasteryQuery();
   const { showAds } = useSupporterStatus();
   useAdScript(showAds);

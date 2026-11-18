@@ -88,11 +88,13 @@ const ModPage: React.FC = () => {
     refetch
   } = useGetModPageDataQuery(undefined);
 
-  const [banByIP] = useBanPlayerByIPMutation();
+  const [banByIP, { isLoading: isBanningByIP }] = useBanPlayerByIPMutation();
   const [banIPDirect, { isLoading: isBanningIPDirect }] =
     useBanIPDirectMutation();
-  const [banByName] = useBanPlayerByNameMutation();
-  const [closeGameMutation] = useCloseGameMutation();
+  const [banByName, { isLoading: isBanningByName }] =
+    useBanPlayerByNameMutation();
+  const [closeGameMutation, { isLoading: isClosingGame }] =
+    useCloseGameMutation();
   const [resetAllRustCounters, { isLoading: isResettingRustCounters }] =
     useResetAllRustCountersMutation();
   const [deleteUsername, { isLoading: isDeletingUsername }] =
@@ -435,7 +437,11 @@ const ModPage: React.FC = () => {
                     onChange={(e) => setPlayerNumberToBan(e.target.value)}
                     required
                   />
-                  <button type="submit">{t('USERNAME_MODERATION.BAN')}</button>
+                  <button type="submit" disabled={isBanningByIP}>
+                    {isBanningByIP
+                      ? t('MOD_PAGE.BANNING')
+                      : t('USERNAME_MODERATION.BAN')}
+                  </button>
                 </form>
 
                 <form onSubmit={handleBanIPDirect} className={styles.form}>
@@ -470,7 +476,9 @@ const ModPage: React.FC = () => {
                     onChange={(e) => setGameToClose(e.target.value)}
                     required
                   />
-                  <button type="submit">{t('MOD_PAGE.CLOSE_GAME')}</button>
+                  <button type="submit" disabled={isClosingGame}>
+                    {t('MOD_PAGE.CLOSE_GAME')}
+                  </button>
                 </form>
 
                 <form onSubmit={handleBanPlayer} className={styles.form}>
@@ -485,7 +493,11 @@ const ModPage: React.FC = () => {
                     onChange={(e) => setPlayerToBan(e.target.value)}
                     required
                   />
-                  <button type="submit">{t('USERNAME_MODERATION.BAN')}</button>
+                  <button type="submit" disabled={isBanningByName}>
+                    {isBanningByName
+                      ? t('MOD_PAGE.BANNING')
+                      : t('USERNAME_MODERATION.BAN')}
+                  </button>
                 </form>
 
                 <form onSubmit={handleDeleteUsername} className={styles.form}>

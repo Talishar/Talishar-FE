@@ -33,7 +33,7 @@ const TranslatedApp = () => {
   // Locale files are asynchronous; do not paint translation keys and then
   // resize every label when the selected language arrives.
   return ready ? (
-    <RouterProvider router={router} />
+    <RouterProvider router={router} future={{ v7_startTransition: true }} />
   ) : (
     <LoadingScreen message="Loading…" showTrivia={false} />
   );

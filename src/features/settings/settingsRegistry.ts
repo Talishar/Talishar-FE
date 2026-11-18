@@ -638,6 +638,18 @@ export const SETTINGS_DEFS: SettingDef[] = [
   },
   {
     kind: 'toggle',
+    key: 'effectPopups',
+    group: 'cardVisuals',
+    labelKey: 'SETTINGS.EFFECT_POPUPS',
+    tooltipKey: 'SETTINGS.EFFECT_POPUPS_TOOLTIP',
+    storage: 'device',
+    name: 'disableEffectPopups',
+    accountName: 'DisableEffectPopups',
+    invert: true,
+    defaultOn: true
+  },
+  {
+    kind: 'toggle',
     key: 'tapToPreviewPlay',
     group: 'cardVisuals',
     labelKey: 'SETTINGS.TAP_TO_PREVIEW_BEFORE_PLAYING_MOBILE',

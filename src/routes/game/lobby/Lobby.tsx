@@ -28,7 +28,8 @@ import StickyFooter, {
 } from './components/stickyFooter/StickyFooter';
 import ChangeDeckModal from './components/changeDeck/ChangeDeckModal';
 import { consumeRematchDeckChange } from './components/changeDeck/rematchDeckIntent';
-import { toast } from 'react-hot-toast';
+import { toast, Toaster } from 'react-hot-toast';
+import { TOAST_OPTIONS } from 'constants/toastOptions';
 import useAuth from 'hooks/useAuth';
 import useAdScript from 'hooks/useAdScript';
 import useSupporterStatus from 'hooks/useSupporterStatus';
@@ -406,7 +407,8 @@ const Lobby = () => {
   const [submitLobbyInput, submitLobbyInputData] =
     useSubmitLobbyInputMutation();
 
-  const [kickPlayerMutation] = useKickPlayerMutation();
+  const [kickPlayerMutation, { isLoading: isKickingPlayer }] =
+    useKickPlayerMutation();
 
   const [isChangeDeckOpen, setIsChangeDeckOpen] = useState(false);
   const canChangeDeck = !!gameLobby?.canChangeDeck && playerID !== 3;
@@ -1227,7 +1229,6 @@ const Lobby = () => {
       const submitError = submitResponse?.deckError ?? submitResponse?.error;
       if (submitError) {
         setSubmitError(String(submitError));
-        toast.error(String(submitError));
         return;
       }
 
@@ -1273,6 +1274,7 @@ const Lobby = () => {
 
   return (
     <main className={mainClassNames}>
+      <Toaster position="top-left" toastOptions={TOAST_OPTIONS} />
       {pendingEquipmentSubmission &&
         createPortal(
           <dialog open className={styles.modal}>
@@ -1491,6 +1493,7 @@ const Lobby = () => {
                         type="button"
                         className={styles.kickButton}
                         onClick={handleKickPlayer}
+                        disabled={isKickingPlayer}
                         title={t('GAME_LOBBY.KICK_TITLE', {
                           name: isStreamerMode
                             ? t('GAME_LOBBY.OPPONENT')

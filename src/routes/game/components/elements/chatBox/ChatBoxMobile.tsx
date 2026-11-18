@@ -13,6 +13,7 @@ import ChatInput from '../chatInput/ChatInput';
 import { useShowsLandscapeFan } from '../../zones/playerHand/useShowsLandscapeFan';
 import styles from './ChatBox.module.css';
 import GameLogMessages from './GameLogMessages';
+import SnapshotInviteNotice from './SnapshotInviteNotice';
 import { useTranslation } from 'react-i18next';
 
 const INITIAL_MOBILE_LOG_MESSAGES = 120;
@@ -244,6 +245,7 @@ export default function ChatBox() {
                   {t('CHAT.LOAD_EARLIER_MESSAGES')}
                 </button>
               )}
+              {chatFilter !== 'log' && <SnapshotInviteNotice mobile />}
               <GameLogMessages
                 chatLog={visibleChatLog}
                 chatFilter={chatFilter}

@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-hot-toast';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { describeThrownError } from 'utils/serverError';
 
 export interface PatreonLoginResponse {
   message?: string;
@@ -25,12 +26,20 @@ const LinkPatreon = () => {
         if (data.message === 'ok') {
           navigate('/user/profile');
         } else {
-          toast.error(t('LINK_PATREON_PAGE.ERROR', { error: data?.error }));
+          toast.error(
+            t('LINK_PATREON_PAGE.ERROR', {
+              error: data?.error || t('BASE.UNKNOWN_ERROR')
+            })
+          );
           navigate('/user/profile');
         }
       })
       .catch((err: any) => {
-        toast.error(t('LINK_PATREON_PAGE.NETWORK_ERROR', { error: err }));
+        toast.error(
+          t('LINK_PATREON_PAGE.NETWORK_ERROR', {
+            error: describeThrownError(err, t('BASE.UNKNOWN_ERROR'))
+          })
+        );
         navigate('/user/profile');
       });
   }, []);

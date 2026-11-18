@@ -448,7 +448,7 @@ const GameStateHandler = ({
                   message: data.error
                 });
                 onLoadingErrorRef.current?.(message);
-                toast.error(message);
+                toast.error(message, { id: 'game-state-error' });
                 source.close();
                 if (navigateTimerRef.current === null) {
                   navigateTimerRef.current = setTimeout(() => {
@@ -462,7 +462,7 @@ const GameStateHandler = ({
               if (errorMsg.includes('required to spectate')) {
                 const message = t('SPECTATOR.LOGIN_REQUIRED_BODY');
                 onLoadingErrorRef.current?.(message);
-                toast.error(message);
+                toast.error(message, { id: 'game-state-error' });
                 source.close();
                 return;
               }
@@ -475,7 +475,7 @@ const GameStateHandler = ({
                   message: data.error
                 });
                 onLoadingErrorRef.current?.(message);
-                toast.error(message);
+                toast.error(message, { id: 'game-state-error' });
                 source.close();
                 return;
               }
@@ -484,7 +484,7 @@ const GameStateHandler = ({
                 message: data.error
               });
               onLoadingErrorRef.current?.(message);
-              toast.error(message);
+              toast.error(message, { id: 'game-state-error' });
               return;
             }
 
@@ -601,7 +601,7 @@ const GameStateHandler = ({
             if (retryCountRef.current === MAX_RETRIES + 1) {
               const message = t('GAME_STATE.CONNECTION_LOST');
               onLoadingErrorRef.current?.(message);
-              toast.error(message);
+              toast.error(message, { id: 'game-state-error' });
             }
             scheduleRetry(10000);
           }

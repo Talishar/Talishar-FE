@@ -7,6 +7,7 @@ import { RootState } from 'app/Store';
 import { setDeckPeek } from 'features/game/GameSlice';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import styles from './DeckZone.module.css';
+import { useTranslation } from 'react-i18next';
 
 const PEEK_DURATION = 10000;
 
@@ -55,6 +56,7 @@ function DeckPeekCardView({
   showCountersOnHover
 }: DeckPeekCardProps & { peekCard: string }) {
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const actionSignature = useAppSelector(selectActionSignature, shallowEqual);
   const signatureAtPeek = useRef(actionSignature);
   const [isClosing, setIsClosing] = useState(false);
@@ -95,9 +97,9 @@ function DeckPeekCardView({
       style={style}
       onClick={dismiss}
       onAnimationEnd={onAnimationEnd}
-      title={`Top of ${
-        isPlayer ? 'your' : "your opponent's"
-      } deck. Only you can see this.`}
+      title={
+        isPlayer ? t('ZONES.DECK_PEEK_YOURS') : t('ZONES.DECK_PEEK_OPPONENT')
+      }
     >
       <CardDisplay
         card={{ cardNumber: peekCard }}
