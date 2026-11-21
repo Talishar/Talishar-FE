@@ -54,7 +54,7 @@ export function Effect(prop: CardProp) {
           className={`${styles.img} ${imgBorderClass} ${imgClassName || ''}`}
           isOpponent={!isPlayer}
         />
-        <CountersOverlay {...card} num={numValue} excludeFancyCounters={true} />
+        <CountersOverlay {...card} num={numValue} excludeFancyCounters={true} numDark />
       </div>
     </CardPopUp>
   );

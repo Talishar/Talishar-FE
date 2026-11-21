@@ -807,3 +807,25 @@
 .numberTab .text {
   color: inherit;
 }
+
+.number.number.numberDark {
+  width: auto;
+  max-width: none;
+  min-width: min(2.5em, 100%);
+  height: 1.8em;
+  max-height: none;
+  min-height: 0;
+  padding: 0 min(0.6em, 10%);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 10px;
+  background: #0e0f12;
+  color: #ecedef;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+  font-size: max(10px, calc(var(--card-size) * 0.105));
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.numberDark .text {
+  color: inherit;
+}

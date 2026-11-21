@@ -42,6 +42,7 @@ export interface CountersProp extends Partial<Card> {
   num?: number;
   numDescription?: string;
   numAsTab?: boolean;
+  numDark?: boolean;
   activeCombatChain?: CombatChainLink;
   excludeFancyCounters?: boolean;
   gemStackIDs?: string[];
@@ -56,6 +57,7 @@ export const CountersOverlay = React.memo(
     actionDataOverride,
     num,
     numAsTab,
+    numDark,
     zone,
     activeCombatChain,
     goAgain,
@@ -102,7 +104,8 @@ export const CountersOverlay = React.memo(
         {!!numTotal && (
           <div
             className={classNames(styles.number, {
-              [styles.numberTab]: numAsTab
+              [styles.numberTab]: numAsTab,
+              [styles.numberDark]: numDark
             })}
           >
             <div className={styles.text}>{numTotal}</div>
