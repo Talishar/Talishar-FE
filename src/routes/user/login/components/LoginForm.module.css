@@ -45,6 +45,17 @@
   text-align: center;
 }
 
+button.oauthButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  margin-top: 18px;
+  width: 100%;
+  background: transparent;
+  color: var(--theme-primary);
+}
+
 .orbreak {
   width: 100%;
   text-align: center;

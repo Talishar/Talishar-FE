@@ -112,6 +112,14 @@
       "ERROR": "Metafy 注册错误：{{error}}",
       "FAILED": "注册失败：{{error}}"
     },
+    "GOOGLE_SIGNUP": {
+      "PAGE_TITLE": "Google 登录",
+      "PROCESSING": "处理中...",
+      "REDIRECTING": "正在返回首页...",
+      "ERROR": "Google 登录错误：{{error}}",
+      "FAILED": "登录失败：{{error}}",
+      "STATE_MISMATCH": "登录请求已过期，请重试"
+    },
     "VERIFY": {
       "ALLOW": "允许",
       "AUTHORIZATION_FAILED": "授权失败",
@@ -2093,6 +2101,7 @@
       "LOGGING_IN": "登录中…",
       "LOGIN": "登录",
       "LOGIN_METAFY": "使用 Metafy 登录",
+      "LOGIN_GOOGLE": "使用 Google 登录",
       "LOGIN_NETWORK_ERROR": "发生网络错误，请重试。",
       "NETWORK_ERROR": "网络错误：{{error}}",
       "NO_ACCOUNT": "还没有账号？",

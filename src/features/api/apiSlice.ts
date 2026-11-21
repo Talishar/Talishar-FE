@@ -768,6 +768,26 @@ export const apiSlice = createApi({
       },
       invalidatesTags: ['Auth', { type: 'UserProfile', id: 'LIST' }]
     }),
+    submitGoogleSignup: builder.mutation<
+      MetafySignupResponse,
+      {
+        code: string;
+        redirect_uri: string;
+      }
+    >({
+      query: ({ code, redirect_uri }) => {
+        return {
+          url: URL_END_POINT.GOOGLE_SIGNUP,
+          method: 'GET',
+          params: {
+            code: code,
+            redirect_uri: redirect_uri
+          },
+          responseHandler: parseResponse
+        };
+      },
+      invalidatesTags: ['Auth', { type: 'UserProfile', id: 'LIST' }]
+    }),
     refreshMetafyCommunities: builder.mutation<
       RefreshMetafyCommunitiesResponse,
       void
@@ -1216,6 +1236,7 @@ export const {
   useSubmitPatreonLoginMutation,
   useSubmitMetafyLoginMutation,
   useSubmitMetafySignupMutation,
+  useSubmitGoogleSignupMutation,
   useRefreshMetafyCommunitiesMutation,
   useLoadDebugGameMutation,
   useGetUserProfileQuery,

@@ -445,6 +445,7 @@ export const URL_END_POINT = {
   PATREON_LOGIN: `AccountFiles/PatreonLoginAPI.php`,
   METAFY_LOGIN: `AccountFiles/MetafyLoginAPI.php`,
   METAFY_SIGNUP: `AccountFiles/MetafySignupAPI.php`,
+  GOOGLE_SIGNUP: `AccountFiles/GoogleSignupAPI.php`,
   METAFY_REFRESH_COMMUNITIES: `APIs/RefreshMetafyCommunities.php`,
   LOAD_BUG_REPORT: `LoadBugReport.php`,
   SUBMIT_LOBBY_INPUT: 'APIs/SubmitLobbyInput.php',

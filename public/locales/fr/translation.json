@@ -112,6 +112,14 @@
       "ERROR": "Erreur d'inscription Metafy : {{error}}",
       "FAILED": "Échec de l'inscription : {{error}}"
     },
+    "GOOGLE_SIGNUP": {
+      "PAGE_TITLE": "Connexion Google",
+      "PROCESSING": "Traitement...",
+      "REDIRECTING": "Redirection vers l'accueil...",
+      "ERROR": "Erreur de connexion Google : {{error}}",
+      "FAILED": "Échec de la connexion : {{error}}",
+      "STATE_MISMATCH": "la demande de connexion a expiré, veuillez réessayer"
+    },
     "VERIFY": {
       "ALLOW": "Permettre",
       "AUTHORIZATION_FAILED": "Échec de l'autorisation",
@@ -2136,6 +2144,7 @@
       "LOGGING_IN": "Connexion en cours…",
       "LOGIN": "Se connecter",
       "LOGIN_METAFY": "Se connecter avec Metafy",
+      "LOGIN_GOOGLE": "Se connecter avec Google",
       "LOGIN_NETWORK_ERROR": "Une erreur réseau s'est produite. ",
       "NETWORK_ERROR": "Erreur réseau : {{error}}",
       "NO_ACCOUNT": "Pas encore de compte?",

@@ -112,6 +112,14 @@
       "ERROR": "Metafy登録エラー：{{error}}",
       "FAILED": "登録に失敗しました：{{error}}"
     },
+    "GOOGLE_SIGNUP": {
+      "PAGE_TITLE": "Googleでログイン",
+      "PROCESSING": "処理中...",
+      "REDIRECTING": "ホームに移動しています...",
+      "ERROR": "Googleログインエラー: {{error}}",
+      "FAILED": "ログインに失敗しました: {{error}}",
+      "STATE_MISMATCH": "ログイン要求の有効期限が切れました。もう一度お試しください"
+    },
     "VERIFY": {
       "ALLOW": "許可",
       "AUTHORIZATION_FAILED": "認証に失敗しました",
@@ -2093,6 +2101,7 @@
       "LOGGING_IN": "ログインしています…",
       "LOGIN": "ログイン",
       "LOGIN_METAFY": "Metafyでログイン",
+      "LOGIN_GOOGLE": "Googleでログイン",
       "LOGIN_NETWORK_ERROR": "ネットワークエラーが発生しました。もう一度お試しください。",
       "NETWORK_ERROR": "ネットワークエラー：{{error}}",
       "NO_ACCOUNT": "アカウントをお持ちでないですか？",

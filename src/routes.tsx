@@ -43,6 +43,7 @@ const PrivacyPolicy = lazy(() => import('routes/legal/PrivacyPolicy'));
 const TermsOfService = lazy(() => import('routes/legal/TermsOfService'));
 const AuthVerify = lazy(() => import('routes/auth/verify'));
 const MetafySignup = lazy(() => import('routes/auth/MetafySignup'));
+const GoogleSignup = lazy(() => import('routes/auth/GoogleSignup'));
 const AdsTest = lazy(() => import('routes/ads/AdsTest'));
 const Learn = lazy(() => import('routes/learn/Learn'));
 const About = lazy(() => import('routes/about/About'));
@@ -253,6 +254,7 @@ export const router = createRouter(
           <Route path="terms-of-service" element={<TermsOfService />} />
           <Route path="auth/verify" element={<AuthVerify />} />
           <Route path="auth/metafy-signup" element={<MetafySignup />} />
+          <Route path="auth/google-signup" element={<GoogleSignup />} />
           <Route path="ads-test" element={<AdsTest />} />
           <Route
             path="mod"

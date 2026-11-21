@@ -112,6 +112,14 @@
       "ERROR": "Metafy signup error: {{error}}",
       "FAILED": "Signup failed: {{error}}"
     },
+    "GOOGLE_SIGNUP": {
+      "PAGE_TITLE": "Google Sign In",
+      "PROCESSING": "Processing...",
+      "REDIRECTING": "Redirecting to home...",
+      "ERROR": "Google sign in error: {{error}}",
+      "FAILED": "Sign in failed: {{error}}",
+      "STATE_MISMATCH": "the sign in request expired, please try again"
+    },
     "VERIFY": {
       "ALLOW": "Allow",
       "AUTHORIZATION_FAILED": "Authorization Failed",
@@ -2558,6 +2566,7 @@
       "LOGGING_IN": "Logging in…",
       "LOGIN": "Log in",
       "LOGIN_METAFY": "Log in with Metafy",
+      "LOGIN_GOOGLE": "Log in with Google",
       "LOGIN_NETWORK_ERROR": "There has been a network error. Please try again.",
       "NETWORK_ERROR": "Network error: {{error}}",
       "NO_ACCOUNT": "No account yet?",
