@@ -133,16 +133,17 @@
 }
 
 :global(body.fanLandscapeHand) .reactionWrapper {
-  height: calc(var(--card-size) + 4px);
+  height: calc(var(--card-size) + 4 * var(--fan-px));
 }
 
 :global(body.fanLandscapeHand) .reactions {
   --reactions-scrollbar-room: 6px;
-  top: calc(-4px - var(--reactions-grow-up));
-  bottom: calc(-4px - var(--reactions-grow-down));
-  left: -3px;
+  top: calc(-4 * var(--fan-px) - var(--reactions-grow-up));
+  bottom: calc(-4 * var(--fan-px) - var(--reactions-grow-down));
+  left: calc(-3 * var(--fan-px));
   width: auto;
-  padding: 6px 8px 6px 3px;
+  padding: calc(6 * var(--fan-px)) calc(8 * var(--fan-px))
+    calc(6 * var(--fan-px)) calc(3 * var(--fan-px));
 }
 
 :global(body.fanLandscapeHand) .cardContainer {
@@ -150,8 +151,7 @@
 }
 
 @media (orientation: landscape) and (min-height: 501px) {
-  :global(body.fanLandscapeHand) .currentAttack,
-  :global(body.fanLandscapeHand) .attDefRow {
+  :global(body.fanLandscapeHand) .currentAttack {
     gap: calc(0.5 * var(--fan-vh));
   }
 
@@ -159,28 +159,8 @@
     padding-left: calc(3 * var(--fan-px));
   }
 
-  :global(body.fanLandscapeHand) .attack,
-  :global(body.fanLandscapeHand) .chainLinksRow {
-    gap: var(--fan-vh);
-  }
-
-  :global(body.fanLandscapeHand) .reactionWrapper {
-    height: calc(var(--card-size) + 4 * var(--fan-px));
-  }
-
   :global(body.fanLandscapeHand) .reactions {
     --reactions-scrollbar-room: 16px;
-    top: calc(-4 * var(--fan-px) - var(--reactions-grow-up));
-    bottom: calc(-4 * var(--fan-px) - var(--reactions-grow-down));
-    left: calc(-3 * var(--fan-px));
-    gap: var(--fan-vh);
-    padding: calc(6 * var(--fan-px)) calc(8 * var(--fan-px))
-      calc(6 * var(--fan-px)) calc(3 * var(--fan-px));
-  }
-
-  :global(body.fanLandscapeHand) .chainLinkSummary {
-    padding-left: var(--fan-vh);
-    padding-right: var(--fan-vh);
     gap: var(--fan-vh);
   }
 }

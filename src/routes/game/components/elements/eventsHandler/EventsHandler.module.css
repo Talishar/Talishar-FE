@@ -6,7 +6,7 @@
   align-items: center;
   gap: 0.5em;
   line-height: normal;
-  min-width: calc(12dvh * var(--card-scale));
+  min-width: calc(12 * var(--app-vh) * var(--card-scale));
   cursor: pointer;
   /* Reset Pico's [role="button"] styling */
   background: transparent;
@@ -17,10 +17,6 @@
   font-size: inherit;
   color: var(--white, #fff);
   cursor: pointer;
-}
-
-:global(body.fanLandscapeHand) .card {
-  min-width: calc(12 * var(--fan-window-vh) * var(--card-scale));
 }
 
 .card:hover,
@@ -66,13 +62,12 @@
 .movementEvent {
   --movement-accent: rgba(var(--theme-on-surface-rgb), 0.65);
   --movement-glow: rgba(var(--theme-on-surface-rgb), 0.12);
-  --movement-card-size: clamp(5.5rem, 13dvh, 7.75rem);
+  --movement-card-size: clamp(5.5rem, calc(13 * var(--app-vh)), 7.75rem);
   gap: 0.35rem;
   min-width: var(--movement-card-size);
 }
 
 :global(body.fanLandscapeHand) .movementEvent {
-  --movement-card-size: clamp(5.5rem, calc(13 * var(--fan-window-vh)), 7.75rem);
   min-width: var(--movement-card-size);
 }
 
@@ -297,12 +292,8 @@
   align-items: center;
   gap: 0.5em;
   line-height: normal;
-  min-width: calc(12dvh * var(--card-scale));
+  min-width: calc(12 * var(--app-vh) * var(--card-scale));
   animation: addBotDeckSlide 1s ease-in-out;
-}
-
-:global(body.fanLandscapeHand) .addBotDeckCard {
-  min-width: calc(12 * var(--fan-window-vh) * var(--card-scale));
 }
 
 @keyframes addBotDeckSlide {
@@ -320,7 +311,7 @@
 .modal {
   position: fixed;
   top: 50%;
-  left: calc(50% - 5dvh);
+  left: calc(50% - 5 * var(--app-vh));
   transform: translate(-50%, -50%);
   z-index: 1000;
   bottom: auto;
@@ -330,10 +321,6 @@
   border: none;
   background: transparent;
   width: max-content;
-}
-
-:global(body.fanLandscapeHand) .modal {
-  left: calc(50% - 5 * var(--fan-window-vh));
 }
 
 .container {
@@ -415,7 +402,10 @@
   justify-content: center;
   min-width: 100px;
   padding: 0.55rem 1.5rem;
-  background-color: rgba(var(--theme-sunken-rgb), calc(0.3 * var(--theme-sunken-alpha)));
+  background-color: rgba(
+    var(--theme-sunken-rgb),
+    calc(0.3 * var(--theme-sunken-alpha))
+  );
   color: rgba(var(--theme-on-surface-rgb), 0.8);
   border: 1px solid rgba(var(--theme-on-surface-rgb), 0.15);
   border-radius: 5px;
@@ -433,4 +423,3 @@
   border-color: rgba(var(--theme-on-surface-rgb), 0.3);
   color: var(--theme-text);
 }
-

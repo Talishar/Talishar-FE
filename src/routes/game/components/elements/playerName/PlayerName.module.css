@@ -68,7 +68,7 @@
   left: auto;
   margin: 0;
   padding: 0 0.15rem;
-  height: 22px;
+  height: calc(22 * var(--fan-px));
   max-width: 100%;
 }
 
@@ -263,34 +263,19 @@
 }
 
 .icon {
-  height: 2.8vh;
-  width: 2.8vh;
-  height: 2.8dvh;
-  width: 2.8dvh;
-}
-
-:global(body.fanLandscapeHand) .icon {
-  height: calc(2.8 * var(--fan-window-vh));
-  width: calc(2.8 * var(--fan-window-vh));
+  height: calc(2.8 * var(--app-vh));
+  width: calc(2.8 * var(--app-vh));
 }
 
 @media (max-width: 1200px) {
   .icon {
-    height: 1.8rem;
-    width: 1.8rem;
-    height: 1.8dvh;
-    width: 1.8dvh;
-  }
-
-  :global(body.fanLandscapeHand) .icon {
-    height: calc(1.8 * var(--fan-window-vh));
-    width: calc(1.8 * var(--fan-window-vh));
+    height: calc(1.8 * var(--app-vh));
+    width: calc(1.8 * var(--app-vh));
   }
 }
 
 @media (orientation: landscape) and (min-height: 501px) {
   :global(body.fanLandscapeHand) .playerName {
-    height: calc(22 * var(--fan-px));
     padding: 0 calc(2.7 * var(--fan-px));
     font-size: calc(9.9 * var(--fan-px));
   }

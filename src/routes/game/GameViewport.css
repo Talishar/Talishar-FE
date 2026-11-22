@@ -1,5 +1,15 @@
 /* Shared by gameplay and lobby. Both screens rely on viewport-sized body
    geometry so the theme background and cards retain their established scale. */
+:root {
+  --app-vh: var(--fan-window-vh, 1vh);
+}
+
+@supports (height: 1dvh) {
+  :root {
+    --app-vh: var(--fan-window-vh, 1dvh);
+  }
+}
+
 html,
 body {
   padding: 0;

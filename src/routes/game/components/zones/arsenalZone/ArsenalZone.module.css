@@ -14,7 +14,7 @@
   min-width: var(--card-size);
   width: fit-content;
   display: flex;
-  gap: 1dvh;
+  gap: calc(1 * var(--app-vh));
   justify-content: center;
   align-items: center;
   position: relative;
@@ -26,10 +26,6 @@
 .splitArsenal {
   position: relative;
   left: var(--arsenal-split-shift, 0px);
-}
-
-:global(body.fanLandscapeHand) .arsenalZone {
-  gap: calc(1 * var(--fan-window-vh));
 }
 
 .cardWrapper {

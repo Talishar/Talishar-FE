@@ -223,8 +223,7 @@
 
 :global(body.fanLandscapeHand) .attDefRow {
   height: 1.1em;
-  font-size: min(4.5vh - 1px, 19px);
-  font-size: min(4.5 * var(--fan-window-vh) - 1px, 19px);
+  font-size: min(4.5 * var(--fan-vh) - var(--fan-px), 19 * var(--fan-px));
 }
 
 :global(body.fanLandscapeHand) :is(.attDiv, .defDiv) {
@@ -245,9 +244,9 @@
   width: 1em;
   height: 1em;
   margin: 0.05em;
-  padding: 1px;
+  padding: var(--fan-px);
   font-size: 1em;
-  border-radius: 3px;
+  border-radius: calc(3 * var(--fan-px));
 }
 
 :global(body.fanLandscapeHand) .icon.icon > svg {
@@ -290,22 +289,5 @@
 
   :global(body.fanLandscapeHand) .attDefRow {
     gap: calc(0.5 * var(--fan-vh));
-    font-size: min(4.5 * var(--fan-vh) - var(--fan-px), 19 * var(--fan-px));
-  }
-
-  :global(body.fanLandscapeHand) .icon.icon {
-    padding: var(--fan-px);
-    border-radius: calc(3 * var(--fan-px));
-  }
-
-  :global(body.fanLandscapeHand) .reactions,
-  :global(body.fanLandscapeHand) .chainLinksRow {
-    gap: var(--fan-vh);
-  }
-
-  :global(body.fanLandscapeHand) .chainLinkSummary {
-    padding-left: var(--fan-vh);
-    padding-right: var(--fan-vh);
-    gap: var(--fan-vh);
   }
 }
