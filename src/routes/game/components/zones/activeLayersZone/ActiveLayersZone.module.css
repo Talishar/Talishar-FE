@@ -122,7 +122,10 @@
   min-height: 0;
   /* Custom scrollbar */
   scrollbar-width: thin;
-  scrollbar-color: var(--theme-primary-focus, color-mix(in srgb, var(--theme-primary) 30%, transparent))
+  scrollbar-color: var(
+      --theme-primary-focus,
+      color-mix(in srgb, var(--theme-primary) 30%, transparent)
+    )
     rgba(0, 0, 0, 0.3);
 }
 
@@ -131,12 +134,18 @@
 }
 
 .activeLayersInner::-webkit-scrollbar-track {
-  background: rgba(var(--theme-sunken-rgb), calc(0.3 * var(--theme-sunken-alpha)));
+  background: rgba(
+    var(--theme-sunken-rgb),
+    calc(0.3 * var(--theme-sunken-alpha))
+  );
   border-radius: 5px;
 }
 
 .activeLayersInner::-webkit-scrollbar-thumb {
-  background: var(--theme-primary-focus, color-mix(in srgb, var(--theme-primary) 30%, transparent));
+  background: var(
+    --theme-primary-focus,
+    color-mix(in srgb, var(--theme-primary) 30%, transparent)
+  );
   border-radius: 5px;
 }
 
@@ -167,8 +176,7 @@
 
 @media (orientation: landscape) and (max-aspect-ratio: 3/2) {
   .activeLayersContents > div {
-    font-size: max(9px, calc(1.5vh - 2px));
-    font-size: max(9px, calc(1.5dvh - 2px));
+    font-size: max(9px, calc(1.5 * var(--app-vh) - 2px));
   }
 
   :global(body.fanLandscapeHand) .activeLayersContents > div {
@@ -337,8 +345,7 @@
   background-color: var(--near-black);
   color: var(--theme-text);
   font-weight: bold;
-  font-size: max(12px, 1.8vh);
-  font-size: max(12px, 1.8dvh);
+  font-size: max(12px, calc(1.8 * var(--app-vh)));
   line-height: 1;
   padding: 4px 9px;
   border-radius: 10px;
@@ -346,22 +353,14 @@
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
 }
 
-:global(body.fanLandscapeHand) .groupedCardCountBadge {
-  font-size: max(12px, calc(1.8 * var(--fan-window-vh)));
-}
-
 @media only screen and (max-width: 768px) {
   .activeLayersBox {
     min-width: min(70dvw, 320px);
     max-width: 92dvw;
     max-height: 45dvh;
-    top: 30dvh;
+    top: calc(30 * var(--app-vh));
     left: 50%;
     translate: -50% 0;
-  }
-
-  :global(body.fanLandscapeHand) .activeLayersBox {
-    top: calc(30 * var(--fan-window-vh));
   }
 
   .activeLayersInner {
@@ -424,22 +423,17 @@
 
 :global(body.fanLandscapeHand) .activeLayersBox {
   --card-size: var(--side-card-size);
-  min-width: 35vh;
   min-width: calc(35 * var(--fan-window-vh));
-  max-width: 95vh;
   max-width: calc(95 * var(--fan-window-vh));
-  max-height: 45vh;
   max-height: calc(45 * var(--fan-window-vh));
 }
 
 :global(body.fanLandscapeHand) .activeLayersInner {
-  padding: 1.5vh;
   padding: calc(1.5 * var(--fan-window-vh));
 }
 
 :global(body.fanLandscapeHand)
   :is(.activeLayersTitle, .activeLayersCallToAction) {
-  font-size: max(11px, min(2.75vh, 16px));
   font-size: max(11px, min(2.75 * var(--fan-window-vh), 16px));
   gap: 0.6em;
   padding-left: 0.5em;
@@ -471,7 +465,6 @@
 
 :global(body.fanLandscapeHand) .activeLayersContents > div {
   width: var(--card-size);
-  margin-right: -3.5vh;
   margin-right: calc(-3.5 * var(--fan-window-vh));
 }
 

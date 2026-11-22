@@ -5,6 +5,11 @@ export const LEGACY_FANNED_HAND_COOKIES = [
 ];
 export const CLASSIC_HAND_COOKIE = 'classicHand';
 export const FANNED_HAND_MOBILE_QUERY = '(max-width: 1199px)';
+export const PITCH_PHASES = new Set([
+  'P',
+  'CHOOSEHANDCANCEL',
+  'PAYGOLDORPITCH'
+]);
 
 export type FanSlot = {
   x: number;
@@ -50,7 +55,6 @@ export const FAN_CARD_HEIGHT_RATIO = 0.25;
 export const FAN_LANDSCAPE_CARD_HEIGHT_RATIO = 0.35;
 export const FAN_LANDSCAPE_BODY_CLASS = 'fanLandscapeHand';
 export const FAN_HAND_RESERVE_VAR = '--fan-hand-reserve';
-export const FAN_FULLSCREEN_WIDTH_VAR = '--fan-fullscreen-width';
 export const FAN_WINDOW_VH_VAR = '--fan-window-vh';
 export const FAN_WINDOW_VH = `var(${FAN_WINDOW_VH_VAR}, 1dvh)`;
 export const FAN_SIDE_COLUMN_ATTR = 'data-fan-side-column';

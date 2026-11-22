@@ -185,26 +185,18 @@
   width: auto;
   height: auto;
   max-width: min(calc(100vw - 80px), 360px);
-  max-height: calc(70dvh - 48px);
-}
-
-:global(body.fanLandscapeHand) .mobileDialog .img {
-  max-height: calc(70 * var(--fan-window-vh) - 48px);
+  max-height: calc(70 * var(--app-vh) - 48px);
 }
 
 .mobileDialog .keywordStrip {
   box-sizing: border-box;
   width: 100%;
   max-width: 100%;
-  max-height: 24dvh;
+  max-height: calc(24 * var(--app-vh));
   margin-top: 14px;
   overflow-y: auto;
   pointer-events: auto;
   font-size: 0.8rem;
-}
-
-:global(body.fanLandscapeHand) .mobileDialog .keywordStrip {
-  max-height: calc(24 * var(--fan-window-vh));
 }
 
 .mobileFaceButton {
@@ -243,14 +235,7 @@
 }
 
 .mobileDialog .meldWrap {
-  --meld-h: min(calc(70dvh - 48px), calc((100vw - 60px) * 0.7166));
-}
-
-:global(body.fanLandscapeHand) .mobileDialog .meldWrap {
-  --meld-h: min(
-    calc(70 * var(--fan-window-vh) - 48px),
-    calc((100vw - 60px) * 0.7166)
-  );
+  --meld-h: min(calc(70 * var(--app-vh) - 48px), calc((100vw - 60px) * 0.7166));
 }
 
 .mobileCloseButton {
@@ -304,11 +289,7 @@
 
   .mobileDialog .img {
     max-width: min(calc(100vw - 56px), 360px);
-    max-height: calc(100dvh - 130px);
-  }
-
-  :global(body.fanLandscapeHand) .mobileDialog .img {
-    max-height: calc(100 * var(--fan-window-vh) - 130px);
+    max-height: calc(100 * var(--app-vh) - 130px);
   }
 }
 

@@ -46,15 +46,10 @@
   -khtml-user-drag: none;
   -moz-user-drag: none;
   -o-user-drag: none;
-  border-radius: 1vh;
-  border-radius: 1dvh;
+  border-radius: calc(1 * var(--app-vh));
   max-height: 100%;
   max-width: 100%;
   transition: box-shadow 0.25s, border-color 0.25s;
-}
-
-:global(body.fanLandscapeHand) .img {
-  border-radius: calc(1 * var(--fan-window-vh));
 }
 
 .fanSlot {
@@ -162,20 +157,11 @@
 .iconCol {
   display: flex;
   position: absolute;
-  top: 3vh;
-  left: -1.25vh;
-  height: 10vh;
-  top: 3dvh;
-  left: -1.25dvh;
-  height: 10dvh;
+  top: calc(3 * var(--app-vh));
+  left: calc(-1.25 * var(--app-vh));
+  height: calc(10 * var(--app-vh));
   justify-content: center;
   align-items: flex-start;
-}
-
-:global(body.fanLandscapeHand) .iconCol {
-  top: calc(3 * var(--fan-window-vh));
-  left: calc(-1.25 * var(--fan-window-vh));
-  height: calc(10 * var(--fan-window-vh));
 }
 
 .icon {
@@ -237,16 +223,17 @@
 
 .border10 {
   border-color: var(--card-border-10);
-  box-shadow: 0 0 0 2px var(--card-border-10), 0 0 10px 2px var(--card-border-10);
+  box-shadow: 0 0 0 2px var(--card-border-10),
+    0 0 10px 2px var(--card-border-10);
 }
 
 .label {
   background-color: var(--near-black);
   color: var(--theme-text);
   position: absolute;
-  bottom: 3dvh;
-  left: 3dvh;
-  right: 3dvh;
+  bottom: calc(3 * var(--app-vh));
+  left: calc(3 * var(--app-vh));
+  right: calc(3 * var(--app-vh));
   text-align: center;
   border: 2px solid goldenrod;
   border-radius: 5px;
@@ -259,10 +246,4 @@
   pointer-events: none;
   white-space: nowrap;
   box-shadow: 0 0 8px rgba(255, 255, 0, 0.8);
-}
-
-:global(body.fanLandscapeHand) .label {
-  bottom: calc(3 * var(--fan-window-vh));
-  left: calc(3 * var(--fan-window-vh));
-  right: calc(3 * var(--fan-window-vh));
 }

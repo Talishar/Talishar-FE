@@ -104,29 +104,23 @@ const GridBoard = () => {
       <ManualModePanel />
       <div className={gridBoardClass}>
         {showsLandscapeFan && (
-          <div className={styles.fanOpponentName}>
-            <PlayerName isPlayer={false} />
-          </div>
-        )}
-        {showsLandscapeFan && (
-          <div className={styles.fanPlayerName}>
-            <PlayerName isPlayer />
-          </div>
-        )}
-        {showsLandscapeFan && (
-          <div className={styles.fanLandmark}>
-            <LandmarkZone />
-          </div>
-        )}
-        {showsLandscapeFan && (
-          <div className={styles.fanOpponentEffects}>
-            <Effects isPlayer={false} />
-          </div>
-        )}
-        {showsLandscapeFan && (
-          <div className={styles.fanPlayerEffects}>
-            <Effects isPlayer />
-          </div>
+          <>
+            <div className={styles.fanOpponentName}>
+              <PlayerName isPlayer={false} />
+            </div>
+            <div className={styles.fanPlayerName}>
+              <PlayerName isPlayer />
+            </div>
+            <div className={styles.fanLandmark}>
+              <LandmarkZone />
+            </div>
+            <div className={styles.fanOpponentEffects}>
+              <Effects isPlayer={false} />
+            </div>
+            <div className={styles.fanPlayerEffects}>
+              <Effects isPlayer />
+            </div>
+          </>
         )}
         <div className={styles.pTwoLegs}>
           <LegsEqZone isPlayer={flipZones} />

@@ -43,19 +43,15 @@
 
 .fanCollapseDock {
   position: fixed;
-  bottom: 2vh;
-  bottom: 2dvh;
+  bottom: calc(2 * var(--app-vh));
   left: 0;
   right: 0;
-  height: 3vh;
-  height: 3dvh;
+  height: calc(3 * var(--app-vh));
   pointer-events: none;
 }
 
 :global(body.fanLandscapeHand) .fanCollapseDock {
   z-index: 401;
-  bottom: calc(2 * var(--fan-window-vh));
-  height: calc(3 * var(--fan-window-vh));
 }
 
 :global(body.fanPortraitHand) .fanCollapseDock {

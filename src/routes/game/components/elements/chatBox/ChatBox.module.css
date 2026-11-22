@@ -266,7 +266,7 @@
 .chatBoxMobileContainer {
   position: fixed;
   bottom: 1dvh;
-  right: 2dvh;
+  right: calc(2 * var(--app-vh));
   width: clamp(230px, 52vw, 360px);
   z-index: 99997;
   display: flex;
@@ -281,7 +281,6 @@
 
 :global(body.fanLandscapeHand) .chatBoxMobileContainer {
   bottom: calc(1 * var(--fan-window-vh) + var(--chat-keyboard-inset, 0px));
-  right: calc(2 * var(--fan-window-vh));
   max-height: calc(98 * var(--fan-window-vh) - var(--chat-keyboard-inset, 0px));
 }
 
@@ -356,7 +355,11 @@
 
 /* Scrollable message area */
 .chatMobileScrollArea {
-  height: clamp(28dvh, 38dvh, 48dvh);
+  height: clamp(
+    calc(28 * var(--app-vh)),
+    calc(38 * var(--app-vh)),
+    calc(48 * var(--app-vh))
+  );
   overflow-y: auto;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
@@ -367,14 +370,6 @@
   display: flex;
   flex-direction: column;
   gap: 1px;
-}
-
-:global(body.fanLandscapeHand) .chatMobileScrollArea {
-  height: clamp(
-    calc(28 * var(--fan-window-vh)),
-    calc(38 * var(--fan-window-vh)),
-    calc(48 * var(--fan-window-vh))
-  );
 }
 
 .loadEarlierButton {

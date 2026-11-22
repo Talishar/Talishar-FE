@@ -26,7 +26,6 @@ import {
   resetGameFullscreenTurnedOff,
   setFanFullscreenWidth
 } from 'utils/gameFullscreen';
-import { FAN_FULLSCREEN_WIDTH_VAR } from '../components/zones/playerHand/fanLayout';
 import { useFannedHand } from '../components/zones/playerHand/useFannedHand';
 import { useShowsLandscapeFan } from '../components/zones/playerHand/useShowsLandscapeFan';
 import { useReplayPlayback } from './ReplayPlaybackContext';
@@ -140,6 +139,11 @@ export const LandscapeFanFullscreen = () => {
     fannedHand &&
     canLockLandscape();
   const enteredRef = useRef(false);
+  const exitIfEntered = () => {
+    if (enteredRef.current && document.fullscreenElement) {
+      document.exitFullscreen().catch(() => undefined);
+    }
+  };
   const gameID = useAppSelector(
     (state: RootState) => state.game.gameInfo.gameID
   );
@@ -155,17 +159,13 @@ export const LandscapeFanFullscreen = () => {
     document.addEventListener('fullscreenchange', onFullscreenChange);
     return () => {
       document.removeEventListener('fullscreenchange', onFullscreenChange);
-      if (enteredRef.current && document.fullscreenElement) {
-        document.exitFullscreen().catch(() => undefined);
-      }
+      exitIfEntered();
     };
   }, []);
 
   useEffect(() => {
     if (!showsLandscapeFan) {
-      if (enteredRef.current && document.fullscreenElement) {
-        document.exitFullscreen().catch(() => undefined);
-      }
+      exitIfEntered();
       return;
     }
     if (!document.fullscreenEnabled || isAppleTouchDevice()) return;
@@ -217,11 +217,7 @@ export const LandscapeFanFullscreen = () => {
 
   useEffect(() => {
     if (!showsLandscapeFan) return;
-    const bodyStyle = document.body.style;
-    const clear = () => {
-      setFanFullscreenWidth(0);
-      bodyStyle.removeProperty(FAN_FULLSCREEN_WIDTH_VAR);
-    };
+    const clear = () => setFanFullscreenWidth(0);
     const update = () => {
       if (
         !document.fullscreenElement ||
@@ -232,7 +228,6 @@ export const LandscapeFanFullscreen = () => {
       }
       if (window.innerWidth <= getFanFullscreenWidth()) return;
       setFanFullscreenWidth(window.innerWidth);
-      bodyStyle.setProperty(FAN_FULLSCREEN_WIDTH_VAR, `${window.innerWidth}px`);
     };
     update();
     document.addEventListener('fullscreenchange', update);

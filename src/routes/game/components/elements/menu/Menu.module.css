@@ -213,7 +213,7 @@
   );
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: calc(4 * var(--fan-px));
 }
 
 :global(body.fanLandscapeHand) .menuList:has(> :nth-child(9)) {
@@ -315,6 +315,5 @@
       (100 * var(--fan-window-vh) + 4 * var(--fan-px)) / var(--rail-slots) - 4 *
         var(--fan-px)
     );
-    gap: calc(4 * var(--fan-px));
   }
 }
