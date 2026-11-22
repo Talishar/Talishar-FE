@@ -518,9 +518,13 @@ export const DecksPage = () => {
 
     const options: (typeof DEFAULT_FRAME | number)[] = [
       DEFAULT_FRAME,
-      ...Array.from({ length: earned + 1 }, (_, index) => index)
+      ...Array.from({ length: earned }, (_, index) => index)
     ];
-    const selected = progress?.displayLevel ?? DEFAULT_FRAME;
+    const displayLevel = progress?.displayLevel ?? null;
+    const selected =
+      displayLevel === null || displayLevel >= earned
+        ? DEFAULT_FRAME
+        : displayLevel;
     const isSaving = savingFrameHero === heroId;
 
     return (
