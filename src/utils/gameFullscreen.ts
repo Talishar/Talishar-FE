@@ -91,10 +91,16 @@ export const unlockLandscape = () => {
 
 let fanFullscreenWidth = 0;
 const fanFullscreenWidthSubscribers = new Set<() => void>();
+const FAN_FULLSCREEN_WIDTH_VAR = '--fan-fullscreen-width';
 
 export const setFanFullscreenWidth = (width: number) => {
   if (width === fanFullscreenWidth) return;
   fanFullscreenWidth = width;
+  if (width) {
+    document.body.style.setProperty(FAN_FULLSCREEN_WIDTH_VAR, `${width}px`);
+  } else {
+    document.body.style.removeProperty(FAN_FULLSCREEN_WIDTH_VAR);
+  }
   fanFullscreenWidthSubscribers.forEach((subscriber) => subscriber());
 };
 

@@ -19,19 +19,14 @@
   box-sizing: border-box;
   display: grid;
   grid-template-rows: 1fr 1.35fr 1fr;
-  gap: 0.8dvh;
-  padding: 0.9dvh;
+  gap: calc(0.8 * var(--app-vh));
+  padding: calc(0.9 * var(--app-vh));
   border-radius: 5px;
   background: linear-gradient(to bottom, #1a1c23 0%, #0f1015 100%);
   border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
   transition: border-color 0.35s ease, box-shadow 0.35s ease;
   font-family: 'Rajdhani', 'Segoe UI', 'Inter', system-ui, sans-serif;
-}
-
-:global(body.fanLandscapeHand) .widget {
-  gap: calc(0.8 * var(--fan-window-vh));
-  padding: calc(0.9 * var(--fan-window-vh));
 }
 
 .widget > * {
@@ -116,13 +111,8 @@
 
   .widget {
     width: 100%;
-    gap: 0.5dvh;
-    padding: 0.5dvh;
-  }
-
-  :global(body.fanLandscapeHand) .widget {
-    gap: calc(0.5 * var(--fan-window-vh));
-    padding: calc(0.5 * var(--fan-window-vh));
+    gap: calc(0.5 * var(--app-vh));
+    padding: calc(0.5 * var(--app-vh));
   }
 
   .apBadge {
@@ -151,15 +141,17 @@
 :global(body.fanLandscapeHand) .vitals {
   grid-template-rows: repeat(3, minmax(0, 1fr));
   width: 76.5%;
-  border-radius: 14px;
+  border-radius: calc(14 * var(--fan-px));
 }
 
 :global(body.fanLandscapeHand) .vitals > :first-child {
-  border-radius: 11px 11px 5px 5px;
+  border-radius: calc(11 * var(--fan-px)) calc(11 * var(--fan-px))
+    calc(5 * var(--fan-px)) calc(5 * var(--fan-px));
 }
 
 :global(body.fanLandscapeHand) .vitals > :last-child {
-  border-radius: 5px 5px 11px 11px;
+  border-radius: calc(5 * var(--fan-px)) calc(5 * var(--fan-px))
+    calc(11 * var(--fan-px)) calc(11 * var(--fan-px));
 }
 
 @media (orientation: landscape) and (min-height: 501px) {
@@ -175,19 +167,5 @@
   :global(body.fanLandscapeHand) .widget {
     gap: calc(0.5 * var(--fan-vh));
     padding: calc(0.5 * var(--fan-vh));
-  }
-
-  :global(body.fanLandscapeHand) .vitals {
-    border-radius: calc(14 * var(--fan-px));
-  }
-
-  :global(body.fanLandscapeHand) .vitals > :first-child {
-    border-radius: calc(11 * var(--fan-px)) calc(11 * var(--fan-px))
-      calc(5 * var(--fan-px)) calc(5 * var(--fan-px));
-  }
-
-  :global(body.fanLandscapeHand) .vitals > :last-child {
-    border-radius: calc(5 * var(--fan-px)) calc(5 * var(--fan-px))
-      calc(11 * var(--fan-px)) calc(11 * var(--fan-px));
   }
 }

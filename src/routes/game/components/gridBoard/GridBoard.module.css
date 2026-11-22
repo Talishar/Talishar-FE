@@ -484,7 +484,7 @@
 }
 
 :global(body.fanLandscapeHand) {
-  --board-gap: calc(0.5 * var(--fan-window-vh));
+  --board-gap: calc(0.5 * var(--fan-vh));
   --board-edge: 0px;
   --board-width: calc(
     100dvw - var(--fan-rail-width) - env(safe-area-inset-left, 0px) -
@@ -546,10 +546,12 @@
       ) / 2
   );
   --fan-hero-lift: 0px;
+  --fan-side-w: var(--side-card-size);
+  --fan-side-grow: 0px;
   grid-template-columns:
-    0 var(--side-card-size) var(--side-card-size) 1fr var(--side-card-size)
-    var(--side-card-size) var(--side-card-size) 1fr var(--side-card-size)
-    var(--side-card-size) 0;
+    0 var(--fan-side-w) var(--fan-side-w) 1fr var(--side-card-size)
+    var(--side-card-size) var(--side-card-size) 1fr var(--fan-side-w)
+    var(--fan-side-w) 0;
   grid-template-rows:
     0 var(--card-size) var(--side-card-size) var(--card-size) 1fr 5px 5px 1fr
     var(--card-size) var(--side-card-size) var(--side-card-size)
@@ -579,8 +581,8 @@
   grid-row: 2;
   grid-column: 3 / 6;
   align-self: start;
-  margin-top: 8px;
-  margin-left: calc(8px - var(--board-gap));
+  margin-top: calc(8 * var(--fan-px));
+  margin-left: calc(8 * var(--fan-px) - var(--board-gap));
   justify-self: start;
   width: auto;
   height: auto;
@@ -603,8 +605,8 @@
   position: relative;
   top: var(--board-bottom-row);
   align-self: end;
-  margin-bottom: calc(8px - var(--board-gap));
-  margin-left: calc(8px - var(--board-gap));
+  margin-bottom: calc(8 * var(--fan-px) - var(--board-gap));
+  margin-left: calc(8 * var(--fan-px) - var(--board-gap));
   justify-self: start;
   width: auto;
   height: auto;
@@ -643,8 +645,10 @@
   flex-direction: column;
   height: var(--side-card-size);
   min-height: 0;
-  padding-inline-start: calc(4px - var(--board-gap));
-  --fx-row: calc((var(--side-card-size) - 12px + var(--board-gap)) / 2);
+  padding-inline-start: calc(4 * var(--fan-px) - var(--board-gap));
+  --fx-row: calc(
+    (var(--side-card-size) - 12 * var(--fan-px) + var(--board-gap)) / 2
+  );
   z-index: 42;
   pointer-events: none;
 }
@@ -659,16 +663,16 @@
 :global(body.fanLandscapeHand) .fanOpponentEffects {
   grid-row: pTwoArsenal;
   grid-column: pTwoHands;
-  padding-top: 4px;
-  padding-bottom: calc(4px - var(--board-gap));
+  padding-top: calc(4 * var(--fan-px));
+  padding-bottom: calc(4 * var(--fan-px) - var(--board-gap));
 }
 
 :global(body.fanLandscapeHand) .fanPlayerEffects {
   grid-row: pOneArsenal;
   grid-column: pOneHands;
   top: var(--board-bottom-row);
-  padding-top: calc(4px - var(--board-gap));
-  padding-bottom: 4px;
+  padding-top: calc(4 * var(--fan-px) - var(--board-gap));
+  padding-bottom: calc(4 * var(--fan-px));
 }
 
 :global(body.fanLandscapeHand)
@@ -701,23 +705,9 @@
     .pOneCount,
     .pOneBanish
   ) {
-  --card-size: var(--side-card-size);
+  --card-size: var(--fan-side-w);
   position: relative;
-  height: var(--side-card-size);
-}
-
-:global(body.fanLandscapeHand)
-  :is(
-    .pTwoWeaponLZone,
-    .pTwoHero,
-    .pTwoWeaponRZone,
-    .pOneWeaponLZone,
-    .pOneHero,
-    .pOneWeaponRZone,
-    .pTwoArsenal,
-    .pOneArsenal
-  ) {
-  --card-size: var(--side-card-size);
+  height: var(--fan-side-w);
 }
 
 :global(body.fanLandscapeHand)
@@ -732,13 +722,13 @@
   --card-size: var(--hero-group-size);
   position: relative;
   align-self: start;
+  justify-self: start;
+  width: var(--hero-group-size);
   height: var(--hero-group-size);
 }
 
 :global(body.fanLandscapeHand)
   :is(.pOneWeaponLZone, .pOneHero, .pOneWeaponRZone) {
-  width: var(--hero-group-size);
-  justify-self: start;
   top: calc(
     var(--board-bottom-row) + var(--board-gap) + var(--side-card-size) -
       var(--hero-group-grow) - var(--fan-arsenal-size) - var(--fan-hero-lift)
@@ -779,8 +769,6 @@
 
 :global(body.fanLandscapeHand)
   :is(.pTwoWeaponLZone, .pTwoHero, .pTwoWeaponRZone) {
-  width: var(--hero-group-size);
-  justify-self: start;
   top: calc(
     var(--fan-arsenal-size) + var(--side-row-step) - var(--side-card-size)
   );
@@ -814,21 +802,17 @@
   top: var(--board-bottom-row);
 }
 
-:global(body.fanLandscapeHand) .combatChain {
-  grid-column: 4 / 9;
-}
-
 :global(body.fanLandscapeHand) :is(.pTwoPermanents, .pOnePermanents) {
   --card-size: var(--side-card-size);
   grid-column: 3 / 5;
 }
 
 :global(body.fanLandscapeHand) .pTwoPermanents {
-  translate: 0 calc(2 * var(--side-row-step));
+  translate: 0 calc(2 * var(--side-row-step) + 2 * var(--fan-side-grow));
 }
 
 :global(body.fanLandscapeHand) .pOnePermanents {
-  translate: 0 var(--board-bottom-row);
+  translate: 0 calc(var(--board-bottom-row) - 3 * var(--fan-side-grow));
 }
 
 @media (max-height: 500px) {
@@ -879,9 +863,11 @@
 }
 
 :global(body.fanLandscapeHand) .combatChain {
+  grid-column: 4 / 9;
   grid-row: 4 / 10;
   inset: 0;
-  padding: 0 calc(32px - 2 * var(--board-gap)) 0 calc(16px - var(--board-gap));
+  padding: 0 calc(32 * var(--fan-px) - 2 * var(--board-gap)) 0
+    calc(16 * var(--fan-px) - var(--board-gap));
 }
 
 :global(body.fanLandscapeHand) .fanWidgets > .combatChain {
@@ -893,7 +879,7 @@
 :global(body.fanLandscapeHand)
   .fanWidgets
   > :is(.pTwoPermanents, .pOnePermanents) {
-  right: calc(4px - var(--board-gap));
+  right: calc(4 * var(--fan-px) - var(--board-gap));
   width: auto;
   margin-right: calc(1.5 * var(--hero-group-grow));
 }
@@ -919,6 +905,59 @@
 }
 
 @media (orientation: landscape) and (min-height: 501px) {
+  :global(body.fanLandscapeHand) {
+    --board-edge: 0px;
+    --side-card-base: var(--fan-unit);
+  }
+
+  :global(body.fanLandscapeHand) .boardGrid {
+    --fan-hand-top: calc(
+      100 * var(--fan-window-vh) - 0.25 * 0.46 * 100 * var(--fan-window-vh) -
+        4px
+    );
+    --fan-mid: calc(50 * var(--fan-window-vh));
+    --fan-pass-height: min(
+      1.65 * var(--side-card-size),
+      2 *
+        (
+          var(--fan-hand-top) - 10 * var(--fan-px) - var(--hero-group-size) -
+            var(--fan-mid)
+        )
+    );
+    --fan-own-hero-top: calc(
+      var(--fan-mid) + var(--fan-pass-height) / 2 + 6 * var(--fan-px)
+    );
+    --fan-opp-hero-top: calc(
+      var(--fan-mid) - var(--fan-pass-height) / 2 - 6 * var(--fan-px) -
+        var(--hero-group-size)
+    );
+    --fan-arsenal-size: min(
+      var(--hero-group-size),
+      var(--fan-opp-hero-top) - var(--board-gap)
+    );
+    --fan-opp-shift: calc(
+      var(--fan-opp-hero-top) - var(--fan-arsenal-size) - var(--board-gap)
+    );
+    --fan-hero-lift: calc(
+      100 * var(--fan-window-vh) - var(--fan-arsenal-size) - var(--board-gap) -
+        var(--hero-group-size) - var(--fan-own-hero-top)
+    );
+    --fan-pass-top: calc(
+      var(--fan-mid) - var(--fan-pass-height) / 2 - var(--card-size) -
+        var(--side-card-size) - 2 * var(--board-gap)
+    );
+  }
+
+  :global(body.fanLandscapeHand)
+    .boardGrid
+    > :is(.pTwoArsenal, .pTwoWeaponLZone, .pTwoHero, .pTwoWeaponRZone) {
+    translate: 0 var(--fan-opp-shift);
+  }
+
+  :global(body.fanLandscapeHand) .boardGrid > .pOneArsenal {
+    height: var(--fan-arsenal-size);
+  }
+
   :global(body.fanLandscapeHand) .boardGrid {
     --fan-side-w: max(
       var(--side-card-size),
@@ -942,35 +981,6 @@
     --fan-collapse-right: calc(
       8 * var(--fan-px) - var(--fan-side-w) - var(--board-gap)
     );
-    grid-template-columns:
-      0 var(--fan-side-w) var(--fan-side-w) 1fr var(--side-card-size)
-      var(--side-card-size) var(--side-card-size) 1fr var(--fan-side-w)
-      var(--fan-side-w) 0;
-  }
-
-  :global(body.fanLandscapeHand)
-    :is(
-      .pTwoHead,
-      .pTwoChest,
-      .pTwoHands,
-      .pTwoLegs,
-      .pTwoGraveyard,
-      .pTwoPitch,
-      .pTwoDeck,
-      .pTwoCount,
-      .pTwoBanish,
-      .pOneHead,
-      .pOneChest,
-      .pOneHands,
-      .pOneLegs,
-      .pOneGraveyard,
-      .pOnePitch,
-      .pOneDeck,
-      .pOneCount,
-      .pOneBanish
-    ) {
-    --card-size: var(--fan-side-w);
-    height: var(--fan-side-w);
   }
 
   :global(body.fanLandscapeHand)
@@ -988,10 +998,6 @@
     translate: 0 calc(2 * var(--fan-side-grow));
   }
 
-  :global(body.fanLandscapeHand) .pTwoPermanents {
-    translate: 0 calc(2 * var(--side-row-step) + 2 * var(--fan-side-grow));
-  }
-
   :global(body.fanLandscapeHand)
     :is(.pOneLegs, .pOneCount, .pOneBanish, .fanPlayerEffects) {
     translate: 0 calc(-1 * var(--fan-side-grow));
@@ -1006,42 +1012,9 @@
     translate: 0 calc(-3 * var(--fan-side-grow));
   }
 
-  :global(body.fanLandscapeHand) .pOnePermanents {
-    translate: 0 calc(var(--board-bottom-row) - 3 * var(--fan-side-grow));
-  }
-
-  :global(body.fanLandscapeHand) .fanOpponentName {
-    margin-top: calc(8 * var(--fan-px));
-    margin-left: calc(8 * var(--fan-px) - var(--board-gap));
-  }
-
-  :global(body.fanLandscapeHand) .fanPlayerName {
-    margin-bottom: calc(8 * var(--fan-px) - var(--board-gap));
-    margin-left: calc(8 * var(--fan-px) - var(--board-gap));
-  }
-
-  :global(body.fanLandscapeHand) :is(.fanOpponentEffects, .fanPlayerEffects) {
-    padding-inline-start: calc(4 * var(--fan-px) - var(--board-gap));
-    --fx-row: calc(
-      (var(--side-card-size) - 12 * var(--fan-px) + var(--board-gap)) / 2
-    );
-  }
-
-  :global(body.fanLandscapeHand) .fanOpponentEffects {
-    padding-top: calc(4 * var(--fan-px));
-    padding-bottom: calc(4 * var(--fan-px) - var(--board-gap));
-  }
-
-  :global(body.fanLandscapeHand) .fanPlayerEffects {
-    padding-top: calc(4 * var(--fan-px) - var(--board-gap));
-    padding-bottom: calc(4 * var(--fan-px));
-  }
-
   :global(body.fanLandscapeHand) .combatChain {
     grid-column: 3 / 9;
     container-type: inline-size;
-    padding: 0 calc(32 * var(--fan-px) - 2 * var(--board-gap)) 0
-      calc(16 * var(--fan-px) - var(--board-gap));
   }
 
   :global(body.fanLandscapeHand)
@@ -1056,12 +1029,6 @@
       var(--fan-widget-pair) + 10 * var(--fan-px) - var(--fan-side-w) -
         var(--board-gap)
     );
-  }
-
-  :global(body.fanLandscapeHand)
-    .fanWidgets
-    > :is(.pTwoPermanents, .pOnePermanents) {
-    right: calc(4 * var(--fan-px) - var(--board-gap));
   }
 
   :global(body.fanLandscapeHand) .fanWidgets > :is(.healthWidget, .fanVitals) {

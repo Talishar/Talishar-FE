@@ -48,14 +48,10 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  border-radius: 0.5dvh;
+  border-radius: calc(0.5 * var(--app-vh));
   z-index: 10;
   border-color: black;
   border-width: 2px;
-}
-
-:global(body.fanLandscapeHand) .passTurnDisplay {
-  border-radius: calc(0.5 * var(--fan-window-vh));
 }
 
 .passTurnActive {
@@ -95,7 +91,7 @@
 .modal {
   position: fixed;
   top: 65%;
-  left: calc(50% - 5dvh);
+  left: calc(50% - 5 * var(--app-vh));
   transform: translate(-50%, -50%);
   z-index: 1000;
   bottom: auto;
@@ -105,10 +101,6 @@
   border: none;
   background: transparent;
   width: max-content;
-}
-
-:global(body.fanLandscapeHand) .modal {
-  left: calc(50% - 5 * var(--fan-window-vh));
 }
 
 .container {

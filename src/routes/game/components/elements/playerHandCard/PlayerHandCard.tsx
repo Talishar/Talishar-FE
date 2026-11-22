@@ -191,7 +191,7 @@ export interface HandCard {
   fanCardHeight?: number;
   fanTransition?: Transition;
   isFanMouse?: boolean;
-  isFanLifted?: boolean;
+  getIsFanLifted?: () => boolean;
   onHoverChange?: (cardId: string, hovering: boolean) => void;
   onFanPointerEnter?: (clientX: number, clientY: number) => void;
   onTouchScrubStart?: (cardId: string, event: PointerEvent) => void;
@@ -229,7 +229,7 @@ export const PlayerHandCard = React.memo(
     fanCardHeight,
     fanTransition,
     isFanMouse = false,
-    isFanLifted = false,
+    getIsFanLifted,
     onHoverChange,
     onFanPointerEnter,
     onTouchScrubStart,
@@ -523,7 +523,7 @@ export const PlayerHandCard = React.memo(
       }
       if (
         isFanned &&
-        isFanLifted &&
+        getIsFanLifted?.() &&
         !isHovered &&
         lastPointerTypeRef.current === 'mouse'
       ) {
@@ -793,7 +793,7 @@ export const PlayerHandCard = React.memo(
       if (
         !isFanned ||
         isDragging ||
-        isFanLifted ||
+        getIsFanLifted?.() ||
         event.pointerType === 'touch'
       ) {
         return;

@@ -8,10 +8,9 @@ import {
 } from 'react';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
-import { FAN_KEEP_OPEN_ATTR } from './fanLayout';
+import { FAN_KEEP_OPEN_ATTR, PITCH_PHASES } from './fanLayout';
 
 const HAND_PROMPT_PHASES = new Set(['P', 'PAYGOLDORPITCH', 'ARS', 'B']);
-const HAND_PAY_PHASES = new Set(['P', 'CHOOSEHANDCANCEL', 'PAYGOLDORPITCH']);
 
 const isHandPromptPhase = (phase: string | undefined) =>
   !!phase &&
@@ -53,7 +52,7 @@ export function useLandscapeHandMode(
   }, []);
 
   const isPrompt = hasPriority && isHandPromptPhase(turnPhase);
-  const isPayPrompt = isPrompt && HAND_PAY_PHASES.has(turnPhase ?? '');
+  const isPayPrompt = isPrompt && PITCH_PHASES.has(turnPhase ?? '');
   const turnKey = turnPlayer === undefined ? null : `${turnNo}-${turnPlayer}`;
   const isMyTurn = Number(turnPlayer) === Number(playerID);
   const isSingleCardArsenal =

@@ -11,16 +11,12 @@
     rgba(255, 255, 255, 0.03) 100%
   );
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  font-size: clamp(0.8rem, 1.7dvh, 1.05rem);
+  font-size: clamp(0.8rem, calc(1.7 * var(--app-vh)), 1.05rem);
   font-weight: 700;
   letter-spacing: 0.14em;
   color: #6f7378;
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.8);
   user-select: none;
-}
-
-:global(body.fanLandscapeHand) .passTurnDisplay {
-  font-size: clamp(0.8rem, calc(1.7 * var(--fan-window-vh)), 1.05rem);
 }
 
 .spectatorDisplay {
@@ -176,7 +172,7 @@
 .modal {
   position: fixed;
   top: 50%;
-  left: calc(50% - 5dvh);
+  left: calc(50% - 5 * var(--app-vh));
   transform: translate(-50%, -50%);
   z-index: 1000;
   bottom: auto;
@@ -186,10 +182,6 @@
   border: none;
   background: transparent;
   width: max-content;
-}
-
-:global(body.fanLandscapeHand) .modal {
-  left: calc(50% - 5 * var(--fan-window-vh));
 }
 
 .container {
@@ -292,12 +284,8 @@
   }
 
   .passTurnDisplay {
-    font-size: clamp(0.55rem, 2.8dvh, 1.05rem);
+    font-size: clamp(0.55rem, calc(2.8 * var(--app-vh)), 1.05rem);
     letter-spacing: 0.06em;
-  }
-
-  :global(body.fanLandscapeHand) .passTurnDisplay {
-    font-size: clamp(0.55rem, calc(2.8 * var(--fan-window-vh)), 1.05rem);
   }
 
   .spectatorDisplay {
@@ -370,7 +358,7 @@
 :global(body.fanLandscapeHand) .passTurnDisplayActive {
   width: 76.5%;
   justify-self: center;
-  border-radius: 14px;
+  border-radius: calc(14 * var(--fan-px));
 }
 
 :global(body.fanLandscapeHand) .passTurnDisplay,
@@ -399,7 +387,6 @@
   :global(body.fanLandscapeHand) .passTurnDisplay,
   :global(body.fanLandscapeHand) .passTurnDisplayActive {
     width: 100%;
-    border-radius: calc(14 * var(--fan-px));
     font-size: calc(14.4 * var(--fan-px));
   }
 

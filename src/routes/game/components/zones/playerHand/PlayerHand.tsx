@@ -66,6 +66,8 @@ import {
   FAN_OPEN_HIDDEN_RATIO,
   FAN_PORTRAIT_BODY_CLASS,
   FAN_REST_HIDDEN_RATIO,
+  FANNED_HAND_MOBILE_QUERY,
+  PITCH_PHASES,
   FAN_SIDE_COLUMN_ATTR,
   FAN_UNHOVER_ANCHOR_ATTR,
   FAN_WINDOW_VH_VAR,
@@ -84,8 +86,6 @@ import {
 } from './fanLayout';
 import { useFanHover } from './useFanHover';
 import { useLandscapeHandMode } from './useLandscapeHandMode';
-import { useShowsLandscapeFan } from './useShowsLandscapeFan';
-import { useShowsPortraitFan } from './useShowsPortraitFan';
 import { usePortraitBoard } from './usePortraitBoard';
 import { useFannedHand } from './useFannedHand';
 import ClassicPlayerHand from './ClassicPlayerHand';
@@ -94,7 +94,6 @@ const CARD_ROTATION_KEY_STEP_DEGREES = 3;
 const WHEEL_ROTATION_DEGREES_PER_PIXEL = 0.15;
 const MAX_WHEEL_ROTATION_DEGREES = 15;
 const NUMERIC_RE = /^\d+$/;
-const PITCH_PHASES = new Set(['P', 'CHOOSEHANDCANCEL', 'PAYGOLDORPITCH']);
 const TOUCH_TAP_SLOP_PX = 10;
 const TOUCH_LOOK_CLICK_SWALLOW_MS = 500;
 const FAN_DOCK_TRANSITION = {
@@ -183,14 +182,21 @@ function PlayerHand() {
   const [width, height] = useWindowDimensions();
   const fanFullscreenWidth = useFanFullscreenWidth();
   const layoutWidth = Math.max(width, fanFullscreenWidth);
-  const isMobile = useMediaQuery('(max-width: 1199px)');
+  const isMobile = useMediaQuery(FANNED_HAND_MOBILE_QUERY);
   const isPortrait = useMediaQuery('(orientation: portrait)');
   const isMobilePortrait = isMobile && isPortrait;
   const isMobileLandscape = isMobile && !isPortrait;
   const isTallScreen = useMediaQuery('(min-height: 501px)');
   const isPhoneLandscape = isMobileLandscape && !isTallScreen;
-  const showsLandscapeFan = useShowsLandscapeFan();
-  const showsPortraitFan = useShowsPortraitFan();
+  const playerID = useAppSelector(
+    (state: RootState) => state.game.gameInfo.playerID
+  );
+  const isReplay = useAppSelector(
+    (state: RootState) => state.game.gameInfo.isReplay
+  );
+  const isViewer = playerID === 3 || !!isReplay;
+  const showsLandscapeFan = isMobileLandscape;
+  const showsPortraitFan = isMobilePortrait && !(playerID === 3 && !isReplay);
   useLayoutEffect(() => {
     if (!showsPortraitFan) return;
     const body = document.body;
@@ -200,19 +206,11 @@ function PlayerHand() {
     };
   }, [showsPortraitFan]);
   const portraitBoard = usePortraitBoard(showsPortraitFan, width, height);
-  const portraitBoardBottom =
-    showsPortraitFan && portraitBoard ? portraitBoard.boardBottom : null;
-  const playerID = useAppSelector(
-    (state: RootState) => state.game.gameInfo.playerID
-  );
-  const isReplay = useAppSelector(
-    (state: RootState) => state.game.gameInfo.isReplay
-  );
-  const isViewer = playerID === 3 || !!isReplay;
+  const portraitBoardBottom = portraitBoard?.boardBottom ?? null;
   const isCameraP2 = useAppSelector(
     (state: RootState) => state.game.spectatorCameraView === 2
   );
-  const hasLandscapeDock = showsLandscapeFan && isPhoneLandscape && !isViewer;
+  const hasLandscapeDock = isPhoneLandscape && !isViewer;
   const canCollapseHand = isMobile || isPortrait;
   const [isHandCollapsed, setIsHandCollapsed] = useState(false);
   const hoverImageSize = useCookieString('hoverImageSize');
@@ -461,6 +459,7 @@ function PlayerHand() {
   const [unhoverAnchorY, setUnhoverAnchorY] = useState<number | null>(null);
 
   useEffect(() => {
+    if (showsLandscapeFan) return;
     const anchors = Array.from(
       document.querySelectorAll<HTMLElement>(`[${FAN_UNHOVER_ANCHOR_ATTR}]`)
     );
@@ -482,7 +481,7 @@ function PlayerHand() {
     const ro = new ResizeObserver(update);
     anchors.forEach((anchor) => ro.observe(anchor));
     return () => ro.disconnect();
-  }, [width, height, isViewer, isCameraP2]);
+  }, [width, height, isViewer, isCameraP2, showsLandscapeFan]);
   const playableBanishedCards = useAppSelector(selectPlayableBanishedCards);
   const playableTheirBanishedCards = useAppSelector(
     selectPlayableTheirBanishedCards
@@ -691,10 +690,10 @@ function PlayerHand() {
     fanGeometry.cardHeight,
     height
   );
+  const fanHiddenRatio = fanGeometry.hiddenRatio ?? FAN_REST_HIDDEN_RATIO;
+  const fanVisibleHeight = fanGeometry.cardHeight * (1 - fanHiddenRatio);
   const hoverAnchorY = showsLandscapeFan
-    ? height -
-      fanGeometry.cardHeight *
-        (1 - (fanGeometry.hiddenRatio ?? FAN_REST_HIDDEN_RATIO))
+    ? height - fanVisibleHeight
     : unhoverAnchorY;
 
   const handReserve =
@@ -725,13 +724,7 @@ function PlayerHand() {
     )
       return;
     const body = document.body;
-    body.style.setProperty(
-      FAN_HAND_RESERVE_VAR,
-      `${
-        fanGeometry.cardHeight *
-        (1 - (fanGeometry.hiddenRatio ?? FAN_REST_HIDDEN_RATIO))
-      }px`
-    );
+    body.style.setProperty(FAN_HAND_RESERVE_VAR, `${fanVisibleHeight}px`);
     return () => {
       body.style.removeProperty(FAN_HAND_RESERVE_VAR);
     };
@@ -741,8 +734,7 @@ function PlayerHand() {
     showsLandscapeFan,
     isHandCollapsed,
     fanItems.length,
-    fanGeometry.cardHeight,
-    fanGeometry.hiddenRatio
+    fanVisibleHeight
   ]);
 
   const isDragActive = dragPlayState !== 'idle' || dragStartOrderIds !== null;
@@ -802,6 +794,10 @@ function PlayerHand() {
   const showHoverKeywords =
     isHoverExpanded && keywordCardId === activeHoveredCardId;
 
+  const baseFanSlots = useMemo(
+    () => computeFanSlots(fanItems.length, fanGeometry),
+    [fanItems.length, fanGeometry]
+  );
   const fanSlotById = useMemo(() => {
     const slots = new Map<string, FanSlot>();
     const hoveredIndex =
@@ -811,7 +807,7 @@ function PlayerHand() {
     const wide =
       hoveredIndex !== -1 && isMeldCard(fanItems[hoveredIndex].card.cardNumber);
     const computed = applyFanHover(
-      computeFanSlots(fanItems.length, fanGeometry),
+      baseFanSlots,
       hoveredIndex === -1 ? null : hoveredIndex,
       fanGeometry,
       fanHoverScale,
@@ -822,6 +818,7 @@ function PlayerHand() {
     return slots;
   }, [
     fanItems,
+    baseFanSlots,
     activeHoveredCardId,
     isHoverExpanded,
     fanGeometry,
@@ -1116,6 +1113,20 @@ function PlayerHand() {
 
     return true;
   };
+
+  const fanLiftedRef = useRef(isFanLifted);
+  const fanPointerEnterImplRef = useRef(handleFanPointerEnter);
+  const clickPlayImplRef = useRef(handleClickPlay);
+  fanLiftedRef.current = isFanLifted;
+  fanPointerEnterImplRef.current = handleFanPointerEnter;
+  clickPlayImplRef.current = handleClickPlay;
+  const getIsFanLifted = useCallback(() => fanLiftedRef.current, []);
+  const stableFanPointerEnter = useCallback((x: number, y: number) => {
+    fanPointerEnterImplRef.current(x, y);
+  }, []);
+  const stableClickPlay = useCallback((cardId: string) => {
+    clickPlayImplRef.current(cardId);
+  }, []);
 
   const dragMoveImplRef = useRef(handleHandCardDragMove);
   const dragEndImplRef = useRef(handleHandCardReorder);
@@ -1479,9 +1490,7 @@ function PlayerHand() {
 
   const restingFanSlot: FanSlot = {
     x: 0,
-    y:
-      fanGeometry.cardHeight *
-      (fanGeometry.hiddenRatio ?? FAN_REST_HIDDEN_RATIO),
+    y: fanGeometry.cardHeight * fanHiddenRatio,
     rotate: 0,
     scale: 1,
     zIndex: 200
@@ -1556,15 +1565,17 @@ function PlayerHand() {
                 isLanding={
                   landingCardIds.includes(id) && activeHoveredCardId !== id
                 }
-                showHoverKeywords={showHoverKeywords}
+                showHoverKeywords={
+                  showHoverKeywords && activeHoveredCardId === id
+                }
                 fanHoverScale={fanHoverScale}
                 fanCardHeight={fanGeometry.cardHeight}
                 fanTransition={portraitSnap ?? dockTransition}
                 isFanMouse={!isMobile}
-                isFanLifted={isFanLifted}
+                getIsFanLifted={getIsFanLifted}
                 onHoverChange={handleHoverChange}
-                onFanPointerEnter={handleFanPointerEnter}
-                onClickPlay={handleClickPlay}
+                onFanPointerEnter={stableFanPointerEnter}
+                onClickPlay={stableClickPlay}
                 onDragPlayStateChange={handleDragPlayStateChange}
                 dragControls={dragControlsFor(id)}
                 onTouchScrubStart={isMobile ? handleTouchScrubStart : undefined}
@@ -1583,14 +1594,16 @@ function PlayerHand() {
                 isLanding={
                   landingCardIds.includes(id) && activeHoveredCardId !== id
                 }
-                showHoverKeywords={showHoverKeywords}
+                showHoverKeywords={
+                  showHoverKeywords && activeHoveredCardId === id
+                }
                 fanHoverScale={fanHoverScale}
                 fanCardHeight={fanGeometry.cardHeight}
                 fanTransition={portraitSnap ?? dockTransition}
                 isFanMouse={!isMobile}
-                isFanLifted={isFanLifted}
+                getIsFanLifted={getIsFanLifted}
                 onHoverChange={handleHoverChange}
-                onFanPointerEnter={handleFanPointerEnter}
+                onFanPointerEnter={stableFanPointerEnter}
                 onDragPlayStateChange={handleDragPlayStateChange}
                 dragControls={dragControlsFor(id)}
                 onTouchScrubStart={isMobile ? handleTouchScrubStart : undefined}

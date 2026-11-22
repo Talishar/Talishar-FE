@@ -116,15 +116,10 @@
   overflow-y: auto;
   max-width: 50vw;
   max-width: 50dvw;
-  max-height: 70vh;
-  max-height: 70dvh;
+  max-height: calc(70 * var(--app-vh));
   border-radius: 10px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7), 0 2px 8px rgba(0, 0, 0, 0.5);
   min-width: 200px;
-}
-
-:global(body.fanLandscapeHand) .popOver {
-  max-height: calc(70 * var(--fan-window-vh));
 }
 
 .popOver button:last-child {
