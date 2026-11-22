@@ -330,6 +330,10 @@ export interface EndGameData extends AggregateStats {
   contractsCompleted?: number;
   createdCardResults?: CreatedCardResult[];
   disruptionValuePerCard?: number;
+  handSize?: number;
+  turnDefensiveCards?: number[];
+  countedTurns?: number[];
+  lethalAttack?: { turnNo: number; power: number };
 }
 
 export interface CardResult {
@@ -384,6 +388,68 @@ const getTurnValue = (
   (+turn.lifeGained || 0) +
   (+turn.lifeLost || 0) +
   disruptionValue * (+(turn.cardsDisrupted ?? 0) || 0);
+
+const statNumber = (value: unknown) => +(value ?? 0) || 0;
+
+const roundStat = (value: number) =>
+  (Math.sign(value) * Math.round(Math.abs(value) * 100 + 1e-7)) / 100;
+
+type CountedTurn = { turnNo: number; turn: TurnResult };
+
+const computeAggregateStats = (
+  turns: CountedTurn[],
+  handSize: number,
+  defensiveCards: number[],
+  disruptionValuePerCard: number
+): Partial<Record<AggregateStatKey, number>> => {
+  const sum = (pick: (turn: TurnResult) => unknown) =>
+    turns.reduce((total, { turn }) => total + statNumber(pick(turn)), 0);
+  const threatened = sum((turn) => turn.damageThreatened);
+  const dealt = sum((turn) => turn.damageDealt);
+  const blocked = sum((turn) => turn.damageBlocked);
+  const lifeGained = sum((turn) => turn.lifeGained);
+  const lifeLost = sum((turn) => turn.lifeLost);
+  const prevented = sum((turn) => turn.damagePrevented);
+  const disrupted = sum((turn) => turn.cardsDisrupted);
+  const allyPrevented = sum((turn) => turn.allyDamagePrevented);
+  const numTurns = Math.max(turns.length, 1);
+  const defensive = turns.reduce(
+    (total, { turnNo }) => total + statNumber(defensiveCards[turnNo]),
+    0
+  );
+  const offensiveCards = Math.max(handSize * numTurns - defensive, 1);
+  const combatValue = threatened + blocked;
+  const value = combatValue + lifeGained + lifeLost + prevented;
+  const disruption = disruptionValuePerCard * disrupted;
+  return {
+    totalDamageThreatened: threatened,
+    totalDamageDealt: dealt,
+    totalLifeGained: lifeGained,
+    totalDamageBlocked: blocked,
+    totalDamagePrevented: prevented,
+    totalLifeLost: lifeLost,
+    averageDamageThreatenedPerTurn: roundStat(threatened / numTurns),
+    averageDamageDealtPerTurn: roundStat(dealt / numTurns),
+    averageDamageThreatenedPerCard: roundStat(threatened / offensiveCards),
+    averageResourcesUsedPerTurn: roundStat(
+      sum((turn) => turn.resourcesUsed) / numTurns
+    ),
+    averageCardsLeftOverPerTurn: roundStat(
+      sum((turn) => turn.cardsLeft) / numTurns
+    ),
+    averageCombatValuePerTurn: roundStat(combatValue / numTurns),
+    averageValuePerTurn: roundStat(value / numTurns),
+    totalCardsDisrupted: disrupted,
+    averageValueWithDisruptionPerTurn: roundStat((value + disruption) / numTurns),
+    totalAllyDamagePrevented: allyPrevented,
+    averageValueWithoutAllyPreventedPerTurn: roundStat(
+      (value - allyPrevented) / numTurns
+    ),
+    averageValueWithDisruptionWithoutAllyPreventedPerTurn: roundStat(
+      (value - allyPrevented + disruption) / numTurns
+    )
+  };
+};
 
 export interface EndGameStatsRef {
   exportScreenshot: () => Promise<void>;
@@ -763,8 +829,62 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
       yourHero?: string;
       opponentHero?: string;
     }>({});
-    const [excludeLastTurn, setExcludeLastTurn] = useState(false);
-    const [excludeTurnZero, setExcludeTurnZero] = useState(true);
+    const [excludedTurns, setExcludedTurns] = useState<ReadonlySet<number>>(
+      () => new Set([0])
+    );
+    const toggleExcludedTurn = (turnNo: number) =>
+      setExcludedTurns((previous) => {
+        const next = new Set(previous);
+        if (next.has(turnNo)) next.delete(turnNo);
+        else next.add(turnNo);
+        return next;
+      });
+    const [includeLethalAttack, setIncludeLethalAttack] = useState(false);
+    const lethalAttack =
+      data.lethalAttack && data.lethalAttack.power > 0
+        ? data.lethalAttack
+        : undefined;
+    const turnEntries = useMemo(
+      () =>
+        Object.entries(data.turnResults ?? {})
+          .map(([key, turn]) => {
+            const turnNo =
+              turn.turnNo !== undefined
+                ? Number(turn.turnNo)
+                : Number(key.replace('turn_', ''));
+            const lethalBonus =
+              includeLethalAttack && lethalAttack?.turnNo === turnNo
+                ? lethalAttack.power
+                : 0;
+            return {
+              key,
+              turnNo,
+              lethalBonus,
+              rawThreatened: statNumber(turn.damageThreatened),
+              turn:
+                lethalBonus > 0
+                  ? {
+                      ...turn,
+                      damageThreatened:
+                        statNumber(turn.damageThreatened) + lethalBonus
+                    }
+                  : turn
+            };
+          })
+          .sort((a, b) => a.turnNo - b.turnNo),
+      [data.turnResults, includeLethalAttack, lethalAttack]
+    );
+    const lastTurnNo =
+      turnEntries.length > 0 ? turnEntries[turnEntries.length - 1].turnNo : -1;
+    const excludeTurnZero = excludedTurns.has(0);
+    const excludeLastTurn = lastTurnNo >= 0 && excludedTurns.has(lastTurnNo);
+    const canPickTurns =
+      data.countedTurns !== undefined && data.turnDefensiveCards !== undefined;
+    const myFirstTurnNo = 1;
+    const showExcludeFirstTurn =
+      canPickTurns &&
+      data.firstPlayer === 0 &&
+      turnEntries.some((entry) => entry.turnNo === myFirstTurnNo);
     const [includeDisruption, setIncludeDisruption] = useState(false);
     const disruptionValue = includeDisruption
       ? data.disruptionValuePerCard ?? 0
@@ -863,13 +983,25 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
       excludeLastTurn ? '_NoLast' : ''
     }` as StatSuffix;
 
-    const stats = useMemo(
-      () =>
-        Object.fromEntries(
+    const stats = useMemo(() => {
+      if (!canPickTurns) {
+        return Object.fromEntries(
           AGGREGATE_STAT_KEYS.map((key) => [key, data[`${key}${statSuffix}`]])
-        ) as Partial<Record<AggregateStatKey, number>>,
-      [statSuffix, data]
-    );
+        ) as Partial<Record<AggregateStatKey, number>>;
+      }
+      const counted = new Set(data.countedTurns);
+      return computeAggregateStats(
+        turnEntries
+          .filter(
+            (entry) =>
+              counted.has(entry.turnNo) && !excludedTurns.has(entry.turnNo)
+          )
+          .map(({ turnNo, turn }) => ({ turnNo, turn })),
+        data.handSize ?? 4,
+        data.turnDefensiveCards ?? [],
+        data.disruptionValuePerCard ?? 0
+      );
+    }, [canPickTurns, statSuffix, data, turnEntries, excludedTurns]);
 
     const avgValuePerTurn = includeAllyPrevented
       ? includeDisruption
@@ -892,21 +1024,10 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
       const opponentStartingLife =
         data.opponentStartingLife ?? opponentData?.startingLife ?? 40;
 
-      const entries = Object.entries(data.turnResults)
-        .map(([key, turn]) => ({
-          turnNo:
-            turn.turnNo !== undefined
-              ? turn.turnNo
-              : Number(key.replace('turn_', '')),
-          turn
-        }))
-        .sort((a, b) => a.turnNo - b.turnNo)
-        .filter((e) => !excludeTurnZero || e.turnNo > 0);
-
       let yourLife = yourStartingLife;
       let opponentLife = opponentStartingLife;
 
-      return entries.map(({ turnNo, turn }) => {
+      return turnEntries.map(({ turnNo, turn }) => {
         const turnValue = getTurnValue(
           turn,
           disruptionValue,
@@ -948,15 +1069,15 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
       data.opponentStartingLife,
       data.playerID,
       data.bothPlayersData,
-      excludeTurnZero,
+      turnEntries,
       disruptionValue,
       includeAllyPrevented
     ]);
 
-    const filteredChartData = useMemo(() => {
-      if (!excludeLastTurn || chartData.length === 0) return chartData;
-      return chartData.slice(0, -1);
-    }, [chartData, excludeLastTurn]);
+    const filteredChartData = useMemo(
+      () => chartData.filter((entry) => !excludedTurns.has(entry.turn)),
+      [chartData, excludedTurns]
+    );
 
     const lifeChartData = useMemo(() => {
       const oppPlayerID = data.playerID === 1 ? 2 : 1;
@@ -1543,14 +1664,19 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
     const displayedTurnResults = useMemo(() => {
       if (!data.turnResults) return [];
 
-      const rows = Object.entries(data.turnResults).map(([key, value], ix) => ({
-        ...value,
-        key,
-        turnNo: value.turnNo !== undefined ? value.turnNo : ix
-      }));
-      const visible = excludeTurnZero
-        ? rows.filter((row) => row.turnNo > 0)
-        : rows;
+      const rows = turnEntries.map(
+        ({ key, turnNo, turn, lethalBonus, rawThreatened }) => ({
+          ...turn,
+          key,
+          turnNo,
+          lethalBonus,
+          rawThreatened
+        })
+      );
+      const visible =
+        excludeTurnZero && !canPickTurns
+          ? rows.filter((row) => row.turnNo > 0)
+          : rows;
 
       const sortBy = turnSort.field;
       if (!sortBy) return visible;
@@ -1581,6 +1707,8 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
       });
     }, [
       data.turnResults,
+      turnEntries,
+      canPickTurns,
       turnSort.field,
       turnSort.direction,
       excludeTurnZero,
@@ -1794,24 +1922,62 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
                     <input
                       type="checkbox"
                       checked={excludeTurnZero}
-                      onChange={(e) => setExcludeTurnZero(e.target.checked)}
+                      onChange={() => toggleExcludedTurn(0)}
                       className={styles.excludeLastTurnCheckbox}
                     />
                     <span className={styles.excludeLastTurnText}>
                       {t('END_GAME.EXCLUDE_TURN_0')}
                     </span>
                   </label>
+                  {showExcludeFirstTurn && (
+                    <label className={styles.excludeLastTurnLabel}>
+                      <input
+                        type="checkbox"
+                        checked={excludedTurns.has(myFirstTurnNo)}
+                        onChange={() => toggleExcludedTurn(myFirstTurnNo)}
+                        className={styles.excludeLastTurnCheckbox}
+                      />
+                      <span className={styles.excludeLastTurnText}>
+                        {t('END_GAME.EXCLUDE_MY_FIRST_TURN')}
+                      </span>
+                    </label>
+                  )}
                   <label className={styles.excludeLastTurnLabel}>
                     <input
                       type="checkbox"
                       checked={excludeLastTurn}
-                      onChange={(e) => setExcludeLastTurn(e.target.checked)}
+                      onChange={() => toggleExcludedTurn(lastTurnNo)}
+                      disabled={lastTurnNo < 0}
                       className={styles.excludeLastTurnCheckbox}
                     />
                     <span className={styles.excludeLastTurnText}>
                       {t('END_GAME.EXCLUDE_LAST_TURN')}
                     </span>
                   </label>
+                  {lethalAttack && (
+                    <span className={styles.valueToggleControl}>
+                      <label className={styles.excludeLastTurnLabel}>
+                        <input
+                          type="checkbox"
+                          checked={includeLethalAttack}
+                          onChange={(e) =>
+                            setIncludeLethalAttack(e.target.checked)
+                          }
+                          className={styles.excludeLastTurnCheckbox}
+                        />
+                        <span className={styles.excludeLastTurnText}>
+                          {t('END_GAME.INCLUDE_LETHAL_ATTACK')}
+                        </span>
+                      </label>
+                      <HelpTooltip
+                        text={t('END_GAME.INCLUDE_LETHAL_ATTACK_TOOLTIP', {
+                          power: lethalAttack.power,
+                          turn: lethalAttack.turnNo
+                        })}
+                        placement="bottom"
+                      />
+                    </span>
+                  )}
                   {data.disruptionValuePerCard !== undefined && (
                     <span className={styles.valueToggleControl}>
                       <label className={styles.excludeLastTurnLabel}>
@@ -2444,6 +2610,14 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
               <table className={styles.cardTable}>
                 <thead>
                   <tr>
+                    {canPickTurns && (
+                      <th
+                        rowSpan={2}
+                        className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
+                      >
+                        {t('END_GAME.COUNT_COLUMN')}
+                      </th>
+                    )}
                     <th
                       className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
                     >
@@ -2617,15 +2791,36 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
                 <tbody>
                   {displayedTurnResults.map((turnData, ix) => {
                     const disruptedCards = +(turnData.cardsDisrupted ?? 0) || 0;
+                    const turnExcluded =
+                      canPickTurns && excludedTurns.has(turnData.turnNo);
+                    const rowClasses = [
+                      hoveredChartTurn === turnData.turnNo
+                        ? styles.chartHighlightedRow
+                        : '',
+                      turnExcluded ? styles.excludedTurnRow : ''
+                    ]
+                      .filter(Boolean)
+                      .join(' ');
                     return (
                       <tr
                         key={`turnList${ix}`}
-                        className={
-                          hoveredChartTurn === turnData.turnNo
-                            ? styles.chartHighlightedRow
-                            : undefined
-                        }
+                        className={rowClasses || undefined}
                       >
+                        {canPickTurns && (
+                          <td className={styles.countTurnCell}>
+                            <input
+                              type="checkbox"
+                              checked={!turnExcluded}
+                              onChange={() =>
+                                toggleExcludedTurn(turnData.turnNo)
+                              }
+                              aria-label={t('END_GAME.COUNT_TURN', {
+                                turn: turnData.turnNo
+                              })}
+                              className={styles.excludeLastTurnCheckbox}
+                            />
+                          </td>
+                        )}
                         <td className={styles.turnNo}>{turnData.turnNo}</td>
                         <td className={styles.played}>{turnData.cardsUsed}</td>
                         <td className={styles.blocked}>
@@ -2647,7 +2842,12 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
                           {turnData.resourcesLeft}
                         </td>
                         <td className={styles.pitched}>
-                          {parseInt(String(turnData.damageThreatened), 10) || 0}
+                          {turnData.rawThreatened}
+                          {turnData.lethalBonus > 0 && (
+                            <span className={styles.lethalAttackBonus}>
+                              +{turnData.lethalBonus}
+                            </span>
+                          )}
                         </td>
                         <td className={styles.pitched}>
                           {parseInt(String(turnData.damageDealt), 10) || 0}

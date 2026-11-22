@@ -794,9 +794,15 @@
     font-size: 1.2em;
   }
 
+  .infoRow {
+    gap: 0.5rem;
+    padding: 0.4rem 0.5rem;
+  }
+
   .infoLabel,
   .infoValue {
-    font-size: 1.5em;
+    font-size: min(1.5em, 3.5vw);
+    white-space: nowrap;
   }
 
   .heroPortraitsContainer {
@@ -828,6 +834,21 @@
 
 .chartHighlightedRow {
   background-color: var(--theme-primary-focus) !important;
+}
+
+.countTurnCell {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.excludedTurnRow td:not(.countTurnCell) {
+  opacity: 0.35;
+}
+
+.lethalAttackBonus {
+  margin-left: 0.25em;
+  color: var(--theme-primary);
+  font-weight: 700;
 }
 
 .chartsGrid {
