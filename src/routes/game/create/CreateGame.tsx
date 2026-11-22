@@ -104,6 +104,8 @@ const CreateGame = ({
     refetchOnMountOrArgChange: true
   });
   const [searchParams] = useSearchParams();
+  const urlDeckLink =
+    searchParams.get('fabdb') ?? searchParams.get('decksToTry') ?? '';
   const [createGame] = useCreateGameMutation();
   const { data: legalHeroesByFormat } = useGetLegalHeroesQuery();
   const [clearRustCounters] = useClearRustCountersMutation();
@@ -129,10 +131,12 @@ const CreateGame = ({
     !isAuthLoading && (!isLoggedIn || !!currentUserName);
   const [standaloneDeckSource, setStandaloneDeckSourceState] = useState<
     'talishar' | 'bazaar'
-  >(
-    () =>
-      (localStorage.getItem('quickJoin_deckSource') as 'talishar' | 'bazaar') ??
-      'talishar'
+  >(() =>
+    urlDeckLink
+      ? 'talishar'
+      : (localStorage.getItem('quickJoin_deckSource') as
+          | 'talishar'
+          | 'bazaar') ?? 'talishar'
   );
   const [standaloneSelectedBazaarDeck, setStandaloneSelectedBazaarDeck] =
     useState<string>(() => localStorage.getItem('quickJoin_bazaarDeck') ?? '');
@@ -221,7 +225,7 @@ const CreateGame = ({
 
     return {
       deck: '',
-      fabdb: searchParams.get('fabdb') ?? searchParams.get('decksToTry') ?? '',
+      fabdb: urlDeckLink,
       deckTestMode: false,
       format:
         searchParams.get('format') ??
@@ -244,7 +248,7 @@ const CreateGame = ({
       decksToTry: '',
       favoriteDeck: false,
       favoriteDecks:
-        data?.lastUsedDeckIndex !== undefined
+        !urlDeckLink && data?.lastUsedDeckIndex !== undefined
           ? data.favoriteDecks.find(
               (deck: FavoriteDeck) => deck.index === data.lastUsedDeckIndex
             )?.key
