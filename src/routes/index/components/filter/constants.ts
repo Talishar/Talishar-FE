@@ -166,7 +166,11 @@ export const HEROES_OF_RATHE: {
   { value: 'OBK072', label: 'Huxley', young: true },
   { value: 'OBK080', label: 'Azalea, Ace of Spades' },
   { value: 'OBK081', label: 'Azalea, Lone Vigilante', young: true },
-  { value: 'OBK089', label: 'α-01, First Cogwarden', young: true }
+  { value: 'OBK089', label: 'α-01, First Cogwarden', young: true },
+  { value: 'MPB002', label: 'Babaza, Bloodbeat Heartfather' },
+  { value: 'MPB003', label: 'Babaza', young: true },
+  { value: 'MPB004', label: 'Zuul, Clubcaste' },
+  { value: 'MPB005', label: 'Zuul', young: true },
 ];
 
 export const CLASS_OF_RATHE: { label: string }[] = [
