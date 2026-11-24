@@ -157,6 +157,9 @@ export interface MisclickContext {
   inputs: number;
   undos: number;
   fastUndos: number;
+  prevInputs: number;
+  prevUndos: number;
+  prevFastUndos: number;
 }
 
 export interface MisclickStat {
@@ -165,6 +168,9 @@ export interface MisclickStat {
   inputs: number;
   undos: number;
   fastUndos: number;
+  prevInputs: number;
+  prevUndos: number;
+  prevFastUndos: number;
   avgUndoMs: number;
   score: number;
   contexts: MisclickContext[];
@@ -188,6 +194,7 @@ export interface SuspectCardStat {
 export interface GameHealthReportResponse {
   days: GameHealthRange;
   since: string;
+  previousSince: string | null;
   games: number;
   inputs: number;
   undos: number;

@@ -62,6 +62,7 @@ type MisclickSortKey =
   | 'undoRate'
   | 'fastUndos'
   | 'fastRate'
+  | 'prevFastRate'
   | 'avgUndoMs';
 type CardSortKey = 'games' | 'fixGames' | 'fixRate' | FixKind;
 
@@ -78,6 +79,7 @@ const MISCLICK_COLUMNS: Record<MisclickSortKey, SortColumn<MisclickStat>> = {
   undoRate: { value: (row) => share(row.undos, row.inputs) },
   fastUndos: { value: (row) => row.fastUndos },
   fastRate: { value: (row) => share(row.fastUndos, row.inputs) },
+  prevFastRate: { value: (row) => share(row.prevFastUndos, row.prevInputs) },
   avgUndoMs: { value: (row) => row.avgUndoMs, ascendingFirst: true }
 };
 
@@ -238,6 +240,14 @@ const GameHealth: React.FC = () => {
               fast: data.fastUndos.toLocaleString(),
               since: data.since
             })}
+            {data.previousSince && (
+              <>
+                {' '}
+                {t('MOD_PAGE.HEALTH_SUMMARY_PREVIOUS', {
+                  since: data.previousSince
+                })}
+              </>
+            )}
             {isFetching && (
               <span className={tableStyles.muted}>
                 {' '}
@@ -302,6 +312,14 @@ const GameHealth: React.FC = () => {
                       {t('MOD_PAGE.HEALTH_COL_FAST_RATE')}
                     </SortHeader>
                     <SortHeader
+                      id="prevFastRate"
+                      sort={misclicks.sort}
+                      onSort={misclicks.toggleSort}
+                      numeric
+                    >
+                      {t('MOD_PAGE.HEALTH_COL_PREV_FAST_RATE')}
+                    </SortHeader>
+                    <SortHeader
                       id="avgUndoMs"
                       sort={misclicks.sort}
                       onSort={misclicks.toggleSort}
@@ -328,7 +346,6 @@ const GameHealth: React.FC = () => {
                             {row.contexts.map((context) => (
                               <span
                                 key={context.context}
-                                className={styles.contextItem}
                                 title={context.context}
                               >
                                 {contextLabel(context)}{' '}
@@ -338,6 +355,12 @@ const GameHealth: React.FC = () => {
                                     inputs: context.inputs.toLocaleString(),
                                     fast: context.fastUndos
                                   })}
+                                  {context.prevInputs > 0 &&
+                                    t('MOD_PAGE.HEALTH_CONTEXT_PREVIOUS', {
+                                      fast: context.prevFastUndos,
+                                      inputs:
+                                        context.prevInputs.toLocaleString()
+                                    })}
                                 </span>
                               </span>
                             ))}
@@ -360,7 +383,12 @@ const GameHealth: React.FC = () => {
                         {percent(share(row.fastUndos, row.inputs))}
                       </td>
                       <td className={tableStyles.numeric}>
-                        {seconds(row.avgUndoMs)}
+                        {row.prevInputs > 0
+                          ? percent(share(row.prevFastUndos, row.prevInputs))
+                          : '-'}
+                      </td>
+                      <td className={tableStyles.numeric}>
+                        {row.undos > 0 ? seconds(row.avgUndoMs) : '-'}
                       </td>
                     </tr>
                   ))}

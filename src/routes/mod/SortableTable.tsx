@@ -8,7 +8,7 @@ export interface SortColumn<T> {
   ascendingFirst?: boolean;
 }
 
-interface SortState<K extends string> {
+export interface SortState<K extends string> {
   key: K;
   descending: boolean;
 }
@@ -23,9 +23,10 @@ const compareValues = (a: SortValue, b: SortValue) => {
 
 export const useTableSort = <T, K extends string>(
   rows: T[],
-  columns: Record<K, SortColumn<T>>
+  columns: Record<K, SortColumn<T>>,
+  initialSort: SortState<K> | null = null
 ) => {
-  const [sort, setSort] = useState<SortState<K> | null>(null);
+  const [sort, setSort] = useState<SortState<K> | null>(initialSort);
 
   const sortedRows = useMemo(() => {
     if (!sort) return rows;
@@ -47,7 +48,7 @@ export const useTableSort = <T, K extends string>(
         : { key, descending: !columns[key].ascendingFirst }
     );
 
-  return { sortedRows, sort, toggleSort };
+  return { sortedRows, sort, toggleSort, setSort };
 };
 
 interface SortHeaderProps<K extends string> {
@@ -55,6 +56,7 @@ interface SortHeaderProps<K extends string> {
   sort: SortState<K> | null;
   onSort: (key: K) => void;
   numeric?: boolean;
+  title?: string;
   children: React.ReactNode;
 }
 
@@ -63,6 +65,7 @@ export const SortHeader = <K extends string>({
   sort,
   onSort,
   numeric,
+  title,
   children
 }: SortHeaderProps<K>) => {
   const active = sort?.key === id;
@@ -70,6 +73,7 @@ export const SortHeader = <K extends string>({
     <th
       scope="col"
       className={numeric ? tableStyles.numeric : undefined}
+      title={title}
       aria-sort={
         active ? (sort?.descending ? 'descending' : 'ascending') : 'none'
       }

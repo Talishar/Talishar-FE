@@ -12,6 +12,13 @@ import {
   AdSlotStat
 } from 'interface/API/ModPageAPI';
 import { MEMBER_LINK_PLACEMENT_PREFIX } from 'utils/memberLink';
+import {
+  SortColumn,
+  SortHeader,
+  SortState,
+  useTableSort
+} from './SortableTable';
+import tableStyles from './ModTable.module.css';
 import styles from './AdStats.module.css';
 
 type Measure = 'impressions' | 'revenue';
@@ -122,11 +129,70 @@ interface BidderRow {
   share: number;
 }
 
+type AdKind = 'display' | 'video' | 'rewarded';
+type KindValues = Record<AdKind, number>;
+type ChartKind = AdKind | 'all';
+
+const AD_KINDS: AdKind[] = ['display', 'video', 'rewarded'];
+const CHART_KINDS: ChartKind[] = ['all', ...AD_KINDS];
+const DROP_RECENT_DAYS = 3;
+const DROP_SHARE = 0.3;
+const DROP_MIN_BASELINE = 100;
+
 interface DayRow {
   day: string;
   views: number;
-  estMicros: number;
-  impressions: number;
+  impressions: KindValues;
+  micros: KindValues;
+}
+
+interface KindDrop {
+  kind: AdKind;
+  recentDays: number;
+  baselineDays: number;
+  recentRate: number;
+  baselineRate: number;
+}
+
+const kindTotal = (values: KindValues) =>
+  values.display + values.video + values.rewarded;
+const kindValue = (values: KindValues, kind: ChartKind) =>
+  kind === 'all' ? kindTotal(values) : values[kind];
+
+// Today's UTC row is still filling, so it is left out of the comparison.
+function findKindDrops(days: DayRow[]): KindDrop[] {
+  const today = new Date().toISOString().slice(0, 10);
+  const complete = days.filter((day) => day.day !== today);
+  const recentDays = Math.min(
+    DROP_RECENT_DAYS,
+    Math.floor(complete.length / 2)
+  );
+  if (recentDays < 2) return [];
+  const recent = complete.slice(-recentDays);
+  const baseline = complete.slice(0, -recentDays);
+  const views = (rows: DayRow[]) =>
+    rows.reduce((sum, day) => sum + day.views, 0);
+  const shown = (rows: DayRow[], kind: AdKind) =>
+    rows.reduce((sum, day) => sum + day.impressions[kind], 0);
+  return AD_KINDS.flatMap((kind) => {
+    const baselineShown = shown(baseline, kind);
+    const recentRate = perThousandCount(shown(recent, kind), views(recent));
+    const baselineRate = perThousandCount(baselineShown, views(baseline));
+    if (
+      baselineShown < DROP_MIN_BASELINE ||
+      recentRate >= baselineRate * (1 - DROP_SHARE)
+    )
+      return [];
+    return [
+      {
+        kind,
+        recentDays,
+        baselineDays: baseline.length,
+        recentRate,
+        baselineRate
+      }
+    ];
+  });
 }
 
 interface RewardedSummary {
@@ -168,11 +234,11 @@ interface InsightInput {
   pages: PageRow[];
   rewarded: RewardedSummary;
   inGameGate: InGameGate;
+  drops: KindDrop[];
   estimated: number;
   used: Prices;
 }
 
-type SortState<K extends string> = { key: K; descending: boolean };
 type Translate = ReturnType<typeof useTranslation>['t'];
 
 const usd = new Intl.NumberFormat('en-US', {
@@ -371,37 +437,115 @@ function slotFlags(row: AdSlotStat, kind: SlotKind, hidden: number) {
   return flags;
 }
 
-function useSort<K extends string>(initial: K) {
-  const [sort, setSort] = useState<SortState<K>>({
-    key: initial,
-    descending: true
-  });
-  const toggle = (key: K) =>
-    setSort((current) =>
-      current.key === key
-        ? { key, descending: !current.descending }
-        : { key, descending: true }
-    );
-  const reset = (key: K) => setSort({ key, descending: true });
-  return [sort, toggle, reset] as const;
+function fieldColumns<T, K extends keyof T & string>(
+  keys: K[],
+  textKeys: K[] = []
+): Record<K, SortColumn<T>> {
+  return Object.fromEntries(
+    keys.map((key) => [
+      key,
+      {
+        value: (row: T) => row[key] as unknown as number | string,
+        ascendingFirst: textKeys.includes(key)
+      }
+    ])
+  ) as Record<K, SortColumn<T>>;
 }
 
-function sorted<T, K extends keyof T & string>(
-  rows: T[],
-  sort: SortState<K>
-): T[] {
-  const direction = sort.descending ? -1 : 1;
-  return [...rows].sort((a, b) => {
-    const left = a[sort.key];
-    const right = b[sort.key];
-    if (typeof left === 'number' && typeof right === 'number')
-      return (left - right) * direction;
-    return String(left).localeCompare(String(right)) * direction;
-  });
-}
+type SlotSortKey =
+  | 'placement'
+  | 'seenRate'
+  | 'avgInViewMs'
+  | 'requests'
+  | 'fillRate'
+  | 'viewableRate'
+  | 'ctr'
+  | 'impressionsPer1k'
+  | 'impressions'
+  | 'ecpm'
+  | 'rpm'
+  | 'estMicros';
+type PageSortKey =
+  | 'page'
+  | 'views'
+  | 'avgMs'
+  | 'visibleMs'
+  | 'slots'
+  | 'impressionsPer1k'
+  | 'impressionsPerHour'
+  | 'impressions'
+  | 'rpm'
+  | 'perHour'
+  | 'estMicros'
+  | 'adblockRate';
+type BidderSortKey =
+  | 'bidder'
+  | 'bids'
+  | 'wins'
+  | 'winRate'
+  | 'avgCpm'
+  | 'winMicros';
+type LinkSortKey = 'source' | 'page' | 'clicks' | 'perThousand';
+
+const SLOT_COLUMNS = fieldColumns<SlotRow, SlotSortKey>(
+  [
+    'placement',
+    'seenRate',
+    'avgInViewMs',
+    'requests',
+    'fillRate',
+    'viewableRate',
+    'ctr',
+    'impressionsPer1k',
+    'impressions',
+    'ecpm',
+    'rpm',
+    'estMicros'
+  ],
+  ['placement']
+);
+const PAGE_COLUMNS = fieldColumns<PageRow, PageSortKey>(
+  [
+    'page',
+    'views',
+    'avgMs',
+    'visibleMs',
+    'slots',
+    'impressionsPer1k',
+    'impressionsPerHour',
+    'impressions',
+    'rpm',
+    'perHour',
+    'estMicros',
+    'adblockRate'
+  ],
+  ['page']
+);
+const BIDDER_COLUMNS = fieldColumns<BidderRow, BidderSortKey>(
+  ['bidder', 'bids', 'wins', 'winRate', 'avgCpm', 'winMicros'],
+  ['bidder']
+);
+const LINK_COLUMNS = fieldColumns<MemberLinkRow, LinkSortKey>(
+  ['source', 'page', 'clicks', 'perThousand'],
+  ['source', 'page']
+);
+
+const slotSortFor = (measure: Measure) => ({
+  key: (measure === 'impressions' ? 'impressions' : 'estMicros') as SlotSortKey,
+  descending: true
+});
+const PAGE_SORT: SortState<PageSortKey> = {
+  key: 'visibleMs',
+  descending: true
+};
+const BIDDER_SORT: SortState<BidderSortKey> = {
+  key: 'winMicros',
+  descending: true
+};
+const LINK_SORT: SortState<LinkSortKey> = { key: 'clicks', descending: true };
 
 function buildInsights(
-  { slots, pages, rewarded, inGameGate, estimated, used }: InsightInput,
+  { slots, pages, rewarded, inGameGate, drops, estimated, used }: InsightInput,
   measure: Measure,
   t: Translate,
   pageLabel: (page: string) => string,
@@ -409,6 +553,18 @@ function buildInsights(
 ): string[] {
   const lines: string[] = [];
   const byImpressions = measure === 'impressions';
+  for (const drop of drops) {
+    lines.push(
+      t('MOD_PAGE.ADS_INSIGHT_DROP', {
+        kind: t(`MOD_PAGE.ADS_KIND_${drop.kind.toUpperCase()}`),
+        drop: percent(1 - ratio(drop.recentRate, drop.baselineRate)),
+        recentDays: drop.recentDays,
+        baselineDays: drop.baselineDays,
+        now: rate(drop.recentRate),
+        before: rate(drop.baselineRate)
+      })
+    );
+  }
   const hidden = slots.filter((row) => row.hidden > 0);
   if (hidden.length > 0) {
     const worstHidden = [...hidden].sort((a, b) => b.hidden - a.hidden)[0];
@@ -599,9 +755,10 @@ const DailyChart = ({
 }) => {
   const { t } = useTranslation();
   const [active, setActive] = useState<number | null>(null);
+  const [kind, setKind] = useState<ChartKind>('all');
   const byImpressions = measure === 'impressions';
   const value = (day: DayRow) =>
-    byImpressions ? day.impressions : day.estMicros;
+    kindValue(byImpressions ? day.impressions : day.micros, kind);
   const peak = Math.max(0, ...days.map(value));
   const max = Math.max(peak, 1);
   const focused = active === null ? null : days[active];
@@ -609,15 +766,15 @@ const DailyChart = ({
     byImpressions
       ? t('MOD_PAGE.ADS_CHART_READOUT_IMPRESSIONS', {
           day: day.day,
-          impressions: count(day.impressions),
+          impressions: count(value(day)),
           views: count(day.views),
-          rate: rate(perThousandCount(day.impressions, day.views))
+          rate: rate(perThousandCount(value(day), day.views))
         })
       : t('MOD_PAGE.ADS_CHART_READOUT', {
           day: day.day,
-          revenue: money(day.estMicros),
+          revenue: money(value(day)),
           views: count(day.views),
-          rpm: dollars(perThousand(day.estMicros, day.views))
+          rpm: dollars(perThousand(value(day), day.views))
         });
 
   return (
@@ -628,6 +785,29 @@ const DailyChart = ({
             ? t('MOD_PAGE.ADS_CHART_TITLE_IMPRESSIONS')
             : t('MOD_PAGE.ADS_CHART_TITLE')}
         </h3>
+        <div
+          className={tableStyles.segmented}
+          role="group"
+          aria-label={t('MOD_PAGE.ADS_KIND')}
+        >
+          {CHART_KINDS.map((option) => (
+            <button
+              key={option}
+              type="button"
+              aria-pressed={kind === option}
+              className={
+                kind === option
+                  ? `${tableStyles.segment} ${tableStyles.segmentActive}`
+                  : tableStyles.segment
+              }
+              onClick={() => setKind(option)}
+            >
+              {t(`MOD_PAGE.ADS_KIND_${option.toUpperCase()}`)}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className={styles.chartHeader}>
         <span className={styles.chartReadout} aria-live="polite">
           {focused ? readout(focused) : t('MOD_PAGE.ADS_CHART_HINT')}
         </span>
@@ -675,15 +855,6 @@ const AdStats: React.FC = () => {
   const [flaggedOnly, setFlaggedOnly] = useState(false);
   const [prices, setPrices] = useState<Prices>(loadPrices);
   const byImpressions = measure === 'impressions';
-  const [slotSort, toggleSlotSort, resetSlotSort] = useSort<
-    keyof SlotRow & string
-  >(byImpressions ? 'impressions' : 'estMicros');
-  const [pageSort, togglePageSort, resetPageSort] = useSort<
-    keyof PageRow & string
-  >('visibleMs');
-  const [bidderSort, toggleBidderSort] = useSort<keyof BidderRow & string>(
-    'winMicros'
-  );
 
   const { data, isFetching, isError } = useGetAdReportQuery(range);
 
@@ -701,8 +872,8 @@ const AdStats: React.FC = () => {
   const changeMeasure = (next: Measure) => {
     setMeasure(next);
     saveMeasure(next);
-    resetSlotSort(next === 'impressions' ? 'impressions' : 'estMicros');
-    resetPageSort('visibleMs');
+    slotTable.setSort(slotSortFor(next));
+    pageTable.setSort(PAGE_SORT);
   };
 
   const slotLabel = (row: SlotRow) =>
@@ -1013,13 +1184,17 @@ const AdStats: React.FC = () => {
         return {
           day: row.day,
           views: row.views,
-          estMicros:
-            row.estMicros +
-            row.unpricedFills * cpmMicros(used.display) +
-            videoImpressions * cpmMicros(used.video) +
-            row.rewardedShows * cpmMicros(used.rewarded),
-          impressions:
-            (row.displayImpressions ?? 0) + videoImpressions + row.rewardedShows
+          micros: {
+            display:
+              row.estMicros + row.unpricedFills * cpmMicros(used.display),
+            video: videoImpressions * cpmMicros(used.video),
+            rewarded: row.rewardedShows * cpmMicros(used.rewarded)
+          },
+          impressions: {
+            display: row.displayImpressions ?? 0,
+            video: videoImpressions,
+            rewarded: row.rewardedShows
+          }
         };
       });
 
@@ -1028,6 +1203,7 @@ const AdStats: React.FC = () => {
       pages,
       bidders,
       days,
+      drops: findKindDrops(days),
       rewarded,
       inGameGate,
       memberLinks,
@@ -1077,14 +1253,21 @@ const AdStats: React.FC = () => {
   const flaggedCount = report.slots.filter(
     (row) => row.flags.length > 0
   ).length;
-  const visibleSlots = sorted(
-    flaggedOnly
-      ? report.slots.filter((row) => row.flags.length > 0)
-      : report.slots,
-    slotSort
+  const slotRows = useMemo(
+    () =>
+      flaggedOnly
+        ? report.slots.filter((row) => row.flags.length > 0)
+        : report.slots,
+    [report, flaggedOnly]
   );
-  const visiblePages = sorted(report.pages, pageSort);
-  const visibleBidders = sorted(report.bidders, bidderSort);
+  const slotTable = useTableSort(slotRows, SLOT_COLUMNS, slotSortFor(measure));
+  const pageTable = useTableSort(report.pages, PAGE_COLUMNS, PAGE_SORT);
+  const bidderTable = useTableSort(report.bidders, BIDDER_COLUMNS, BIDDER_SORT);
+  const linkTable = useTableSort(report.memberLinks, LINK_COLUMNS, LINK_SORT);
+  const visibleSlots = slotTable.sortedRows;
+  const visiblePages = pageTable.sortedRows;
+  const visibleBidders = bidderTable.sortedRows;
+  const visibleLinks = linkTable.sortedRows;
   const { totals, rewarded, used } = report;
   const missed = Math.max(
     0,
@@ -1134,14 +1317,6 @@ const AdStats: React.FC = () => {
       })
     },
     {
-      label: t('MOD_PAGE.ADS_REWARDED_READY'),
-      value: percent(ratio(rewarded.filled, rewarded.requests)),
-      note: t('MOD_PAGE.ADS_REWARDED_READY_NOTE', {
-        filled: count(rewarded.filled),
-        requests: count(rewarded.requests)
-      })
-    },
-    {
       label: t('MOD_PAGE.ADS_KPI_REVENUE'),
       value: money(rewarded.micros),
       note:
@@ -1157,44 +1332,15 @@ const AdStats: React.FC = () => {
   const hasRewarded = rewarded.requests > 0 || rewarded.clicks > 0;
   const hasData = report.slots.length > 0 || report.pages.length > 0;
 
-  const header = <K extends string>(
-    sort: SortState<K>,
-    toggle: (key: K) => void,
-    key: K,
-    label: string,
-    numeric = true,
-    hint?: string
-  ) => (
-    <th
-      scope="col"
-      className={numeric ? styles.numeric : undefined}
-      aria-sort={
-        sort.key === key
-          ? sort.descending
-            ? 'descending'
-            : 'ascending'
-          : 'none'
-      }
-      title={hint}
-    >
-      <button
-        type="button"
-        className={styles.sortButton}
-        onClick={() => toggle(key)}
-      >
-        {label}
-        <span className={styles.sortIndicator} aria-hidden="true">
-          {sort.key === key ? (sort.descending ? '▼' : '▲') : ''}
-        </span>
-      </button>
-    </th>
-  );
-
   const flagList = (flags: Array<SlotFlag | PageFlag>) =>
     flags.length > 0 && (
-      <div className={styles.flags}>
+      <div className={tableStyles.reasons}>
         {flags.map((flag) => (
-          <span key={flag} className={styles.flag} title={flagHint(flag)}>
+          <span
+            key={flag}
+            className={`${tableStyles.reason} ${styles.flag}`}
+            title={flagHint(flag)}
+          >
             {flagLabel(flag)}
           </span>
         ))}
@@ -1202,7 +1348,7 @@ const AdStats: React.FC = () => {
     );
 
   const shareCell = (label: string, share: number, hint?: string) => (
-    <td className={styles.numeric} title={hint}>
+    <td className={tableStyles.numeric} title={hint}>
       <div className={styles.revenueCell}>
         <span>{label}</span>
         <span className={styles.shareBar} aria-hidden="true">
@@ -1211,7 +1357,7 @@ const AdStats: React.FC = () => {
             style={{ width: `${share * 100}%` }}
           />
         </span>
-        <span className={styles.muted}>{percent(share)}</span>
+        <span className={tableStyles.muted}>{percent(share)}</span>
       </div>
     </td>
   );
@@ -1287,7 +1433,7 @@ const AdStats: React.FC = () => {
     onSelect: (value: V) => void,
     text: (value: V) => string
   ) => (
-    <div className={styles.segmented} role="group" aria-label={label}>
+    <div className={tableStyles.segmented} role="group" aria-label={label}>
       {values.map((value) => (
         <button
           key={value}
@@ -1295,8 +1441,8 @@ const AdStats: React.FC = () => {
           aria-pressed={current === value}
           className={
             current === value
-              ? `${styles.segment} ${styles.segmentActive}`
-              : styles.segment
+              ? `${tableStyles.segment} ${tableStyles.segmentActive}`
+              : tableStyles.segment
           }
           onClick={() => onSelect(value)}
         >
@@ -1308,9 +1454,9 @@ const AdStats: React.FC = () => {
 
   return (
     <div className={styles.panel}>
-      <div className={styles.header}>
+      <div className={tableStyles.header}>
         <div>
-          <h2 className={styles.title}>{t('MOD_PAGE.ADS_TITLE')}</h2>
+          <h2 className={tableStyles.title}>{t('MOD_PAGE.ADS_TITLE')}</h2>
           <p className={styles.description}>{t('MOD_PAGE.ADS_DESCRIPTION')}</p>
         </div>
         <div className={styles.headerControls}>
@@ -1337,10 +1483,10 @@ const AdStats: React.FC = () => {
       </div>
 
       {data && !isError && !data.error && (
-        <p className={styles.summary}>
+        <p className={tableStyles.summary}>
           {t('MOD_PAGE.ADS_SUMMARY', { since: data.since })}
           {isFetching && (
-            <span className={styles.muted}> {t('MOD_PAGE.LOADING')}</span>
+            <span className={tableStyles.muted}> {t('MOD_PAGE.LOADING')}</span>
           )}
         </p>
       )}
@@ -1354,7 +1500,7 @@ const AdStats: React.FC = () => {
           <span className={styles.pricesTitle}>
             {t('MOD_PAGE.ADS_PRICES_TITLE')}
           </span>
-          <span className={styles.muted}>
+          <span className={tableStyles.muted}>
             {t('MOD_PAGE.ADS_PRICES_DESCRIPTION', {
               video: dollars(ESTIMATED_CPM.video),
               rewarded: dollars(ESTIMATED_CPM.rewarded)
@@ -1388,11 +1534,11 @@ const AdStats: React.FC = () => {
       </div>
 
       {isError || data?.error ? (
-        <p className={styles.empty}>{t('MOD_PAGE.ADS_LOAD_FAILED')}</p>
+        <p className={tableStyles.empty}>{t('MOD_PAGE.ADS_LOAD_FAILED')}</p>
       ) : !data ? (
-        <p className={styles.empty}>{t('MOD_PAGE.LOADING')}</p>
+        <p className={tableStyles.empty}>{t('MOD_PAGE.LOADING')}</p>
       ) : !hasData ? (
-        <p className={styles.empty}>{t('MOD_PAGE.ADS_EMPTY')}</p>
+        <p className={tableStyles.empty}>{t('MOD_PAGE.ADS_EMPTY')}</p>
       ) : (
         <>
           <div className={styles.tiles}>
@@ -1459,25 +1605,45 @@ const AdStats: React.FC = () => {
                   </p>
                 </div>
               </div>
-              <div className={styles.tableWrap}>
-                <table className={styles.table}>
+              <div className={tableStyles.tableWrap}>
+                <table className={`${tableStyles.table} ${styles.adTable}`}>
                   <thead>
                     <tr>
-                      <th>{t('MOD_PAGE.ADS_COL_LINK')}</th>
-                      <th>{t('MOD_PAGE.ADS_COL_PAGE')}</th>
-                      <th className={styles.numeric}>
+                      <SortHeader
+                        id="source"
+                        sort={linkTable.sort}
+                        onSort={linkTable.toggleSort}
+                      >
+                        {t('MOD_PAGE.ADS_COL_LINK')}
+                      </SortHeader>
+                      <SortHeader
+                        id="page"
+                        sort={linkTable.sort}
+                        onSort={linkTable.toggleSort}
+                      >
+                        {t('MOD_PAGE.ADS_COL_PAGE')}
+                      </SortHeader>
+                      <SortHeader
+                        id="clicks"
+                        sort={linkTable.sort}
+                        onSort={linkTable.toggleSort}
+                        numeric
+                      >
                         {t('MOD_PAGE.ADS_COL_CLICKS')}
-                      </th>
-                      <th
-                        className={styles.numeric}
+                      </SortHeader>
+                      <SortHeader
+                        id="perThousand"
+                        sort={linkTable.sort}
+                        onSort={linkTable.toggleSort}
+                        numeric
                         title={t('MOD_PAGE.ADS_COL_CLICKS_PER_1K_HINT')}
                       >
                         {t('MOD_PAGE.ADS_COL_RPM')}
-                      </th>
+                      </SortHeader>
                     </tr>
                   </thead>
                   <tbody>
-                    {report.memberLinks.map((row) => (
+                    {visibleLinks.map((row) => (
                       <tr key={row.key}>
                         <td>
                           <code className={styles.code}>{row.source}</code>
@@ -1487,8 +1653,10 @@ const AdStats: React.FC = () => {
                             {pageLabel(row.page)}
                           </span>
                         </td>
-                        <td className={styles.numeric}>{count(row.clicks)}</td>
-                        <td className={styles.numeric}>
+                        <td className={tableStyles.numeric}>
+                          {count(row.clicks)}
+                        </td>
+                        <td className={tableStyles.numeric}>
                           {row.perThousand > 0
                             ? row.perThousand.toFixed(2)
                             : '-'}
@@ -1511,7 +1679,7 @@ const AdStats: React.FC = () => {
                   {t('MOD_PAGE.ADS_SLOTS_DESCRIPTION')}
                 </p>
               </div>
-              <label className={styles.toggle}>
+              <label className={tableStyles.toggle}>
                 <input
                   type="checkbox"
                   checked={flaggedOnly}
@@ -1520,100 +1688,116 @@ const AdStats: React.FC = () => {
                 {t('MOD_PAGE.ADS_FLAGGED_ONLY', { total: flaggedCount })}
               </label>
             </div>
-            <div className={styles.tableWrap}>
-              <table className={`${styles.table} ${styles.slotTable}`}>
+            <div className={tableStyles.tableWrap}>
+              <table className={`${tableStyles.table} ${styles.slotTable}`}>
                 <thead>
                   <tr>
-                    {header(
-                      slotSort,
-                      toggleSlotSort,
-                      'placement',
-                      t('MOD_PAGE.ADS_COL_SLOT'),
-                      false
-                    )}
-                    {header(
-                      slotSort,
-                      toggleSlotSort,
-                      'seenRate',
-                      t('MOD_PAGE.ADS_COL_SEEN'),
-                      true,
-                      t('MOD_PAGE.ADS_COL_SEEN_HINT')
-                    )}
-                    {header(
-                      slotSort,
-                      toggleSlotSort,
-                      'avgInViewMs',
-                      t('MOD_PAGE.ADS_COL_IN_VIEW'),
-                      true,
-                      t('MOD_PAGE.ADS_COL_IN_VIEW_HINT')
-                    )}
-                    {header(
-                      slotSort,
-                      toggleSlotSort,
-                      'requests',
-                      t('MOD_PAGE.ADS_COL_REQUESTS')
-                    )}
-                    {header(
-                      slotSort,
-                      toggleSlotSort,
-                      'fillRate',
-                      t('MOD_PAGE.ADS_COL_FILL')
-                    )}
-                    {header(
-                      slotSort,
-                      toggleSlotSort,
-                      'viewableRate',
-                      t('MOD_PAGE.ADS_COL_VIEWABLE')
-                    )}
-                    {header(
-                      slotSort,
-                      toggleSlotSort,
-                      'ctr',
-                      t('MOD_PAGE.ADS_COL_CTR')
-                    )}
+                    <SortHeader
+                      id="placement"
+                      sort={slotTable.sort}
+                      onSort={slotTable.toggleSort}
+                    >
+                      {t('MOD_PAGE.ADS_COL_SLOT')}
+                    </SortHeader>
+                    <SortHeader
+                      id="seenRate"
+                      sort={slotTable.sort}
+                      onSort={slotTable.toggleSort}
+                      numeric
+                      title={t('MOD_PAGE.ADS_COL_SEEN_HINT')}
+                    >
+                      {t('MOD_PAGE.ADS_COL_SEEN')}
+                    </SortHeader>
+                    <SortHeader
+                      id="avgInViewMs"
+                      sort={slotTable.sort}
+                      onSort={slotTable.toggleSort}
+                      numeric
+                      title={t('MOD_PAGE.ADS_COL_IN_VIEW_HINT')}
+                    >
+                      {t('MOD_PAGE.ADS_COL_IN_VIEW')}
+                    </SortHeader>
+                    <SortHeader
+                      id="requests"
+                      sort={slotTable.sort}
+                      onSort={slotTable.toggleSort}
+                      numeric
+                    >
+                      {t('MOD_PAGE.ADS_COL_REQUESTS')}
+                    </SortHeader>
+                    <SortHeader
+                      id="fillRate"
+                      sort={slotTable.sort}
+                      onSort={slotTable.toggleSort}
+                      numeric
+                    >
+                      {t('MOD_PAGE.ADS_COL_FILL')}
+                    </SortHeader>
+                    <SortHeader
+                      id="viewableRate"
+                      sort={slotTable.sort}
+                      onSort={slotTable.toggleSort}
+                      numeric
+                    >
+                      {t('MOD_PAGE.ADS_COL_VIEWABLE')}
+                    </SortHeader>
+                    <SortHeader
+                      id="ctr"
+                      sort={slotTable.sort}
+                      onSort={slotTable.toggleSort}
+                      numeric
+                    >
+                      {t('MOD_PAGE.ADS_COL_CTR')}
+                    </SortHeader>
                     {byImpressions ? (
                       <>
-                        {header(
-                          slotSort,
-                          toggleSlotSort,
-                          'impressionsPer1k',
-                          t('MOD_PAGE.ADS_COL_RPM'),
-                          true,
-                          t('MOD_PAGE.ADS_COL_IMPRESSIONS_PER_1K_HINT')
-                        )}
-                        {header(
-                          slotSort,
-                          toggleSlotSort,
-                          'impressions',
-                          t('MOD_PAGE.ADS_COL_IMPRESSIONS'),
-                          true,
-                          t('MOD_PAGE.ADS_COL_IMPRESSIONS_HINT')
-                        )}
+                        <SortHeader
+                          id="impressionsPer1k"
+                          sort={slotTable.sort}
+                          onSort={slotTable.toggleSort}
+                          numeric
+                          title={t('MOD_PAGE.ADS_COL_IMPRESSIONS_PER_1K_HINT')}
+                        >
+                          {t('MOD_PAGE.ADS_COL_RPM')}
+                        </SortHeader>
+                        <SortHeader
+                          id="impressions"
+                          sort={slotTable.sort}
+                          onSort={slotTable.toggleSort}
+                          numeric
+                          title={t('MOD_PAGE.ADS_COL_IMPRESSIONS_HINT')}
+                        >
+                          {t('MOD_PAGE.ADS_COL_IMPRESSIONS')}
+                        </SortHeader>
                       </>
                     ) : (
                       <>
-                        {header(
-                          slotSort,
-                          toggleSlotSort,
-                          'ecpm',
-                          t('MOD_PAGE.ADS_COL_ECPM'),
-                          true,
-                          t('MOD_PAGE.ADS_COL_ECPM_HINT')
-                        )}
-                        {header(
-                          slotSort,
-                          toggleSlotSort,
-                          'rpm',
-                          t('MOD_PAGE.ADS_COL_RPM'),
-                          true,
-                          t('MOD_PAGE.ADS_COL_RPM_HINT')
-                        )}
-                        {header(
-                          slotSort,
-                          toggleSlotSort,
-                          'estMicros',
-                          t('MOD_PAGE.ADS_COL_REVENUE')
-                        )}
+                        <SortHeader
+                          id="ecpm"
+                          sort={slotTable.sort}
+                          onSort={slotTable.toggleSort}
+                          numeric
+                          title={t('MOD_PAGE.ADS_COL_ECPM_HINT')}
+                        >
+                          {t('MOD_PAGE.ADS_COL_ECPM')}
+                        </SortHeader>
+                        <SortHeader
+                          id="rpm"
+                          sort={slotTable.sort}
+                          onSort={slotTable.toggleSort}
+                          numeric
+                          title={t('MOD_PAGE.ADS_COL_RPM_HINT')}
+                        >
+                          {t('MOD_PAGE.ADS_COL_RPM')}
+                        </SortHeader>
+                        <SortHeader
+                          id="estMicros"
+                          sort={slotTable.sort}
+                          onSort={slotTable.toggleSort}
+                          numeric
+                        >
+                          {t('MOD_PAGE.ADS_COL_REVENUE')}
+                        </SortHeader>
                       </>
                     )}
                   </tr>
@@ -1624,33 +1808,35 @@ const AdStats: React.FC = () => {
                       <td>
                         <div className={styles.slotName}>
                           <code className={styles.code}>{slotLabel(row)}</code>
-                          <span className={styles.muted}>
+                          <span className={tableStyles.muted}>
                             {pageLabel(row.page)}
                           </span>
                         </div>
                         {flagList(row.flags)}
                       </td>
-                      <td className={styles.numeric}>
+                      <td className={tableStyles.numeric}>
                         {row.mounts > 0 ? percent(row.seenRate) : '-'}
                       </td>
-                      <td className={styles.numeric}>
+                      <td className={tableStyles.numeric}>
                         {row.mounts > 0 ? duration(row.avgInViewMs) : '-'}
                       </td>
-                      <td className={styles.numeric}>{count(row.requests)}</td>
-                      <td className={styles.numeric}>
+                      <td className={tableStyles.numeric}>
+                        {count(row.requests)}
+                      </td>
+                      <td className={tableStyles.numeric}>
                         {row.requests > 0 ? percent(row.fillRate) : '-'}
                       </td>
-                      <td className={styles.numeric}>
+                      <td className={tableStyles.numeric}>
                         {row.filled > 0 ? percent(row.viewableRate) : '-'}
                       </td>
-                      <td className={styles.numeric}>
+                      <td className={tableStyles.numeric}>
                         {row.filled > 0
                           ? `${(row.ctr * 100).toFixed(2)}%`
                           : '-'}
                       </td>
                       {byImpressions ? (
                         <>
-                          <td className={styles.numeric}>
+                          <td className={tableStyles.numeric}>
                             {rate(row.impressionsPer1k)}
                           </td>
                           {shareCell(
@@ -1666,10 +1852,12 @@ const AdStats: React.FC = () => {
                         </>
                       ) : (
                         <>
-                          <td className={styles.numeric}>
+                          <td className={tableStyles.numeric}>
                             {row.impressions > 0 ? dollars(row.ecpm) : '-'}
                           </td>
-                          <td className={styles.numeric}>{dollars(row.rpm)}</td>
+                          <td className={tableStyles.numeric}>
+                            {dollars(row.rpm)}
+                          </td>
                           {shareCell(
                             money(row.estMicros),
                             row.share,
@@ -1695,98 +1883,118 @@ const AdStats: React.FC = () => {
                 </p>
               </div>
             </div>
-            <div className={styles.tableWrap}>
-              <table className={styles.table}>
+            <div className={tableStyles.tableWrap}>
+              <table className={`${tableStyles.table} ${styles.adTable}`}>
                 <thead>
                   <tr>
-                    {header(
-                      pageSort,
-                      togglePageSort,
-                      'page',
-                      t('MOD_PAGE.ADS_COL_PAGE'),
-                      false
-                    )}
-                    {header(
-                      pageSort,
-                      togglePageSort,
-                      'views',
-                      t('MOD_PAGE.ADS_COL_VIEWS')
-                    )}
-                    {header(
-                      pageSort,
-                      togglePageSort,
-                      'avgMs',
-                      t('MOD_PAGE.ADS_COL_AVG_TIME')
-                    )}
-                    {header(
-                      pageSort,
-                      togglePageSort,
-                      'visibleMs',
-                      t('MOD_PAGE.ADS_COL_TIME_SHARE')
-                    )}
-                    {header(
-                      pageSort,
-                      togglePageSort,
-                      'slots',
-                      t('MOD_PAGE.ADS_COL_SLOTS')
-                    )}
+                    <SortHeader
+                      id="page"
+                      sort={pageTable.sort}
+                      onSort={pageTable.toggleSort}
+                    >
+                      {t('MOD_PAGE.ADS_COL_PAGE')}
+                    </SortHeader>
+                    <SortHeader
+                      id="views"
+                      sort={pageTable.sort}
+                      onSort={pageTable.toggleSort}
+                      numeric
+                    >
+                      {t('MOD_PAGE.ADS_COL_VIEWS')}
+                    </SortHeader>
+                    <SortHeader
+                      id="avgMs"
+                      sort={pageTable.sort}
+                      onSort={pageTable.toggleSort}
+                      numeric
+                    >
+                      {t('MOD_PAGE.ADS_COL_AVG_TIME')}
+                    </SortHeader>
+                    <SortHeader
+                      id="visibleMs"
+                      sort={pageTable.sort}
+                      onSort={pageTable.toggleSort}
+                      numeric
+                    >
+                      {t('MOD_PAGE.ADS_COL_TIME_SHARE')}
+                    </SortHeader>
+                    <SortHeader
+                      id="slots"
+                      sort={pageTable.sort}
+                      onSort={pageTable.toggleSort}
+                      numeric
+                    >
+                      {t('MOD_PAGE.ADS_COL_SLOTS')}
+                    </SortHeader>
                     {byImpressions ? (
                       <>
-                        {header(
-                          pageSort,
-                          togglePageSort,
-                          'impressionsPer1k',
-                          t('MOD_PAGE.ADS_COL_RPM'),
-                          true,
-                          t('MOD_PAGE.ADS_COL_IMPRESSIONS_PER_1K_HINT')
-                        )}
-                        {header(
-                          pageSort,
-                          togglePageSort,
-                          'impressionsPerHour',
-                          t('MOD_PAGE.ADS_COL_PER_HOUR'),
-                          true,
-                          t('MOD_PAGE.ADS_COL_IMPRESSIONS_PER_HOUR_HINT')
-                        )}
-                        {header(
-                          pageSort,
-                          togglePageSort,
-                          'impressions',
-                          t('MOD_PAGE.ADS_COL_IMPRESSIONS'),
-                          true,
-                          t('MOD_PAGE.ADS_COL_IMPRESSIONS_HINT')
-                        )}
+                        <SortHeader
+                          id="impressionsPer1k"
+                          sort={pageTable.sort}
+                          onSort={pageTable.toggleSort}
+                          numeric
+                          title={t('MOD_PAGE.ADS_COL_IMPRESSIONS_PER_1K_HINT')}
+                        >
+                          {t('MOD_PAGE.ADS_COL_RPM')}
+                        </SortHeader>
+                        <SortHeader
+                          id="impressionsPerHour"
+                          sort={pageTable.sort}
+                          onSort={pageTable.toggleSort}
+                          numeric
+                          title={t(
+                            'MOD_PAGE.ADS_COL_IMPRESSIONS_PER_HOUR_HINT'
+                          )}
+                        >
+                          {t('MOD_PAGE.ADS_COL_PER_HOUR')}
+                        </SortHeader>
+                        <SortHeader
+                          id="impressions"
+                          sort={pageTable.sort}
+                          onSort={pageTable.toggleSort}
+                          numeric
+                          title={t('MOD_PAGE.ADS_COL_IMPRESSIONS_HINT')}
+                        >
+                          {t('MOD_PAGE.ADS_COL_IMPRESSIONS')}
+                        </SortHeader>
                       </>
                     ) : (
                       <>
-                        {header(
-                          pageSort,
-                          togglePageSort,
-                          'rpm',
-                          t('MOD_PAGE.ADS_COL_RPM')
-                        )}
-                        {header(
-                          pageSort,
-                          togglePageSort,
-                          'perHour',
-                          t('MOD_PAGE.ADS_COL_PER_HOUR'),
-                          true,
-                          t('MOD_PAGE.ADS_COL_PER_HOUR_HINT')
-                        )}
-                        {header(
-                          pageSort,
-                          togglePageSort,
-                          'estMicros',
-                          t('MOD_PAGE.ADS_COL_REVENUE')
-                        )}
+                        <SortHeader
+                          id="rpm"
+                          sort={pageTable.sort}
+                          onSort={pageTable.toggleSort}
+                          numeric
+                        >
+                          {t('MOD_PAGE.ADS_COL_RPM')}
+                        </SortHeader>
+                        <SortHeader
+                          id="perHour"
+                          sort={pageTable.sort}
+                          onSort={pageTable.toggleSort}
+                          numeric
+                          title={t('MOD_PAGE.ADS_COL_PER_HOUR_HINT')}
+                        >
+                          {t('MOD_PAGE.ADS_COL_PER_HOUR')}
+                        </SortHeader>
+                        <SortHeader
+                          id="estMicros"
+                          sort={pageTable.sort}
+                          onSort={pageTable.toggleSort}
+                          numeric
+                        >
+                          {t('MOD_PAGE.ADS_COL_REVENUE')}
+                        </SortHeader>
                       </>
                     )}
-                    {header(
-                      pageSort,
-                      togglePageSort,
-                      'adblockRate',
-                      t('MOD_PAGE.ADS_COL_ADBLOCK')
-                    )}
+                    <SortHeader
+                      id="adblockRate"
+                      sort={pageTable.sort}
+                      onSort={pageTable.toggleSort}
+                      numeric
+                    >
+                      {t('MOD_PAGE.ADS_COL_ADBLOCK')}
+                    </SortHeader>
                   </tr>
                 </thead>
                 <tbody>
@@ -1798,36 +2006,42 @@ const AdStats: React.FC = () => {
                         </span>
                         {flagList(row.flags)}
                       </td>
-                      <td className={styles.numeric}>{count(row.views)}</td>
-                      <td className={styles.numeric}>{duration(row.avgMs)}</td>
-                      <td className={styles.numeric}>
+                      <td className={tableStyles.numeric}>
+                        {count(row.views)}
+                      </td>
+                      <td className={tableStyles.numeric}>
+                        {duration(row.avgMs)}
+                      </td>
+                      <td className={tableStyles.numeric}>
                         {percent(row.timeShare)}
                       </td>
-                      <td className={styles.numeric}>{row.slots}</td>
+                      <td className={tableStyles.numeric}>{row.slots}</td>
                       {byImpressions ? (
                         <>
-                          <td className={styles.numeric}>
+                          <td className={tableStyles.numeric}>
                             {rate(row.impressionsPer1k)}
                           </td>
-                          <td className={styles.numeric}>
+                          <td className={tableStyles.numeric}>
                             {rate(row.impressionsPerHour)}
                           </td>
-                          <td className={styles.numeric}>
+                          <td className={tableStyles.numeric}>
                             {count(row.impressions)}
                           </td>
                         </>
                       ) : (
                         <>
-                          <td className={styles.numeric}>{dollars(row.rpm)}</td>
-                          <td className={styles.numeric}>
+                          <td className={tableStyles.numeric}>
+                            {dollars(row.rpm)}
+                          </td>
+                          <td className={tableStyles.numeric}>
                             {dollars(row.perHour)}
                           </td>
-                          <td className={styles.numeric}>
+                          <td className={tableStyles.numeric}>
                             {money(row.estMicros)}
                           </td>
                         </>
                       )}
-                      <td className={styles.numeric}>
+                      <td className={tableStyles.numeric}>
                         {percent(row.adblockRate)}
                       </td>
                     </tr>
@@ -1849,47 +2063,57 @@ const AdStats: React.FC = () => {
                   </p>
                 </div>
               </div>
-              <div className={styles.tableWrap}>
-                <table className={`${styles.table} ${styles.bidderTable}`}>
+              <div className={tableStyles.tableWrap}>
+                <table className={`${tableStyles.table} ${styles.bidderTable}`}>
                   <thead>
                     <tr>
-                      {header(
-                        bidderSort,
-                        toggleBidderSort,
-                        'bidder',
-                        t('MOD_PAGE.ADS_COL_BIDDER'),
-                        false
-                      )}
-                      {header(
-                        bidderSort,
-                        toggleBidderSort,
-                        'bids',
-                        t('MOD_PAGE.ADS_COL_BIDS')
-                      )}
-                      {header(
-                        bidderSort,
-                        toggleBidderSort,
-                        'wins',
-                        t('MOD_PAGE.ADS_COL_WINS')
-                      )}
-                      {header(
-                        bidderSort,
-                        toggleBidderSort,
-                        'winRate',
-                        t('MOD_PAGE.ADS_COL_WIN_RATE')
-                      )}
-                      {header(
-                        bidderSort,
-                        toggleBidderSort,
-                        'avgCpm',
-                        t('MOD_PAGE.ADS_COL_AVG_CPM')
-                      )}
-                      {header(
-                        bidderSort,
-                        toggleBidderSort,
-                        'winMicros',
-                        t('MOD_PAGE.ADS_COL_PREBID_REVENUE')
-                      )}
+                      <SortHeader
+                        id="bidder"
+                        sort={bidderTable.sort}
+                        onSort={bidderTable.toggleSort}
+                      >
+                        {t('MOD_PAGE.ADS_COL_BIDDER')}
+                      </SortHeader>
+                      <SortHeader
+                        id="bids"
+                        sort={bidderTable.sort}
+                        onSort={bidderTable.toggleSort}
+                        numeric
+                      >
+                        {t('MOD_PAGE.ADS_COL_BIDS')}
+                      </SortHeader>
+                      <SortHeader
+                        id="wins"
+                        sort={bidderTable.sort}
+                        onSort={bidderTable.toggleSort}
+                        numeric
+                      >
+                        {t('MOD_PAGE.ADS_COL_WINS')}
+                      </SortHeader>
+                      <SortHeader
+                        id="winRate"
+                        sort={bidderTable.sort}
+                        onSort={bidderTable.toggleSort}
+                        numeric
+                      >
+                        {t('MOD_PAGE.ADS_COL_WIN_RATE')}
+                      </SortHeader>
+                      <SortHeader
+                        id="avgCpm"
+                        sort={bidderTable.sort}
+                        onSort={bidderTable.toggleSort}
+                        numeric
+                      >
+                        {t('MOD_PAGE.ADS_COL_AVG_CPM')}
+                      </SortHeader>
+                      <SortHeader
+                        id="winMicros"
+                        sort={bidderTable.sort}
+                        onSort={bidderTable.toggleSort}
+                        numeric
+                      >
+                        {t('MOD_PAGE.ADS_COL_PREBID_REVENUE')}
+                      </SortHeader>
                     </tr>
                   </thead>
                   <tbody>
@@ -1898,17 +2122,21 @@ const AdStats: React.FC = () => {
                         <td>
                           <code className={styles.code}>{row.bidder}</code>
                         </td>
-                        <td className={styles.numeric}>{count(row.bids)}</td>
-                        <td className={styles.numeric}>{count(row.wins)}</td>
-                        <td className={styles.numeric}>
+                        <td className={tableStyles.numeric}>
+                          {count(row.bids)}
+                        </td>
+                        <td className={tableStyles.numeric}>
+                          {count(row.wins)}
+                        </td>
+                        <td className={tableStyles.numeric}>
                           {percent(row.winRate)}
                         </td>
-                        <td className={styles.numeric}>
+                        <td className={tableStyles.numeric}>
                           {row.wins > 0 ? dollars(row.avgCpm) : '-'}
                         </td>
-                        <td className={styles.numeric}>
+                        <td className={tableStyles.numeric}>
                           {money(row.winMicros)}{' '}
-                          <span className={styles.muted}>
+                          <span className={tableStyles.muted}>
                             {percent(row.share)}
                           </span>
                         </td>

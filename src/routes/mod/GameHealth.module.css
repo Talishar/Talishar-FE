@@ -24,10 +24,6 @@
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
-  min-width: 12rem;
+  min-width: 16rem;
   font-size: 0.8rem;
-}
-
-.contextItem {
-  white-space: nowrap;
 }

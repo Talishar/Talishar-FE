@@ -6,20 +6,6 @@
   color: var(--theme-text);
 }
 
-.header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 0.75rem 1.5rem;
-}
-
-.title {
-  margin: 0 0 0.3rem;
-  font-size: 1.15rem;
-  color: var(--theme-text);
-}
-
 .description,
 .sectionDescription {
   margin: 0;
@@ -37,58 +23,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-}
-
-.segmented {
-  display: inline-flex;
-  flex: 0 0 auto;
-  padding: 2px;
-  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.12);
-  border-radius: 6px;
-  background: rgba(
-    var(--theme-sunken-rgb),
-    calc(0.3 * var(--theme-sunken-alpha))
-  );
-}
-
-.segment {
-  width: auto !important;
-  margin: 0 !important;
-  padding: 0.35rem 0.75rem !important;
-  border: 0 !important;
-  border-radius: 4px !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  color: rgba(var(--theme-on-surface-rgb), 0.62) !important;
-  font-size: 0.8rem;
-  font-weight: 600;
-  line-height: 1.2;
-  white-space: nowrap;
-  cursor: pointer;
-}
-
-.segment:hover {
-  color: var(--theme-text) !important;
-}
-
-.segment:focus-visible {
-  outline: 2px solid var(--theme-primary);
-  outline-offset: -2px;
-}
-
-.segmentActive {
-  color: var(--theme-text) !important;
-  background: rgba(var(--theme-on-surface-rgb), 0.1) !important;
-}
-
-.summary {
-  margin: 0;
-  font-size: 0.8rem;
-  color: var(--theme-text-secondary);
-}
-
-.muted {
-  color: var(--theme-text-secondary);
 }
 
 .prices {
@@ -167,13 +101,6 @@
 
 .priceInput input:focus {
   outline: none;
-}
-
-.empty {
-  margin: 0;
-  padding: 1.5rem 0;
-  font-size: 0.9rem;
-  color: var(--theme-text-secondary);
 }
 
 .tiles {
@@ -338,108 +265,16 @@
   margin-bottom: 0.2rem;
 }
 
-.toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  margin: 0;
-  font-size: 0.85rem;
-  color: var(--theme-text-secondary);
-  cursor: pointer;
-}
-
-.toggle input {
-  margin: 0;
-}
-
-.tableWrap {
-  width: 100%;
-  overflow-x: auto;
-  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.12);
-  border-radius: 6px;
-}
-
-.table {
-  width: 100%;
+table.adTable {
   min-width: 46rem;
-  margin: 0;
-  border-collapse: collapse;
-  font-size: 0.85rem;
 }
 
-.slotTable {
+table.slotTable {
   min-width: 60rem;
 }
 
-.bidderTable {
+table.bidderTable {
   min-width: 36rem;
-}
-
-.table th,
-.table td {
-  padding: 0.55rem 0.75rem;
-  border: 0;
-  border-bottom: 1px solid rgba(var(--theme-on-surface-rgb), 0.08);
-  background: transparent;
-  color: var(--theme-text);
-  text-align: left;
-  vertical-align: middle;
-}
-
-.table thead th {
-  background: rgba(var(--theme-on-surface-rgb), 0.03);
-  color: rgba(var(--theme-on-surface-rgb), 0.62);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-.table tbody tr:last-child td {
-  border-bottom: 0;
-}
-
-.table tbody tr:hover td {
-  background: rgba(var(--theme-on-surface-rgb), 0.03);
-}
-
-.numeric {
-  text-align: right !important;
-  white-space: nowrap;
-  font-variant-numeric: tabular-nums;
-}
-
-.sortButton {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  width: auto !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  border: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  color: inherit !important;
-  font: inherit;
-  letter-spacing: inherit;
-  text-transform: inherit;
-  cursor: pointer;
-}
-
-.sortButton:hover {
-  color: var(--theme-text) !important;
-}
-
-.sortButton:focus-visible {
-  outline: 2px solid var(--theme-primary);
-  outline-offset: 2px;
-}
-
-.sortIndicator {
-  display: inline-block;
-  min-width: 0.6rem;
-  font-size: 0.6rem;
 }
 
 .slotName {
@@ -462,22 +297,7 @@
   font-weight: 600;
 }
 
-.flags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem;
-  margin-top: 0.3rem;
-}
-
 .flag {
-  padding: 0.05rem 0.4rem;
-  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.28);
-  border-radius: 10px;
-  background: rgba(var(--theme-on-surface-rgb), 0.06);
-  color: var(--theme-text);
-  font-size: 0.68rem;
-  font-weight: 600;
-  white-space: nowrap;
   cursor: help;
 }
 

@@ -320,6 +320,41 @@ function removeStickyAd(el: HTMLElement) {
   el.remove();
 }
 
+let stickyAdGuardInstalled = false;
+
+function removeStickyAdsIn(root: ParentNode) {
+  root
+    .querySelectorAll<HTMLElement>(STICKY_AD_SELECTOR)
+    .forEach(removeStickyAd);
+}
+
+// Pages without useAdScript never run the overlay lock, but the provider stays
+// loaded after an ad page and still appends its anchor there.
+function installStickyAdGuard() {
+  if (stickyAdGuardInstalled || !document.body) return;
+  stickyAdGuardInstalled = true;
+  removeStickyAdsIn(document.body);
+  new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+      for (const node of mutation.addedNodes) {
+        if (node instanceof HTMLElement && node.matches(STICKY_AD_SELECTOR))
+          removeStickyAd(node);
+      }
+    }
+  }).observe(document.body, { childList: true });
+  new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+      const target = mutation.target;
+      if (target instanceof HTMLElement && target.matches(STICKY_AD_SELECTOR))
+        removeStickyAd(target);
+    }
+  }).observe(document.body, {
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['data-reviq-sticky-ad']
+  });
+}
+
 const TEXT_FIELD_SELECTOR =
   'input, textarea, [contenteditable]:not([contenteditable="false"])';
 const TYPING_GRACE_MS = 1000;
@@ -344,20 +379,26 @@ function onFocusOut(event: FocusEvent) {
       : null;
 }
 
-function restoreField(field: HTMLElement) {
+// A creative that focuses itself while the pointer is elsewhere takes every
+// key press, so text fields get their focus back and game hotkeys their page.
+function restoreFocus(field: HTMLElement | null) {
   const active = document.activeElement;
   if (!(active instanceof HTMLIFrameElement) || isReactOwned(active)) return;
-  if (!field.isConnected || blurredField !== field) return;
   hoverQuery ??= window.matchMedia('(hover: hover)');
-  const typing = Date.now() - lastKeyAt < TYPING_GRACE_MS;
-  if (!typing && !(hoverQuery.matches && !active.matches(':hover'))) return;
-  field.focus({ preventScroll: true });
+  const stolen = hoverQuery.matches && !active.matches(':hover');
+  if (field && field.isConnected && blurredField === field) {
+    const typing = Date.now() - lastKeyAt < TYPING_GRACE_MS;
+    if (typing || stolen) field.focus({ preventScroll: true });
+    return;
+  }
+  if (!stolen || !active.closest('[data-ad]')) return;
+  active.blur();
+  window.focus();
 }
 
 function onWindowBlur() {
   const field = blurredField;
-  if (!field) return;
-  window.setTimeout(() => window.setTimeout(() => restoreField(field), 0), 0);
+  window.setTimeout(() => window.setTimeout(() => restoreFocus(field), 0), 0);
 }
 
 function installFocusGuard() {
@@ -496,6 +537,7 @@ export default function useAdScript(
     startAdAnalytics();
     installIframeInsertionGuard();
     installFocusGuard();
+    installStickyAdGuard();
 
     if (!document.querySelector('script[src="//js.rev.iq/talishar.net"]')) {
       try {
