@@ -43,7 +43,9 @@ const PlayerReports: React.FC = () => {
   });
   const { warn, isWarning } = useWarnPlayer();
   const { ban, isBanning } = useBanPlayer();
-  const [hideBanned, setHideBanned] = useHideBanned();
+  const [hideBanned, setHideBanned] = useHideBanned(
+    'modHideBannedPlayerReports'
+  );
   const [expanded, setExpanded] = useState<Set<number>>(new Set());
 
   const toggleExpanded = (reportId: number) => {

@@ -1,11 +1,9 @@
 import React, { useMemo, useState } from 'react';
-import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import { useGetBlockReportsQuery } from 'features/api/apiSlice';
 import {
   MODERATION_REASONS,
-  MODERATION_REASON_LABEL_KEYS,
-  ModerationReason
+  MODERATION_REASON_LABEL_KEYS
 } from 'interface/API/ModerationAPI';
 import { BlockReportPlayer } from 'interface/API/BlockedUsersAPI.php';
 import tableStyles from './ModTable.module.css';
@@ -18,15 +16,11 @@ import useHideBanned from './useHideBanned';
 export const DAY_OPTIONS = [7, 14, 30, 90, 365];
 const MIN_BLOCK_OPTIONS = [1, 2, 3, 5, 10];
 
-type SortKey = 'player' | 'blocks' | ModerationReason | 'lastBlocked';
+type SortKey = 'player' | 'blocks' | 'lastBlocked';
 
 const SORT_COLUMNS: Record<SortKey, SortColumn<BlockReportPlayer>> = {
   player: { value: (row) => row.displayName, ascendingFirst: true },
   blocks: { value: (row) => row.blockCount },
-  rude: { value: (row) => row.reasonCounts.rude },
-  insulting: { value: (row) => row.reasonCounts.insulting },
-  unsporting: { value: (row) => row.reasonCounts.unsporting },
-  other: { value: (row) => row.reasonCounts.other },
   lastBlocked: { value: (row) => row.lastBlockedAt }
 };
 
@@ -44,7 +38,9 @@ const BlockReports: React.FC = () => {
   });
   const { warn, isWarning } = useWarnPlayer();
   const { ban, isBanning } = useBanPlayer();
-  const [hideBanned, setHideBanned] = useHideBanned();
+  const [hideBanned, setHideBanned] = useHideBanned(
+    'modHideBannedBlockReports'
+  );
 
   const visiblePlayers = useMemo(() => {
     const all = data?.players ?? NO_PLAYERS;
@@ -138,17 +134,7 @@ const BlockReports: React.FC = () => {
                 <SortHeader id="blocks" sort={sort} onSort={toggleSort} numeric>
                   {t('BLOCK_REPORTS.BLOCKS')}
                 </SortHeader>
-                {MODERATION_REASONS.map((reason) => (
-                  <SortHeader
-                    key={reason}
-                    id={reason}
-                    sort={sort}
-                    onSort={toggleSort}
-                    numeric
-                  >
-                    {t(MODERATION_REASON_LABEL_KEYS[reason])}
-                  </SortHeader>
-                ))}
+                <th>{t('BLOCK_REPORTS.REASONS')}</th>
                 <SortHeader id="lastBlocked" sort={sort} onSort={toggleSort}>
                   {t('BLOCK_REPORTS.LAST_BLOCKED')}
                 </SortHeader>
@@ -182,17 +168,23 @@ const BlockReports: React.FC = () => {
                       <td className={tableStyles.numeric}>
                         {player.blockCount}
                       </td>
-                      {MODERATION_REASONS.map((reason) => (
-                        <td
-                          key={reason}
-                          className={classNames(tableStyles.numeric, {
-                            [tableStyles.muted]:
-                              player.reasonCounts[reason] === 0
-                          })}
-                        >
-                          {player.reasonCounts[reason]}
-                        </td>
-                      ))}
+                      <td>
+                        <div className={styles.reasonList}>
+                          {MODERATION_REASONS.every(
+                            (reason) => player.reasonCounts[reason] === 0
+                          ) && <span className={tableStyles.muted}>-</span>}
+                          {MODERATION_REASONS.filter(
+                            (reason) => player.reasonCounts[reason] > 0
+                          ).map((reason) => (
+                            <span key={reason} className={styles.reasonTag}>
+                              {t(MODERATION_REASON_LABEL_KEYS[reason])}{' '}
+                              <span className={styles.reasonCount}>
+                                {player.reasonCounts[reason]}
+                              </span>
+                            </span>
+                          ))}
+                        </div>
+                      </td>
                       <td className={styles.nowrap}>
                         {player.lastBlockedAt.slice(0, 10)}
                       </td>
@@ -234,7 +226,7 @@ const BlockReports: React.FC = () => {
                     </tr>
                     {expanded.has(player.usersId) && (
                       <tr>
-                        <td colSpan={4 + MODERATION_REASONS.length}>
+                        <td colSpan={5}>
                           <ul className={styles.notes}>
                             {player.notes.map((note, ix) => (
                               <li key={ix} className={styles.note}>

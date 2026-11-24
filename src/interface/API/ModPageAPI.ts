@@ -43,6 +43,12 @@ export interface LinkedAccount {
   username: string;
   ip: string;
   linkedTo: string;
+  lastSeen?: string;
+}
+
+export interface DismissBanEvaderRequest {
+  username: string;
+  ips: string[];
 }
 
 export interface TopSpectator {
@@ -57,6 +63,7 @@ export interface ModPageDataResponse {
   recentAccounts: string[];
   linkedAccounts?: LinkedAccount[];
   bannedPlayerIPs?: Record<string, string[]>;
+  ipAccountCounts?: Record<string, number>;
 }
 
 export interface SearchUsernamesRequest {

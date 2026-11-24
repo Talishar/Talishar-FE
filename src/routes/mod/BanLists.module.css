@@ -1,0 +1,90 @@
+.narrow {
+  min-width: 28rem;
+}
+
+.ip {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+  overflow-wrap: anywhere;
+}
+
+.ipRows {
+  display: flex;
+  flex-direction: column;
+}
+
+.ipRow {
+  display: grid;
+  grid-template-columns: minmax(14rem, 2fr) minmax(8rem, 2fr) 7rem 6rem 5.5rem;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.35rem 0;
+  font-size: 0.8rem;
+  border-bottom: 1px solid rgba(var(--theme-on-surface-rgb), 0.06);
+}
+
+.ipRow:last-child {
+  border-bottom: 0;
+}
+
+.ipLinks {
+  overflow-wrap: anywhere;
+}
+
+.ipGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.ipGridBoxed {
+  padding: 0.75rem;
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.12);
+  border-radius: 6px;
+}
+
+.ipChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.15rem 0.25rem 0.15rem 0.5rem;
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.14);
+  border-radius: 4px;
+  color: var(--theme-text);
+}
+
+.ipGridBoxed .ipChip {
+  padding-right: 0.5rem;
+}
+
+.chipButton {
+  width: auto !important;
+  margin: 0 !important;
+  padding: 0.05rem 0.4rem !important;
+  border-radius: 3px !important;
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.18) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--theme-text) !important;
+  font-size: 0.7rem;
+  line-height: 1.3;
+  cursor: pointer;
+}
+
+.chipButton:hover:not(:disabled) {
+  background: rgba(var(--theme-on-surface-rgb), 0.08) !important;
+}
+
+.chipButton:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.chipNote {
+  font-size: 0.7rem;
+  color: var(--theme-text-secondary);
+}
+
+.showMore {
+  align-self: flex-start;
+}

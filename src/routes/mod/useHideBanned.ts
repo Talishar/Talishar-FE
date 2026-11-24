@@ -1,11 +1,9 @@
 import { useState } from 'react';
 
-const STORAGE_KEY = 'modHideBanned';
-
-export default function useHideBanned() {
+export default function useHideBanned(storageKey: string) {
   const [hideBanned, setHideBannedState] = useState(() => {
     try {
-      return localStorage.getItem(STORAGE_KEY) === '1';
+      return localStorage.getItem(storageKey) === '1';
     } catch {
       return false;
     }
@@ -14,7 +12,7 @@ export default function useHideBanned() {
   const setHideBanned = (value: boolean) => {
     setHideBannedState(value);
     try {
-      localStorage.setItem(STORAGE_KEY, value ? '1' : '0');
+      localStorage.setItem(storageKey, value ? '1' : '0');
     } catch {
       // ignore
     }

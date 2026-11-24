@@ -465,6 +465,7 @@ export const URL_END_POINT = {
   SUBMIT_PLAYER_REPORT: 'APIs/SubmitPlayerReport.php',
   GET_PLAYER_REPORTS: 'APIs/GetPlayerReports.php',
   DELETE_PLAYER_REPORT: 'APIs/DeletePlayerReport.php',
+  DISMISS_BAN_EVADER: 'APIs/DismissBanEvader.php',
   SYSTEM_MESSAGE: 'APIs/SystemMessageAPI.php',
   GET_SYSTEM_MESSAGE: 'APIs/GetSystemMessage.php',
   GET_LAST_ACTIVE_GAME: 'APIs/GetLastActiveGame.php',

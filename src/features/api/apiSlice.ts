@@ -94,6 +94,7 @@ import {
   ModPageDataResponse,
   BanPlayerByIPRequest,
   BanIPDirectRequest,
+  DismissBanEvaderRequest,
   BanPlayerByNameRequest,
   CloseGameRequest,
   DeleteUsernameRequest,
@@ -848,6 +849,13 @@ export const apiSlice = createApi({
         postJson(URL_END_POINT.BAN_PLAYER, { directIPToBan: directIPToBan }),
       invalidatesTags: [{ type: 'ModPageData', id: 'LIST' }]
     }),
+    dismissBanEvader: builder.mutation<
+      { success?: boolean; dismissed?: number; error?: string },
+      DismissBanEvaderRequest
+    >({
+      query: (body) => postJson(URL_END_POINT.DISMISS_BAN_EVADER, body),
+      invalidatesTags: [{ type: 'ModPageData', id: 'LIST' }]
+    }),
     banPlayerByName: builder.mutation<any, BanPlayerByNameRequest>({
       query: ({ playerToBan }) =>
         postJson(URL_END_POINT.BAN_PLAYER, { playerToBan: playerToBan }),
@@ -1263,6 +1271,7 @@ export const {
   useResetAllRustCountersMutation,
   useBanPlayerByIPMutation,
   useBanIPDirectMutation,
+  useDismissBanEvaderMutation,
   useBanPlayerByNameMutation,
   useDeleteUsernameMutation,
   useCloseGameMutation,

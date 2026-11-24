@@ -18,6 +18,18 @@
   white-space: nowrap;
 }
 
+.reasonList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.reasonCount {
+  font-weight: 600;
+  color: var(--theme-text);
+  font-variant-numeric: tabular-nums;
+}
+
 .nowrap {
   white-space: nowrap;
 }

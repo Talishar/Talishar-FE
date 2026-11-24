@@ -21,11 +21,12 @@ import AdStats from './AdStats';
 import GameHealth from './GameHealth';
 import BlockReports from './BlockReports';
 import PlayerReports from './PlayerReports';
+import BanLists from './BanLists';
 import blockStyles from './BlockReports.module.css';
-import { LinkedAccount } from 'interface/API/ModPageAPI';
 
 const MOD_TABS = [
   { id: 'moderation', labelKey: 'MOD_PAGE.TAB_MODERATION' },
+  { id: 'bans', labelKey: 'MOD_PAGE.TAB_BANS' },
   { id: 'messages', labelKey: 'MOD_PAGE.TAB_MESSAGES' },
   { id: 'usernames', labelKey: 'MOD_PAGE.TAB_USERNAMES' },
   { id: 'reports', labelKey: 'MOD_PAGE.TAB_REPORTS' },
@@ -563,7 +564,9 @@ const ModPage: React.FC = () => {
                     </p>
                   )}
                 </div>
+              </div>
 
+              <div className={styles.rightColumn}>
                 <div className={styles.dataSection}>
                   <h2>{t('MOD_PAGE.MOST_RECENTLY_CREATED_ACCOUNTS')}</h2>
                   {isLoading ? (
@@ -581,105 +584,11 @@ const ModPage: React.FC = () => {
                     <p>{t('MOD_PAGE.NO_RECENT_ACCOUNTS')}</p>
                   )}
                 </div>
-
-                <div className={styles.dataSection}>
-                  <h2>{t('MOD_PAGE.POSSIBLE_BAN_EVADERS')}</h2>
-                  {isLoading ? (
-                    <p>{t('MOD_PAGE.LOADING')}</p>
-                  ) : modPageData?.linkedAccounts &&
-                    modPageData.linkedAccounts.length > 0 ? (
-                    <ul className={styles.dataList}>
-                      {modPageData.linkedAccounts.map(
-                        (link: LinkedAccount, index: number) => (
-                          <li key={index}>
-                            <strong>{link.username}</strong> - {link.ip} (
-                            {link.linkedTo === 'banned IP'
-                              ? t('MOD_PAGE.BANNED_IP')
-                              : t('MOD_PAGE.SHARES_IP_WITH', {
-                                  username: link.linkedTo
-                                })}
-                            )
-                          </li>
-                        )
-                      )}
-                    </ul>
-                  ) : (
-                    <p>{t('MOD_PAGE.NO_LINKED_ACCOUNTS')}</p>
-                  )}
-                </div>
-              </div>
-
-              <div className={styles.rightColumn}>
-                <div className={styles.dataSection}>
-                  <h2>{t('MOD_PAGE.BANNED_PLAYERS')}</h2>
-                  {isLoading ? (
-                    <p>{t('MOD_PAGE.LOADING')}</p>
-                  ) : modPageData?.bannedPlayers &&
-                    modPageData.bannedPlayers.length > 0 ? (
-                    <ul className={styles.dataList}>
-                      {modPageData.bannedPlayers.map(
-                        (player: string, index: number) => {
-                          const knownIPs =
-                            modPageData.bannedPlayerIPs?.[player.toLowerCase()];
-                          return (
-                            <li key={index}>
-                              {player}
-                              {knownIPs && knownIPs.length > 0 && (
-                                <span
-                                  style={{ color: '#aaa', fontSize: '12px' }}
-                                >
-                                  {' - '}
-                                  {knownIPs.map(
-                                    (ip: string, ipIndex: number) => (
-                                      <React.Fragment key={ip}>
-                                        {ipIndex > 0 && ', '}
-                                        <a
-                                          onClick={() => setDirectIP(ip)}
-                                          title={t(
-                                            'MOD_PAGE.CLICK_TO_FILL_BAN_IP_FORM'
-                                          )}
-                                          style={{
-                                            cursor: 'pointer',
-                                            textDecoration: 'underline'
-                                          }}
-                                        >
-                                          {ip}
-                                        </a>
-                                      </React.Fragment>
-                                    )
-                                  )}
-                                </span>
-                              )}
-                            </li>
-                          );
-                        }
-                      )}
-                    </ul>
-                  ) : (
-                    <p>{t('MOD_PAGE.NO_BANNED_PLAYERS')}</p>
-                  )}
-                </div>
-
-                <div className={styles.dataSection}>
-                  <h2>{t('MOD_PAGE.BANNED_IPS')}</h2>
-                  {isLoading ? (
-                    <p>{t('MOD_PAGE.LOADING')}</p>
-                  ) : modPageData?.bannedIPs &&
-                    modPageData.bannedIPs.length > 0 ? (
-                    <ul className={styles.dataList}>
-                      {modPageData.bannedIPs.map(
-                        (ip: string, index: number) => (
-                          <li key={index}>{ip}</li>
-                        )
-                      )}
-                    </ul>
-                  ) : (
-                    <p>{t('MOD_PAGE.NO_BANNED_IPS')}</p>
-                  )}
-                </div>
               </div>
             </div>
           )}
+
+          {activeTab === 'bans' && <BanLists />}
 
           {activeTab === 'messages' && (
             <div className={styles.twoColumn}>
