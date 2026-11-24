@@ -42,11 +42,15 @@ export const useTableSort = <T, K extends string>(
   }, [rows, columns, sort]);
 
   const toggleSort = (key: K) =>
-    setSort((current) =>
-      current?.key === key
-        ? { key, descending: !current.descending }
-        : { key, descending: !columns[key].ascendingFirst }
-    );
+    setSort((current) => {
+      const firstDirection = !columns[key].ascendingFirst;
+      if (current?.key !== key) return { key, descending: firstDirection };
+      if (current.descending === firstDirection)
+        return { key, descending: !firstDirection };
+      return initialSort?.key === key
+        ? { key, descending: firstDirection }
+        : initialSort;
+    });
 
   return { sortedRows, sort, toggleSort, setSort };
 };

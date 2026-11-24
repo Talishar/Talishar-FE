@@ -14,6 +14,7 @@ import { SortColumn, SortHeader, useTableSort } from './SortableTable';
 import tableStyles from './ModTable.module.css';
 import blockStyles from './BlockReports.module.css';
 import styles from './GameHealth.module.css';
+import { isSessionExpired } from './sessionExpired';
 
 const RANGES: GameHealthRange[] = [1, 7, 30, 90];
 
@@ -36,9 +37,14 @@ const FIX_COLUMNS: { kind: FixKind; labelKey: string }[] = [
   { kind: 'bugs', labelKey: 'MOD_PAGE.HEALTH_COL_BUGS' }
 ];
 
+const DEFAULT_MIN_INPUTS = 20;
+const DEFAULT_MIN_FIX_GAMES = 5;
+
 const PROMPT_MODE_NAMES: [number, string][] = [
   [8, 'Put on top'],
   [11, 'Choose from deck'],
+  [12, 'Put on top'],
+  [13, 'Put on bottom'],
   [16, 'Choose'],
   [106, 'Use floating resources'],
   [107, 'Submit opt'],
@@ -64,7 +70,7 @@ type MisclickSortKey =
   | 'fastRate'
   | 'prevFastRate'
   | 'avgUndoMs';
-type CardSortKey = 'games' | 'fixGames' | 'fixRate' | FixKind;
+type CardSortKey = 'games' | 'fixGames' | 'fixRate' | 'prevFixRate' | FixKind;
 
 const share = (part: number, whole: number) => (whole > 0 ? part / whole : 0);
 const percent = (value: number) =>
@@ -79,7 +85,10 @@ const MISCLICK_COLUMNS: Record<MisclickSortKey, SortColumn<MisclickStat>> = {
   undoRate: { value: (row) => share(row.undos, row.inputs) },
   fastUndos: { value: (row) => row.fastUndos },
   fastRate: { value: (row) => share(row.fastUndos, row.inputs) },
-  prevFastRate: { value: (row) => share(row.prevFastUndos, row.prevInputs) },
+  prevFastRate: {
+    value: (row) =>
+      row.prevInputs > 0 ? share(row.prevFastUndos, row.prevInputs) : null
+  },
   avgUndoMs: { value: (row) => row.avgUndoMs, ascendingFirst: true }
 };
 
@@ -87,6 +96,10 @@ const CARD_COLUMNS: Record<CardSortKey, SortColumn<SuspectCardStat>> = {
   games: { value: (row) => row.games },
   fixGames: { value: (row) => row.fixGames },
   fixRate: { value: (row) => share(row.fixGames, row.games) },
+  prevFixRate: {
+    value: (row) =>
+      row.prevGames > 0 ? share(row.prevFixGames, row.prevGames) : null
+  },
   life: { value: (row) => row.life },
   ap: { value: (row) => row.ap },
   resources: { value: (row) => row.resources },
@@ -137,7 +150,11 @@ const GameHealth: React.FC = () => {
   const { t } = useTranslation();
   const [range, setRange] = useState<GameHealthRange>(7);
   const [query, setQuery] = useState('');
-  const { data, isFetching, isError } = useGetGameHealthReportQuery(range);
+  const [showSmall, setShowSmall] = useState(false);
+  const { data, isFetching, isError, error } =
+    useGetGameHealthReportQuery(range);
+  const minInputs = data?.minInputs ?? DEFAULT_MIN_INPUTS;
+  const minFixGames = data?.minFixGames ?? DEFAULT_MIN_FIX_GAMES;
 
   const modeLabel = (mode: number) =>
     MODE_NAMES.get(mode) ?? t('MOD_PAGE.HEALTH_MODE_UNKNOWN', { mode });
@@ -148,7 +165,7 @@ const GameHealth: React.FC = () => {
 
   const needle = query.trim().toLowerCase();
 
-  const misclickRows = useMemo(() => {
+  const misclickMatches = useMemo(() => {
     const rows = data?.misclicks ?? NO_MISCLICKS;
     if (!needle) return rows;
     return rows.filter((row) =>
@@ -163,7 +180,7 @@ const GameHealth: React.FC = () => {
     );
   }, [data, needle]);
 
-  const cardRows = useMemo(() => {
+  const cardMatches = useMemo(() => {
     const rows = data?.cards ?? NO_CARDS;
     if (!needle) return rows;
     return rows.filter((row) =>
@@ -173,28 +190,56 @@ const GameHealth: React.FC = () => {
     );
   }, [data, needle]);
 
+  const rankedMisclicks = useMemo(
+    () => misclickMatches.filter((row) => row.inputs >= minInputs),
+    [misclickMatches, minInputs]
+  );
+  const rankedCards = useMemo(
+    () => cardMatches.filter((row) => row.fixGames >= minFixGames),
+    [cardMatches, minFixGames]
+  );
+  const misclickRows = showSmall ? misclickMatches : rankedMisclicks;
+  const cardRows = showSmall ? cardMatches : rankedCards;
+  const smallRows =
+    misclickMatches.length -
+    rankedMisclicks.length +
+    cardMatches.length -
+    rankedCards.length;
+
   const misclicks = useTableSort(misclickRows, MISCLICK_COLUMNS);
   const cards = useTableSort(cardRows, CARD_COLUMNS);
 
   const failed = isError || !!data?.error;
   const status = failed ? (
-    <p className={tableStyles.empty}>{t('MOD_PAGE.HEALTH_LOAD_FAILED')}</p>
+    <p className={tableStyles.empty}>
+      {isSessionExpired(error)
+        ? t('MOD_PAGE.SESSION_EXPIRED')
+        : t('MOD_PAGE.HEALTH_LOAD_FAILED')}
+    </p>
   ) : !data ? (
     <p className={tableStyles.empty}>{t('MOD_PAGE.LOADING')}</p>
   ) : null;
 
   return (
     <div className={blockStyles.tabStack}>
-      <section className={tableStyles.panel}>
-        <div className={tableStyles.header}>
-          <div>
-            <h2 className={tableStyles.title}>
-              {t('MOD_PAGE.HEALTH_MISCLICKS_TITLE')}
-            </h2>
-            <p className={tableStyles.description}>
-              {t('MOD_PAGE.HEALTH_MISCLICKS_DESCRIPTION')}
-            </p>
-          </div>
+      <div className={styles.toolbar}>
+        <div className={tableStyles.controls}>
+          <input
+            type="search"
+            className={tableStyles.search}
+            value={query}
+            placeholder={t('MOD_PAGE.HEALTH_SEARCH_PLACEHOLDER')}
+            aria-label={t('MOD_PAGE.HEALTH_SEARCH_PLACEHOLDER')}
+            onChange={(event) => setQuery(event.target.value)}
+          />
+          <label className={tableStyles.toggle}>
+            <input
+              type="checkbox"
+              checked={showSmall}
+              onChange={(event) => setShowSmall(event.target.checked)}
+            />
+            {t('MOD_PAGE.HEALTH_SHOW_SMALL', { count: smallRows })}
+          </label>
           <div
             className={tableStyles.segmented}
             role="group"
@@ -219,18 +264,6 @@ const GameHealth: React.FC = () => {
             ))}
           </div>
         </div>
-
-        <div className={tableStyles.controls}>
-          <input
-            type="search"
-            className={tableStyles.search}
-            value={query}
-            placeholder={t('MOD_PAGE.HEALTH_SEARCH_PLACEHOLDER')}
-            aria-label={t('MOD_PAGE.HEALTH_SEARCH_PLACEHOLDER')}
-            onChange={(event) => setQuery(event.target.value)}
-          />
-        </div>
-
         {data && !failed && (
           <p className={tableStyles.summary}>
             {t('MOD_PAGE.HEALTH_SUMMARY', {
@@ -256,13 +289,28 @@ const GameHealth: React.FC = () => {
             )}
           </p>
         )}
+      </div>
+
+      <section className={tableStyles.panel}>
+        <div className={tableStyles.header}>
+          <div>
+            <h2 className={tableStyles.title}>
+              {t('MOD_PAGE.HEALTH_MISCLICKS_TITLE')}
+            </h2>
+            <p className={tableStyles.description}>
+              {t('MOD_PAGE.HEALTH_MISCLICKS_DESCRIPTION')}
+            </p>
+          </div>
+        </div>
 
         {status ??
           (misclicks.sortedRows.length === 0 ? (
             <p className={tableStyles.empty}>
-              {data?.misclicks.length
-                ? t('MOD_PAGE.HEALTH_NO_MATCH')
-                : t('MOD_PAGE.HEALTH_MISCLICKS_EMPTY')}
+              {!data?.misclicks.length
+                ? t('MOD_PAGE.HEALTH_MISCLICKS_EMPTY')
+                : misclickMatches.length
+                ? t('MOD_PAGE.HEALTH_ALL_SMALL')
+                : t('MOD_PAGE.HEALTH_NO_MATCH')}
             </p>
           ) : (
             <div className={tableStyles.tableWrap}>
@@ -413,9 +461,11 @@ const GameHealth: React.FC = () => {
         {status ??
           (cards.sortedRows.length === 0 ? (
             <p className={tableStyles.empty}>
-              {data?.cards.length
-                ? t('MOD_PAGE.HEALTH_NO_MATCH')
-                : t('MOD_PAGE.HEALTH_CARDS_EMPTY')}
+              {!data?.cards.length
+                ? t('MOD_PAGE.HEALTH_CARDS_EMPTY')
+                : cardMatches.length
+                ? t('MOD_PAGE.HEALTH_ALL_SMALL')
+                : t('MOD_PAGE.HEALTH_NO_MATCH')}
             </p>
           ) : (
             <div className={tableStyles.tableWrap}>
@@ -447,6 +497,14 @@ const GameHealth: React.FC = () => {
                     >
                       {t('MOD_PAGE.HEALTH_COL_FIX_RATE')}
                     </SortHeader>
+                    <SortHeader
+                      id="prevFixRate"
+                      sort={cards.sort}
+                      onSort={cards.toggleSort}
+                      numeric
+                    >
+                      {t('MOD_PAGE.HEALTH_COL_PREV_FIX_RATE')}
+                    </SortHeader>
                     {FIX_COLUMNS.map(({ kind, labelKey }) => (
                       <SortHeader
                         key={kind}
@@ -474,6 +532,11 @@ const GameHealth: React.FC = () => {
                       </td>
                       <td className={tableStyles.numeric}>
                         {percent(share(row.fixGames, row.games))}
+                      </td>
+                      <td className={tableStyles.numeric}>
+                        {row.prevGames > 0
+                          ? percent(share(row.prevFixGames, row.prevGames))
+                          : '-'}
                       </td>
                       {FIX_COLUMNS.map(({ kind }) => (
                         <td key={kind} className={tableStyles.numeric}>

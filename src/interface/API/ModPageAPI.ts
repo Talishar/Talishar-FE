@@ -127,6 +127,8 @@ export interface AdDailyStat {
   videoStarts?: number;
   videoCompletes?: number;
   rewardedShows: number;
+  rewardedCloses?: number;
+  rewardedGrants?: number;
 }
 
 export interface AdEventStat {
@@ -181,6 +183,8 @@ export interface SuspectCardStat {
   cardName: string;
   games: number;
   fixGames: number;
+  prevGames: number;
+  prevFixGames: number;
   score: number;
   life: number;
   ap: number;
@@ -199,6 +203,8 @@ export interface GameHealthReportResponse {
   inputs: number;
   undos: number;
   fastUndos: number;
+  minInputs?: number;
+  minFixGames?: number;
   misclicks: MisclickStat[];
   cards: SuspectCardStat[];
   error?: string;

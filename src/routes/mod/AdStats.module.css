@@ -228,6 +228,22 @@
   background: rgba(var(--theme-on-surface-rgb), 0.85);
 }
 
+.chartBarPartial {
+  background: repeating-linear-gradient(
+    135deg,
+    rgba(var(--theme-on-surface-rgb), 0.35) 0 3px,
+    rgba(var(--theme-on-surface-rgb), 0.12) 3px 6px
+  );
+}
+
+.chartBarPartial.chartBarActive {
+  background: repeating-linear-gradient(
+    135deg,
+    rgba(var(--theme-on-surface-rgb), 0.7) 0 3px,
+    rgba(var(--theme-on-surface-rgb), 0.3) 3px 6px
+  );
+}
+
 .chartAxis {
   display: flex;
   justify-content: space-between;

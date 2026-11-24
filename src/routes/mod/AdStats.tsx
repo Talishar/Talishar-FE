@@ -20,6 +20,7 @@ import {
 } from './SortableTable';
 import tableStyles from './ModTable.module.css';
 import styles from './AdStats.module.css';
+import { isSessionExpired } from './sessionExpired';
 
 type Measure = 'impressions' | 'revenue';
 
@@ -141,6 +142,7 @@ const DROP_MIN_BASELINE = 100;
 
 interface DayRow {
   day: string;
+  partial: boolean;
   views: number;
   impressions: KindValues;
   micros: KindValues;
@@ -161,8 +163,7 @@ const kindValue = (values: KindValues, kind: ChartKind) =>
 
 // Today's UTC row is still filling, so it is left out of the comparison.
 function findKindDrops(days: DayRow[]): KindDrop[] {
-  const today = new Date().toISOString().slice(0, 10);
-  const complete = days.filter((day) => day.day !== today);
+  const complete = days.filter((day) => !day.partial);
   const recentDays = Math.min(
     DROP_RECENT_DAYS,
     Math.floor(complete.length / 2)
@@ -206,7 +207,6 @@ interface RewardedSummary {
   missUnfilled: number;
   missSpent: number;
   missBlocked: number;
-  shownLate: number;
 }
 
 interface InGameGate {
@@ -290,6 +290,23 @@ function sumBy<T, K extends keyof T>(
 
 const cpmMicros = (cpm: number) => Math.round(cpm * 1000);
 
+const DAY_MS = 86400000;
+const utcDay = (time: number) => new Date(time).toISOString().slice(0, 10);
+
+function dayRange(from: string, to: string): string[] {
+  const days: string[] = [];
+  const end = Date.parse(`${to}T00:00:00Z`);
+  for (
+    let time = Date.parse(`${from}T00:00:00Z`);
+    time <= end && days.length < 400;
+    time += DAY_MS
+  )
+    days.push(utcDay(time));
+  return days;
+}
+
+const isWarning = (flag: SlotFlag) => flag !== 'WRAPPER';
+
 function loadPrices(): Prices {
   try {
     const stored = JSON.parse(localStorage.getItem(PRICE_STORAGE_KEY) ?? '{}');
@@ -343,6 +360,8 @@ function unpricedFills(row: { filled: number; pricedFills: number }) {
 
 // The video player's AdImpression event misses some ads that still start,
 // become viewable and play to the end, so video takes the largest count.
+// A rust counter ad only counts once it closes: asking Google to show one does
+// not mean it played.
 function slotImpressions(row: AdSlotStat, kind: SlotKind, events: EventCounts) {
   if (kind === 'video')
     return Math.max(
@@ -351,7 +370,7 @@ function slotImpressions(row: AdSlotStat, kind: SlotKind, events: EventCounts) {
       events.started ?? 0,
       events.complete ?? 0
     );
-  if (kind === 'rewarded') return events.shown ?? 0;
+  if (kind === 'rewarded') return events.closed ?? 0;
   return row.filled;
 }
 
@@ -406,7 +425,8 @@ const DAY_SUM_FIELDS: Array<keyof AdDailyStat> = [
   'videoViewable',
   'videoStarts',
   'videoCompletes',
-  'rewardedShows'
+  'rewardedShows',
+  'rewardedCloses'
 ];
 
 function slotFlags(row: AdSlotStat, kind: SlotKind, hidden: number) {
@@ -590,7 +610,7 @@ function buildInsights(
     );
   }
   const reachable = rewarded.clicks - rewarded.missBlocked;
-  const missed = Math.max(0, reachable - rewarded.shown);
+  const missed = Math.max(0, reachable - rewarded.closed);
   if (
     reachable >= MIN_SAMPLE &&
     ratio(missed, reachable) >= MISSED_REWARDED_SHARE
@@ -737,9 +757,7 @@ function buildInsights(
       })
     );
   }
-  const flagged = slots.filter((row) =>
-    row.flags.some((flag) => flag !== 'WRAPPER')
-  ).length;
+  const flagged = slots.filter((row) => row.flags.some(isWarning)).length;
   if (flagged > 0) {
     lines.push(t('MOD_PAGE.ADS_INSIGHT_FLAGGED', { count: flagged }));
   }
@@ -762,7 +780,7 @@ const DailyChart = ({
   const peak = Math.max(0, ...days.map(value));
   const max = Math.max(peak, 1);
   const focused = active === null ? null : days[active];
-  const readout = (day: DayRow) =>
+  const baseReadout = (day: DayRow) =>
     byImpressions
       ? t('MOD_PAGE.ADS_CHART_READOUT_IMPRESSIONS', {
           day: day.day,
@@ -776,6 +794,10 @@ const DailyChart = ({
           views: count(day.views),
           rpm: dollars(perThousand(value(day), day.views))
         });
+  const readout = (day: DayRow) =>
+    day.partial
+      ? t('MOD_PAGE.ADS_CHART_PARTIAL', { readout: baseReadout(day) })
+      : baseReadout(day);
 
   return (
     <div className={styles.chartCard}>
@@ -828,11 +850,13 @@ const DailyChart = ({
               onBlur={() => setActive(null)}
             >
               <span
-                className={
-                  active === index
-                    ? `${styles.chartBar} ${styles.chartBarActive}`
-                    : styles.chartBar
-                }
+                className={[
+                  styles.chartBar,
+                  active === index ? styles.chartBarActive : '',
+                  day.partial ? styles.chartBarPartial : ''
+                ]
+                  .filter(Boolean)
+                  .join(' ')}
                 style={{ height: `${(value(day) / max) * 100}%` }}
               />
             </div>
@@ -856,7 +880,7 @@ const AdStats: React.FC = () => {
   const [prices, setPrices] = useState<Prices>(loadPrices);
   const byImpressions = measure === 'impressions';
 
-  const { data, isFetching, isError } = useGetAdReportQuery(range);
+  const { data, isFetching, isError, error } = useGetAdReportQuery(range);
 
   const pageLabel = (page: string) =>
     t(`MOD_PAGE.ADS_PAGE_${page.toUpperCase().replace(/-/g, '_')}`, {
@@ -914,7 +938,8 @@ const AdStats: React.FC = () => {
         videoViewable: 0,
         videoStarts: 0,
         videoCompletes: 0,
-        ...row
+        ...row,
+        rewardedCloses: row.rewardedCloses ?? row.rewardedShows
       })),
       (row) => row.day,
       DAY_SUM_FIELDS
@@ -1063,8 +1088,7 @@ const AdStats: React.FC = () => {
       micros: 0,
       missUnfilled: 0,
       missSpent: 0,
-      missBlocked: 0,
-      shownLate: 0
+      missBlocked: 0
     };
     for (const row of slots.filter((slot) => slot.kind === 'rewarded')) {
       rewarded.clicks += row.events.click ?? 0;
@@ -1077,7 +1101,6 @@ const AdStats: React.FC = () => {
       rewarded.missUnfilled += row.events['miss-unfilled'] ?? 0;
       rewarded.missSpent += row.events['miss-spent'] ?? 0;
       rewarded.missBlocked += row.events['miss-blocked'] ?? 0;
-      rewarded.shownLate += row.events['shown-late'] ?? 0;
     }
 
     const inGameGate: InGameGate = {
@@ -1172,8 +1195,26 @@ const AdStats: React.FC = () => {
       })
     );
 
-    const days: DayRow[] = Array.from(dayTotals.values())
-      .sort((a, b) => a.day.localeCompare(b.day))
+    const today = utcDay(Date.now());
+    const firstDay = Array.from(dayTotals.keys()).sort()[0];
+    const chartStart =
+      firstDay && data && firstDay > data.since ? firstDay : data?.since;
+    const days: DayRow[] = (
+      chartStart && firstDay ? dayRange(chartStart, today) : []
+    )
+      .map(
+        (day): AdDailyStat =>
+          dayTotals.get(day) ?? {
+            day,
+            device: 'desktop',
+            views: 0,
+            estMicros: 0,
+            unpricedFills: 0,
+            videoImpressions: 0,
+            rewardedShows: 0,
+            rewardedCloses: 0
+          }
+      )
       .map((row) => {
         const videoImpressions = Math.max(
           row.videoImpressions,
@@ -1181,19 +1222,21 @@ const AdStats: React.FC = () => {
           row.videoStarts ?? 0,
           row.videoCompletes ?? 0
         );
+        const rewardedPlays = row.rewardedCloses ?? 0;
         return {
           day: row.day,
+          partial: row.day === today,
           views: row.views,
           micros: {
             display:
               row.estMicros + row.unpricedFills * cpmMicros(used.display),
             video: videoImpressions * cpmMicros(used.video),
-            rewarded: row.rewardedShows * cpmMicros(used.rewarded)
+            rewarded: rewardedPlays * cpmMicros(used.rewarded)
           },
           impressions: {
             display: row.displayImpressions ?? 0,
             video: videoImpressions,
-            rewarded: row.rewardedShows
+            rewarded: rewardedPlays
           }
         };
       });
@@ -1250,13 +1293,13 @@ const AdStats: React.FC = () => {
   const flagHint = (flag: SlotFlag | PageFlag) =>
     t(`MOD_PAGE.ADS_FLAG_${flag}_HINT`);
 
-  const flaggedCount = report.slots.filter(
-    (row) => row.flags.length > 0
+  const flaggedCount = report.slots.filter((row) =>
+    row.flags.some(isWarning)
   ).length;
   const slotRows = useMemo(
     () =>
       flaggedOnly
-        ? report.slots.filter((row) => row.flags.length > 0)
+        ? report.slots.filter((row) => row.flags.some(isWarning))
         : report.slots,
     [report, flaggedOnly]
   );
@@ -1271,8 +1314,9 @@ const AdStats: React.FC = () => {
   const { totals, rewarded, used } = report;
   const missed = Math.max(
     0,
-    rewarded.clicks - rewarded.shown - rewarded.missBlocked
+    rewarded.clicks - rewarded.closed - rewarded.missBlocked
   );
+  const neverPlayed = Math.max(0, rewarded.shown - rewarded.closed);
   const rewardedTiles = [
     {
       label: t('MOD_PAGE.ADS_REWARDED_CLICKS'),
@@ -1280,17 +1324,11 @@ const AdStats: React.FC = () => {
       note: t('MOD_PAGE.ADS_REWARDED_CLICKS_NOTE')
     },
     {
-      label: t('MOD_PAGE.ADS_REWARDED_SHOWN'),
-      value: count(rewarded.shown),
-      note:
-        rewarded.shownLate > 0
-          ? t('MOD_PAGE.ADS_REWARDED_SHOWN_LATE_NOTE', {
-              share: percent(ratio(rewarded.shown, rewarded.clicks)),
-              late: count(rewarded.shownLate)
-            })
-          : t('MOD_PAGE.ADS_REWARDED_SHOWN_NOTE', {
-              share: percent(ratio(rewarded.shown, rewarded.clicks))
-            })
+      label: t('MOD_PAGE.ADS_REWARDED_PLAYED'),
+      value: count(rewarded.closed),
+      note: t('MOD_PAGE.ADS_REWARDED_PLAYED_NOTE', {
+        share: percent(ratio(rewarded.closed, rewarded.clicks))
+      })
     },
     {
       label: t('MOD_PAGE.ADS_REWARDED_BLOCKED'),
@@ -1301,10 +1339,11 @@ const AdStats: React.FC = () => {
       label: t('MOD_PAGE.ADS_REWARDED_MISSED'),
       value: count(missed),
       note:
-        rewarded.missUnfilled + rewarded.missSpent > 0
+        rewarded.missUnfilled + rewarded.missSpent + neverPlayed > 0
           ? t('MOD_PAGE.ADS_REWARDED_MISSED_SPLIT', {
               unfilled: count(rewarded.missUnfilled),
-              spent: count(rewarded.missSpent)
+              spent: count(rewarded.missSpent),
+              never: count(neverPlayed)
             })
           : t('MOD_PAGE.ADS_REWARDED_MISSED_NOTE')
     },
@@ -1312,7 +1351,7 @@ const AdStats: React.FC = () => {
       label: t('MOD_PAGE.ADS_REWARDED_GRANTED'),
       value: count(rewarded.granted),
       note: t('MOD_PAGE.ADS_REWARDED_GRANTED_NOTE', {
-        share: percent(ratio(rewarded.granted, rewarded.shown)),
+        share: percent(ratio(rewarded.granted, rewarded.closed)),
         closed: count(Math.max(0, rewarded.closed - rewarded.granted))
       })
     },
@@ -1491,50 +1530,55 @@ const AdStats: React.FC = () => {
         </p>
       )}
 
-      <div
-        className={styles.prices}
-        role="group"
-        aria-label={t('MOD_PAGE.ADS_PRICES_TITLE')}
-      >
-        <div className={styles.pricesText}>
-          <span className={styles.pricesTitle}>
-            {t('MOD_PAGE.ADS_PRICES_TITLE')}
-          </span>
-          <span className={tableStyles.muted}>
-            {t('MOD_PAGE.ADS_PRICES_DESCRIPTION', {
-              video: dollars(ESTIMATED_CPM.video),
-              rewarded: dollars(ESTIMATED_CPM.rewarded)
-            })}
-          </span>
+      {!byImpressions && data && !isError && !data.error && (
+        <div
+          className={styles.prices}
+          role="group"
+          aria-label={t('MOD_PAGE.ADS_PRICES_TITLE')}
+        >
+          <div className={styles.pricesText}>
+            <span className={styles.pricesTitle}>
+              {t('MOD_PAGE.ADS_PRICES_TITLE')}
+            </span>
+            <span className={tableStyles.muted}>
+              {t('MOD_PAGE.ADS_PRICES_DESCRIPTION', {
+                video: dollars(ESTIMATED_CPM.video),
+                rewarded: dollars(ESTIMATED_CPM.rewarded)
+              })}
+            </span>
+          </div>
+          {PRICE_FIELDS.map((field) => (
+            <label key={field} className={styles.priceField}>
+              <span>
+                {t(`MOD_PAGE.ADS_PRICE_${field.toUpperCase()}`)}{' '}
+                {prices[field] === 0 && (
+                  <span className={styles.estimateTag}>
+                    {t('MOD_PAGE.ADS_PRICE_ESTIMATE')}
+                  </span>
+                )}
+              </span>
+              <span className={styles.priceInput}>
+                <span aria-hidden="true">$</span>
+                <input
+                  type="number"
+                  min={0}
+                  step={0.01}
+                  inputMode="decimal"
+                  value={prices[field] || ''}
+                  placeholder={used[field].toFixed(2)}
+                  onChange={(event) => updatePrice(field, event.target.value)}
+                />
+              </span>
+            </label>
+          ))}
         </div>
-        {PRICE_FIELDS.map((field) => (
-          <label key={field} className={styles.priceField}>
-            <span>
-              {t(`MOD_PAGE.ADS_PRICE_${field.toUpperCase()}`)}{' '}
-              {prices[field] === 0 && (
-                <span className={styles.estimateTag}>
-                  {t('MOD_PAGE.ADS_PRICE_ESTIMATE')}
-                </span>
-              )}
-            </span>
-            <span className={styles.priceInput}>
-              <span aria-hidden="true">$</span>
-              <input
-                type="number"
-                min={0}
-                step={0.01}
-                inputMode="decimal"
-                value={prices[field] || ''}
-                placeholder={used[field].toFixed(2)}
-                onChange={(event) => updatePrice(field, event.target.value)}
-              />
-            </span>
-          </label>
-        ))}
-      </div>
-
+      )}
       {isError || data?.error ? (
-        <p className={tableStyles.empty}>{t('MOD_PAGE.ADS_LOAD_FAILED')}</p>
+        <p className={tableStyles.empty}>
+          {isSessionExpired(error)
+            ? t('MOD_PAGE.SESSION_EXPIRED')
+            : t('MOD_PAGE.ADS_LOAD_FAILED')}
+        </p>
       ) : !data ? (
         <p className={tableStyles.empty}>{t('MOD_PAGE.LOADING')}</p>
       ) : !hasData ? (
