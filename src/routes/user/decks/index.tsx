@@ -37,7 +37,7 @@ import {
   DEFAULT_LANGUAGE,
   getCollectionCardImagePath
 } from 'utils';
-import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
+import { memberLink } from 'utils/memberLink';
 import { generateCroppedImageUrl, heroCropFocusStyle } from 'utils/cropImages';
 import { getReadableFormatName } from 'utils/formatUtils';
 import { HEROES_OF_RATHE } from 'routes/index/components/filter/constants';
@@ -677,7 +677,7 @@ export const DecksPage = () => {
             components={{
               2: (
                 <a
-                  href={TALISHAR_METAFY_URL}
+                  href={memberLink('decks-banner')}
                   target="_blank"
                   rel="noopener noreferrer"
                 />
@@ -920,7 +920,7 @@ export const DecksPage = () => {
                       components={{
                         2: (
                           <a
-                            href={TALISHAR_METAFY_URL}
+                            href={memberLink('decks-alt-arts')}
                             target="_blank"
                             rel="noopener noreferrer"
                           />

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import RemoveAdsLink from 'components/RemoveAdsLink/RemoveAdsLink';
 import useAdSlotRef from 'hooks/useAdSlotRef';
 import { IN_GAME_AD_SIZE } from 'config/ads';
-import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
+import { memberLink } from 'utils/memberLink';
 import squareMemberCTA from '../../../../img/squareMemberCTA.webp';
 import styles from './RightColumn.module.css';
 
@@ -35,14 +35,17 @@ const InGameAd = () => {
 
   return (
     <div ref={columnRef} className={styles.inGameAd}>
-      <RemoveAdsLink className={styles.inGameAdRemove} />
+      <RemoveAdsLink
+        className={styles.inGameAdRemove}
+        source="remove-ads-in-game"
+      />
       <div
         className={styles.inGameAdBox}
         style={boxStyle}
         data-fits-ad={fitsAd || undefined}
       >
         <a
-          href={TALISHAR_METAFY_URL}
+          href={memberLink('in-game-card')}
           target="_blank"
           rel="noopener noreferrer"
           className={styles.inGameAdCta}

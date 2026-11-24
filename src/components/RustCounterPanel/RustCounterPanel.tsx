@@ -6,6 +6,7 @@ import {
   RUST_PANEL_ATTENTION_EVENT
 } from 'hooks/useRustCounters';
 import { trackRewardedAdClick } from 'utils/adAnalytics';
+import { memberLink } from 'utils/memberLink';
 import HouseRewardedAd from './HouseRewardedAd';
 import styles from './RustCounterPanel.module.css';
 
@@ -169,7 +170,7 @@ const RustCounterPanel = ({
         )}
         <a
           className={styles.removeAdsLink}
-          href="https://metafy.gg/@talishar"
+          href={memberLink('rust-panel')}
           target="_blank"
           rel="noreferrer"
         >

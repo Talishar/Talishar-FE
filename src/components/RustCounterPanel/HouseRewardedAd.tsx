@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { createPortal } from 'react-dom';
 import { FaTimes } from 'react-icons/fa';
-import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
+import { memberLink } from 'utils/memberLink';
 import talisharBanner from 'img/Talishar-Banner-Ad-1.webp';
 import { METAFY_TIER_MAP } from 'utils/patronIcons';
 import styles from './HouseRewardedAd.module.css';
@@ -128,7 +128,7 @@ const HouseRewardedAd = ({ onRewardEarned }: HouseRewardedAdProps) => {
 
         <a
           className={styles.bannerLink}
-          href={TALISHAR_METAFY_URL}
+          href={memberLink('house-ad-banner')}
           target="_blank"
           rel="noopener noreferrer"
           aria-label={t('HOUSE_REWARDED_AD.BECOME_MEMBER')}
@@ -165,7 +165,7 @@ const HouseRewardedAd = ({ onRewardEarned }: HouseRewardedAdProps) => {
               <a
                 key={tier.name}
                 className={styles.tier}
-                href={TALISHAR_METAFY_URL}
+                href={memberLink('house-ad-tier')}
                 target="_blank"
                 rel="noopener noreferrer"
               >

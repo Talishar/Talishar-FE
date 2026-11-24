@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import RemoveAdsLink from 'components/RemoveAdsLink/RemoveAdsLink';
 import useAdSlotRef from 'hooks/useAdSlotRef';
-import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
+import { memberLink } from 'utils/memberLink';
 import squareMemberCTA from '../../../../../img/squareMemberCTA.webp';
 import styles from './LobbyAd.module.css';
 
@@ -11,10 +11,10 @@ const LobbyAd = () => {
 
   return (
     <div className={styles.lobbyAd}>
-      <RemoveAdsLink className={styles.remove} />
+      <RemoveAdsLink className={styles.remove} source="remove-ads-lobby" />
       <div className={styles.box}>
         <a
-          href={TALISHAR_METAFY_URL}
+          href={memberLink('lobby-card')}
           target="_blank"
           rel="noopener noreferrer"
           className={styles.cta}

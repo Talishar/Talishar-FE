@@ -1,4 +1,6 @@
-import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
+import { memberLink } from 'utils/memberLink';
+
+const BADGE_LINK = memberLink('badge');
 
 // Icon configuration for patron/contributor status indicators
 // Used across multiple components to maintain consistency
@@ -28,37 +30,37 @@ export const METAFY_TIER_MAP: Record<
     image: '/images/fyendal.webp',
     label: 'Fyendal Supporter',
     title: 'I am a Metafy Supporter! 💖',
-    href: TALISHAR_METAFY_URL
+    href: BADGE_LINK
   },
   'Seers of Ophidia': {
     image: '/images/ophidia.webp',
     label: 'Seer of Ophidia',
     title: 'I am a Metafy Supporter! 💖',
-    href: TALISHAR_METAFY_URL
+    href: BADGE_LINK
   },
   'Arknight Shards': {
     image: '/images/arknight.webp',
     label: 'Arknight Shard',
     title: 'I am a Metafy Supporter! 💖',
-    href: TALISHAR_METAFY_URL
+    href: BADGE_LINK
   },
   'Lover of Grandeur': {
     image: '/images/grandeur.webp',
     label: 'Lover of Grandeur',
     title: 'I am a Metafy Supporter! 💖',
-    href: TALISHAR_METAFY_URL
+    href: BADGE_LINK
   },
   'Sponsors of Trōpal-Dhani': {
     image: '/images/tropal.webp',
     label: 'Sponsor of Trōpal-Dhani',
     title: 'I am a Metafy Supporter! 💖',
-    href: TALISHAR_METAFY_URL
+    href: BADGE_LINK
   },
   'Light of Sol Gemini Circle': {
     image: '/images/lightofsol.webp',
     label: 'Light of Sol Gemini Circle',
     title: 'I am a Metafy Supporter! 💖',
-    href: TALISHAR_METAFY_URL
+    href: BADGE_LINK
   }
 };
 
@@ -81,19 +83,19 @@ export const createPatreonIconMap = (
         condition: isContributor ?? false,
         src: '/images/copper.webp',
         title: 'I am a contributor to Talishar!',
-        href: TALISHAR_METAFY_URL
+        href: BADGE_LINK
       },
       {
         condition: isPatron ?? false,
         src: '/images/patronHeart.webp',
         title: 'I am a Supporter of Talishar 💖',
-        href: TALISHAR_METAFY_URL
+        href: BADGE_LINK
       },
       {
         condition: isPvtVoidPatron ?? false,
         src: '/images/patronEye.webp',
         title: 'I am a Supporter of Talishar 💖',
-        href: TALISHAR_METAFY_URL
+        href: BADGE_LINK
       }
     );
   }
@@ -107,7 +109,7 @@ export const createPatreonIconMap = (
           condition: true,
           src: tierConfig.image,
           title: tierConfig.title,
-          href: TALISHAR_METAFY_URL
+          href: BADGE_LINK
         });
       }
     }

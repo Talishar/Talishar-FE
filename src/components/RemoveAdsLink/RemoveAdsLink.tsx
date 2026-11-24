@@ -1,17 +1,18 @@
 import { useTranslation } from 'react-i18next';
-import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
+import { memberLink, MemberLinkSource } from 'utils/memberLink';
 import styles from './RemoveAdsLink.module.css';
 
 interface RemoveAdsLinkProps {
   className?: string;
+  source: Extract<MemberLinkSource, `remove-ads-${string}`>;
 }
 
-const RemoveAdsLink = ({ className }: RemoveAdsLinkProps) => {
+const RemoveAdsLink = ({ className, source }: RemoveAdsLinkProps) => {
   const { t } = useTranslation();
 
   return (
     <a
-      href={TALISHAR_METAFY_URL}
+      href={memberLink(source)}
       target="_blank"
       rel="noopener noreferrer"
       className={

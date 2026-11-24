@@ -21,7 +21,7 @@ import classNames from 'classnames';
 import { PiFileCsvFill, PiCameraFill } from 'react-icons/pi';
 import { MdSwapHoriz } from 'react-icons/md';
 import { markRematchDeckChange } from 'routes/game/lobby/components/changeDeck/rematchDeckIntent';
-import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
+import { memberLink } from 'utils/memberLink';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import MetafyLogo from 'img/MetafyGradient.svg';
 import { useTranslation } from 'react-i18next';
@@ -315,7 +315,7 @@ const EndGameScreen = () => {
           {!isSupporter && !isLoading && !error && (
             <div className={styles.supportCta}>
               <a
-                href={TALISHAR_METAFY_URL}
+                href={memberLink('end-game')}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.supportCtaLink}

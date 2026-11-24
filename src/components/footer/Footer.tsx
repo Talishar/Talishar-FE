@@ -7,10 +7,10 @@ import {
   TALISHAR_BLUESKY_URL,
   TALISHAR_DISCORD_URL,
   TALISHAR_GITHUB_URL,
-  TALISHAR_METAFY_URL,
   TALISHAR_X_URL,
   TALISHAR_YOUTUBE_URL
 } from 'constants/socialLinks';
+import { memberLink } from 'utils/memberLink';
 import TalisharLogo from '../../img/TalisharLogo.webp';
 import styles from './Footer.module.scss';
 import useSupporterStatus from 'hooks/useSupporterStatus';
@@ -34,7 +34,7 @@ const Footer = () => {
             />
             {!isSupporter && (
               <a
-                href={TALISHAR_METAFY_URL}
+                href={memberLink('footer')}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.supportBtn}

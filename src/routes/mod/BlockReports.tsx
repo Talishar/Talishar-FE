@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import { useGetBlockReportsQuery } from 'features/api/apiSlice';
@@ -13,8 +13,9 @@ import styles from './BlockReports.module.css';
 import useWarnPlayer from './useWarnPlayer';
 import useBanPlayer from './useBanPlayer';
 import { SortColumn, SortHeader, useTableSort } from './SortableTable';
+import useHideBanned from './useHideBanned';
 
-export const DAY_OPTIONS = [30, 90, 365];
+export const DAY_OPTIONS = [7, 14, 30, 90, 365];
 const MIN_BLOCK_OPTIONS = [1, 2, 3, 5, 10];
 
 type SortKey = 'player' | 'blocks' | ModerationReason | 'lastBlocked';
@@ -43,12 +44,18 @@ const BlockReports: React.FC = () => {
   });
   const { warn, isWarning } = useWarnPlayer();
   const { ban, isBanning } = useBanPlayer();
+  const [hideBanned, setHideBanned] = useHideBanned();
+
+  const visiblePlayers = useMemo(() => {
+    const all = data?.players ?? NO_PLAYERS;
+    return hideBanned ? all.filter((p) => !p.isBanned) : all;
+  }, [data, hideBanned]);
 
   const {
     sortedRows: players,
     sort,
     toggleSort
-  } = useTableSort(data?.players ?? NO_PLAYERS, SORT_COLUMNS);
+  } = useTableSort(visiblePlayers, SORT_COLUMNS);
 
   const toggleExpanded = (usersId: number) => {
     const next = new Set(expanded);
@@ -96,6 +103,14 @@ const BlockReports: React.FC = () => {
               </option>
             ))}
           </select>
+        </label>
+        <label className={tableStyles.toggle}>
+          <input
+            type="checkbox"
+            checked={hideBanned}
+            onChange={(e) => setHideBanned(e.target.checked)}
+          />
+          {t('BLOCK_REPORTS.HIDE_BANNED')}
         </label>
         <button
           className={styles.actionButton}

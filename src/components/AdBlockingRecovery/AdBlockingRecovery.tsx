@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
+import { memberLink } from 'utils/memberLink';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import { isAdBlocked } from 'utils/adBlockDetection';
 import styles from './AdBlockingRecovery.module.css';
@@ -83,7 +83,7 @@ const AdBlockingRecovery: React.FC = () => {
             You can also support us directly on{' '}
             <a
               className={styles.link}
-              href={TALISHAR_METAFY_URL}
+              href={memberLink('adblock-notice')}
               target="_blank"
               rel="noopener noreferrer"
             >

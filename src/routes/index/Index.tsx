@@ -17,7 +17,7 @@ import useSupporterStatus from 'hooks/useSupporterStatus';
 import useAdScript from 'hooks/useAdScript';
 import TalisharLogo from '../../img/TalisharLogo.webp';
 import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
-import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
+import { memberLink } from 'utils/memberLink';
 import { Link } from 'react-router-dom';
 
 const LAST_HOME_USER_KEY = 'talishar_home_last_user_v1';
@@ -189,7 +189,7 @@ const Index = () => {
                     </a>
                     {!isSupporter && (
                       <a
-                        href={TALISHAR_METAFY_URL}
+                        href={memberLink('home-hero')}
                         target="_blank"
                         rel="noopener noreferrer"
                         className={styles.heroCtaSecondary}

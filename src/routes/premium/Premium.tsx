@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { usePageTitle } from 'hooks/usePageTitle';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import useAdScript from 'hooks/useAdScript';
-import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
+import { memberLink } from 'utils/memberLink';
 import { METAFY_TIER_MAP, MetafyTierName } from 'utils/patronIcons';
 import { useTranslation } from 'react-i18next';
 import styles from './Premium.module.scss';
@@ -193,7 +193,7 @@ const Premium = () => {
     {
       label: t('PREMIUM_PAGE.COMPARISON.REPLAY_SAVE_SLOTS'),
       free: '3',
-      premium: '5-30 (by tier)'
+      premium: '5-20 (by tier)'
     },
     {
       label: t('PREMIUM_PAGE.COMPARISON.EXTRA_LEADERBOARD'),
@@ -293,7 +293,7 @@ const Premium = () => {
                   )}
                 </div>
                 <a
-                  href={TALISHAR_METAFY_URL}
+                  href={memberLink('premium-tier')}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={styles.upgradeBtn}
@@ -361,7 +361,7 @@ const Premium = () => {
             <p>{t('PREMIUM_PAGE.CTA_SUBTITLE')}</p>
           </div>
           <a
-            href={TALISHAR_METAFY_URL}
+            href={memberLink('premium-cta')}
             target="_blank"
             rel="noopener noreferrer"
             className={styles.ctaBtn}

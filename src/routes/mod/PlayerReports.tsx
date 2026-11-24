@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import classNames from 'classnames';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -16,8 +16,8 @@ import styles from './BlockReports.module.css';
 import useWarnPlayer from './useWarnPlayer';
 import useBanPlayer from './useBanPlayer';
 import { SortColumn, SortHeader, useTableSort } from './SortableTable';
-
-const DAY_OPTIONS = [7, 14, 30, 90, 365];
+import { DAY_OPTIONS } from './BlockReports';
+import useHideBanned from './useHideBanned';
 
 type SortKey = 'date' | 'reported' | 'reporter' | 'reason' | 'game';
 
@@ -43,6 +43,7 @@ const PlayerReports: React.FC = () => {
   });
   const { warn, isWarning } = useWarnPlayer();
   const { ban, isBanning } = useBanPlayer();
+  const [hideBanned, setHideBanned] = useHideBanned();
   const [expanded, setExpanded] = useState<Set<number>>(new Set());
 
   const toggleExpanded = (reportId: number) => {
@@ -70,11 +71,16 @@ const PlayerReports: React.FC = () => {
     }
   };
 
+  const visibleReports = useMemo(() => {
+    const all = data?.reports ?? NO_REPORTS;
+    return hideBanned ? all.filter((r) => !r.reportedIsBanned) : all;
+  }, [data, hideBanned]);
+
   const {
     sortedRows: reports,
     sort,
     toggleSort
-  } = useTableSort(data?.reports ?? NO_REPORTS, SORT_COLUMNS);
+  } = useTableSort(visibleReports, SORT_COLUMNS);
 
   return (
     <section className={tableStyles.panel}>
@@ -101,6 +107,14 @@ const PlayerReports: React.FC = () => {
               </option>
             ))}
           </select>
+        </label>
+        <label className={tableStyles.toggle}>
+          <input
+            type="checkbox"
+            checked={hideBanned}
+            onChange={(e) => setHideBanned(e.target.checked)}
+          />
+          {t('BLOCK_REPORTS.HIDE_BANNED')}
         </label>
         <button
           className={styles.actionButton}

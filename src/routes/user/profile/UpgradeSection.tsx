@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
+import { memberLink } from 'utils/memberLink';
 import styles from './profile.module.css';
 
 interface UpgradeSectionProps {
@@ -34,7 +34,7 @@ const UpgradeSection: React.FC<UpgradeSectionProps> = ({ isSupporter }) => {
 
       <div className={styles.upgradeButtonSection}>
         <a
-          href={TALISHAR_METAFY_URL}
+          href={memberLink('profile-upgrade')}
           target="_blank"
           rel="noopener noreferrer"
           className={styles.upgradeButton}

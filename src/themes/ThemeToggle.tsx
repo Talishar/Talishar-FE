@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
-import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
+import { memberLink } from 'utils/memberLink';
+import { trackMemberLinkClick } from 'utils/adAnalytics';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import { useTheme } from './ThemeContext';
 import { useTranslation } from 'react-i18next';
@@ -32,7 +33,8 @@ const ThemeToggle: React.FC = () => {
   const handlePremiumClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsOpen(false);
-    window.location.href = TALISHAR_METAFY_URL;
+    trackMemberLinkClick('theme-lock');
+    window.location.href = memberLink('theme-lock');
   };
 
   return (

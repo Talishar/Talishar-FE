@@ -1,5 +1,9 @@
 import { BACKEND_URL, URL_END_POINT } from 'appConstants';
 import { isAdBlocked } from 'utils/adBlockDetection';
+import {
+  MEMBER_LINK_PLACEMENT_PREFIX,
+  memberLinkSource
+} from 'utils/memberLink';
 
 type Device = 'desktop' | 'mobile';
 
@@ -412,6 +416,17 @@ function onIntersection(entries: IntersectionObserverEntry[]) {
   }
 }
 
+export function trackMemberLinkClick(source: string) {
+  countEvent(`${MEMBER_LINK_PLACEMENT_PREFIX}${source}`, 'click');
+}
+
+function onDocumentClick(event: MouseEvent) {
+  if (event.button > 1 || !(event.target instanceof Element)) return;
+  const href = event.target.closest('a[href]')?.getAttribute('href');
+  const source = href ? memberLinkSource(href) : null;
+  if (source) trackMemberLinkClick(source);
+}
+
 function installListeners() {
   if (listenersInstalled) return;
   listenersInstalled = true;
@@ -425,6 +440,8 @@ function installListeners() {
     rewardedReadyNow = true;
   }
   window.addEventListener('focus', onWindowFocus);
+  document.addEventListener('click', onDocumentClick, true);
+  document.addEventListener('auxclick', onDocumentClick, true);
   window.setInterval(flush, FLUSH_INTERVAL_MS);
 }
 

@@ -11,6 +11,7 @@ import {
   AdReportRange,
   AdSlotStat
 } from 'interface/API/ModPageAPI';
+import { MEMBER_LINK_PLACEMENT_PREFIX } from 'utils/memberLink';
 import styles from './AdStats.module.css';
 
 type Measure = 'impressions' | 'revenue';
@@ -46,6 +47,13 @@ type SlotFlag =
   | 'LOW_FILL'
   | 'LOW_VIEWABILITY';
 type PageFlag = 'NO_ADS' | 'UNDER_MONETIZED';
+interface MemberLinkRow {
+  key: string;
+  page: string;
+  source: string;
+  clicks: number;
+  perThousand: number;
+}
 type SlotKind = 'display' | 'wrapper' | 'video' | 'rewarded';
 type Prices = { display: number; video: number; rewarded: number };
 type EventCounts = Record<string, number>;
@@ -742,7 +750,23 @@ const AdStats: React.FC = () => {
     );
 
     const eventsBySlot = new Map<string, EventCounts>();
+    const memberLinkTotals = new Map<string, MemberLinkRow>();
     for (const row of (data?.events ?? []).filter(matches) as AdEventStat[]) {
+      if (row.placement.startsWith(MEMBER_LINK_PLACEMENT_PREFIX)) {
+        if (row.event !== 'click') continue;
+        const source = row.placement.slice(MEMBER_LINK_PLACEMENT_PREFIX.length);
+        const key = `${row.page}\t${source}`;
+        const link = memberLinkTotals.get(key) ?? {
+          key,
+          page: row.page,
+          source,
+          clicks: 0,
+          perThousand: 0
+        };
+        link.clicks += row.count;
+        memberLinkTotals.set(key, link);
+        continue;
+      }
       const placement = REWARDED_RE.test(row.placement)
         ? REWARDED_PLACEMENT
         : row.placement;
@@ -756,6 +780,15 @@ const AdStats: React.FC = () => {
 
     const slotsList = Array.from(slotTotals.values());
     const pagesList = Array.from(pageTotals.values());
+    const memberLinks = Array.from(memberLinkTotals.values())
+      .map((link) => {
+        const views = pageTotals.get(link.page)?.views ?? 0;
+        return {
+          ...link,
+          perThousand: views > 0 ? (link.clicks / views) * 1000 : 0
+        };
+      })
+      .sort((a, b) => b.clicks - a.clicks);
     const slotInputs = slotsList.map((row) => {
       const kind = slotKind(row);
       const events = eventsBySlot.get(`${row.page}\t${row.placement}`) ?? {};
@@ -997,6 +1030,7 @@ const AdStats: React.FC = () => {
       days,
       rewarded,
       inGameGate,
+      memberLinks,
       estimated,
       used,
       totals: {
@@ -1409,6 +1443,60 @@ const AdStats: React.FC = () => {
                     <span className={styles.tileNote}>{tile.note}</span>
                   </div>
                 ))}
+              </div>
+            </div>
+          )}
+
+          {report.memberLinks.length > 0 && (
+            <div className={styles.section}>
+              <div className={styles.sectionHeader}>
+                <div>
+                  <h3 className={styles.sectionTitle}>
+                    {t('MOD_PAGE.ADS_MEMBER_LINKS_TITLE')}
+                  </h3>
+                  <p className={styles.sectionDescription}>
+                    {t('MOD_PAGE.ADS_MEMBER_LINKS_DESCRIPTION')}
+                  </p>
+                </div>
+              </div>
+              <div className={styles.tableWrap}>
+                <table className={styles.table}>
+                  <thead>
+                    <tr>
+                      <th>{t('MOD_PAGE.ADS_COL_LINK')}</th>
+                      <th>{t('MOD_PAGE.ADS_COL_PAGE')}</th>
+                      <th className={styles.numeric}>
+                        {t('MOD_PAGE.ADS_COL_CLICKS')}
+                      </th>
+                      <th
+                        className={styles.numeric}
+                        title={t('MOD_PAGE.ADS_COL_CLICKS_PER_1K_HINT')}
+                      >
+                        {t('MOD_PAGE.ADS_COL_RPM')}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {report.memberLinks.map((row) => (
+                      <tr key={row.key}>
+                        <td>
+                          <code className={styles.code}>{row.source}</code>
+                        </td>
+                        <td>
+                          <span className={styles.pageName}>
+                            {pageLabel(row.page)}
+                          </span>
+                        </td>
+                        <td className={styles.numeric}>{count(row.clicks)}</td>
+                        <td className={styles.numeric}>
+                          {row.perThousand > 0
+                            ? row.perThousand.toFixed(2)
+                            : '-'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           )}

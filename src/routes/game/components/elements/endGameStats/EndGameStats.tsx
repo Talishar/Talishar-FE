@@ -19,7 +19,7 @@ import {
 import { Trans, useTranslation } from 'react-i18next';
 import TalisharLogo from 'img/TalisharLogo.webp';
 import { BACKEND_URL } from 'appConstants';
-import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
+import { memberLink } from 'utils/memberLink';
 import { useTheme } from 'themes/ThemeContext';
 import useSetting from 'hooks/useSetting';
 import { COLORBLIND_MODE } from 'features/options/constants';
@@ -1284,7 +1284,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
 
         csvContent += '========== STATS PROVIDED BY TALISHAR ==========\n';
         csvContent += 'Support our work on Metafy!\n';
-        csvContent += 'https://metafy.gg/@Talishar\n\n';
+        csvContent += `${memberLink('stats-csv')}\n\n`;
 
         const formatHeroName = (heroName: string): string => {
           return heroName
@@ -2274,7 +2274,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
                       components={{
                         2: (
                           <a
-                            href={TALISHAR_METAFY_URL}
+                            href={memberLink('stats-watermark')}
                             target="_blank"
                             rel="noopener noreferrer"
                           />
@@ -2590,7 +2590,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
             <div className={`${styles.adBlock} ${styles.hideOnExport}`}>
               {!isSupporter && (
                 <div className={styles.adHeader}>
-                  <RemoveAdsLink />
+                  <RemoveAdsLink source="remove-ads-end-game" />
                 </div>
               )}
               <AdUnit placement="billboard-1" className={styles.desktopAd} />
@@ -2959,7 +2959,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>(
           <div className={`${styles.adBlock} ${styles.hideOnExport}`}>
             {!isSupporter && (
               <div className={styles.adHeader}>
-                <RemoveAdsLink />
+                <RemoveAdsLink source="remove-ads-end-game" />
               </div>
             )}
             <AdUnit placement="billboard-2" className={styles.desktopAd} />

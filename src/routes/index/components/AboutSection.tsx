@@ -9,9 +9,9 @@ import { useMediaQuery } from 'hooks/useMediaQuery';
 import PageBanner from 'components/PageBanner/PageBanner';
 import {
   TALISHAR_DISCORD_URL,
-  TALISHAR_GITHUB_URL,
-  TALISHAR_METAFY_URL
+  TALISHAR_GITHUB_URL
 } from 'constants/socialLinks';
+import { memberLink } from 'utils/memberLink';
 
 const AboutSection: React.FC = () => {
   const [expandedFAQ, setExpandedFAQ] = React.useState<number | null>(null);
@@ -241,7 +241,7 @@ const AboutSection: React.FC = () => {
             </div>
             {!isSupporter && (
               <a
-                href={TALISHAR_METAFY_URL}
+                href={memberLink('home-about')}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.metafyButton}

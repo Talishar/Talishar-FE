@@ -56,7 +56,7 @@ const VideoAdPlayer = ({ onClose }: { onClose: () => void }) => {
       aria-label={t('VIDEO_AD.LABEL')}
     >
       <div className={styles.bar}>
-        <RemoveAdsLink className={styles.removeAds} />
+        <RemoveAdsLink className={styles.removeAds} source="remove-ads-video" />
         <button
           type="button"
           className={styles.closeButton}
