@@ -104,6 +104,37 @@
   grid-row: 1 / 4;
 }
 
+/* Left-handed mode (portrait board only): mirror the widget so Pass is on
+   the outer, left edge and the action point badge sits on its right. */
+@media (orientation: portrait) {
+  :global([data-left-handed]) .widget {
+    right: auto;
+    left: 0;
+  }
+
+  :global([data-left-handed]) .apBadge {
+    left: auto;
+    right: 0;
+    transform: translate(calc(100% + 1.2vw), -50%);
+  }
+}
+
+:global(body.fanPortraitHand [data-left-handed]) .widget {
+  grid-template-columns: 42% minmax(0, 1fr);
+}
+
+:global(body.fanPortraitHand [data-left-handed]) .apBadge,
+:global(body.fanPortraitHand [data-left-handed]) .apBadge + *,
+:global(body.fanPortraitHand [data-left-handed]) .widget > :last-child {
+  grid-column: 2;
+}
+
+:global(body.fanPortraitHand [data-left-handed])
+  .widget
+  > :nth-child(3):not(:last-child) {
+  grid-column: 1;
+}
+
 @media (orientation: landscape) and (max-height: 600px) {
   .widgetContainer {
     height: 30dvh;

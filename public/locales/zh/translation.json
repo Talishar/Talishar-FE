@@ -1899,6 +1899,8 @@
     "HIDE_HAND_FROM_FRIENDS": "对好友隐藏手牌",
     "HIDE_HAND_FROM_FRIENDS_TOOLTIP": "不向好友显示您的手牌内容。",
     "LANGUAGE_EXPERIMENTAL_TOAST": "此实验性功能目前仅适用于卡牌图片。如有错误，请在 Discord 上报告。",
+    "LEFT_HANDED": "左手模式",
+    "LEFT_HANDED_TOOLTIP": "在竖屏手机上，将放弃按钮、生命值和行动点移到左侧，方便左手拇指操作。",
     "MANUAL_MODE": "手动模式",
     "MANUAL_TARGETING": "手动选择目标",
     "MANUAL_TUNIC_MODE": "手动 Tunic 模式",

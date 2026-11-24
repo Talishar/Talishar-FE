@@ -2043,6 +2043,8 @@
     "HIDE_LOG_NOISE_TOOLTIP": "Retire les lignes « passed priority », « chain link was resolved » et « combat chain was closed » du journal de partie. Le chat et toutes les autres lignes restent.",
     "HOLD_TO_AUTO_PASS": "Maintenir pour passer automatiquement",
     "HOLD_TO_AUTO_PASS_TOOLTIP": "Maintenir Espace ou le bouton PASSER active la passe automatique. Désactivez et maintenir ne fait que passer la priorité une fois, comme un appui normal.",
+    "LEFT_HANDED": "Mode gaucher",
+    "LEFT_HANDED_TOOLTIP": "Sur un téléphone en mode portrait, place le bouton Passer, les points de vie et les points d’action sur le bord gauche pour les atteindre avec le pouce gauche.",
     "MANUAL_DYNAMO_MODE": "Mode Valiant Dynamo manuel",
     "MANUAL_DYNAMO_MODE_TOOLTIP": "Déclenchez Valiant Dynamo vous-même au lieu que Talishar l'applique automatiquement lors de votre deuxième attaque d'arme.",
     "MANUAL_MODE_TOOLTIP": "Contourne l'application des règles pour déplacer librement les cartes. Disponible dans les parties privées, contre l'IA et Futures.",

@@ -30,6 +30,11 @@
   min-width: 20dvw;
 }
 
+/* Left-handed mode: the turn widget sits on the left edge. */
+.gameBoard[data-left-handed] .chainMiddleContainer {
+  flex-direction: row-reverse;
+}
+
 .chainContainer {
   flex-grow: 2;
 }

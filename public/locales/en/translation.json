@@ -2478,6 +2478,8 @@
     "HOLD_TO_AUTO_PASS": "Hold to Auto-Pass",
     "HOLD_TO_AUTO_PASS_TOOLTIP": "Holding Space or the PASS button turns on auto-pass. Switch off and holding just passes priority once, like a normal press.",
     "LANGUAGE_EXPERIMENTAL_TOAST": "This experimental feature currently applies only to card images. Please report any errors on Discord.",
+    "LEFT_HANDED": "Left-handed mode",
+    "LEFT_HANDED_TOOLTIP": "On a phone held upright, move the Pass button, life and action points to the left edge so your left thumb can reach them.",
     "MANUAL_DYNAMO_MODE": "Manual Valiant Dynamo Mode",
     "MANUAL_DYNAMO_MODE_TOOLTIP": "Trigger Valiant Dynamo yourself instead of Talishar applying it automatically on your second weapon attack.",
     "MANUAL_MODE": "Manual Mode",
