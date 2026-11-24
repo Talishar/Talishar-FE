@@ -487,6 +487,7 @@ export const SETTINGS_DEFS: SettingDef[] = [
     tooltipKey: 'SETTINGS.LEFT_HANDED_TOOLTIP',
     storage: 'device',
     name: LEFT_HANDED_COOKIE,
+    accountName: 'LeftHanded',
     defaultOn: false
   },
   {
