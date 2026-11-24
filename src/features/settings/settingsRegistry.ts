@@ -32,6 +32,7 @@ import {
   DISABLE_SPACE_PASS_COOKIE
 } from './passShortcutPreferences';
 import { HIDE_LOG_NOISE_COOKIE } from './gameLogPreferences';
+import { LEFT_HANDED_COOKIE } from './handedness';
 import {
   notificationsSupported,
   PRIORITY_NOTIFICATIONS_COOKIE
@@ -476,6 +477,16 @@ export const SETTINGS_DEFS: SettingDef[] = [
     tooltipKey: 'SETTINGS.CLASSIC_HAND_TOOLTIP',
     storage: 'device',
     name: CLASSIC_HAND_COOKIE,
+    defaultOn: false
+  },
+  {
+    kind: 'toggle',
+    key: 'leftHanded',
+    group: 'appearance',
+    labelKey: 'SETTINGS.LEFT_HANDED',
+    tooltipKey: 'SETTINGS.LEFT_HANDED_TOOLTIP',
+    storage: 'device',
+    name: LEFT_HANDED_COOKIE,
     defaultOn: false
   },
   {

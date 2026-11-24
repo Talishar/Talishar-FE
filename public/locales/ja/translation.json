@@ -1899,6 +1899,8 @@
     "HIDE_HAND_FROM_FRIENDS": "フレンドに手札を表示しない",
     "HIDE_HAND_FROM_FRIENDS_TOOLTIP": "フレンドに手札の内容を表示しません。",
     "LANGUAGE_EXPERIMENTAL_TOAST": "この試験的な機能は現在カード画像にのみ適用されます。エラーがあればDiscordで報告してください。",
+    "LEFT_HANDED": "左利きモード",
+    "LEFT_HANDED_TOOLTIP": "スマホの縦持ちで、パスボタン・ライフ・アクションポイントを左端に移し、左手の親指で押しやすくします。",
     "MANUAL_MODE": "マニュアルモード",
     "MANUAL_TARGETING": "手動で対象を選ぶ",
     "MANUAL_TUNIC_MODE": "Tunicの手動モード",

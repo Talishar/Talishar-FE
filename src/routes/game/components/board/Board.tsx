@@ -14,6 +14,7 @@ import { useAppSelector } from 'app/Hooks';
 import { selectIsP2View } from 'features/game/perspective';
 import AmbientParticles from '../elements/ambientParticles';
 import EffectArrivals from '../elements/effects/EffectArrivals';
+import { useLeftHanded } from 'features/settings/handedness';
 
 export interface playAreaDimensions {
   dimension: number;
@@ -23,10 +24,15 @@ export const Board = React.memo(function Board() {
   const useOldScreen = useMediaQuery('(orientation: portrait)');
   const experimental = useCookieString('experimental');
   const isSpectatorViewingPlayer2 = useAppSelector(selectIsP2View);
+  const leftHanded = useLeftHanded();
 
   if (useOldScreen) {
     return (
-      <div className={styles.gameBoard} data-fan-portrait-board="">
+      <div
+        className={styles.gameBoard}
+        data-fan-portrait-board=""
+        data-left-handed={leftHanded ? '' : undefined}
+      >
         <EffectArrivals />
         <AmbientParticles />
         <ManualModePanel />
