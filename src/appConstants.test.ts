@@ -18,7 +18,9 @@ describe('AI decks by format', () => {
       AI_DECK.DUMMY,
       AI_DECK.BRIARSAGE,
       AI_DECK.BRAVOSAGE,
-      AI_DECK.IRASAGE
+      AI_DECK.IRASAGE,
+      AI_DECK.KAYOSAGE,
+      AI_DECK.DORINTHEASAGE
     ]);
   });
 
@@ -27,6 +29,18 @@ describe('AI decks by format', () => {
       AI_DECKS_FOR_FORMAT(GAME_FORMAT.CLASSIC_CONSTRUCTED).map(
         ({ value }) => value
       )
-    ).toEqual([AI_DECK.DUMMY, AI_DECK.IRACC, AI_DECK.FAICC]);
+    ).toEqual([
+      AI_DECK.DUMMY,
+      AI_DECK.IRACC,
+      AI_DECK.FAICC,
+      AI_DECK.CINDRACC,
+      AI_DECK.HALACC,
+      AI_DECK.JARLCC,
+      AI_DECK.LEVIACC,
+      AI_DECK.STARVOCC,
+      AI_DECK.BOLTYNCC,
+      AI_DECK.AURORACC,
+      AI_DECK.FANGCC
+    ]);
   });
 });

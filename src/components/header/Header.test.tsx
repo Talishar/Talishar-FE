@@ -6,6 +6,7 @@ import {
   screen,
   within
 } from '@testing-library/react';
+import { transferableAbortController } from 'node:util';
 import { lazy } from 'react';
 import {
   createMemoryRouter,
@@ -45,13 +46,21 @@ vi.mock(
 );
 
 beforeEach(() => {
+  // The data router uses Node's Request, which needs a Node AbortSignal.
+  const controller = transferableAbortController();
+  vi.stubGlobal('AbortController', controller.constructor);
+  vi.stubGlobal('AbortSignal', controller.signal.constructor);
+
   localStorage.clear();
   state.auth.isLoggedIn = false;
   state.auth.isLoading = true;
   state.auth.currentUserName = null;
   state.pendingRequests = [];
 });
-afterEach(() => cleanup());
+afterEach(() => {
+  cleanup();
+  vi.unstubAllGlobals();
+});
 
 it('keeps returning-user navigation links mounted while auth resolves', () => {
   localStorage.setItem('talishar_home_last_user_v1', 'Player');

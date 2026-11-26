@@ -1,4 +1,5 @@
 import { act, render, screen, waitFor } from '@testing-library/react';
+import { transferableAbortController } from 'node:util';
 import { Suspense } from 'react';
 import { Provider } from 'react-redux';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
@@ -15,6 +16,11 @@ vi.mock('hooks/useSupporterStatus', () => ({
 }));
 
 it('warms the Learn data after Play renders and reuses it on navigation', async () => {
+  // The data router uses Node's Request, which needs a Node AbortSignal.
+  const controller = transferableAbortController();
+  vi.stubGlobal('AbortController', controller.constructor);
+  vi.stubGlobal('AbortSignal', controller.signal.constructor);
+
   let runIdleCallback: IdleRequestCallback | undefined;
   vi.stubGlobal('requestIdleCallback', (callback: IdleRequestCallback) => {
     runIdleCallback = callback;

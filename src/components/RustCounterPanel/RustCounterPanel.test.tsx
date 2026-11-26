@@ -5,6 +5,7 @@ import RustCounterPanel from './RustCounterPanel';
 describe('RustCounterPanel rewarded ad fallback', () => {
   afterEach(() => {
     vi.useRealTimers();
+    vi.unstubAllEnvs();
     delete (window as any)._talishar_showRewarded;
   });
 
@@ -28,14 +29,13 @@ describe('RustCounterPanel rewarded ad fallback', () => {
   });
 
   it('keeps rewarded-ad testing available to supporters in development', () => {
+    vi.stubEnv('DEV', true);
+
     render(<RustCounterPanel rustCounters={0} isSupporter />);
 
     expect(
       screen.getByRole('button', { name: 'Watch Ad to Clear' })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText('Development mode: rust counters do not block games.')
-    ).toBeInTheDocument();
+    ).toBeEnabled();
   });
 
   it('requires 8 visible seconds before clearing counters', () => {

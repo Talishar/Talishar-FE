@@ -1,6 +1,7 @@
 import { cleanup, render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { vi } from 'vitest';
+import type { GetFavoriteDecksResponse } from 'interface/API/GetFavoriteDecks.php';
 import UnifiedGamePanel from '../UnifiedGamePanel';
 import GameList from '../gameList/GameList';
 import { QuickJoinProvider, useQuickJoin } from './QuickJoinContext';
@@ -11,6 +12,7 @@ const state = vi.hoisted(() => ({
   gamesLoading: false,
   gamesQuery: vi.fn(),
   favoritesLoading: false,
+  favoritesData: undefined as GetFavoriteDecksResponse | undefined,
   favoritesQuery: vi.fn(),
   joinGame: vi.fn()
 }));
@@ -53,7 +55,7 @@ vi.mock('features/api/apiSlice', () => ({
   useGetFriendsListQuery: () => ({}),
   useGetFavoriteDecksQuery: (_: unknown, options: unknown) => {
     state.favoritesQuery(options);
-    return { isLoading: state.favoritesLoading };
+    return { data: state.favoritesData, isLoading: state.favoritesLoading };
   },
   useGetBazaarDecksQuery: () => ({}),
   useGetHeroMasteryQuery: () => ({}),
@@ -88,6 +90,7 @@ beforeEach(() => {
   state.auth = { isLoggedIn: false, isLoading: true };
   state.userName = null;
   state.favoritesLoading = false;
+  state.favoritesData = undefined;
   state.gamesLoading = false;
   vi.clearAllMocks();
 });
@@ -95,9 +98,9 @@ afterEach(cleanup);
 
 it('keeps the real deck controls mounted through auth and deck loading', () => {
   const view = render(homePanels());
-  const deckPicker = screen.getByRole('combobox');
+  const deckPicker = screen.getByRole('button', { name: /^Deck Loading/ });
   const creationForm = screen.getByTestId('creation-form');
-  expect(deckPicker).toHaveAttribute('aria-busy', 'true');
+  expect(deckPicker).toBeDisabled();
   expect(state.favoritesQuery).toHaveBeenLastCalledWith({ skip: true });
   fireEvent.click(screen.getByTestId('join-test-game'));
   expect(state.joinGame).not.toHaveBeenCalled();
@@ -105,21 +108,51 @@ it('keeps the real deck controls mounted through auth and deck loading', () => {
   state.auth = { isLoggedIn: true, isLoading: false };
   // Auth response can arrive one render before Redux account credentials.
   view.rerender(homePanels());
-  expect(deckPicker).toHaveAttribute('aria-busy', 'true');
+  expect(screen.getByRole('button', { name: /^Deck Loading/ })).toBe(
+    deckPicker
+  );
+  expect(deckPicker).toBeDisabled();
   expect(state.favoritesQuery).toHaveBeenLastCalledWith({ skip: true });
 
   state.userName = 'Player';
   state.favoritesLoading = true;
   view.rerender(homePanels());
-  expect(screen.getByRole('combobox')).toBe(deckPicker);
+  expect(screen.getByRole('button', { name: /^Deck Loading/ })).toBe(
+    deckPicker
+  );
   expect(screen.getByTestId('creation-form')).toBe(creationForm);
-  expect(deckPicker).toHaveAttribute('aria-busy', 'true');
+  expect(deckPicker).toBeDisabled();
   expect(state.favoritesQuery).toHaveBeenLastCalledWith({ skip: false });
 
   state.favoritesLoading = false;
+  state.favoritesData = {
+    favoriteDecks: [
+      {
+        index: 0,
+        key: 'ira-deck',
+        name: 'Ira deck',
+        hero: 'HER123',
+        format: 'classic constructed',
+        cardBack: '',
+        playmat: '',
+        altArtsCustomized: false,
+        link: ''
+      }
+    ],
+    lastUsedDeckIndex: 0,
+    lastFormat: 'classic constructed',
+    lastVisibility: 0
+  };
   view.rerender(homePanels());
-  expect(screen.getByRole('combobox')).toBe(deckPicker);
-  expect(deckPicker).toHaveAttribute('aria-busy', 'false');
+  expect(screen.getByRole('button', { name: 'Deck Select a deck' })).toBe(
+    deckPicker
+  );
+  expect(screen.getByTestId('creation-form')).toBe(creationForm);
+  expect(deckPicker).toBeEnabled();
+
+  fireEvent.click(deckPicker);
+  fireEvent.click(screen.getByRole('option', { name: /Ira deck/ }));
+  expect(deckPicker).toHaveAccessibleName(/^Deck Ira deck/);
 });
 
 it('keeps the game list skeleton and header through auth and game loading', () => {
