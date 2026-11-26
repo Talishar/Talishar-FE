@@ -142,7 +142,7 @@ const FriendsDock = () => {
         <span className={styles.toggleLabel}>{t('FRIENDS_DOCK.TITLE')}</span>
         {onlineCount > 0 && (
           <span className={styles.count} aria-hidden="true">
-            {onlineCount}
+            <span className={styles.countValue}>{onlineCount}</span>
           </span>
         )}
       </button>

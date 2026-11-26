@@ -981,20 +981,20 @@ const CreateGame = ({
 
   const buttonClass = classNames(styles.button, 'primary');
 
+  const deckFormatWarning =
+    canFindMatch &&
+    isHeroIllegalForQueue &&
+    (isPreconFormat(activeFormat) || quickJoinCtx?.hasDeckConfigured) ? (
+      <FindMatchStatus
+        format={activeFormat}
+        heroName={quickJoinCtx?.findMatchStatus?.heroShortName}
+        heroId={quickJoinCtx?.selectedDeckHero}
+        onSelectFormat={selectFormat}
+      />
+    ) : null;
+
   // While rust-locked the button stays clickable
   // so it can direct the user to the rust counter panel.
-  const findMatchStatusNotice = canFindMatch ? (
-    <FindMatchStatus
-      status={quickJoinCtx?.findMatchStatus}
-      format={activeFormat}
-      heroId={quickJoinCtx?.selectedDeckHero}
-      onSelectFormat={selectFormat}
-      hasDeck={
-        isPreconFormat(activeFormat) || !!quickJoinCtx?.hasDeckConfigured
-      }
-    />
-  ) : null;
-
   const createButton = (
     <button
       type={isRustLocked ? 'button' : 'submit'}
@@ -1869,19 +1869,18 @@ const CreateGame = ({
               </div>
             )}
             {serverError && <ServerErrorNotice error={serverError} />}
-            {findMatchStatusNotice &&
-              (findMatchQueues && queuedSearches.length > 0 ? (
-                <FindMatchQueueList
-                  queues={queuedSearches}
-                  statuses={findMatchQueues.statuses}
-                  startedAt={findMatchQueues.startedAt}
-                  onLeave={findMatchQueues.leaveQueue}
-                  onLeaveAll={findMatchQueues.leaveAll}
-                  footer={findMatchStatusNotice}
-                />
-              ) : (
-                findMatchStatusNotice
-              ))}
+            {canFindMatch && findMatchQueues && queuedSearches.length > 0 ? (
+              <FindMatchQueueList
+                queues={queuedSearches}
+                statuses={findMatchQueues.statuses}
+                startedAt={findMatchQueues.startedAt}
+                onLeave={findMatchQueues.leaveQueue}
+                onLeaveAll={findMatchQueues.leaveAll}
+                footer={deckFormatWarning}
+              />
+            ) : (
+              deckFormatWarning
+            )}
           </form>
         )}
       </article>
