@@ -10,21 +10,18 @@ interface BotDeckPickerProps {
   options: ImageSelectOption[];
   value?: string;
   onChange: (value: string) => void;
+  compact?: boolean;
 }
 
-const LABEL_WITH_FORMAT = /^(.+?)\s*[(（]([^()（）]+)[)）]$/;
-
-const splitLabel = (label: string): { name: string; format?: string } => {
-  const match = LABEL_WITH_FORMAT.exec(label);
-  return match ? { name: match[1], format: match[2] } : { name: label };
-};
+const FORMAT_SUFFIX = /\s*[(（][^()（）]+[)）]$/;
 
 export const BotDeckPicker: React.FC<BotDeckPickerProps> = ({
   id,
   label,
   options,
   value,
-  onChange
+  onChange,
+  compact = false
 }) => {
   const labelId = useId();
   const tileRefs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -60,7 +57,7 @@ export const BotDeckPicker: React.FC<BotDeckPickerProps> = ({
   };
 
   return (
-    <div className={styles.picker}>
+    <div className={classNames(styles.picker, compact && styles.compact)}>
       <span id={labelId} className={styles.title}>
         {label}
       </span>
@@ -73,7 +70,7 @@ export const BotDeckPicker: React.FC<BotDeckPickerProps> = ({
       >
         {options.map((option, index) => {
           const isSelected = index === selectedIndex;
-          const { name, format } = splitLabel(option.label);
+          const name = option.label.replace(FORMAT_SUFFIX, '');
           return (
             <button
               key={option.value}
@@ -100,7 +97,6 @@ export const BotDeckPicker: React.FC<BotDeckPickerProps> = ({
               )}
               <span className={styles.caption} aria-hidden="true">
                 <span className={styles.name}>{name}</span>
-                {format && <span className={styles.format}>{format}</span>}
               </span>
             </button>
           );

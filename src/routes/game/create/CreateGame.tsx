@@ -79,11 +79,27 @@ type CreateGameProps = {
   userLayout?: boolean;
 };
 
+const VISIBILITY_OPTIONS = [
+  {
+    value: GAME_VISIBILITY.PUBLIC,
+    labelKey: 'MENU.CREATE_GAME.VISIBILITIES.PUBLIC'
+  },
+  {
+    value: GAME_VISIBILITY.PRIVATE,
+    labelKey: 'MENU.CREATE_GAME.VISIBILITIES.PRIVATE'
+  },
+  {
+    value: GAME_VISIBILITY.FRIENDS_ONLY,
+    labelKey: 'MENU.CREATE_GAME.VISIBILITIES.FRIENDS'
+  }
+];
+
 const CreateGame = ({
   inUnifiedPanel = false,
   userLayout
 }: CreateGameProps) => {
   const quickJoinCtx = useQuickJoinOptional();
+  const settingsLabelId = React.useId();
   const {
     isLoggedIn,
     isLoading: isAuthLoading,
@@ -1059,11 +1075,12 @@ const CreateGame = ({
             onSubmit={handleSubmit(onSubmit, onInvalid)}
           >
             <div
-              className={
+              className={classNames(
                 useUnifiedPanelStyles
                   ? styles.embeddedFormInner
-                  : styles.formInner
-              }
+                  : styles.formInner,
+                isEmbedded && styles.inlineForm
+              )}
             >
               {/* Register deck fields when inside QuickJoinProvider (values synced from context) */}
               {isEmbedded && !isPreconFormat(formFormat || selectedFormat) && (
@@ -1103,7 +1120,7 @@ const CreateGame = ({
                         isBazaarEnabled && setStandaloneDeckSource('bazaar')
                       }
                       disabled={!isBazaarEnabled}
-                      title={
+                      data-compact-tooltip={
                         !isBazaarEnabled
                           ? t('MENU.CREATE_GAME.COMING_SOON')
                           : undefined
@@ -1226,7 +1243,13 @@ const CreateGame = ({
                   <label>
                     {isPreconFormat(formFormat || selectedFormat) ? (
                       <>
-                        {t('MENU.CREATE_GAME.PRECONSTRUCTED_DECK')}
+                        <span
+                          className={
+                            isEmbedded ? styles.inlineLabel : undefined
+                          }
+                        >
+                          {t('MENU.CREATE_GAME.PRECONSTRUCTED_DECK')}
+                        </span>
                         <ImageSelect
                           id="preconDecks"
                           options={preconDeckOptions}
@@ -1254,7 +1277,7 @@ const CreateGame = ({
                         {t('MENU.CREATE_GAME.IMPORT')}
                         {''}
                         <span
-                          title={t('MENU.CREATE_GAME.IMPORT_TITLE')}
+                          data-compact-tooltip={t('MENU.CREATE_GAME.IMPORT_TITLE')}
                           style={{
                             cursor: 'help',
                             display: 'inline-flex',
@@ -1297,10 +1320,94 @@ const CreateGame = ({
                   )}
                 </fieldset>
               )}
+              <label>
+                <span className={isEmbedded ? styles.inlineLabel : undefined}>
+                  {isEmbedded
+                    ? t('MENU.CREATE_GAME.FORMAT_SHORT')
+                    : t('MENU.CREATE_GAME.FORMAT')}
+                </span>
+                <select
+                  id="format"
+                  aria-label={t('MENU.CREATE_GAME.FORMAT')}
+                  {...register('format')}
+                  aria-invalid={errors.format?.message ? 'true' : undefined}
+                  onChange={(e) => {
+                    handleFormatChange(e);
+                    register('format').onChange(e);
+                  }}
+                >
+                  <optgroup label={t('MENU.CREATE_GAME.FORMATS.POPULAR')}>
+                    <option value={GAME_FORMAT.CLASSIC_CONSTRUCTED}>
+                      {t('MENU.CREATE_GAME.FORMATS.CC')}
+                    </option>
+                    <option value={GAME_FORMAT.SAGE}>
+                      {t('MENU.CREATE_GAME.FORMATS.SAGE')}
+                    </option>
+                    <option value={GAME_FORMAT.LLCC}>
+                      {t('MENU.CREATE_GAME.FORMATS.LL')}
+                    </option>
+                  </optgroup>
+                  <optgroup label={t('MENU.CREATE_GAME.FORMATS.COMPETITIVE')}>
+                    <option value={GAME_FORMAT.COMPETITIVE_CC}>
+                      {t('MENU.CREATE_GAME.FORMATS.COMPETITIVE_CC')}
+                    </option>
+                    <option value={GAME_FORMAT.COMPETITIVE_SAGE}>
+                      {t('MENU.CREATE_GAME.FORMATS.COMPETITIVE_SAGE')}
+                    </option>
+                    <option value={GAME_FORMAT.COMPETITIVE_LL}>
+                      {t('MENU.CREATE_GAME.FORMATS.COMPETITIVE_LL')}
+                    </option>
+                  </optgroup>
+                  <optgroup
+                    label={t('MENU.CREATE_GAME.FORMATS.FUTURE_FORMATS')}
+                  >
+                    <option value={GAME_FORMAT.OPEN_CC}>
+                      {t('MENU.CREATE_GAME.FORMATS.FUTURE_CC')}
+                    </option>
+                    <option value={GAME_FORMAT.OPEN_LL_CC}>
+                      {t('MENU.CREATE_GAME.FORMATS.FUTURE_LL')}
+                    </option>
+                    <option value={GAME_FORMAT.OPEN_SAGE}>
+                      {t('MENU.CREATE_GAME.FORMATS.FUTURE_SAGE')}
+                    </option>
+                  </optgroup>
+                  <optgroup label={t('MENU.CREATE_GAME.FORMATS.OTHER')}>
+                    <option value={GAME_FORMAT.PRECON}>
+                      {t('MENU.CREATE_GAME.FORMATS.PRECON')}
+                    </option>
+                    <option value={GAME_FORMAT.BLITZ}>
+                      {t('MENU.CREATE_GAME.FORMATS.BLITZ')}
+                    </option>
+                    <option value={GAME_FORMAT.DRAFT}>
+                      {t('MENU.CREATE_GAME.FORMATS.DRAFT')}
+                    </option>
+                    <option value={GAME_FORMAT.OPEN}>
+                      {t('MENU.CREATE_GAME.FORMATS.OPEN')}
+                    </option>
+                    <option value={GAME_FORMAT.GAGE}>
+                      {t('MENU.CREATE_GAME.FORMATS.GAGE')}
+                    </option>
+                  </optgroup>
+                </select>
+                {isEmbedded &&
+                  !canFindMatch &&
+                  !isPreconFormat(activeFormat) && (
+                    <DeckLegality
+                      heroId={quickJoinCtx?.selectedDeckHero}
+                      format={activeFormat}
+                      onlyMismatch
+                      onSelectFormat={selectFormat}
+                    />
+                  )}
+              </label>
               <label
                 className={!hasUserLayout ? styles.guestHiddenField : undefined}
               >
-                {t('MENU.CREATE_GAME.GAME_DESCRIPTION')}
+                <span className={isEmbedded ? styles.inlineLabel : undefined}>
+                  {isEmbedded
+                    ? t('MENU.CREATE_GAME.DESCRIPTION_SHORT')
+                    : t('MENU.CREATE_GAME.GAME_DESCRIPTION')}
+                </span>
                 <select
                   id="gameDescription"
                   aria-label={t('MENU.CREATE_GAME.GAME_DESCRIPTION')}
@@ -1565,84 +1672,41 @@ const CreateGame = ({
                   )}
                 </div>
               )}
-              <label>
-                {t('MENU.CREATE_GAME.FORMAT')}
-                <select
-                  id="format"
-                  aria-label={t('MENU.CREATE_GAME.FORMAT')}
-                  {...register('format')}
-                  aria-invalid={errors.format?.message ? 'true' : undefined}
-                  onChange={(e) => {
-                    handleFormatChange(e);
-                    register('format').onChange(e);
-                  }}
-                >
-                  <optgroup label={t('MENU.CREATE_GAME.FORMATS.POPULAR')}>
-                    <option value={GAME_FORMAT.CLASSIC_CONSTRUCTED}>
-                      {t('MENU.CREATE_GAME.FORMATS.CC')}
-                    </option>
-                    <option value={GAME_FORMAT.SAGE}>
-                      {t('MENU.CREATE_GAME.FORMATS.SAGE')}
-                    </option>
-                    <option value={GAME_FORMAT.LLCC}>
-                      {t('MENU.CREATE_GAME.FORMATS.LL')}
-                    </option>
-                  </optgroup>
-                  <optgroup label={t('MENU.CREATE_GAME.FORMATS.COMPETITIVE')}>
-                    <option value={GAME_FORMAT.COMPETITIVE_CC}>
-                      {t('MENU.CREATE_GAME.FORMATS.COMPETITIVE_CC')}
-                    </option>
-                    <option value={GAME_FORMAT.COMPETITIVE_SAGE}>
-                      {t('MENU.CREATE_GAME.FORMATS.COMPETITIVE_SAGE')}
-                    </option>
-                    <option value={GAME_FORMAT.COMPETITIVE_LL}>
-                      {t('MENU.CREATE_GAME.FORMATS.COMPETITIVE_LL')}
-                    </option>
-                  </optgroup>
-                  <optgroup
-                    label={t('MENU.CREATE_GAME.FORMATS.FUTURE_FORMATS')}
-                  >
-                    <option value={GAME_FORMAT.OPEN_CC}>
-                      {t('MENU.CREATE_GAME.FORMATS.FUTURE_CC')}
-                    </option>
-                    <option value={GAME_FORMAT.OPEN_LL_CC}>
-                      {t('MENU.CREATE_GAME.FORMATS.FUTURE_LL')}
-                    </option>
-                    <option value={GAME_FORMAT.OPEN_SAGE}>
-                      {t('MENU.CREATE_GAME.FORMATS.FUTURE_SAGE')}
-                    </option>
-                  </optgroup>
-                  <optgroup label={t('MENU.CREATE_GAME.FORMATS.OTHER')}>
-                    <option value={GAME_FORMAT.PRECON}>
-                      {t('MENU.CREATE_GAME.FORMATS.PRECON')}
-                    </option>
-                    <option value={GAME_FORMAT.BLITZ}>
-                      {t('MENU.CREATE_GAME.FORMATS.BLITZ')}
-                    </option>
-                    <option value={GAME_FORMAT.DRAFT}>
-                      {t('MENU.CREATE_GAME.FORMATS.DRAFT')}
-                    </option>
-                    <option value={GAME_FORMAT.OPEN}>
-                      {t('MENU.CREATE_GAME.FORMATS.OPEN')}
-                    </option>
-                    <option value={GAME_FORMAT.GAGE}>
-                      {t('MENU.CREATE_GAME.FORMATS.GAGE')}
-                    </option>
-                  </optgroup>
-                </select>
-                {isEmbedded &&
-                  !canFindMatch &&
-                  !isPreconFormat(activeFormat) && (
-                    <DeckLegality
-                      heroId={quickJoinCtx?.selectedDeckHero}
-                      format={activeFormat}
-                      onlyMismatch
-                      onSelectFormat={selectFormat}
-                    />
-                  )}
-              </label>
               <fieldset>
-                {hasUserLayout && (
+                {hasUserLayout && isEmbedded && (
+                  <div className={styles.inlineRow}>
+                    <span id="visibilityLabel" className={styles.inlineLabel}>
+                      {t('MENU.CREATE_GAME.VISIBILITY')}
+                    </span>
+                    <div
+                      role="group"
+                      aria-labelledby="visibilityLabel"
+                      className={styles.segmented}
+                    >
+                      {VISIBILITY_OPTIONS.map((option) => (
+                        <button
+                          key={option.value}
+                          type="button"
+                          aria-pressed={formVisibility === option.value}
+                          className={classNames(
+                            styles.segment,
+                            formVisibility === option.value &&
+                              styles.segmentActive
+                          )}
+                          onClick={() =>
+                            setValue('visibility', option.value, {
+                              shouldDirty: true
+                            })
+                          }
+                        >
+                          {t(option.labelKey)}
+                        </button>
+                      ))}
+                    </div>
+                    <input type="hidden" {...register('visibility')} />
+                  </div>
+                )}
+                {hasUserLayout && !isEmbedded && (
                   <label>
                     {t('MENU.CREATE_GAME.VISIBILITY')}
                     <select
@@ -1665,23 +1729,63 @@ const CreateGame = ({
                     </select>
                   </label>
                 )}
-                <label className={styles.toggleLabel}>
-                  <input
-                    type="checkbox"
-                    role="switch"
-                    id="deckTestMode"
-                    aria-label={t('MENU.CREATE_GAME.SINGLE_PLAYER')}
-                    {...register('deckTestMode')}
-                    aria-invalid={
-                      errors.deckTestMode?.message ? 'true' : undefined
-                    }
-                  />
-                  {t('MENU.CREATE_GAME.SINGLE_PLAYER')}
-                </label>
-                {isPrivateGame && (
+                {isEmbedded ? (
+                  <div className={styles.inlineRow}>
+                    <span id={settingsLabelId} className={styles.inlineLabel}>
+                      {t('MENU.CREATE_GAME.SETTINGS')}
+                    </span>
+                    <div
+                      role="group"
+                      aria-labelledby={settingsLabelId}
+                      className={styles.settingsToggles}
+                    >
+                      <label className={styles.inlineToggle}>
+                        <input
+                          type="checkbox"
+                          role="switch"
+                          id="deckTestMode"
+                          {...register('deckTestMode')}
+                          aria-invalid={
+                            errors.deckTestMode?.message ? 'true' : undefined
+                          }
+                        />
+                        {t('MENU.CREATE_GAME.PLAY_VS_BOT')}
+                      </label>
+                      {isPrivateGame && (
+                        <label
+                          className={styles.inlineToggle}
+                          data-compact-tooltip={t('MENU.CREATE_GAME.OPEN_HANDS_TOOLTIP')}
+                        >
+                          <input
+                            type="checkbox"
+                            role="switch"
+                            id="openHands"
+                            {...register('openHands')}
+                          />
+                          {t('MENU.CREATE_GAME.OPEN_HANDS')}
+                        </label>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <label className={styles.toggleLabel}>
+                    <input
+                      type="checkbox"
+                      role="switch"
+                      id="deckTestMode"
+                      aria-label={t('MENU.CREATE_GAME.SINGLE_PLAYER')}
+                      {...register('deckTestMode')}
+                      aria-invalid={
+                        errors.deckTestMode?.message ? 'true' : undefined
+                      }
+                    />
+                    {t('MENU.CREATE_GAME.SINGLE_PLAYER')}
+                  </label>
+                )}
+                {!isEmbedded && isPrivateGame && (
                   <label
                     className={styles.toggleLabel}
-                    title={t('MENU.CREATE_GAME.OPEN_HANDS_TOOLTIP')}
+                    data-compact-tooltip={t('MENU.CREATE_GAME.OPEN_HANDS_TOOLTIP')}
                   >
                     <input
                       type="checkbox"
@@ -1695,13 +1799,34 @@ const CreateGame = ({
                 )}
                 {hasUserLayout && deckTestMode && (
                   <>
-                    <BotDeckPicker
-                      id="deckTestDeck"
-                      label={t('MENU.CREATE_GAME.AI_DECK')}
-                      options={aiDeckOptions}
-                      value={deckTestDeck}
-                      onChange={(value) => setValue('deckTestDeck', value)}
-                    />
+                    {isEmbedded ? (
+                      <div
+                        className={classNames(
+                          styles.inlineRow,
+                          styles.inlineRowTop
+                        )}
+                      >
+                        <span className={styles.inlineLabel} aria-hidden="true">
+                          {t('MENU.CREATE_GAME.AI_DECK')}
+                        </span>
+                        <BotDeckPicker
+                          id="deckTestDeck"
+                          label={t('MENU.CREATE_GAME.AI_DECK')}
+                          options={aiDeckOptions}
+                          value={deckTestDeck}
+                          onChange={(value) => setValue('deckTestDeck', value)}
+                          compact
+                        />
+                      </div>
+                    ) : (
+                      <BotDeckPicker
+                        id="deckTestDeck"
+                        label={t('MENU.CREATE_GAME.AI_DECK')}
+                        options={aiDeckOptions}
+                        value={deckTestDeck}
+                        onChange={(value) => setValue('deckTestDeck', value)}
+                      />
+                    )}
                     <input type="hidden" {...register('deckTestDeck')} />
                   </>
                 )}
@@ -1724,7 +1849,7 @@ const CreateGame = ({
                       !isActiveFormatQueued)
                   }
                   aria-disabled={isRustLocked || undefined}
-                  title={t('FIND_MATCH.JOIN_QUEUE_TITLE', {
+                  data-compact-tooltip={t('FIND_MATCH.JOIN_QUEUE_TITLE', {
                     max: MAX_FIND_MATCH_QUEUES
                   })}
                   onClick={handleJoinQueue}

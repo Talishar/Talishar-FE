@@ -8,6 +8,39 @@
   margin-bottom: calc(var(--spacing, 1rem) * 0.375);
 }
 
+.picker.compact {
+  margin-bottom: 0;
+}
+
+.compact .title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.compact .grid {
+  grid-template-columns: repeat(auto-fit, minmax(3.5rem, 1fr));
+  gap: 0.375rem;
+}
+
+.compact .grid .tile {
+  aspect-ratio: auto;
+  height: 4.75rem;
+  border-radius: 6px;
+}
+
+.compact .caption {
+  padding: 0.9rem 0.25rem 0.3rem;
+}
+
+.compact .name {
+  font-size: 0.72rem;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(4rem, 1fr));
@@ -80,9 +113,6 @@
   left: 0;
   right: 0;
   bottom: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.1rem;
   padding: 1.25rem 0.3rem 0.35rem;
   background: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0));
   line-height: 1.15;
@@ -93,12 +123,6 @@
   font-weight: 600;
   text-shadow: 0 1px 0 #000;
   overflow-wrap: anywhere;
-}
-
-.format {
-  font-size: 0.65rem;
-  color: #b4b8bc;
-  text-shadow: 0 1px 0 #000;
 }
 
 .tile.selected .name {

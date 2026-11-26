@@ -83,6 +83,56 @@ it.each([0, 1, 2])(
   }
 );
 
+it('shows video titles for link-only posts in the cards and the selectable list', async () => {
+  vi.mocked(fetchDiscordContentCarousel).mockResolvedValue([
+    {
+      ...video(0),
+      type: 'youtube',
+      title: '<https://youtu.be/abcdefghijk>',
+      mediaTitle: 'A Day at My Local Armory'
+    },
+    {
+      ...video(1),
+      type: 'youtube',
+      title: 'https://youtu.be/lmnopqrstuv'
+    },
+    {
+      ...video(2),
+      type: 'youtube',
+      title: '<https://youtu.be/12345678901>',
+      mediaTitle: 'Levia Deck Tech'
+    },
+    {
+      ...video(3),
+      type: 'youtube',
+      title: 'Sunday Blitz recap <https://youtu.be/12345678902>'
+    }
+  ]);
+
+  render(<CommunityContent />);
+
+  expect(
+    await screen.findByRole('heading', { name: 'A Day at My Local Armory' })
+  ).toBeInTheDocument();
+  expect(
+    screen.getByRole('heading', { name: 'YouTube video' })
+  ).toBeInTheDocument();
+  expect(
+    screen.getByRole('button', { name: /Sunday Blitz recap/ })
+  ).toBeInTheDocument();
+
+  fireEvent.click(screen.getByRole('button', { name: /Levia Deck Tech/ }));
+
+  const featured = screen.getByTestId('community-featured');
+  expect(
+    screen.getByRole('heading', { name: 'Levia Deck Tech' })
+  ).toBeInTheDocument();
+  expect(featured.querySelector('iframe')).toHaveAttribute(
+    'title',
+    'Levia Deck Tech'
+  );
+});
+
 it('keeps the current feed visible while refreshing and tolerates a shorter replacement', async () => {
   vi.useFakeTimers();
   let refresh!: (videos: ContentVideo[]) => void;

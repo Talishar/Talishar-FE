@@ -6,6 +6,7 @@ import {
   ContentVideo
 } from '../../../services/contentService';
 import { Trans, useTranslation } from 'react-i18next';
+import { FiExternalLink, FiPlay } from 'react-icons/fi';
 import { TALISHAR_DISCORD_URL } from 'constants/socialLinks';
 
 interface CommunityContentProps {
@@ -46,8 +47,9 @@ const CommunityContent: React.FC<CommunityContentProps> = ({
   const { t, i18n } = useTranslation();
 
   const cleanTitle = (title: string): string => {
-    let cleaned = title.replace(/https?:\/\/\S+/gi, '').trim();
-    cleaned = cleaned.replace(/<[^>]*>/g, '');
+    let cleaned = title
+      .replace(/\[([^\]]+)\]\(https?:\/\/[^)]+\)/gi, '$1')
+      .replace(/<[^>]*>|https?:\/\/[^\s<>]+/gi, '');
     cleaned = cleaned
       .replace(/&lt;/g, '<')
       .replace(/&gt;/g, '>')
@@ -57,9 +59,22 @@ const CommunityContent: React.FC<CommunityContentProps> = ({
     return cleaned.replace(/\s+/g, ' ').trim();
   };
 
+  const getTitle = (video: ContentVideo): string => {
+    const mediaTitle = video.mediaTitle?.trim();
+    if (mediaTitle) return mediaTitle;
+
+    const caption = cleanTitle(video.title);
+    if (/[\p{L}\p{N}]/u.test(caption)) return caption;
+
+    if (video.type === 'metafy') return t('COMMUNITY_CONTENT.FALLBACK_METAFY');
+    if (video.type === 'twitch') return t('COMMUNITY_CONTENT.FALLBACK_TWITCH');
+    return t('COMMUNITY_CONTENT.FALLBACK_YOUTUBE');
+  };
+
   const getContentTypeLabel = (video: ContentVideo): string => {
     if (video.type === 'metafy') return t('COMMUNITY_CONTENT.TYPE_GUIDE');
-    switch (inferContentType(video.title, video.description)) {
+    const text = `${video.mediaTitle ?? ''} ${video.title}`;
+    switch (inferContentType(text, video.description)) {
       case 'TYPE_PODCAST':
         return t('COMMUNITY_CONTENT.TYPE_PODCAST');
       case 'TYPE_DECK_TECH':
@@ -72,22 +87,9 @@ const CommunityContent: React.FC<CommunityContentProps> = ({
   };
 
   const getThumbnail = (video: ContentVideo): string => {
-    if (video.type === 'youtube')
+    if (video.type === 'youtube' || video.type === 'fabinsights')
       return `https://img.youtube.com/vi/${video.videoId}/mqdefault.jpg`;
-    if (video.thumbnail) return video.thumbnail;
-    if (video.videoId)
-      return `https://img.youtube.com/vi/${video.videoId}/mqdefault.jpg`;
-    return '';
-  };
-
-  const handleThumbError = (
-    e: React.SyntheticEvent<HTMLImageElement>,
-    video: ContentVideo
-  ) => {
-    const img = e.currentTarget;
-    if (video.videoId && !img.src.includes('youtube.com')) {
-      img.src = `https://img.youtube.com/vi/${video.videoId}/mqdefault.jpg`;
-    }
+    return video.thumbnail ?? '';
   };
 
   const formatDate = (timestamp: string): string =>
@@ -99,6 +101,16 @@ const CommunityContent: React.FC<CommunityContentProps> = ({
 
   const capitalize = (s: string): string =>
     s.charAt(0).toUpperCase() + s.slice(1);
+
+  const renderMeta = (video: ContentVideo) => (
+    <>
+      <span className={styles.metaAuthor}>
+        {t('COMMUNITY_CONTENT.BY')} {capitalize(video.author)}
+      </span>
+      <span aria-hidden="true"> · </span>
+      <time dateTime={video.timestamp}>{formatDate(video.timestamp)}</time>
+    </>
+  );
 
   const openContent = (video: ContentVideo) => {
     const targetUrl = video.url || video.messageUrl;
@@ -132,23 +144,29 @@ const CommunityContent: React.FC<CommunityContentProps> = ({
     .filter(({ idx }) => idx !== featuredIndex && idx !== secondaryIndex)
     .slice(0, 5);
 
-  const renderEmbed = (video: ContentVideo) => {
+  const renderEmbed = (video: ContentVideo, title: string) => {
     if (video.type === 'metafy') {
+      const thumbnail = getThumbnail(video);
       return (
         <button
           type="button"
           className={styles.guideCard}
+          aria-label={title}
           onClick={() => openContent(video)}
         >
-          {getThumbnail(video) ? (
+          <FiExternalLink
+            className={styles.guideCardFallback}
+            aria-hidden="true"
+          />
+          {thumbnail && (
             <img
+              key={thumbnail}
               className={styles.guideCardImage}
-              src={getThumbnail(video)}
-              alt={cleanTitle(video.title)}
+              src={thumbnail}
+              alt=""
               loading="lazy"
+              onError={(event) => (event.currentTarget.hidden = true)}
             />
-          ) : (
-            <div className={styles.guideCardFallback} />
           )}
           <span className={styles.guideCardBadge}>
             {t('COMMUNITY_CONTENT.TYPE_GUIDE')}
@@ -165,7 +183,7 @@ const CommunityContent: React.FC<CommunityContentProps> = ({
       <iframe
         className={styles.videoFrame}
         src={src}
-        title={video.title}
+        title={title}
         frameBorder="0"
         allow="autoplay; encrypted-media; picture-in-picture"
         allowFullScreen
@@ -179,54 +197,33 @@ const CommunityContent: React.FC<CommunityContentProps> = ({
   const renderCard = (
     video: ContentVideo | undefined | null,
     primary: boolean
-  ) => (
-    <div
-      className={`${
-        primary ? styles.featuredSection : styles.secondarySection
-      }${!loading && !video ? ` ${styles.unavailable}` : ''}`}
-      data-testid={primary ? 'community-featured' : 'community-secondary'}
-    >
+  ) => {
+    const title = video ? getTitle(video) : undefined;
+    return (
       <div
-        className={`${primary ? styles.featuredEmbed : styles.secondaryEmbed}${
-          loading ? ` ${styles.mediaSkeleton}` : ''
-        }`}
+        className={`${styles.mediaCard}${
+          primary ? ` ${styles.featuredCard}` : ''
+        }${!loading && !video ? ` ${styles.unavailable}` : ''}`}
+        data-testid={primary ? 'community-featured' : 'community-secondary'}
       >
-        {video && renderEmbed(video)}
-      </div>
-      <div className={primary ? styles.featuredInfo : styles.secondaryInfo}>
-        {primary ? (
-          <h3
-            className={styles.featuredTitle}
-            title={video ? cleanTitle(video.title) : undefined}
-          >
-            {video ? cleanTitle(video.title) : skeletonText}
+        <div
+          className={`${styles.mediaEmbed}${
+            loading ? ` ${styles.mediaSkeleton}` : ''
+          }`}
+        >
+          {video && title && renderEmbed(video, title)}
+        </div>
+        <div className={styles.cardInfo}>
+          <h3 className={styles.cardTitle} data-compact-tooltip={title} dir="auto">
+            {title ?? skeletonText}
           </h3>
-        ) : (
-          <p
-            className={styles.secondaryTitle}
-            title={video ? cleanTitle(video.title) : undefined}
-          >
-            {video ? cleanTitle(video.title) : skeletonText}
+          <p className={styles.cardMeta}>
+            {video ? renderMeta(video) : skeletonText}
           </p>
-        )}
-        <p className={primary ? styles.featuredMeta : styles.secondaryMeta}>
-          {video ? (
-            <>
-              <span className={styles.metaAuthor}>
-                {t('COMMUNITY_CONTENT.BY')} {capitalize(video.author)}
-              </span>
-              &nbsp;-&nbsp;
-              <span className={styles.metaDate}>
-                {formatDate(video.timestamp)}
-              </span>
-            </>
-          ) : (
-            skeletonText
-          )}
-        </p>
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <section className={styles.communityContentContainer}>
@@ -241,49 +238,51 @@ const CommunityContent: React.FC<CommunityContentProps> = ({
           <p className={styles.subtitle}>{t('COMMUNITY_CONTENT.DISCOVER')}</p>
         </div>
 
-        {/* Hero: featured video + secondary card + ad */}
         <div className={styles.heroLayout}>
-          {/* Featured */}
           {renderCard(featured, true)}
-
-          <div className={styles.rightColumn}>
-            {renderCard(secondary, false)}
-
-          </div>
+          {renderCard(secondary, false)}
         </div>
         <ul className={styles.videoList}>
-          {listVideos.map(({ video, idx }) => (
-            <li key={video.videoId}>
-              <button
-                className={styles.videoListItem}
-                onClick={() => setSelectedIndex(idx)}
-              >
-                <div className={styles.listThumbWrapper}>
-                  <img
-                    src={getThumbnail(video)}
-                    alt={cleanTitle(video.title)}
-                    className={styles.thumbImg}
-                    loading="lazy"
-                    onError={(e) => handleThumbError(e, video)}
-                  />
-                  <div className={styles.thumbPlayOverlay}>
-                    <div className={styles.playCircleSmall} />
+          {listVideos.map(({ video, idx }) => {
+            const title = getTitle(video);
+            const thumbnail = getThumbnail(video);
+            return (
+              <li key={video.videoId}>
+                <button
+                  type="button"
+                  className={styles.videoListItem}
+                  onClick={() => setSelectedIndex(idx)}
+                >
+                  <div className={styles.listThumbWrapper} aria-hidden="true">
+                    {video.type === 'metafy' ? <FiExternalLink /> : <FiPlay />}
+                    {thumbnail && (
+                      <img
+                        key={thumbnail}
+                        src={thumbnail}
+                        alt=""
+                        className={styles.thumbImg}
+                        loading="lazy"
+                        onError={(event) => (event.currentTarget.hidden = true)}
+                      />
+                    )}
                   </div>
-                </div>
-                <div className={styles.listInfo}>
-                  <p className={styles.listTitle}>{cleanTitle(video.title)}</p>
-                  <p className={styles.listMeta}>
-                    {t('COMMUNITY_CONTENT.BY')} {capitalize(video.author)}
-                    &nbsp;-&nbsp;
-                    {formatDate(video.timestamp)}
-                  </p>
-                </div>
-                <span className={styles.contentTypeTag}>
-                  {getContentTypeLabel(video)}
-                </span>
-              </button>
-            </li>
-          ))}
+                  <div className={styles.listInfo}>
+                    <p
+                      className={styles.listTitle}
+                      data-compact-tooltip={title}
+                      dir="auto"
+                    >
+                      {title}
+                    </p>
+                    <p className={styles.listMeta}>{renderMeta(video)}</p>
+                  </div>
+                  <span className={styles.contentTypeTag}>
+                    {getContentTypeLabel(video)}
+                  </span>
+                </button>
+              </li>
+            );
+          })}
           {Array.from({ length: 5 - listVideos.length }, (_, index) => (
             <li
               key={`placeholder-${index}`}

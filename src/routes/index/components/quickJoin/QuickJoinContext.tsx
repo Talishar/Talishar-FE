@@ -28,6 +28,7 @@ import { generateCroppedImageUrl, getHeroCropFocusX } from 'utils/cropImages';
 import { ImageSelectOption } from 'components/ImageSelect';
 import { formatDeckLabel, getReadableFormatName } from 'utils/formatUtils';
 import { FAB_BAZAAR_DECK_URL_BASE } from 'appConstants';
+import { HEROES_OF_RATHE } from 'routes/index/components/filter/constants';
 import useAuth from 'hooks/useAuth';
 import { FavoriteDeck } from 'interface/API/GetFavoriteDecks.php';
 import { BazaarDeck } from 'interface/API/GetBazaarDecks';
@@ -169,9 +170,7 @@ export const QuickJoinProvider = ({
     isFavoritesQueryLoading;
 
   const [deckSource, setDeckSourceState] = useState<'talishar' | 'bazaar'>(
-    () =>
-      (localStorage.getItem(LS_DECK_SOURCE_KEY) as 'talishar' | 'bazaar') ??
-      'talishar'
+    'talishar'
   );
   const [selectedFavoriteDeck, setSelectedFavoriteDeckState] = useState<string>(
     () => localStorage.getItem(LS_FAVE_DECK_KEY) ?? ''
@@ -221,7 +220,9 @@ export const QuickJoinProvider = ({
         shorten: shortenFormat
       }),
       imageUrl: generateCroppedImageUrl(deck.hero),
-      imageFocusX: getHeroCropFocusX(deck.hero)
+      imageFocusX: getHeroCropFocusX(deck.hero),
+      description: HEROES_OF_RATHE.find((hero) => hero.value === deck.hero)
+        ?.label
     }));
   }, [favoritesData?.favoriteDecks]);
 

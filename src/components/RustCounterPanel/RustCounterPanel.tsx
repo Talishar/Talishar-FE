@@ -6,7 +6,6 @@ import {
   RUST_PANEL_ATTENTION_EVENT
 } from 'hooks/useRustCounters';
 import { trackRewardedAdClick } from 'utils/adAnalytics';
-import { memberLink } from 'utils/memberLink';
 import HouseRewardedAd from './HouseRewardedAd';
 import styles from './RustCounterPanel.module.css';
 
@@ -118,82 +117,64 @@ const RustCounterPanel = ({
       className={`${styles.panel} ${isLocked ? styles.panelLocked : ''}`}
       role={isLocked ? 'alert' : undefined}
     >
-      <div className={styles.content}>
-        <div className={styles.titleRow}>
-          {displayedRustCounters > 0 && (
-            <span className={styles.counterImages} aria-hidden="true">
-              {Array.from({ length: displayedRustCounters }, (_, index) => (
-                <img
-                  key={index}
-                  className={styles.counterImage}
-                  src="/images/rust-counter.webp"
-                  alt=""
-                />
-              ))}
-            </span>
-          )}
-          <span className={styles.title}>
-            {t('RUST_COUNTER_PANEL.RUST_COUNTERS', {
-              count: displayedRustCounters,
+      <div className={styles.titleRow}>
+        {displayedRustCounters > 0 && (
+          <span className={styles.counterImages} aria-hidden="true">
+            {Array.from({ length: displayedRustCounters }, (_, index) => (
+              <img
+                key={index}
+                className={styles.counterImage}
+                src="/images/rust-counter.webp"
+                alt=""
+              />
+            ))}
+          </span>
+        )}
+        <span className={styles.title}>
+          {t('RUST_COUNTER_PANEL.RUST_COUNTERS', {
+            count: displayedRustCounters,
+            max: MAX_RUST_COUNTERS
+          })}
+        </span>
+        <span className={styles.helpWrapper}>
+          <button
+            type="button"
+            className={styles.helpIcon}
+            aria-label={t('RUST_COUNTER_PANEL.WHAT_ARE_RUST_COUNTERS')}
+            data-compact-tooltip={t('RUST_COUNTER_PANEL.TOOLTIP', {
               max: MAX_RUST_COUNTERS
             })}
-          </span>
-        </div>
-        {canTestRewardedAds ? (
-          <span className={styles.subtitle}>
-            {t('RUST_COUNTER_PANEL.DEV_MODE_NOTE')}
-          </span>
-        ) : isLocked ? (
-          <span className={styles.subtitle}>
-            {t('RUST_COUNTER_PANEL.WATCH_AD_NOTE')}
-          </span>
-        ) : null}
-      </div>
-      <div className={styles.actions}>
-        {shouldShowWatchAd && (
-          <div className={styles.watchAdWrapper}>
-            <button
-              id="clearRust"
-              type="button"
-              className={`${styles.clearButton} ${
-                isLocked ? styles.clearButtonLocked : ''
-              } ${isLocked && isPulsing ? styles.pulse : ''}`}
-              onClick={handleWatchAdClick}
-              onAnimationEnd={() => setIsPulsing(false)}
-              aria-busy={isWaitingForAd || undefined}
-            >
-              {isWaitingForAd
-                ? t('RUST_COUNTER_PANEL.LOADING_AD')
-                : t('RUST_COUNTER_PANEL.WATCH_AD_TO_CLEAR')}
-            </button>
-          </div>
-        )}
-        <a
-          className={styles.removeAdsLink}
-          href={memberLink('rust-panel')}
-          target="_blank"
-          rel="noreferrer"
-        >
-          {t('UNITED_GAME_PANEL.REMOVE_ADS')}
-        </a>
-      </div>
-      <span className={styles.helpWrapper}>
-        <button
-          type="button"
-          className={styles.helpIcon}
-          aria-label={t('RUST_COUNTER_PANEL.WHAT_ARE_RUST_COUNTERS')}
-          aria-describedby="rust-counter-tooltip"
-        >
-          <FaQuestionCircle size={14} />
-        </button>
-        <span
-          id="rust-counter-tooltip"
-          role="tooltip"
-          className={styles.tooltip}
-        >
-          {t('RUST_COUNTER_PANEL.TOOLTIP', { max: MAX_RUST_COUNTERS })}
+          >
+            <FaQuestionCircle size={14} />
+          </button>
         </span>
-      </span>
+      </div>
+      {shouldShowWatchAd && (
+        <div className={styles.watchAdWrapper}>
+          <button
+            id="clearRust"
+            type="button"
+            className={`${styles.clearButton} ${
+              isLocked ? styles.clearButtonLocked : ''
+            } ${isLocked && isPulsing ? styles.pulse : ''}`}
+            onClick={handleWatchAdClick}
+            onAnimationEnd={() => setIsPulsing(false)}
+            aria-busy={isWaitingForAd || undefined}
+          >
+            {isWaitingForAd
+              ? t('RUST_COUNTER_PANEL.LOADING_AD')
+              : t('RUST_COUNTER_PANEL.WATCH_AD_TO_CLEAR')}
+          </button>
+        </div>
+      )}
+      {canTestRewardedAds ? (
+        <span className={styles.subtitle}>
+        </span>
+      ) : isLocked ? (
+        <span className={styles.subtitle}>
+          {t('RUST_COUNTER_PANEL.WATCH_AD_NOTE')}
+        </span>
+      ) : null}
       {showFallbackAd && (
         <HouseRewardedAd onRewardEarned={handleFallbackAdComplete} />
       )}

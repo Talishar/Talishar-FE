@@ -125,21 +125,22 @@
           margin: 0 0 0 8px;
           border-radius: 5px;
           font-size: 15px;
-          background-color: transparent;
-          border: 1px solid var(--theme-primary);
-          color: var(--theme-primary);
+          background-color: var(--theme-secondary, #606569);
+          border: none;
+          color: var(--theme-text);
           font-weight: 600;
           line-height: 1;
           white-space: nowrap;
+          transition: background-color 0.2s ease, transform 0.15s ease;
 
           &:focus,
           &:hover {
-            background-color: color-mix(
-              in srgb,
-              var(--theme-primary) 14%,
-              transparent
-            );
-            color: var(--theme-primary);
+            background-color: var(--theme-secondary-hover, #757a7f);
+            color: var(--theme-text);
+          }
+
+          &:hover {
+            transform: translateY(-1px);
           }
 
           &::before,

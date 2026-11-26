@@ -22,7 +22,7 @@ const HeroPortrait = ({ hero }: { hero?: string }) => {
       src={generateCroppedImageUrl(hero)}
       style={heroCropFocusStyle(hero)}
       alt={name}
-      title={name}
+      data-compact-tooltip={name}
       loading="lazy"
     />
   ) : (
@@ -61,7 +61,10 @@ export const InProgressGame = ({
       <div className={styles.heroRow}>
         <HeroPortrait hero={entry.p1Hero} />
         {hasLife ? (
-          <span className={styles.score} title={t('IN_PROGRESS_GAME.LIFE')}>
+          <span
+            className={styles.score}
+            data-compact-tooltip={t('IN_PROGRESS_GAME.LIFE')}
+          >
             <span>{entry.p1Life}</span>
             <RiSwordLine className={styles.versus} aria-hidden="true" />
             <span>{entry.p2Life}</span>
@@ -95,7 +98,7 @@ export const InProgressGame = ({
           {spectatorCount > 0 && (
             <span
               className={styles.spectatorCount}
-              title={t('IN_PROGRESS_GAME.SPECTATOR_COUNT', {
+              data-compact-tooltip={t('IN_PROGRESS_GAME.SPECTATOR_COUNT', {
                 count: spectatorCount
               })}
             >

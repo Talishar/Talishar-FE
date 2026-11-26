@@ -2,6 +2,7 @@ import useAuth from 'hooks/useAuth';
 import { useState, useEffect, useRef } from 'react';
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import styles from './Header.module.scss';
+import CompactTooltip from 'components/Tooltip/CompactTooltip';
 import TalisharLogo from '../../img/CoinLogo.png';
 // Menu icons all come from Bootstrap's outline set so they share one stroke
 // weight and optical size.
@@ -410,6 +411,7 @@ const Header = () => {
       <AdBlockingRecovery />
       <VideoAdDock />
       {isLoggedIn && pathname === '/' && <FriendsDock />}
+      <CompactTooltip key={pathname} />
       <SessionRecovery />
     </div>
   );

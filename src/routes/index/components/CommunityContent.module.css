@@ -11,11 +11,11 @@
 }
 
 .sectionHeader {
-  margin-bottom: 1.5em;
+  margin-bottom: 1rem;
 }
 
 .sectionHeader h2 {
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   margin: 0 0 0.25rem 0;
   color: var(--theme-text);
   font-weight: 700;
@@ -23,19 +23,21 @@
 
 .subtitle {
   font-size: 0.92rem;
-  color: #888;
+  color: var(--theme-text-muted);
   margin: 0;
 }
 
 .heroLayout {
   display: grid;
-  grid-template-columns: 3fr 2fr;
-  gap: 1.5em;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  align-items: start;
+  gap: 1rem;
 }
 
-.featuredSection {
-  display: flex;
-  flex-direction: column;
+.mediaCard {
+  border: 1px solid var(--theme-border-light);
+  border-radius: 12px;
+  background: var(--theme-card-background);
 }
 
 .unavailable {
@@ -60,20 +62,11 @@
   animation: contentPulse 1.5s ease-in-out infinite;
 }
 
-.rightColumn {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75em;
-}
-
-.featuredEmbed {
+.mediaEmbed {
   position: relative;
-  width: 100%;
-  flex: 0 0 auto;
-  min-height: 0;
   aspect-ratio: 16 / 9;
   background: #000;
-  border-radius: 10px;
+  border-radius: 11px 11px 0 0;
   overflow: hidden;
 }
 
@@ -104,12 +97,6 @@
   display: block;
 }
 
-.featuredEmbed:has(.guideCard) {
-  flex: 0 0 auto;
-  min-height: 0;
-  aspect-ratio: 16 / 9;
-}
-
 .guideCard {
   position: absolute;
   inset: 0;
@@ -118,7 +105,7 @@
   min-height: 0;
   padding: 0;
   border: 0;
-  border-radius: 10px;
+  border-radius: 0;
   overflow: hidden;
   background: #0d0d0d;
   cursor: pointer;
@@ -137,8 +124,11 @@
 
 .guideCardFallback {
   position: absolute;
-  inset: 0;
-  background: #141414;
+  inset: 50% auto auto 50%;
+  transform: translate(-50%, -50%);
+  color: #aaa;
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
 .guideCardBadge {
@@ -157,38 +147,39 @@
   text-transform: uppercase;
 }
 
-.featuredInfo {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4em;
-  padding-top: 0.75em;
+.cardInfo {
+  padding: 0.8rem 0.95rem;
 }
 
-.featuredTitle {
+.cardTitle,
+.listTitle {
+  font-size: 1rem;
+  font-weight: 650;
+  color: var(--theme-text);
+  margin: 0;
+  line-height: 1.3;
+  min-height: 1lh;
+  overflow-wrap: anywhere;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.featuredCard .cardTitle {
   font-size: 1.2rem;
-  font-weight: 600;
-  color: var(--theme-text-secondary);
-  margin: 0;
-  line-height: 1.35;
-  height: 2lh;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
 }
 
-.featuredMeta {
-  font-size: 0.87rem;
-  color: #777;
+.cardMeta,
+.listMeta {
+  font-size: 0.8rem;
+  color: var(--theme-text-muted);
   margin: 0;
+  margin-top: 0.25rem;
   line-height: 1.5;
-  height: 2lh;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
+  min-height: 1lh;
+  overflow-wrap: anywhere;
 }
 
 .metaAuthor {
@@ -196,69 +187,14 @@
   font-weight: 500;
 }
 
-.metaDate {
-  color: #777;
-}
-
 .contentTypeTag {
-  display: inline-block;
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   font-weight: 600;
-  color: var(--theme-text-muted);
-  background: rgba(var(--theme-on-surface-rgb), 0.07);
-  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.12);
-  border-radius: 5px;
-  padding: 0.18em 0.55em;
-  letter-spacing: 0.02em;
-}
-
-.secondarySection {
-  display: flex;
-  flex-direction: column;
-}
-
-.secondaryEmbed {
-  position: relative;
-  width: 100%;
-  flex: 0 0 auto;
-  aspect-ratio: 16 / 9;
-  background: #000;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.secondaryInfo {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2em;
-  padding-top: 0.5em;
-}
-
-.secondaryTitle {
-  margin: 0;
-  font-size: 0.9rem;
   color: var(--theme-text-secondary);
-  font-weight: 500;
-  line-height: 1.35;
-  height: 2lh;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
-
-.secondaryMeta {
-  margin: 0;
-  font-size: 0.78rem;
-  color: #777;
-  line-height: 1.5;
-  height: 2lh;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
+  background: rgba(var(--theme-on-surface-rgb), 0.07);
+  border: 1px solid var(--theme-border-light);
+  border-radius: 999px;
+  padding: 0.18em 0.65em;
 }
 
 .communityAdSection {
@@ -271,72 +207,66 @@
 
 .videoList {
   list-style: none;
-  margin: 0 0 1em;
+  margin: 1rem 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
 }
 
 .videoList li {
   list-style: none;
+  margin: 0;
+}
+
+.videoList li + li {
+  border-top: 1px solid var(--theme-border-light);
 }
 
 .videoListItem {
   all: unset;
   cursor: pointer;
   display: grid;
-  grid-template-columns: 76px 1fr auto;
+  grid-template-columns: 5.75rem minmax(0, 1fr) minmax(0, max-content);
   align-items: center;
-  gap: 0.75em;
-  padding: 0.55em 0.5em;
-  border-radius: 5px;
-  border: 1px solid transparent;
-  transition: background 0.18s ease, border-color 0.18s ease;
+  gap: 0.85rem;
+  padding: 0.55rem 0.65rem;
+  border-radius: 6px;
+  transition: background 0.18s ease;
   box-sizing: border-box;
   width: 100%;
-  height: 5rem;
+  min-height: 4.4rem;
 }
 
 .videoListItem:hover {
   background: rgba(var(--theme-on-surface-rgb), 0.05);
-  border-color: rgba(var(--theme-on-surface-rgb), 0.1);
 }
 
-.videoListItem:focus-visible {
-  outline: 2px solid rgba(102, 179, 255, 0.7);
-  outline-offset: 2px;
+.videoListItem:focus-visible,
+.guideCard:focus-visible {
+  outline: 2px solid var(--theme-primary);
+  outline-offset: -2px;
 }
 
 .listThumbWrapper {
   position: relative;
-  width: 76px;
+  display: grid;
+  place-items: center;
   aspect-ratio: 16 / 9;
-  border-radius: 5px;
+  border-radius: 6px;
   overflow: hidden;
-  background: #0d0d0d;
-  flex-shrink: 0;
+  color: var(--theme-text-muted);
+  background: rgba(var(--theme-on-surface-rgb), 0.08);
 }
 
-.playCircleSmall {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.65);
-  background: rgba(0, 0, 0, 0.65);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.thumbImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.playCircleSmall::after {
-  content: '';
-  display: block;
-  width: 0;
-  height: 0;
-  border-top: 4px solid transparent;
-  border-bottom: 4px solid transparent;
-  border-left: 7px solid rgba(var(--theme-on-surface-rgb), 0.85);
-  margin-left: 2px;
+.thumbImg[hidden],
+.guideCardImage[hidden] {
+  display: none;
 }
 
 .listInfo {
@@ -344,23 +274,10 @@
 }
 
 .listTitle {
-  margin: 0 0 0.17em;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--theme-text-secondary);
-  line-height: 1.3;
-  height: 2lh;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
+  font-size: 0.95rem;
 }
 
 .listMeta {
-  margin: 0;
-  font-size: 0.75rem;
-  color: #777;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -456,8 +373,7 @@
 
 @media (max-width: 960px) {
   .heroLayout {
-    grid-template-columns: 1fr;
-    gap: 1.25em;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .communityAdSection {
@@ -474,17 +390,19 @@
     font-size: 1.25rem;
   }
 
-  .featuredTitle {
-    font-size: 1.05rem;
+  .featuredCard .cardTitle {
+    font-size: 1.1rem;
   }
 
   .videoListItem {
-    grid-template-columns: 64px 1fr auto;
-    gap: 0.6em;
+    grid-template-columns: 4.25rem minmax(0, 1fr) auto;
+    gap: 0.65rem;
   }
 
-  .listThumbWrapper {
-    width: 64px;
+  .contentTypeTag {
+    max-width: 6.5rem;
+    text-align: center;
+    overflow-wrap: anywhere;
   }
 
   .ctaBar {
@@ -504,11 +422,16 @@
   }
 
   .videoListItem {
-    grid-template-columns: 56px 1fr auto;
-    gap: 0.5em;
+    grid-template-columns: 3.5rem minmax(0, 1fr);
+    gap: 0.25rem 0.65rem;
   }
 
-  .listThumbWrapper {
-    width: 56px;
+  .videoListItem .listThumbWrapper {
+    grid-row: span 2;
+  }
+
+  .videoListItem .contentTypeTag {
+    grid-column: 2;
+    justify-self: start;
   }
 }

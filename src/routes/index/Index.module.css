@@ -1,66 +1,11 @@
 .main {
   margin-top: -80px;
   --landing-surface: var(--theme-contrast-inverse, #000000);
+  --banner-image: url('/images/talishar-lost-prince.webp');
   background: var(--theme-background);
 }
 
-.bannerSectionCompact .bannerContent {
-  padding: 120px 0 0;
-}
-
-.bannerToggle {
-  position: absolute;
-  top: 86px;
-  left: 16px;
-  z-index: 3;
-  width: 34px;
-  height: 34px;
-  padding: 0;
-  border-radius: 10px;
-  border: 1px solid
-    color-mix(
-      in srgb,
-      var(--theme-border, rgba(255, 255, 255, 0.2)) 70%,
-      black 30%
-    );
-  background: color-mix(in srgb, var(--landing-surface) 93%, black 7%);
-  color: color-mix(in srgb, var(--theme-text, #ffffff) 68%, black 32%);
-  font-size: 0.95rem;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
-  cursor: pointer;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
-  transition: background-color 0.2s ease, border-color 0.2s ease,
-    color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
-}
-
-.bannerToggle:hover {
-  border-color: var(--theme-primary, #d4af37);
-  background: color-mix(in srgb, var(--landing-surface) 82%, black 18%);
-  color: var(--theme-primary, #d4af37);
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25),
-    0 0 12px color-mix(in srgb, var(--theme-primary, #d4af37) 18%, transparent);
-  transform: translateY(-1px);
-}
-
-.bannerToggle:focus-visible {
-  outline: 2px solid var(--theme-primary, #d4af37);
-  outline-offset: 2px;
-}
-
 .bannerSection {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-  background-color: var(--landing-surface);
-}
-
-.bannerBackground {
-  position: absolute;
-  inset: 0;
   background: linear-gradient(
       to bottom,
       rgba(0, 0, 0, 0.55) 0%,
@@ -69,25 +14,15 @@
       var(--landing-surface) 90%,
       var(--landing-surface) 100%
     ),
-    url('/images/talishar-lost-prince.webp') center 40% / cover no-repeat;
-}
-
-.bannerOverlay {
-  display: none;
+    var(--banner-image) center 40% / cover no-repeat var(--landing-surface);
 }
 
 .bannerContent {
-  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 120px 2rem 3rem;
-  pointer-events: none;
-}
-
-.bannerContentGuest {
-  padding-bottom: 2rem;
+  padding: 120px 2rem 2rem;
 }
 
 .heroLogo {
@@ -123,7 +58,6 @@
   flex-wrap: wrap;
   gap: 0.75rem;
   justify-content: center;
-  pointer-events: all;
 }
 
 .heroCtaPrimary {
@@ -170,21 +104,26 @@
   scroll-margin-top: 86px;
 }
 
-@media (max-width: 768px) {
-  .bannerToggle {
-    top: 76px;
-    left: 12px;
-    width: 30px;
-    height: 30px;
-    font-size: 0.85rem;
-  }
+.contentSectionSignedIn {
+  isolation: isolate;
+  padding-top: 96px;
+}
 
+.contentSectionSignedIn::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: clamp(150px, 24vw, 260px);
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.75)),
+    var(--banner-image) center 40% / cover no-repeat;
+  mask-image: linear-gradient(black 35%, transparent);
+}
+
+@media (max-width: 768px) {
   .bannerContent {
     padding: 80px 1.25rem 1.5rem;
-  }
-
-  .bannerSectionCompact .bannerContent {
-    padding: 110px 0 0;
   }
 
   .heroSubtitle {
@@ -236,6 +175,14 @@
   background: rgba(var(--theme-on-surface-rgb), 0.03);
   border: 1px solid rgba(var(--theme-on-surface-rgb), 0.08);
   border-radius: 10px;
+}
+
+.contentSectionSignedIn .grid {
+  background: color-mix(
+    in srgb,
+    var(--landing-surface),
+    rgb(var(--theme-on-surface-rgb)) 3%
+  );
 }
 
 .gameListContainer {
@@ -895,12 +842,8 @@ h3 {
 }
 
 @media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
-  .bannerSectionCompact .bannerContent {
-    padding: 86px 0 0;
-  }
-
-  .bannerSectionCompact .bannerToggle {
-    display: none;
+  .contentSectionSignedIn {
+    padding-top: 86px;
   }
 
   .contentSection {

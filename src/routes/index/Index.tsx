@@ -1,6 +1,6 @@
 import { useAppDispatch } from 'app/Hooks';
 import { clearGameInfo } from 'features/game/GameSlice';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { usePageTitle } from 'hooks/usePageTitle';
 import GameList from './components/gameList';
@@ -16,8 +16,6 @@ import useAuth from 'hooks/useAuth';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import useAdScript from 'hooks/useAdScript';
 import TalisharLogo from '../../img/TalisharLogo.webp';
-import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
-import { memberLink } from 'utils/memberLink';
 import { Link } from 'react-router-dom';
 
 const LAST_HOME_USER_KEY = 'talishar_home_last_user_v1';
@@ -27,7 +25,7 @@ const Index = () => {
   usePageTitle(t('PAGES.PLAY_FAB_ONLINE'));
   const dispatch = useAppDispatch();
   const { isLoggedIn, isLoading: isAuthLoading, currentUserName } = useAuth();
-  const { isSupporter, showAds } = useSupporterStatus();
+  const { showAds } = useSupporterStatus();
   const [cachedUserName, setCachedUserName] = useState<string | null>(() => {
     try {
       return localStorage.getItem(LAST_HOME_USER_KEY) || null;
@@ -37,36 +35,8 @@ const Index = () => {
   });
   const isAuthReady = !isAuthLoading && (!isLoggedIn || !!currentUserName);
   // This is a layout hint only. Queries and account actions still use real auth.
-  const layoutUserName = isAuthReady
-    ? isLoggedIn
-      ? currentUserName
-      : null
-    : currentUserName || cachedUserName;
-  const hasUserLayout = !!layoutUserName;
-  const [bannerOverride, setBannerOverride] = useState<{
-    key: string | null;
-    hidden: boolean;
-  } | null>(null);
-
-  const bannerPreferenceKey = useMemo(() => {
-    if (!layoutUserName) return null;
-    return `talishar_home_banner_hidden_v2_${layoutUserName}`;
-  }, [layoutUserName]);
-  // Resolve the saved layout during render, before the hero can be painted.
-  const savedBannerHidden = useMemo(() => {
-    if (!bannerPreferenceKey) return false;
-    try {
-      const stored = localStorage.getItem(bannerPreferenceKey);
-      return stored === null ? true : stored === '1';
-    } catch {
-      return true;
-    }
-  }, [bannerPreferenceKey]);
-  const isBannerHidden =
-    hasUserLayout &&
-    (bannerOverride?.key === bannerPreferenceKey
-      ? bannerOverride.hidden
-      : savedBannerHidden);
+  const hasUserLayout =
+    isLoggedIn || (!isAuthReady && !!(currentUserName || cachedUserName));
   useAdScript(showAds);
 
   useEffect(() => {
@@ -102,19 +72,6 @@ const Index = () => {
     };
   }, []);
 
-  const handleToggleBanner = () => {
-    const nextHiddenValue = !isBannerHidden;
-    setBannerOverride({ key: bannerPreferenceKey, hidden: nextHiddenValue });
-
-    if (!bannerPreferenceKey) return;
-
-    try {
-      localStorage.setItem(bannerPreferenceKey, nextHiddenValue ? '1' : '0');
-    } catch {
-      // Ignore storage write failures and keep in-memory toggle behavior.
-    }
-  };
-
   const gameGrid = (
     <div className={styles.gridWrapper}>
       <div
@@ -136,39 +93,9 @@ const Index = () => {
 
   return (
     <main className={styles.main}>
-      <div
-        className={`${styles.bannerSection}${
-          isBannerHidden ? ` ${styles.bannerSectionCompact}` : ''
-        }`}
-      >
-        {hasUserLayout && (
-          <button
-            type="button"
-            className={styles.bannerToggle}
-            onClick={handleToggleBanner}
-            aria-pressed={isBannerHidden}
-            aria-label={
-              isBannerHidden
-                ? t('HOME.HERO.EXPAND_BANNER')
-                : t('HOME.HERO.COLLAPSE_BANNER')
-            }
-            title={
-              isBannerHidden
-                ? t('HOME.HERO.EXPAND_BANNER')
-                : t('HOME.HERO.COLLAPSE_BANNER')
-            }
-          >
-            {isBannerHidden ? <BsChevronDown /> : <BsChevronUp />}
-          </button>
-        )}
-        <div className={styles.bannerBackground} />
-        <div className={styles.bannerOverlay} />
-        <div
-          className={`${styles.bannerContent}${
-            !hasUserLayout ? ` ${styles.bannerContentGuest}` : ''
-          }`}
-        >
-          {!isBannerHidden && (
+      {!hasUserLayout && (
+        <div className={styles.bannerSection}>
+          <div className={styles.bannerContent}>
             <img
               src={TalisharLogo}
               width={1080}
@@ -176,47 +103,25 @@ const Index = () => {
               alt={t('HOME.HERO.LOGO_ALT')}
               className={styles.heroLogo}
             />
-          )}
-          {!isBannerHidden && (
-            <>
-              <h1 className={styles.heroTitle}>{t('HOME.HERO.TITLE')}</h1>
-              <p className={styles.heroSubtitle}>{t('HOME.HERO.SUBTITLE')}</p>
-              <div className={styles.heroCta}>
-                {hasUserLayout ? (
-                  <>
-                    <a href="#games" className={styles.heroCtaPrimary}>
-                      {t('HOME.HERO.JOIN_CTA')}
-                    </a>
-                    {!isSupporter && (
-                      <a
-                        href={memberLink('home-hero')}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={styles.heroCtaSecondary}
-                      >
-                        {t('HOME.HERO.SUPPORT_CTA')}
-                      </a>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    <Link to="/user/login" className={styles.heroCtaPrimary}>
-                      {t('HOME.HERO.LOGIN_CTA')}
-                    </Link>
-                    <Link
-                      to="/user/login/signup"
-                      className={styles.heroCtaSecondary}
-                    >
-                      {t('HOME.HERO.SIGN_UP_CTA')}
-                    </Link>
-                  </>
-                )}
-              </div>
-            </>
-          )}
+            <h1 className={styles.heroTitle}>{t('HOME.HERO.TITLE')}</h1>
+            <p className={styles.heroSubtitle}>{t('HOME.HERO.SUBTITLE')}</p>
+            <div className={styles.heroCta}>
+              <Link to="/user/login" className={styles.heroCtaPrimary}>
+                {t('HOME.HERO.LOGIN_CTA')}
+              </Link>
+              <Link to="/user/login/signup" className={styles.heroCtaSecondary}>
+                {t('HOME.HERO.SIGN_UP_CTA')}
+              </Link>
+            </div>
+          </div>
         </div>
-      </div>
-      <div id="games" className={styles.contentSection}>
+      )}
+      <div
+        id="games"
+        className={`${styles.contentSection}${
+          hasUserLayout ? ` ${styles.contentSectionSignedIn}` : ''
+        }`}
+      >
         <QuickJoinProvider>{gameGrid}</QuickJoinProvider>
         <section className={styles.newsContainer}>
           <News />

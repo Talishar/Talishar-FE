@@ -1,8 +1,9 @@
 import React from 'react';
-import { fireEvent, render, screen, cleanup } from '@testing-library/react';
+import { render, screen, cleanup } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { vi } from 'vitest';
 import Index from './Index';
+import styles from './Index.module.css';
 
 const state = vi.hoisted(() => ({
   auth: {
@@ -60,26 +61,33 @@ afterEach(() => {
 });
 
 it.each([null, '1', '0'])(
-  'paints the saved hero layout on its first render (%s)',
+  'uses the signed-in layout regardless of the old banner preference (%s)',
   (saved) => {
     if (saved !== null) localStorage.setItem(preferenceKey, saved);
-    renderHome();
-    expect(screen.queryByRole('img')).toBe(
-      saved === '0' ? screen.getByRole('img') : null
-    );
-    expect(
-      screen.getByRole('button', { pressed: saved !== '0' })
-    ).toBeInTheDocument();
+    const { container } = renderHome();
+    expect(screen.queryByRole('img')).not.toBeInTheDocument();
+    expect(screen.queryByRole('heading')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button')).not.toBeInTheDocument();
     expect(screen.getByTestId('games')).toBeInTheDocument();
+    expect(container.querySelector('#games')).toHaveClass(
+      styles.contentSectionSignedIn
+    );
   }
 );
+
+it('uses the signed-in layout before the username is available', () => {
+  state.auth.currentUserName = null;
+  renderHome();
+  expect(screen.queryByRole('img')).not.toBeInTheDocument();
+  expect(screen.getByTestId('games')).toBeInTheDocument();
+});
 
 it('renders the cached layout while auth loads, then refreshes the cache', () => {
   localStorage.setItem('talishar_home_last_user_v1', 'Player');
   state.auth = { isLoggedIn: false, isLoading: true, currentUserName: null };
   const view = renderHome();
   expect(screen.getByTestId('news')).toBeInTheDocument();
-  expect(screen.getByRole('button', { pressed: true })).toBeInTheDocument();
+  expect(screen.queryByRole('img')).not.toBeInTheDocument();
   const setupPanel = screen.getByTestId('game-setup');
   const gameList = screen.getByTestId('games');
   expect(screen.queryByRole('status')).not.toBeInTheDocument();
@@ -127,57 +135,33 @@ it('renders the guest shell immediately when no layout is cached', () => {
   expect(screen.queryByRole('status')).not.toBeInTheDocument();
 });
 
-it('uses the remembered expanded banner before auth and preserves a toggle through resolution', () => {
-  localStorage.setItem('talishar_home_last_user_v1', 'Player');
-  localStorage.setItem(preferenceKey, '0');
-  state.auth = { isLoggedIn: false, isLoading: true, currentUserName: null };
-  const view = renderHome();
-  expect(screen.getByRole('img')).toBeInTheDocument();
-  fireEvent.click(screen.getByRole('button', { pressed: false }));
-  state.auth = {
-    isLoggedIn: true,
-    isLoading: false,
-    currentUserName: 'Player'
-  };
-  view.rerender(
-    <MemoryRouter>
-      <Index />
-    </MemoryRouter>
-  );
-  expect(screen.queryByRole('img')).not.toBeInTheDocument();
-  expect(localStorage.getItem(preferenceKey)).toBe('1');
-});
-
-it('persists explicit banner toggles and applies a different user preference', () => {
-  const view = renderHome();
-  fireEvent.click(screen.getByRole('button', { pressed: true }));
-  expect(screen.getByRole('img')).toBeInTheDocument();
-  expect(localStorage.getItem(preferenceKey)).toBe('0');
-  state.auth.currentUserName = 'OtherPlayer';
-  view.rerender(
-    <MemoryRouter>
-      <Index />
-    </MemoryRouter>
-  );
-  expect(screen.queryByRole('img')).not.toBeInTheDocument();
-});
-
 it('always renders the expanded hero for guests', () => {
   localStorage.setItem(preferenceKey, '1');
   state.auth.isLoggedIn = false;
-  renderHome();
+  const { container } = renderHome();
   expect(screen.getByRole('img')).toBeInTheDocument();
+  expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: 'Log in to play' })).toHaveAttribute(
+    'href',
+    '/user/login'
+  );
+  expect(screen.getByRole('link', { name: 'Create account' })).toHaveAttribute(
+    'href',
+    '/user/login/signup'
+  );
   expect(screen.queryByRole('button')).not.toBeInTheDocument();
+  expect(container.querySelector('#games')).not.toHaveClass(
+    styles.contentSectionSignedIn
+  );
   expect(screen.getByTestId('game-setup')).toBeInTheDocument();
   expect(screen.queryByTestId('games')).not.toBeInTheDocument();
 });
 
-it('uses the compact default when preference storage is unavailable', () => {
+it('uses the signed-in layout when storage is unavailable', () => {
   vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
     throw new Error('Unavailable');
   });
   renderHome();
   expect(screen.queryByRole('img')).not.toBeInTheDocument();
-  fireEvent.click(screen.getByRole('button', { pressed: true }));
-  expect(screen.getByRole('img')).toBeInTheDocument();
+  expect(screen.getByTestId('games')).toBeInTheDocument();
 });

@@ -228,9 +228,19 @@ export const AI_DECK = {
   DUMMY: 'Dummy',
   IRACC: 'IraCC',
   FAICC: 'FaiCC',
+  CINDRACC: 'CindraCC',
+  HALACC: 'HalaCC',
+  JARLCC: 'JarlCC',
+  LEVIACC: 'LeviaCC',
+  STARVOCC: 'StarvoCC',
+  BOLTYNCC: 'BoltynCC',
+  AURORACC: 'AuroraCC',
+  FANGCC: 'FangCC',
   BRIARSAGE: 'BriarSAGE',
   BRAVOSAGE: 'BravoSAGE',
-  IRASAGE: 'IraSAGE'
+  IRASAGE: 'IraSAGE',
+  KAYOSAGE: 'KayoSAGE',
+  DORINTHEASAGE: 'DorintheaSAGE'
 };
 
 export interface AiDeckOption {
@@ -260,12 +270,30 @@ const AI_DECKS_SMALL: AiDeckOption[] = [
     value: AI_DECK.IRASAGE,
     labelKey: 'MENU.CREATE_GAME.IRA_SAGE',
     hero: 'CRU046'
+  },
+  {
+    value: AI_DECK.KAYOSAGE,
+    labelKey: 'MENU.CREATE_GAME.KAYO_SAGE',
+    hero: 'kayo'
+  },
+  {
+    value: AI_DECK.DORINTHEASAGE,
+    labelKey: 'MENU.CREATE_GAME.DORINTHEA_SAGE',
+    hero: 'dorinthea'
   }
 ];
 
 const AI_DECKS_LARGE: AiDeckOption[] = [
   { value: AI_DECK.IRACC, labelKey: 'MENU.CREATE_GAME.IRA_CC', hero: 'HER123' },
-  { value: AI_DECK.FAICC, labelKey: 'MENU.CREATE_GAME.FAI_CC', hero: 'UPR044' }
+  { value: AI_DECK.FAICC, labelKey: 'MENU.CREATE_GAME.FAI_CC', hero: 'UPR044' },
+  { value: AI_DECK.CINDRACC, labelKey: 'MENU.CREATE_GAME.CINDRA_CC', hero: 'cindra_dracai_of_retribution' },
+  { value: AI_DECK.HALACC, labelKey: 'MENU.CREATE_GAME.HALA_CC', hero: 'hala_bladesaint_of_the_vow' },
+  { value: AI_DECK.JARLCC, labelKey: 'MENU.CREATE_GAME.JARL_CC', hero: 'jarl_vetreidi' },
+  { value: AI_DECK.LEVIACC, labelKey: 'MENU.CREATE_GAME.LEVIA_CC', hero: 'levia_shadowborn_abomination' },
+  { value: AI_DECK.STARVOCC, labelKey: 'MENU.CREATE_GAME.STARVO_CC', hero: 'bravo_star_of_the_show' },
+  { value: AI_DECK.BOLTYNCC, labelKey: 'MENU.CREATE_GAME.BOLTYN_CC', hero: 'ser_boltyn_breaker_of_dawn' },
+  { value: AI_DECK.AURORACC, labelKey: 'MENU.CREATE_GAME.AURORA_CC', hero: 'aurora_legacy_of_tempest' },
+  { value: AI_DECK.FANGCC, labelKey: 'MENU.CREATE_GAME.FANG_CC', hero: 'fang_dracai_of_blades' }
 ];
 
 // Formats using young heroes or smaller decks use the 40-card SAGE bots;

@@ -26,10 +26,11 @@ export interface ContentVideo {
   videoId: string;
   type: 'youtube' | 'twitch' | 'fabinsights' | 'metafy';
   title: string;
+  mediaTitle?: string | null;
   author: string;
   authorAvatar?: string;
   description?: string;
-  thumbnail?: string;
+  thumbnail?: string | null;
   timestamp: string;
   messageUrl: string;
   url?: string;

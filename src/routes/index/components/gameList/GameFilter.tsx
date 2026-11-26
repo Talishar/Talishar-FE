@@ -257,7 +257,7 @@ const GameFilter = <T extends string>({
           hasActiveFilters ? ` ${styles.filterButtonActive}` : ''
         }`}
         onClick={() => setIsOpen(!isOpen)}
-        title={t('GAME_FILTER.FILTER_GAMES')}
+        data-compact-tooltip={t('GAME_FILTER.FILTER_GAMES')}
         aria-label={t('GAME_FILTER.FILTER_GAMES')}
         aria-expanded={isOpen}
         aria-haspopup="dialog"
@@ -339,7 +339,10 @@ const GameFilter = <T extends string>({
                 </span>
                 {formatRows.map((row) => (
                   <Fragment key={row.label}>
-                    <span className={styles.rowLabel} title={row.label}>
+                    <span
+                      className={styles.rowLabel}
+                      data-compact-tooltip={row.label}
+                    >
                       {row.label}
                     </span>
                     {[row.casual, row.competitive].map((format, ix) => {

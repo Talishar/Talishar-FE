@@ -48,57 +48,86 @@
 .content {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.625rem;
 }
 
-.label {
+.row {
+  display: grid;
+  grid-template-columns: var(--inline-label-width, 5.25rem) minmax(0, 1fr);
+  column-gap: 0.75rem;
+  align-items: center;
+}
+
+.rowTop {
+  align-items: start;
+}
+
+.rowLabel {
+  margin: 0;
+  color: var(--theme-text-muted, rgba(255, 255, 255, 0.6));
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.rowTop .rowLabel {
+  padding-top: 0.6rem;
+}
+
+.rowControl {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
-  font-size: 0.9rem;
-  color: var(--theme-text, #ededed);
+  gap: 0.4rem;
+  min-width: 0;
 }
 
-.labelText {
-  display: flex;
-  align-items: center;
-  gap: 4px;
+.urlField {
+  position: relative;
 }
 
-.textInput {
+.urlField .textInput {
   width: 100%;
+  height: 2.5rem;
   box-sizing: border-box;
-  margin-bottom: 0 !important;
+  margin: 0 !important;
+  padding: 0 2.75rem 0 0.75rem;
+  font-size: 0.875rem;
 }
 
 .textInput[aria-invalid='true'] {
   border-color: var(--alarm, #d93526);
 }
 
-.toggleLabel {
+.urlField .favoriteButton {
+  position: absolute;
+  top: 50%;
+  right: 4px;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9rem;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin: -16px 0 0;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: #ff4f7b;
+  box-shadow: none;
   cursor: pointer;
-  margin: 0;
-  padding: 2px 0 2px 2px;
 }
 
-.toggleLabel input[type='checkbox'] {
-  flex-shrink: 0;
-  margin: 0;
+.urlField .favoriteButton:hover {
+  background: rgba(var(--theme-on-surface-rgb), 0.07);
 }
 
-.toggleLabel input[type='checkbox'][role='switch']:not(:checked) {
-  --switch-background-color: var(--theme-tertiary);
-  background-color: var(--near-black) !important;
-  border-color: rgba(var(--theme-on-surface-rgb), 0.18) !important;
+.urlField .favoriteButton:focus {
+  box-shadow: none;
 }
 
-.toggleLabel input[type='checkbox'][role='switch']:checked {
-  background-color: #6f767e !important;
-  border-color: #6f767e !important;
+.urlField .favoriteButton:focus-visible {
+  outline: 2px solid var(--theme-text, #f4eded);
+  outline-offset: 0;
 }
 
 .joiningText {
@@ -116,157 +145,21 @@
   }
 }
 
-/* ── Deck source tabs ─────────────────────────────────────────── */
-
-.tabBar {
-  display: flex;
-  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.15));
-  border-radius: 8px;
-  overflow: hidden;
-  background: rgba(
-    var(--theme-sunken-rgb),
-    calc(0.15 * var(--theme-sunken-alpha))
-  );
-}
-
-.tab {
-  flex: 1;
-  padding: 0.4rem 0.75rem;
-  border: none;
-  border-radius: 0;
-  background: transparent;
-  color: var(--theme-text-muted, rgba(237, 237, 237, 0.55));
-  cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 500;
-  transition: background 0.15s ease, color 0.15s ease;
-  text-align: center;
-  width: auto !important;
-  margin-bottom: 0 !important;
-}
-
-.tab:hover {
-  background: rgba(var(--theme-on-surface-rgb), 0.06);
-  color: var(--theme-text, #ededed);
-}
-
-.tab:focus-visible {
-  position: relative;
-  z-index: 1;
-  outline: 2px solid var(--theme-primary, #d4af37);
-  outline-offset: -2px;
-}
-
-.tab + .tab {
-  border-left: 1px solid var(--theme-border, rgba(255, 255, 255, 0.15));
-}
-
-.tabActive {
-  background: var(--theme-form-background, #33383d);
-  color: var(--theme-primary, #d4af37);
-  font-weight: 600;
-  box-shadow: inset 0 -2px 0 var(--theme-primary, #d4af37) !important;
-}
-
-.tabActive:hover {
-  box-shadow: inset 0 -2px 0 var(--theme-primary, #d4af37) !important;
-}
-
-.tabDisabled {
-  opacity: 0.45 !important;
-  cursor: not-allowed !important;
-  /* Pico CSS sets pointer-events: none on button:disabled, which prevents cursor: not-allowed.
-     Restoring pointer-events here is safe - the HTML disabled attribute still blocks clicks. */
-  pointer-events: auto !important;
-}
-
-.tabDisabled:hover {
-  background: transparent !important;
-  color: var(--theme-text-muted, rgba(237, 237, 237, 0.55)) !important;
-}
-
-.comingSoonBadge {
-  font-size: 0.75rem;
-  font-style: italic;
-  opacity: 0.8;
-}
-
-.tabContent {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.bazaarMessage {
-  font-size: 0.875rem;
-  color: var(--theme-text-muted, rgba(237, 237, 237, 0.6));
-  margin: 0.25rem 0;
-  text-align: center;
-}
-
-.bazaarMessage a {
-  color: var(--theme-primary, #d4af37);
-  text-decoration: underline;
-}
-
-:global(#quickJoinFavoriteDeck),
-:global(#quickJoinFavoriteDeck:hover),
-:global(#quickJoinFavoriteDeck:focus),
-:global(#quickJoinFavoriteDeck[aria-expanded='true']) {
-  border-color: transparent;
-  background: var(--theme-form-background, #33383d);
-  box-shadow: none;
-}
-
-:global(
-    [role='listbox'][data-select-id='quickJoinFavoriteDeck']
-      [role='option']:hover
-  ),
-:global(
-    [role='listbox'][data-select-id='quickJoinFavoriteDeck']
-      [role='option']:focus
-  ) {
-  background-color: var(
-    --dropdown-hover-background-color,
-    color-mix(in srgb, var(--theme-primary) 15%, transparent)
-  );
-}
-
-.masterySlot {
-  min-height: 4rem;
-}
-
 @media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
   .content {
     gap: 0.4rem;
   }
 
-  .tab {
-    padding-top: 0.2rem;
-    padding-bottom: 0.2rem;
-    font-size: 0.78rem;
+  .rowLabel {
+    font-size: 0.75rem;
   }
 
-  .label {
-    gap: 0.15rem;
-    font-size: 0.8rem;
+  .rowTop .rowLabel {
+    padding-top: 0.35rem;
   }
 
-  .label .textInput {
+  .urlField .textInput {
     height: 2.15rem;
-    padding-top: 0;
-    padding-bottom: 0;
     font-size: 0.85rem;
-  }
-
-  .label [role='combobox'] {
-    min-height: 2.15rem;
-    padding-top: 0.15rem;
-    padding-bottom: 0.15rem;
-    font-size: 0.85rem;
-  }
-
-  .toggleLabel {
-    font-size: 0.78rem;
   }
 }

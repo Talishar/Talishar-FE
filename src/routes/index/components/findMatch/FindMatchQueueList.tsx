@@ -89,7 +89,7 @@ const FindMatchQueueList = ({
                 className={styles.remove}
                 onClick={() => onLeave(queue.id)}
                 aria-label={t('FIND_MATCH.LEAVE_QUEUE', { format })}
-                title={t('FIND_MATCH.LEAVE_QUEUE', { format })}
+                data-compact-tooltip={t('FIND_MATCH.LEAVE_QUEUE', { format })}
               >
                 <FaTimes aria-hidden="true" />
               </button>

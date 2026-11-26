@@ -823,7 +823,7 @@ const GameList = () => {
               onClick={handleReloadClick}
               className={styles.reloadButton}
               disabled={!canAccessPublicGames || isFetching || isRateLimited}
-              title={t('GAME_LIST.MANUAL_REFRESH')}
+              data-compact-tooltip={t('GAME_LIST.MANUAL_REFRESH')}
             >
               {t('GAME_LIST.REFRESH')}
               <span

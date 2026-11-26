@@ -107,7 +107,7 @@ const NewsCard = ({ message }: { message: DiscordMessage }) => {
                 <img
                   src={`https://cdn.discordapp.com/emojis/${reaction.emoji.id}.webp?size=16`}
                   alt={reaction.emoji.name}
-                  title={reaction.emoji.name}
+                  data-compact-tooltip={reaction.emoji.name}
                 />
               ) : (
                 reaction.emoji.name

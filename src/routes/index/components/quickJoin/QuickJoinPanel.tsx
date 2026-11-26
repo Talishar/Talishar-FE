@@ -1,17 +1,20 @@
 import { useState, useEffect, useRef } from 'react';
-import { FaQuestionCircle, FaChevronUp, FaChevronDown } from 'react-icons/fa';
+import classNames from 'classnames';
+import { FaChevronUp, FaChevronDown, FaHeart, FaRegHeart } from 'react-icons/fa';
 import { toast } from 'react-hot-toast';
-import { ImageSelect } from 'components/ImageSelect';
 import { useGetHeroMasteryQuery } from 'features/api/apiSlice';
-import MasteryProgressCard from 'features/mastery/MasteryProgressCard';
-import { emptyMastery, masteryHeroId } from 'features/mastery/mastery';
+import {
+  emptyMastery,
+  masteryHeroId,
+  progressStart,
+  ROMAN_LEVELS
+} from 'features/mastery/mastery';
 import useAuth from 'hooks/useAuth';
 import { useQuickJoin } from './QuickJoinContext';
+import DeckBanner, { DeckBannerMastery } from './DeckBanner';
 import styles from './QuickJoinPanel.module.css';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { getCookie, setCookie } from 'utils/cookies';
-import LoadingSkeleton from 'components/LoadingSkeleton/LoadingSkeleton';
-import DeckLegality from 'components/DeckLegality';
 import Notice, { ServerErrorNotice } from 'components/Notice';
 import { PHONE_LANDSCAPE_QUERY } from 'routes/game/lobby/phoneLandscape';
 
@@ -28,11 +31,8 @@ const QuickJoinPanel = ({ embedded = false, userLayout }: Props) => {
     return savedState !== 'false';
   });
   const {
-    deckSource,
     selectedFavoriteDeck,
     selectedFavoriteDeckHero,
-    selectedDeckHero,
-    selectedBazaarDeck,
     importDeckUrl,
     saveDeck,
     error,
@@ -40,14 +40,7 @@ const QuickJoinPanel = ({ embedded = false, userLayout }: Props) => {
     isJoining,
     favoriteDeckOptions,
     isFavoritesLoading,
-    bazaarDeckOptions,
-    isBazaarLoading,
-    bazaarError,
-    metafyHash,
-    isBazaarEnabled,
-    setDeckSource,
     setSelectedFavoriteDeck,
-    setSelectedBazaarDeck,
     setImportDeckUrl,
     setSaveDeck,
     setError
@@ -85,169 +78,112 @@ const QuickJoinPanel = ({ embedded = false, userLayout }: Props) => {
 
   if (!(userLayout ?? isLoggedIn)) return null;
 
-  const talisharContent = (
-    <>
-      <label className={styles.label}>
-        <ImageSelect
-          id="quickJoinFavoriteDeck"
-          options={favoriteDeckOptions}
-          value={selectedFavoriteDeck}
-          onChange={setSelectedFavoriteDeck}
-          placeholder={
-            isFavoritesLoading ? t('BASE.LOADING') : t('JOIN.SELECT_DECK')
-          }
-          aria-busy={isFavoritesLoading}
-          aria-label={t('JOIN.SELECT_DECK')}
-        />
-        {selectedFavoriteDeck && (
-          <DeckLegality heroId={selectedFavoriteDeckHero} />
-        )}
-      </label>
+  let bannerMastery: DeckBannerMastery | null = null;
+  if (selectedMasteryProgress) {
+    const { qualifyingGames, level, nextThreshold } = selectedMasteryProgress;
+    const start = progressStart(level);
+    bannerMastery =
+      nextThreshold === null
+        ? { percent: 100, label: t('MASTERY.HIGHEST_REACHED') }
+        : {
+            percent: Math.min(
+              100,
+              ((qualifyingGames - start) / (nextThreshold - start)) * 100
+            ),
+            label: t('MASTERY.SHORT_PROGRESS', {
+              games: qualifyingGames,
+              threshold: nextThreshold,
+              level: ROMAN_LEVELS[level + 1]
+            })
+          };
+  }
 
-      {selectedFavoriteDeck &&
-        (isFavoritesLoading || selectedFavoriteDeckHero) && (
-          <div className={styles.masterySlot}>
-            {isFavoritesLoading ? (
-              <LoadingSkeleton label={t('BASE.LOADING')} rows={1} />
-            ) : selectedFavoriteDeckHero && selectedMasteryProgress ? (
-              <MasteryProgressCard
-                heroId={selectedFavoriteDeckHero}
-                games={selectedMasteryProgress.qualifyingGames}
-                level={selectedMasteryProgress.level}
-                nextThreshold={selectedMasteryProgress.nextThreshold}
-                gamesToNext={selectedMasteryProgress.gamesToNext}
-                compact
-              />
-            ) : null}
-          </div>
-        )}
-
-      <label className={styles.label}>
-        <span className={styles.labelText}>
-          {t('JOIN.IMPORT_DECK_URL')}&nbsp;
-          <span
-            title={t('JOIN.IMPORT_URL_HELP')}
-            style={{
-              cursor: 'help',
-              display: 'inline-flex',
-              alignItems: 'center'
-            }}
-          >
-            <FaQuestionCircle size={13} />
-          </span>
-        </span>
-        <input
-          type="text"
-          className={styles.textInput}
-          placeholder={t('JOIN.DECK_URL_PLACEHOLDER')}
-          value={importDeckUrl}
-          ref={importDeckInputRef}
-          maxLength={500}
-          onChange={(e) => {
-            const val = e.target.value;
-            if (val.length > 500) return;
-            setImportDeckUrl(val);
-          }}
-          onPaste={(e) => {
-            const text = e.clipboardData.getData('text');
-            if (text.length <= 500) return;
-            e.preventDefault();
-            const match = text.match(/https?:\/\/[^\s"'<>]+/);
-            if (match) {
-              setImportDeckUrl(match[0].slice(0, 500));
-              toast.success(t('JOIN.URL_EXTRACTED'));
-            } else {
-              toast.error(t('JOIN.PASTE_NOT_URL'));
-            }
-          }}
-          aria-label={t('JOIN.DECK_URL_LABEL')}
-          aria-invalid={importDeckError ? 'true' : undefined}
-          aria-describedby={
-            importDeckError ? 'quickJoinDeckUrlError' : undefined
-          }
-        />
-        {importDeckError && (
-          <Notice
-            id="quickJoinDeckUrlError"
-            tone="error"
-            title={importDeckError}
-          />
-        )}
-      </label>
-
-      <label className={styles.toggleLabel}>
-        <input
-          type="checkbox"
-          role="switch"
-          checked={saveDeck}
-          onChange={(e) => setSaveDeck(e.target.checked)}
-        />
-        {t('JOIN.SAVE_DECK_FAVORITES')}
-      </label>
-    </>
-  );
-  const bazaarContent = metafyHash ? (
-    <label className={styles.label}>
-      <ImageSelect
-        id="quickJoinBazaarDeck"
-        options={bazaarDeckOptions}
-        value={selectedBazaarDeck}
-        onChange={setSelectedBazaarDeck}
-        placeholder={
-          isBazaarLoading
-            ? t('BASE.LOADING')
-            : t('MENU.CREATE_GAME.SELECT_BAZAAR_DECK_PLACEHOLDER')
-        }
-        aria-busy={isBazaarLoading}
-        aria-label={t('MENU.CREATE_GAME.SELECT_BAZAAR_DECK_PLACEHOLDER')}
-      />
-      {selectedBazaarDeck && <DeckLegality heroId={selectedDeckHero} />}
-      {bazaarError && <Notice tone="error" title={bazaarError} />}
-    </label>
-  ) : (
-    <p className={styles.bazaarMessage}>
-      <Trans
-        i18nKey="JOIN.BAZAAR_LINK"
-        components={{ 1: <a href="/user/profile" /> }}
-      />
-    </p>
-  );
+  const deckPlaceholder = isFavoritesLoading
+    ? t('BASE.LOADING')
+    : favoriteDeckOptions.length === 0
+    ? t('JOIN.NO_SAVED_DECKS')
+    : importDeckUrl.trim()
+    ? t('FIND_MATCH.IMPORTED_DECK')
+    : t('JOIN.SELECT_DECK');
 
   const content = (
     <div className={styles.content}>
-      <div className={styles.tabBar} role="tablist">
-        <button
-          role="tab"
-          aria-selected={deckSource === 'talishar'}
-          className={`${styles.tab} ${
-            deckSource === 'talishar' ? styles.tabActive : ''
-          }`}
-          onClick={() => setDeckSource('talishar')}
-        >
-          {t('JOIN.TALISHAR_DECKS')}
-        </button>
-        <button
-          role="tab"
-          aria-selected={deckSource === 'bazaar'}
-          className={`${styles.tab} ${
-            deckSource === 'bazaar' ? styles.tabActive : ''
-          } ${!isBazaarEnabled ? styles.tabDisabled : ''}`}
-          onClick={() => isBazaarEnabled && setDeckSource('bazaar')}
-          disabled={!isBazaarEnabled}
-          title={!isBazaarEnabled ? t('JOIN.COMING_SOON') : undefined}
-        >
-          {isBazaarEnabled ? (
-            'FaB Bazaar'
-          ) : (
-            <span className={styles.comingSoonBadge}>
-              {t('JOIN.COMING_SOON')}
-            </span>
-          )}
-        </button>
+      <div className={classNames(styles.row, styles.rowTop)}>
+        <span id="quickJoinDeckLabel" className={styles.rowLabel}>
+          {t('JOIN.DECK')}
+        </span>
+        <div className={styles.rowControl}>
+          <DeckBanner
+            options={favoriteDeckOptions}
+            value={selectedFavoriteDeck}
+            onChange={setSelectedFavoriteDeck}
+            placeholder={deckPlaceholder}
+            labelledBy="quickJoinDeckLabel"
+            disabled={isFavoritesLoading}
+            mastery={bannerMastery}
+          />
+        </div>
       </div>
 
-      <div className={styles.tabContent}>
-        {deckSource === 'talishar' ? talisharContent : bazaarContent}
+      <div className={styles.row}>
+        <label
+          htmlFor="quickJoinDeckUrl"
+          className={styles.rowLabel}
+          data-compact-tooltip={t('JOIN.IMPORT_URL_HELP')}
+        >
+          {t('JOIN.IMPORT_URL')}
+        </label>
+        <div className={styles.rowControl}>
+          <div className={styles.urlField}>
+            <input
+              id="quickJoinDeckUrl"
+              type="text"
+              className={styles.textInput}
+              placeholder={t('JOIN.DECK_URL_SOURCES_PLACEHOLDER')}
+              value={importDeckUrl}
+              ref={importDeckInputRef}
+              maxLength={500}
+              onChange={(e) => {
+                const val = e.target.value;
+                if (val.length > 500) return;
+                setImportDeckUrl(val);
+              }}
+              onPaste={(e) => {
+                const text = e.clipboardData.getData('text');
+                if (text.length <= 500) return;
+                e.preventDefault();
+                const match = text.match(/https?:\/\/[^\s"'<>]+/);
+                if (match) {
+                  setImportDeckUrl(match[0].slice(0, 500));
+                  toast.success(t('JOIN.URL_EXTRACTED'));
+                } else {
+                  toast.error(t('JOIN.PASTE_NOT_URL'));
+                }
+              }}
+              aria-invalid={importDeckError ? 'true' : undefined}
+              aria-describedby={
+                importDeckError ? 'quickJoinDeckUrlError' : undefined
+              }
+            />
+            <button
+              type="button"
+              className={styles.favoriteButton}
+              onClick={() => setSaveDeck(!saveDeck)}
+              aria-pressed={saveDeck}
+              aria-label={t('JOIN.SAVE_TO_FAVORITES')}
+              data-compact-tooltip={t('JOIN.SAVE_TO_FAVORITES')}
+            >
+              {saveDeck ? <FaHeart size={15} /> : <FaRegHeart size={15} />}
+            </button>
+          </div>
+          {importDeckError && (
+            <Notice
+              id="quickJoinDeckUrlError"
+              tone="error"
+              title={importDeckError}
+            />
+          )}
+        </div>
       </div>
 
       {error && <ServerErrorNotice error={error} />}

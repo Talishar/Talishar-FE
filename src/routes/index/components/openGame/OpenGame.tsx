@@ -285,7 +285,10 @@ const OpenGame = ({
           />
         )}
       </div>
-      <div className={styles.descriptionBlock} title={entry.description}>
+      <div
+        className={styles.descriptionBlock}
+        data-compact-tooltip={entry.description}
+      >
         {formatLabel && (
           <span className={styles.formatLabel}>{formatLabel}</span>
         )}
@@ -312,7 +315,7 @@ const OpenGame = ({
           role="button"
           aria-disabled={isRustLocked || !!joinBlocker || undefined}
           onClick={handleJoin}
-          title={
+          data-compact-tooltip={
             isRustLocked
               ? t('OPEN_GAME.CLEAR_RUST_TO_JOIN')
               : blockedByHero

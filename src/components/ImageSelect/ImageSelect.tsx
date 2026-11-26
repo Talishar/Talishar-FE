@@ -28,6 +28,7 @@ export interface ImageSelectOption {
   label: string;
   imageUrl?: string;
   imageFocusX?: string;
+  description?: string;
 }
 
 interface ImageSelectProps {
