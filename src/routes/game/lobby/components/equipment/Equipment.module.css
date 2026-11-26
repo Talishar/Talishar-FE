@@ -196,6 +196,8 @@
   .container {
     gap: 6px 16px;
     padding: 6px 10px;
+    box-sizing: border-box;
+    height: var(--lobby-body-h);
   }
 
   .eqCategory > h3 {
