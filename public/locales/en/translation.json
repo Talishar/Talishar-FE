@@ -2635,7 +2635,7 @@
     "GAME_SETUP": "Game Setup",
     "GUEST_PRIVATE_DESCRIPTION": "No account needed. Create a game and share its link with a friend.",
     "GUEST_PRIVATE_TITLE": "Or create a private game",
-    "JOIN_CREATE": "Quick Join / Create Game",
+    "JOIN_CREATE": "Join Queue / Create Game",
     "MINIMIZE": "Minimize panel",
     "REMOVE_ADS": "Remove ads"
   },
