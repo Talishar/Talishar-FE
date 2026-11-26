@@ -18,6 +18,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { getCookie, setCookie } from 'utils/cookies';
 import Notice, { ServerErrorNotice } from 'components/Notice';
+import { ImageSelectOption } from 'components/ImageSelect';
 import { PHONE_LANDSCAPE_QUERY } from 'routes/game/lobby/phoneLandscape';
 
 interface Props {
@@ -29,6 +30,9 @@ const DECK_SOURCES = [
   { value: 'talishar', label: 'Talishar' },
   { value: 'bazaar', label: 'FaB Bazaar' }
 ] as const;
+
+const hasDeckArt = (options: ImageSelectOption[], value: string) =>
+  !!options.find((option) => option.value === value)?.imageUrl;
 
 const QuickJoinPanel = ({ embedded = false, userLayout }: Props) => {
   const { isLoggedIn, currentUserId } = useAuth();
@@ -158,7 +162,13 @@ const QuickJoinPanel = ({ embedded = false, userLayout }: Props) => {
   );
 
   const bazaarRows = metafyHash ? (
-    <div className={classNames(styles.row, styles.rowTop)}>
+    <div
+      className={classNames(
+        styles.row,
+        styles.rowTop,
+        hasDeckArt(bazaarDeckOptions, selectedBazaarDeck) && styles.rowArt
+      )}
+    >
       <span id="quickJoinDeckLabel" className={styles.rowLabel}>
         {t('JOIN.DECK')}
       </span>
@@ -189,7 +199,13 @@ const QuickJoinPanel = ({ embedded = false, userLayout }: Props) => {
 
   const talisharRows = (
     <>
-      <div className={classNames(styles.row, styles.rowTop)}>
+      <div
+        className={classNames(
+          styles.row,
+          styles.rowTop,
+          hasDeckArt(favoriteDeckOptions, selectedFavoriteDeck) && styles.rowArt
+        )}
+      >
         <span id="quickJoinDeckLabel" className={styles.rowLabel}>
           {t('JOIN.DECK')}
         </span>
