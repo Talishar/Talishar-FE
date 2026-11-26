@@ -171,8 +171,7 @@
             if (
               root &&
               this !== root &&
-              root.contains(this) &&
-              !this.closest('[data-allow-click-listeners]')
+              root.contains(this)
             ) return;
           }
           return _origAddEL.call(this, type, listener, opts);

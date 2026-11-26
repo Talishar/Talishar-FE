@@ -105,20 +105,7 @@
 }
 
 .contentSectionSignedIn {
-  isolation: isolate;
-  padding-top: 96px;
-}
-
-.contentSectionSignedIn::before {
-  content: '';
-  position: absolute;
-  inset: 0 0 auto;
-  height: clamp(150px, 24vw, 260px);
-  z-index: -1;
-  pointer-events: none;
-  background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.75)),
-    var(--banner-image) center 40% / cover no-repeat;
-  mask-image: linear-gradient(black 35%, transparent);
+  composes: backdrop from '../NavigationPage.module.css';
 }
 
 @media (max-width: 768px) {

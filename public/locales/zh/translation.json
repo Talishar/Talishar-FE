@@ -56,7 +56,6 @@
       "FREE": "<0>{{percent}}</0><1>免费游玩</1>",
       "PLAYERS": "<0>{{players}}</0><1>每日玩家</1>"
     },
-    "SUB_HEADER": "非官方的 Flesh & Blood 在线平台",
     "SUPPORT_METAFY": "在 Metafy 上支持我们",
     "TITLE": "欢迎来到 Talishar",
     "UNOFFICIAL_TITLE": "Talishar 是一个非官方的独立平台",
@@ -222,7 +221,7 @@
   "COMMUNITY_CONTENT": {
     "BY": "作者",
     "CTA_HEADING": "👋 想让您的内容在此展示吗？",
-    "CTA_SUB": "在 <1>#talishar-content</1> 分享您的游戏视频、播客或策略内容，我们将展示您的最佳作品。",
+    "CTA_SUB": "在 Discord 的 <1>#talishar-content</1> 分享视频、播客或攻略。",
     "DISCOVER": "发现来自 Talishar 社区的内容、套牌科技和精彩瞬间",
     "FALLBACK_METAFY": "Metafy 攻略",
     "FALLBACK_TWITCH": "Twitch 视频",
@@ -805,7 +804,6 @@
     "SHOW_FEWER": "显示较少贡献者"
   },
   "LEARN": {
-    "BANNER_SUBTITLE": "借助我们的社区攻略，提升技巧。",
     "FREE_FOR_SUPPORTERS": "支持者免费",
     "LOADING": "加载攻略中…",
     "NO_GUIDES": "暂无攻略。",
@@ -973,7 +971,6 @@
     "SIGN_IN_TO_VIEW": "登录以查看您保存的回放。",
     "STEP_LOOK_FOR": "查找 <2>\"Replay load error:\"</2> 消息",
     "STEP_OPEN_CONSOLE": "打开浏览器控制台：按 <2>F12</2> → <5>Console</5> 标签页",
-    "SUBTITLE": "回顾您保存的对局，重温关键回合，提升下一场比赛。",
     "SUPPORTER_INFO": "回放保存功能面向 Metafy 支持者开放。每位用户都有基础存档位，更高的支持等级可解锁更多存档位，让您同时保留更多对局。等级详情请参阅<2>高级会员</2>页面。",
     "TROUBLESHOOTING_STEPS": "故障排除步骤",
     "VERIFY_DIRECTORY": "请确认回放目录位于：",
@@ -999,11 +996,10 @@
     "SLOTS_FREE_other": "{{count}} 个空位",
     "SLOTS_UPGRADE": "支持 Talishar 以获得更多存档位。",
     "SAVES_TITLE": "您的存档",
-    "SAVES_SUBTITLE": "观看回放，或从快照开始新对局。每次启动快照都会为另一个座位生成新的邀请。",
     "STORAGE_USED": "存储：已使用 {{used}}/{{max}} 个存档位",
     "STORAGE_FAVORITES_other": "{{count}} 个收藏，永不删除",
     "STORAGE_OTHER_other": "{{count}} 个其他存档",
-    "STORAGE_NOTE": "回放和快照共用这些存档位。存满后，新的存档会删除您最早的非收藏存档。",
+    "STORAGE_NOTE": "存档位满后，新存档会替换最早的未收藏存档。",
     "STORAGE_ALL_FAVORITES": "所有存档位都已收藏，因此新存档不会被保留。请取消一个收藏以腾出空间。",
     "FILTER_LABEL": "显示",
     "FILTER_ALL": "全部",
@@ -1127,7 +1123,6 @@
       "LABEL": "英雄排序",
       "RANK": "等级/对局数"
     },
-    "SUBTITLE": "每一局符合条件的对局都会为您与该英雄的故事添上一笔。",
     "TITLE": "英雄精通",
     "UNLOCKED": "英雄精通已解锁",
     "UNLOCKED_SUMMARY_one": "",
@@ -1138,8 +1133,6 @@
       "HIGHEST_FRAME": "最高边框",
       "HIGHEST_HERO_other": "{{hero}}（{{formattedCount}} 局）",
       "FIRST_FRAME_other": "使用同一英雄进行 {{count}} 局即可获得精通 I。",
-      "GROUP_GAMES": "{{group}} {{games}}",
-      "GROUP_PLAYED": "{{group}} {{played}}/{{total}}",
       "CLOSEST_TITLE": "最接近下一个边框"
     },
     "FORMAT_LABEL": "赛制",
@@ -1172,7 +1165,6 @@
     "LOSS_LABEL": "失败",
     "OPPONENT": "对手：{{name}}",
     "SAVE_REPLAY": "保存回放",
-    "SUBTITLE": "你与其他玩家最近的 {{limit}} 场对局。",
     "TITLE": "对局记录",
     "TURNS_other": "{{count}} 回合",
     "UNKNOWN_OPPONENT": "访客",

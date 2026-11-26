@@ -1,5 +1,5 @@
 export const defaultAuth = {
-  user: null,
+  user: null as string | number | null,
   userName: null,
   displayName: null as string | null,
   token: null,

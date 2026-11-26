@@ -1,0 +1,33 @@
+.backdrop {
+  position: relative;
+  isolation: isolate;
+  padding-top: 96px;
+}
+
+.backdrop::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: clamp(150px, 24vw, 260px);
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.75)),
+    url('/images/talishar-lost-prince.webp') center 40% / cover no-repeat;
+  mask-image: linear-gradient(black 35%, transparent);
+}
+
+.page {
+  composes: backdrop;
+  margin-top: -80px;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

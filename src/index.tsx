@@ -15,7 +15,8 @@ import {
 } from 'utils/performanceMetrics';
 import { attemptAssetRecovery } from 'utils/assetRecovery';
 import { installStaleBuildReload } from 'utils/staleBuildReload';
-import { installVideoAdTagConfig } from 'utils/videoAds';
+import { installFloatingVideoAdGuard } from 'utils/videoAds';
+import { installAdInsertionGuard } from 'hooks/useAdScript';
 import { migrateFannedHandCookie } from 'routes/game/components/zones/playerHand/migrateFannedHandCookie';
 import {
   frameHost,
@@ -48,7 +49,8 @@ window.addEventListener('vite:preloadError', (event) => {
 const container = document.getElementById('root')!;
 const root = createRoot(container);
 
-installVideoAdTagConfig();
+installAdInsertionGuard();
+installFloatingVideoAdGuard();
 migrateFannedHandCookie();
 installMouseInput();
 if (frameHost) {

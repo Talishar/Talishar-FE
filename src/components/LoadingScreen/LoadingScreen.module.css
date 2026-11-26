@@ -13,6 +13,12 @@
   text-align: center;
 }
 
+.inline {
+  position: static;
+  min-height: 55vh;
+  background: transparent;
+}
+
 .message,
 .detail {
   margin: 0;

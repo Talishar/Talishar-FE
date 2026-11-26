@@ -1,9 +1,10 @@
 import { Link, useNavigate } from 'react-router-dom';
+import { skipToken } from '@reduxjs/toolkit/query';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-hot-toast';
 import { FaPlay, FaSave } from 'react-icons/fa';
-import { useAppDispatch } from 'app/Hooks';
-import PageBanner from 'components/PageBanner/PageBanner';
+import { useAppDispatch, useAppSelector } from 'app/Hooks';
+import NavigationPage from 'routes/NavigationPage';
 import useAdScript from 'hooks/useAdScript';
 import { usePageTitle } from 'hooks/usePageTitle';
 import useSupporterStatus from 'hooks/useSupporterStatus';
@@ -12,6 +13,7 @@ import {
   useLoadReplayMutation
 } from 'features/api/apiSlice';
 import { setReplayStart } from 'features/game/GameSlice';
+import { selectCurrentUser } from 'features/auth/authSlice';
 import { GAME_FORMAT, normalizeFormat } from 'appConstants';
 import { GameLocationState } from 'interface/GameLocationState';
 import { MatchHistoryGame } from 'interface/API/GetMatchHistory.php';
@@ -40,9 +42,11 @@ const MatchHistory = () => {
   const dispatch = useAppDispatch();
   const { showAds } = useSupporterStatus();
   useAdScript(showAds);
-  const { data, isError } = useGetMatchHistoryQuery(undefined, {
-    refetchOnMountOrArgChange: true
-  });
+  const accountId = useAppSelector(selectCurrentUser);
+  const { currentData: data, isError } = useGetMatchHistoryQuery(
+    accountId ? String(accountId) : skipToken,
+    { refetchOnMountOrArgChange: true }
+  );
   const [loadReplay, { isLoading: isLoadingReplay }] = useLoadReplayMutation();
   const games = data?.games ?? [];
 
@@ -120,11 +124,7 @@ const MatchHistory = () => {
   };
 
   return (
-    <main className={styles.page}>
-      <PageBanner
-        title={t('MATCH_HISTORY.TITLE')}
-        subtitle={t('MATCH_HISTORY.SUBTITLE', { limit: data?.limit ?? 20 })}
-      />
+    <NavigationPage className={styles.page} title={t('MATCH_HISTORY.TITLE')}>
       <div className={styles.content}>
         {isError || data?.loggedIn === false ? (
           <p className={styles.status}>{t('MATCH_HISTORY.LOAD_ERROR')}</p>
@@ -197,7 +197,7 @@ const MatchHistory = () => {
           })}
         </div>
       </div>
-    </main>
+    </NavigationPage>
   );
 };
 

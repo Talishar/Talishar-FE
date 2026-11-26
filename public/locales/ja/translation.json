@@ -56,7 +56,6 @@
       "FREE": "<0>{{percent}}</0><1>無料</1>",
       "PLAYERS": "<0>{{players}}</0><1>デイリーアクティブユーザー</1>"
     },
-    "SUB_HEADER": "Flesh & Bloodの非公式オンラインプラットフォーム",
     "SUPPORT_METAFY": "Metafyで支援する",
     "TITLE": "ようこそ！ Talisharへ",
     "UNOFFICIAL_TITLE": "Talisharは非公式の独立したプラットフォームです",
@@ -222,7 +221,7 @@
   "COMMUNITY_CONTENT": {
     "BY": "By",
     "CTA_HEADING": "あなたのコンテンツを掲載しませんか？",
-    "CTA_SUB": "Discordの<1>#talishar-content</1>でゲームプレイ動画、ポッドキャスト、戦略コンテンツを共有してください。優れた作品を紹介します。",
+    "CTA_SUB": "Discordの<1>#talishar-content</1>で動画、ポッドキャスト、攻略ガイドを共有しましょう。",
     "DISCOVER": "Talisharコミュニティのコンテンツ、デッキ構築、そして注目のハイライトをチェックしよう",
     "FALLBACK_METAFY": "Metafyガイド",
     "FALLBACK_TWITCH": "Twitch動画",
@@ -805,7 +804,6 @@
     "SHOW_FEWER": "表示する貢献者を減らす"
   },
   "LEARN": {
-    "BANNER_SUBTITLE": "Flesh and BloodプレイヤーによるデッキガイドとMetafyで公開されている戦略ガイド",
     "FREE_FOR_SUPPORTERS": "サポーターは無料",
     "LOADING": "ガイドを読み込んでいます…",
     "NO_GUIDES": "現在利用できるガイドはありません。",
@@ -973,7 +971,6 @@
     "SIGN_IN_TO_VIEW": "保存したリプレイを見るにはログインしてください。",
     "STEP_LOOK_FOR": "<2>\"Replay load error:\"</2>というメッセージを探してください",
     "STEP_OPEN_CONSOLE": "ブラウザのコンソールを開く：<2>F12</2>を押して → <5>Console</5>タブ",
-    "SUBTITLE": "保存したゲームを振り返り、重要なターンを見直して、次の試合に活かしましょう。",
     "SUPPORTER_INFO": "リプレイの保存はMetafyサポーターが利用できます。全員に基本の保存枠があり、上位の支援ティアでは追加の枠がアンロックされ、より多くのゲームを保存できます。ティアの詳細は<2>プレミアム</2>ページをご覧ください。",
     "TROUBLESHOOTING_STEPS": "トラブルシューティング手順",
     "VERIFY_DIRECTORY": "リプレイのディレクトリが次の場所にあることを確認してください：",
@@ -999,11 +996,10 @@
     "SLOTS_FREE_other": "空き枠{{count}}",
     "SLOTS_UPGRADE": "Talisharを支援すると枠が増えます。",
     "SAVES_TITLE": "保存データ",
-    "SAVES_SUBTITLE": "リプレイを見るか、スナップショットから新しいゲームを開始します。スナップショットを開始するたびに、もう一方の席への新しい招待が発行されます。",
     "STORAGE_USED": "ストレージ：{{max}}枠中{{used}}枠使用",
     "STORAGE_FAVORITES_other": "お気に入り{{count}}件（削除されません）",
     "STORAGE_OTHER_other": "その他の保存データ{{count}}件",
-    "STORAGE_NOTE": "リプレイとスナップショットはこれらの枠を共有します。枠がいっぱいになると、新しく保存したときにお気に入り以外で最も古いものが削除されます。",
+    "STORAGE_NOTE": "枠がいっぱいのときに新しく保存すると、お気に入り以外で最も古いデータが削除されます。",
     "STORAGE_ALL_FAVORITES": "すべての枠がお気に入りのため、新しく保存したデータは保持されません。お気に入りを1つ解除して空きを作ってください。",
     "FILTER_LABEL": "表示",
     "FILTER_ALL": "すべて",
@@ -1127,7 +1123,6 @@
       "LABEL": "ヒーローを並べ替え",
       "RANK": "ランク／プレイ数"
     },
-    "SUBTITLE": "対象となるゲームをプレイするたびに、そのヒーローとの物語が積み重なります。",
     "TITLE": "ヒーローマスタリー",
     "UNLOCKED": "ヒーローマスタリーをアンロック",
     "UNLOCKED_SUMMARY_one": "",
@@ -1138,8 +1133,6 @@
       "HIGHEST_FRAME": "最高フレーム",
       "HIGHEST_HERO_other": "{{hero}}（{{formattedCount}}ゲーム）",
       "FIRST_FRAME_other": "1人のヒーローで{{count}}ゲームプレイするとマスタリーIを獲得できます。",
-      "GROUP_GAMES": "{{group}} {{games}}",
-      "GROUP_PLAYED": "{{group}} {{total}}人中{{played}}人",
       "CLOSEST_TITLE": "次のフレームに最も近い"
     },
     "FORMAT_LABEL": "フォーマット",
@@ -1172,7 +1165,6 @@
     "LOSS_LABEL": "敗北",
     "OPPONENT": "対戦相手：{{name}}",
     "SAVE_REPLAY": "リプレイを保存",
-    "SUBTITLE": "他のプレイヤーとの直近{{limit}}試合です。",
     "TITLE": "対戦履歴",
     "TURNS_other": "{{count}}ターン",
     "UNKNOWN_OPPONENT": "ゲスト",

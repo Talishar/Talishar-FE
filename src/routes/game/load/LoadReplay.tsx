@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { useAppDispatch } from 'app/Hooks';
+import { skipToken } from '@reduxjs/toolkit/query';
+import { useAppDispatch, useAppSelector } from 'app/Hooks';
+import { selectCurrentUser } from 'features/auth/authSlice';
 import {
   useDeleteReplayMutation,
   useCreateSnapshotGameMutation,
@@ -31,7 +33,7 @@ import { useNavigate } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import styles from './LoadReplay.module.css';
 import { GameLocationState } from 'interface/GameLocationState';
-import PageBanner from 'components/PageBanner/PageBanner';
+import NavigationPage from 'routes/NavigationPage';
 import useAdScript from 'hooks/useAdScript';
 import { usePageTitle } from 'hooks/usePageTitle';
 import useSupporterStatus from 'hooks/useSupporterStatus';
@@ -46,15 +48,14 @@ const LoadReplay = () => {
   const { showAds } = useSupporterStatus();
   useAdScript(showAds);
   return (
-    <main className={styles.pageWrapper}>
-      <PageBanner
-        title={t('PAGES.REPLAY_TOOL')}
-        subtitle={t('LOAD_REPLAY.SUBTITLE')}
-      />
+    <NavigationPage
+      className={styles.pageWrapper}
+      title={t('PAGES.REPLAY_TOOL')}
+    >
       <article className={styles.articleContainer}>
         <ReplayGame />
       </article>
-    </main>
+    </NavigationPage>
   );
 };
 
@@ -162,9 +163,11 @@ const RecentGames = ({
   isLoadingReplay: boolean;
 }) => {
   const { t, i18n } = useTranslation();
-  const { data } = useGetRecentGamesQuery(undefined, {
-    refetchOnMountOrArgChange: true
-  });
+  const accountId = useAppSelector(selectCurrentUser);
+  const { currentData: data } = useGetRecentGamesQuery(
+    accountId ? String(accountId) : skipToken,
+    { refetchOnMountOrArgChange: true }
+  );
   const [saveRecentGame] = useSaveRecentGameMutation();
   const [savingToken, setSavingToken] = useState<string | null>(null);
   const games = data?.games ?? [];
@@ -312,8 +315,12 @@ const ReplayGame = () => {
     number | null
   >(null);
   const [noteSave, setNoteSave] = useState<SavedReplay | null>(null);
-  const { data: savedReplayData, isLoading: isLoadingSavedReplays } =
-    useGetSavedReplaysQuery();
+  const accountId = useAppSelector(selectCurrentUser);
+  const { currentData: savedReplayData, isFetching: isFetchingSavedReplays } =
+    useGetSavedReplaysQuery(accountId ? String(accountId) : skipToken, {
+      refetchOnMountOrArgChange: 60
+    });
+  const isLoadingSavedReplays = isFetchingSavedReplays && !savedReplayData;
   const [saveFilter, setSaveFilter] = useState<SaveFilter>('all');
   const [saveView, setSaveView] = useState<SaveView>(readSaveView);
   const [searchQuery, setSearchQuery] = useState('');
@@ -748,10 +755,7 @@ const ReplayGame = () => {
         aria-labelledby="saved-replays-heading"
       >
         <div className={styles.savedReplaysHeader}>
-          <div>
-            <h2 id="saved-replays-heading">{t('LOAD_REPLAY.SAVES_TITLE')}</h2>
-            <p>{t('LOAD_REPLAY.SAVES_SUBTITLE')}</p>
-          </div>
+          <h2 id="saved-replays-heading">{t('LOAD_REPLAY.SAVES_TITLE')}</h2>
           {isLoadingSavedReplays && (
             <span className={styles.replaysStatus}>
               {t('LOAD_REPLAY.LOADING')}

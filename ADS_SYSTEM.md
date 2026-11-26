@@ -158,24 +158,9 @@ const REWARDED_ATTRS = ['data-google-rewarded', 'data-google-interstitial'];
 
 ---
 
-## Floating Video Ad (`VideoAdDock.tsx`, `utils/videoAds.ts`)
+## Floating Video Ads
 
-The video player comes from a VidCrunch (Aniview) tag, `<script id="AV<tagId>" src="...vidcrunch.com/api/adserver/spt?AV_TAGID=...">`, which the provider injects into `<head>`. With no placement config the tag appends its player to the end of `<body>`, which is below the footer. `[data-ad="video"]` divs do nothing: rev.iq has no `video` placement and the tag never looks for them.
-
-The tag reads `data-*` attributes on its own script element as config overrides. `installVideoAdTagConfig()` (called from `src/index.tsx`) watches `<head>`/`<body>` for the tag and sets:
-
-| Attribute | Effect |
-|------|------|
-| `data-pos-selector="#talishar-video-ad"` | Build the player inside the dock's slot |
-| `data-pos-timeout="1000000"` | Keep retrying every 250ms until a dock exists (the default gives up after 10s) |
-| `data-destroy-on-host-removal="true"` | Destroy the player when the slot leaves the DOM, then disconnect the tag's body observer |
-| `data-player-api="talisharVideoAdPlayer"` | Hand us the player so `AdStarted`/`AdImpression` reveal the dock even when the ad renders in a cross-origin iframe |
-
-The slot carries `data-allow-click-listeners`. `index.html` silently drops `click` listeners added to elements inside `#root` (so ad SDKs can't wire Talishar's buttons), and without the exemption the player's pause, Stay/Next and mute buttons were dead while its pointer-driven timeline still worked.
-
-The player's volume comes from the tag's own config: it starts "unmuted" at `volume.startValue` 0.001, and unmuting only clears the mute flag, so the speaker icon reads "on" at 0.1% volume. Only dragging the volume slider makes it audible.
-
-`VideoAdDock` is rendered by `Header` and only mounts on `/game/load`, `/mastery`, `/match-history`, `/learn`, `/about` and `/ads-test` (`isVideoAdRoute`). The home page has no video ad. It stays `inert`, transparent and click-through until a video actually plays, so a loading or unfilled player never shows as a blank box or catches clicks. Moving between those pages keeps the same player; leaving them destroys it, and `restartVideoAdTagIfUsed()` re-inserts the tag when a dock mounts again. Desktop has no close button. Mobile (768px wide or less, or a touch-only device) gets a smaller dock with a close button, and closing it hides it until the next full page load.
+Floating video ads are disabled site-wide. `src/index.tsx` installs the insertion guard before the ad provider loads, and `src/utils/videoAds.ts` removes matching player markup that arrives later. This applies across client-side navigation. The Watch Ad to Clear button uses a separate, user-initiated Google Publisher Tag slot.
 
 ---
 
@@ -187,7 +172,7 @@ The `in-game-block` placement sits under the chat in `RightColumn` on desktop, f
 |------|------|
 | `.inGameAdBox`: fixed size, `overflow: hidden`, `contain: strict`, `isolation: isolate` | A creative painting, expanding or `position: fixed`-ing itself outside the box. Paint containment makes the box the containing block for fixed descendants too |
 | Placement only mounts when the column is at least `IN_GAME_AD_SIZE` wide | rev.iq rendering a cropped or hidden 250x250. Narrower columns show the member CTA alone |
-| `useAdScript(..., contained = true)` while the game runs | Everything outside `#root` stays hidden, video players included (they are raised on the main pages) |
+| `useAdScript(..., contained = true)` while the game runs | The overlay guard hides non-React ad elements outside `#root` |
 | Iframe insertion guard | See below |
 | Navigation guard | See below |
 
@@ -211,8 +196,7 @@ rev.iq runs its own `navigation-security` module on the same event. Its config h
 | `src/hooks/useAdScript.ts` | Rev.iq script injection, pointer-events locking, navigation guard, iframe insertion guard, attribute stripping |
 | `src/routes/game/components/rightColumn/InGameAd.tsx` | Contained in-game slot with the member CTA underneath |
 | `src/components/RustCounterPanel/RustCounterPanel.tsx` | "Watch Ad to Clear" button, calls `window._talishar_showRewarded` |
-| `src/utils/videoAds.ts` | VidCrunch tag config overrides and restart |
-| `src/components/ads/VideoAdDock.tsx` | Floating video ad dock on the main pages |
+| `src/utils/videoAds.ts` | Site-wide floating video ad resource matching and cleanup |
 
 ---
 
@@ -223,8 +207,6 @@ rev.iq runs its own `navigation-security` module on the same event. Its config h
 - **`isOurClick` (no currentTarget check)** — blocks game's own stopImmediatePropagation, breaks card play
 - **Specific selector targeting** (`ins[id*="gpt_unit"]` etc.) — rev.iq injects with unpredictable IDs; use broad body-child sweep
 - **Setting flag lazily from React** — ad script loads before React mounts; override must be unconditional from page load
-- **Video ad slot in the footer or a zero-size `body > [data-ad="video"]` anchor**: the VidCrunch tag ignores both and lands after the footer, where the overlay lock hides it only some of the time
-- **VidCrunch `data-spa="true"`**: after the first player is destroyed, its body observer reruns the whole tag on every DOM mutation (about 0.2ms per React commit, in games too) for the rest of the session
 - **Wrapping `Location.prototype.href`/`assign`/`replace`**: those members are unforgeable own properties of `window.location`, so `Location.prototype` has none of them and the old nav guard was a silent no-op. A cross-origin frame's `top.location = ...` never touches the top window's Location object anyway
 - **Sandboxing ad iframes from a MutationObserver**: sandbox flags are fixed when a frame navigates, and GPT's frames load (or get `document.write`) as soon as they are connected, so a sandbox added afterwards only applies to their next navigation
 - **In-game slot with `overflow: visible`**: the 250x250 creative spilled past the right column, which is narrower than 250px below about 2084x1250

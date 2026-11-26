@@ -13,14 +13,21 @@ import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
 import { useTranslation } from 'react-i18next';
 import useAuth from 'hooks/useAuth';
 import LoadingScreen from 'components/LoadingScreen/LoadingScreen';
+import {
+  NavigationTabs,
+  playTab,
+  replaysTab,
+  matchHistoryTab,
+  masteryTab,
+  learnTab,
+  aboutTab
+} from 'routes/NavigationTabs';
 
 const Header = lazy(() => import('components/header/Header'));
-const Index = lazy(() => import('./routes/index/Index'));
 const Play = lazy(() => import('routes/game/play/Play'));
 const JoinGame = lazy(() => import('routes/game/join/Join'));
 const Lobby = lazy(() => import('routes/game/lobby/Lobby'));
 const CreateGame = lazy(() => import('routes/game/create/CreateGamePage'));
-const LoadReplay = lazy(() => import('routes/game/load/LoadReplay'));
 const SharedReplay = lazy(() => import('routes/game/shared/SharedReplay'));
 const JoinSnapshot = lazy(() => import('routes/game/shared/JoinSnapshot'));
 const SettingsPage = lazy(() => import('routes/user/settings'));
@@ -45,11 +52,7 @@ const AuthVerify = lazy(() => import('routes/auth/verify'));
 const MetafySignup = lazy(() => import('routes/auth/MetafySignup'));
 const GoogleSignup = lazy(() => import('routes/auth/GoogleSignup'));
 const AdsTest = lazy(() => import('routes/ads/AdsTest'));
-const Learn = lazy(() => import('routes/learn/Learn'));
-const About = lazy(() => import('routes/about/About'));
 const Premium = lazy(() => import('routes/premium/Premium'));
-const Mastery = lazy(() => import('routes/mastery/Mastery'));
-const MatchHistory = lazy(() => import('routes/matchHistory/MatchHistory'));
 const LoginPage = lazy(() =>
   import('routes/user/login').then((module) => ({ default: module.LoginPage }))
 );
@@ -118,6 +121,8 @@ const LoggedInGuard = ({
       <LoadingScreen
         message={t('AUTH.LOADING')}
         detail={error ? t('AUTH.LOADING_ERROR') : undefined}
+        inline
+        showTrivia={false}
       />
     );
   }
@@ -207,46 +212,48 @@ export const router = createRouter(
           element={<Navigate to="/" replace={true} />}
         />
         <Route element={<Header />}>
-          <Route path="/">
+          <Route element={<NavigationTabs />}>
+            <Route path="/">
+              <Route
+                index
+                element={
+                  <IndexGuard>
+                    <playTab.Page />
+                  </IndexGuard>
+                }
+                errorElement={<ErrorPage />}
+              />
+            </Route>
+            <Route path="learn" element={<learnTab.Page />} />
+            <Route path="about" element={<aboutTab.Page />} />
             <Route
-              index
+              path="mastery"
               element={
-                <IndexGuard>
-                  <Index />
-                </IndexGuard>
+                <LoggedInGuard shouldBeLoggedIn={true}>
+                  <masteryTab.Page />
+                </LoggedInGuard>
               }
-              errorElement={<ErrorPage />}
+            />
+            <Route
+              path="match-history"
+              element={
+                <LoggedInGuard shouldBeLoggedIn={true}>
+                  <matchHistoryTab.Page />
+                </LoggedInGuard>
+              }
+            />
+            <Route
+              path="game/load"
+              element={
+                <LoggedInGuard shouldBeLoggedIn={true}>
+                  <replaysTab.Page />
+                </LoggedInGuard>
+              }
             />
           </Route>
-          <Route path="learn" element={<Learn />} />
-          <Route path="about" element={<About />} />
           <Route path="premium" element={<Premium />} />
-          <Route
-            path="mastery"
-            element={
-              <LoggedInGuard shouldBeLoggedIn={true}>
-                <Mastery />
-              </LoggedInGuard>
-            }
-          />
-          <Route
-            path="match-history"
-            element={
-              <LoggedInGuard shouldBeLoggedIn={true}>
-                <MatchHistory />
-              </LoggedInGuard>
-            }
-          />
           <Route path="game/join/:gameID" element={<JoinGame />} />
           <Route path="game/create" element={<CreateGame />} />
-          <Route
-            path="game/load"
-            element={
-              <LoggedInGuard shouldBeLoggedIn={true}>
-                <LoadReplay />
-              </LoggedInGuard>
-            }
-          />
           <Route path="replay/shared" element={<SharedReplay />} />
           <Route path="snapshot/join" element={<JoinSnapshot />} />
           <Route path="privacy" element={<Privacy />} />

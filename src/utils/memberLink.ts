@@ -19,7 +19,6 @@ export type MemberLinkSource =
   | 'remove-ads-end-game'
   | 'remove-ads-in-game'
   | 'remove-ads-lobby'
-  | 'remove-ads-video'
   | 'rust-panel'
   | 'stats-csv'
   | 'stats-watermark'

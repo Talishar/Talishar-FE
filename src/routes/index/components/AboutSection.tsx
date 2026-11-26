@@ -6,7 +6,7 @@ import ContributorLeaderboard from './ContributorLeaderboard';
 import { AdUnit } from 'components/ads/AdUnit';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import { useMediaQuery } from 'hooks/useMediaQuery';
-import PageBanner from 'components/PageBanner/PageBanner';
+import NavigationPage from 'routes/NavigationPage';
 import {
   TALISHAR_DISCORD_URL,
   TALISHAR_GITHUB_URL
@@ -123,8 +123,7 @@ const AboutSection: React.FC = () => {
   ];
 
   return (
-    <main className={styles.pageWrapper}>
-      <PageBanner title={t('ABOUT.TITLE')} subtitle={t('ABOUT.SUB_HEADER')} />
+    <NavigationPage className={styles.pageWrapper} title={t('ABOUT.TITLE')}>
       <section className={styles.aboutContainer}>
         <div className={styles.content}>
           <div className={styles.section}>
@@ -329,7 +328,7 @@ const AboutSection: React.FC = () => {
           </div>
         </div>
       </section>
-    </main>
+    </NavigationPage>
   );
 };
 

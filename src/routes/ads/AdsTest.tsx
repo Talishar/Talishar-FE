@@ -109,14 +109,6 @@ const AdsTest: React.FC = () => {
               <div data-ad="in-game-block" />
             </div>
           </section>
-
-          <section className="ad-test-section">
-            <h2>{t('ADS_TEST.VIDEO_TITLE')}</h2>
-            <div>
-              <div className="ad-label">{t('ADS_TEST.REWARDED_VIDEO_AD')}</div>
-              <div data-ad="video" />
-            </div>
-          </section>
         </main>
 
         {/* Right Sidebar */}

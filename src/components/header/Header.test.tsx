@@ -1,5 +1,17 @@
-import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import {
+  act,
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  within
+} from '@testing-library/react';
+import { lazy } from 'react';
+import {
+  createMemoryRouter,
+  MemoryRouter,
+  RouterProvider
+} from 'react-router-dom';
 import { vi } from 'vitest';
 import Header from './Header';
 
@@ -12,19 +24,20 @@ const state = vi.hoisted(() => ({
     currentDisplayName: null,
     logOut: vi.fn()
   },
-  pendingRequests: [] as { requesterUserId: number }[]
+  pendingRequests: [] as { requesterUserId: number }[],
+  refetchFriends: vi.fn()
 }));
 vi.mock('hooks/useAuth', () => ({ default: () => state.auth }));
 vi.mock('features/api/apiSlice', () => ({
   useGetPendingRequestsQuery: () => ({
     data: { requests: state.pendingRequests }
-  })
+  }),
+  useGetFriendsListQuery: () => ({ refetch: state.refetchFriends })
 }));
 vi.mock('components/header/LanguageSelector', () => ({ default: () => null }));
 vi.mock('components/footer/Footer', () => ({ default: () => null }));
 vi.mock('components/CookieConsent', () => ({ default: () => null }));
 vi.mock('components/AdBlockingRecovery', () => ({ default: () => null }));
-vi.mock('components/ads/VideoAdDock', () => ({ default: () => null }));
 vi.mock('components/SessionRecovery', () => ({ default: () => null }));
 vi.mock(
   'routes/game/components/elements/ambientParticles/AmbientParticles',
@@ -80,6 +93,9 @@ it('removes cached account links when the session has expired', () => {
   expect(
     screen.queryByRole('link', { name: 'Mastery' })
   ).not.toBeInTheDocument();
+  expect(
+    screen.queryByRole('button', { name: /open friends list/i })
+  ).not.toBeInTheDocument();
 });
 
 it('shows pending friend requests on the Profile menu entry', () => {
@@ -102,4 +118,68 @@ it('shows pending friend requests on the Profile menu entry', () => {
   expect(
     within(profileLink).getByLabelText('2 pending friend requests')
   ).toHaveTextContent('2');
+});
+
+it('keeps Play and the header visible while a tab is still loading', async () => {
+  let finishLoading!: (page: { default: () => JSX.Element }) => void;
+  const pendingTab = new Promise<{ default: () => JSX.Element }>((resolve) => {
+    finishLoading = resolve;
+  });
+  const Learn = lazy(() => pendingTab);
+  const router = createMemoryRouter([
+    {
+      element: <Header />,
+      children: [
+        { path: '/', element: <main>Play content</main> },
+        { path: '/learn', element: <Learn /> }
+      ]
+    }
+  ]);
+  render(<RouterProvider router={router} future={{ v7_startTransition: true }} />);
+
+  const learnLink = screen.getByRole('link', { name: 'Learn' });
+  fireEvent.click(learnLink);
+  expect(learnLink).toBeVisible();
+  expect(screen.getByText('Play content')).toBeVisible();
+
+  await act(async () => {
+    finishLoading({ default: () => <main>Learn content</main> });
+  });
+
+  expect(screen.getByText('Learn content')).toBeVisible();
+  expect(screen.getByRole('link', { name: 'Learn' })).toBe(learnLink);
+  expect(learnLink).toHaveAttribute('aria-current', 'page');
+
+  await act(() => router.navigate(-1));
+  expect(screen.getByText('Play content')).toBeVisible();
+  expect(screen.getByRole('link', { name: 'Play' })).toHaveAttribute(
+    'aria-current',
+    'page'
+  );
+});
+
+it('keeps Friends mounted across tabs without a floating video slot', () => {
+  state.auth.isLoggedIn = true;
+  state.auth.isLoading = false;
+  state.auth.currentUserName = 'Player';
+
+  const router = createMemoryRouter([{ path: '*', element: <Header /> }]);
+  render(<RouterProvider router={router} future={{ v7_startTransition: true }} />);
+
+  const friends = screen.getByRole('button', { name: /open friends list/i });
+  expect(document.getElementById('talishar-video-ad')).toBeNull();
+
+  for (const name of ['Replays', 'Match History', 'Mastery', 'Learn', 'About']) {
+    const tab = screen.getByRole('link', { name });
+    fireEvent.click(tab);
+    expect(tab).toHaveAttribute('aria-current', 'page');
+    expect(screen.getByRole('button', { name: /open friends list/i })).toBe(
+      friends
+    );
+    expect(document.getElementById('talishar-video-ad')).toBeNull();
+  }
+
+  fireEvent.click(screen.getByRole('link', { name: 'Play' }));
+  expect(document.getElementById('talishar-video-ad')).toBeNull();
+  expect(screen.getByRole('button', { name: /open friends list/i })).toBe(friends);
 });

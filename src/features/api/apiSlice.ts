@@ -133,6 +133,7 @@ import {
   SaveRecentGameResponse
 } from 'interface/API/GetRecentGames.php';
 import { GetMatchHistoryResponse } from 'interface/API/GetMatchHistory.php';
+import { fetchMetafyGuides, MetafyGuidesResponse } from 'services/metafyService';
 import {
   HeroMasteryResponse,
   SaveHeroMasteryFrameRequest,
@@ -153,7 +154,10 @@ export interface GetLastActiveGameResponse {
 // catch warnings and show a toast if we get one.
 export const rtkQueryErrorToaster: Middleware =
   (_api: MiddlewareAPI) => (next) => (action) => {
-    if (isRejectedWithValue(action)) {
+    if (
+      isRejectedWithValue(action) &&
+      !apiSlice.endpoints.getMetafyGuides.matchRejected(action)
+    ) {
       const payload = action.payload as
         | { status?: number | string; message?: string; aborted?: boolean }
         | undefined;
@@ -297,25 +301,36 @@ export const apiSlice = createApi({
     findMatch: builder.mutation<FindMatchResponse, FindMatchRequest>({
       query: (body) => postJson(URL_END_POINT.FIND_MATCH, body)
     }),
+    getMetafyGuides: builder.query<MetafyGuidesResponse, number>({
+      queryFn: async (page) => {
+        try {
+          return { data: await fetchMetafyGuides(page) };
+        } catch (error) {
+          return { error: { status: 'CUSTOM_ERROR', error: String(error) } };
+        }
+      }
+    }),
     getHeroMastery: builder.query<
       HeroMasteryResponse,
       | string
       | {
+          accountId?: string;
           gameKey?: string;
           gameName?: number;
           scope?: 'account' | 'game' | 'award';
         }
       | void
     >({
-      query: (request) => ({
-        url: URL_END_POINT.GET_HERO_MASTERY,
-        method: 'GET',
-        params:
-          typeof request === 'string'
-            ? { gameKey: request }
-            : request || undefined,
-        responseHandler: parseResponse
-      }),
+      query: (request) => {
+        const { gameKey, gameName, scope } =
+          typeof request === 'string' ? { gameKey: request } : request ?? {};
+        return {
+          url: URL_END_POINT.GET_HERO_MASTERY,
+          method: 'GET',
+          params: { gameKey, gameName, scope },
+          responseHandler: parseResponse
+        };
+      },
       providesTags: ['HeroMastery']
     }),
     saveHeroMasteryFrame: builder.mutation<
@@ -591,14 +606,15 @@ export const apiSlice = createApi({
         return `Replay request failed (${response.status})`;
       }
     }),
-    getSavedReplays: builder.query<GetSavedReplaysResponse, void>({
+    // Account IDs partition the client cache. The server uses the session cookie.
+    getSavedReplays: builder.query<GetSavedReplaysResponse, string>({
       query: () => ({
         url: URL_END_POINT.GET_SAVED_REPLAYS,
         method: 'GET'
       }),
       providesTags: ['SavedReplays']
     }),
-    getRecentGames: builder.query<GetRecentGamesResponse, void>({
+    getRecentGames: builder.query<GetRecentGamesResponse, string>({
       query: () => ({
         url: URL_END_POINT.GET_RECENT_GAMES,
         method: 'GET'
@@ -617,7 +633,7 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ['SavedReplays', 'RecentGames']
     }),
-    getMatchHistory: builder.query<GetMatchHistoryResponse, void>({
+    getMatchHistory: builder.query<GetMatchHistoryResponse, string>({
       query: () => ({
         url: URL_END_POINT.GET_MATCH_HISTORY,
         method: 'GET'
@@ -1216,6 +1232,7 @@ export const {
   useLazyGetFindMatchStatusQuery,
   useFindMatchMutation,
   useGetHeroMasteryQuery,
+  useGetMetafyGuidesQuery,
   useSaveHeroMasteryFrameMutation,
   useGetPopUpContentQuery,
   useSubmitChatMutation,

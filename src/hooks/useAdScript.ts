@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { ADS_ENABLED, isAdFreeRoute } from 'config/ads';
 import { startAdAnalytics } from 'utils/adAnalytics';
+import { isFloatingVideoAdResource } from 'utils/videoAds';
 
 declare global {
   interface Window {
@@ -145,11 +146,9 @@ function sandboxAdIframe(
 let insertionGuardInstalled = false;
 let insertionGuardActive = false;
 
-// GPT connects creative iframes with appendChild/insertBefore and they start
-// loading at once. Sandbox flags are fixed when a frame navigates, so the
-// sandbox has to be on the iframe before it is connected.
-function installIframeInsertionGuard() {
-  insertionGuardActive = true;
+// Reject floating video tags before they load. GPT's creative iframes also
+// need their sandbox set before appendChild or insertBefore connects them.
+export function installAdInsertionGuard() {
   if (insertionGuardInstalled) return;
   insertionGuardInstalled = true;
 
@@ -161,6 +160,7 @@ function installIframeInsertionGuard() {
     this: Node,
     node: T
   ): T {
+    if (isFloatingVideoAdResource(node)) return node;
     if (insertionGuardActive && node?.nodeName === 'IFRAME') {
       sandboxAdIframe(node as unknown as HTMLIFrameElement, this);
     }
@@ -171,11 +171,21 @@ function installIframeInsertionGuard() {
     node: T,
     child: Node | null
   ): T {
+    if (isFloatingVideoAdResource(node)) return node;
     if (insertionGuardActive && node?.nodeName === 'IFRAME') {
       sandboxAdIframe(node as unknown as HTMLIFrameElement, this);
     }
     return originalInsertBefore.call(this, node, child) as T;
   };
+
+  for (const method of ['append', 'prepend'] as const) {
+    const insert = Element.prototype[method];
+    Element.prototype[method] = function (this: Element, ...nodes) {
+      insert.apply(this, nodes.filter((node) =>
+        typeof node === 'string' || !isFloatingVideoAdResource(node)
+      ));
+    };
+  }
 }
 
 function sandboxAdIframesIn(root: Document | Element) {
@@ -215,18 +225,6 @@ const CMP_SELECTOR =
   '[id^="fc-"],[id^="sp_message_container"],[id^="qc-cmp"],' +
   '[id*="onetrust"],[id*="didomi"],[id*="CybotCookie"],[id^="truste"],[id*="usercentrics"]';
 
-const VIDEO_AD_CONTAINER_SELECTOR =
-  '[id^="reviq-"], [id^="prims_"], [id^="primis"], [class*="primis"]';
-const VIDEO_AD_DISMISS_SELECTOR =
-  '[aria-label*="close" i], [aria-label*="dismiss" i], ' +
-  '[title*="close" i], [title*="dismiss" i], ' +
-  '[id*="close" i], [id*="dismiss" i], ' +
-  '[class*="close" i], [class*="dismiss" i], ' +
-  '[data-action*="close" i], [data-action*="dismiss" i]';
-const VIDEO_AD_INTERACTIVE_SELECTOR =
-  'iframe, video, a, button, input, select, [role="button"], [tabindex], ' +
-  VIDEO_AD_DISMISS_SELECTOR;
-const VIDEO_AD_Z_INDEX = '9999';
 // rev.iq's sticky anchor, appended straight to <body>.
 const STICKY_AD_SELECTOR = '[data-reviq-sticky-ad]';
 const REVIQ_CMP_HOST_SELECTOR = '[data-reviq-cmp="host"]';
@@ -254,17 +252,6 @@ function isCMPElement(el: Element): boolean {
   return false;
 }
 
-function isVideoAdElement(el: Element): boolean {
-  try {
-    return (
-      el.matches(VIDEO_AD_CONTAINER_SELECTOR) ||
-      el.querySelector(VIDEO_AD_CONTAINER_SELECTOR) !== null
-    );
-  } catch (_) {
-    return false;
-  }
-}
-
 function unlockElementTree(el: HTMLElement) {
   el.style.removeProperty('pointer-events');
   el.style.removeProperty('visibility');
@@ -282,26 +269,6 @@ function addReviqCmpStyle(el: Element) {
     '[hidden]{display:none!important}' +
     '[data-reviq-cmp="privacy-link"]{display:none!important}';
   root.appendChild(style);
-}
-
-function raiseVideoAdElement(el: HTMLElement) {
-  // Provider wrappers can cover most or all of the viewport on mobile even
-  // when only a small floating player is visible. Keep those transparent
-  // wrappers click-through and opt only the actual ad UI back into hit testing.
-  el.style.removeProperty('visibility');
-  el.style.setProperty('pointer-events', 'none', 'important');
-  el.style.setProperty('z-index', VIDEO_AD_Z_INDEX, 'important');
-  el.querySelectorAll<HTMLElement>('*').forEach((child) => {
-    child.style.setProperty('pointer-events', 'none', 'important');
-    if (child.matches(VIDEO_AD_CONTAINER_SELECTOR)) {
-      child.style.setProperty('z-index', VIDEO_AD_Z_INDEX, 'important');
-    }
-  });
-  el.querySelectorAll<HTMLElement>(VIDEO_AD_INTERACTIVE_SELECTOR).forEach(
-    (child) => {
-      child.style.setProperty('pointer-events', 'auto', 'important');
-    }
-  );
 }
 
 // The anchor is off everywhere. Hiding it is not enough: rev.iq still renders
@@ -435,10 +402,6 @@ function lockNonRootBodyChildren() {
       removeStickyAd(h);
       continue;
     }
-    if (!containedMode && isVideoAdElement(el)) {
-      raiseVideoAdElement(h);
-      continue;
-    }
     h.style.setProperty('pointer-events', 'none', 'important');
     // Hide all non-root body children so interstitial/vignette ads can't
     // visually cover the page regardless of what element type Google injects
@@ -535,7 +498,8 @@ export default function useAdScript(
     containedMode = contained;
     installNavGuard();
     startAdAnalytics();
-    installIframeInsertionGuard();
+    installAdInsertionGuard();
+    insertionGuardActive = true;
     installFocusGuard();
     installStickyAdGuard();
 

@@ -56,7 +56,6 @@
       "FREE": "<0>{{percent}}</0><1>Gratuit</1>",
       "PLAYERS": "<0>{{players}}</0><1>Joueurs quotidiens</1>"
     },
-    "SUB_HEADER": "La plateforme en ligne non officielle pour Flesh & Blood",
     "SUPPORT_METAFY": "Soutenez-nous sur Metafy",
     "TITLE": "Bienvenue sur Talishar",
     "UNOFFICIAL_TITLE": "Talishar est une plateforme indépendante non officielle",
@@ -230,7 +229,7 @@
   "COMMUNITY_CONTENT": {
     "BY": "Par",
     "CTA_HEADING": "👋 Vous voulez que votre contenu soit présenté ici ?",
-    "CTA_SUB": "Partagez des vidéos de gameplay, des podcasts ou du contenu stratégique dans <1>#talishar-contenu</1> sur Discord et nous mettrons en valeur votre meilleur travail.",
+    "CTA_SUB": "Partagez vos vidéos, podcasts ou guides sur Discord dans <1>#talishar-content</1>.",
     "DISCOVER": "Découvrez du contenu, des astuces de decks et les moments forts de la communauté Talishar",
     "FALLBACK_METAFY": "Guide Metafy",
     "FALLBACK_TWITCH": "Vidéo Twitch",
@@ -820,7 +819,6 @@
     "SHOW_FEWER": "Afficher moins de contributeurs"
   },
   "LEARN": {
-    "BANNER_SUBTITLE": "Maîtrisez vos compétences avec les guides experts de notre communauté",
     "FREE_FOR_SUPPORTERS": "Gratuit pour les supporters",
     "LOADING": "Chargement des guides…",
     "NO_GUIDES": "Aucun guide disponible pour le moment.",
@@ -985,7 +983,6 @@
     "SIGN_IN_TO_VIEW": "Connectez-vous pour voir vos rediffusions enregistrées.",
     "STEP_LOOK_FOR": "Rechercher <2>« Erreur de chargement de relecture : »</2> message",
     "STEP_OPEN_CONSOLE": "Ouvrir la console du navigateur : appuyez sur <2>F12</2> → <5>Console</5> languette",
-    "SUBTITLE": "Passez en revue vos parties sauvegardées, revisitez les tours clés et améliorez votre prochain match.",
     "SUPPORTER_INFO": "La sauvegarde des replays est disponible pour les supporters de Metafy.  <2>Prime</2> page pour les détails du niveau.",
     "TROUBLESHOOTING_STEPS": "Étapes de dépannage",
     "VERIFY_DIRECTORY": "Vérifiez que le répertoire de relecture existe à l'adresse :",
@@ -1012,13 +1009,12 @@
     "SLOTS_FREE_other": "{{count}} emplacements libres",
     "SLOTS_UPGRADE": "Soutenez Talishar pour plus d'emplacements.",
     "SAVES_TITLE": "Vos sauvegardes",
-    "SAVES_SUBTITLE": "Regardez un replay ou lancez une nouvelle partie à partir d'un instantané. Chaque lancement d'instantané vous donne une nouvelle invitation pour l'autre siège.",
     "STORAGE_USED": "Stockage : {{used}} emplacements utilisés sur {{max}}",
     "STORAGE_FAVORITES_one": "{{count}} favori, jamais supprimé",
     "STORAGE_FAVORITES_other": "{{count}} favoris, jamais supprimés",
     "STORAGE_OTHER_one": "{{count}} autre sauvegarde",
     "STORAGE_OTHER_other": "{{count}} autres sauvegardes",
-    "STORAGE_NOTE": "Les replays et les instantanés partagent ces emplacements. Lorsqu'ils sont pleins, une nouvelle sauvegarde supprime votre plus ancienne sauvegarde non favorite.",
+    "STORAGE_NOTE": "Si le stockage est plein, toute nouvelle sauvegarde remplace la plus ancienne hors favoris.",
     "STORAGE_ALL_FAVORITES": "Tous les emplacements sont des favoris, les nouvelles sauvegardes ne seront donc pas conservées. Retirez un favori pour faire de la place.",
     "FILTER_LABEL": "Afficher",
     "FILTER_ALL": "Tout",
@@ -1142,7 +1138,6 @@
       "LABEL": "Trier les héros",
       "RANK": "Rang / parties jouées"
     },
-    "SUBTITLE": "Chaque partie éligible enrichit votre histoire avec ce héros.",
     "TITLE": "Maîtrise des héros",
     "UNLOCKED": "MAÎTRISE DE HÉROS DÉBLOQUÉE",
     "UNLOCKED_SUMMARY_one": "Maîtrise {{level}} - {{count}} partie jouée",
@@ -1155,8 +1150,6 @@
       "HIGHEST_HERO_other": "{{hero}} ({{formattedCount}} parties)",
       "FIRST_FRAME_one": "Jouez {{count}} partie avec un héros pour obtenir la maîtrise I.",
       "FIRST_FRAME_other": "Jouez {{count}} parties avec un héros pour obtenir la maîtrise I.",
-      "GROUP_GAMES": "{{games}} {{group}}",
-      "GROUP_PLAYED": "{{played}} sur {{total}} {{group}}",
       "CLOSEST_TITLE": "Le plus proche du prochain cadre"
     },
     "FORMAT_LABEL": "Format",
@@ -1191,7 +1184,6 @@
     "LOSS_LABEL": "Défaite",
     "OPPONENT": "contre {{name}}",
     "SAVE_REPLAY": "Enregistrer la rediffusion",
-    "SUBTITLE": "Vos {{limit}} dernières parties contre d'autres joueurs.",
     "TITLE": "Historique des parties",
     "TURNS_many": "{{count}} tours",
     "TURNS_one": "{{count}} tour",

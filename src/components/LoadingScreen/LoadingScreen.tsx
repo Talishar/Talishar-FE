@@ -65,17 +65,23 @@ interface LoadingScreenProps {
   message: ReactNode;
   detail?: ReactNode;
   showTrivia?: boolean;
+  inline?: boolean;
 }
 
 const LoadingScreen = ({
   message,
   detail,
-  showTrivia = true
+  showTrivia = true,
+  inline = false
 }: LoadingScreenProps) => {
   const trivia = useLoadingTrivia(showTrivia && !detail);
 
   return (
-    <div className={styles.screen} role="status" aria-live="polite">
+    <div
+      className={`${styles.screen}${inline ? ` ${styles.inline}` : ''}`}
+      role="status"
+      aria-live="polite"
+    >
       <SwordLoader />
       <p className={styles.message}>{message}</p>
       {detail && <p className={styles.detail}>{detail}</p>}

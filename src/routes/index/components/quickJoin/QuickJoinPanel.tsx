@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { skipToken } from '@reduxjs/toolkit/query';
 import classNames from 'classnames';
 import { FaChevronUp, FaChevronDown, FaHeart, FaRegHeart } from 'react-icons/fa';
 import { toast } from 'react-hot-toast';
@@ -24,7 +25,7 @@ interface Props {
 }
 
 const QuickJoinPanel = ({ embedded = false, userLayout }: Props) => {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, currentUserId } = useAuth();
   const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(() => {
     const savedState = getCookie('quickJoinPanelExpanded');
@@ -45,10 +46,12 @@ const QuickJoinPanel = ({ embedded = false, userLayout }: Props) => {
     setSaveDeck,
     setError
   } = useQuickJoin();
-  const { data: masteryData } = useGetHeroMasteryQuery(undefined, {
-    skip: !isLoggedIn || !selectedFavoriteDeckHero,
-    refetchOnMountOrArgChange: true
-  });
+  const { currentData: masteryData } = useGetHeroMasteryQuery(
+    isLoggedIn && currentUserId && selectedFavoriteDeckHero
+      ? { accountId: String(currentUserId) }
+      : skipToken,
+    { refetchOnMountOrArgChange: true }
+  );
   const selectedMasteryProgress = selectedFavoriteDeckHero
     ? masteryData?.heroes?.find(
         (hero) => hero.heroId === masteryHeroId(selectedFavoriteDeckHero)

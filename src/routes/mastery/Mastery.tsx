@@ -1,10 +1,13 @@
 import React, { useMemo, useRef, useState } from 'react';
+import { skipToken } from '@reduxjs/toolkit/query';
 import { useTranslation } from 'react-i18next';
+import { useAppSelector } from 'app/Hooks';
 import { useGetHeroMasteryQuery } from 'features/api/apiSlice';
+import { selectCurrentUser } from 'features/auth/authSlice';
 import { HEROES_OF_RATHE } from 'routes/index/components/filter/constants';
 import { generateCroppedImageUrl, heroCropFocusStyle } from 'utils/cropImages';
 import MasteryFrame from 'features/mastery/MasteryFrame';
-import PageBanner from 'components/PageBanner/PageBanner';
+import NavigationPage from 'routes/NavigationPage';
 import useAdScript from 'hooks/useAdScript';
 import { usePageTitle } from 'hooks/usePageTitle';
 import useSupporterStatus from 'hooks/useSupporterStatus';
@@ -33,7 +36,12 @@ const progressPercent = (item: HeroMasteryProgress, milestones: number[]) => {
 const Mastery = () => {
   const { t } = useTranslation();
   usePageTitle(t('HEADER.MASTERY'));
-  const { data, isLoading, error } = useGetHeroMasteryQuery();
+  const accountId = useAppSelector(selectCurrentUser);
+  const { currentData: data, isFetching, error } = useGetHeroMasteryQuery(
+    accountId ? { accountId: String(accountId) } : skipToken,
+    { refetchOnMountOrArgChange: true }
+  );
+  const isLoading = isFetching && !data;
   const { showAds } = useSupporterStatus();
   useAdScript(showAds);
   const [sortOrder, setSortOrder] = useState<SortOrder>('rank');
@@ -106,8 +114,7 @@ const Mastery = () => {
         key: group.key,
         name: group.name,
         total: group.heroes.length,
-        played: groupHeroes.filter((hero) => hero.qualifyingGames > 0).length,
-        games: groupHeroes.reduce((sum, hero) => sum + hero.qualifyingGames, 0)
+        played: groupHeroes.filter((hero) => hero.qualifyingGames > 0).length
       };
     });
 
@@ -343,8 +350,7 @@ const Mastery = () => {
     : undefined;
 
   return (
-    <main className={styles.page}>
-      <PageBanner title={t('MASTERY.TITLE')} subtitle={t('MASTERY.SUBTITLE')} />
+    <NavigationPage className={styles.page} title={t('MASTERY.TITLE')}>
       <div className={styles.content}>
         {isLoading && <p className={styles.status}>{t('MASTERY.LOADING')}</p>}
         {error && <p className={styles.status}>{t('MASTERY.LOAD_ERROR')}</p>}
@@ -359,17 +365,6 @@ const Mastery = () => {
                 <strong className={styles.statValue}>
                   {summary.totalGames.toLocaleString()}
                 </strong>
-                <span className={styles.statNote}>
-                  {summary.groupTotals
-                    .filter((group) => group.games > 0)
-                    .map((group) =>
-                      t('MASTERY.SUMMARY.GROUP_GAMES', {
-                        games: group.games.toLocaleString(),
-                        group: group.name
-                      })
-                    )
-                    .join(', ')}
-                </span>
               </div>
               <div className={styles.stat}>
                 <span className={styles.statLabel}>
@@ -378,17 +373,6 @@ const Mastery = () => {
                 <strong className={styles.statValue}>
                   {summary.heroesPlayed.toLocaleString()}
                 </strong>
-                <span className={styles.statNote}>
-                  {summary.groupTotals
-                    .map((group) =>
-                      t('MASTERY.SUMMARY.GROUP_PLAYED', {
-                        played: group.played,
-                        total: group.total,
-                        group: group.name
-                      })
-                    )
-                    .join(', ')}
-                </span>
               </div>
               <div className={`${styles.stat} ${styles.highestStat}`}>
                 {summary.highest && highestHero ? (
@@ -567,7 +551,7 @@ const Mastery = () => {
           </>
         )}
       </div>
-    </main>
+    </NavigationPage>
   );
 };
 

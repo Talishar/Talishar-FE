@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styles from './Learn.module.scss';
 import { usePageTitle } from 'hooks/usePageTitle';
 import GuideGrid from './components/GuideGrid';
-import { fetchMetafyGuides, MetafyGuide } from '../../services/metafyService';
-import PageBanner from 'components/PageBanner/PageBanner';
+import { useGetMetafyGuidesQuery } from 'features/api/apiSlice';
+import NavigationPage from 'routes/NavigationPage';
 import useAdScript from 'hooks/useAdScript';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import { useTranslation } from 'react-i18next';
@@ -13,33 +13,13 @@ const Learn: React.FC = () => {
   const { showAds } = useSupporterStatus();
   useAdScript(showAds);
   usePageTitle(t('LEARN.PAGE_TITLE'));
-  const [guides, setGuides] = useState<MetafyGuide[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-
-  useEffect(() => {
-    loadGuides(currentPage);
-  }, [currentPage]);
-
-  const loadGuides = async (page: number) => {
-    try {
-      setLoading(true);
-      setError(null);
-      const result = await fetchMetafyGuides(page, 20);
-      setGuides(result.guides);
-      setTotalPages(result.meta.pagination.total_pages);
-    } catch (err) {
-      const errorMsg =
-        err instanceof Error ? err.message : t('BASE.UNKNOWN_ERROR');
-      setError(t('LEARN.LOAD_FAILED', { error: errorMsg }));
-      console.error('Error loading guides:', err);
-      setGuides([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { currentData, isFetching, error, refetch } = useGetMetafyGuidesQuery(
+    currentPage,
+    { refetchOnMountOrArgChange: 60 }
+  );
+  const guides = currentData?.guides ?? [];
+  const totalPages = currentData?.meta.pagination.total_pages ?? 1;
 
   const handlePreviousPage = () => {
     if (currentPage > 1) {
@@ -56,24 +36,21 @@ const Learn: React.FC = () => {
   };
 
   return (
-    <main className={styles.learnPage}>
-      <PageBanner
-        title={t('PAGES.LEARN_FAB')}
-        subtitle={t('LEARN.BANNER_SUBTITLE')}
-      />
+    <NavigationPage className={styles.learnPage} title={t('PAGES.LEARN_FAB')}>
       <div className={styles.container}>
-        {loading ? (
+        {isFetching && !currentData ? (
           <div className={styles.loadingContainer}>
             <div className={styles.spinner}></div>
             <p>{t('LEARN.LOADING')}</p>
           </div>
-        ) : error ? (
+        ) : error && !currentData ? (
           <div className={styles.errorContainer}>
-            <p className={styles.errorMessage}>{error}</p>
-            <button
-              onClick={() => loadGuides(1)}
-              className={styles.retryButton}
-            >
+            <p className={styles.errorMessage}>
+              {t('LEARN.LOAD_FAILED', {
+                error: 'error' in error ? error.error : t('BASE.UNKNOWN_ERROR')
+              })}
+            </p>
+            <button onClick={() => refetch()} className={styles.retryButton}>
               {t('LEARN.TRY_AGAIN')}
             </button>
           </div>
@@ -112,7 +89,7 @@ const Learn: React.FC = () => {
           </div>
         )}
       </div>
-    </main>
+    </NavigationPage>
   );
 };
 

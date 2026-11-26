@@ -85,7 +85,6 @@
   font-size: 1.15rem;
 }
 
-.savedReplaysHeader p,
 .emptyReplays {
   margin: 0.35rem 0 0;
   color: var(--theme-text-secondary, #c6c6c6);

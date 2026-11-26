@@ -1,8 +1,9 @@
 import useAuth from 'hooks/useAuth';
-import { useState, useEffect, useRef } from 'react';
+import { Suspense, useState, useEffect, useRef } from 'react';
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import styles from './Header.module.scss';
 import CompactTooltip from 'components/Tooltip/CompactTooltip';
+import LoadingScreen from 'components/LoadingScreen/LoadingScreen';
 import TalisharLogo from '../../img/CoinLogo.png';
 // Menu icons all come from Bootstrap's outline set so they share one stroke
 // weight and optical size.
@@ -31,7 +32,6 @@ import Footer from 'components/footer/Footer';
 import { useGetPendingRequestsQuery } from 'features/api/apiSlice';
 import CookieConsent from 'components/CookieConsent';
 import AdBlockingRecovery from 'components/AdBlockingRecovery';
-import VideoAdDock from 'components/ads/VideoAdDock';
 import FriendsDock from 'components/friendsDock/FriendsDock';
 import SessionRecovery from 'components/SessionRecovery';
 import { AmbientParticles } from 'routes/game/components/elements/ambientParticles/AmbientParticles';
@@ -403,14 +403,19 @@ const Header = () => {
         </div>
       )}
       <div className={styles.contentWrapper}>
-        <Outlet />
+        <Suspense
+          fallback={
+            <LoadingScreen message={t('BASE.LOADING')} inline showTrivia={false} />
+          }
+        >
+          <Outlet />
+        </Suspense>
         <Footer />
       </div>
       <AmbientParticles variant="global" />
       <CookieConsent />
       <AdBlockingRecovery />
-      <VideoAdDock />
-      {isLoggedIn && pathname === '/' && <FriendsDock />}
+      {isLoggedIn && <FriendsDock />}
       <CompactTooltip key={pathname} />
       <SessionRecovery />
     </div>

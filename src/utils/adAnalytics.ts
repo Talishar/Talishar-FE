@@ -29,10 +29,6 @@ interface GoogleTag {
   };
 }
 
-interface VideoAdPlayer {
-  on?: (event: string, callback: () => void) => void;
-}
-
 interface PrebidBid {
   adUnitCode?: string;
   bidderCode?: string;
@@ -105,17 +101,8 @@ const noop = () => undefined;
 const UNTRACKED_PAGE_RE = /^\/(?:mod|ads-test)(?:\/|$)/i;
 const SLOT_ID_RE = /^ad_(.+)_(\d+)$/;
 const REWARDED_PATH_RE = /reward/i;
-const VIDEO_PLACEMENT = 'video';
 const REWARDED_PLACEMENT = 'rewarded';
 const IN_GAME_PLACEMENT = 'in-game-block';
-const VIDEO_PLAYER_EVENTS: Array<[string, number | string]> = [
-  ['InventoryRequest', REQUESTS],
-  ['AdImpression', FILLED],
-  ['AdStarted', 'started'],
-  ['AdViewableImpression', VIEWABLE],
-  ['AdClickThru', CLICKS],
-  ['AdVideoComplete', 'complete']
-];
 
 const slotCounters = new Map<string, number[]>();
 const pageCounters = new Map<string, number[]>();
@@ -591,16 +578,6 @@ export function setInGameAdGate(gate: InGameAdGate | null) {
   } else if (!gate && inGameSampler) {
     window.clearInterval(inGameSampler);
     inGameSampler = 0;
-  }
-}
-
-export function trackVideoAdPlayer(player: VideoAdPlayer) {
-  for (const [event, target] of VIDEO_PLAYER_EVENTS) {
-    player?.on?.(event, () => {
-      if (!currentPage) return;
-      if (typeof target === 'string') countEvent(VIDEO_PLACEMENT, target);
-      else slotRow(currentPage, VIDEO_PLACEMENT)[target] += 1;
-    });
   }
 }
 
