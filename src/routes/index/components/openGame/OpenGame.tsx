@@ -132,8 +132,6 @@ const OpenGame = ({
         hero: findMatchStatus?.heroShortName ?? t('FIND_MATCH.YOUR_HERO')
       })
     : '';
-  const lobbyNote =
-    joinBlockerText || (isOwnLobby ? t('FIND_MATCH.BLOCKER_own') : '');
   const blockedByHero =
     joinBlocker === 'theyRejectHero' || joinBlocker === 'heroIllegal';
   const { data: legalHeroesByFormat } = useGetLegalHeroesQuery();
@@ -244,6 +242,7 @@ const OpenGame = ({
 
   const descRef = useRef<HTMLSpanElement>(null);
   const [isLongDesc, setIsLongDesc] = useState(false);
+  const isDefaultDescription = entry.description === `Game #${entry.gameName}`;
 
   useEffect(() => {
     const el = descRef.current;
@@ -287,7 +286,9 @@ const OpenGame = ({
       </div>
       <div
         className={styles.descriptionBlock}
-        data-compact-tooltip={entry.description}
+        data-compact-tooltip={
+          isDefaultDescription ? undefined : entry.description
+        }
       >
         {formatLabel && (
           <span className={styles.formatLabel}>{formatLabel}</span>
@@ -300,7 +301,6 @@ const OpenGame = ({
         >
           {translateDescription(entry.description)}
         </span>
-        {lobbyNote && <span className={styles.joinBlocker}>{lobbyNote}</span>}
       </div>
       {isOther && !formatLabel && (
         <div className={styles.formatName}>

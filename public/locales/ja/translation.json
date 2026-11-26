@@ -775,7 +775,7 @@
     "DECK_URL_PLACEHOLDER": "デッキリストのURLを貼り付け",
     "DECK": "デッキ",
     "IMPORT_URL": "URLインポート",
-    "DECK_URL_SOURCES_PLACEHOLDER": "Fabrary または FaB Bazaar のURL",
+    "DECK_URL_SOURCES_PLACEHOLDER": "デッキURL",
     "SAVE_TO_FAVORITES": "デッキをお気に入りに保存",
     "NO_SAVED_DECKS": "保存済みのデッキはまだありません",
     "INVALID_DECK_URL": "有効なデッキURLを入力してください（例：FaBraryのデッキリンク）。",

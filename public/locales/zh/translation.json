@@ -775,7 +775,7 @@
     "DECK_URL_PLACEHOLDER": "粘贴套牌列表 URL",
     "DECK": "套牌",
     "IMPORT_URL": "导入 URL",
-    "DECK_URL_SOURCES_PLACEHOLDER": "Fabrary 或 FaB Bazaar URL",
+    "DECK_URL_SOURCES_PLACEHOLDER": "套牌 URL",
     "SAVE_TO_FAVORITES": "将套牌保存至收藏",
     "NO_SAVED_DECKS": "还没有已保存的套牌",
     "INVALID_DECK_URL": "请输入有效的套牌 URL（例如 FaBrary 套牌链接）。",

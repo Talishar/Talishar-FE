@@ -789,7 +789,7 @@
     "DECK_URL_PLACEHOLDER": "Collez l'URL de la liste de deck",
     "DECK": "Deck",
     "IMPORT_URL": "Importer une URL",
-    "DECK_URL_SOURCES_PLACEHOLDER": "URL Fabrary ou FaB Bazaar",
+    "DECK_URL_SOURCES_PLACEHOLDER": "Deck URL",    
     "SAVE_TO_FAVORITES": "Enregistrer le deck dans les favoris",
     "NO_SAVED_DECKS": "Aucun deck enregistré",
     "INVALID_DECK_URL": "Saisissez une URL de deck valide (par exemple, un lien de deck FaBrary).",
