@@ -1,0 +1,117 @@
+.picker {
+  contain: inline-size;
+  margin-bottom: var(--spacing, 1rem);
+}
+
+.title {
+  display: block;
+  margin-bottom: calc(var(--spacing, 1rem) * 0.375);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(4rem, 1fr));
+  gap: 0.5rem;
+  max-width: calc(
+    var(--tile-count, 4) * 7.5rem + (var(--tile-count, 4) - 1) * 0.5rem
+  );
+}
+
+.grid .tile {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: var(--theme-form-background, #33383d);
+  color: var(--theme-text, #f4eded);
+  border: 1px solid var(--theme-form-border, #797c80);
+  border-radius: 0.5rem;
+  box-shadow: none;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.grid .tile:hover {
+  border-color: #b4b8bc;
+}
+
+.grid .tile:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.grid .tile:focus-visible {
+  outline: 2px solid var(--theme-text, #f4eded);
+  outline-offset: 2px;
+}
+
+.grid .tile.selected {
+  border-color: var(--theme-primary, #d4af37);
+  box-shadow: 0 0 0 1px var(--theme-primary, #d4af37);
+}
+
+.portrait {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--hero-focus-x, center) center;
+  filter: brightness(0.6) saturate(0.6);
+  transition: filter 0.15s, transform 0.2s;
+  user-select: none;
+}
+
+.tile:hover .portrait {
+  filter: brightness(0.85) saturate(0.85);
+  transform: scale(1.05);
+}
+
+.tile.selected .portrait {
+  filter: none;
+}
+
+.caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  padding: 1.25rem 0.3rem 0.35rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0));
+  line-height: 1.15;
+}
+
+.name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-shadow: 0 1px 0 #000;
+  overflow-wrap: anywhere;
+}
+
+.format {
+  font-size: 0.65rem;
+  color: #b4b8bc;
+  text-shadow: 0 1px 0 #000;
+}
+
+.tile.selected .name {
+  color: var(--theme-primary, #d4af37);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grid .tile,
+  .portrait {
+    transition: none;
+  }
+
+  .tile:hover .portrait {
+    transform: none;
+  }
+}

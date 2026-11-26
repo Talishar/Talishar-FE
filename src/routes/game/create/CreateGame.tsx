@@ -47,6 +47,7 @@ import {
 } from '../../index/components/filter/constants';
 import { generateCroppedImageUrl, getHeroCropFocusX } from 'utils/cropImages';
 import { ImageSelect, ImageSelectOption } from 'components/ImageSelect';
+import { BotDeckPicker } from './BotDeckPicker';
 import RustCounterPanel from 'components/RustCounterPanel';
 import { useTranslation, Trans } from 'react-i18next';
 import { useQuickJoinOptional } from 'routes/index/components/quickJoin';
@@ -1693,18 +1694,16 @@ const CreateGame = ({
                   </label>
                 )}
                 {hasUserLayout && deckTestMode && (
-                  <label>
-                    {t('MENU.CREATE_GAME.AI_DECK')}
-                    <ImageSelect
+                  <>
+                    <BotDeckPicker
                       id="deckTestDeck"
+                      label={t('MENU.CREATE_GAME.AI_DECK')}
                       options={aiDeckOptions}
                       value={deckTestDeck}
                       onChange={(value) => setValue('deckTestDeck', value)}
-                      placeholder={t('MENU.CREATE_GAME.AI_DECK')}
-                      aria-label={t('MENU.CREATE_GAME.AI_DECK')}
                     />
                     <input type="hidden" {...register('deckTestDeck')} />
-                  </label>
+                  </>
                 )}
               </fieldset>
             </div>
