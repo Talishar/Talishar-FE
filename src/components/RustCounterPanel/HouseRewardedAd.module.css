@@ -6,7 +6,6 @@
   place-items: center;
   padding: 1rem;
   background: rgba(3, 5, 8, 0.9);
-  backdrop-filter: blur(8px);
 }
 
 .dialog {
