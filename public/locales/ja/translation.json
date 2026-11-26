@@ -1713,6 +1713,13 @@
     },
     "US_RIGHTS_TITLE": ""
   },
+  "FRIENDS_DOCK": {
+    "TITLE": "フレンド",
+    "OPEN_other": "フレンドリストを開く（{{count}}人オンライン）",
+    "CLOSE": "フレンドリストを閉じる",
+    "EMPTY": "まだフレンドがいません。プロフィールから追加できます。",
+    "MANAGE": "フレンドを管理"
+  },
   "PROFILE": {
     "ACCEPT_FRIEND_REQUEST": "フレンドリクエストを承認",
     "ACTION": "操作",
@@ -1765,6 +1772,9 @@
     "LOADING": "プロフィールを読み込んでいます…",
     "LOADING_BLOCKED_USERS": "ブロックしたユーザーを読み込んでいます…",
     "LOADING_FRIENDS": "フレンドを読み込んでいます…",
+    "FRIEND_ONLINE": "オンライン",
+    "FRIEND_PLAYING": "対戦中",
+    "FRIEND_OFFLINE": "オフライン",
     "METAFY_COMMUNITIES": "Metafyのコミュニティ",
     "METAFY_LINKED": "Metafyアカウントは連携済みです。",
     "METAFY_REDIRECTING": "Metafyアカウントの再接続に移動しています…",
@@ -1998,6 +2008,8 @@
     "HERO_INTRO_ANIMATION": "ヒーロー登場アニメーション",
     "HIDE_GAMES_FROM_FRIENDS": "フレンドにゲームを表示しない",
     "HIDE_GAMES_FROM_FRIENDS_TOOLTIP": "フレンドの公開ゲームと観戦リストにあなたのゲームを表示しません。他の人には通常どおり表示されます。",
+    "APPEAR_OFFLINE": "オフライン表示にする",
+    "APPEAR_OFFLINE_TOOLTIP": "フレンドリストでフレンドからオフラインとして表示されます。フレンドのステータスは引き続き確認できます。",
     "HIDE_LOG_NOISE": "パスと終了した戦闘の行を隠す",
     "HIDE_LOG_NOISE_TOOLTIP": "ゲームログから「passed priority」「chain link was resolved」「combat chain was closed」の行を削除します。チャットとその他の行は残ります。",
     "HOLD_TO_AUTO_PASS": "長押しで自動パス",

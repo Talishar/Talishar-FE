@@ -751,6 +751,17 @@ export const SETTINGS_DEFS: SettingDef[] = [
   },
   {
     kind: 'toggle',
+    key: 'appearOffline',
+    group: 'friends',
+    labelKey: 'SETTINGS.APPEAR_OFFLINE',
+    tooltipKey: 'SETTINGS.APPEAR_OFFLINE_TOOLTIP',
+    storage: 'account',
+    name: optConst.APPEAR_OFFLINE,
+    defaultOn: false,
+    visible: inAMatch
+  },
+  {
+    kind: 'toggle',
     key: 'streamerMode',
     group: 'broadcast',
     labelKey: 'SETTINGS.STREAMER_MODE',

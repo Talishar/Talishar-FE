@@ -6,7 +6,10 @@ export interface Friend {
   isPvtVoidPatron?: boolean;
   isContributor?: boolean;
   metafyTiers?: string[];
+  onlineStatus?: FriendOnlineStatus;
 }
+
+export type FriendOnlineStatus = 'online' | 'playing' | 'offline';
 
 export interface User {
   usersId: number;

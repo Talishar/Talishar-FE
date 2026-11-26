@@ -1,6 +1,6 @@
 import useAuth from 'hooks/useAuth';
 import { useState, useEffect, useRef } from 'react';
-import { Link, NavLink, Outlet } from 'react-router-dom';
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import styles from './Header.module.scss';
 import TalisharLogo from '../../img/CoinLogo.png';
 // Menu icons all come from Bootstrap's outline set so they share one stroke
@@ -31,6 +31,7 @@ import { useGetPendingRequestsQuery } from 'features/api/apiSlice';
 import CookieConsent from 'components/CookieConsent';
 import AdBlockingRecovery from 'components/AdBlockingRecovery';
 import VideoAdDock from 'components/ads/VideoAdDock';
+import FriendsDock from 'components/friendsDock/FriendsDock';
 import SessionRecovery from 'components/SessionRecovery';
 import { AmbientParticles } from 'routes/game/components/elements/ambientParticles/AmbientParticles';
 import { Toaster } from 'react-hot-toast';
@@ -66,6 +67,7 @@ const Header = () => {
     skip: !isLoggedIn
   });
   const pendingRequestCount = pendingData?.requests?.length || 0;
+  const { pathname } = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(
@@ -407,6 +409,7 @@ const Header = () => {
       <CookieConsent />
       <AdBlockingRecovery />
       <VideoAdDock />
+      {isLoggedIn && pathname === '/' && <FriendsDock />}
       <SessionRecovery />
     </div>
   );

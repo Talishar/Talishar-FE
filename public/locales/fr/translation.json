@@ -1747,6 +1747,14 @@
     },
     "US_RIGHTS_TITLE": "Vos droits en vertu des lois des États américains :"
   },
+  "FRIENDS_DOCK": {
+    "TITLE": "Amis",
+    "OPEN_one": "Ouvrir la liste d'amis, {{count}} en ligne",
+    "OPEN_other": "Ouvrir la liste d'amis, {{count}} en ligne",
+    "CLOSE": "Fermer la liste d'amis",
+    "EMPTY": "Aucun ami pour le moment. Ajoutez-en depuis votre profil.",
+    "MANAGE": "Gérer les amis"
+  },
   "PROFILE": {
     "ACCEPT_FRIEND_REQUEST": "Accepter la demande d'ami",
     "ACTION": "Action",
@@ -1799,6 +1807,9 @@
     "LOADING": "Chargement du profil…",
     "LOADING_BLOCKED_USERS": "Chargement des utilisateurs bloqués…",
     "LOADING_FRIENDS": "Chargement des amis…",
+    "FRIEND_ONLINE": "En ligne",
+    "FRIEND_PLAYING": "En partie",
+    "FRIEND_OFFLINE": "Hors ligne",
     "METAFY_COMMUNITIES": "Communautés métafy",
     "METAFY_LINKED": "Vous avez lié votre compte Metafy.",
     "METAFY_REDIRECTING": "Redirection pour reconnecter votre compte Metafy…",
@@ -1943,6 +1954,8 @@
     "GAME_SETTINGS": "Paramètres du jeu",
     "HIDE_GAMES_FROM_FRIENDS": "Cacher vos parties à votre liste d'amis",
     "HIDE_GAMES_FROM_FRIENDS_TOOLTIP": "Vos parties n'apparaissent plus dans les listes de parties ouvertes et de parties en cours de vos amis. Les autres joueurs les voient toujours.",
+    "APPEAR_OFFLINE": "Apparaître hors ligne",
+    "APPEAR_OFFLINE_TOOLTIP": "Vos amis vous voient hors ligne dans leur liste d'amis. Vous voyez toujours leur statut.",
     "HIDE_HAND_FROM_FRIENDS": "Cacher la main des amis",
     "HIDE_HAND_FROM_FRIENDS_TOOLTIP": "Ne montrez pas le contenu de votre main à vos amis.",
     "LANGUAGE_EXPERIMENTAL_TOAST": "Fonctionnalité expérimentale uniquement pour les images de cartes pour le moment. ",

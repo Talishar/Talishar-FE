@@ -1713,6 +1713,13 @@
     },
     "US_RIGHTS_TITLE": ""
   },
+  "FRIENDS_DOCK": {
+    "TITLE": "好友",
+    "OPEN_other": "打开好友列表（{{count}} 人在线）",
+    "CLOSE": "关闭好友列表",
+    "EMPTY": "还没有好友。可在个人资料中添加。",
+    "MANAGE": "管理好友"
+  },
   "PROFILE": {
     "ACCEPT_FRIEND_REQUEST": "接受好友请求",
     "ACTION": "操作",
@@ -1765,6 +1772,9 @@
     "LOADING": "加载中…",
     "LOADING_BLOCKED_USERS": "正在加载已屏蔽用户…",
     "LOADING_FRIENDS": "正在加载好友…",
+    "FRIEND_ONLINE": "在线",
+    "FRIEND_PLAYING": "对局中",
+    "FRIEND_OFFLINE": "离线",
     "METAFY_COMMUNITIES": "Metafy 社区",
     "METAFY_LINKED": "您已关联 Metafy 账户。",
     "METAFY_REDIRECTING": "正在跳转以重新连接您的 Metafy 账户…",
@@ -1998,6 +2008,8 @@
     "HERO_INTRO_ANIMATION": "英雄开场动画",
     "HIDE_GAMES_FROM_FRIENDS": "对好友隐藏游戏",
     "HIDE_GAMES_FROM_FRIENDS_TOOLTIP": "不让您的游戏出现在好友的公开游戏和观战列表中。其他人仍会照常看到。",
+    "APPEAR_OFFLINE": "显示为离线",
+    "APPEAR_OFFLINE_TOOLTIP": "好友会在其好友列表中看到您处于离线状态。您仍可看到他们的状态。",
     "HIDE_LOG_NOISE": "隐藏放弃和已关闭的战斗记录",
     "HIDE_LOG_NOISE_TOOLTIP": "从游戏日志中移除“passed priority”“chain link was resolved”和“combat chain was closed”记录。聊天和其他所有记录会保留。",
     "HOLD_TO_AUTO_PASS": "长按自动放弃",

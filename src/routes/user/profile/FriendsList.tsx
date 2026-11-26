@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   useAddFriendMutation,
   useGetFriendsListQuery,
@@ -22,10 +22,18 @@ import {
 import { IoMdArrowDropright } from 'react-icons/io';
 import { useTranslation } from 'react-i18next';
 import styles from './FriendsList.module.css';
-import { Friend } from 'interface/API/FriendListAPI.php';
+import { Friend, FriendOnlineStatus } from 'interface/API/FriendListAPI.php';
 import UserBadgeIcons from 'components/UserBadgeIcons/UserBadgeIcons';
 import { useUserSearch } from 'hooks/useUserSearch';
 import { UserSearchResults } from './UserSearchResults';
+
+const FRIENDS_STATUS_REFRESH_MS = 60_000;
+
+const STATUS_ORDER: Record<FriendOnlineStatus, number> = {
+  playing: 0,
+  online: 1,
+  offline: 2
+};
 
 interface FriendsListProps {
   className?: string;
@@ -57,6 +65,23 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
     isLoading: friendsLoading,
     refetch: refetchFriends
   } = useGetFriendsListQuery(undefined);
+
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      if (!document.hidden) refetchFriends();
+    }, FRIENDS_STATUS_REFRESH_MS);
+    return () => window.clearInterval(id);
+  }, [refetchFriends]);
+
+  const sortedFriends = useMemo(
+    () =>
+      [...(friendsData?.friends ?? [])].sort(
+        (a: Friend, b: Friend) =>
+          STATUS_ORDER[a.onlineStatus ?? 'offline'] -
+          STATUS_ORDER[b.onlineStatus ?? 'offline']
+      ),
+    [friendsData?.friends]
+  );
 
   const [addFriend, { isLoading: isAddingFriend }] = useAddFriendMutation();
   const [removeFriend, { isLoading: isRemovingFriend }] =
@@ -404,10 +429,25 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {friendsData.friends.map((friend: Friend) => (
+                    {sortedFriends.map((friend: Friend) => (
                       <tr key={friend.friendUserId}>
                         <td>
                           <div className={styles.friendNameContainer}>
+                            <span
+                              className={`${styles.statusDot} ${
+                                friend.onlineStatus === 'online' ||
+                                friend.onlineStatus === 'playing'
+                                  ? styles.statusDotOnline
+                                  : ''
+                              }`}
+                              title={t(
+                                friend.onlineStatus === 'playing'
+                                  ? 'PROFILE.FRIEND_PLAYING'
+                                  : friend.onlineStatus === 'online'
+                                  ? 'PROFILE.FRIEND_ONLINE'
+                                  : 'PROFILE.FRIEND_OFFLINE'
+                              )}
+                            />
                             <div className={styles.friendIcons}>
                               <UserBadgeIcons
                                 isContributor={friend.isContributor}
@@ -423,6 +463,16 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
                             {friend.nickname && (
                               <span className={styles.nickname}>
                                 ({friend.nickname})
+                              </span>
+                            )}
+                            {(friend.onlineStatus === 'online' ||
+                              friend.onlineStatus === 'playing') && (
+                              <span className={styles.statusLabel}>
+                                {t(
+                                  friend.onlineStatus === 'playing'
+                                    ? 'PROFILE.FRIEND_PLAYING'
+                                    : 'PROFILE.FRIEND_ONLINE'
+                                )}
                               </span>
                             )}
                           </div>

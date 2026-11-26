@@ -175,7 +175,7 @@ The slot carries `data-allow-click-listeners`. `index.html` silently drops `clic
 
 The player's volume comes from the tag's own config: it starts "unmuted" at `volume.startValue` 0.001, and unmuting only clears the mute flag, so the speaker icon reads "on" at 0.1% volume. Only dragging the volume slider makes it audible.
 
-`VideoAdDock` is rendered by `Header` and only mounts on `/`, `/game/load`, `/mastery`, `/learn`, `/about` and `/ads-test` (`isVideoAdRoute`). It stays `inert`, transparent and click-through until a video actually plays, so a loading or unfilled player never shows as a blank box or catches clicks. Moving between those pages keeps the same player; leaving them destroys it, and `restartVideoAdTagIfUsed()` re-inserts the tag when a dock mounts again. Desktop has no close button. Mobile (768px wide or less, or a touch-only device) gets a smaller dock with a close button, and closing it hides it until the next full page load.
+`VideoAdDock` is rendered by `Header` and only mounts on `/game/load`, `/mastery`, `/match-history`, `/learn`, `/about` and `/ads-test` (`isVideoAdRoute`). The home page has no video ad. It stays `inert`, transparent and click-through until a video actually plays, so a loading or unfilled player never shows as a blank box or catches clicks. Moving between those pages keeps the same player; leaving them destroys it, and `restartVideoAdTagIfUsed()` re-inserts the tag when a dock mounts again. Desktop has no close button. Mobile (768px wide or less, or a touch-only device) gets a smaller dock with a close button, and closing it hides it until the next full page load.
 
 ---
 

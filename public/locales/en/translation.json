@@ -2202,6 +2202,14 @@
     },
     "US_RIGHTS_TITLE": "Your Rights Under US State Laws:"
   },
+  "FRIENDS_DOCK": {
+    "TITLE": "Friends",
+    "OPEN_one": "Open friends list, {{count}} online",
+    "OPEN_other": "Open friends list, {{count}} online",
+    "CLOSE": "Close friends list",
+    "EMPTY": "No friends yet. Add some from your profile.",
+    "MANAGE": "Manage friends"
+  },
   "PROFILE": {
     "ACCEPT_FRIEND_REQUEST": "Accept friend request",
     "ACTION": "Action",
@@ -2254,6 +2262,9 @@
     "LOADING": "Loading Profile…",
     "LOADING_BLOCKED_USERS": "Loading blocked users…",
     "LOADING_FRIENDS": "Loading friends…",
+    "FRIEND_ONLINE": "Online",
+    "FRIEND_PLAYING": "In a game",
+    "FRIEND_OFFLINE": "Offline",
     "METAFY_COMMUNITIES": "Metafy Communities",
     "METAFY_LINKED": "You have linked your Metafy account.",
     "METAFY_NOT_SIGNED_IN": "You are signed out. Please log in again, then refresh your Metafy connection.",
@@ -2476,6 +2487,8 @@
     "HERO_INTRO_ANIMATION": "Hero Intro Animation",
     "HIDE_GAMES_FROM_FRIENDS": "Hide games from friends",
     "HIDE_GAMES_FROM_FRIENDS_TOOLTIP": "Keep your games out of your friends' open game and spectate lists. Everyone else still sees them as usual.",
+    "APPEAR_OFFLINE": "Appear offline",
+    "APPEAR_OFFLINE_TOOLTIP": "Your friends see you as offline in their friends list. You still see their status.",
     "HIDE_HAND_FROM_FRIENDS": "Hide hand from friends",
     "HIDE_HAND_FROM_FRIENDS_TOOLTIP": "Do not show your hand content to your friends.",
     "HIDE_LOG_NOISE": "Hide Passes and Closed Combat Lines",
