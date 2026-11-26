@@ -169,8 +169,10 @@ export const QuickJoinProvider = ({
     (isLoggedIn && !currentUserName) ||
     isFavoritesQueryLoading;
 
-  const [deckSource, setDeckSourceState] = useState<'talishar' | 'bazaar'>(
-    'talishar'
+  const [deckSource, setDeckSourceState] = useState<'talishar' | 'bazaar'>(() =>
+    localStorage.getItem(LS_DECK_SOURCE_KEY) === 'bazaar'
+      ? 'bazaar'
+      : 'talishar'
   );
   const [selectedFavoriteDeck, setSelectedFavoriteDeckState] = useState<string>(
     () => localStorage.getItem(LS_FAVE_DECK_KEY) ?? ''
@@ -242,7 +244,9 @@ export const QuickJoinProvider = ({
         shorten: shortenFormat
       }),
       imageUrl: deck.hero ? generateCroppedImageUrl(deck.hero) : undefined,
-      imageFocusX: getHeroCropFocusX(deck.hero)
+      imageFocusX: getHeroCropFocusX(deck.hero),
+      description: HEROES_OF_RATHE.find((hero) => hero.value === deck.hero)
+        ?.label
     }));
   }, [bazaarData?.decks]);
 
@@ -421,8 +425,10 @@ export const QuickJoinProvider = ({
       : !!(selectedFavoriteDeck || importDeckUrl.trim());
 
   const effectiveFabdb = useMemo(() => {
-    if (deckSource === 'bazaar' && selectedBazaarDeck) {
-      return `${FAB_BAZAAR_DECK_URL_BASE}${selectedBazaarDeck}`;
+    if (deckSource === 'bazaar') {
+      return selectedBazaarDeck
+        ? `${FAB_BAZAAR_DECK_URL_BASE}${selectedBazaarDeck}`
+        : '';
     }
     return importDeckUrl;
   }, [deckSource, selectedBazaarDeck, importDeckUrl]);
@@ -559,6 +565,11 @@ export const QuickJoinProvider = ({
         requestRustPanelAttention();
         return;
       }
+      if (deckSource === 'bazaar' && !selectedBazaarDeck) {
+        setImportDeckError(null);
+        setError({ title: t('FIND_MATCH.NEED_DECK') });
+        return;
+      }
       if (
         deckSource === 'talishar' &&
         !selectedFavoriteDeck &&
@@ -580,6 +591,7 @@ export const QuickJoinProvider = ({
       isLoggedIn,
       currentUserName,
       selectedFavoriteDeck,
+      selectedBazaarDeck,
       importDeckUrl,
       deckSource,
       joinWithDeck,

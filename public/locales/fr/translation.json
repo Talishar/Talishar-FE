@@ -791,6 +791,8 @@
     "DECK_URL_SOURCES_PLACEHOLDER": "Deck URL",    
     "SAVE_TO_FAVORITES": "Enregistrer le deck dans les favoris",
     "NO_SAVED_DECKS": "Aucun deck enregistré",
+    "NO_BAZAAR_DECKS": "Aucun deck FaB Bazaar trouvé",
+    "DECK_SOURCE": "Source",
     "INVALID_DECK_URL": "Saisissez une URL de deck valide (par exemple, un lien de deck FaBrary).",
     "PASTE_NOT_URL": "Cela ne ressemble pas à une URL valide.",
     "URL_EXTRACTED": "URL extraite du contenu collé."

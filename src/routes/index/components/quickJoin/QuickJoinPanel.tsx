@@ -14,7 +14,8 @@ import useAuth from 'hooks/useAuth';
 import { useQuickJoin } from './QuickJoinContext';
 import DeckBanner, { DeckBannerMastery } from './DeckBanner';
 import styles from './QuickJoinPanel.module.css';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { getCookie, setCookie } from 'utils/cookies';
 import Notice, { ServerErrorNotice } from 'components/Notice';
 import { PHONE_LANDSCAPE_QUERY } from 'routes/game/lobby/phoneLandscape';
@@ -24,6 +25,11 @@ interface Props {
   userLayout?: boolean;
 }
 
+const DECK_SOURCES = [
+  { value: 'talishar', label: 'Talishar' },
+  { value: 'bazaar', label: 'FaB Bazaar' }
+] as const;
+
 const QuickJoinPanel = ({ embedded = false, userLayout }: Props) => {
   const { isLoggedIn, currentUserId } = useAuth();
   const { t } = useTranslation();
@@ -32,8 +38,10 @@ const QuickJoinPanel = ({ embedded = false, userLayout }: Props) => {
     return savedState !== 'false';
   });
   const {
+    deckSource,
     selectedFavoriteDeck,
-    selectedFavoriteDeckHero,
+    selectedDeckHero,
+    selectedBazaarDeck,
     importDeckUrl,
     saveDeck,
     error,
@@ -41,21 +49,27 @@ const QuickJoinPanel = ({ embedded = false, userLayout }: Props) => {
     isJoining,
     favoriteDeckOptions,
     isFavoritesLoading,
+    bazaarDeckOptions,
+    isBazaarLoading,
+    bazaarError,
+    metafyHash,
+    setDeckSource,
     setSelectedFavoriteDeck,
+    setSelectedBazaarDeck,
     setImportDeckUrl,
     setSaveDeck,
     setError
   } = useQuickJoin();
   const { currentData: masteryData } = useGetHeroMasteryQuery(
-    isLoggedIn && currentUserId && selectedFavoriteDeckHero
+    isLoggedIn && currentUserId && selectedDeckHero
       ? { accountId: String(currentUserId) }
       : skipToken,
     { refetchOnMountOrArgChange: true }
   );
-  const selectedMasteryProgress = selectedFavoriteDeckHero
+  const selectedMasteryProgress = selectedDeckHero
     ? masteryData?.heroes?.find(
-        (hero) => hero.heroId === masteryHeroId(selectedFavoriteDeckHero)
-      ) ?? emptyMastery(selectedFavoriteDeckHero)
+        (hero) => hero.heroId === masteryHeroId(selectedDeckHero)
+      ) ?? emptyMastery(selectedDeckHero)
     : null;
   const importDeckInputRef = useRef<HTMLInputElement>(null);
 
@@ -109,8 +123,72 @@ const QuickJoinPanel = ({ embedded = false, userLayout }: Props) => {
     ? t('FIND_MATCH.IMPORTED_DECK')
     : t('JOIN.SELECT_DECK');
 
-  const content = (
-    <div className={styles.content}>
+  const bazaarPlaceholder = isBazaarLoading
+    ? t('BASE.LOADING')
+    : bazaarDeckOptions.length === 0 && !bazaarError
+    ? t('JOIN.NO_BAZAAR_DECKS')
+    : t('MENU.CREATE_GAME.SELECT_BAZAAR_DECK_PLACEHOLDER');
+
+  const sourceRow = (
+    <div className={styles.row}>
+      <span id="quickJoinSourceLabel" className={styles.rowLabel}>
+        {t('JOIN.DECK_SOURCE')}
+      </span>
+      <div
+        role="group"
+        aria-labelledby="quickJoinSourceLabel"
+        className={styles.segmented}
+      >
+        {DECK_SOURCES.map((source) => (
+          <button
+            key={source.value}
+            type="button"
+            aria-pressed={deckSource === source.value}
+            className={classNames(
+              styles.segment,
+              deckSource === source.value && styles.segmentActive
+            )}
+            onClick={() => setDeckSource(source.value)}
+          >
+            {source.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+
+  const bazaarRows = metafyHash ? (
+    <div className={classNames(styles.row, styles.rowTop)}>
+      <span id="quickJoinDeckLabel" className={styles.rowLabel}>
+        {t('JOIN.DECK')}
+      </span>
+      <div className={styles.rowControl}>
+        <DeckBanner
+          options={bazaarDeckOptions}
+          value={selectedBazaarDeck}
+          onChange={setSelectedBazaarDeck}
+          placeholder={bazaarPlaceholder}
+          labelledBy="quickJoinDeckLabel"
+          disabled={isBazaarLoading}
+          mastery={bannerMastery}
+        />
+        {bazaarError && <Notice tone="error" title={bazaarError} />}
+      </div>
+    </div>
+  ) : (
+    <div className={styles.row}>
+      <span className={styles.rowLabel}>{t('JOIN.DECK')}</span>
+      <p className={styles.bazaarMessage}>
+        <Trans
+          i18nKey="JOIN.BAZAAR_LINK"
+          components={{ 1: <Link to="/user/profile" /> }}
+        />
+      </p>
+    </div>
+  );
+
+  const talisharRows = (
+    <>
       <div className={classNames(styles.row, styles.rowTop)}>
         <span id="quickJoinDeckLabel" className={styles.rowLabel}>
           {t('JOIN.DECK')}
@@ -188,6 +266,13 @@ const QuickJoinPanel = ({ embedded = false, userLayout }: Props) => {
           )}
         </div>
       </div>
+    </>
+  );
+
+  const content = (
+    <div className={styles.content}>
+      {sourceRow}
+      {deckSource === 'bazaar' ? bazaarRows : talisharRows}
 
       {error && <ServerErrorNotice error={error} />}
 

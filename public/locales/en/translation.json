@@ -882,6 +882,8 @@
     "DECK_URL_SOURCES_PLACEHOLDER": "Deck URL",
     "SAVE_TO_FAVORITES": "Save deck to Favorites",
     "NO_SAVED_DECKS": "No saved decks yet",
+    "NO_BAZAAR_DECKS": "No FaB Bazaar decks found",
+    "DECK_SOURCE": "Source",
     "GAME_FORMAT": "Game Format",
     "IMPORT_DECK": "Import Deck",
     "IMPORT_DECK_URL": "Import Deck URL",

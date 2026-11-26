@@ -777,6 +777,8 @@
     "DECK_URL_SOURCES_PLACEHOLDER": "デッキURL",
     "SAVE_TO_FAVORITES": "デッキをお気に入りに保存",
     "NO_SAVED_DECKS": "保存済みのデッキはまだありません",
+    "NO_BAZAAR_DECKS": "FaB Bazaarのデッキが見つかりません",
+    "DECK_SOURCE": "取得元",
     "INVALID_DECK_URL": "有効なデッキURLを入力してください（例：FaBraryのデッキリンク）。",
     "PASTE_NOT_URL": "有効なURLではないようです。",
     "URL_EXTRACTED": "貼り付けた内容からURLを抽出しました。"
