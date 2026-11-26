@@ -78,30 +78,13 @@ const useLandscapeCardFit = (
       return;
     }
 
-    const parent = container.parentElement;
-    if (!parent) return;
-
     let cancelled = false;
     let fittedFor = '';
     const fit = (force: boolean) => {
       if (cancelled) return;
-      const root = document.documentElement;
-      const footerHeight =
-        parseFloat(
-          getComputedStyle(root).getPropertyValue('--sticky-footer-height')
-        ) || 44;
-      const top =
-        container.getBoundingClientRect().top -
-        parent.getBoundingClientRect().top;
-      const fitFor = [
-        top,
-        root.clientWidth,
-        root.clientHeight,
-        footerHeight
-      ].join();
+      const fitFor = `${container.clientWidth}x${container.clientHeight}`;
       if (!force && fitFor === fittedFor) return;
       fittedFor = fitFor;
-      const available = root.clientHeight - footerHeight - top;
       let low = FIT_CARD_MIN;
       let high = FIT_CARD_MAX;
       let best = FIT_CARD_MIN;
@@ -109,7 +92,7 @@ const useLandscapeCardFit = (
         const size = Math.floor((low + high) / 2);
         container.style.setProperty('--lobby-eq-card', `${size}px`);
         const fits =
-          container.scrollHeight <= available &&
+          container.scrollHeight <= container.clientHeight &&
           container.scrollWidth <= container.clientWidth;
         if (fits) {
           best = size;
@@ -124,13 +107,11 @@ const useLandscapeCardFit = (
     const refit = () => fit(false);
 
     fit(true);
-    window.addEventListener('resize', refit);
     const observer = new ResizeObserver(refit);
-    observer.observe(parent);
+    observer.observe(container);
     document.fonts?.ready.then(() => fit(true));
     return () => {
       cancelled = true;
-      window.removeEventListener('resize', refit);
       observer.disconnect();
     };
   }, [containerRef, isPhoneLandscape, layoutKey]);
