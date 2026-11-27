@@ -28,5 +28,6 @@ export default defineConfig({
   lint: {
     // Keyboard key labels such as Ctrl, Shift, and Cmd are not translated.
     ignoredTags: ['kbd'],
+    ignore: ['src/**/*.test.{ts,tsx}', 'src/**/__tests__/**'],
   },
 })
