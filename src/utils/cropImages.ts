@@ -1,8 +1,10 @@
 import type { CSSProperties } from 'react';
 import { CLOUD_IMAGES_URL } from 'appConstants';
 
+const CROP_IMAGE_VERSION = 3;
+
 export const generateCroppedImageUrl = (cardName: string): string =>
-  `${CLOUD_IMAGES_URL}/crops/${cardName}_cropped.webp`;
+  `${CLOUD_IMAGES_URL}/crops/${cardName}_cropped.webp?v=${CROP_IMAGE_VERSION}`;
 
 const HERO_CROP_FOCUS_X: Record<string, string> = {
   kayo_underhanded_cheat: 'left',
