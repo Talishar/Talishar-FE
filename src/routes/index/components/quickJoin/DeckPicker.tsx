@@ -250,20 +250,22 @@ const DeckPicker = ({
       </button>
       {selected && (
         <div className={styles.side}>
-          <span id={nameId} className={styles.name}>
-            {selected.label}
-          </span>
-          {selected.description && (
-            <span className={styles.description}>{selected.description}</span>
-          )}
-          {mastery && (
-            <span className={styles.mastery}>
-              <span className={styles.track} aria-hidden="true">
-                <i style={{ width: `${mastery.percent}%` }} />
-              </span>
-              <span className={styles.masteryText}>{mastery.label}</span>
+          <div className={styles.lines}>
+            <span id={nameId} className={styles.name}>
+              {selected.label}
             </span>
-          )}
+            {mastery && (
+              <span className={styles.mastery}>
+                <span className={styles.track} aria-hidden="true">
+                  <i style={{ width: `${mastery.percent}%` }} />
+                </span>
+                <span className={styles.masteryText}>{mastery.label}</span>
+              </span>
+            )}
+            {selected.description && (
+              <span className={styles.description}>{selected.description}</span>
+            )}
+          </div>
           <div className={styles.minis}>
             {minis.map((option) => (
               <button

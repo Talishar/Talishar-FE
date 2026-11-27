@@ -5,6 +5,7 @@
 }
 
 .root.picked {
+  container: deckpicker / inline-size;
   display: flex;
   flex-wrap: wrap;
   gap: 0.6rem 0.875rem;
@@ -114,8 +115,30 @@
   display: flex;
   flex: 1 1 11rem;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 6px;
   min-width: min(11rem, 100%);
+}
+
+@container deckpicker (min-width: 19.875rem) {
+  .side {
+    height: var(--sq);
+  }
+}
+
+.lines {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 0.4rem 1rem;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.lines > * {
+  flex: none;
+  width: 100%;
 }
 
 .side .name {
@@ -168,10 +191,8 @@
 
 .minis {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, calc(var(--sq) * 0.44)));
   gap: 6px;
-  max-width: 15rem;
-  margin-top: auto;
 }
 
 .root .mini,
@@ -375,6 +396,12 @@
   .root {
     --sq: 6.5rem;
   }
+
+  @container deckpicker (min-width: 18.375rem) {
+    .side {
+      height: var(--sq);
+    }
+  }
 }
 
 @media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
@@ -382,8 +409,14 @@
     --sq: 5.25rem;
   }
 
-  .side {
-    gap: 0.25rem;
+  @container deckpicker (min-width: 17.125rem) {
+    .side {
+      height: var(--sq);
+    }
+  }
+
+  .lines {
+    gap: 0.25rem 1rem;
   }
 
   .root .banner.compact {
