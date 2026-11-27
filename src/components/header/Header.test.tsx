@@ -33,7 +33,9 @@ vi.mock('features/api/apiSlice', () => ({
   useGetPendingRequestsQuery: () => ({
     data: { requests: state.pendingRequests }
   }),
-  useGetFriendsListQuery: () => ({ refetch: state.refetchFriends })
+  useGetFriendsListQuery: () => ({ refetch: state.refetchFriends }),
+  useGetGameInvitesQuery: () => ({ data: undefined, refetch: vi.fn() }),
+  useDeclineGameInviteMutation: () => [vi.fn()]
 }));
 vi.mock('components/header/LanguageSelector', () => ({ default: () => null }));
 vi.mock('components/footer/Footer', () => ({ default: () => null }));

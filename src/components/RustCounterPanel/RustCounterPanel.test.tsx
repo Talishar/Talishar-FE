@@ -66,7 +66,7 @@ describe('RustCounterPanel rewarded ad fallback', () => {
     });
 
     const rewardButton = screen.getByRole('button', {
-      name: 'Continue - Clear Your Rust Counters!'
+      name: 'Continue and clear your rust counters'
     });
     expect(rewardButton).toBeEnabled();
 
