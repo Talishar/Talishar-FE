@@ -602,6 +602,7 @@
     "SELECT_NONE": "取消全选",
     "SELECT_NONE_TITLE": "取消全选卡牌",
     "SEND_INVITE_FRIEND": "向好友发送邀请",
+    "INVITE_FRIEND": "邀请好友",
     "SIDEBOARD_UNREADY_FAILURE": "取消准备备牌失败",
     "SOME_ERROR": "发生了一些错误",
     "SUBMITTING": "提交中…",
@@ -1735,7 +1736,16 @@
     "OPEN_other": "打开好友列表（{{count}} 人在线）",
     "CLOSE": "关闭好友列表",
     "EMPTY": "还没有好友。可在个人资料中添加。",
-    "MANAGE": "管理好友"
+    "MANAGE": "管理好友",
+    "DECLINE": "拒绝",
+    "DONE": "完成",
+    "INVITE": "邀请",
+    "INVITED": "已邀请",
+    "INVITED_YOU": "{{name}}邀请你加入游戏",
+    "INVITE_FAILED": "无法发送邀请。",
+    "INVITE_LABEL": "邀请{{name}}加入游戏",
+    "INVITE_ON_CREATE": "创建此游戏时将邀请{{name}}。",
+    "JOIN": "加入"
   },
   "PROFILE": {
     "ACCEPT_FRIEND_REQUEST": "接受好友请求",

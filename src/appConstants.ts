@@ -487,6 +487,7 @@ export const URL_END_POINT = {
   BAN_PLAYER: 'BanPlayer.php',
   CLOSE_GAME: 'CloseGame.php',
   FRIEND_LIST: 'APIs/FriendListAPI.php',
+  GAME_INVITE: 'APIs/GameInviteAPI.php',
   BLOCKED_USERS: 'APIs/BlockedUsersAPI.php',
   USERNAME_MODERATION: 'APIs/UsernameModeration.php',
   BLOCK_REPORTS: 'APIs/BlockReports.php',

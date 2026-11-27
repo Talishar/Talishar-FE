@@ -1,4 +1,5 @@
 import React, {
+  useCallback,
   useEffect,
   useLayoutEffect,
   useState,
@@ -27,6 +28,7 @@ import StickyFooter, {
   LobbyPhase
 } from './components/stickyFooter/StickyFooter';
 import ChangeDeckModal from './components/changeDeck/ChangeDeckModal';
+import InviteFriendModal from './components/inviteFriend/InviteFriendModal';
 import { consumeRematchDeckChange } from './components/changeDeck/rematchDeckIntent';
 import { toast, Toaster } from 'react-hot-toast';
 import { TOAST_OPTIONS } from 'constants/toastOptions';
@@ -411,6 +413,20 @@ const Lobby = () => {
     useKickPlayerMutation();
 
   const [isChangeDeckOpen, setIsChangeDeckOpen] = useState(false);
+  const [isInviteFriendOpen, setIsInviteFriendOpen] = useState(false);
+  const closeInviteFriend = useCallback(() => setIsInviteFriendOpen(false), []);
+  const opponentSeated =
+    gameLobby?.opponentSeatOccupied ??
+    (!!gameLobby?.theirHero && gameLobby.theirHero !== 'CardBack');
+  const canInviteFriends =
+    isLoggedIn &&
+    playerID === 1 &&
+    !!gameLobby &&
+    !opponentSeated &&
+    !gameLobby.isOpponentAI;
+  const openInviteFriend = canInviteFriends
+    ? () => setIsInviteFriendOpen(true)
+    : undefined;
   const canChangeDeck = !!gameLobby?.canChangeDeck && playerID !== 3;
 
   useEffect(() => {
@@ -1483,6 +1499,15 @@ const Lobby = () => {
                       />
                     </div>
                   )}
+                  {openInviteFriend && (
+                    <button
+                      type="button"
+                      className={styles.inviteFriendButton}
+                      onClick={openInviteFriend}
+                    >
+                      {t('GAME_LOBBY.INVITE_FRIEND')}
+                    </button>
+                  )}
                   {playerID === 1 &&
                     gameLobby?.theirHero &&
                     gameLobby.theirHero !== 'CardBack' &&
@@ -1783,6 +1808,7 @@ const Lobby = () => {
                 )
               }
               onIsValidChange={setIsDeckValid}
+              onSendInviteClick={openInviteFriend}
               onChangeDeckClick={
                 canChangeDeck ? () => setIsChangeDeckOpen(true) : undefined
               }
@@ -1809,6 +1835,13 @@ const Lobby = () => {
         playerID={playerID}
         authKey={authKey}
         format={lobbyFormatCode}
+      />
+
+      <InviteFriendModal
+        isOpen={isInviteFriendOpen && canInviteFriends}
+        onClose={closeInviteFriend}
+        gameID={gameID}
+        authKey={authKey}
       />
 
       {/* Opponent note tooltip in lobby */}

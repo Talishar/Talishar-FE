@@ -7,6 +7,11 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 0.5rem;
+  max-height: calc(100dvh - 70px - 2rem - env(safe-area-inset-bottom, 0px));
+}
+
+.dock > * {
+  flex: none;
 }
 
 .toggle {
@@ -83,6 +88,11 @@
 
 .countValue {
   text-box: trim-both cap alphabetic;
+}
+
+.dock > .panel {
+  flex: 0 1 auto;
+  min-height: 0;
 }
 
 .panel {
@@ -216,13 +226,100 @@
   text-decoration: underline;
 }
 
+.inviteButton,
+.inviteDecline,
+.inviteJoin {
+  flex: none;
+  width: auto;
+  height: 24px;
+  margin: 0;
+  padding: 0 0.6rem;
+  border: 1px solid var(--theme-dropdown-border, #1b1b28);
+  border-radius: 5px;
+  background: transparent;
+  box-shadow: none;
+  color: var(--theme-text, #f4eded);
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.inviteButton {
+  border-color: rgba(var(--theme-on-surface-rgb), 0.18);
+}
+
+.inviteButton:hover,
+.inviteButton:focus-visible,
+.inviteDecline:hover,
+.inviteDecline:focus-visible {
+  border-color: rgba(var(--theme-on-surface-rgb), 0.32);
+  background: rgba(var(--theme-on-surface-rgb), 0.08);
+}
+
+.inviteCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  width: 300px;
+  padding: 0.7rem 0.75rem;
+  border: 1px solid var(--theme-dropdown-border, #1b1b28);
+  border-radius: 5px;
+  background: var(--theme-dropdown-background, #0e0e11);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  color: var(--theme-text, #f4eded);
+}
+
+.inviteText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.inviteTitle {
+  overflow-wrap: anywhere;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.inviteFormat {
+  color: var(--theme-text-muted, rgba(255, 255, 255, 0.6));
+  font-size: 0.8rem;
+}
+
+.inviteActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.inviteDecline,
+.inviteJoin {
+  height: 28px;
+  padding: 0 0.8rem;
+}
+
+.inviteJoin {
+  border-color: rgba(var(--theme-on-surface-rgb), 0.32);
+  background: rgba(var(--theme-on-surface-rgb), 0.12);
+}
+
+.inviteJoin:hover,
+.inviteJoin:focus-visible {
+  border-color: rgba(var(--theme-on-surface-rgb), 0.45);
+  background: rgba(var(--theme-on-surface-rgb), 0.18);
+}
+
 @media (max-width: 768px) {
   .dock {
     left: 0.5rem;
     bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px));
+    max-height: calc(100dvh - 70px - 1rem - env(safe-area-inset-bottom, 0px));
   }
 
-  .panel {
+  .panel,
+  .inviteCard {
     width: calc(100vw - 1rem);
     max-height: calc(
       100dvh - 70px - 1rem - 36px - 1rem - env(safe-area-inset-bottom, 0px)

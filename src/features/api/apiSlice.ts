@@ -106,6 +106,7 @@ import {
   GameHealthReportResponse,
 } from 'interface/API/ModPageAPI';
 import { FriendListAPIResponse } from 'interface/API/FriendListAPI.php';
+import { GameInviteAPIResponse } from 'interface/API/GameInviteAPI.php';
 import {
   UsernamesModerationResponse,
   BanOffensiveUsernameRequest
@@ -964,6 +965,24 @@ export const apiSlice = createApi({
       )
     }),
 
+    getGameInvites: builder.query<GameInviteAPIResponse, void>({
+      query: () => postJson(URL_END_POINT.GAME_INVITE, { action: 'list' })
+    }),
+    sendGameInvite: builder.mutation<
+      GameInviteAPIResponse,
+      { friendUserId: number; gameName: number | string; authKey: string }
+    >({
+      query: (arg) =>
+        postJson(URL_END_POINT.GAME_INVITE, { action: 'send', ...arg })
+    }),
+    declineGameInvite: builder.mutation<
+      GameInviteAPIResponse,
+      { fromUserId: number; gameName: string }
+    >({
+      query: (arg) =>
+        postJson(URL_END_POINT.GAME_INVITE, { action: 'decline', ...arg })
+    }),
+
     // Blocked Users endpoints
     getBlockedUsers: builder.query<BlockedUsersAPIResponse, void>({
       queryFn: async (_arg, _api, _extraOptions, baseQuery) => {
@@ -1294,6 +1313,9 @@ export const {
   useCloseGameMutation,
   useSearchUsernamesQuery,
   useGetFriendsListQuery,
+  useGetGameInvitesQuery,
+  useSendGameInviteMutation,
+  useDeclineGameInviteMutation,
   useAddFriendMutation,
   useRemoveFriendMutation,
   useSearchUsersQuery,

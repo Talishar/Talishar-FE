@@ -18,7 +18,9 @@ import {
   useGetBazaarDecksQuery,
   useClearRustCountersMutation,
   useGetLegalHeroesQuery,
-  useGetLegalHeroIdsQuery
+  useGetLegalHeroIdsQuery,
+  useGetFriendsListQuery,
+  useSendGameInviteMutation
 } from 'features/api/apiSlice';
 import { isHeroLegalIn } from 'utils/heroLegality';
 import {
@@ -124,6 +126,19 @@ const CreateGame = ({
   const urlDeckLink =
     searchParams.get('fabdb') ?? searchParams.get('decksToTry') ?? '';
   const [createGame] = useCreateGameMutation();
+  const inviteFriendId = Number(searchParams.get('invite')) || 0;
+  const { data: friendsData } = useGetFriendsListQuery(undefined, {
+    skip: !inviteFriendId || isAuthPending || !isLoggedIn
+  });
+  const inviteFriend = inviteFriendId
+    ? friendsData?.friends?.find(
+        (friend) => Number(friend.friendUserId) === inviteFriendId
+      )
+    : undefined;
+  const inviteFriendName = inviteFriend
+    ? inviteFriend.nickname || inviteFriend.username
+    : '';
+  const [sendGameInvite] = useSendGameInviteMutation();
   const { data: legalHeroesByFormat } = useGetLegalHeroesQuery();
   const [clearRustCounters] = useClearRustCountersMutation();
   const { canViewRustCounters, rustCounters, isRustLocked } = useRustCounters();
@@ -883,6 +898,17 @@ const CreateGame = ({
                 : undefined
           })
         );
+        if (inviteFriend) {
+          try {
+            await sendGameInvite({
+              friendUserId: inviteFriendId,
+              gameName: response.gameName,
+              authKey: response.authKey
+            }).unwrap();
+          } catch (error) {
+            console.warn(error);
+          }
+        }
         // Reset save deck checkbox after successful game creation
         quickJoinCtx?.setSaveDeck(false);
         navigate(`/game/lobby/${response.gameName}`, {
@@ -1862,6 +1888,14 @@ const CreateGame = ({
               </div>
             ) : (
               createButton
+            )}
+            {inviteFriendName && (
+              <Notice
+                tone="info"
+                title={t('FRIENDS_DOCK.INVITE_ON_CREATE', {
+                  name: inviteFriendName
+                })}
+              />
             )}
             {isRustLocked && (
               <div className={styles.rustLockedHint}>

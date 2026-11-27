@@ -722,6 +722,7 @@
     "SELECT_NONE": "Select None",
     "SELECT_NONE_TITLE": "Deselect all cards",
     "SEND_INVITE_FRIEND": "Send invite to friend",
+    "INVITE_FRIEND": "Invite friend",
     "SIDEBOARD_UNREADY_FAILURE": "Failed to unready sideboard.",
     "SOME_ERROR": "Something went wrong.",
     "SUBMIT_FAILED": "Could not confirm your selection ({{status}}). Please report game #{{gameId}} if this keeps happening.",
@@ -2225,7 +2226,16 @@
     "OPEN_other": "Open friends list, {{count}} online",
     "CLOSE": "Close friends list",
     "EMPTY": "No friends yet. Add some from your profile.",
-    "MANAGE": "Manage friends"
+    "MANAGE": "Manage friends",
+    "DECLINE": "Decline",
+    "DONE": "Done",
+    "INVITE": "Invite",
+    "INVITED": "Invited",
+    "INVITED_YOU": "{{name}} invited you to a game",
+    "INVITE_FAILED": "Could not send the invite.",
+    "INVITE_LABEL": "Invite {{name}} to a game",
+    "INVITE_ON_CREATE": "{{name}} will be invited when you create this game.",
+    "JOIN": "Join"
   },
   "PROFILE": {
     "ACCEPT_FRIEND_REQUEST": "Accept friend request",

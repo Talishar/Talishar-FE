@@ -602,6 +602,7 @@
     "SELECT_NONE": "選択解除",
     "SELECT_NONE_TITLE": "すべてのカードの選択を解除",
     "SEND_INVITE_FRIEND": "フレンドに招待を送る",
+    "INVITE_FRIEND": "フレンドを招待",
     "SIDEBOARD_UNREADY_FAILURE": "サイドボードの準備完了を解除できませんでした。",
     "SOME_ERROR": "問題が発生しました。",
     "SUBMITTING": "送信中…",
@@ -1735,7 +1736,16 @@
     "OPEN_other": "フレンドリストを開く（{{count}}人オンライン）",
     "CLOSE": "フレンドリストを閉じる",
     "EMPTY": "まだフレンドがいません。プロフィールから追加できます。",
-    "MANAGE": "フレンドを管理"
+    "MANAGE": "フレンドを管理",
+    "DECLINE": "辞退",
+    "DONE": "完了",
+    "INVITE": "招待",
+    "INVITED": "招待済み",
+    "INVITED_YOU": "{{name}}からゲームに招待されました",
+    "INVITE_FAILED": "招待を送信できませんでした。",
+    "INVITE_LABEL": "{{name}}をゲームに招待",
+    "INVITE_ON_CREATE": "このゲームを作成すると{{name}}に招待が送られます。",
+    "JOIN": "参加"
   },
   "PROFILE": {
     "ACCEPT_FRIEND_REQUEST": "フレンドリクエストを承認",

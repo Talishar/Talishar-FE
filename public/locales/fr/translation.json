@@ -625,6 +625,7 @@
     "SELECT_NONE": "Tout désélectionner",
     "SELECT_NONE_TITLE": "Désélectionner toutes les cartes",
     "SEND_INVITE_FRIEND": "Envoyer une invitation à un ami",
+    "INVITE_FRIEND": "Inviter un ami",
     "SIDEBOARD_UNREADY_FAILURE": "Impossible d’annuler l’état prêt du sideboard",
     "SOME_ERROR": "Une erreur est survenue",
     "SUBMITTING": "Soumission en cours…",
@@ -1770,7 +1771,16 @@
     "OPEN_other": "Ouvrir la liste d'amis, {{count}} en ligne",
     "CLOSE": "Fermer la liste d'amis",
     "EMPTY": "Aucun ami pour le moment. Ajoutez-en depuis votre profil.",
-    "MANAGE": "Gérer les amis"
+    "MANAGE": "Gérer les amis",
+    "DECLINE": "Refuser",
+    "DONE": "Terminé",
+    "INVITE": "Inviter",
+    "INVITED": "Invité",
+    "INVITED_YOU": "{{name}} vous invite à une partie",
+    "INVITE_FAILED": "Impossible d'envoyer l'invitation.",
+    "INVITE_LABEL": "Inviter {{name}} à une partie",
+    "INVITE_ON_CREATE": "{{name}} sera invité(e) à la création de cette partie.",
+    "JOIN": "Rejoindre"
   },
   "PROFILE": {
     "ACCEPT_FRIEND_REQUEST": "Accepter la demande d'ami",

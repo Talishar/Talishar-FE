@@ -554,6 +554,32 @@ h3 {
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
 }
 
+.inviteFriendButton {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 10;
+  width: fit-content;
+  margin: 0;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  background: rgba(14, 14, 17, 0.9);
+  color: var(--theme-text, #f4eded);
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.22);
+  border-radius: 5px;
+  box-shadow: none;
+  cursor: pointer;
+  backdrop-filter: blur(2px);
+}
+
+.inviteFriendButton:hover,
+.inviteFriendButton:focus-visible {
+  border-color: rgba(var(--theme-on-surface-rgb), 0.4);
+  background: rgba(30, 30, 36, 0.95);
+}
+
 .rightCol:hover .kickButton {
   opacity: 0.75;
 }
@@ -1632,7 +1658,8 @@ button.secondary:hover {
     font-size: 0.78em;
   }
 
-  .kickButton {
+  .kickButton,
+  .inviteFriendButton {
     top: 4px;
     right: auto;
     left: 4px;

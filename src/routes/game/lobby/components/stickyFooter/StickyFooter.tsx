@@ -219,7 +219,7 @@ const StickyFooter = ({
             >
               {copied ? <HiClipboardCheck /> : <HiClipboardCopy />}
             </button>
-            {onSendInviteClick && isWidescreen && (
+            {onSendInviteClick && (
               <button
                 className={styles.iconButton}
                 onClick={onSendInviteClick}

@@ -1,0 +1,96 @@
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.error {
+  padding: 0 16px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 40px;
+  padding: 0.35rem 16px;
+  font-size: 0.9rem;
+}
+
+.row:hover {
+  background: rgba(var(--theme-on-surface-rgb), 0.03);
+}
+
+.rowOffline .name {
+  color: var(--theme-text-muted, rgba(255, 255, 255, 0.6));
+}
+
+.dot {
+  flex: none;
+  width: 0.55rem;
+  height: 0.55rem;
+  border: 1px solid var(--theme-text-muted, rgba(255, 255, 255, 0.6));
+  border-radius: 50%;
+  opacity: 0.6;
+}
+
+.dotOnline {
+  border-color: var(--theme-success, #28a745);
+  background: var(--theme-success, #28a745);
+  opacity: 1;
+}
+
+.name {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  color: rgba(var(--theme-on-surface-rgb), 0.92);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status {
+  flex: none;
+  color: var(--theme-text-muted, rgba(255, 255, 255, 0.6));
+  font-size: 0.8rem;
+}
+
+.inviteButton {
+  flex: none;
+  width: auto;
+  height: 28px;
+  margin: 0;
+  padding: 0 0.75rem;
+  border: 1px solid rgba(var(--theme-on-surface-rgb), 0.18);
+  border-radius: 5px;
+  background: transparent;
+  box-shadow: none;
+  color: var(--theme-text, #f4eded);
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.inviteButton:hover:not(:disabled),
+.inviteButton:focus-visible {
+  border-color: rgba(var(--theme-on-surface-rgb), 0.32);
+  background: rgba(var(--theme-on-surface-rgb), 0.08);
+}
+
+.inviteButton:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.empty {
+  padding: 0.5rem 16px;
+  color: var(--theme-text-muted, rgba(255, 255, 255, 0.6));
+}

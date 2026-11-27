@@ -1,15 +1,38 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { MdPeople } from 'react-icons/md';
 import { IoMdClose } from 'react-icons/io';
-import { useGetFriendsListQuery } from 'features/api/apiSlice';
+import {
+  useDeclineGameInviteMutation,
+  useGetFriendsListQuery,
+  useGetGameInvitesQuery
+} from 'features/api/apiSlice';
 import { Friend, FriendOnlineStatus } from 'interface/API/FriendListAPI.php';
+import { GameInvite } from 'interface/API/GameInviteAPI.php';
 import { useOutsideClick } from 'hooks/useOutsideClick';
 import styles from './FriendsDock.module.css';
 
 const OPEN_REFRESH_MS = 60_000;
 const CLOSED_REFRESH_MS = 180_000;
+const INVITE_REFRESH_MS = 10_000;
+
+const INVITE_FORMAT_KEYS: Record<string, string> = {
+  cc: 'CC',
+  compcc: 'COMPETITIVE_CC',
+  blitz: 'BLITZ',
+  compblitz: 'COMPETITIVE_BLITZ',
+  llcc: 'LL',
+  compllcc: 'COMPETITIVE_LL',
+  sage: 'SAGE',
+  compsage: 'COMPETITIVE_SAGE',
+  futuresage: 'FUTURE_SAGE',
+  futurecc: 'FUTURE_CC',
+  gage: 'GAGE'
+};
+
+const inviteKey = (invite: GameInvite) =>
+  `${invite.fromUserId}:${invite.gameName}`;
 
 const STATUS_ORDER: Record<FriendOnlineStatus, number> = {
   playing: 0,
@@ -24,7 +47,25 @@ const FriendsDock = () => {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const dockRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
   const { data, isLoading, refetch } = useGetFriendsListQuery(undefined);
+  const hasFriends = (data?.friends?.length ?? 0) > 0;
+  const { data: inviteData, refetch: refetchInvites } = useGetGameInvitesQuery(
+    undefined,
+    { skip: !hasFriends }
+  );
+  const [declineGameInvite] = useDeclineGameInviteMutation();
+  const [dismissedInvites, setDismissedInvites] = useState<Set<string>>(
+    () => new Set()
+  );
+
+  useEffect(() => {
+    if (!hasFriends) return;
+    const id = window.setInterval(() => {
+      if (!document.hidden) refetchInvites();
+    }, INVITE_REFRESH_MS);
+    return () => window.clearInterval(id);
+  }, [hasFriends, refetchInvites]);
 
   useEffect(() => {
     const id = window.setInterval(
@@ -57,6 +98,44 @@ const FriendsDock = () => {
     [data?.friends]
   );
   const onlineCount = friends.filter(isActive).length;
+
+  const friendNames = useMemo(() => {
+    const names = new Map<number, string>();
+    for (const friend of data?.friends ?? []) {
+      names.set(
+        Number(friend.friendUserId),
+        friend.nickname || friend.username
+      );
+    }
+    return names;
+  }, [data?.friends]);
+
+  const invites = (inviteData?.invites ?? []).filter(
+    (invite) => !dismissedInvites.has(inviteKey(invite))
+  );
+
+  const dismissInvite = (invite: GameInvite) =>
+    setDismissedInvites((prev) => new Set(prev).add(inviteKey(invite)));
+
+  const handleInviteFriend = (friend: Friend) => {
+    setIsOpen(false);
+    navigate(
+      `/game/create?visibility=private&invite=${friend.friendUserId}`
+    );
+  };
+
+  const handleJoinInvite = (invite: GameInvite) => {
+    dismissInvite(invite);
+    navigate(`/game/join/${invite.gameName}`);
+  };
+
+  const handleDeclineInvite = (invite: GameInvite) => {
+    dismissInvite(invite);
+    declineGameInvite({
+      fromUserId: invite.fromUserId,
+      gameName: invite.gameName
+    });
+  };
 
   const handleToggle = () => {
     if (!isOpen) refetch();
@@ -107,15 +186,26 @@ const FriendsDock = () => {
                   <span className={styles.name}>
                     {friend.nickname || friend.username}
                   </span>
-                  <span className={styles.status}>
-                    {t(
-                      friend.onlineStatus === 'playing'
-                        ? 'PROFILE.FRIEND_PLAYING'
-                        : friend.onlineStatus === 'online'
-                        ? 'PROFILE.FRIEND_ONLINE'
-                        : 'PROFILE.FRIEND_OFFLINE'
-                    )}
-                  </span>
+                  {friend.onlineStatus === 'online' ? (
+                    <button
+                      type="button"
+                      className={styles.inviteButton}
+                      onClick={() => handleInviteFriend(friend)}
+                      aria-label={t('FRIENDS_DOCK.INVITE_LABEL', {
+                        name: friend.nickname || friend.username
+                      })}
+                    >
+                      {t('FRIENDS_DOCK.INVITE')}
+                    </button>
+                  ) : (
+                    <span className={styles.status}>
+                      {t(
+                        friend.onlineStatus === 'playing'
+                          ? 'PROFILE.FRIEND_PLAYING'
+                          : 'PROFILE.FRIEND_OFFLINE'
+                      )}
+                    </span>
+                  )}
                 </div>
               ))
             )}
@@ -131,6 +221,45 @@ const FriendsDock = () => {
           </div>
         </div>
       )}
+      {invites.map((invite) => {
+        const formatKey = INVITE_FORMAT_KEYS[invite.format];
+        return (
+          <div
+            key={inviteKey(invite)}
+            className={styles.inviteCard}
+            role="status"
+          >
+            <div className={styles.inviteText}>
+              <span className={styles.inviteTitle}>
+                {t('FRIENDS_DOCK.INVITED_YOU', {
+                  name: friendNames.get(invite.fromUserId) || invite.fromName
+                })}
+              </span>
+              {formatKey && (
+                <span className={styles.inviteFormat}>
+                  {t(`GAME_LIST.FORMATS.${formatKey}`)}
+                </span>
+              )}
+            </div>
+            <div className={styles.inviteActions}>
+              <button
+                type="button"
+                className={styles.inviteDecline}
+                onClick={() => handleDeclineInvite(invite)}
+              >
+                {t('FRIENDS_DOCK.DECLINE')}
+              </button>
+              <button
+                type="button"
+                className={styles.inviteJoin}
+                onClick={() => handleJoinInvite(invite)}
+              >
+                {t('FRIENDS_DOCK.JOIN')}
+              </button>
+            </div>
+          </div>
+        );
+      })}
       <button
         type="button"
         className={`${styles.toggle} ${isOpen ? styles.toggleOpen : ''}`}
