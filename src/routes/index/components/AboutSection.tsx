@@ -8,6 +8,7 @@ import useSupporterStatus from 'hooks/useSupporterStatus';
 import { useMediaQuery } from 'hooks/useMediaQuery';
 import NavigationPage from 'routes/NavigationPage';
 import {
+  JUDGE_HUB_DISCORD_URL,
   TALISHAR_DISCORD_URL,
   TALISHAR_GITHUB_URL
 } from 'constants/socialLinks';
@@ -220,22 +221,24 @@ const AboutSection: React.FC = () => {
             <div className={styles.bodyText}>
               <Trans
                 i18nKey="ABOUT.LSS_RELATIONSHIP_DESCRIPTION"
-                components={[
-                  <p key="lss-p0" className={styles.bodyText} />,
-                  <p key="lss-p1" className={styles.bodyText} />,
-                  <a
-                    key="lss-discord"
-                    href={TALISHAR_DISCORD_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  />,
-                  <a
-                    key="lss-rules"
-                    href="https://fabtcg.com/rules/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  />
-                ]}
+                components={{
+                  0: <p className={styles.bodyText} />,
+                  1: <p className={styles.bodyText} />,
+                  2: (
+                    <a
+                      href={JUDGE_HUB_DISCORD_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    />
+                  ),
+                  3: (
+                    <a
+                      href="https://fabtcg.com/rules/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    />
+                  )
+                }}
               />
             </div>
             {!isSupporter && (
