@@ -74,34 +74,6 @@
   padding-top: 0.6rem;
 }
 
-.rowArt {
-  grid-template-columns: minmax(0, 1fr);
-}
-
-.rowArt > .rowLabel,
-.rowArt > .rowControl {
-  grid-row: 1;
-  grid-column: 1;
-}
-
-.rowTop.rowArt > .rowLabel {
-  position: relative;
-  z-index: 1;
-  justify-self: start;
-  display: inline-flex;
-  align-items: center;
-  box-sizing: border-box;
-  height: 28px;
-  margin: calc(0.5rem + 1px) 0 0 calc(0.5rem + 1px);
-  padding: 0 0.625rem;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 14px;
-  background: rgba(0, 0, 0, 0.6);
-  color: #f4eded;
-  font-size: 0.8125rem;
-  pointer-events: none;
-}
-
 .rowControl {
   display: flex;
   flex-direction: column;
@@ -238,6 +210,15 @@
     border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
     border-radius: 10px;
     margin: 1em 0;
+  }
+
+  .deckRow {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 0.4rem;
+  }
+
+  .deckRow .rowLabel {
+    padding-top: 0;
   }
 }
 

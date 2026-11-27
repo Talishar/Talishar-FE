@@ -12,13 +12,12 @@ import {
 } from 'features/mastery/mastery';
 import useAuth from 'hooks/useAuth';
 import { useQuickJoin } from './QuickJoinContext';
-import DeckBanner, { DeckBannerMastery } from './DeckBanner';
+import DeckPicker, { DeckPickerMastery } from './DeckPicker';
 import styles from './QuickJoinPanel.module.css';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { getCookie, setCookie } from 'utils/cookies';
 import Notice, { ServerErrorNotice } from 'components/Notice';
-import { ImageSelectOption } from 'components/ImageSelect';
 import { PHONE_LANDSCAPE_QUERY } from 'routes/game/lobby/phoneLandscape';
 
 interface Props {
@@ -30,9 +29,6 @@ const DECK_SOURCES = [
   { value: 'talishar', label: 'Talishar' },
   { value: 'bazaar', label: 'FaB Bazaar' }
 ] as const;
-
-const hasDeckArt = (options: ImageSelectOption[], value: string) =>
-  !!options.find((option) => option.value === value)?.imageUrl;
 
 const QuickJoinPanel = ({ embedded = false, userLayout }: Props) => {
   const { isLoggedIn, currentUserId } = useAuth();
@@ -99,7 +95,7 @@ const QuickJoinPanel = ({ embedded = false, userLayout }: Props) => {
 
   if (!(userLayout ?? isLoggedIn)) return null;
 
-  let bannerMastery: DeckBannerMastery | null = null;
+  let bannerMastery: DeckPickerMastery | null = null;
   if (selectedMasteryProgress) {
     const { qualifyingGames, level, nextThreshold } = selectedMasteryProgress;
     const start = progressStart(level);
@@ -162,22 +158,17 @@ const QuickJoinPanel = ({ embedded = false, userLayout }: Props) => {
   );
 
   const bazaarRows = metafyHash ? (
-    <div
-      className={classNames(
-        styles.row,
-        styles.rowTop,
-        hasDeckArt(bazaarDeckOptions, selectedBazaarDeck) && styles.rowArt
-      )}
-    >
+    <div className={classNames(styles.row, styles.rowTop, styles.deckRow)}>
       <span id="quickJoinDeckLabel" className={styles.rowLabel}>
         {t('JOIN.DECK')}
       </span>
       <div className={styles.rowControl}>
-        <DeckBanner
+        <DeckPicker
           options={bazaarDeckOptions}
           value={selectedBazaarDeck}
           onChange={setSelectedBazaarDeck}
           placeholder={bazaarPlaceholder}
+          recentKey="quickJoin_recentBazaarDecks"
           labelledBy="quickJoinDeckLabel"
           disabled={isBazaarLoading}
           mastery={bannerMastery}
@@ -199,22 +190,17 @@ const QuickJoinPanel = ({ embedded = false, userLayout }: Props) => {
 
   const talisharRows = (
     <>
-      <div
-        className={classNames(
-          styles.row,
-          styles.rowTop,
-          hasDeckArt(favoriteDeckOptions, selectedFavoriteDeck) && styles.rowArt
-        )}
-      >
+      <div className={classNames(styles.row, styles.rowTop, styles.deckRow)}>
         <span id="quickJoinDeckLabel" className={styles.rowLabel}>
           {t('JOIN.DECK')}
         </span>
         <div className={styles.rowControl}>
-          <DeckBanner
+          <DeckPicker
             options={favoriteDeckOptions}
             value={selectedFavoriteDeck}
             onChange={setSelectedFavoriteDeck}
             placeholder={deckPlaceholder}
+            recentKey="quickJoin_recentFavoriteDecks"
             labelledBy="quickJoinDeckLabel"
             disabled={isFavoritesLoading}
             mastery={bannerMastery}
