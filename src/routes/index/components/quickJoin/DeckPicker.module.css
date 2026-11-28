@@ -362,6 +362,7 @@
 .thumb .art {
   position: absolute;
   inset: 0;
+  will-change: transform;
 }
 
 .optionSelected .thumb {
